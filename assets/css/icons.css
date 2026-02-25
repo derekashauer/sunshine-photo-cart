@@ -1,0 +1,332 @@
+@font-face {
+  font-family: "SunshineIcons";
+  src: url("../fonts/SunshineIcons.eot");
+  src: url("../fonts/SunshineIcons.eot?#iefix") format("embedded-opentype"),
+  url("../fonts/SunshineIcons.woff2") format("woff2"),
+  url("../fonts/SunshineIcons.woff") format("woff"),
+  url("../fonts/SunshineIcons.ttf") format("truetype"),
+  url("../fonts/SunshineIcons.svg#font") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  @font-face {
+	font-family: "SunshineIcons";
+	src: url("../fonts/SunshineIcons.svg#SunshineIcons") format("svg");
+  }
+}
+
+[data-sunshine-icon]:before {
+  content: attr(data-sunshine-icon);
+}
+
+.sunshine--icon--favorite:before,
+.sunshine--icon--heart:before,
+.sunshine--icon--shopping-cart:before,
+.sunshine--icon--shopping-cart-2:before,
+.sunshine--icon--lock:before,
+.sunshine--icon--lock-2:before,
+.sunshine--icon--downloading-updates:before,
+.sunshine--icon--forward-arrow:before,
+.sunshine--icon--return:before,
+.sunshine--icon--male-user:before,
+.sunshine--icon--male-user-2:before,
+.sunshine--icon--trash:before,
+.sunshine--icon--trash-2:before,
+.sunshine--icon--home:before,
+.sunshine--icon--home-2:before,
+.sunshine--icon--comments:before,
+.sunshine--icon--comments-2:before,
+.sunshine--icon--crop:before,
+.sunshine--icon--right-arrow:before,
+.sunshine--icon--forward:before,
+.sunshine--icon--ok:before,
+.sunshine--icon--ok-2:before,
+.sunshine--icon--login:before,
+.sunshine--icon--logout-rounded-left:before,
+.sunshine--icon--close:before,
+.sunshine--icon--plus:before,
+.sunshine--icon--minus:before,
+.sunshine--icon--purchase-order:before,
+.sunshine--icon--lightning-bolt:before,
+.sunshine--icon--view:before,
+.sunshine--icon--repeat:before,
+.sunshine--icon--gallery:before,
+.sunshine--icon--settings:before,
+.sunshine--icon--product:before,
+.sunshine--icon--mail:before,
+.sunshine--icon--slider:before,
+.sunshine--icon--star:before,
+.sunshine--icon--star-2:before,
+.sunshine--icon--edit:before,
+.sunshine--icon--edit-2:before,
+.sunshine--icon--page:before,
+.sunshine--icon--tax:before,
+.sunshine--icon--checkout:before,
+.sunshine--icon--pay:before,
+.sunshine--icon--in-transit:before,
+.sunshine--icon--web-design:before,
+.sunshine--icon--key:before,
+.sunshine--icon--upgrade:before,
+.sunshine--icon--calendar:before,
+.sunshine--icon--documents:before,
+.sunshine--icon--left-arrow:before,
+.sunshine--icon--list:before,
+.sunshine--icon--online-store:before,
+.sunshine--icon--zoom-in:before,
+.sunshine--icon--circled-play:before,
+.sunshine--icon--computers-connecting:before,
+.sunshine--icon--albums:before,
+.sunshine--icon--pause-button:before,
+.sunshine--icon--full-screen:before,
+.sunshine--icon--normal-screen:before,
+.sunshine--icon--zoom-out:before,
+.sunshine--icon--wedding:before,
+.sunshine--icon--customer:before,
+.sunshine--icon--conference:before,
+.sunshine--icon--tourist-guide:before,
+.sunshine--icon--portrait:before,
+.sunshine--icon--support:before,
+.sunshine--icon--chart:before,
+.sunshine--icon--cart:before,
+.sunshine--icon--cart-2:before,
+.sunshine--icon--add-shopping-cart:before,
+.sunshine--icon--add-shopping-cart-2:before,
+.sunshine--icon--cloud:before,
+.icons8,
+[data-icons8]:before {
+  display: inline-block;
+  font-family: "SunshineIcons";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+
+.sunshine--icon--favorite:before {
+  content: "\f101";
+}
+.sunshine--icon--heart:before {
+  content: "\f102";
+}
+.sunshine--icon--shopping-cart:before {
+  content: "\f103";
+}
+.sunshine--icon--shopping-cart-2:before {
+  content: "\f104";
+}
+.sunshine--icon--lock:before {
+  content: "\f105";
+}
+.sunshine--icon--lock-2:before {
+  content: "\f106";
+}
+.sunshine--icon--downloading-updates:before {
+  content: "\f107";
+}
+.sunshine--icon--forward-arrow:before {
+  content: "\f108";
+}
+.sunshine--icon--return:before {
+  content: "\f109";
+}
+.sunshine--icon--male-user:before {
+  content: "\f10a";
+}
+.sunshine--icon--male-user-2:before {
+  content: "\f10b";
+}
+.sunshine--icon--trash:before {
+  content: "\f10c";
+}
+.sunshine--icon--trash-2:before {
+  content: "\f10d";
+}
+.sunshine--icon--home:before {
+  content: "\f10e";
+}
+.sunshine--icon--home-2:before {
+  content: "\f10f";
+}
+.sunshine--icon--comments:before {
+  content: "\f110";
+}
+.sunshine--icon--comments-2:before {
+  content: "\f111";
+}
+.sunshine--icon--crop:before {
+  content: "\f114";
+}
+.sunshine--icon--right-arrow:before {
+  content: "\f115";
+}
+.sunshine--icon--forward:before {
+  content: "\f116";
+}
+.sunshine--icon--ok:before {
+  content: "\f117";
+}
+.sunshine--icon--ok-2:before {
+  content: "\f118";
+}
+.sunshine--icon--login:before {
+  content: "\f119";
+}
+.sunshine--icon--logout-rounded-left:before {
+  content: "\f11a";
+}
+.sunshine--icon--close:before {
+  content: "\f11b";
+}
+.sunshine--icon--plus:before {
+  content: "\f11c";
+}
+.sunshine--icon--minus:before {
+  content: "\f11d";
+}
+.sunshine--icon--purchase-order:before {
+  content: "\f11e";
+}
+.sunshine--icon--lightning-bolt:before {
+  content: "\f120";
+}
+.sunshine--icon--view:before {
+  content: "\f121";
+}
+.sunshine--icon--repeat:before {
+  content: "\f122";
+}
+.sunshine--icon--gallery:before {
+  content: "\f123";
+}
+.sunshine--icon--settings:before {
+  content: "\f124";
+}
+.sunshine--icon--product:before {
+  content: "\f125";
+}
+.sunshine--icon--mail:before {
+  content: "\f126";
+}
+.sunshine--icon--slider:before {
+  content: "\f127";
+}
+.sunshine--icon--star:before {
+  content: "\f128";
+}
+.sunshine--icon--star-2:before {
+  content: "\f129";
+}
+.sunshine--icon--edit:before {
+  content: "\f12a";
+}
+.sunshine--icon--edit-2:before {
+  content: "\f12b";
+}
+.sunshine--icon--page:before {
+  content: "\f12c";
+}
+.sunshine--icon--tax:before {
+  content: "\f12d";
+}
+.sunshine--icon--checkout:before {
+  content: "\f12e";
+}
+.sunshine--icon--pay:before {
+  content: "\f12f";
+}
+.sunshine--icon--in-transit:before {
+  content: "\f130";
+}
+.sunshine--icon--web-design:before {
+  content: "\f131";
+}
+.sunshine--icon--key:before {
+  content: "\f132";
+}
+.sunshine--icon--upgrade:before {
+  content: "\f133";
+}
+.sunshine--icon--calendar:before {
+  content: "\f134";
+}
+.sunshine--icon--documents:before {
+  content: "\f135";
+}
+.sunshine--icon--left-arrow:before {
+  content: "\f136";
+}
+.sunshine--icon--list:before {
+  content: "\f137";
+}
+.sunshine--icon--online-store:before {
+  content: "\f138";
+}
+.sunshine--icon--zoom-in:before {
+  content: "\f139";
+}
+.sunshine--icon--circled-play:before {
+  content: "\f13b";
+}
+.sunshine--icon--computers-connecting:before {
+  content: "\f13c";
+}
+.sunshine--icon--albums:before {
+  content: "\f13d";
+}
+.sunshine--icon--pause-button:before {
+  content: "\f13e";
+}
+.sunshine--icon--full-screen:before {
+  content: "\f13f";
+}
+.sunshine--icon--normal-screen:before {
+  content: "\f140";
+}
+.sunshine--icon--zoom-out:before {
+  content: "\f141";
+}
+.sunshine--icon--wedding:before {
+  content: "\f142";
+}
+.sunshine--icon--customer:before {
+  content: "\f143";
+}
+.sunshine--icon--conference:before {
+  content: "\f144";
+}
+.sunshine--icon--tourist-guide:before {
+  content: "\f145";
+}
+.sunshine--icon--portrait:before {
+  content: "\f146";
+}
+.sunshine--icon--support:before {
+  content: "\f147";
+}
+.sunshine--icon--chart:before {
+  content: "\f148";
+}
+.sunshine--icon--cart:before {
+  content: "\f149";
+}
+.sunshine--icon--cart-2:before {
+  content: "\f14a";
+}
+.sunshine--icon--add-shopping-cart:before {
+  content: "\f14b";
+}
+.sunshine--icon--add-shopping-cart-2:before {
+  content: "\f14c";
+}
+.sunshine--icon--cloud:before {
+  content: "\f14d";
+}

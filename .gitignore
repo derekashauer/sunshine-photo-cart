@@ -1,0 +1,6 @@
+.DS_Store
+includes/vendor/
+.idea/
+.vscode/
+*.log
+Thumbs.db

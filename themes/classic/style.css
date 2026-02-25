@@ -1,0 +1,61 @@
+html { padding: 0; margin: 0; height: 100%; }
+body { padding: 0; margin: 0; min-height: 100%; }
+
+#sunshine--wrapper { display: flex; min-height: 100vh; }
+
+#sunshine--header { flex-shrink: 0; background: black; padding: 50px; width: 350px; box-sizing: border-box; }
+
+#sunshine--logo { font-size: clamp(26px, 4vw, 38px); color: #FFF; line-height: 1.1; }
+#sunshine--logo img { max-width: 100%; }
+#sunshine--logo a { color: #FFF; }
+
+#sunshine--header .sunshine--main-menu { margin: 30px auto; }
+#sunshine--header .sunshine--main-menu--toggle,
+#sunshine--header .sunshine--main-menu input { display: none; }
+#sunshine--header .sunshine--main-menu ul { display: flex; flex-direction: column; gap: 20px; padding: 0; margin: 0; }
+#sunshine--header .sunshine--main-menu li { display: inline-block !important; margin: 0 !important; padding: 0 !important; position: relative; font-size: 18px; }
+#sunshine--header .sunshine--main-menu a { text-decoration: none; color: #FFF; }
+#sunshine--header .sunshine--main-menu .sunshine--count { display: inline-block; width: 18px; height: 18px; text-align: center; font-size: 12px; line-height: 18px; border-radius: 50%; background: rgba(255,255,255,.2); margin-left: 5px; }
+#sunshine--header .sunshine--main-menu .sunshine--selected a { font-weight: bold; }
+
+body > .sunshine--main-menu { position: fixed; z-index: 99997; left: 0; bottom: 0; right: 0; margin: 0; padding: 20px 5%; box-shadow: 0 0 25px rgba(0,0,0,.2); border: none; }
+
+#sunshine { padding: 50px 75px; width: auto; flex-grow: 10; }
+
+#sunshine--search,
+#sunshine--password { display: block; }
+#sunshine--search input[type="text"] { width: 100%; box-sizing: border-box; }
+#sunshine--password input[type="password"] { width: 100%; box-sizing: border-box; }
+#sunshine--search .sunshine--button { }
+
+@media screen and (max-width: 860px) {
+
+	#sunshine--wrapper { display: block; }
+	#sunshine--header { position: static; height: auto; width: 100%; }
+	#sunshine--logo img { max-width: 200px; }
+	.sunshine--main-menu { margin: 30px 0 0 0; }
+	.sunshine--main-menu ul { flex-direction: row; }
+	.sunshine--main-menu li.sunshine--account,
+	.sunshine--main-menu li.sunshine--login { flex-grow: 10; text-align: right; }
+
+	#sunshine { padding: 75px 5%; }
+
+	#sunshine--header #sunshine--search,
+	#sunshine--header #sunshine--password { display: none; }
+
+}
+
+@media screen and (max-width: 730px) {
+
+	#sunshine--header { display: flex; gap: 50px; justify-content: space-between; align-items: center; }
+	#sunshine--header .sunshine--main-menu { margin: 0; }
+	#sunshine--header .sunshine--main-menu nav { display: none; }
+	#sunshine--header .sunshine--main-menu .sunshine--main-menu--open { display: block; }
+	#sunshine--header .sunshine--main-menu .sunshine--main-menu--close { display: none; }
+	#sunshine--header .sunshine--main-menu input[type="checkbox"]:checked ~ nav { display: block; position: fixed; z-index: 99998; top: 0; right: 0; bottom: 0; left: 0; background: #000; text-align: center; }
+	#sunshine--header .sunshine--main-menu input[type="checkbox"]:checked ~ .sunshine--main-menu--open { display: none; }
+	#sunshine--header .sunshine--main-menu input[type="checkbox"]:checked ~ .sunshine--main-menu--close { display: block !important; position: fixed; z-index: 99999; top: 15px; right: 15px; }
+	#sunshine--header .sunshine--main-menu ul { flex-direction: column; position: relative; top: 50%; transform: translateY(-50%); text-align: center; }
+	#sunshine--header .sunshine--main-menu li { display: block !important; text-align: center !important; }
+
+}

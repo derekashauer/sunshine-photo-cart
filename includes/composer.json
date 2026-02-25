@@ -1,0 +1,11 @@
+{
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
+    },
+    "require": {
+        "stripe/stripe-php": "^13.1",
+        "square/square": "32.0.0.20231018"
+    }
+}
