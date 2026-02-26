@@ -373,6 +373,10 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 
 		// Regenerate everything.
 		$new_metadata = wp_generate_attachment_metadata( $image_id, $file_path );
+
+		// Ensure intermediate sizes exist even when the image is smaller than the target size.
+		$new_metadata = sunshine_ensure_intermediate_sizes( $image_id, $new_metadata, $file_path );
+
 		$image_meta   = isset( $new_metadata['image_meta'] ) ? $new_metadata['image_meta'] : array();
 		if ( empty( $created_timestamp ) && ! empty( $image_meta['created_timestamp'] ) ) {
 			$created_timestamp = $image_meta['created_timestamp'];

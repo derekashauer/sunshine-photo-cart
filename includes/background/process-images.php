@@ -163,6 +163,10 @@ class SPC_Background_Process_Images extends SPC_Background_Process {
 			return false;
 		}
 
+		// Ensure intermediate sizes exist even when the image is smaller than the target size.
+		// This creates copies of the original so watermarks are applied to copies, not the original.
+		$metadata = sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $file_path );
+
 		// Handle secure file names if enabled
 		if ( ! function_exists( 'as3cf_get_attachment_url' ) && SPC()->get_option( 'use_secure_file_names' ) ) {
 			$file_name = basename( $file_path );

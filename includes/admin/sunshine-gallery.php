@@ -347,10 +347,6 @@ function sunshine_meta_gallery_images_display() {
 			<p class="drag-drop-info">
 				<span class="no-drag-drop"><?php esc_html_e( 'Drop files here', 'sunshine-photo-cart' ); ?> or </span><input id="plupload-browse-button" type="button" value="<?php esc_attr_e( 'Select Files from Computer', 'sunshine-photo-cart' ); ?>" class="button" />
 				<br /><span class="recommend-size">
-					<?php
-					/* translators: %s is the minimum image dimensions in width x height format */
-					echo esc_html( sprintf( __( 'Images must be larger than %s', 'sunshine-photo-cart' ), sunshine_get_large_dimension( 'w' ) . ' &times; ' . sunshine_get_large_dimension( 'h' ) ) );
-					?>
 					<?php if ( SPC()->get_option( 'watermark_image' ) ) { ?>
 						<br />
 						<label class="sunshine-switch small">
@@ -1219,63 +1215,6 @@ function sunshine_gallery_admin_ajax_upload() {
 			return;
 		}
 
-		// Check image dimensions against minimum size requirements (skip for non-image files like videos)
-		$large_size = SPC()->get_option( 'large_size' );
-		if ( isset( $large_size['w'] ) && isset( $large_size['h'] ) && strpos( $file_upload['type'], 'image' ) !== false ) {
-			$image_info = getimagesize( $file_upload['file'] );
-			if ( $image_info === false ) {
-				SPC()->log( 'Error: Could not get image dimensions' );
-				wp_send_json_error(
-					array(
-						'error' => __( 'Could not read image dimensions', 'sunshine-photo-cart' ),
-						'file'  => $file['name'],
-					)
-				);
-				return;
-			}
-
-			$image_width  = $image_info[0];
-			$image_height = $image_info[1];
-			$min_width    = intval( $large_size['w'] );
-			$min_height   = intval( $large_size['h'] );
-
-			if ( $image_width < $min_width || $image_height < $min_height ) {
-				SPC()->log(
-					sprintf(
-						'Error: Image too small. Required: %dx%d, Actual: %dx%d',
-						$min_width,
-						$min_height,
-						$image_width,
-						$image_height
-					)
-				);
-				wp_send_json_error(
-					array(
-						'error' => sprintf(
-							/* translators: %1$d is minimum width, %2$d is minimum height, %3$d is actual image width, %4$d is actual image height */
-							__( 'Image is too small. Image must be larger than: %1$dx%2$d pixels. Your image: %3$dx%4$d pixels', 'sunshine-photo-cart' ),
-							$min_width,
-							$min_height,
-							$image_width,
-							$image_height
-						) . ' <a href="https://www.sunshinephotocart.com/docs/minimum-image-size-requirement/" target="_blank" class="dashicons dashicons-editor-help"></a>',
-						'file'  => $file['name'],
-					)
-				);
-				return;
-			}
-
-			SPC()->log(
-				sprintf(
-					'Image size validation passed. Required: %dx%d, Actual: %dx%d',
-					$min_width,
-					$min_height,
-					$image_width,
-					$image_height
-				)
-			);
-		}
-
 		SPC()->log( 'File upload successful' );
 
 		$post_parent_id = intval( $_POST['gallery_id'] );
@@ -1384,6 +1323,9 @@ function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json
 		} else {
 			// Normal processing - generate full metadata including intermediate sizes
 			$attachment_image_meta = wp_generate_attachment_metadata( $attachment_id, $file_path );
+
+			// Ensure intermediate sizes exist even when the image is smaller than the target size.
+			$attachment_image_meta = sunshine_ensure_intermediate_sizes( $attachment_id, $attachment_image_meta, $file_path );
 		}
 
 		// Don't do this when offloading is enabled.
@@ -1848,63 +1790,6 @@ function sunshine_ajax_gallery_import() {
 	$perms = $stat['mode'] & 0000666;
 	@ chmod( $new_file_path, $perms );
 	$url = $upload_dir['url'] . '/' . $new_file_name;
-
-	// Check image dimensions against minimum size requirements
-	$large_size = SPC()->get_option( 'large_size' );
-	if ( isset( $large_size['w'] ) && isset( $large_size['h'] ) ) {
-		$image_info = getimagesize( $new_file_path );
-		if ( $image_info === false ) {
-			SPC()->log( 'Error: Could not get image dimensions for import' );
-			wp_send_json_error(
-				array(
-					'error' => __( 'Could not read image dimensions', 'sunshine-photo-cart' ),
-					'file'  => $file_name,
-				)
-			);
-			return;
-		}
-
-		$image_width  = $image_info[0];
-		$image_height = $image_info[1];
-		$min_width    = intval( $large_size['w'] );
-		$min_height   = intval( $large_size['h'] );
-
-		if ( $image_width < $min_width || $image_height < $min_height ) {
-			SPC()->log(
-				sprintf(
-					'Error: Imported image too small. Required: %dx%d, Actual: %dx%d',
-					$min_width,
-					$min_height,
-					$image_width,
-					$image_height
-				)
-			);
-			wp_send_json_error(
-				array(
-					'error' => sprintf(
-						/* translators: %1$d is minimum width, %2$d is minimum height, %3$d is actual image width, %4$d is actual image height */
-						__( 'Image is too small. Image must be larger than: %1$dx%2$d pixels. Your image: %3$dx%4$d pixels', 'sunshine-photo-cart' ),
-						$min_width,
-						$min_height,
-						$image_width,
-						$image_height
-					) . ' <a href="https://www.sunshinephotocart.com/docs/minimum-image-size-requirement/" target="_blank" class="dashicons dashicons-editor-help"></a>',
-					'file'  => $file_name,
-				)
-			);
-			return;
-		}
-
-		SPC()->log(
-			sprintf(
-				'Image size validation passed for import. Required: %dx%d, Actual: %dx%d',
-				$min_width,
-				$min_height,
-				$image_width,
-				$image_height
-			)
-		);
-	}
 
 	$data = sunshine_insert_gallery_image( $new_file_path, $gallery_id, 'data', $watermark );
 

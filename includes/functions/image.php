@@ -1,4 +1,68 @@
 <?php
+
+/**
+ * Ensure all Sunshine intermediate sizes exist in attachment metadata.
+ *
+ * When an uploaded image is smaller than a registered Sunshine size (e.g., sunshine-large),
+ * WordPress won't create an intermediate file for that size. This function creates a copy
+ * of the original file to serve as the intermediate, so watermarks are applied to the copy
+ * instead of the original.
+ *
+ * @param int    $attachment_id The attachment ID.
+ * @param array  $metadata      The attachment metadata array (modified in place).
+ * @param string $file_path     The full path to the original image file.
+ * @return array The modified metadata array.
+ */
+function sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $file_path ) {
+	if ( empty( $metadata['width'] ) || empty( $metadata['height'] ) ) {
+		return $metadata;
+	}
+
+	if ( ! file_exists( $file_path ) ) {
+		return $metadata;
+	}
+
+	$sizes_to_check = apply_filters( 'sunshine_image_sizes', array( 'sunshine-thumbnail', 'sunshine-large' ) );
+
+	if ( ! is_array( $metadata['sizes'] ) ) {
+		$metadata['sizes'] = array();
+	}
+
+	$file_info = pathinfo( $file_path );
+	$file_type = wp_check_filetype( $file_path );
+	$dir       = trailingslashit( $file_info['dirname'] );
+
+	foreach ( $sizes_to_check as $size_name ) {
+		if ( ! empty( $metadata['sizes'][ $size_name ] ) ) {
+			continue;
+		}
+
+		$image_width  = $metadata['width'];
+		$image_height = $metadata['height'];
+
+		// Generate a filename following WordPress intermediate naming conventions
+		$copy_name = $file_info['filename'] . '-' . $image_width . 'x' . $image_height . '.' . $file_info['extension'];
+		$copy_name = wp_unique_filename( $dir, $copy_name );
+		$copy_path = $dir . $copy_name;
+
+		if ( ! copy( $file_path, $copy_path ) ) {
+			SPC()->log( 'Failed to create intermediate copy for ' . $size_name . ': ' . $copy_path );
+			continue;
+		}
+
+		SPC()->log( 'Created intermediate copy for ' . $size_name . ': ' . $copy_name );
+
+		$metadata['sizes'][ $size_name ] = array(
+			'file'      => $copy_name,
+			'width'     => $image_width,
+			'height'    => $image_height,
+			'mime-type' => $file_type['type'],
+		);
+	}
+
+	return $metadata;
+}
+
 function sunshine_get_image_file_name( $image_id ) {
 	return get_post_meta( $image_id, 'sunshine_file_name', true );
 }
