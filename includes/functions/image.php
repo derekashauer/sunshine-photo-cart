@@ -96,40 +96,39 @@ function sunshine_get_images( $args = array() ) {
 	// Searching for images if we have a search term.
 	if ( ! empty( $args['s'] ) ) {
 
-		$post_parent = ( ! empty( $args['post_parent__in'] ) ) ? "AND {$wpdb->prefix}posts.post_parent IN (" . join( ',', $args['post_parent__in'] ) . ')' : '';
+		$post_parent = '';
+		if ( ! empty( $args['post_parent__in'] ) ) {
+			$parent_ids  = implode( ',', array_map( 'intval', $args['post_parent__in'] ) );
+			$post_parent = "AND p.post_parent IN ({$parent_ids})";
+		}
 
 		$query = "
-			SELECT {$wpdb->prefix}posts.*
-			FROM {$wpdb->prefix}posts
-			INNER JOIN {$wpdb->prefix}postmeta ON ( {$wpdb->prefix}posts.ID = {$wpdb->prefix}postmeta.post_id )
-			INNER JOIN {$wpdb->prefix}postmeta AS sunshine_meta ON ( {$wpdb->prefix}posts.ID = sunshine_meta.post_id AND sunshine_meta.meta_key = 'sunshine_file_name' )
-			WHERE 1=1
+			SELECT p.*
+			FROM {$wpdb->prefix}posts AS p
+			INNER JOIN {$wpdb->prefix}postmeta AS sunshine_meta
+				ON ( p.ID = sunshine_meta.post_id AND sunshine_meta.meta_key = 'sunshine_file_name' )
+			WHERE p.post_type = 'attachment'
+			AND ( p.post_status = 'publish' OR p.post_status = 'private' )
 			{$post_parent}
-			AND {$wpdb->prefix}posts.post_type = 'attachment'
 			AND (
-				({$wpdb->prefix}posts.post_title LIKE %s)
-				OR ({$wpdb->prefix}postmeta.meta_value LIKE %s)
-				OR ({$wpdb->prefix}posts.post_excerpt LIKE %s)
-				OR ({$wpdb->prefix}posts.post_content LIKE %s)
+				p.post_title LIKE %s
+				OR p.post_excerpt LIKE %s
+				OR p.post_content LIKE %s
+				OR sunshine_meta.meta_value LIKE %s
+				OR EXISTS (
+					SELECT 1 FROM {$wpdb->prefix}postmeta
+					WHERE post_id = p.ID
+					AND meta_key = '_wp_attachment_metadata'
+					AND meta_value LIKE %s
+				)
 			)
-			OR (
-				({$wpdb->prefix}postmeta.meta_key = 'sunshine_file_name' AND {$wpdb->prefix}postmeta.meta_value LIKE %s)
-				OR
-				({$wpdb->prefix}postmeta.meta_key = '_wp_attachment_metadata' AND {$wpdb->prefix}postmeta.meta_value LIKE %s)
-			)
-			AND (
-				{$wpdb->prefix}posts.post_type = 'attachment'
-				AND ({$wpdb->prefix}posts.post_status = 'publish' OR {$wpdb->prefix}posts.post_status = 'private')
-			)
-			AND {$wpdb->prefix}posts.ID > 0
-			GROUP BY {$wpdb->prefix}posts.ID
-			ORDER BY {$wpdb->prefix}posts.post_title LIKE %s DESC, {$wpdb->prefix}posts.post_date DESC
+			GROUP BY p.ID
+			ORDER BY p.post_title LIKE %s DESC, p.post_date DESC
 		";
 
 		// Preparing the SQL statement
 		$query = $wpdb->prepare(
 			$query,
-			"%{$args['s']}%",
 			"%{$args['s']}%",
 			"%{$args['s']}%",
 			"%{$args['s']}%",
