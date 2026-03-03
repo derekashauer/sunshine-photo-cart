@@ -1897,6 +1897,23 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			$line_items[] = $shipping_item;
 		}
 
+		// Add fees (e.g. payment gateway fee) as line items
+		$fees = $order->get_fees();
+		if ( ! empty( $fees ) ) {
+			foreach ( $fees as $fee ) {
+				$line_items[] = array(
+					'price_data' => array(
+						'currency'     => strtolower( $this->currency ),
+						'product_data' => array(
+							'name' => $fee['name'],
+						),
+						'unit_amount'  => $this->convert_amount_to_stripe( $fee['amount'] ),
+					),
+					'quantity'   => 1,
+				);
+			}
+		}
+
 		// Add tax as line item ONLY if NOT using Stripe Tax
 		if ( ! $use_stripe_tax && $order->get_tax() > 0 ) {
 			$line_items[] = array(
