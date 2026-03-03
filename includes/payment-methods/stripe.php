@@ -1833,11 +1833,6 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	 */
 	public function create_order_status( $status, $order ) {
 		if ( $order->get_payment_method() === $this->id ) {
-			$checkout_mode = $this->get_option( 'checkout_mode' );
-			if ( $checkout_mode === 'hosted' ) {
-				// For hosted checkout, stay pending until webhook confirms payment
-				return 'pending';
-			}
 			return 'new';
 		}
 		return $status;
@@ -2396,9 +2391,6 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 			// Post-process order (sends emails, updates stats, etc.)
 			SPC()->cart->post_process_order( $order );
-
-			// Set order status to 'new' AFTER post_process_order to avoid filter overwrite
-			$order->set_status( 'new', 'Stripe hosted checkout payment confirmed' );
 
 			SPC()->log( 'Stripe Webhook: Order ' . $order->get_name() . ' processed via checkout.session.completed' );
 			status_header( 200 );

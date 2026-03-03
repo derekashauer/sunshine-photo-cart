@@ -247,6 +247,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: Stripe hosted checkout not including gateway fees in line items
 * Fix: Stripe hosted checkout creating unnecessary duplicate payment intent
 * Fix: Stripe hosted checkout compatibility with Accounts v2 (pass customer ID)
+* Fix: Stripe hosted checkout overriding order status set by other plugins (e.g. digital downloads auto-ship)
 
 = 3.6.1 =
 * Fix: Image search query causing database lockups on sites with large posts/postmeta tables due to unconstrained joins
