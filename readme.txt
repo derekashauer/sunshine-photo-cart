@@ -243,6 +243,9 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.6.1 =
+* Fix: Image search query causing database lockups on sites with large posts/postmeta tables due to unconstrained joins
+
 = 3.6 2026-03-02 =
 * Add: Caption option added to Thumbnail Content setting (from EXIF metadata)
 * Add: Option to show image caption under single image view
@@ -276,7 +279,6 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Add: Log files are now downloaded through authenticated admin routes instead of direct file access
 * Security: Block direct web access to log files via .htaccess
 * Fix: Automatically prevent Yoast SEO and Rank Math from redirecting Sunshine gallery image pages when media pages are disabled
-
 = 3.5.7.3 =
 * Security: Add permission check on image data ajax request
 
