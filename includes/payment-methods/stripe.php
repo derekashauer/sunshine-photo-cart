@@ -1852,6 +1852,12 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	private function create_checkout_session( $order ) {
 		$this->setup();
 
+		// Get or create Stripe customer (required for Accounts v2)
+		$stripe_customer_id = $this->get_stripe_customer_id();
+		if ( empty( $stripe_customer_id ) ) {
+			$stripe_customer_id = $this->create_stripe_customer();
+		}
+
 		$line_items     = array();
 		$tax_mode       = $this->get_option( 'tax_mode' );
 		$use_stripe_tax = ( $tax_mode === 'stripe' );
@@ -1937,7 +1943,6 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 				'stripe_cancel'
 			),
 			'line_items'          => $line_items,
-			'customer_email'      => $order->get_email(),
 			'metadata'            => array(
 				'order_id'   => $order->get_id(),
 				'order_name' => $order->get_name(),
@@ -1951,6 +1956,13 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 				),
 			),
 		);
+
+		// Pass customer ID if available, fall back to email
+		if ( ! empty( $stripe_customer_id ) ) {
+			$args['customer'] = $stripe_customer_id;
+		} else {
+			$args['customer_email'] = $order->get_email();
+		}
 
 		// Enable Stripe Tax if selected
 		if ( $use_stripe_tax ) {
@@ -2805,7 +2817,11 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			return;
 		}
 
-		$current_order_id = SPC()->session->get( 'checkout_order_id' );
+		// Hosted checkout doesn't need a payment intent — it creates its own via Checkout Session
+		$checkout_mode = $this->get_option( 'checkout_mode' );
+		if ( $checkout_mode === 'hosted' ) {
+			return;
+		}
 
 		// Set things up here only when we select stripe.
 		$this->setup();
