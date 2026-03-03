@@ -428,7 +428,7 @@ class SPC_Frontend {
 					'favorites_url'        => sunshine_get_page_permalink( 'favorites' ),
 					'favorites'            => $favorites_data,
 					'is_logged_in'         => is_user_logged_in() ? 1 : 0,
-					'guest_favorites_mode' => ( ! is_user_logged_in() && SPC()->session->get( 'guest_favorites_mode' ) ) ? 1 : 0,
+					'guest_favorites_mode' => ( ! is_user_logged_in() && SPC()->get_option( 'enable_guest_favorites' ) && SPC()->session->get( 'guest_favorites_mode' ) ) ? 1 : 0,
 					'lang'                 => array(
 						'error'                   => __( 'Sorry, there was an error with your request', 'sunshine-photo-cart' ),
 						'max_images'              => __( 'You have already selected the maximum number of photos allowed', 'sunshine-photo-cart' ),

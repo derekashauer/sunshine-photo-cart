@@ -154,10 +154,10 @@ function sunshine_get_settings_fields() {
 	$log_desc = '';
 	if ( SPC()->get_option( 'enable_log' ) ) {
 		$download_url = wp_nonce_url( admin_url( 'admin-post.php?action=sunshine_download_log' ), 'sunshine_download_log' );
-		$log_desc     = '<br /><br /><a href="' . esc_url( $download_url ) . '" class="button-primary">' . __( 'Download log', 'sunshine-photo-cart' ) . '</a> ';
+		$log_desc     = '<br /><br /><a href="' . esc_url( $download_url ) . '" class="button button-small">' . __( 'Download log', 'sunshine-photo-cart' ) . '</a> ';
 		$clear_url    = admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine' );
 		$clear_url    = wp_nonce_url( $clear_url, 'sunshine_clear_log', 'sunshine_clear_log' );
-		$log_desc    .= '<a href="' . esc_url( $clear_url ) . '" class="button delete">' . __( 'Clear log', 'sunshine-photo-cart' ) . '</a>';
+		$log_desc    .= '<a href="' . esc_url( $clear_url ) . '" class="button button-small delete">' . __( 'Clear log', 'sunshine-photo-cart' ) . '</a>';
 	}
 	$general_fields['5200'] = array(
 		'name'        => __( 'Enable logging', 'sunshine-photo-cart' ),
@@ -168,10 +168,10 @@ function sunshine_get_settings_fields() {
 	$error_log_desc         = '';
 	if ( SPC()->get_option( 'enable_error_log' ) ) {
 		$download_error_url = wp_nonce_url( admin_url( 'admin-post.php?action=sunshine_download_error_log' ), 'sunshine_download_error_log' );
-		$error_log_desc     = '<br /><br /><a href="' . esc_url( $download_error_url ) . '" class="button-primary">' . __( 'Download error log', 'sunshine-photo-cart' ) . '</a> ';
+		$error_log_desc     = '<br /><br /><a href="' . esc_url( $download_error_url ) . '" class="button button-small">' . __( 'Download error log', 'sunshine-photo-cart' ) . '</a> ';
 		$clear_error_url    = admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine' );
 		$clear_error_url    = wp_nonce_url( $clear_error_url, 'sunshine_clear_error_log', 'sunshine_clear_error_log' );
-		$error_log_desc    .= '<a href="' . esc_url( $clear_error_url ) . '" class="button delete">' . __( 'Clear error log', 'sunshine-photo-cart' ) . '</a>';
+		$error_log_desc    .= '<a href="' . esc_url( $clear_error_url ) . '" class="button button-small delete">' . __( 'Clear error log', 'sunshine-photo-cart' ) . '</a>';
 	}
 	$general_fields['5205'] = array(
 		'name'        => __( 'Enable PHP error logging', 'sunshine-photo-cart' ),
@@ -751,6 +751,20 @@ function sunshine_get_settings_fields() {
 		'type'        => 'checkbox',
 		'description' => __( 'Allow users to save images to their favorites', 'sunshine-photo-cart' ),
 	);
+	$galleries_fields['5075'] = array(
+		'name'        => __( 'Enable Guest Favorites', 'sunshine-photo-cart' ),
+		'id'          => 'enable_guest_favorites',
+		'type'        => 'checkbox',
+		'description' => __( 'Allow visitors who are not logged in to save favorites for their browser session', 'sunshine-photo-cart' ),
+		'conditions'  => array(
+			array(
+				'compare' => '==',
+				'value'   => '1',
+				'field'   => 'enable_favorites',
+				'action'  => 'show',
+			),
+		),
+	);
 	$galleries_fields['5100'] = array(
 		'name'          => __( 'Enable Selection Tray', 'sunshine-photo-cart' ),
 		'id'            => 'enable_selection_tray',
@@ -1256,7 +1270,7 @@ function sunshine_get_settings_fields() {
 		'description' => '',
 	);
 	$design_fields[2100] = array(
-		'name'        => __( 'Auto-include Sunshine main menu', 'sunshine-photo-cart' ),
+		'name'          => __( 'Auto-include Sunshine main menu', 'sunshine-photo-cart' ),
 		'id'            => 'main_menu',
 		'type'          => 'checkbox',
 		'description'   => __( 'Automatically have the Sunshine Main Menu appear above the Sunshine content', 'sunshine-photo-cart' ),

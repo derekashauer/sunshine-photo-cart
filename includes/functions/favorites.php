@@ -130,7 +130,7 @@ function sunshine_add_to_favorites() {
 	}
 
 	// Guest user.
-	if ( ! SPC()->session->get( 'guest_favorites_mode' ) ) {
+	if ( ! SPC()->get_option( 'enable_guest_favorites' ) || ! SPC()->session->get( 'guest_favorites_mode' ) ) {
 		SPC()->session->set( 'pending_favorite', $image_id );
 		wp_send_json_success(
 			array(
@@ -161,6 +161,10 @@ function sunshine_add_to_favorites() {
 add_action( 'wp_ajax_nopriv_sunshine_guest_favorites_mode', 'sunshine_guest_favorites_mode' );
 function sunshine_guest_favorites_mode() {
 	sunshine_modal_check_security();
+
+	if ( ! SPC()->get_option( 'enable_guest_favorites' ) ) {
+		wp_send_json_error( __( 'Guest favorites are not enabled', 'sunshine-photo-cart' ) );
+	}
 
 	SPC()->session->set( 'guest_favorites_mode', 1 );
 

@@ -13,7 +13,9 @@
 		<?php echo sunshine_get_template_html( 'account/login', array( 'redirect' => '' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
 
-	<p><a href="#" id="sunshine--guest-favorites-modal--continue-guest" class="sunshine--button-alt"><?php esc_html_e( 'Continue as guest', 'sunshine-photo-cart' ); ?></a></p>
+	<?php if ( SPC()->get_option( 'enable_guest_favorites' ) ) { ?>
+		<p><a href="#" id="sunshine--guest-favorites-modal--continue-guest" class="sunshine--button-alt"><?php esc_html_e( 'Continue as guest', 'sunshine-photo-cart' ); ?></a></p>
+	<?php } ?>
 
 	<div id="sunshine--guest-favorites-modal--notice" style="display:none;"></div>
 

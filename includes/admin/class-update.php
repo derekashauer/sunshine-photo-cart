@@ -15,7 +15,7 @@ class SPC_Update {
 			$this->need_update = true;
 		}
 
-		$this->update_actions = array( '3.0', '3.0.17', '3.0.18', '3.5.6', '3.6.0' );
+		$this->update_actions = array( '3.0', '3.0.17', '3.0.18', '3.5.6', '3.6.0', '3.6.2' );
 
 		add_action( 'admin_init', array( $this, 'update_check' ) );
 		add_action( 'admin_menu', array( $this, 'menu' ) );
@@ -38,6 +38,7 @@ class SPC_Update {
 		add_action( 'sunshine_update_3.0.18', array( $this, 'update_3_0_18' ) );
 		add_action( 'sunshine_update_3.5.6', array( $this, 'update_3_5_6' ) );
 		add_action( 'sunshine_update_3.6.0', array( $this, 'update_3_6_0' ) );
+		add_action( 'sunshine_update_3.6.2', array( $this, 'update_3_6_2' ) );
 
 		add_action( 'activated_plugin', array( $this, 'check_plugin_activation' ), 10, 2 );
 		add_action( 'admin_notices', array( $this, 'show_deactivation_notice' ), 10, 2 );
@@ -236,6 +237,13 @@ class SPC_Update {
 		// Generate random log filename if logging is currently enabled.
 		if ( SPC()->get_option( 'enable_log' ) && ! get_option( 'sunshine_log_file_name' ) ) {
 			SPC()->generate_log_filename();
+		}
+	}
+
+	function update_3_6_2() {
+		// Enable guest favorites by default for existing installs.
+		if ( get_option( 'sunshine_enable_guest_favorites' ) === false ) {
+			SPC()->update_option( 'enable_guest_favorites', true );
 		}
 	}
 
