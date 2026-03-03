@@ -86,6 +86,46 @@ function sunshine_yoast_change_opengraph_image_height( $height ) {
 
 
 /**
+ * Prevent Yoast SEO from redirecting Sunshine gallery image attachment pages
+ *
+ * Yoast disables media pages by default, redirecting attachment URLs.
+ * Returning empty prevents the redirect for Sunshine gallery images.
+ *
+ * @since 3.x
+ * @param string $url        The attachment redirect URL.
+ * @param object $attachment The attachment post object.
+ * @return string Empty string to prevent redirect, or original URL.
+ */
+add_filter( 'wpseo_attachment_redirect_url', 'sunshine_yoast_prevent_image_redirect', 10, 2 );
+function sunshine_yoast_prevent_image_redirect( $url, $attachment ) {
+	if ( ! empty( $attachment->post_parent ) && get_post_type( $attachment->post_parent ) === 'sunshine-gallery' ) {
+		return '';
+	}
+	return $url;
+}
+
+/**
+ * Prevent Rank Math from redirecting Sunshine gallery image attachment pages
+ *
+ * Rank Math redirects attachments to parent posts by default.
+ * Returning empty prevents the redirect for Sunshine gallery images.
+ *
+ * @since 3.x
+ * @param string $redirect The calculated redirect URL.
+ * @return string Empty string to prevent redirect, or original URL.
+ */
+add_filter( 'rank_math/frontend/attachment/redirect_url', 'sunshine_rank_math_prevent_image_redirect' );
+function sunshine_rank_math_prevent_image_redirect( $redirect ) {
+	if ( is_attachment() ) {
+		$attachment = get_queried_object();
+		if ( ! empty( $attachment->post_parent ) && get_post_type( $attachment->post_parent ) === 'sunshine-gallery' ) {
+			return '';
+		}
+	}
+	return $redirect;
+}
+
+/**
  * Function to query and get IDs of galleries to be excluded from XML sitemaps
  *
  * @since  3.0.0
@@ -116,23 +156,6 @@ function sunshine_get_seo_sitemap_exclude_ids() {
 	return $exclude_galleries;
 }
 
-add_action( 'admin_init', 'sunshine_yoast_attachment_urls' );
-function sunshine_yoast_attachment_urls() {
-	if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) ) {
-		$wpseo_titles = get_option( 'wpseo_titles' );
-		if ( ! empty( $wpseo_titles ) ) {
-			if ( $wpseo_titles['disable-attachment'] == 1 ) {
-				SPC()->notices->add_admin( 'yoast_attachment_urls', __( 'Yoast SEO is blocking attachment URLs, please enable this feature for Sunshine to work properly', 'sunshine-photo-cart' ) . ' <a href="' . admin_url( 'admin.php?page=wpseo_page_settings#/media-pages#input-wpseo_titles-disable-attachment' ) . '" class="button">' . __( 'Click here', 'sunshine-photo-cart' ) . '</a>', 'error' );
-			}
-		}
-	}
-	if ( is_plugin_active( 'seo-by-rank-math/rank-math.php' ) ) {
-		$rank_math_options = get_option( 'rank-math-options-general' );
-		if ( ! empty( $rank_math_options ) && $rank_math_options['attachment_redirect_urls'] == 'on' ) {
-			SPC()->notices->add_admin( 'yoast_attachment_urls', __( 'Rank Math SEO is blocking attachment URLs, please disable the "Redirect Attachments" setting', 'sunshine-photo-cart' ) . ' <a href="' . admin_url( 'admin.php?page=rank-math-options-general' ) . '" class="button">' . __( 'Click here', 'sunshine-photo-cart' ) . '</a>', 'error' );
-		}
-	}
-}
 
 /**
  * Hide necessary galleries from Yoast SEO XML Sitemap

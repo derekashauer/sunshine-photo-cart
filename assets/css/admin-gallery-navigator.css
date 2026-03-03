@@ -5,6 +5,11 @@ body.sunshine-gallery-navigator-open {
 	overflow: hidden;
 }
 
+#sunshine-gallery-navigator-open .dashicons {
+	vertical-align: middle;
+	line-height: 1;
+}
+
 /* Modal Overlay */
 .sunshine-gallery-navigator-overlay {
 	position: fixed;

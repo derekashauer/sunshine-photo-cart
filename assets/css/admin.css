@@ -474,8 +474,10 @@ input:checked + .sunshine-switch-slider:before {
 .sunshine-meta-fields td { padding: 10px; border-bottom: 1px solid #EFEFEF; }
 .sunshine-meta-fields tr:last-child th,
 .sunshine-meta-fields tr:last-child td { border: none; }
-a.sunshine-admin-meta-doc:before { content: "\f135"; font-family: "SunshineIcons"; color: var(--light); }
+a.sunshine-admin-meta-doc:before { content: "\f135"; font-family: "SunshineIcons"; color: #999; }
 a.sunshine-admin-meta-doc { text-decoration: none; }
+a.sunshine-admin-meta-doc:hover:before { color: #0073aa; }
+a.sunshine-admin-meta-doc-right { float: right; }
 
 tr.sunshine-meta-field-upgrade td { background: var(--light); font-size: 12px; }
 tr.sunshine-meta-field-upgrade td:before { content: "\f133"; font-family: "SunshineIcons"; color: var(--accent-alt); display: inline-block; margin-right: 5px; font-size: 14px; }

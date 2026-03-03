@@ -94,9 +94,10 @@ function sunshine_get_settings_fields() {
 	);
 
 	$general_fields['4000'] = array(
-		'id'   => 'accounts',
-		'name' => __( 'Accounts', 'sunshine-photo-cart' ),
-		'type' => 'header',
+		'id'            => 'accounts',
+		'name'          => __( 'Accounts', 'sunshine-photo-cart' ),
+		'type'          => 'header',
+		'documentation' => 'https://www.sunshinephotocart.com/docs/customer-account-settings/',
 	);
 	$general_fields['4100'] = array(
 		'name'        => __( 'Disable Signup', 'sunshine-photo-cart' ),
@@ -164,7 +165,7 @@ function sunshine_get_settings_fields() {
 		'type'        => 'checkbox',
 		'description' => __( 'Enable logging of all events within Sunshine to help with debugging. Disable when not needed.', 'sunshine-photo-cart' ) . ' ' . $log_desc,
 	);
-	$error_log_desc = '';
+	$error_log_desc         = '';
 	if ( SPC()->get_option( 'enable_error_log' ) ) {
 		$download_error_url = wp_nonce_url( admin_url( 'admin-post.php?action=sunshine_download_error_log' ), 'sunshine_download_error_log' );
 		$error_log_desc     = '<br /><br /><a href="' . esc_url( $download_error_url ) . '" class="button-primary">' . __( 'Download error log', 'sunshine-photo-cart' ) . '</a> ';
@@ -200,10 +201,11 @@ function sunshine_get_settings_fields() {
 	/* PAGES */
 	$pages_fields         = array();
 	$pages_fields['1000'] = array(
-		'id'          => 'pages',
-		'name'        => __( 'Page Options', 'sunshine-photo-cart' ),
-		'description' => __( 'The following pages need selecting so that Sunshine knows where they are. These pages should have been created upon installation, if not you will need to create them.', 'sunshine-photo-cart' ) . ' <a href="https://www.sunshinephotocart.com/docs/shortcodes/" target="_blank">' . __( 'See required shortcodes', 'sunshine-photo-cart' ) . '</a>',
-		'type'        => 'header',
+		'id'            => 'pages',
+		'name'          => __( 'Page Options', 'sunshine-photo-cart' ),
+		'description'   => __( 'The following pages need selecting so that Sunshine knows where they are. These pages should have been created upon installation, if not you will need to create them.', 'sunshine-photo-cart' ) . ' <a href="https://www.sunshinephotocart.com/docs/shortcodes/" target="_blank">' . __( 'See required shortcodes', 'sunshine-photo-cart' ) . '</a>',
+		'type'          => 'header',
+		'documentation' => 'https://www.sunshinephotocart.com/docs/sunshine-pages/',
 	);
 	/*
 	$pages_fields['1100'] = array(
@@ -246,9 +248,10 @@ function sunshine_get_settings_fields() {
 	);
 
 	$pages_fields['2000'] = array(
-		'id'   => 'urls',
-		'name' => __( 'URLs', 'sunshine-photo-cart' ),
-		'type' => 'header',
+		'id'            => 'urls',
+		'name'          => __( 'URLs', 'sunshine-photo-cart' ),
+		'type'          => 'header',
+		'documentation' => 'https://www.sunshinephotocart.com/docs/how-to-customize-the-url-for-galleries/',
 	);
 	$pages_fields['2100'] = array(
 		'name'        => __( 'Gallery', 'sunshine-photo-cart' ),
@@ -279,10 +282,11 @@ function sunshine_get_settings_fields() {
 	);
 
 	$pages_fields['3000'] = array(
-		'id'          => 'endpoints',
-		'name'        => __( 'Account Endpoints', 'sunshine-photo-cart' ),
-		'description' => __( 'Endpoints are appended to your page URLs to handle specific actions on the account page.', 'sunshine-photo-cart' ),
-		'type'        => 'header',
+		'id'            => 'endpoints',
+		'name'          => __( 'Account Endpoints', 'sunshine-photo-cart' ),
+		'description'   => __( 'Endpoints are appended to your page URLs to handle specific actions on the account page.', 'sunshine-photo-cart' ),
+		'type'          => 'header',
+		'documentation' => 'https://www.sunshinephotocart.com/docs/how-to-customize-the-url-for-galleries/',
 	);
 	$pages_fields['3100'] = array(
 		'id'       => 'account_orders_endpoint',
@@ -363,9 +367,10 @@ function sunshine_get_settings_fields() {
 	/* GALLERIES */
 	$galleries_fields         = array();
 	$galleries_fields['1000'] = array(
-		'id'   => 'admin_options',
-		'name' => __( 'Administration Options', 'sunshine-photo-cart' ),
-		'type' => 'header',
+		'id'            => 'admin_options',
+		'name'          => __( 'Administration Options', 'sunshine-photo-cart' ),
+		'type'          => 'header',
+		'documentation' => 'https://www.sunshinephotocart.com/docs/gallery-administration-options/',
 	);
 	$galleries_fields['1100'] = array(
 		'name'        => __( 'Remove images', 'sunshine-photo-cart' ),
@@ -386,10 +391,11 @@ function sunshine_get_settings_fields() {
 		'description' => __( 'By default Sunshine hides images uploaded to Sunshine galleries in the Media Library, enabling this option will show them instead. Use at your own risk.', 'sunshine-photo-cart' ),
 	);
 	$galleries_fields['1350'] = array(
-		'name'        => __( 'Delay image processing', 'sunshine-photo-cart' ),
-		'id'          => 'delay_image_processing',
-		'type'        => 'checkbox',
-		'description' => __( 'When enabled, intermediate image sizes (thumbnails and large) and watermarks will be generated in the background after upload, allowing faster initial uploads. Images may not be immediately available in all sizes until processing completes.', 'sunshine-photo-cart' ),
+		'name'          => __( 'Delay image processing', 'sunshine-photo-cart' ),
+		'id'            => 'delay_image_processing',
+		'type'          => 'checkbox',
+		'description'   => __( 'When enabled, intermediate image sizes (thumbnails and large) and watermarks will be generated in the background after upload, allowing faster initial uploads. Images may not be immediately available in all sizes until processing completes.', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/delayed-image-processing/',
 	);
 	/*
 	Can't get it to work with regenerate, so no go yet
@@ -407,18 +413,20 @@ function sunshine_get_settings_fields() {
 		'type' => 'header',
 	);
 	$galleries_fields['1510'] = array(
-		'name'        => __( 'Image Theft Prevention', 'sunshine-photo-cart' ),
-		'id'          => 'disable_right_click',
-		'type'        => 'checkbox',
-		'description' => __( 'Enabling this option will disable the right click menu and also not allow images to be dragged/dropped to the desktop. NOT a 100% effective method, but should stop most people. Is NOT used for admin users.', 'sunshine-photo-cart' ),
-		'options'     => array( 1 ),
+		'name'          => __( 'Image Theft Prevention', 'sunshine-photo-cart' ),
+		'id'            => 'disable_right_click',
+		'type'          => 'checkbox',
+		'description'   => __( 'Enabling this option will disable the right click menu and also not allow images to be dragged/dropped to the desktop. NOT a 100% effective method, but should stop most people. Is NOT used for admin users.', 'sunshine-photo-cart' ),
+		'options'       => array( 1 ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/image-protection/',
 	);
 	$galleries_fields['1520'] = array(
-		'name'        => __( 'Proofing Only', 'sunshine-photo-cart' ),
-		'id'          => 'proofing',
-		'type'        => 'checkbox',
-		'description' => __( 'This will remove all aspects of purchasing abilities throughout the site, leaving just image viewing and adding to favorites', 'sunshine-photo-cart' ),
-		'options'     => array( 1 ),
+		'name'          => __( 'Proofing Only', 'sunshine-photo-cart' ),
+		'id'            => 'proofing',
+		'type'          => 'checkbox',
+		'description'   => __( 'This will remove all aspects of purchasing abilities throughout the site, leaving just image viewing and adding to favorites', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/proofing-only-mode/',
+		'options'       => array( 1 ),
 	);
 	$galleries_fields['1530'] = array(
 		'name'        => __( 'Allow product comments', 'sunshine-photo-cart' ),
@@ -428,11 +436,12 @@ function sunshine_get_settings_fields() {
 		'options'     => array( 1 ),
 	);
 	$galleries_fields['1540'] = array(
-		'name'        => __( 'Allow Store', 'sunshine-photo-cart' ),
-		'id'          => 'allow_store',
-		'type'        => 'checkbox',
-		'description' => __( 'Galleries come with a Store where products are shown first and customers add images to cart.', 'sunshine-photo-cart' ),
-		'options'     => array( 1 ),
+		'name'          => __( 'Allow Store', 'sunshine-photo-cart' ),
+		'id'            => 'allow_store',
+		'type'          => 'checkbox',
+		'description'   => __( 'Galleries come with a Store where products are shown first and customers add images to cart.', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/gallery-store-view/',
+		'options'       => array( 1 ),
 	);
 	$galleries_fields['1550'] = array(
 		'name'        => __( 'Allow Gallery Sharing', 'sunshine-photo-cart' ),
@@ -447,10 +456,11 @@ function sunshine_get_settings_fields() {
 		'description' => __( 'Allow users to share images within a gallery and favorites', 'sunshine-photo-cart' ),
 	);
 	$galleries_fields['1570'] = array(
-		'name'        => __( 'Use Secure File Names', 'sunshine-photo-cart' ),
-		'id'          => 'use_secure_file_names',
-		'type'        => 'checkbox',
-		'description' => __( 'Add random strings to image file names for added security', 'sunshine-photo-cart' ),
+		'name'          => __( 'Use Secure File Names', 'sunshine-photo-cart' ),
+		'id'            => 'use_secure_file_names',
+		'type'          => 'checkbox',
+		'description'   => __( 'Add random strings to image file names for added security', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/image-protection/',
 	);
 	$galleries_fields['1580'] = array(
 		'name'        => __( 'Enable Open Graph', 'sunshine-photo-cart' ),
@@ -471,10 +481,11 @@ function sunshine_get_settings_fields() {
 		'type' => 'header',
 	);
 	$galleries_fields['2150'] = array(
-		'name'    => __( 'Gallery Order', 'sunshine-photo-cart' ),
-		'id'      => 'gallery_order',
-		'type'    => 'select',
-		'options' => array(
+		'name'          => __( 'Gallery Order', 'sunshine-photo-cart' ),
+		'id'            => 'gallery_order',
+		'type'          => 'select',
+		'documentation' => 'https://www.sunshinephotocart.com/docs/ordering-your-galleries/',
+		'options'       => array(
 			'menu_order'   => __( 'Custom ordering', 'sunshine-photo-cart' ),
 			'date_new_old' => __( 'Gallery Creation Date (New to Old)', 'sunshine-photo-cart' ),
 			'date_old_new' => __( 'Gallery Creation Date (Old to New)', 'sunshine-photo-cart' ),
@@ -497,16 +508,18 @@ function sunshine_get_settings_fields() {
 	);
 
 	$galleries_fields['2210'] = array(
-		'name'        => __( 'Fallback Featured Image', 'sunshine-photo-cart' ),
-		'id'          => 'fallback_featured_image',
-		'type'        => 'image',
-		'description' => __( 'Upload a custom thumbnail image to be used when no specific featured image is set', 'sunshine-photo-cart' ),
+		'name'          => __( 'Fallback Featured Image', 'sunshine-photo-cart' ),
+		'id'            => 'fallback_featured_image',
+		'type'          => 'image',
+		'description'   => __( 'Upload a custom thumbnail image to be used when no specific featured image is set', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/default-featured-images/',
 	);
 	$galleries_fields['2215'] = array(
-		'name'        => __( 'Password Protected Featured Image', 'sunshine-photo-cart' ),
-		'id'          => 'password_featured_image',
-		'type'        => 'image',
-		'description' => __( 'Upload a custom thumbnail image to be used when a gallery is password protected', 'sunshine-photo-cart' ),
+		'name'          => __( 'Password Protected Featured Image', 'sunshine-photo-cart' ),
+		'id'            => 'password_featured_image',
+		'type'          => 'image',
+		'description'   => __( 'Upload a custom thumbnail image to be used when a gallery is password protected', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/default-featured-images/',
 	);
 
 	// Galleries Display Settings
@@ -547,11 +560,12 @@ function sunshine_get_settings_fields() {
 		),
 	);
 	$galleries_fields['2235'] = array(
-		'name'        => __( 'Galleries Per Page', 'sunshine-photo-cart' ),
-		'id'          => 'galleries_per_page',
-		'type'        => 'number',
-		'css'         => 'width: 50px;',
-		'description' => __( 'Set to 0 for unlimited galleries (no pagination)', 'sunshine-photo-cart' ),
+		'name'          => __( 'Galleries Per Page', 'sunshine-photo-cart' ),
+		'id'            => 'galleries_per_page',
+		'type'          => 'number',
+		'css'           => 'width: 50px;',
+		'description'   => __( 'Set to 0 for unlimited galleries (no pagination)', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/gallery-pagination/',
 	);
 	$galleries_fields['2240'] = array(
 		'name'    => __( 'Galleries Pagination Style', 'sunshine-photo-cart' ),
@@ -637,11 +651,12 @@ function sunshine_get_settings_fields() {
 	);
 
 	$galleries_fields['3000'] = array(
-		'id'          => 'images',
-		'name'        => __( 'Image Sizing', 'sunshine-photo-cart' ),
-		'type'        => 'header',
+		'id'            => 'images',
+		'name'          => __( 'Image Sizing', 'sunshine-photo-cart' ),
+		'type'          => 'header',
 		/* translators: %s is the URL to help documentation */
-		'description' => sprintf( __( 'Making changes to your image sizes does not immediately affect your galleries and you will need to regenerate all images. <a href="%s" target="_blank">Please see this help article</a>', 'sunshine-photo-cart' ), 'http://www.sunshinephotocart.com/docs/thumbnails-not-cropping/' ),
+		'description'   => sprintf( __( 'Making changes to your image sizes does not immediately affect your galleries and you will need to regenerate all images. <a href="%s" target="_blank">Please see this help article</a>', 'sunshine-photo-cart' ), 'http://www.sunshinephotocart.com/docs/thumbnails-not-cropping/' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/how-to-change-the-thumbnail-image-size/',
 	);
 	$galleries_fields['3100'] = array(
 		'name' => __( 'Thumbnail Size', 'sunshine-photo-cart' ),
@@ -679,9 +694,10 @@ function sunshine_get_settings_fields() {
 	);
 
 	$galleries_fields['4000'] = array(
-		'id'   => 'watermark',
-		'name' => __( 'Watermark', 'sunshine-photo-cart' ),
-		'type' => 'header',
+		'id'            => 'watermark',
+		'name'          => __( 'Watermark', 'sunshine-photo-cart' ),
+		'type'          => 'header',
+		'documentation' => 'https://www.sunshinephotocart.com/docs/add-watermark-image/',
 	);
 	$galleries_fields['4100'] = array(
 		'name'        => __( 'Watermark Image', 'sunshine-photo-cart' ),
@@ -724,9 +740,10 @@ function sunshine_get_settings_fields() {
 	);
 
 	$galleries_fields['5000'] = array(
-		'id'   => 'favorites_selections',
-		'name' => __( 'Favorites / Selections', 'sunshine-photo-cart' ),
-		'type' => 'header',
+		'id'            => 'favorites_selections',
+		'name'          => __( 'Favorites / Selections', 'sunshine-photo-cart' ),
+		'type'          => 'header',
+		'documentation' => 'https://www.sunshinephotocart.com/docs/favorites-selection-tray/',
 	);
 	$galleries_fields['5050'] = array(
 		'name'        => __( 'Enable Favorites', 'sunshine-photo-cart' ),
@@ -735,10 +752,11 @@ function sunshine_get_settings_fields() {
 		'description' => __( 'Allow users to save images to their favorites', 'sunshine-photo-cart' ),
 	);
 	$galleries_fields['5100'] = array(
-		'name'        => __( 'Enable Selection Tray', 'sunshine-photo-cart' ),
-		'id'          => 'enable_selection_tray',
-		'type'        => 'checkbox',
-		'description' => __( 'Show users their selected favorites in a persistent popup while viewing galleries', 'sunshine-photo-cart' ),
+		'name'          => __( 'Enable Selection Tray', 'sunshine-photo-cart' ),
+		'id'            => 'enable_selection_tray',
+		'type'          => 'checkbox',
+		'description'   => __( 'Show users their selected favorites in a persistent popup while viewing galleries', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/favorites-selection-tray/',
 	);
 	$galleries_fields['5200'] = array(
 		'name'        => __( 'Position', 'sunshine-photo-cart' ),
@@ -772,9 +790,10 @@ function sunshine_get_settings_fields() {
 
 	$tax_fields         = array();
 	$tax_fields['1000'] = array(
-		'id'   => 'taxes_enabled',
-		'name' => __( 'Enable Taxes', 'sunshine-photo-cart' ),
-		'type' => 'checkbox',
+		'id'            => 'taxes_enabled',
+		'name'          => __( 'Enable Taxes', 'sunshine-photo-cart' ),
+		'type'          => 'checkbox',
+		'documentation' => 'https://www.sunshinephotocart.com/docs/setting-up-taxes/',
 	);
 	$tax_fields['1100'] = array(
 		'id'          => 'tax_rates',
@@ -866,10 +885,11 @@ function sunshine_get_settings_fields() {
 
 	$checkout_fields        = array();
 	$checkout_fields['100'] = array(
-		'name'        => __( 'Distraction Free Checkout', 'sunshine-photo-cart' ),
-		'id'          => 'checkout_standalone',
-		'type'        => 'checkbox',
-		'description' => __( 'Remove site header/footer and let user focus only on the checkout experience', 'sunshine-photo-cart' ),
+		'name'          => __( 'Distraction Free Checkout', 'sunshine-photo-cart' ),
+		'id'            => 'checkout_standalone',
+		'type'          => 'checkbox',
+		'description'   => __( 'Remove site header/footer and let user focus only on the checkout experience', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/distraction-free-checkout/',
 	);
 
 	$checkout_fields['1100'] = array(
@@ -895,11 +915,12 @@ function sunshine_get_settings_fields() {
 		'options'     => SPC()->countries->get_countries(),
 	);
 	$checkout_fields['1300'] = array(
-		'name'        => __( 'Google Maps API Key', 'sunshine-photo-cart' ),
-		'id'          => 'google_maps_api_key',
-		'type'        => 'text',
+		'name'          => __( 'Google Maps API Key', 'sunshine-photo-cart' ),
+		'id'            => 'google_maps_api_key',
+		'type'          => 'text',
 		/* translators: %s is the URL to help documentation */
-		'description' => sprintf( __( 'Enter a Google API key to enable address autocomplete at checkout, <a href="%s" target="_blank">learn more here</a>', 'sunshine-photo-cart' ), 'https://www.sunshinephotocart.com/docs/address-autocomplete' ),
+		'description'   => sprintf( __( 'Enter a Google API key to enable address autocomplete at checkout, <a href="%s" target="_blank">learn more here</a>', 'sunshine-photo-cart' ), 'https://www.sunshinephotocart.com/docs/address-autocomplete' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/google-maps-api-key/',
 	);
 
 	$checkout_fields['1500'] = array(
@@ -909,16 +930,18 @@ function sunshine_get_settings_fields() {
 		'description' => '',
 	);
 	$checkout_fields['1501'] = array(
-		'name'        => __( 'Next Order Number', 'sunshine-photo-cart' ),
-		'id'          => 'next_order_number',
-		'type'        => 'number',
-		'description' => __( 'Leave blank to use default order numbering, otherwise set the next order number to be used', 'sunshine-photo-cart' ),
+		'name'          => __( 'Next Order Number', 'sunshine-photo-cart' ),
+		'id'            => 'next_order_number',
+		'type'          => 'number',
+		'description'   => __( 'Leave blank to use default order numbering, otherwise set the next order number to be used', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/order-numbers/',
 	);
 	$checkout_fields['1502'] = array(
-		'name'        => __( 'Disable Invoice', 'sunshine-photo-cart' ),
-		'id'          => 'disable_invoice',
-		'type'        => 'checkbox',
-		'description' => __( 'Disable invoices with orders', 'sunshine-photo-cart' ),
+		'name'          => __( 'Disable Invoice', 'sunshine-photo-cart' ),
+		'id'            => 'disable_invoice',
+		'type'          => 'checkbox',
+		'description'   => __( 'Disable invoices with orders', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/order-invoices/',
 	);
 
 	$checkout_fields['2000'] = array(
@@ -1051,15 +1074,16 @@ function sunshine_get_settings_fields() {
 		'description' => '',
 	);
 	$design_fields[1] = array(
-		'name'        => __( 'Pages Theme', 'sunshine-photo-cart' ),
-		'id'          => 'theme',
-		'type'        => 'select',
-		'options'     => array(
+		'name'          => __( 'Pages Theme', 'sunshine-photo-cart' ),
+		'id'            => 'theme',
+		'type'          => 'select',
+		'options'       => array(
 			'theme'   => __( 'My WordPress Theme', 'sunshine-photo-cart' ),
 			'classic' => __( 'Classic', 'sunshine-photo-cart' ),
 			'cover'   => __( 'Cover', 'sunshine-photo-cart' ),
 		),
-		'description' => __( 'What should be used for your general theme when viewing Sunshine pages', 'sunshine-photo-cart' ),
+		'description'   => __( 'What should be used for your general theme when viewing Sunshine pages', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/how-to-customize-the-look-and-feel-of-sunshine-theme/',
 	);
 	$design_fields[2] = array(
 		'name'        => __( 'Gallery Theme', 'sunshine-photo-cart' ),
@@ -1233,9 +1257,10 @@ function sunshine_get_settings_fields() {
 	);
 	$design_fields[2100] = array(
 		'name'        => __( 'Auto-include Sunshine main menu', 'sunshine-photo-cart' ),
-		'id'          => 'main_menu',
-		'type'        => 'checkbox',
-		'description' => __( 'Automatically have the Sunshine Main Menu appear above the Sunshine content', 'sunshine-photo-cart' ),
+		'id'            => 'main_menu',
+		'type'          => 'checkbox',
+		'description'   => __( 'Automatically have the Sunshine Main Menu appear above the Sunshine content', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/sunshine-main-menu/',
 	);
 	$design_fields[2200] = array(
 		'name'        => __( 'Hide link to main galleries page', 'sunshine-photo-cart' ),
@@ -1250,9 +1275,10 @@ function sunshine_get_settings_fields() {
 		'description' => '',
 	);
 	$design_fields[3100] = array(
-		'name' => __( 'Custom CSS for frontend', 'sunshine-photo-cart' ),
-		'id'   => 'css',
-		'type' => 'textarea',
+		'name'          => __( 'Custom CSS for frontend', 'sunshine-photo-cart' ),
+		'id'            => 'css',
+		'type'          => 'textarea',
+		'documentation' => 'https://www.sunshinephotocart.com/docs/custom-css/',
 	);
 	$design_fields[3150] = array(
 		'name' => __( 'Custom CSS for emails', 'sunshine-photo-cart' ),
@@ -1273,9 +1299,10 @@ function sunshine_get_settings_fields() {
 	);
 
 	$design_fields[4000] = array(
-		'name'        => __( 'Invoices', 'sunshine-photo-cart' ),
-		'type'        => 'header',
-		'description' => '',
+		'name'          => __( 'Invoices', 'sunshine-photo-cart' ),
+		'type'          => 'header',
+		'description'   => '',
+		'documentation' => 'https://www.sunshinephotocart.com/docs/order-invoices/',
 	);
 
 	$design_fields[4100] = array(
@@ -1474,9 +1501,10 @@ function sunshine_get_settings_fields() {
 	$privacy_fields = array();
 
 	$privacy_fields['1000'] = array(
-		'id'   => 'privacy_erasure_header',
-		'name' => __( 'Account Erasure Requests', 'sunshine-photo-cart' ),
-		'type' => 'header',
+		'id'            => 'privacy_erasure_header',
+		'name'          => __( 'Account Erasure Requests', 'sunshine-photo-cart' ),
+		'type'          => 'header',
+		'documentation' => 'https://www.sunshinephotocart.com/docs/privacy-data-retention/',
 	);
 	$privacy_fields['1100'] = array(
 		'id'          => 'privacy_erasure_remove_order_data',

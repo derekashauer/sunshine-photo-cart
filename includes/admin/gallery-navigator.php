@@ -40,7 +40,7 @@ function sunshine_gallery_navigator_button( $which ) {
 	?>
 	<div class="alignleft actions">
 		<button type="button" id="sunshine-gallery-navigator-open" class="button">
-			<span class="dashicons dashicons-category" style="margin-top: 3px;"></span>
+			<span class="dashicons dashicons-category"></span>
 			<?php esc_html_e( 'Gallery Navigator', 'sunshine-photo-cart' ); ?>
 		</button>
 	</div>

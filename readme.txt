@@ -5,8 +5,8 @@ Contributors: wpsunshine, sccr410
 Tags: client photo gallery, photo proofing, client proofing, sell photos, client galleries
 Requires at least: 5.5
 Requires PHP: 7.4
-Tested up to: 6.9
-Stable tag: 3.6-beta4
+Tested up to: 7.0
+Stable tag: 3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,7 +243,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.6 =
+= 3.6 2026-03-02 =
 * Add: Caption option added to Thumbnail Content setting (from EXIF metadata)
 * Add: Option to show image caption under single image view
 * Add: Admin Gallery Navigator - Easier gallery management with lots of galleries and hierarchy
@@ -275,6 +275,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Add: New "Enable PHP error logging" option to capture PHP notices, warnings, and fatal errors to a separate log file
 * Add: Log files are now downloaded through authenticated admin routes instead of direct file access
 * Security: Block direct web access to log files via .htaccess
+* Fix: Automatically prevent Yoast SEO and Rank Math from redirecting Sunshine gallery image pages when media pages are disabled
 
 = 3.5.7.3 =
 * Security: Add permission check on image data ajax request

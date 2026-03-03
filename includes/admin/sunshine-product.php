@@ -26,12 +26,13 @@ class Sunshine_Admin_Meta_Boxes_Product extends Sunshine_Admin_Meta_Boxes {
 		*/
 		$product_types              = sunshine_get_product_types( 'name' );
 		$price_level_fields['1']    = array(
-			'id'         => 'type',
-			'name'       => __( 'Type', 'sunshine-photo-cart' ),
-			'type'       => 'select',
-			'default'    => 'print',
-			'options'    => $product_types,
-			'conditions' => array(),
+			'id'            => 'type',
+			'name'          => __( 'Type', 'sunshine-photo-cart' ),
+			'type'          => 'select',
+			'default'       => 'print',
+			'options'       => $product_types,
+			'documentation' => 'https://www.sunshinephotocart.com/docs/how-to-create-a-product/',
+			'conditions'    => array(),
 		);
 		$price_level_fields['1000'] = array(
 			'id'      => 'price',
@@ -56,10 +57,11 @@ class Sunshine_Admin_Meta_Boxes_Product extends Sunshine_Admin_Meta_Boxes {
 			'description' => __( 'Do not require shipping for this item at checkout', 'sunshine-photo-cart' ),
 		);
 		$price_level_fields['1200'] = array(
-			'id'          => 'shipping',
-			'name'        => __( 'Extra Shipping Cost', 'sunshine-photo-cart' ),
-			'type'        => 'price',
-			'description' => __( 'Additional shipping cost, intended for larger items such as canvases', 'sunshine-photo-cart' ),
+			'id'            => 'shipping',
+			'name'          => __( 'Extra Shipping Cost', 'sunshine-photo-cart' ),
+			'type'          => 'price',
+			'description'   => __( 'Additional shipping cost, intended for larger items such as canvases', 'sunshine-photo-cart' ),
+			'documentation' => 'https://www.sunshinephotocart.com/docs/extra-shipping-fees-for-large-or-heavy-items/',
 			'conditions'  => array(
 				array(
 					'field'   => 'disable_shipping',

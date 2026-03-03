@@ -170,9 +170,14 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 							$class .= ' ' . $field['class'];
 						}
 
+						$label = isset( $field['name'] ) ? $field['name'] : '';
+						if ( ! empty( $field['documentation'] ) ) {
+							$label .= ' <a href="' . esc_url( $field['documentation'] ) . '" target="_blank" title="' . esc_attr__( 'Documentation', 'sunshine-photo-cart' ) . '" class="sunshine-admin-meta-doc"></a>';
+						}
+
 						add_settings_field(
 							$field['id'],
-							isset( $field['name'] ) ? $field['name'] : '',
+							$label,
 							array( $this, 'display_field' ),
 							$this->prefix . $data['id'],
 							$data['id'],
@@ -520,7 +525,11 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 
 				case 'header':
 				case 'title':
-					$html .= '<h3>' . wp_kses_post( $field['name'] ) . '</h3>';
+					$html .= '<h3>' . wp_kses_post( $field['name'] );
+					if ( ! empty( $field['documentation'] ) ) {
+						$html .= '<a href="' . esc_url( $field['documentation'] ) . '" target="_blank" title="' . esc_attr__( 'Documentation', 'sunshine-photo-cart' ) . '" class="sunshine-admin-meta-doc sunshine-admin-meta-doc-right"></a>';
+					}
+					$html .= '</h3>';
 					break;
 
 				case 'html':

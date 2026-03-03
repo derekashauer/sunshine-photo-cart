@@ -234,25 +234,6 @@ function sunshine_galleries_settings_promos( $fields ) {
 
 }
 
-// Payment settings promos.
-add_filter( 'sunshine_options_payment_methods', 'sunshine_payment_settings_promos', 100 );
-function sunshine_payment_settings_promos( $fields ) {
-
-	if ( SPC()->get_option( 'promos_hide' ) && SPC()->has_plan() ) {
-		return $fields;
-	}
-
-	$fields['9000'] = array(
-		'id'          => 'payment_gateways_promo',
-		'type'        => 'promo',
-		'url'         => 'https://www.sunshinephotocart.com/payment-gateways/',
-		'description' => sunshine_get_template_html( 'admin/promo/payment-gateways' ),
-	);
-
-	return $fields;
-
-}
-
 // Cloud Storage settings tab promo.
 // The Cloud Storage addon unhooks this and adds its own settings tab.
 add_filter( 'sunshine_options_extra', 'sunshine_cloud_storage_promo_tab', 5 );

@@ -57,15 +57,16 @@ class SPC_Payment_Method {
 			'placeholder' => $this->description,
 		);
 		$fields[40] = array(
-			'name'        => __( 'Fees', 'sunshine-photo-cart' ),
-			'id'          => $this->id . '_fee',
-			'type'        => 'radio',
-			'description' => __( 'Fees added to the order for using this payment method', 'sunshine-photo-cart' ),
-			'options'     => array(
+			'name'          => __( 'Fees', 'sunshine-photo-cart' ),
+			'id'            => $this->id . '_fee',
+			'type'          => 'radio',
+			'description'   => __( 'Fees added to the order for using this payment method', 'sunshine-photo-cart' ),
+			'options'       => array(
 				'none'    => __( 'No added fees', 'sunshine-photo-cart' ),
 				'percent' => __( 'Percentage of total order', 'sunshine-photo-cart' ),
 				'amount'  => __( 'Fixed amount', 'sunshine-photo-cart' ),
 			),
+			'documentation' => 'https://www.sunshinephotocart.com/docs/payment-gateway-fees/',
 		);
 		$fields[41] = array(
 			'name'        => __( 'Fee Name', 'sunshine-photo-cart' ),

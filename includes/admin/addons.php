@@ -19,7 +19,7 @@ function is_sunshine_addon_active( $addon ) {
 
 	// Original license-based check - commented out for later restoration.
 	// if ( array_key_exists( $addon, SPC()->active_addons ) ) {
-	// 	return true;
+	// return true;
 	// }
 	// return false;
 }

@@ -46,15 +46,16 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 				'icon'   => SUNSHINE_PHOTO_CART_PATH . 'assets/images/icons/settings.svg',
 				'fields' => array(
 					array(
-						'id'      => 'status',
-						'name'    => __( 'Gallery Type', 'sunshine-photo-cart' ),
-						'type'    => 'radio',
-						'default' => 'default',
-						'options' => array(
+						'id'            => 'status',
+						'name'          => __( 'Gallery Type', 'sunshine-photo-cart' ),
+						'type'          => 'radio',
+						'default'       => 'default',
+						'options'       => array(
 							'default'  => __( 'Default', 'sunshine-photo-cart' ),
 							'password' => __( 'Password Protected', 'sunshine-photo-cart' ),
 							'private'  => __( 'Private (only specified users)', 'sunshine-photo-cart' ),
 						),
+						'documentation' => 'https://www.sunshinephotocart.com/docs/gallery-types/',
 					),
 					array(
 						'id'         => 'password',
@@ -100,15 +101,16 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						),
 					),
 					array(
-						'id'      => 'access_type',
-						'name'    => __( 'Access Type', 'sunshine-photo-cart' ),
-						'type'    => 'radio',
-						'options' => array(
+						'id'            => 'access_type',
+						'name'          => __( 'Access Type', 'sunshine-photo-cart' ),
+						'type'          => 'radio',
+						'options'       => array(
 							''        => __( 'Default', 'sunshine-photo-cart' ),
 							'account' => __( 'Registered and logged in', 'sunshine-photo-cart' ),
 							'email'   => __( 'Provide email address', 'sunshine-photo-cart' ),
 							'url'     => __( 'Direct URL', 'sunshine-photo-cart' ),
 						),
+						'documentation' => 'https://www.sunshinephotocart.com/docs/gallery-access-types/',
 						/*
 						'conditions' => array(
 							array(
@@ -122,16 +124,18 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						*/
 					),
 					array(
-						'id'          => 'end_date',
-						'name'        => __( 'Expiration', 'sunshine-photo-cart' ),
-						'type'        => 'date_time',
-						'description' => __( 'When will this gallery expire and no longer be accessible', 'sunshine-photo-cart' ),
+						'id'            => 'end_date',
+						'name'          => __( 'Expiration', 'sunshine-photo-cart' ),
+						'type'          => 'date_time',
+						'description'   => __( 'When will this gallery expire and no longer be accessible', 'sunshine-photo-cart' ),
+						'documentation' => 'https://www.sunshinephotocart.com/docs/gallery-expiration/',
 					),
 					array(
-						'id'          => 'image_comments',
-						'name'        => __( 'Comments', 'sunshine-photo-cart' ),
-						'type'        => 'checkbox',
-						'description' => __( 'Allow comments on images in this gallery', 'sunshine-photo-cart' ),
+						'id'            => 'image_comments',
+						'name'          => __( 'Comments', 'sunshine-photo-cart' ),
+						'type'          => 'checkbox',
+						'description'   => __( 'Allow comments on images in this gallery', 'sunshine-photo-cart' ),
+						'documentation' => 'https://www.sunshinephotocart.com/docs/enable-comments-images-gallery/',
 					),
 					array(
 						'id'          => 'image_comments_approval',
