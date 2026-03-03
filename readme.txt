@@ -245,6 +245,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 = 3.6.1 =
 * Fix: Image search query causing database lockups on sites with large posts/postmeta tables due to unconstrained joins
+* Fix: Stripe inline checkout orders not updating to paid status when using webhooks
 
 = 3.6 2026-03-02 =
 * Add: Caption option added to Thumbnail Content setting (from EXIF metadata)

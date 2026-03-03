@@ -1838,6 +1838,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 				// For hosted checkout, stay pending until webhook confirms payment
 				return 'pending';
 			}
+			return 'new';
 		}
 		return $status;
 	}

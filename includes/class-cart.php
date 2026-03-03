@@ -2231,12 +2231,6 @@ class SPC_Cart {
 
 		SPC()->session->set( 'checkout_order_id', '' );
 
-		// Clear Stripe payment intent data to prevent reuse in next checkout.
-		// This is a safety measure in case the Stripe payment method doesn't clear its own session.
-		SPC()->session->set( 'stripe_payment_intent_id', '' );
-		SPC()->session->set( 'stripe_client_secret', '' );
-		SPC()->session->set( 'stripe_idempotency_key', '' );
-
 	}
 
 	public function get_active_section() {
