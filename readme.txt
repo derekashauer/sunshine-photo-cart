@@ -243,7 +243,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.6.2 =
+= 3.6.2 - March 6, 2026 =
 * Security: Added nonce verification and access control checks to multi-image select AJAX handlers
 * Fix: "Always collect an address" fields not reloading state/province options when country changes
 * Fix: Tax rates not applied when using customer address fields instead of shipping address
@@ -259,7 +259,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: Share favorites not working for guests even when guest favorites are enabled
 * Fix: Guest favorites not merging into account after logging in or registering
 
-= 3.6.1 =
+= 3.6.1 2026-03-03 =
 * Add: Setting to enable or disable guest favorites
 * Fix: Image search query causing database lockups on sites with large posts/postmeta tables due to unconstrained joins
 * Fix: Stripe inline checkout orders not updating to paid status when using webhooks
