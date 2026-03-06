@@ -36,7 +36,7 @@ if ( ! empty( $note ) ) {
 </table>
 
 <p align="center">
-	<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-customers&customer=' . SPC()->customer->ID ) ); ?>" class="button">
+	<a href="<?php echo esc_url( $favorites_url ); ?>" class="button">
 		<?php esc_html_e( 'View all favorites', 'sunshine-photo-cart' ); ?>
 	</a>
 </p>

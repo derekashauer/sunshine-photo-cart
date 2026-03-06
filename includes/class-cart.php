@@ -674,7 +674,14 @@ class SPC_Cart {
 			$prefix = 'shipping_';
 		}
 		*/
-		$prefix = 'shipping_';
+		// Check if customer address data exists in checkout session (set by require_address).
+		// Use it for tax matching since its presence means it was collected at checkout.
+		$checkout_data = $this->get_checkout_data();
+		if ( ! empty( $checkout_data['customer_country'] ) ) {
+			$prefix = 'customer_';
+		} else {
+			$prefix = 'shipping_';
+		}
 
 		// Match address to tax rate
 		$customer_country  = $this->get_checkout_data_item( $prefix . 'country' );
@@ -1466,9 +1473,13 @@ class SPC_Cart {
 					$fields['shipping_method']['summary'] = $this->shipping_method->get_name();
 				}
 			}
-		} elseif ( SPC()->get_option( 'require_address' ) ) {
+		} elseif ( SPC()->get_option( 'require_address' ) || sunshine_tax_rates_need_address() ) {
 
-			$default_country   = SPC()->customer->get_shipping_country();
+			$default_country = SPC()->customer->get_shipping_country();
+			if ( $this->get_checkout_data_item( 'customer_country' ) ) {
+				$default_country = $this->get_checkout_data_item( 'customer_country' );
+			}
+
 			$fields['address'] = array(
 				'active' => false,
 				'name'   => __( 'Address', 'sunshine-photo-cart' ),

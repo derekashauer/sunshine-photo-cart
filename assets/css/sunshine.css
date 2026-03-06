@@ -170,16 +170,16 @@
 #sunshine--selection-tray-widget--title { font-size: 14px; font-weight: bold; text-transform: uppercase; color: var(--sunshine--dark); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
 #sunshine--selection-tray-widget--title:after { content: "\f115"; font-family: "SunshineIcons"; display: inline-block; }
 #sunshine--selection-tray-widget--title:hover { color: var(--sunshine--color); }
-#sunshine--selection-tray-widget--images { display: flex; gap: 5px; padding-bottom: 5px; max-height: 60px; overflow-x: auto; }
+#sunshine--selection-tray-widget--images { display: flex; gap: 5px; max-height: 60px; overflow-x: auto; }
 #sunshine--selection-tray-widget--images::-webkit-scrollbar { width: 2px; height: 5px; }
 #sunshine--selection-tray-widget--images::-webkit-scrollbar-track { background: var(--sunshine--light-gray); }
 #sunshine--selection-tray-widget--images::-webkit-scrollbar-thumb { background: var(--sunshine--gray); }
 .sunshine--selection-tray-widget--image { flex-shrink: 0; position: relative; width: 60px; height: 60px; border-radius: 3px; overflow: hidden; }
 .sunshine--selection-tray-widget--image img { width: 100%; height: 100%; object-fit: cover; }
-.sunshine--selection-tray-widget--delete { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; border: none; border-radius: 50%; background: rgba(0,0,0,0.6); color: #fff; font-size: 10px; cursor: pointer; padding: 0; line-height: 1; }
+.sunshine--selection-tray-widget--delete { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; border: none; border-radius: 50%; background: rgba(0,0,0,0.6); color: #fff; font-size: 10px; cursor: pointer; padding: 0; line-height: 1; text-align: center; }
 .sunshine--selection-tray-widget--delete:before { content: "\f10c"; font-family: "SunshineIcons"; }
-.sunshine--selection-tray-widget--delete:hover { background: var(--sunshine--color); }
-#sunshine--selection-tray-widget--minimize { position: absolute; top: -12px; right: -18px; transform: translateX(-50%); width: 18px; height: 18px; border: none; border-radius: 50%; background: var(--sunshine--dark); color: #fff; font-size: 8px; cursor: pointer; padding: 0; line-height: 1; opacity: 0; transition: opacity 0.2s; }
+.sunshine--selection-tray-widget--delete:hover { background: red; }
+#sunshine--selection-tray-widget--minimize { position: absolute; top: -12px; right: -18px; transform: translateX(-50%); width: 18px; height: 18px; border: none; border-radius: 50%; background: var(--sunshine--dark); color: #fff; font-size: 8px; cursor: pointer; padding: 0; line-height: 1; opacity: 0; transition: opacity 0.2s; text-align: center; }
 #sunshine--selection-tray-widget--minimize:before { content: "\f11b"; font-family: "SunshineIcons"; }
 #sunshine--selection-tray-widget:hover #sunshine--selection-tray-widget--minimize { opacity: 1; }
 #sunshine--selection-tray-minimized { display: none; position: fixed; z-index: 99996; bottom: 0; right: 20px; background: #FFF; color: var(--sunshine--dark); border: none; border-radius: 8px 8px 0 0; padding: 8px 12px; cursor: pointer; font-size: 14px; box-shadow: 0 5px 25px rgba(0,0,0,0.3); }

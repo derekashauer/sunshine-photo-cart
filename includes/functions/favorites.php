@@ -17,7 +17,7 @@ function sunshine_add_session_favorite( $image_id ) {
 	if ( ! in_array( $image_id, $favorites, true ) ) {
 		$favorites[] = $image_id;
 		SPC()->session->set( 'favorites', $favorites );
-		do_action( 'sunshine_add_favorite', $image_id );
+		do_action( 'sunshine_add_favorite', $image_id, null );
 	}
 	return count( $favorites );
 }
@@ -29,7 +29,7 @@ function sunshine_delete_session_favorite( $image_id ) {
 		unset( $favorites[ $key ] );
 		$favorites = array_values( $favorites );
 		SPC()->session->set( 'favorites', $favorites );
-		do_action( 'sunshine_delete_favorite', $image_id );
+		do_action( 'sunshine_delete_favorite', $image_id, null );
 	}
 	return count( $favorites );
 }
@@ -55,7 +55,7 @@ function sunshine_account_require_login_message_favorites( $message, $vars ) {
 
 add_action( 'sunshine_after_login', 'sunshine_after_login_add_to_favorites' );
 add_action( 'sunshine_after_signup', 'sunshine_after_login_add_to_favorites' );
-function sunshine_after_login_add_to_favorites( $user_id ) {
+function sunshine_after_login_add_to_favorites( $data = null ) {
 	// Single pending favorite (from modal flow).
 	$image_id = SPC()->session->get( 'add_to_favorites' );
 	if ( $image_id ) {
@@ -79,8 +79,28 @@ function sunshine_after_login_add_to_favorites( $user_id ) {
 		sunshine_clear_session_favorites();
 		SPC()->session->delete( 'guest_favorites_mode' );
 		SPC()->notices->add( __( 'Your selections have been saved to your account', 'sunshine-photo-cart' ) );
-		SPC()->log( 'Merged ' . count( $session_favorites ) . ' session favorites into account for user ' . $user_id );
+		SPC()->log( 'Merged ' . count( $session_favorites ) . ' session favorites into account for user ' . SPC()->customer->get_id() );
 	}
+}
+
+add_action( 'wp_login', 'sunshine_merge_favorites_on_wp_login', 10, 2 );
+function sunshine_merge_favorites_on_wp_login( $user_login, $user ) {
+	$session_favorites = sunshine_get_session_favorite_ids();
+	if ( empty( $session_favorites ) ) {
+		return;
+	}
+
+	// Ensure the customer object is set to the logging-in user.
+	if ( empty( SPC()->customer ) || SPC()->customer->get_id() !== $user->ID ) {
+		SPC()->customer = new SPC_Customer( $user->ID );
+	}
+
+	foreach ( $session_favorites as $fav_id ) {
+		SPC()->customer->add_favorite( $fav_id );
+	}
+	sunshine_clear_session_favorites();
+	SPC()->session->delete( 'guest_favorites_mode' );
+	SPC()->log( 'Merged ' . count( $session_favorites ) . ' session favorites on wp_login for user ' . $user->ID );
 }
 
 add_action( 'sunshine_modal_display_guest_favorites', 'sunshine_modal_display_guest_favorites' );
@@ -320,11 +340,20 @@ function sunshine_modal_share_favorites() {
 }
 
 add_action( 'wp_ajax_sunshine_modal_favorites_share_process', 'sunshine_modal_favorites_share_process' );
+add_action( 'wp_ajax_nopriv_sunshine_modal_favorites_share_process', 'sunshine_modal_favorites_share_process' );
 function sunshine_modal_favorites_share_process() {
 
 	sunshine_modal_check_security( 'sunshine_favorites_share' );
 
-	do_action( 'sunshine_favorites_share', $_POST );
+	$post_data = wp_unslash( $_POST );
+
+	// For guests, attach sender info from the share form.
+	if ( ! is_user_logged_in() ) {
+		$post_data['guest_name']  = ! empty( $post_data['sender_name'] ) ? sanitize_text_field( $post_data['sender_name'] ) : '';
+		$post_data['guest_email'] = ! empty( $post_data['sender_email'] ) ? sanitize_email( $post_data['sender_email'] ) : '';
+	}
+
+	do_action( 'sunshine_favorites_share', $post_data );
 
 	SPC()->log( 'Favorites shared' );
 
@@ -346,8 +375,19 @@ function sunshine_delete_favorite( $image_id ) {
 	update_post_meta( $image_id, 'favorite_count', $favorite_count );
 }
 
+function sunshine_create_guest_favorites_share_key() {
+	$favorite_ids = sunshine_get_session_favorite_ids();
+	if ( empty( $favorite_ids ) ) {
+		return false;
+	}
+	$key = wp_generate_password( 20, false );
+	set_transient( 'sunshine_shared_favorites_' . $key, $favorite_ids, 30 * DAY_IN_SECONDS );
+	return $key;
+}
+
 function sunshine_get_favorites_by_key( $key, $ids = true ) {
 
+	// Check registered users first.
 	$args  = array(
 		'meta_key'   => 'sunshine_favorite_key',
 		'meta_value' => $key,
@@ -361,6 +401,22 @@ function sunshine_get_favorites_by_key( $key, $ids = true ) {
 			$images = $customer->get_favorites();
 		}
 		return $images;
+	}
+
+	// Check guest share transients.
+	$transient_ids = get_transient( 'sunshine_shared_favorites_' . $key );
+	if ( ! empty( $transient_ids ) && is_array( $transient_ids ) ) {
+		if ( $ids ) {
+			return array_map( 'intval', $transient_ids );
+		}
+		$images = array();
+		foreach ( $transient_ids as $image_id ) {
+			$image = sunshine_get_image( intval( $image_id ) );
+			if ( $image && $image->exists() ) {
+				$images[] = $image;
+			}
+		}
+		return ! empty( $images ) ? $images : false;
 	}
 
 }

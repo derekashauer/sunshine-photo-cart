@@ -364,6 +364,10 @@ function sunshine_gallery_pagination_load() {
 	check_ajax_referer( 'sunshinephotocart', 'security' );
 
 	$gallery = sunshine_get_gallery( intval( $_POST['gallery'] ) );
+	if ( empty( $gallery ) || ! $gallery->can_access() ) {
+		wp_send_json_error( array( 'reason' => __( 'Access denied', 'sunshine-photo-cart' ) ) );
+	}
+
 	$args    = array(
 		'offset'         => sunshine_gallery_images_per_page() * intval( $_POST['page'] ),
 		'posts_per_page' => sunshine_gallery_images_per_page(),

@@ -1,6 +1,16 @@
 <form method="post" action="" id="sunshine--favorites--share">
 	<?php wp_nonce_field( 'sunshine_favorites_share', 'sunshine_favorites_share' ); ?>
 	<div id="sunshine--favorites--share--title" class="sunshine--modal--title"><?php esc_html_e( 'Share Your Favorites', 'sunshine-photo-cart' ); ?></div>
+	<?php if ( ! is_user_logged_in() ) : ?>
+	<div class="sunshine--form--field">
+		<label for="sunshine-favorites-share-sender-name"><?php esc_html_e( 'Your Name', 'sunshine-photo-cart' ); ?></label>
+		<input type="text" name="sunshine_favorites_share_sender_name" id="sunshine-favorites-share-sender-name" />
+	</div>
+	<div class="sunshine--form--field">
+		<label for="sunshine-favorites-share-sender-email"><?php esc_html_e( 'Your Email', 'sunshine-photo-cart' ); ?></label>
+		<input type="email" name="sunshine_favorites_share_sender_email" id="sunshine-favorites-share-sender-email" />
+	</div>
+	<?php endif; ?>
 	<div class="sunshine--form--field">
 		<label for="sunshine-favorites-share-message"><?php esc_html_e( 'Recipients', 'sunshine-photo-cart' ); ?></label>
 		<input type="checkbox" name="sunshine_favorites_share_recipients[]" value="admin" checked="checked" /> <?php bloginfo( 'name' ); ?><br />

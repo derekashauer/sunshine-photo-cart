@@ -761,7 +761,7 @@ class SPC_Frontend {
 					);
 				}
 
-				if ( is_user_logged_in() && SPC()->get_option( 'allow_image_sharing' ) ) {
+				if ( SPC()->get_option( 'allow_image_sharing' ) && ( is_user_logged_in() || ! empty( sunshine_get_session_favorite_ids() ) ) ) {
 					$menu[10] = array(
 						'name'    => __( 'Share your favorites', 'sunshine-photo-cart' ),
 						'class'   => 'sunshine--favorites-share',

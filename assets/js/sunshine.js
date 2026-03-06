@@ -547,6 +547,7 @@ jQuery( document ).ready(function($){
             url: sunshine_photo_cart.ajax_url,
             data: {
                 action: 'sunshine_multi_image_select_images',
+				security: sunshine_photo_cart.security,
 				ref: ref,
 				key: key,
                 gallery_id: gallery_id,
@@ -620,6 +621,7 @@ jQuery( document ).ready(function($){
 			url: sunshine_photo_cart.ajax_url,
 			data: {
 				action: 'sunshine_multi_image_select_gallery_images',
+				security: sunshine_photo_cart.security,
 				gallery_id: gallery_id,
 				product_id: product_id,
 				image_count: image_count,
@@ -760,6 +762,7 @@ jQuery( document ).ready(function($){
 			url: sunshine_photo_cart.ajax_url,
 			data: {
 				action: 'sunshine_multi_image_select_images_item',
+				security: sunshine_photo_cart.security,
 				selected_image_ids: selectedIds,
 				key: key,
 				ref: ref,
@@ -1174,7 +1177,9 @@ jQuery( document ).ready(function($){
                 recipients: recipients,
                 email: email,
                 note: note,
-                security: security
+                security: security,
+                sender_name: $( 'input[name="sunshine_favorites_share_sender_name"]' ).val() || '',
+                sender_email: $( 'input[name="sunshine_favorites_share_sender_email"]' ).val() || ''
             },
             success: function( result, textStatus, XMLHttpRequest) {
                 if ( result.success ) {

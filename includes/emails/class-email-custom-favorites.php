@@ -32,16 +32,33 @@ class SPC_Email_Custom_Favorites extends SPC_Email {
 		$this->set_template( $this->id );
 		$this->set_subject( $this->get_subject() );
 
+		// Generate favorites URL — use transient key for guests, user meta key for logged-in.
+		if ( SPC()->customer->is_guest() ) {
+			$share_key = sunshine_create_guest_favorites_share_key();
+		} else {
+			$share_key = SPC()->customer->get_favorite_key();
+		}
+
 		$args = array(
 			'favorites'     => SPC()->customer->get_favorites(),
 			'note'          => wpautop( sanitize_textarea_field( $post_data['note'] ) ),
-			'favorites_url' => add_query_arg( 'favorites_key', SPC()->customer->get_favorite_key(), sunshine_get_page_permalink( 'favorites' ) ),
+			'favorites_url' => add_query_arg( 'favorites_key', $share_key, sunshine_get_page_permalink( 'favorites' ) ),
 		);
 		$this->add_args( $args );
 
+		// Use guest-provided name if available, otherwise use customer data.
+		if ( ! empty( $post_data['guest_name'] ) ) {
+			$name_parts = explode( ' ', $post_data['guest_name'], 2 );
+			$first_name = $name_parts[0];
+			$last_name  = isset( $name_parts[1] ) ? $name_parts[1] : '';
+		} else {
+			$first_name = SPC()->customer->get_first_name();
+			$last_name  = SPC()->customer->get_last_name();
+		}
+
 		$search_replace = array(
-			'first_name' => SPC()->customer->get_first_name(),
-			'last_name'  => SPC()->customer->get_last_name(),
+			'first_name' => $first_name,
+			'last_name'  => $last_name,
 		);
 		$this->add_search_replace( $search_replace );
 

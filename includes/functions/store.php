@@ -85,7 +85,7 @@ add_action( 'wp_ajax_nopriv_sunshine_multi_image_select_images', 'sunshine_multi
 add_action( 'wp_ajax_sunshine_multi_image_select_images', 'sunshine_multi_image_select_images' );
 function sunshine_multi_image_select_images() {
 
-	// TODO: Need nonce check.
+	check_ajax_referer( 'sunshinephotocart', 'security' );
 
 	if ( empty( $_POST['gallery_id'] ) || empty( $_POST['product_id'] ) ) {
 		wp_send_json_error();
@@ -109,6 +109,10 @@ function sunshine_multi_image_select_images() {
 	$gallery = sunshine_get_gallery( intval( $_POST['gallery_id'] ) );
 	if ( empty( $gallery ) ) {
 		wp_send_json_error();
+	}
+
+	if ( ! $gallery->can_access() ) {
+		wp_send_json_error( array( 'reason' => __( 'Access denied', 'sunshine-photo-cart' ) ) );
 	}
 
 	$value_target    = ( ! empty( $_POST['value_target'] ) ) ? sanitize_text_field( $_POST['value_target'] ) : '';
@@ -147,6 +151,8 @@ add_action( 'wp_ajax_nopriv_sunshine_multi_image_select_gallery_images', 'sunshi
 add_action( 'wp_ajax_sunshine_multi_image_select_gallery_images', 'sunshine_multi_image_select_gallery_images' );
 function sunshine_multi_image_select_gallery_images() {
 
+	check_ajax_referer( 'sunshinephotocart', 'security' );
+
 	if ( empty( $_POST['gallery_id'] ) ) {
 		wp_send_json_error();
 	}
@@ -155,6 +161,10 @@ function sunshine_multi_image_select_gallery_images() {
 
 	$gallery_id      = intval( $_POST['gallery_id'] );
 	$args['gallery'] = sunshine_get_gallery( $gallery_id );
+
+	if ( empty( $args['gallery'] ) || ! $args['gallery']->can_access() ) {
+		wp_send_json_error( array( 'reason' => __( 'Access denied', 'sunshine-photo-cart' ) ) );
+	}
 
 	$args['selected'] = SPC()->session->get( 'selected' );
 	if ( ! empty( $_POST['selected'] ) ) {
@@ -184,6 +194,8 @@ add_action( 'wp_ajax_sunshine_multi_image_select_images_item', 'sunshine_multi_i
 add_action( 'wp_ajax_nopriv_sunshine_multi_image_select_images_item', 'sunshine_multi_image_select_images_item' );
 function sunshine_multi_image_select_images_item() {
 
+	check_ajax_referer( 'sunshinephotocart', 'security' );
+
 	$hash      = ( ! empty( $_POST['ref'] ) ) ? sanitize_text_field( $_POST['ref'] ) : '';
 	$key       = ( isset( $_POST['key'] ) ) ? sanitize_text_field( $_POST['key'] ) : '';
 	$image_ids = ( ! empty( $_POST['selected_image_ids'] ) ) ? array_map( 'intval', $_POST['selected_image_ids'] ) : '';
@@ -196,7 +208,10 @@ function sunshine_multi_image_select_images_item() {
 			if ( $image_id <= 0 ) {
 				continue;
 			}
-			$image        = sunshine_get_image( $image_id );
+			$image = sunshine_get_image( $image_id );
+			if ( ! $image->can_access() ) {
+				continue;
+			}
 			$image_data[] = array(
 				'id'  => $image->get_id(),
 				'url' => $image->get_image_url(),

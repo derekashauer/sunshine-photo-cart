@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 3.6.1
+Stable tag: 3.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -244,10 +244,20 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.6.2 =
+* Security: Added nonce verification and access control checks to multi-image select AJAX handlers
+* Fix: "Always collect an address" fields not reloading state/province options when country changes
+* Fix: Tax rates not applied when using customer address fields instead of shipping address
+* Fix: Automatically show address fields at checkout when tax rates require a specific location
 * Fix: Stripe hosted checkout not including gateway fees in line items
 * Fix: Stripe hosted checkout creating unnecessary duplicate payment intent
 * Fix: Stripe hosted checkout compatibility with Accounts v2 (pass customer ID)
 * Fix: Stripe hosted checkout overriding order status set by other plugins (e.g. digital downloads auto-ship)
+* Fix: Stripe statement descriptor suffix failing when order number contains only digits
+* Fix: Stripe payment failures for zero-decimal currencies (HUF, ISK, etc.) on accounts with older Stripe API versions
+* Fix: Fatal error when guest adds or removes favorites with Analytics addon active
+* Fix: Empty autocomplete attribute rendered on form fields when no value is set
+* Fix: Share favorites not working for guests even when guest favorites are enabled
+* Fix: Guest favorites not merging into account after logging in or registering
 
 = 3.6.1 =
 * Add: Setting to enable or disable guest favorites

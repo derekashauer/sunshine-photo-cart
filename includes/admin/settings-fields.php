@@ -49,6 +49,10 @@ function sunshine_get_settings_fields() {
 	);
 
 	$currencies = sunshine_get_currencies();
+	// Add the currency code to the label for clarity since some symbols are shared between currencies
+	foreach ( $currencies as $code => $name ) {
+		$currencies[ $code ] = sprintf( '%s (%s)', $name, $code );
+	}
 
 	$general_fields['3100'] = array(
 		'name'    => __( 'Currency', 'sunshine-photo-cart' ),

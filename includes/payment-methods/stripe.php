@@ -66,7 +66,17 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	private $client_secret;
 
 	/**
-	 * Total amount in cents
+	 * Stripe API version to pin for consistent behavior across all accounts.
+	 *
+	 * Using 2022-08-01 because:
+	 * - HUF/ISK/TWD became zero-decimal for charges in this version
+	 * - The charges field on PaymentIntents (used in check_order_paid) was
+	 *   removed in 2022-11-15, so we stay before that version
+	 */
+	const STRIPE_API_VERSION = '2022-08-01';
+
+	/**
+	 * Total amount in smallest currency unit
 	 *
 	 * @var int
 	 */
@@ -90,8 +100,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			'httpversion' => '1.0',
 			'blocking'    => true,
 			'headers'     => array(
-				'Authorization' => 'Bearer ' . $this->get_secret_key(),
-				'Content-Type'  => 'application/x-www-form-urlencoded',
+				'Authorization'  => 'Bearer ' . $this->get_secret_key(),
+				'Content-Type'   => 'application/x-www-form-urlencoded',
+				'Stripe-Version' => self::STRIPE_API_VERSION,
 			),
 		);
 
@@ -191,8 +202,13 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$use_suffix = $this->get_option( 'statement_descriptor_suffix' );
 		if ( ( $use_suffix === 'yes' || $use_suffix === '1' ) && ! empty( $order_id ) ) {
 			$order  = sunshine_get_order( $order_id );
-			$suffix = '#' . $order->get_order_number();
-			// Max 22 chars for suffix
+			$suffix = $order->get_name();
+			// Stripe disallows < > \ ' " * in statement descriptors
+			$suffix = preg_replace( '/[<>\\\\\'"*]/', '', $suffix );
+			// Fall back to compact format if name exceeds Stripe's 22-char limit
+			if ( strlen( $suffix ) > 22 ) {
+				$suffix = 'N' . $order->get_order_number();
+			}
 			$args['statement_descriptor_suffix'] = substr( $suffix, 0, 22 );
 		}
 
@@ -246,6 +262,8 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		if ( ! empty( $metadata ) ) {
 			$args['metadata'] = $metadata;
 		}
+
+		sunshine_log( $args, 'Stripe payment intent args' );
 
 		return $args;
 	}
@@ -419,6 +437,13 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			return true;
 		}
 		return false;
+	}
+
+	public function get_submit_label() {
+		if ( $this->get_option( 'checkout_mode' ) === 'hosted' ) {
+			return __( 'Continue to payment', 'sunshine-photo-cart' );
+		}
+		return parent::get_submit_label();
 	}
 
 	/**
@@ -1253,9 +1278,14 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	 * Check if currency is zero-decimal (no decimal places)
 	 *
 	 * Stripe requires amounts for zero-decimal currencies to be sent as whole numbers
-	 * without multiplying by 100. Common zero-decimal currencies include:
-	 * JPY, KRW, CLP, BIF, KMF, DJF, GNF, HUF, ISK, IDR, LAK, MGA, PYG, RWF, TZS, UGX, VND, VUV, XAF, XOF, XPF
+	 * without multiplying by 100.
 	 *
+	 * Note: HUF, ISK, UGX, TWD are NOT included here despite being conceptually
+	 * zero-decimal. Stripe's docs say these should be represented as two-decimal
+	 * values for charges (backward compatibility). IDR, LAK, TZS are also excluded
+	 * as they are not in Stripe's zero-decimal list.
+	 *
+	 * @see https://docs.stripe.com/currencies
 	 * @return bool True if currency is zero-decimal
 	 */
 	private function is_zero_decimal_currency() {
@@ -1270,17 +1300,11 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			'MGA', // Malagasy Ariary
 			'PYG', // Paraguayan Guarani
 			'RWF', // Rwandan Franc
-			'TZS', // Tanzanian Shilling
-			'UGX', // Ugandan Shilling
 			'VND', // Vietnamese Dong
 			'VUV', // Vanuatu Vatu
 			'XAF', // Central African CFA Franc
 			'XOF', // West African CFA Franc
 			'XPF', // CFP Franc
-			'HUF', // Hungarian Forint
-			'ISK', // Icelandic Króna
-			'IDR', // Indonesian Rupiah
-			'LAK', // Lao Kip
 		);
 		return in_array( $this->currency, $zero_decimal_currencies, true );
 	}
@@ -1511,6 +1535,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		}
 
 		$this->total = $this->convert_amount_to_stripe( $cart_total );
+		sunshine_log( 'Setting up Stripe payment intent for amount: ' . $this->total . ' (' . $cart_total . ' in base currency)' );
 
 		// CRITICAL: Check if existing payment intent was already used for a completed order
 		// This prevents stale payment intents from being reused after successful orders.

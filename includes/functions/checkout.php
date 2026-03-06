@@ -394,6 +394,41 @@ function sunshine_checkout_scripts() {
 			return false;
 		});
 
+		$( document ).on( 'change', 'select[name="customer_country"]', function(){
+			console.log( 'changing customer country' );
+			sunshine_checkout_updating();
+			var sunshine_selected_customer_country = $( this ).val();
+			var sunshine_selected_customer_country_required;
+			if ( $( this ).prop( 'required' ) ) {
+				sunshine_selected_customer_country_required = true;
+			}
+			setTimeout( function () {
+				$.ajax({
+					type: 'POST',
+					url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
+					data: {
+						action: 'sunshine_checkout_update_state',
+						country: sunshine_selected_customer_country,
+						type: 'customer',
+						required: sunshine_selected_customer_country_required,
+						security: sunshine_state_change_security
+					},
+					success: function(output, textStatus, XMLHttpRequest) {
+						if ( output ) {
+							$( '#sunshine--checkout--address .sunshine--form--fields' ).html( '' );
+							$( '#sunshine--checkout--address .sunshine--form--fields' ).html( output );
+						}
+						$( document ).trigger( 'sunshine_address_country_change', [ sunshine_selected_customer_country ] );
+						sunshine_checkout_updating_done();
+					},
+					error: function(MLHttpRequest, textStatus, errorThrown) {
+						alert('Sorry, there was an error with your request');
+					}
+				});
+			}, 500);
+			return false;
+		});
+
 		$( document ).on( 'submit', '#sunshine--checkout--discount-form', function(e){
 			console.log( 'Submitting discount form' );
 			e.preventDefault();
@@ -975,6 +1010,8 @@ function sunshine_checkout_update_state() {
 		$type = sanitize_key( $_POST['type'] );
 		if ( $type == 'shipping' ) {
 			$prefix = 'shipping_';
+		} elseif ( $type == 'customer' ) {
+			$prefix = 'customer_';
 		} else {
 			$prefix = 'billing_';
 		}

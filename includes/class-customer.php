@@ -339,7 +339,7 @@ class SPC_Customer extends WP_User {
 		if ( $this->is_guest() ) {
 			$favorite_ids = $this->get_favorite_ids();
 			foreach ( $favorite_ids as $image_id ) {
-				do_action( 'sunshine_delete_favorite', $image_id );
+				do_action( 'sunshine_delete_favorite', $image_id, $this );
 			}
 			sunshine_clear_session_favorites();
 			return;
