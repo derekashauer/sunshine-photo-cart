@@ -110,6 +110,9 @@ class SPC_Session {
 			'expiration' => $this->expiration,
 		);
 		$result  = $wpdb->replace( "{$wpdb->prefix}sunshine_sessions", $session );
+		if ( false === $result ) {
+			SPC()->log( 'Session write failed for session ' . $this->session_id . ': ' . $wpdb->last_error );
+		}
 
 	}
 

@@ -148,6 +148,13 @@ class SPC_Background_Process_Images extends SPC_Background_Process {
 			sunshine_doing_upload( $gallery_id );
 		}
 
+		// Fix EXIF orientation on the original before generating intermediates.
+		// WordPress depends on PHP's exif extension for orientation detection,
+		// but Imagick can read EXIF natively for more reliable handling.
+		if ( sunshine_fix_image_orientation( $file_path ) ) {
+			SPC()->log( 'Background Process: Fixed EXIF orientation for attachment ' . $attachment_id );
+		}
+
 		// Add filter to limit image sizes to only Sunshine sizes during background processing
 		// This ensures we only generate sunshine-thumbnail and sunshine-large, not all theme sizes
 		add_filter( 'intermediate_image_sizes', array( $this, 'filter_background_image_sizes' ), 99999 );
@@ -199,13 +206,16 @@ class SPC_Background_Process_Images extends SPC_Background_Process {
 		// Update attachment metadata BEFORE watermarking so watermark function can find the files
 		wp_update_attachment_metadata( $attachment_id, $metadata );
 
-		// Apply watermark if needed
-		if ( $watermark && SPC()->get_option( 'watermark_image' ) ) {
-			sunshine_watermark_image( $attachment_id, $metadata );
-		}
+		// Set global path marker so EWWW background optimization bypass can detect sunshine images
+		$GLOBALS['sunshine_current_upload_path'] = $file_path;
 
-		// Trigger the after_image_process hook for compatibility with other plugins
+		// Trigger the after_image_process hook which handles:
+		// - Priority 1: EWWWIO_EDITOR_OVERWRITE constant (plugin-compat.php)
+		// - Priority 10: Watermarking via sunshine_watermark_media_upload (watermark.php)
+		// - Priority 20: Cloud storage offloading (cloud-storage hooks.php)
 		do_action( 'sunshine_after_image_process', $attachment_id, $file_path, $watermark );
+
+		unset( $GLOBALS['sunshine_current_upload_path'] );
 
 		// If WP Offload Media is active, update metadata again to trigger upload of new intermediate sizes
 		if ( function_exists( 'as3cf_get_attachment_url' ) ) {

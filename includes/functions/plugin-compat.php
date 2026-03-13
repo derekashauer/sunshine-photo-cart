@@ -54,6 +54,18 @@ function sunshine_ewww_image_optimizer_editor_overwrite( $attachment_id ) {
 	}
 }
 
+// Prevent EWWW from doing background optimization for Sunshine images.
+// EWWW's multi-stage background pipeline (background_media → background_image → background_attachment_update)
+// creates timing issues with cloud storage offloading. Forcing synchronous processing means our existing
+// bypass filters handle everything cleanly within the same request.
+add_filter( 'ewww_image_optimizer_background_optimization', 'sunshine_ewww_disable_background_for_sunshine', 10 );
+function sunshine_ewww_disable_background_for_sunshine( $defer ) {
+	if ( ! empty( $GLOBALS['sunshine_current_upload_path'] ) && str_contains( $GLOBALS['sunshine_current_upload_path'], 'uploads/sunshine/' ) ) {
+		return false;
+	}
+	return $defer;
+}
+
 // Imagify - bypass optimizer if in a sunshine folder.
 add_filter( 'imagify_auto_optimize_attachment', 'sunshine_imagify_auto_optimize_attachment', 10, 2 );
 function sunshine_imagify_auto_optimize_attachment( $optimize, $attachment_id ) {

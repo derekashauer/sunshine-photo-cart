@@ -4,6 +4,7 @@ class SPC_Background_Processing {
 
 	protected $delete_gallery_images;
 	protected $process_images;
+	protected $migrate_keywords;
 
 	/**
 	 * Example_Background_Processing constructor.
@@ -31,6 +32,12 @@ class SPC_Background_Processing {
 			require_once SUNSHINE_PHOTO_CART_PATH . 'includes/background/process-images.php';
 			$this->process_images = new SPC_Background_Process_Images();
 		}
+
+		// Initialize keyword migration if not already completed
+		if ( ! $this->migrate_keywords && ! get_option( 'sunshine_keywords_migrated' ) ) {
+			require_once SUNSHINE_PHOTO_CART_PATH . 'includes/background/migrate-keywords.php';
+			$this->migrate_keywords = new SPC_Background_Migrate_Keywords();
+		}
 	}
 
 
@@ -45,6 +52,19 @@ class SPC_Background_Processing {
 			$this->process_images = new SPC_Background_Process_Images();
 		}
 		return $this->process_images;
+	}
+
+	/**
+	 * Get migrate keywords instance
+	 *
+	 * @return SPC_Background_Migrate_Keywords|null
+	 */
+	public function get_migrate_keywords() {
+		if ( ! $this->migrate_keywords && ! get_option( 'sunshine_keywords_migrated' ) ) {
+			require_once SUNSHINE_PHOTO_CART_PATH . 'includes/background/migrate-keywords.php';
+			$this->migrate_keywords = new SPC_Background_Migrate_Keywords();
+		}
+		return $this->migrate_keywords;
 	}
 
 	public function delete_gallery_images( $post_id, $post ) {

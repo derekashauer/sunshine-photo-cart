@@ -1,6 +1,83 @@
 <?php
 
 /**
+ * Fix EXIF orientation on an image file by physically rotating the pixels.
+ *
+ * WordPress relies on PHP's exif extension for orientation detection during
+ * sub-size generation. When the exif extension is unavailable, sub-sizes are
+ * generated with incorrect pixel orientation. This function uses Imagick's
+ * native EXIF reading (which does not require PHP's exif extension) as the
+ * primary method, falling back to WordPress's image editor.
+ *
+ * Should be called on the original file BEFORE wp_generate_attachment_metadata()
+ * so all intermediate sizes are generated from correctly-oriented pixels.
+ *
+ * @param string $file_path Full path to the image file.
+ * @return bool True if orientation was fixed, false if no fix was needed or possible.
+ */
+function sunshine_fix_image_orientation( $file_path ) {
+	$file_type = wp_check_filetype( $file_path );
+	if ( ! in_array( $file_type['ext'], array( 'jpg', 'jpeg' ), true ) ) {
+		return false;
+	}
+
+	// Quick check: read EXIF orientation from the file header without
+	// loading/decoding the full image. This is fast and adds negligible
+	// overhead for the 99% of images that don't need rotation.
+	$orientation = 0;
+	if ( function_exists( 'exif_read_data' ) ) {
+		$exif = @exif_read_data( $file_path, 'IFD0' );
+		if ( ! empty( $exif['Orientation'] ) ) {
+			$orientation = (int) $exif['Orientation'];
+		}
+	} elseif ( class_exists( 'Imagick' ) ) {
+		// No PHP exif extension — use Imagick to read orientation only.
+		try {
+			$probe       = new Imagick( $file_path );
+			$orientation = $probe->getImageOrientation();
+			$probe->destroy();
+		} catch ( Exception $e ) {
+			return false;
+		}
+	}
+
+	// No rotation needed.
+	if ( $orientation <= 1 ) {
+		return false;
+	}
+
+	// Orientation needs fixing — now load and rotate.
+	if ( class_exists( 'Imagick' ) ) {
+		try {
+			$image = new Imagick( $file_path );
+			$image->autoOrient();
+			$image->setImageOrientation( Imagick::ORIENTATION_TOPLEFT );
+			$quality = $image->getImageCompressionQuality();
+			$image->setImageCompressionQuality( $quality ?: 100 );
+			$image->writeImage( $file_path );
+			$image->destroy();
+			return true;
+		} catch ( Exception $e ) {
+			// Fall through to WordPress editor.
+		}
+	}
+
+	// Fall back to WordPress image editor.
+	$editor = wp_get_image_editor( $file_path );
+	if ( is_wp_error( $editor ) ) {
+		return false;
+	}
+
+	$rotated = $editor->maybe_exif_rotate();
+	if ( true === $rotated ) {
+		$saved = $editor->save( $file_path );
+		return ! is_wp_error( $saved );
+	}
+
+	return false;
+}
+
+/**
  * Ensure all Sunshine intermediate sizes exist in attachment metadata.
  *
  * When an uploaded image is smaller than a registered Sunshine size (e.g., sunshine-large),
@@ -108,13 +185,19 @@ function sunshine_get_images( $args = array() ) {
 			INNER JOIN {$wpdb->prefix}postmeta AS sunshine_meta
 				ON ( p.ID = sunshine_meta.post_id AND sunshine_meta.meta_key = 'sunshine_file_name' )
 			WHERE p.post_type = 'attachment'
-			AND ( p.post_status = 'publish' OR p.post_status = 'private' )
+			AND ( p.post_status = 'inherit' OR p.post_status = 'publish' OR p.post_status = 'private' )
 			{$post_parent}
 			AND (
 				p.post_title LIKE %s
 				OR p.post_excerpt LIKE %s
 				OR p.post_content LIKE %s
 				OR sunshine_meta.meta_value LIKE %s
+				OR EXISTS (
+					SELECT 1 FROM {$wpdb->prefix}postmeta
+					WHERE post_id = p.ID
+					AND meta_key = 'sunshine_keywords'
+					AND meta_value LIKE %s
+				)
 				OR EXISTS (
 					SELECT 1 FROM {$wpdb->prefix}postmeta
 					WHERE post_id = p.ID
@@ -133,7 +216,8 @@ function sunshine_get_images( $args = array() ) {
 			"%{$args['s']}%",
 			"%{$args['s']}%",
 			"%{$args['s']}%",
-			"%\\\"{$args['s']}\\\"%",
+			"%{$args['s']}%",
+			"%{$args['s']}%",
 			"%{$args['s']}%"
 		);
 

@@ -1290,6 +1290,9 @@ function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json
 		// Use meta value to store all image IDs for gallery
 		$gallery = sunshine_get_gallery( $gallery_id );
 
+		// Set global path marker so EWWW background optimization bypass can detect sunshine images
+		$GLOBALS['sunshine_current_upload_path'] = $file_path;
+
 		$delay_processing = SPC()->get_option( 'delay_image_processing' );
 
 		// If delay processing is enabled, skip full metadata generation and create minimal metadata only
@@ -1385,6 +1388,9 @@ function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json
 
 		add_post_meta( $attachment_id, 'created_timestamp', $created_timestamp );
 		add_post_meta( $attachment_id, 'sunshine_file_name', $original_file_name );
+		if ( ! empty( $image_meta['keywords'] ) && is_array( $image_meta['keywords'] ) ) {
+			add_post_meta( $attachment_id, 'sunshine_keywords', implode( ', ', $image_meta['keywords'] ) );
+		}
 		$apply_watermark = ( ! empty( $watermark ) ) ? SPC()->get_option( 'watermark_image' ) : 0;
 		add_post_meta( $attachment_id, 'sunshine_watermark', $apply_watermark );
 
@@ -1428,6 +1434,8 @@ function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json
 			// Process immediately as before
 			do_action( 'sunshine_after_image_process', $attachment_id, $file_path, $apply_watermark );
 		}
+
+		unset( $GLOBALS['sunshine_current_upload_path'] );
 
 		$image_ids = $gallery->add_image_id( $attachment_id );
 

@@ -889,6 +889,7 @@ class Sunshine_Admin {
 			$keywords                           = array_map( 'trim', $keywords );  // Remove start and end spaces
 			$metadata['image_meta']['keywords'] = $keywords;
 			wp_update_attachment_metadata( $post['ID'], $metadata );
+			update_post_meta( $post['ID'], 'sunshine_keywords', implode( ', ', $keywords ) );
 		}
 
 		if ( isset( $attachment['sunshine_disable_purchase'] ) ) {

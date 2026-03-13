@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 3.6.2
+Stable tag: 3.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,6 +243,12 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.6.3 =
+* Enhancement: Migrated image keywords to dedicated meta key for significantly faster search performance on large sites
+* Fix: Image keyword search not returning results due to incorrect post status filter and metadata escaping
+* Fix: How it checks for Imagick during watermarking process to really be sure it is available before trying to use it
+* Fix: Optimized private gallery lookup query that could cause slowdowns on sites with many images
+
 = 3.6.2 - March 6, 2026 =
 * Security: Added nonce verification and access control checks to multi-image select AJAX handlers
 * Fix: "Always collect an address" fields not reloading state/province options when country changes
@@ -257,6 +263,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: Fatal error when guest adds or removes favorites with Analytics addon active
 * Fix: Empty autocomplete attribute rendered on form fields when no value is set
 * Fix: Share favorites not working for guests even when guest favorites are enabled
+* Fix: Watermarked images now respect EXIF orientation data, preventing incorrectly rotated output
 * Fix: Guest favorites not merging into account after logging in or registering
 
 = 3.6.1 2026-03-03 =

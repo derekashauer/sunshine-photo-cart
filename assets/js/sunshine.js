@@ -756,6 +756,22 @@ jQuery( document ).ready(function($){
 
 		$( 'input[name="' + value_target + '"]' ).val( selectedIds.join( ',' ) );
 
+		// Synchronously re-enable/disable options based on new totals
+		if ( maxImages > 0 ) {
+			main_el.find('.sunshine--multi-image-select--source--list select').each(function() {
+				var $s = $(this);
+				var cv = parseInt($s.val());
+				var maxOpt = maxImages - currentTotal + cv;
+				var maxSingle = $s.data( 'max' );
+				if ( maxSingle ) {
+					maxOpt = Math.min( maxOpt, maxSingle );
+				}
+				$s.find('option').each(function() {
+					var ov = parseInt($(this).val());
+					$(this).prop('disabled', ov > maxOpt);
+				});
+			});
+		}
 
 		$.ajax({
 			type: 'POST',
@@ -808,6 +824,12 @@ jQuery( document ).ready(function($){
 				                    $(this).remove();
 				                }
 				            });
+
+							// Update disabled state for all options based on current limits
+							$select.find('option').each(function() {
+								var optionValue = parseInt($(this).val());
+								$(this).prop('disabled', optionValue > maxOptionValue);
+							});
 
 				            // Add back options if needed
 				            for (let i = 0; i <= maxOptionValue; i++) {

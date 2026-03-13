@@ -565,20 +565,29 @@ class SPC_Customer extends WP_User {
 	}
 
 	public function get_galleries() {
+		global $wpdb;
+
+		$like_value = '%"' . $wpdb->esc_like( $this->ID ) . '"%';
+
+		$gallery_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT p.ID FROM {$wpdb->posts} p
+			INNER JOIN {$wpdb->postmeta} pm_status ON p.ID = pm_status.post_id AND pm_status.meta_key = 'status' AND pm_status.meta_value = 'private'
+			INNER JOIN {$wpdb->postmeta} pm_users ON p.ID = pm_users.post_id AND pm_users.meta_key = 'private_users' AND pm_users.meta_value LIKE %s
+			WHERE p.post_type = 'sunshine-gallery' AND p.post_status = 'publish'",
+				$like_value
+			)
+		);
+
+		$gallery_ids = apply_filters( 'sunshine_customer_get_gallery_ids', $gallery_ids, $this );
+
+		if ( empty( $gallery_ids ) ) {
+			return false;
+		}
+
 		$args      = array(
 			'posts_per_page' => -1,
-			'meta_query'     => array(
-				'relation' => 'AND',
-				array(
-					'key'     => 'private_users',
-					'value'   => '"' . $this->ID . '"',
-					'compare' => 'LIKE',
-				),
-				array(
-					'key'   => 'status',
-					'value' => 'private',
-				),
-			),
+			'post__in'       => $gallery_ids,
 		);
 		$args      = apply_filters( 'sunshine_customer_get_galleries_args', $args );
 		$galleries = sunshine_get_galleries( $args );

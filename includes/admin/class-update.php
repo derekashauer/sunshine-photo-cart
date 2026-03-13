@@ -15,7 +15,7 @@ class SPC_Update {
 			$this->need_update = true;
 		}
 
-		$this->update_actions = array( '3.0', '3.0.17', '3.0.18', '3.5.6', '3.6.0', '3.6.2' );
+		$this->update_actions = array( '3.0', '3.0.17', '3.0.18', '3.5.6', '3.6.0', '3.6.2', '3.6.3' );
 
 		add_action( 'admin_init', array( $this, 'update_check' ) );
 		add_action( 'admin_menu', array( $this, 'menu' ) );
@@ -39,6 +39,7 @@ class SPC_Update {
 		add_action( 'sunshine_update_3.5.6', array( $this, 'update_3_5_6' ) );
 		add_action( 'sunshine_update_3.6.0', array( $this, 'update_3_6_0' ) );
 		add_action( 'sunshine_update_3.6.2', array( $this, 'update_3_6_2' ) );
+		add_action( 'sunshine_update_3.6.3', array( $this, 'update_3_6_3' ) );
 
 		add_action( 'activated_plugin', array( $this, 'check_plugin_activation' ), 10, 2 );
 		add_action( 'admin_notices', array( $this, 'show_deactivation_notice' ), 10, 2 );
@@ -244,6 +245,61 @@ class SPC_Update {
 		// Enable guest favorites by default for existing installs.
 		if ( get_option( 'sunshine_enable_guest_favorites' ) === false ) {
 			SPC()->update_option( 'enable_guest_favorites', true );
+		}
+	}
+
+	function update_3_6_3() {
+		global $wpdb;
+
+		// Migrate keywords from serialized _wp_attachment_metadata to dedicated sunshine_keywords meta.
+		if ( get_option( 'sunshine_keywords_migrated' ) ) {
+			return;
+		}
+
+		$background_processing = isset( $GLOBALS['sunshine_background_processing'] ) ? $GLOBALS['sunshine_background_processing'] : null;
+		if ( ! $background_processing ) {
+			return;
+		}
+
+		$migrate_keywords = $background_processing->get_migrate_keywords();
+		if ( ! $migrate_keywords ) {
+			return;
+		}
+
+		$offset = 0;
+		$batch  = 500;
+		$queued = 0;
+
+		do {
+			$image_ids = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT p.ID FROM {$wpdb->prefix}posts p
+					INNER JOIN {$wpdb->prefix}postmeta pm ON p.ID = pm.post_id AND pm.meta_key = 'sunshine_file_name'
+					WHERE p.post_type = 'attachment'
+					AND NOT EXISTS (
+						SELECT 1 FROM {$wpdb->prefix}postmeta pm2
+						WHERE pm2.post_id = p.ID AND pm2.meta_key = 'sunshine_keywords'
+					)
+					LIMIT %d OFFSET %d",
+					$batch,
+					$offset
+				)
+			);
+
+			if ( ! empty( $image_ids ) ) {
+				foreach ( $image_ids as $image_id ) {
+					$migrate_keywords->push_to_queue( absint( $image_id ) );
+					$queued++;
+				}
+				$offset += $batch;
+			}
+		} while ( ! empty( $image_ids ) );
+
+		if ( $queued > 0 ) {
+			$migrate_keywords->save()->dispatch();
+			SPC()->log( 'Queued ' . $queued . ' images for keyword migration' );
+		} else {
+			update_option( 'sunshine_keywords_migrated', time(), false );
 		}
 	}
 

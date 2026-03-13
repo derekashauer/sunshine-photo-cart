@@ -45,8 +45,14 @@ function sunshine_watermark_image( $attachment_id, $metadata = array(), $passed_
 				'quality'  => (int) $quality,
 			);
 
-			// Use Imagick when available, fall back to GD.
-			if ( extension_loaded( 'imagick' ) ) {
+			// Use Imagick when available and the file is local (not a stream wrapper like S3).
+			// Imagick uses its own file I/O and cannot read PHP stream wrapper URLs.
+			$use_imagick = class_exists( 'Imagick' )
+				&& class_exists( 'WP_Image_Editor_Imagick' )
+				&& WP_Image_Editor_Imagick::test()
+				&& false === strpos( $image, '://' );
+
+			if ( $use_imagick ) {
 				$result = sunshine_apply_watermark_imagick( $image, $watermark_image, $options );
 			} else {
 				$result = sunshine_apply_watermark_gd( $image, $watermark_image, $options );
