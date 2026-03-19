@@ -56,7 +56,7 @@ if ( empty( $id ) ) {
 		);
 		?>
 		<?php if ( $favorite_count > 0 ) { ?>
-			<div id="sunshine--multi-image-select--source-favorites" class="sunshine--multi-image-select--source--list" data-product-type="<?php echo esc_attr( $product->get_type() ); ?>" style="display:none;">
+			<div id="sunshine--multi-image-select--source-favorites--<?php echo esc_attr( $id ); ?>" class="sunshine--multi-image-select--source--list" data-product-type="<?php echo esc_attr( $product->get_type() ); ?>" style="display:none;">
 				<?php foreach ( SPC()->customer->get_favorites() as $image ) { ?>
 					<figure class="sunshine--multi-image-select--image sunshine--multi-image-select--source-favorites">
 						<input type="checkbox" required="required" id="image-favorites-<?php echo esc_attr( $image->get_gallery_id() ); ?>-<?php echo esc_attr( $image->get_id() ); ?>-<?php echo esc_attr( $id ); ?>" name="images[]" data-option-id="images" value="<?php echo esc_attr( $image->get_id() ); ?>" data-image-url="<?php echo esc_url( $image->get_image_url() ); ?>" <?php checked( ! empty( $selected ) && in_array( $image->get_id(), $selected ), true ); ?> />

@@ -375,6 +375,7 @@ class SPC_Privacy {
 	public function retention_cleanup() {
 		$this->cleanup_inactive_accounts();
 		$this->cleanup_old_orders();
+		$this->cleanup_expired_galleries();
 	}
 
 	/**
@@ -454,6 +455,40 @@ class SPC_Privacy {
 
 		foreach ( $orders as $order_id ) {
 			self::anonymize_order( $order_id );
+		}
+	}
+
+	/**
+	 * Delete galleries that expired more than X days ago.
+	 */
+	private function cleanup_expired_galleries() {
+		$days = SPC()->get_option( 'privacy_delete_expired_galleries' );
+
+		if ( empty( $days ) ) {
+			return;
+		}
+
+		$days   = absint( $days );
+		$cutoff = current_time( 'timestamp' ) - ( $days * DAY_IN_SECONDS );
+
+		$galleries = get_posts( array(
+			'post_type'      => 'sunshine-gallery',
+			'posts_per_page' => 20,
+			'post_status'    => array( 'publish', 'draft', 'pending', 'private' ),
+			'meta_query'     => array(
+				array(
+					'key'     => 'end_date',
+					'value'   => $cutoff,
+					'compare' => '<',
+					'type'    => 'NUMERIC',
+				),
+			),
+			'fields'         => 'ids',
+		) );
+
+		foreach ( $galleries as $gallery_id ) {
+			SPC()->log( 'Auto-deleting expired gallery #' . $gallery_id );
+			wp_delete_post( $gallery_id, true );
 		}
 	}
 

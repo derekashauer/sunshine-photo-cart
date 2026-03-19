@@ -722,50 +722,56 @@ function sunshine_checkout_scripts() {
 		?>
 	<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo esc_attr( $google_maps_api_key ); ?>&callback=sunshine_load_address_autocomplete&loading=async&libraries=places&v=weekly" async></script>
 	<script id="sunshine--checkout--autocomplete">
-		var sunshine_autocomplete, sunshine_autocomplete_listener;
+		var sunshine_autocompletes = {};
 
 		function sunshine_load_address_autocomplete() {
 			sunshine_init_address_autocomplete( 'shipping' );
 			sunshine_init_address_autocomplete( 'billing' );
+			sunshine_init_address_autocomplete( 'customer' );
 		}
 
 		function sunshine_init_address_autocomplete( section, default_country = '<?php echo esc_js( $default_country ); ?>' ) {
-			if ( sunshine_autocomplete ) {
-				google.maps.event.removeListener( sunshine_autocomplete_listener );
-				google.maps.event.clearInstanceListeners( sunshine_autocomplete );
-				jQuery( ".pac-container" ).remove();
-			}
-			address1Field = document.querySelector("#" + section + "_address1");
+			var address1Field = document.querySelector("#" + section + "_address1");
 			if ( ! address1Field ) {
 				return;
 			}
-			address2Field = document.querySelector("#" + section + "_address2");
-			postalField = document.querySelector("#" + section + "_postcode");
-			sunshine_autocomplete = new google.maps.places.Autocomplete(address1Field, {
+			if ( sunshine_autocompletes[section] ) {
+				google.maps.event.removeListener( sunshine_autocompletes[section].listener );
+				google.maps.event.clearInstanceListeners( sunshine_autocompletes[section].instance );
+				jQuery( ".pac-container" ).remove();
+			}
+			var instance = new google.maps.places.Autocomplete(address1Field, {
 				componentRestrictions: { country: [ default_country ] },
 				fields: ["address_components", "geometry"],
 				types: ["address"],
 			});
-			sunshine_autocomplete_listener = sunshine_autocomplete.addListener( "place_changed", function(){
+			var listener = instance.addListener( "place_changed", function(){
 				sunshine_autopopulate_address( section );
 			});
+			sunshine_autocompletes[section] = { instance: instance, listener: listener };
 		}
 
 		jQuery( document ).on( 'sunshine_shipping_country_change', function( event, country ){
 			sunshine_init_address_autocomplete( 'shipping', country );
 		});
 
+		jQuery( document ).on( 'sunshine_address_country_change', function( event, country ){
+			sunshine_init_address_autocomplete( 'customer', country );
+		});
+
 		jQuery( document ).on( 'sunshine_reload_checkout', function( event, data ) {
-			section = data.section;
+			var section = data.section;
 			if ( section == 'shipping' ) {
 				sunshine_init_address_autocomplete( 'shipping', jQuery( '#shipping_country' ).val() );
 			} else if ( section == 'billing' ) {
 				sunshine_init_address_autocomplete( 'billing', jQuery( '#billing_country' ).val() );
+			} else if ( section == 'address' ) {
+				sunshine_init_address_autocomplete( 'customer', jQuery( '#customer_country' ).val() );
 			}
 		});
 
 		function sunshine_autopopulate_address( section ) {
-			const place = sunshine_autocomplete.getPlace();
+			const place = sunshine_autocompletes[section].instance.getPlace();
 			let address1 = "";
 			let postcode = "";
 

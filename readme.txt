@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 3.6.3
+Stable tag: 3.6.4-beta1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,7 +243,13 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.6.3 =
+= 3.6.4 =
+* New: Privacy setting to automatically delete galleries a specified number of days after they expire
+* Fix: Google address autocomplete not working for address fields at checkout
+* Fix: Tax calculated on pre-discount subtotal when discounts are applied before tax
+* Fix: Package image selection showing blank when switching source dropdown on second or later items
+
+= 3.6.3 - March 13, 2026 =
 * Enhancement: Migrated image keywords to dedicated meta key for significantly faster search performance on large sites
 * Fix: Image keyword search not returning results due to incorrect post status filter and metadata escaping
 * Fix: How it checks for Imagick during watermarking process to really be sure it is available before trying to use it
@@ -266,12 +272,12 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: Watermarked images now respect EXIF orientation data, preventing incorrectly rotated output
 * Fix: Guest favorites not merging into account after logging in or registering
 
-= 3.6.1 2026-03-03 =
+= 3.6.1 - March 3, 2026 =
 * Add: Setting to enable or disable guest favorites
 * Fix: Image search query causing database lockups on sites with large posts/postmeta tables due to unconstrained joins
 * Fix: Stripe inline checkout orders not updating to paid status when using webhooks
 
-= 3.6 2026-03-02 =
+= 3.6 - March 2, 2026 =
 * Add: Caption option added to Thumbnail Content setting (from EXIF metadata)
 * Add: Option to show image caption under single image view
 * Add: Admin Gallery Navigator - Easier gallery management with lots of galleries and hierarchy
@@ -304,6 +310,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Add: Log files are now downloaded through authenticated admin routes instead of direct file access
 * Security: Block direct web access to log files via .htaccess
 * Fix: Automatically prevent Yoast SEO and Rank Math from redirecting Sunshine gallery image pages when media pages are disabled
+
 = 3.5.7.3 =
 * Security: Add permission check on image data ajax request
 

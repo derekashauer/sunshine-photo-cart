@@ -1559,6 +1559,14 @@ function sunshine_get_settings_fields() {
 		'name' => __( 'Retain completed orders', 'sunshine-photo-cart' ),
 		'type' => 'duration',
 	);
+	$privacy_fields['3300'] = array(
+		'id'          => 'privacy_delete_expired_galleries',
+		'name'        => __( 'Delete expired galleries after', 'sunshine-photo-cart' ),
+		'type'        => 'number',
+		'placeholder' => '',
+		'min'         => 1,
+		'description' => __( 'days — Galleries will be permanently deleted this many days after their expiration date. Leave blank to keep expired galleries indefinitely.', 'sunshine-photo-cart' ),
+	);
 
 	$privacy_fields = apply_filters( 'sunshine_options_privacy', $privacy_fields );
 	if ( ! empty( $privacy_fields ) ) {

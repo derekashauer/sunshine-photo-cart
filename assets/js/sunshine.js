@@ -597,22 +597,27 @@ jQuery( document ).ready(function($){
     // Choose source
     $( 'body' ).on( 'change', '.sunshine--multi-image-select--sources select', function(){
 
-		$( '.sunshine--multi-image-select--list' ).addClass( 'sunshine--loading' );
+		let $container = $( this ).closest( '.sunshine--multi-image-select' );
+		let $list = $container.find( '.sunshine--multi-image-select--list' );
+		let modal_id = $container.attr( 'id' );
+
+		$list.addClass( 'sunshine--loading' );
 
 		let gallery_id = $( 'option:selected', this ).val();
-		let product_id = $( this ).closest( '.sunshine--multi-image-select' ).data( 'product-id' );
-		let image_count = $( this ).closest( '.sunshine--multi-image-select' ).data( 'image-count' );
-		let selected_target = $( this ).closest( '.sunshine--multi-image-select' ).data( 'value-target' );
+		let product_id = $container.data( 'product-id' );
+		let image_count = $container.data( 'image-count' );
+		let selected_target = $container.data( 'value-target' );
 		let selected = $( 'input[name="' + selected_target + '"]' ).val();
 		selected = selected.split( ',' );
 
-		// Hide all existing source lists.
-		$( '.sunshine--multi-image-select--source--list' ).hide();
+		// Hide all existing source lists within this modal.
+		$container.find( '.sunshine--multi-image-select--source--list' ).hide();
 
-		// See if source is already on the page, show if so.
-		if ( $( '#sunshine--multi-image-select--source-' + gallery_id ).length ) {
-			$( '#sunshine--multi-image-select--source-' + gallery_id ).show();
-			$( '.sunshine--multi-image-select--list' ).removeClass( 'sunshine--loading' );
+		// See if source is already on the page within this modal, show if so.
+		let source_id = 'sunshine--multi-image-select--source-' + gallery_id + '--' + modal_id;
+		if ( $( '#' + source_id ).length ) {
+			$( '#' + source_id ).show();
+			$list.removeClass( 'sunshine--loading' );
 			return;
 		}
 
@@ -626,17 +631,18 @@ jQuery( document ).ready(function($){
 				product_id: product_id,
 				image_count: image_count,
 				selected: selected,
+				id: modal_id,
 			},
 			success: function( result, textStatus, XMLHttpRequest) {
 				if ( result.success ) {
-					$( '.sunshine--multi-image-select--list' ).append( result.data.html );
+					$list.append( result.data.html );
 				}
 			},
 			error: function( MLHttpRequest, textStatus, errorThrown ) {
 				alert( sunshine_photo_cart.lang.error );
 			}
 		}).always(function(){
-			$( '.sunshine--multi-image-select--list' ).removeClass( 'sunshine--loading' );
+			$list.removeClass( 'sunshine--loading' );
 		});
 
     });
@@ -1310,190 +1316,6 @@ jQuery( document ).ready(function($){
         });
 
     });
-
-    $( 'body' ).on( 'submit', '#sunshine--modal--content #sunshine--download--required-data', function(e){
-
-        e.preventDefault();
-
-        // Remove error just in case it exists
-        $( '.sunshine--error' ).remove();
-
-        let download_action = $( 'input[name="download_action"]' ).val();
-        let email = $( 'input[name="sunshine_download_email"]' ).val();
-        let passcode = $( 'input[name="sunshine_download_passcode"]' ).val();
-        let security = $( 'input[name="sunshine_download_required_data_security"]' ).val();
-        let image_id = $( 'input[name="image_id"]' ).val();
-        let gallery_id = $( 'input[name="gallery_id"]' ).val();
-		let download_print_release_approval = $( 'input[name="download_print_release_approval"]' ).val();
-
-        // Form set to loading
-        $( '#sunshine--download--required-data' ).addClass( 'sunshine--loading' );
-
-        // Then run ajax request
-        $.ajax({
-            type: 'POST',
-            url: sunshine_photo_cart.ajax_url,
-            data: {
-                action: 'sunshine_modal_download_required_data',
-                download_action: download_action,
-                image_id: image_id,
-                gallery_id: gallery_id,
-                passcode: passcode,
-                email: email,
-				download_print_release_approval: download_print_release_approval,
-                security: security
-            },
-            success: function( result, textStatus, XMLHttpRequest) {
-                if ( result.success ) {
-                    $( '#sunshine--modal--content' ).html( result.data.html );
-                    $( document ).trigger( 'download_free_image' );
-                } else {
-                    $( '#sunshine--download--required-data' ).prepend( '<div class="sunshine--error">' + result.data + '</div>');
-                }
-            },
-            error: function( MLHttpRequest, textStatus, errorThrown ) {
-				alert( sunshine_photo_cart.lang.error );
-            }
-        }).always(function(){
-            $( '#sunshine--download--required-data' ).removeClass( 'sunshine--loading' );
-        });
-
-        return false;
-
-    });
-
-    $( document ).on( 'download_free_image download_credit_image download_history_image download_free_gallery download_order_files download_order_item download_order_all download', function(e){
-        var download_trigger = document.getElementById( "sunshine--download--trigger" );
-        var progress_text = document.getElementById( "sunshine--download--progress-text" );
-		if ( download_trigger ) {
-			// Trigger the actual download by clicking the hidden link
-			download_trigger.click();
-		}
-		if ( download_trigger && progress_text ) {
-            var download_url = download_trigger.href;
-            var streamingStarted = false;
-            var progressXhr = null;
-            var startTime = Date.now();
-            var isOffloaded = false; // Will be determined by delay before first progress
-            
-            // Initialize - always start with "Preparing download..." (handles offloaded images)
-            var preparingText = ( typeof sunshine_photo_cart !== 'undefined' && sunshine_photo_cart.lang && sunshine_photo_cart.lang.preparing_download ) ? sunshine_photo_cart.lang.preparing_download : 'Preparing download...';
-            progress_text.textContent = preparingText;
-            
-            // Use parallel fetch request to track progress (we'll abort it, just using it for progress tracking)
-            // The actual download is already handled by the link's download attribute
-            progressXhr = new XMLHttpRequest();
-            progressXhr.open( 'GET', download_url, true );
-            progressXhr.responseType = 'blob';
-            
-            // Track download progress - switch to actual download progress once streaming starts
-            progressXhr.addEventListener( 'progress', function( e ) {
-                // First progress event means streaming has started
-                if ( ! streamingStarted && e.loaded > 0 ) {
-                    streamingStarted = true;
-                    var timeElapsed = Date.now() - startTime;
-                    
-                    // If progress started quickly (< 500ms), assume non-offloaded, use "Downloading..."
-                    // If it took longer, assume offloaded, use "Download started"
-                    if ( timeElapsed < 500 ) {
-                        isOffloaded = false;
-                    } else {
-                        isOffloaded = true;
-                    }
-                }
-                
-                var mbLoaded = ( e.loaded / 1024 / 1024 ).toFixed( 1 );
-                
-                if ( e.lengthComputable ) {
-                    // Total size known - show MB/MB with percentage
-                    var mbTotal = ( e.total / 1024 / 1024 ).toFixed( 1 );
-                    var percentComplete = Math.round( ( e.loaded / e.total ) * 100 );
-                    
-                    if ( isOffloaded ) {
-                        // Offloaded images: "Download started" + file size
-                        var downloadStartedText = ( typeof sunshine_photo_cart !== 'undefined' && sunshine_photo_cart.lang && sunshine_photo_cart.lang.download_started ) ? sunshine_photo_cart.lang.download_started : 'Download started';
-                        progress_text.textContent = downloadStartedText + ' - ' + mbLoaded + ' MB / ' + mbTotal + ' MB (' + percentComplete + '%)';
-                    } else {
-                        // Non-offloaded: "Downloading..." + file size
-                        var downloadingText = ( typeof sunshine_photo_cart !== 'undefined' && sunshine_photo_cart.lang && sunshine_photo_cart.lang.downloading ) ? sunshine_photo_cart.lang.downloading : 'Downloading...';
-                        progress_text.textContent = downloadingText + ' ' + mbLoaded + ' MB / ' + mbTotal + ' MB (' + percentComplete + '%)';
-                    }
-                } else {
-                    // Total size unknown (streaming zip) - show MB downloaded
-                    if ( isOffloaded ) {
-                        // Offloaded images: "Download started" + file size
-                        var downloadStartedText = ( typeof sunshine_photo_cart !== 'undefined' && sunshine_photo_cart.lang && sunshine_photo_cart.lang.download_started ) ? sunshine_photo_cart.lang.download_started : 'Download started';
-                        progress_text.textContent = downloadStartedText + ' - ' + mbLoaded + ' MB';
-                    } else {
-                        // Non-offloaded: "Downloading..." + file size
-                        var downloadingText = ( typeof sunshine_photo_cart !== 'undefined' && sunshine_photo_cart.lang && sunshine_photo_cart.lang.downloading ) ? sunshine_photo_cart.lang.downloading : 'Downloading...';
-                        progress_text.textContent = downloadingText + ' ' + mbLoaded + ' MB';
-                    }
-                }
-            } );
-            
-            // When progress request completes, abort it (we don't need the blob, native download handles it)
-            progressXhr.addEventListener( 'load', function() {
-                if ( progressXhr.status === 200 ) {
-                    // Abort the progress tracking request - native download is handling the actual file
-                    progressXhr.abort();
-                    
-                    // Show success message
-                    var completeText = ( typeof sunshine_photo_cart !== 'undefined' && sunshine_photo_cart.lang && sunshine_photo_cart.lang.download_complete ) ? sunshine_photo_cart.lang.download_complete : 'Download complete!';
-                    
-                    if ( progressXhr.response && progressXhr.response.size > 0 ) {
-                        var finalMb = ( progressXhr.response.size / 1024 / 1024 ).toFixed( 1 );
-                        progress_text.textContent = completeText + ' (' + finalMb + ' MB)';
-                    } else {
-                        progress_text.textContent = completeText;
-                    }
-                }
-            } );
-            
-            // Handle errors - fallback to native download
-            progressXhr.addEventListener( 'error', function() {
-                progress_text.textContent = 'Download failed. Please try again.';
-            } );
-            
-            // Start the progress tracking request
-            progressXhr.send();
-        }
-    });
-
-	$( document ).on( 'click', '#sunshine--download--gallery-add-to-cart--button button', function(){
-		var gallery_id = $( this ).data( 'gallery' );
-		var product_id = $( this ).data( 'product' );
-
-        // Form set to loading
-        $( '#sunshine--modal--content' ).addClass( 'sunshine--loading' );
-
-        // Then run ajax request
-        $.ajax({
-            type: 'POST',
-            url: sunshine_photo_cart.ajax_url,
-            data: {
-                action: 'sunshine_modal_gallery_add_to_cart',
-                gallery_id: gallery_id,
-                product_id: product_id,
-            },
-            success: function( result, textStatus, XMLHttpRequest) {
-                if ( result.success ) {
-					$( '.sunshine--cart--count' ).html( result.data.count );
-					$( '<div class="sunshine--success"></div>' ).appendTo( '#sunshine--modal--content' ).delay( 1000 ).fadeOut( 500, function(){ sunshine_close_modal(); } );
-                } else {
-                    $( '#sunshine--modale--content' ).prepend( '<div class="sunshine--error">' + result.data + '</div>');
-                }
-            },
-            error: function( MLHttpRequest, textStatus, errorThrown ) {
-				alert( sunshine_photo_cart.lang.error );
-            }
-        }).always(function(){
-            $( '#sunshine--modal--content' ).removeClass( 'sunshine--loading' );
-        });
-
-        return false;
-
-	});
 
 	$( '.sunshine--cart-item--qty input' ).on( 'change', function() {
 	    $( '#sunshine--cart--update-button input' ).prop( 'disabled', false );

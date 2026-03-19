@@ -185,6 +185,8 @@ function sunshine_multi_image_select_gallery_images() {
 		$args['image_count'] = intval( $_POST['image_count'] );
 	}
 
+	$args['id'] = ( ! empty( $_POST['id'] ) ) ? sanitize_text_field( $_POST['id'] ) : '';
+
 	$html = sunshine_get_template_html( 'multi-image-select/gallery-list', $args );
 	wp_send_json_success( array( 'html' => $html ) );
 

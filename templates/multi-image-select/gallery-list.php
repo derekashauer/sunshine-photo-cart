@@ -6,7 +6,7 @@ $images = $gallery->get_images( array( 'nopaging' => true ) );
 if ( $images ) {
 	?>
 
-<div id="sunshine--multi-image-select--source-<?php echo esc_attr( $gallery->get_id() ); ?>" class="sunshine--multi-image-select--source--list" data-product-type="<?php echo esc_attr( $product->get_type() ); ?>">
+<div id="sunshine--multi-image-select--source-<?php echo esc_attr( $gallery->get_id() ); ?>--<?php echo esc_attr( $id ); ?>" class="sunshine--multi-image-select--source--list" data-product-type="<?php echo esc_attr( $product->get_type() ); ?>">
 	<?php foreach ( $images as $image ) { ?>
 	<figure class="sunshine--multi-image-select--image sunshine--multi-image-select--source-<?php echo esc_attr( $gallery->get_id() ); ?> <?php echo ( SPC()->customer->has_favorite( $image->get_id() ) ) ? 'sunshine--multi-image-select--source-favorites' : ''; ?>">
 		<input type="checkbox" required="required" id="image-<?php echo esc_attr( $gallery->get_id() ); ?>-<?php echo esc_attr( $image->get_id() ); ?>-<?php echo esc_attr( $id ); ?>" name="images[]" data-option-id="images" value="<?php echo esc_attr( $image->get_id() ); ?>" data-image-url="<?php echo esc_url( $image->get_image_url() ); ?>" <?php checked( ! empty( $selected ) && in_array( $image->get_id(), $selected ), true ); ?> />
@@ -46,7 +46,7 @@ if ( $images ) {
 </div>
 
 <?php } else { ?>
-	<div id="sunshine--multi-image-select--source-<?php echo esc_attr( $gallery->get_id() ); ?>" class="sunshine--multi-image-select--source--list">
+	<div id="sunshine--multi-image-select--source-<?php echo esc_attr( $gallery->get_id() ); ?>--<?php echo esc_attr( $id ); ?>" class="sunshine--multi-image-select--source--list">
 		<?php esc_html_e( 'No images in this gallery', 'sunshine-photo-cart' ); ?>
 	</div>
 <?php } ?>

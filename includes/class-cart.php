@@ -782,6 +782,14 @@ class SPC_Cart {
 				$this->tax += $item->get_tax_total();
 			}
 
+			// Reduce tax by the discount amount applied to taxable items.
+			if ( $this->discount_taxable_total > 0 ) {
+				$this->tax -= round( $this->discount_taxable_total * $this->tax_rate['rate'], 2 );
+				if ( $this->tax < 0 ) {
+					$this->tax = 0;
+				}
+			}
+
 			// Is selected shipping taxable?
 			$this->shipping_tax = 0;
 			if ( $this->shipping_method && $this->shipping_method->is_taxable() ) {
