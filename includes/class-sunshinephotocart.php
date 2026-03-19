@@ -477,6 +477,12 @@ final class Sunshine_Photo_Cart {
 		);
 		register_taxonomy( 'sunshine-product-category', 'sunshine-product', $args );
 
+		// Ensure order meta is added for terms created via REST API (block editor).
+		// The admin class also hooks this, but only loads when is_admin() is true,
+		// which excludes REST API requests.
+		add_action( 'created_sunshine-product-category', array( $this, 'ensure_term_order_meta' ) );
+		add_action( 'created_sunshine-product-option', array( $this, 'ensure_term_order_meta' ) );
+
 		$labels = array(
 			'name'                   => __( 'Price Levels', 'sunshine-photo-cart' ),
 			'singular_name'          => __( 'Price Level', 'sunshine-photo-cart' ),
@@ -589,6 +595,13 @@ final class Sunshine_Photo_Cart {
 		);
 		register_taxonomy( 'sunshine-order-status', 'sunshine-order', $args );
 
+	}
+
+	public function ensure_term_order_meta( $term_id ) {
+		$order = get_term_meta( $term_id, 'order', true );
+		if ( empty( $order ) ) {
+			add_term_meta( $term_id, 'order', 1 );
+		}
 	}
 
 	public function get_post_types() {

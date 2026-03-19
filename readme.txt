@@ -243,6 +243,9 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.6.5 =
+* Fix: Product categories created via the block editor not appearing on the taxonomy management screen
+
 = 3.6.4 =
 * New: Privacy setting to automatically delete galleries a specified number of days after they expire
 * Fix: Google address autocomplete not working for address fields at checkout

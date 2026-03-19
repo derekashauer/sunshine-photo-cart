@@ -20,6 +20,7 @@ class Sunshine_Admin {
 
 		add_action( 'admin_init', array( $this, 'update_check' ) );
 		add_action( 'admin_init', array( $this, 'warnings' ) );
+		add_action( 'admin_init', array( $this, 'repair_term_order_meta' ) );
 
 		add_filter( 'jpeg_quality', array( $this, 'image_quality' ) );
 		// add_filter( 'wp_image_editors', array( $this, 'force_imagick' ) );
@@ -738,11 +739,35 @@ class Sunshine_Admin {
 	public function term_clauses( $pieces, $taxonomies, $args ) {
 		global $wpdb;
 		if ( in_array( 'sunshine-product-category', $taxonomies ) || in_array( 'sunshine-product-option', $taxonomies ) ) {
-			$pieces['join']   .= ' INNER JOIN ' . $wpdb->termmeta . ' AS tm ON t.term_id = tm.term_id ';
-			$pieces['where']  .= ' AND tm.meta_key = "order"';
-			$pieces['orderby'] = ' ORDER BY tm.meta_value + 0 ';
+			$pieces['join']   .= ' LEFT JOIN ' . $wpdb->termmeta . ' AS tm ON t.term_id = tm.term_id AND tm.meta_key = "order" ';
+			$pieces['orderby'] = ' ORDER BY COALESCE(tm.meta_value + 0, 999) ';
 		}
 		return $pieces;
+	}
+
+	public function repair_term_order_meta() {
+		if ( get_option( 'sunshine_repaired_term_order_meta' ) ) {
+			return;
+		}
+		$taxonomies = array( 'sunshine-product-category', 'sunshine-product-option' );
+		foreach ( $taxonomies as $taxonomy ) {
+			$terms = get_terms( array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => false,
+				'meta_query' => array(
+					array(
+						'key'     => 'order',
+						'compare' => 'NOT EXISTS',
+					),
+				),
+			) );
+			if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+					add_term_meta( $term->term_id, 'order', 1 );
+				}
+			}
+		}
+		update_option( 'sunshine_repaired_term_order_meta', true, true );
 	}
 
 	public function delete_post( $post_id, $post ) {
