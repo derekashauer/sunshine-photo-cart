@@ -194,9 +194,13 @@ function sunshine_addons_page() {
 			<?php foreach ( $categories as $key => $name ) { ?>
 				<a href="#<?php echo esc_attr( $key ); ?>" data-category="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $name ); ?></a>
 			<?php } ?>
+			<?php if ( $current_plan !== 'pro' ) { ?>
+				<a href="#plus" data-plan="plus" class="sunshine--addons--plan-filter">Plus</a>
+				<a href="#pro" data-plan="pro" class="sunshine--addons--plan-filter">Pro</a>
+			<?php } ?>
 		</p>
 		<script>
-		jQuery( '#sunshine--addons--categories a' ).on( 'click', function(){
+		jQuery( '#sunshine--addons--categories a[data-category]' ).on( 'click', function(){
 			jQuery( '#sunshine--addons--categories a' ).removeClass( 'active' );
 			jQuery( this ).addClass( 'active' );
 			var category = jQuery( this ).data( 'category' );
@@ -205,6 +209,17 @@ function sunshine_addons_page() {
 			} else {
 				jQuery( '#sunshine--addons li' ).hide();
 				jQuery( '#sunshine--addons li.' + category ).show();
+			}
+		});
+		jQuery( '#sunshine--addons--categories a[data-plan]' ).on( 'click', function(){
+			jQuery( '#sunshine--addons--categories a' ).removeClass( 'active' );
+			jQuery( this ).addClass( 'active' );
+			var plan = jQuery( this ).data( 'plan' );
+			jQuery( '#sunshine--addons li' ).hide();
+			if ( plan == 'pro' ) {
+				jQuery( '#sunshine--addons li.plus, #sunshine--addons li.pro' ).show();
+			} else {
+				jQuery( '#sunshine--addons li.' + plan ).show();
 			}
 		});
 		</script>
@@ -246,15 +261,41 @@ function sunshine_addons_page() {
 								</div>
 							</div>
 							<div class="sunshine--addons--upgrade-modal--content">
-								<div class="sunshine--addons--upgrade-modal--content--title">
-									<strong>GO PRO</strong> for only <span>$279</span>
-								</div>
-								<div class="sunshine--addons--upgrade-modal--content--description">
-									Get access to every single add-on, including <?php echo esc_html( $addon['title'] ); ?>, for huge savings compared to buying individually
-								</div>
-								<a href="https://www.sunshinephotocart.com/checkout?edd_action=add_to_cart&download_id=44&utm_source=plugin&utm_medium=link&utm_campaign=addons-list-modal" target="_blank" class="button-primary large">Upgrade to PRO</a><br /><br />
-								<a href="https://www.sunshinephotocart.com/upgrade/?utm_source=plugin&utm_medium=link&utm_campaign=addons-list-modal" target="_blank">Learn more about Pro</a> |
-								<a href="<?php echo esc_url( admin_url( 'admin.php?page=sunshine&section=license&license_reminder' ) ); ?>">I already have a license</a>
+								<?php if ( $addon['plan'] == 'plus' ) { ?>
+									<div class="sunshine--addons--upgrade-modal--plans">
+										<div class="sunshine--addons--upgrade-modal--plan">
+											<div class="sunshine--addons--upgrade-modal--content--title">
+												<strong>GO PLUS</strong> for only <span>$149</span>
+											</div>
+											<div class="sunshine--addons--upgrade-modal--content--description">
+												Get access to all Plus add-ons, including <?php echo esc_html( $addon['title'] ); ?>
+											</div>
+											<a href="https://www.sunshinephotocart.com/checkout?edd_action=add_to_cart&download_id=129771&utm_source=plugin&utm_medium=link&utm_campaign=addons-list-modal" target="_blank" class="button-primary large">Upgrade to PLUS</a><br /><br />
+											<a href="https://www.sunshinephotocart.com/upgrade/?utm_source=plugin&utm_medium=link&utm_campaign=addons-list-modal" target="_blank">Learn more</a>
+										</div>
+										<div class="sunshine--addons--upgrade-modal--plan sunshine--addons--upgrade-modal--plan-pro">
+											<div class="sunshine--addons--upgrade-modal--content--title">
+												<strong>GO PRO</strong> for only <span>$249</span>
+											</div>
+											<div class="sunshine--addons--upgrade-modal--content--description">
+												Get access to every add-on for huge savings
+											</div>
+											<a href="https://www.sunshinephotocart.com/checkout?edd_action=add_to_cart&download_id=44&utm_source=plugin&utm_medium=link&utm_campaign=addons-list-modal" target="_blank" class="button-primary large">Upgrade to PRO</a><br /><br />
+											<a href="https://www.sunshinephotocart.com/upgrade/?utm_source=plugin&utm_medium=link&utm_campaign=addons-list-modal" target="_blank">Learn more</a>
+										</div>
+									</div>
+									<!--<a href="<?php echo esc_url( admin_url( 'admin.php?page=sunshine&section=license&license_reminder' ) ); ?>">I already have a license</a>-->
+								<?php } else { ?>
+									<div class="sunshine--addons--upgrade-modal--content--title">
+										<strong>GO PRO</strong> for only <span>$249</span>
+									</div>
+									<div class="sunshine--addons--upgrade-modal--content--description">
+										Get access to every add-on, including <?php echo esc_html( $addon['title'] ); ?>, for huge savings compared to buying individually
+									</div>
+									<a href="https://www.sunshinephotocart.com/checkout?edd_action=add_to_cart&download_id=44&utm_source=plugin&utm_medium=link&utm_campaign=addons-list-modal" target="_blank" class="button-primary large">Upgrade to PRO</a><br /><br />
+									<a href="https://www.sunshinephotocart.com/upgrade/?utm_source=plugin&utm_medium=link&utm_campaign=addons-list-modal" target="_blank">Learn more about Pro</a> |
+									<a href="<?php echo esc_url( admin_url( 'admin.php?page=sunshine&section=license&license_reminder' ) ); ?>">I already have a license</a>
+								<?php } ?>
 								<div class="sunshine--addons--upgrade-modal--content--divider">
 									OR
 								</div>

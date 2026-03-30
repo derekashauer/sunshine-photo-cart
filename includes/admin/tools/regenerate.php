@@ -398,6 +398,7 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			}
 		}
 
+		do_action( 'sunshine_regenerate_image', $image_id );
 		do_action( 'sunshine_after_image_process', $image_id, $file_path, $watermark );
 		wp_update_attachment_metadata( $image_id, $new_metadata );
 

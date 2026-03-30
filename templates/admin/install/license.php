@@ -27,7 +27,7 @@
 			<h2>Make more money <em>by going Pro!</em></h2>
 			<p>Get access to every available add-on to grow your photography business and profits — <strong>cover the cost with just one customer!</strong></p>
 			<p>
-				<a href="https://www.sunshinephotocart.com/upgrade/?utm_source=plugin&utm_medium=link&utm_campaign=onboarding" class="button-primary large" target"_blank" style="margin-top: 15px;">Go Pro for only $279!</a>
+				<a href="https://www.sunshinephotocart.com/upgrade/?utm_source=plugin&utm_medium=link&utm_campaign=onboarding" class="button-primary large" target"_blank" style="margin-top: 15px;">Go Pro for only $249!</a>
 				<br />
 				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-install&step=data' ) ); ?>" style="font-size: 14px;">Not now, I will check this out later</a>
 			</p>

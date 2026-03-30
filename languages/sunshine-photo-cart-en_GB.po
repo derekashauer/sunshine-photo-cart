@@ -255,12 +255,12 @@ msgstr "Logged out"
 #: sunshine-analytics/customer-tracking.php:146
 #, php-format
 msgid "Image %s added to favorites"
-msgstr "Image %s added to favorites"
+msgstr "Image %s added to favourites"
 
 #: sunshine-analytics/customer-tracking.php:153
 #, php-format
 msgid "Image %s removed from favorites"
-msgstr "Image %s removed from favorites"
+msgstr "Image %s removed from favourites"
 
 #: sunshine-analytics/customer-tracking.php:173
 #, php-format
@@ -835,11 +835,11 @@ msgstr "All"
 
 #: sunshine-automated-email-marketing/class-admin-automated-emails.php:74
 msgid "User has favorites"
-msgstr "User has favorites"
+msgstr "User has favourites"
 
 #: sunshine-automated-email-marketing/class-admin-automated-emails.php:75
 msgid "User has no favorites"
-msgstr "User has no favorites"
+msgstr "User has no favourites"
 
 #: sunshine-automated-email-marketing/class-admin-automated-emails.php:76
 msgid "User has items in cart"
@@ -999,7 +999,7 @@ msgstr "After user adds item to cart"
 
 #: sunshine-automated-email-marketing/common.php:129
 msgid "After user adds image to favorites"
-msgstr "After user adds image to favorites"
+msgstr "After user adds image to favourites"
 
 #: sunshine-automated-email-marketing/common.php:130
 msgid "After user submits order"
@@ -1057,7 +1057,7 @@ msgstr "Watch training video"
 #: sunshine-photo-cart/templates/email/admin-favorites.php:40
 #: sunshine-photo-cart/templates/email/custom-favorites.php:40
 msgid "View all favorites"
-msgstr "View all favorites"
+msgstr "View all favourites"
 
 #: sunshine-bulk-galleries/hooks.php:9
 msgid "Bulk add galleries"
@@ -4563,7 +4563,7 @@ msgstr "Open Gallery"
 #: sunshine-lightbox/class-lightbox.php:251
 #: sunshine-photo-cart/includes/class-frontend.php:627
 msgid "Favorite"
-msgstr "Favorite"
+msgstr "Favourite"
 
 #: sunshine-lightbox/class-lightbox.php:273
 #: sunshine-photo-cart/includes/class-frontend.php:685
@@ -5326,7 +5326,7 @@ msgstr "Sunshine Checkout"
 #: sunshine-photo-cart/includes/admin/class-admin.php:333
 #: sunshine-photo-cart/includes/functions/favorites.php:245
 msgid "Sunshine Favorites"
-msgstr "Sunshine Favorites"
+msgstr "Sunshine Favourites"
 
 #: sunshine-photo-cart/includes/admin/class-admin.php:335
 msgid "Sunshine Terms & Conditions"
@@ -5656,7 +5656,7 @@ msgstr "Shipping Postcode"
 
 #: sunshine-photo-cart/includes/admin/class-privacy.php:204
 msgid "Favorite Images"
-msgstr "Favorite Images"
+msgstr "Favourite Images"
 
 #: sunshine-photo-cart/includes/admin/class-privacy.php:205
 msgid "Account Credits"
@@ -6543,7 +6543,7 @@ msgid ""
 "leaving just image viewing and adding to favorites"
 msgstr ""
 "This will remove all aspects of purchasing abilities throughout the site, "
-"leaving just image viewing and adding to favorites"
+"leaving just image viewing and adding to favourites"
 
 #: sunshine-photo-cart/includes/admin/settings-fields.php:432
 msgid "Allow product comments"
@@ -6921,11 +6921,11 @@ msgstr "Watermark Thumbnails"
 
 #: sunshine-photo-cart/includes/admin/settings-fields.php:744
 msgid "Favorites / Selections"
-msgstr "Favorites / Selections"
+msgstr "Favourites / Selections"
 
 #: sunshine-photo-cart/includes/admin/settings-fields.php:749
 msgid "Enable Favorites"
-msgstr "Enable Favorites"
+msgstr "Enable Favourites"
 
 #: sunshine-photo-cart/includes/admin/settings-fields.php:752
 msgid "Allow users to save images to their favorites"
@@ -7527,7 +7527,7 @@ msgstr "Should comments require approval before being shown"
 
 #: sunshine-photo-cart/includes/admin/sunshine-gallery.php:158
 msgid "Disable favorites for this gallery"
-msgstr "Disable favorites for this gallery"
+msgstr "Disable favourites for this gallery"
 
 #: sunshine-photo-cart/includes/admin/sunshine-gallery.php:162
 msgid "Gallery Sharing"
@@ -17322,7 +17322,7 @@ msgstr "Add all to cart"
 
 #: sunshine-photo-cart/includes/class-frontend.php:766
 msgid "Share your favorites"
-msgstr "Share your favorites"
+msgstr "Share your favourites"
 
 #: sunshine-photo-cart/includes/class-frontend.php:778
 msgid "Clear all favorites"
@@ -17741,17 +17741,17 @@ msgstr "Order items shipped or delivered to your provided address"
 
 #: sunshine-photo-cart/includes/emails/class-email-admin-favorites.php:8
 msgid "Favorites (Admin)"
-msgstr "Favorites (Admin)"
+msgstr "Favourites (Admin)"
 
 #: sunshine-photo-cart/includes/emails/class-email-admin-favorites.php:9
 msgid "Favorites notification sent by customers to site admin"
-msgstr "Favorites notification sent by customers to site admin"
+msgstr "Favourites notification sent by customers to site admin"
 
 #. translators: %1$s is the customer email address, %2$s is the site name
 #: sunshine-photo-cart/includes/emails/class-email-admin-favorites.php:11
 #, php-format
 msgid "Favorites submitted by %1$s on %2$s"
-msgstr "Favorites submitted by %1$s on %2$s"
+msgstr "Favourites submitted by %1$s on %2$s"
 
 #: sunshine-photo-cart/includes/emails/class-email-admin-receipt.php:8
 msgid "Admin Order Receipt"
@@ -17783,17 +17783,17 @@ msgstr "Customer signup at %s"
 
 #: sunshine-photo-cart/includes/emails/class-email-custom-favorites.php:8
 msgid "Favorites (Custom Recipient)"
-msgstr "Favorites (Custom Recipient)"
+msgstr "Favourites (Custom Recipient)"
 
 #: sunshine-photo-cart/includes/emails/class-email-custom-favorites.php:9
 msgid "Favorites notification sent by customers to a custom recipient"
-msgstr "Favorites notification sent by customers to a custom recipient"
+msgstr "Favourites notification sent by customers to a custom recipient"
 
 #. translators: %1$s is the customer first name, %2$s is the customer last name, %3$s is the site name
 #: sunshine-photo-cart/includes/emails/class-email-custom-favorites.php:11
 #, php-format
 msgid "%1$s %2$s has sent you favorited images on %3$s"
-msgstr "%1$s %2$s has sent you favorited images on %3$s"
+msgstr "%1$s %2$s has sent you favourited images on %3$s"
 
 #: sunshine-photo-cart/includes/emails/class-email-customer-receipt.php:8
 msgid "Customer Order Receipt"
@@ -18132,7 +18132,7 @@ msgstr "Invalid comment submission - unknown reason"
 msgid ""
 "You will need an account to remember your favorites the next time you visit"
 msgstr ""
-"You will need an account to remember your favorites the next time you visit"
+"You will need an account to remember your favourites the next time you visit"
 
 #: sunshine-photo-cart/includes/functions/favorites.php:81
 msgid "Your selections have been saved to your account"
@@ -18144,11 +18144,11 @@ msgstr "Invalid image"
 
 #: sunshine-photo-cart/includes/functions/favorites.php:107
 msgid "Could not add image to favorites"
-msgstr "Could not add image to favorites"
+msgstr "Could not add image to favourites"
 
 #: sunshine-photo-cart/includes/functions/favorites.php:224
 msgid "Favorites cleared"
-msgstr "Favorites cleared"
+msgstr "Favourites cleared"
 
 #: sunshine-photo-cart/includes/functions/favorites.php:234
 msgid "Customer Profile"
@@ -18175,7 +18175,7 @@ msgid ""
 "Images in your favorites have been removed because they are no longer "
 "available"
 msgstr ""
-"Images in your favorites have been removed because they are no longer "
+"Images in your favourites have been removed because they are no longer "
 "available"
 
 #: sunshine-photo-cart/includes/functions/misc.php:212
@@ -20210,7 +20210,7 @@ msgstr "View All Reports"
 
 #: sunshine-photo-cart/templates/favorites/empty.php:3
 msgid "You do not have any favorites yet"
-msgstr "You do not have any favorites yet"
+msgstr "You do not have any favourites yet"
 
 #: sunshine-photo-cart/templates/favorites/guest-choice.php:5
 msgid "Create an account to save your favorites across multiple visits"
@@ -20218,7 +20218,7 @@ msgstr "Create an account to save your favourites across multiple visits"
 
 #: sunshine-photo-cart/templates/favorites/share.php:3
 msgid "Share Your Favorites"
-msgstr "Share Your Favorites"
+msgstr "Share Your Favourites"
 
 #: sunshine-photo-cart/templates/favorites/share.php:7
 msgid "Custom recipients"
@@ -20235,7 +20235,7 @@ msgid ""
 "it."
 msgstr ""
 "Notice: A unique URL is generated and emailed to your recipients. Your "
-"selected favorite images will be accessible via this URL to anyone who has "
+"selected favourite images will be accessible via this URL to anyone who has "
 "it."
 
 #: sunshine-photo-cart/templates/favorites/share.php:18
@@ -20244,7 +20244,7 @@ msgstr "Custom Note"
 
 #: sunshine-photo-cart/templates/favorites/share.php:23
 msgid "Share Favorites"
-msgstr "Share Favorites"
+msgstr "Share Favourites"
 
 #: sunshine-photo-cart/templates/galleries/empty.php:1
 msgid "Sorry, no galleries have been setup yet"

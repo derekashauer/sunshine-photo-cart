@@ -125,7 +125,13 @@
 				// If only 1 product, show details directly.
 				if ( 1 === $total_products && $single_product ) {
 					// Add data attribute to indicate single product mode for JS to auto-close modal after add to cart.
-					echo '<script>document.getElementById("sunshine--image--add-to-cart").dataset.singleProduct = "true";</script>';
+					echo '<script>';
+					echo 'var el = document.getElementById("sunshine--image--add-to-cart");';
+					echo 'el.dataset.singleProduct = "true";';
+					echo 'el.dataset.singleProductId = "' . (int) $single_product->get_id() . '";';
+					echo 'el.dataset.singleProductType = "' . esc_js( $single_product->get_type() ) . '";';
+					echo 'el.dataset.singleProductGalleryId = "' . (int) ( $action_image ? $action_image->get_gallery_id() : 0 ) . '";';
+					echo '</script>';
 					sunshine_get_template(
 						'image/product-details',
 						array(

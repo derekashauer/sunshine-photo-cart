@@ -1027,8 +1027,9 @@ class Sunshine_Admin_Meta_Boxes {
 		$search = sanitize_text_field( $_REQUEST['search'] );
 
 		$args      = array(
-			's'      => $search,
-			'number' => -1,
+			's'           => $search,
+			'number'      => -1,
+			'post_status' => array( 'publish', 'private', 'draft' ),
 		);
 		$galleries = sunshine_get_galleries( $args, 'all' );
 

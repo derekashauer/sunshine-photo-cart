@@ -1544,10 +1544,11 @@ function sunshine_get_settings_fields() {
 	);
 
 	$privacy_fields['3000'] = array(
-		'id'          => 'privacy_retention_header',
-		'name'        => __( 'Personal Data Retention', 'sunshine-photo-cart' ),
-		'type'        => 'header',
-		'description' => __( 'Choose how long to retain personal data when it\'s no longer needed for processing. Leave the following options blank to retain this data indefinitely.', 'sunshine-photo-cart' ),
+		'id'            => 'privacy_retention_header',
+		'name'          => __( 'Personal Data Retention', 'sunshine-photo-cart' ),
+		'type'          => 'header',
+		'description'   => __( 'Choose how long to retain personal data when it\'s no longer needed for processing. Leave the following options blank to retain this data indefinitely.', 'sunshine-photo-cart' ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/privacy-data-retention/',
 	);
 	$privacy_fields['3100'] = array(
 		'id'   => 'privacy_retain_inactive_accounts',

@@ -77,6 +77,13 @@ function sunshine_get_products( $price_level = 'all', $category = '', $types = '
 		$types = array( $types );
 	}
 
+	// Static cache to avoid redundant DB queries within the same request.
+	static $cache = array();
+	$cache_key = md5( serialize( array( $price_level, $category, $types, $args, $ignore_price ) ) );
+	if ( isset( $cache[ $cache_key ] ) ) {
+		return $cache[ $cache_key ];
+	}
+
 	$products = get_posts( $args );
 	if ( ! empty( $products ) ) {
 		$final_products = array();
@@ -87,9 +94,11 @@ function sunshine_get_products( $price_level = 'all', $category = '', $types = '
 				$final_products[] = $p;
 			}
 		}
+		$cache[ $cache_key ] = $final_products;
 		return $final_products;
 	}
 
+	$cache[ $cache_key ] = false;
 	return false;
 
 }
@@ -133,6 +142,11 @@ function sunshine_get_default_product_category() {
 	if ( ! empty( $terms ) ) {
 		return new SPC_Product_Category( $terms[0] );
 	}
+	// No default category marked — fall back to first available category
+	$all_terms = get_terms( 'sunshine-product-category', array( 'hide_empty' => 0, 'orderby' => 'meta_value_num', 'meta_key' => 'order', 'order' => 'ASC', 'number' => 1 ) );
+	if ( ! empty( $all_terms ) ) {
+		return new SPC_Product_Category( $all_terms[0] );
+	}
 	return false;
 }
 
@@ -148,16 +162,30 @@ function sunshine_get_product_categories( $price_level = '', $type = '' ) {
 	);
 	if ( ! empty( $terms ) ) {
 		$product_categories = array();
-		foreach ( $terms as $term ) {
-			// Filter based on price level
-			if ( $price_level ) {
-				$products = sunshine_get_products( $price_level, $term->term_id, $type );
-				if ( empty( $products ) ) {
-					continue;
+
+		if ( $price_level ) {
+			// Fetch all products once and determine which categories have products.
+			$all_products = sunshine_get_products( $price_level, '', $type );
+			$active_category_ids = array();
+			if ( ! empty( $all_products ) ) {
+				foreach ( $all_products as $product ) {
+					$cat_id = $product->get_category_id();
+					if ( $cat_id ) {
+						$active_category_ids[ $cat_id ] = true;
+					}
 				}
 			}
-			$product_categories[] = new SPC_Product_Category( $term );
+			foreach ( $terms as $term ) {
+				if ( isset( $active_category_ids[ $term->term_id ] ) ) {
+					$product_categories[] = new SPC_Product_Category( $term );
+				}
+			}
+		} else {
+			foreach ( $terms as $term ) {
+				$product_categories[] = new SPC_Product_Category( $term );
+			}
 		}
+
 		return $product_categories;
 	}
 	return false;

@@ -196,6 +196,26 @@ jQuery( document ).ready(function($){
         return false;
     });
 
+    // After the add_to_cart modal loads, if single product mode is active,
+    // fire the product_details event so addons can intercept.
+    $( document ).on( 'add_to_cart', function() {
+        var $container = $( '#sunshine--image--add-to-cart' );
+        var singleProduct = $container.data( 'single-product' );
+        if ( singleProduct !== 'true' && singleProduct !== true ) {
+            return;
+        }
+        var $details = $( '#sunshine--product--details' );
+        if ( ! $details.length ) {
+            return;
+        }
+        $( document ).trigger( 'sunshine_product_details', [
+            $container.data( 'single-product-id' ),
+            $container.data( 'single-product-type' ),
+            $details.data( 'image-id' ),
+            $container.data( 'single-product-gallery-id' )
+        ] );
+    });
+
     // Show product options
     $( document ).on( 'click', '#sunshine--modal--content .sunshine--product--show-details', function(e){
 
