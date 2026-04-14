@@ -766,7 +766,7 @@ class Sunshine_Admin_Meta_Boxes {
 						}
 						if ( is_array( $condition['value'] ) ) {
 							?>
-							var possible_values = [ '<?php echo esc_js( join( "', '", $condition['value'] ) ); ?>' ];
+							var possible_values = <?php echo wp_json_encode( $condition['value'] ); ?>;
 							if ( possible_values.includes( value ) ) {
 								$( '<?php echo esc_js( $action_target ); ?>' ).<?php echo esc_js( $true_action ); ?>();
 							} else {
