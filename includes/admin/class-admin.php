@@ -3,8 +3,8 @@
 class Sunshine_Admin {
 
 	protected $notices;
-	protected $tabs      = array();
-	private $needs_setup = false;
+	protected $tabs                 = array();
+	private $needs_setup            = false;
 	private $remote_promo_displayed = false;
 
 	public function __construct() {
@@ -34,7 +34,7 @@ class Sunshine_Admin {
 		add_filter( 'pre_get_posts', array( $this, 'media_library_list' ) );
 
 		// Show the links on the Plugins page.
-		add_filter( 'plugin_action_links_sunshine-photo-cart-v3/sunshine-photo-cart.php', array( $this, 'plugin_action_links' ) );
+		add_filter( 'plugin_action_links_' . plugin_basename( SUNSHINE_PHOTO_CART_FILE ), array( $this, 'add_plugin_action_links' ) );
 
 		// Add link to main Sunshine page in admin bar top left.
 		add_action( 'admin_bar_menu', array( $this, 'admin_bar_view_client_galleries' ), 768 );
@@ -377,12 +377,24 @@ class Sunshine_Admin {
 		return $editors;
 	}
 
-	function plugin_action_links( $links ) {
+	public function add_plugin_action_links( $links ) {
+		$action_links = array(
+			sprintf(
+				'<a href="%1$s">%2$s</a>',
+				esc_url( admin_url( 'admin.php?page=sunshine' ) ),
+				esc_html__( 'Settings', 'sunshine-photo-cart' )
+			),
+		);
+
 		if ( ! SPC()->is_pro() ) {
-			$upgrade_page = '<a href="https://www.sunshinephotocart.com/pricing/?utm_source=plugin&utm_medium=link&utm_campaign=upgrade" target="_blank"><b style="color: orange;">' . __( 'Upgrade', 'sunshine-photo-cart' ) . '</b></a>';
-			array_unshift( $links, $upgrade_page );
+			$action_links[] = sprintf(
+				'<a href="%1$s" target="_blank" rel="noopener" style="font-weight: bold;">%2$s</a>',
+				esc_url( 'https://www.sunshinephotocart.com/upgrade/?utm_source=plugin&utm_medium=link&utm_campaign=plugin-links-upgrade' ),
+				esc_html__( 'Go Pro', 'sunshine-photo-cart' )
+			);
 		}
-		return $links;
+
+		return array_merge( $links, $action_links );
 	}
 
 	function admin_footer_text( $footer_text ) {
@@ -592,7 +604,7 @@ class Sunshine_Admin {
 		// Include the in-app promos class.
 		require_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/class-in-app-promos.php';
 
-		$promos = new Sunshine_In_App_Promos();
+		$promos                       = new Sunshine_In_App_Promos();
 		$this->remote_promo_displayed = $promos->display();
 	}
 
@@ -751,16 +763,18 @@ class Sunshine_Admin {
 		}
 		$taxonomies = array( 'sunshine-product-category', 'sunshine-product-option' );
 		foreach ( $taxonomies as $taxonomy ) {
-			$terms = get_terms( array(
-				'taxonomy'   => $taxonomy,
-				'hide_empty' => false,
-				'meta_query' => array(
-					array(
-						'key'     => 'order',
-						'compare' => 'NOT EXISTS',
+			$terms = get_terms(
+				array(
+					'taxonomy'   => $taxonomy,
+					'hide_empty' => false,
+					'meta_query' => array(
+						array(
+							'key'     => 'order',
+							'compare' => 'NOT EXISTS',
+						),
 					),
-				),
-			) );
+				)
+			);
 			if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
 				foreach ( $terms as $term ) {
 					add_term_meta( $term->term_id, 'order', 1 );

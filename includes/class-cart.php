@@ -490,7 +490,8 @@ class SPC_Cart {
 	}
 
 	public function calculate_discount() {
-		$this->discount = 0;
+		$this->discount               = 0;
+		$this->discount_taxable_total = 0;
 
 		// Set any line item discounts.
 		$items = $this->get_cart_items();
@@ -760,13 +761,27 @@ class SPC_Cart {
 
 		$price_has_tax = SPC()->get_option( 'price_has_tax' );
 
-		// When prices include tax, just sum up all the pre-calculated tax amounts.
+		// When prices include tax, calculate tax from the discounted total if applicable.
 		if ( 'yes' === $price_has_tax ) {
 
-			// Sum item taxes.
 			$contents = $this->get_cart_items();
-			foreach ( $contents as $item ) {
-				$this->tax += $item->get_tax_total();
+
+			if ( $this->discount_taxable_total > 0 && $this->tax_rate ) {
+				// Recalculate tax on the discounted total for taxable items.
+				$taxable_items_total = 0;
+				foreach ( $contents as $item ) {
+					if ( $item->is_taxable() ) {
+						$taxable_items_total += $item->get_total() + $item->get_tax_total();
+					}
+				}
+				$discounted      = max( $taxable_items_total - $this->discount_taxable_total, 0 );
+				$discounted_base = round( $discounted / ( $this->tax_rate['rate'] + 1 ), 2 );
+				$this->tax       = $discounted - $discounted_base;
+			} else {
+				// No cart-level discount, sum item taxes.
+				foreach ( $contents as $item ) {
+					$this->tax += $item->get_tax_total();
+				}
 			}
 
 			// Add shipping tax.

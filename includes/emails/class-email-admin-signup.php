@@ -11,6 +11,13 @@ class SPC_Email_Admin_Signup extends SPC_Email {
 		$this->subject           = sprintf( __( 'Customer signup at %s', 'sunshine-photo-cart' ), '[sitename]' );
 		$this->custom_recipients = true;
 
+		$this->add_search_replace(
+			array(
+				'first_name' => '',
+				'last_name'  => '',
+				'email'      => '',
+			)
+		);
 		add_action( 'sunshine_after_signup', array( $this, 'trigger' ) );
 
 	}
@@ -29,6 +36,13 @@ class SPC_Email_Admin_Signup extends SPC_Email {
 			'customer' => $customer,
 		);
 		$this->add_args( $args );
+
+		$search_replace = array(
+			'first_name' => $customer->get_first_name() ? $customer->get_first_name() : __( 'No first name given', 'sunshine-photo-cart' ),
+			'last_name'  => $customer->get_last_name() ? $customer->get_last_name() : __( 'No last name given', 'sunshine-photo-cart' ),
+			'email'      => $customer->get_email(),
+		);
+		$this->add_search_replace( $search_replace );
 
 		$this->send();
 

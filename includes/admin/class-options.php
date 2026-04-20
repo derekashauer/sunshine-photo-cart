@@ -39,9 +39,6 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 			// add_action( 'admin_head', array( $this, 'styles' ) );
 			add_action( 'admin_footer', array( $this, 'scripts' ) );
 
-			// Add settings link to plugins page
-			add_filter( 'plugin_action_links_' . plugin_basename( SUNSHINE_PHOTO_CART_FILE ), array( $this, 'add_settings_link' ) );
-
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
 			add_action( 'admin_init', array( $this, 'flush_endpoint_rewrite_rules_check' ) );
@@ -100,18 +97,6 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 			// wp_register_script( $this->prefix . '-settings-js', $this->assets_url . 'js/settings.js', array( 'farbtastic', 'jquery' ), '1.0.0' );
 			// wp_enqueue_script( $this->prefix . '-settings-js' );
 			// wp_enqueue_style( $this->prefix . '-settings-css', $this->assets_url . 'css/admin.css' );
-		}
-
-		/**
-		 * Add settings link to plugin list table
-		 *
-		 * @param  array $links Existing links
-		 * @return array        Modified links
-		 */
-		public function add_settings_link( $links ) {
-			$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=' . $this->key ) ) . '">' . __( 'Settings', 'sunshine-photo-cart' ) . '</a>';
-			array_push( $links, $settings_link );
-			return $links;
 		}
 
 		/**
@@ -548,8 +533,8 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 						'months' => __( 'month(s)', 'sunshine-photo-cart' ),
 						'years'  => __( 'year(s)', 'sunshine-photo-cart' ),
 					);
-					$html             .= '<input type="number" min="1" step="1" style="width: 80px;" name="' . esc_attr( $option_name ) . '[number]" value="' . esc_attr( $number_val ) . '" /> ';
-					$html             .= '<select name="' . esc_attr( $option_name ) . '[unit]">';
+					$html          .= '<input type="number" min="1" step="1" style="width: 80px;" name="' . esc_attr( $option_name ) . '[number]" value="' . esc_attr( $number_val ) . '" /> ';
+					$html          .= '<select name="' . esc_attr( $option_name ) . '[unit]">';
 					foreach ( $units as $ukey => $ulabel ) {
 						$html .= '<option value="' . esc_attr( $ukey ) . '"' . selected( $unit_val, $ukey, false ) . '>' . esc_html( $ulabel ) . '</option>';
 					}
@@ -775,7 +760,8 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 
 							function sunshine_evaluate_conditions_<?php echo esc_js( $i ); ?>() {
 								var show = true;
-								<?php foreach ( $valid_conditions as $ci => $condition ) {
+								<?php
+								foreach ( $valid_conditions as $ci => $condition ) {
 									$comparison_string_safe = '';
 									if ( is_array( $condition['value'] ) ) {
 										$comparison_strings = array();
@@ -787,9 +773,9 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 										$comparison_string_safe = 'val ' . esc_js( $condition['compare'] ) . ' "' . esc_js( $condition['value'] ) . '"';
 									}
 									$is_show = ( $condition['action'] == 'show' );
-								?>
+									?>
 								var val = sunshine_get_condition_field_value( '<?php echo esc_js( $condition['field'] ); ?>' );
-								<?php if ( $is_show ) { ?>
+									<?php if ( $is_show ) { ?>
 								if ( !( <?php echo $comparison_string_safe; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> ) ) { show = false; }
 								<?php } else { ?>
 								if ( <?php echo $comparison_string_safe; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> ) { show = false; }
@@ -814,7 +800,7 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 								}
 							}
 							foreach ( $bound_fields as $bound_field ) {
-							?>
+								?>
 							jQuery( '.sunshine-settings-<?php echo esc_js( $bound_field ); ?> input, .sunshine-settings-<?php echo esc_js( $bound_field ); ?> select' ).on( 'change', function(){
 								sunshine_evaluate_conditions_<?php echo esc_js( $i ); ?>();
 							});

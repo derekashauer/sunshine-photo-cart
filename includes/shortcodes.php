@@ -44,7 +44,17 @@ function sunshine_gallery_shortcode( $atts ) {
 		$atts
 	);
 
-	$gallery = sunshine_get_gallery( $atts['id'] );
+	if ( empty( $atts['id'] ) ) {
+		// See if the current page is a gallery page and if so, use that gallery
+		if ( SPC()->frontend->is_gallery() ) {
+			$gallery = SPC()->frontend->current_gallery;
+		} else {
+			return '<p>' . __( 'Sorry, no gallery ID provided', 'sunshine-photo-cart' ) . '</p>';
+		}
+	} else {
+		$gallery = sunshine_get_gallery( $atts['id'] );
+	}
+
 	if ( ! $gallery->get_id() ) {
 		return '<p>' . __( 'Sorry, no gallery with that ID', 'sunshine-photo-cart' ) . '</p>';
 	}

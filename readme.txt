@@ -243,7 +243,14 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.6.5 =
+= 3.6.6 - April 20, 2026 =
+* Fix: Admin email for customer signup missing template tags
+* Fix: Tax calculations when price includes tax, discount used, and discounts applied before tax
+* Enhancement: Allow more source options for filling multi-image/packages
+* Enhancement: [sunshine_gallery] shortcode looks for current gallery ID as fallback
+* Change: Main menu CSS adjustments - selectors less strict
+
+= 3.6.5  - March 30, 2026 =
 * Fix: Regenerated images not re-uploaded to cloud storage after watermark changes
 * Fix: Product categories created via the block editor not appearing on the taxonomy management screen
 * Fix: Single product mode not triggering multi-image product image selection UI

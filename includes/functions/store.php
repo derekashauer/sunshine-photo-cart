@@ -54,6 +54,15 @@ function sunshine_get_sources( $product, $gallery ) {
 			$galleries        = sunshine_get_galleries( array( 'post__in' => $ancestor_ids ) );
 			$source_galleries = array_merge( $source_galleries, $galleries );
 		}
+
+		if ( in_array( 'top_level', $allowed_sources ) ) {
+			$ancestor_ids   = get_post_ancestors( $gallery->get_id() );
+			$root_id        = ! empty( $ancestor_ids ) ? end( $ancestor_ids ) : $gallery->get_id();
+			$descendant_ids = sunshine_get_gallery_descendant_ids( $root_id );
+			$descendant_ids[] = $root_id;
+			$galleries        = sunshine_get_galleries( array( 'post__in' => $descendant_ids ) );
+			$source_galleries = array_merge( $source_galleries, $galleries );
+		}
 	} else {
 		// Fallback to all accessible galleries if nothing is selected.
 		$source_galleries = sunshine_get_galleries( array( 'meta_query' => array() ) );
@@ -62,6 +71,8 @@ function sunshine_get_sources( $product, $gallery ) {
 	if ( ! array_key_exists( $gallery->get_id(), $source_galleries ) ) {
 		$source_galleries[] = $gallery;
 	}
+
+	$source_galleries = apply_filters( 'sunshine_product_sources', $source_galleries, $product, $gallery );
 
 	return $source_galleries;
 

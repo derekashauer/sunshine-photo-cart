@@ -360,11 +360,11 @@ class SPC_Discount extends Sunshine_Data {
 				$product_total[ $item->get_product_id() ] = 0;
 				$product_qty[ $item->get_product_id() ]   = 0;
 			}
-			$product_total[ $item->get_product_id() ] += $item->get_subtotal();
+			$product_total[ $item->get_product_id() ] += $item->get_total();
 			$product_qty[ $item->get_product_id() ]   += $item->get_qty();
 			$product_price[ $item->get_product_id() ]  = $item->get_subtotal();
 
-			if ( SPC()->get_option( 'discount_after_tax' ) ) {
+			if ( SPC()->get_option( 'discount_after_tax' ) || 'yes' === SPC()->get_option( 'price_has_tax' ) ) {
 				$discountable_total                       += $item->get_tax_total();
 				$product_total[ $item->get_product_id() ] += $item->get_tax_total();
 			}

@@ -535,17 +535,17 @@ body.sunshine--checkout--standalone td { border: none; }
 #sunshine-notices > .sunshine-notice.notify { background: #ADD8E6; color: var(--sunshine--dark); }
 
 /* Main menu */
-#sunshine .sunshine--main-menu { margin: 30px auto; text-align: center; padding: 10px 20px; background: rgba(255,255,255,.9); border-radius: 3px; border: 1px solid rgba(0,0,0,.1); }
-#sunshine .sunshine--main-menu .sunshine--main-menu--toggle,
-#sunshine .sunshine--main-menu input { display: none; }
-#sunshine .sunshine--main-menu ul { display: flex; gap: 20px; padding: 0; margin: 0; }
-#sunshine .sunshine--main-menu li { display: inline-block !important; margin: 0 !important; padding: 0 !important; position: relative; }
-#sunshine .sunshine--main-menu li.sunshine--account,
-#sunshine .sunshine--main-menu li.sunshine--login { flex-grow: 10; text-align: right; }
-#sunshine .sunshine--main-menu a { text-decoration: none; color: var(--sunshine--dark); }
-#sunshine .sunshine--main-menu a:hover { color: var(--sunshine--gray); }
-#sunshine .sunshine--main-menu .sunshine--count { display: inline-block; width: 18px; height: 18px; text-align: center; font-size: 11px; line-height: 18px; border-radius: 50%; background: rgba(0,0,0,.4); margin-left: 5px; }
-#sunshine .sunshine--main-menu .sunshine--selected a { font-weight: bold; }
+.sunshine--main-menu { margin: 30px auto; text-align: center; padding: 10px 20px; background: rgba(255,255,255,.9); border-radius: 3px; border: 1px solid rgba(0,0,0,.1); }
+.sunshine--main-menu .sunshine--main-menu--toggle,
+.sunshine--main-menu input { display: none; }
+.sunshine--main-menu ul { display: flex; gap: 20px; padding: 0; margin: 0; }
+.sunshine--main-menu li { display: inline-block !important; margin: 0 !important; padding: 0 !important; position: relative; }
+.sunshine--main-menu li.sunshine--account,
+.sunshine--main-menu li.sunshine--login { flex-grow: 10; text-align: right; }
+.sunshine--main-menu a { text-decoration: none; color: var(--sunshine--dark); }
+.sunshine--main-menu a:hover { color: var(--sunshine--gray); }
+.sunshine--main-menu .sunshine--count { display: inline-block; width: 18px; height: 18px; text-align: center; font-size: 11px; line-height: 18px; border-radius: 50%; background: rgba(0,0,0,.4); margin-left: 5px; }
+.sunshine--main-menu .sunshine--selected a { font-weight: bold; }
 
 body > .sunshine--main-menu { position: fixed; z-index: 99997; left: 0; bottom: 0; right: 0; margin: 0; padding: 20px 5%; box-shadow: 0 0 25px rgba(0,0,0,.2); border: none; }
 
