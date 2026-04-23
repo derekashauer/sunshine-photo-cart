@@ -298,8 +298,15 @@ jQuery( document ).ready(function($){
 	});
 
     // Trigger product row to be clickable
-    $( document ).on( 'click', '.sunshine--image--add-to-cart--product-item, .sunshine--store--product-item', function() {
-        $( 'button', this ).trigger( 'click' );
+    $( document ).on( 'click', '.sunshine--image--add-to-cart--product-item, .sunshine--store--product-item', function( e ) {
+        // Ignore if the click originated on the action element itself to avoid double-firing
+        if ( $( e.target ).closest( 'button, a' ).length ) {
+            return;
+        }
+        const action = $( 'button, a', this ).get( 0 );
+        if ( action ) {
+            action.click();
+        }
     });
 
     // Add to cart from qty button in product row (not used right now)

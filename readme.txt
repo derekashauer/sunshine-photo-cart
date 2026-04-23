@@ -243,6 +243,10 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.6.7 =
+* New: Filter `sunshine_store_product_item_link` to allow add-ons to replace the store product modal with a direct link
+* Fix: Classic/Cover theme menu CSS fixes
+
 = 3.6.6 - April 20, 2026 =
 * Fix: Admin email for customer signup missing template tags
 * Fix: Tax calculations when price includes tax, discount used, and discounts applied before tax

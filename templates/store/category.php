@@ -8,7 +8,7 @@
 	<?php } ?>
 	<div class="sunshine--store--category--products">
 		<?php
-		$products = sunshine_get_products( $gallery->get_price_level(), $category->get_id() );
+		$products = sunshine_get_products( $gallery->get_price_level(), $category->get_id(), sunshine_get_allowed_product_types_for_store() );
 		if ( ! empty( $products ) ) {
 			foreach ( $products as $product ) {
 				sunshine_get_template(

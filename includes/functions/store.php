@@ -49,10 +49,15 @@ function sunshine_get_sources( $product, $gallery ) {
 			$source_galleries = array_merge( $source_galleries, $galleries );
 		}
 
+		// The "ancestors" key is historical — the option's UI label is
+		// "Sub galleries of the current gallery" and returns the current
+		// gallery's descendants. Key left unchanged to preserve saved meta.
 		if ( in_array( 'ancestors', $allowed_sources ) ) {
-			$ancestor_ids     = get_post_ancestors( $gallery->get_id() );
-			$galleries        = sunshine_get_galleries( array( 'post__in' => $ancestor_ids ) );
-			$source_galleries = array_merge( $source_galleries, $galleries );
+			$descendant_ids   = sunshine_get_gallery_descendant_ids( $gallery->get_id() );
+			if ( ! empty( $descendant_ids ) ) {
+				$galleries        = sunshine_get_galleries( array( 'post__in' => $descendant_ids ) );
+				$source_galleries = array_merge( $source_galleries, $galleries );
+			}
 		}
 
 		if ( in_array( 'top_level', $allowed_sources ) ) {
