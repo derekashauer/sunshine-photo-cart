@@ -53,6 +53,10 @@ class SPC_Shipping_Method_Flat_Rate extends SPC_Shipping_Method {
 			$this->price = $price + $product_shipping;
 		} elseif ( ! empty( $cart_items ) ) {
 			foreach ( $cart_items as $item ) {
+				$product = $item->get_product();
+				if ( ! $product->needs_shipping() ) {
+					continue;
+				}
 				if ( $price_type == 'line' ) {
 					$this->price += $price;
 				} elseif ( $price_type == 'qty' ) {

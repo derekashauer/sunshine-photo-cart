@@ -83,6 +83,10 @@ class SPC_Gallery extends Sunshine_Data {
 			return false;
 		}
 
+		if ( $this->email_required() ) {
+			return false;
+		}
+
 		if ( $this->is_expired() ) {
 			return false;
 		}

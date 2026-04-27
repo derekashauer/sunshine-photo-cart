@@ -3,6 +3,8 @@
 	<input type="hidden" name="sunshine_gallery_id" value="<?php echo esc_attr( $gallery->get_id() ); ?>" />
 	<?php
 	if ( $password ) {
+		// Add filtered output to allow custom description above password field (e.g. password hint)
+		do_action( 'sunshine_gallery_password_before', $gallery );
 		echo sunshine_form_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			'sunshine_gallery_password',
 			array(
@@ -12,16 +14,19 @@
 				'description' => esc_html( $gallery->get_password_hint() ),
 			),
 		);
+		do_action( 'sunshine_gallery_password_after', $gallery );
 	}
 	?>
 
 	<?php
 	if ( $email ) {
+		// Add filtered output to allow custom description above email field (e.g. instructions, allowed domains, etc.)
+		do_action( 'sunshine_gallery_email_before', $gallery );
 		echo sunshine_form_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			'sunshine_gallery_email',
 			array(
 				'type'         => 'email',
-				'name'         => __( 'Email', 'sunshine-photo-cart' ),
+				'name'         => __( 'Enter email to access gallery', 'sunshine-photo-cart' ),
 				'required'     => true,
 				'autocomplete' => 'email',
 			),
