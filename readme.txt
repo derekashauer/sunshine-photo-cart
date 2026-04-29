@@ -243,6 +243,12 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.6.8 - April 28, 2026 =
+* New: Quick Edit support for galleries to inline-edit gallery type, password, allowed customers, expiration, comments, sharing, products, and price level
+* New: Quick Edit support for products to inline-edit type, price, taxable, shipping, and quantity limits
+* New: Bulk Edit support for galleries and products to apply settings across multiple items at once
+* New: `quick_edit` and `bulk_edit` field flags so add-ons can opt their meta box fields into the inline editors
+
 = 3.6.7 - April 27, 2026 =
 * New: Filter `sunshine_store_product_item_link` to allow add-ons to replace the store product modal with a direct link
 * New: Actions `sunshine_gallery_password_before`, `sunshine_gallery_password_after`, `sunshine_gallery_email_before`, and `sunshine_gallery_email_after` to add custom content around gallery password and email fields
