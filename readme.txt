@@ -244,9 +244,10 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.6.8 - April 28, 2026 =
-* New: Quick Edit support for galleries to inline-edit gallery type, password, allowed customers, expiration, comments, sharing, products, and price level
+* New: Quick Edit support for galleries to inline-edit gallery type, password, allowed customers, access type, expiration, comments, sharing, products, and price level
 * New: Quick Edit support for products to inline-edit type, price, taxable, shipping, and quantity limits
-* New: Bulk Edit support for galleries and products to apply settings across multiple items at once
+* New: Bulk Edit support for galleries to update gallery type, allowed customers, access type, expiration, comments, sharing, products, and price level across many galleries at once
+* New: Bulk Edit support for products to update type, taxable, shipping, and quantity limits across many products at once
 * New: `quick_edit` and `bulk_edit` field flags so add-ons can opt their meta box fields into the inline editors
 
 = 3.6.7 - April 27, 2026 =
