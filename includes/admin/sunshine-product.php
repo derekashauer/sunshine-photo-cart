@@ -33,28 +33,35 @@ class Sunshine_Admin_Meta_Boxes_Product extends Sunshine_Admin_Meta_Boxes {
 			'options'       => $product_types,
 			'documentation' => 'https://www.sunshinephotocart.com/docs/how-to-create-a-product/',
 			'conditions'    => array(),
+			'quick_edit'    => true,
+			'bulk_edit'     => true,
 		);
 		$price_level_fields['1000'] = array(
-			'id'      => 'price',
-			'name'    => __( 'Price', 'sunshine-photo-cart' ),
-			'type'    => 'price',
-			'default' => '',
-			'upgrade' => array(
+			'id'         => 'price',
+			'name'       => __( 'Price', 'sunshine-photo-cart' ),
+			'type'       => 'price',
+			'default'    => '',
+			'quick_edit' => true,
+			'upgrade'    => array(
 				'addon' => 'price-levels',
 				'label' => __( 'Manage more price levels to offer different pricing in across galleries for the same product', 'sunshine-photo-cart' ),
 				'url'   => 'https://www.sunshinephotocart.com/addon/price-levels/',
 			),
 		);
 		$price_level_fields['1100'] = array(
-			'id'   => 'taxable',
-			'name' => __( 'Taxable', 'sunshine-photo-cart' ),
-			'type' => 'checkbox',
+			'id'         => 'taxable',
+			'name'       => __( 'Taxable', 'sunshine-photo-cart' ),
+			'type'       => 'checkbox',
+			'quick_edit' => true,
+			'bulk_edit'  => true,
 		);
 		$price_level_fields['1150'] = array(
 			'id'          => 'disable_shipping',
 			'name'        => __( 'Disable Shipping', 'sunshine-photo-cart' ),
 			'type'        => 'checkbox',
 			'description' => __( 'Do not require shipping for this item at checkout', 'sunshine-photo-cart' ),
+			'quick_edit'  => true,
+			'bulk_edit'   => true,
 		);
 		$price_level_fields['1200'] = array(
 			'id'            => 'shipping',
@@ -62,6 +69,8 @@ class Sunshine_Admin_Meta_Boxes_Product extends Sunshine_Admin_Meta_Boxes {
 			'type'          => 'price',
 			'description'   => __( 'Additional shipping cost, intended for larger items such as canvases', 'sunshine-photo-cart' ),
 			'documentation' => 'https://www.sunshinephotocart.com/docs/extra-shipping-fees-for-large-or-heavy-items/',
+			'quick_edit'    => true,
+			'bulk_edit'     => true,
 			'conditions'  => array(
 				array(
 					'field'   => 'disable_shipping',
@@ -76,12 +85,16 @@ class Sunshine_Admin_Meta_Boxes_Product extends Sunshine_Admin_Meta_Boxes {
 			'name'        => __( 'Minimum Quantity', 'sunshine-photo-cart' ),
 			'type'        => 'number',
 			'description' => __( 'Do not allow customer to add less than this amount to cart for each image', 'sunshine-photo-cart' ),
+			'quick_edit'  => true,
+			'bulk_edit'   => true,
 		);
 		$price_level_fields['1400'] = array(
 			'id'          => 'max_qty',
 			'name'        => __( 'Max Quantity', 'sunshine-photo-cart' ),
 			'type'        => 'number',
 			'description' => __( 'Do not allow customer to add more than this amount to cart for each image', 'sunshine-photo-cart' ),
+			'quick_edit'  => true,
+			'bulk_edit'   => true,
 		);
 
 		$options['sunshine-product-options'] = array(
@@ -97,7 +110,7 @@ class Sunshine_Admin_Meta_Boxes_Product extends Sunshine_Admin_Meta_Boxes {
 
 }
 
-$sunshine_admin_meta_boxes_product = new Sunshine_Admin_Meta_Boxes_Product();
+$GLOBALS['sunshine_admin_meta_boxes_product'] = new Sunshine_Admin_Meta_Boxes_Product();
 
 add_filter( 'manage_edit-sunshine-product_columns', 'sunshine_products_columns', 10 );
 function sunshine_products_columns( $columns ) {
