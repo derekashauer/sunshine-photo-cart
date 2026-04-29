@@ -56,6 +56,8 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 							'private'  => __( 'Private (only specified users)', 'sunshine-photo-cart' ),
 						),
 						'documentation' => 'https://www.sunshinephotocart.com/docs/gallery-types/',
+						'quick_edit'    => true,
+						'bulk_edit'     => true,
 					),
 					array(
 						'id'         => 'password',
@@ -70,11 +72,13 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 								'action'  => 'show',
 							),
 						),
+						'quick_edit' => true,
 					),
 					array(
 						'id'          => 'password_hint',
 						'name'        => __( 'Password Hint', 'sunshine-photo-cart' ),
 						'type'        => 'text',
+						'quick_edit'  => true,
 						'conditions'  => array(
 							array(
 								'field'   => 'status',
@@ -91,6 +95,8 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						'type'       => 'users',
 						'select2'    => true,
 						'options'    => 'users',
+						'quick_edit' => true,
+						'bulk_edit'  => true,
 						'conditions' => array(
 							array(
 								'field'   => 'status',
@@ -111,6 +117,8 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 							'url'     => __( 'Direct URL', 'sunshine-photo-cart' ),
 						),
 						'documentation' => 'https://www.sunshinephotocart.com/docs/gallery-access-types/',
+						'quick_edit'    => true,
+						'bulk_edit'     => true,
 						/*
 						'conditions' => array(
 							array(
@@ -129,6 +137,8 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						'type'          => 'date_time',
 						'description'   => __( 'When will this gallery expire and no longer be accessible', 'sunshine-photo-cart' ),
 						'documentation' => 'https://www.sunshinephotocart.com/docs/gallery-expiration/',
+						'quick_edit'    => true,
+						'bulk_edit'     => true,
 					),
 					array(
 						'id'            => 'image_comments',
@@ -136,12 +146,16 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						'type'          => 'checkbox',
 						'description'   => __( 'Allow comments on images in this gallery', 'sunshine-photo-cart' ),
 						'documentation' => 'https://www.sunshinephotocart.com/docs/enable-comments-images-gallery/',
+						'quick_edit'    => true,
+						'bulk_edit'     => true,
 					),
 					array(
 						'id'          => 'image_comments_approval',
 						'name'        => __( 'Comments require approval', 'sunshine-photo-cart' ),
 						'type'        => 'checkbox',
 						'description' => __( 'Should comments require approval before being shown', 'sunshine-photo-cart' ),
+						'quick_edit'  => true,
+						'bulk_edit'   => true,
 						'conditions'  => array(
 							array(
 								'field'   => 'image_comments',
@@ -156,18 +170,24 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						'name'        => __( 'Favorites', 'sunshine-photo-cart' ),
 						'type'        => 'checkbox',
 						'description' => __( 'Disable favorites for this gallery', 'sunshine-photo-cart' ),
+						'quick_edit'  => true,
+						'bulk_edit'   => true,
 					),
 					array(
 						'id'          => 'allow_gallery_sharing',
 						'name'        => __( 'Gallery Sharing', 'sunshine-photo-cart' ),
 						'type'        => 'checkbox',
 						'description' => __( 'Allow gallery sharing', 'sunshine-photo-cart' ),
+						'quick_edit'  => true,
+						'bulk_edit'   => true,
 					),
 					array(
 						'id'          => 'allow_image_sharing',
 						'name'        => __( 'Image Sharing', 'sunshine-photo-cart' ),
 						'type'        => 'checkbox',
 						'description' => __( 'Allow individual image sharing for this gallery', 'sunshine-photo-cart' ),
+						'quick_edit'  => true,
+						'bulk_edit'   => true,
 					),
 				),
 			),
@@ -181,6 +201,8 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						'name'        => __( 'Disable Products', 'sunshine-photo-cart' ),
 						'type'        => 'checkbox',
 						'description' => __( 'Users will not be able to purchase any products for this gallery', 'sunshine-photo-cart' ),
+						'quick_edit'  => true,
+						'bulk_edit'   => true,
 						'conditions'  => array(
 							array(
 								'field'         => 'disable_products',
@@ -197,6 +219,8 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						'type'          => 'select',
 						'options'       => $price_levels,
 						'documentation' => 'https://www.sunshinephotocart.com/docs/setting-up-price-levels/',
+						'quick_edit'    => true,
+						'bulk_edit'     => true,
 						/*
 						'upgrade'       => array(
 							'addon' => 'price-levels',
@@ -238,7 +262,7 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 
 }
 
-$sunshine_admin_meta_boxes_gallery = new Sunshine_Admin_Meta_Boxes_Gallery();
+$GLOBALS['sunshine_admin_meta_boxes_gallery'] = new Sunshine_Admin_Meta_Boxes_Gallery();
 
 // add_action( 'admin_head', 'sunshine_remove_add_media' );
 function sunshine_remove_add_media() {

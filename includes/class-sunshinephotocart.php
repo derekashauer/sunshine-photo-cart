@@ -182,6 +182,7 @@ final class Sunshine_Photo_Cart {
 			include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/sunshine-product.php';
 			include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/sunshine-product-category.php';
 			include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/sunshine-order.php';
+			include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/class-admin-quick-bulk-edit.php';
 
 			// TODO: Only load some of these on necessary admin screens. Use admin version of is_sunshine somehow?
 			// Notices likely needs to be on all pages

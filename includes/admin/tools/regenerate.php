@@ -21,7 +21,6 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 	function regenerate_gallery_images_link_row( $actions, $post ) {
 		if ( $post->post_type == 'sunshine-gallery' ) {
 			$actions['regenerate'] = '<a href="' . wp_nonce_url( admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-tools&tool=regenerate-images&sunshine_gallery=' . $post->ID ), 'sunshine_tool_' . $this->get_key() ) . '">' . __( 'Regenerate Images', 'sunshine-photo-cart' ) . '</a>';
-			unset( $actions['inline hide-if-no-js'] );
 		}
 		return $actions;
 	}
