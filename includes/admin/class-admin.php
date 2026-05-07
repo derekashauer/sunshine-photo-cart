@@ -322,18 +322,25 @@ class Sunshine_Admin {
 
 	public function post_states( $post_states, $post ) {
 
-		if ( SPC()->get_option( 'page' ) == $post->ID ) {
-			$post_states['sunshine_page'] = __( 'Sunshine Main Page', 'sunshine-photo-cart' );
-		} elseif ( SPC()->get_option( 'page_account' ) == $post->ID ) {
-			$post_states['sunshine_page_account'] = __( 'Sunshine Account', 'sunshine-photo-cart' );
-		} elseif ( SPC()->get_option( 'page_cart' ) == $post->ID ) {
-			$post_states['sunshine_page_cart'] = __( 'Sunshine Cart', 'sunshine-photo-cart' );
-		} elseif ( SPC()->get_option( 'page_checkout' ) == $post->ID ) {
-			$post_states['sunshine_page_checkout'] = __( 'Sunshine Checkout', 'sunshine-photo-cart' );
-		} elseif ( SPC()->get_option( 'page_favorites' ) == $post->ID ) {
-			$post_states['sunshine_page_favorites'] = __( 'Sunshine Favorites', 'sunshine-photo-cart' );
-		} elseif ( SPC()->get_option( 'page_terms' ) == $post->ID ) {
-			$post_states['sunshine_page_terms'] = __( 'Sunshine Terms & Conditions', 'sunshine-photo-cart' );
+		$labels = array(
+			'page'           => array( 'sunshine_page', __( 'Sunshine Main Page', 'sunshine-photo-cart' ) ),
+			'page_account'   => array( 'sunshine_page_account', __( 'Sunshine Account', 'sunshine-photo-cart' ) ),
+			'page_cart'      => array( 'sunshine_page_cart', __( 'Sunshine Cart', 'sunshine-photo-cart' ) ),
+			'page_checkout'  => array( 'sunshine_page_checkout', __( 'Sunshine Checkout', 'sunshine-photo-cart' ) ),
+			'page_favorites' => array( 'sunshine_page_favorites', __( 'Sunshine Favorites', 'sunshine-photo-cart' ) ),
+			'page_terms'     => array( 'sunshine_page_terms', __( 'Sunshine Terms & Conditions', 'sunshine-photo-cart' ) ),
+		);
+
+		foreach ( $labels as $option_key => $label ) {
+			$configured_id = SPC()->get_option( $option_key );
+			if ( empty( $configured_id ) ) {
+				continue;
+			}
+			$translation_ids = apply_filters( 'sunshine_page_translation_ids', array( (int) $configured_id ), (int) $configured_id );
+			if ( in_array( (int) $post->ID, array_map( 'intval', $translation_ids ), true ) ) {
+				$post_states[ $label[0] ] = $label[1];
+				break;
+			}
 		}
 
 		return $post_states;
@@ -649,7 +656,8 @@ class Sunshine_Admin {
 							dataType: 'json',
 							data: {
 								action: 'sunshine_term_sort',
-								categories: category_order
+								categories: category_order,
+								security: '<?php echo esc_js( wp_create_nonce( 'sunshine_sort' ) ); ?>'
 							},
 							success: function( result, textStatus, XMLHttpRequest) {
 								item_list.removeClass( 'sunshine-loading' );
@@ -681,7 +689,8 @@ class Sunshine_Admin {
 							dataType: 'json',
 							data: {
 								action: 'sunshine_post_sort',
-								posts: post_order
+								posts: post_order,
+								security: '<?php echo esc_js( wp_create_nonce( 'sunshine_sort' ) ); ?>'
 							},
 							success: function( result, textStatus, XMLHttpRequest) {
 								item_list.removeClass( 'sunshine-loading' );
@@ -701,23 +710,53 @@ class Sunshine_Admin {
 	}
 
 	public function term_sort() {
-		$categories = sanitize_text_field( $_POST['categories'] );
+		check_ajax_referer( 'sunshine_sort', 'security' );
+
+		if ( ! current_user_can( 'sunshine_manage_options' ) ) {
+			wp_send_json_error();
+		}
+
+		$allowed_taxonomies = array( 'sunshine-product-category', 'sunshine-product-option' );
+
+		$categories = isset( $_POST['categories'] ) ? sanitize_text_field( wp_unslash( $_POST['categories'] ) ) : '';
 		$categories = str_replace( 'tag-', '', $categories );
 		$categories = explode( ',', $categories );
 		$i          = 1;
 
 		foreach ( $categories as $category_id ) {
+			$category_id = absint( $category_id );
+			if ( ! $category_id ) {
+				continue;
+			}
+			$term = get_term( $category_id );
+			if ( ! $term || is_wp_error( $term ) || ! in_array( $term->taxonomy, $allowed_taxonomies, true ) ) {
+				continue;
+			}
 			update_term_meta( $category_id, 'order', $i );
 			$i++;
 		}
+
+		wp_send_json_success();
 	}
 
 	public function post_sort() {
-		$posts = sanitize_text_field( $_POST['posts'] );
+		check_ajax_referer( 'sunshine_sort', 'security' );
+
+		if ( ! current_user_can( 'sunshine_manage_options' ) ) {
+			wp_send_json_error();
+		}
+
+		$allowed_post_types = array( 'sunshine-product', 'sunshine-gallery' );
+
+		$posts = isset( $_POST['posts'] ) ? sanitize_text_field( wp_unslash( $_POST['posts'] ) ) : '';
 		$posts = str_replace( 'post-', '', $posts );
 		$posts = explode( ',', $posts );
 		$i     = 1;
 		foreach ( $posts as $post_id ) {
+			$post_id = absint( $post_id );
+			if ( ! $post_id || ! in_array( get_post_type( $post_id ), $allowed_post_types, true ) ) {
+				continue;
+			}
 			wp_update_post(
 				array(
 					'ID'         => $post_id,
@@ -726,6 +765,8 @@ class Sunshine_Admin {
 			);
 			$i++;
 		}
+
+		wp_send_json_success();
 	}
 
 	public function pre_get_posts_sort( $query ) {
@@ -980,24 +1021,31 @@ class Sunshine_Admin {
 
 	public function show_post_debug() {
 
-		if ( isset( $_GET['sunshine_debug'] ) && isset( $_GET['post'] ) ) {
-			$meta = get_post_meta( intval( $_GET['post'] ) );
-			echo '<!-- SUNSHINE DEBUG META -->';
-			sunshine_dump_var( $meta );
-
-			// If this is a 'sunshine-gallery' post, get all the images and display paths and file dimensions.
-			if ( get_post_type( $_GET['post'] ) === 'sunshine-gallery' ) {
-				$gallery = sunshine_get_gallery( $_GET['post'] );
-				$images  = $gallery->get_images();
-				foreach ( $images as $image ) {
-					$image_id         = $image->get_id();
-					$image_path       = get_attached_file( $image_id );
-					$image_dimensions = wp_get_attachment_metadata( $image_id );
-					echo '<p>' . esc_html( $image_path ) . ' - ' . esc_html( $image_dimensions['width'] ) . 'x' . esc_html( $image_dimensions['height'] ) . '</p>';
-				}
-			}
-			exit;
+		if ( ! isset( $_GET['sunshine_debug'] ) || ! isset( $_GET['post'] ) ) {
+			return;
 		}
+
+		if ( ! current_user_can( 'sunshine_manage_options' ) ) {
+			return;
+		}
+
+		$post_id = intval( $_GET['post'] );
+		$meta    = get_post_meta( $post_id );
+		echo '<!-- SUNSHINE DEBUG META -->';
+		sunshine_dump_var( $meta );
+
+		// If this is a 'sunshine-gallery' post, get all the images and display paths and file dimensions.
+		if ( get_post_type( $post_id ) === 'sunshine-gallery' ) {
+			$gallery = sunshine_get_gallery( $post_id );
+			$images  = $gallery->get_images();
+			foreach ( $images as $image ) {
+				$image_id         = $image->get_id();
+				$image_path       = get_attached_file( $image_id );
+				$image_dimensions = wp_get_attachment_metadata( $image_id );
+				echo '<p>' . esc_html( $image_path ) . ' - ' . esc_html( $image_dimensions['width'] ) . 'x' . esc_html( $image_dimensions['height'] ) . '</p>';
+			}
+		}
+		exit;
 
 	}
 

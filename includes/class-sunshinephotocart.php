@@ -325,13 +325,17 @@ final class Sunshine_Photo_Cart {
 
 	public function get_page( $page ) {
 		if ( is_numeric( $page ) ) {
-			if ( in_array( $page, $this->pages ) ) {
-				return $this->pages[ array_search( $page, $this->pages ) ];
+			if ( in_array( (int) $page, array_map( 'intval', $this->pages ), true ) ) {
+				return (int) $page;
 			}
-		} else {
-			if ( array_key_exists( $page, $this->pages ) ) {
-				return $this->pages[ $page ];
+			return apply_filters( 'sunshine_get_page_for_post_id', false, (int) $page, $this->pages );
+		}
+		if ( array_key_exists( $page, $this->pages ) ) {
+			$page_id = $this->pages[ $page ];
+			if ( empty( $page_id ) ) {
+				return false;
 			}
+			return apply_filters( 'sunshine_get_page', $page_id, $page );
 		}
 		return false;
 	}

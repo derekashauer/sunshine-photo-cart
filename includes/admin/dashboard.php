@@ -61,6 +61,7 @@ class SPC_Dashboard_Widget {
 
 			var data = {
 				'action': 'sunshine_dashboard_calculate_stats',
+				'security': '<?php echo esc_js( wp_create_nonce( 'sunshine_dashboard' ) ); ?>'
 			};
 
 			// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
@@ -108,6 +109,12 @@ class SPC_Dashboard_Widget {
 
 	function calculate_stats() {
 		global $wpdb;
+
+		check_ajax_referer( 'sunshine_dashboard', 'security' );
+
+		if ( ! current_user_can( 'sunshine_manage_options' ) ) {
+			wp_send_json_error();
+		}
 
 		$data = get_transient( 'sunshine-dashboard-sales' );
 

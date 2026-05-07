@@ -370,12 +370,30 @@ function sunshine_addon_toggle() {
 
 				$install = $upgrader->install( $addon_item['file'] );
 
-				if ( $install ) {
-					// echo 'Files installed!';
+				if ( true === $install ) {
 					$status = 'installed';
 				} else {
 					$status = 'failed';
 					$reason = __( 'Could not get download file', 'sunshine-photo-cart' );
+
+					if ( is_wp_error( $install ) ) {
+						$detail = sprintf(
+							'WP_Error code=%s message=%s',
+							$install->get_error_code(),
+							$install->get_error_message()
+						);
+					} elseif ( false === $install ) {
+						$detail = 'install returned false (likely filesystem not directly writable; FTP credentials would normally be requested)';
+					} else {
+						$detail = 'install returned ' . var_export( $install, true );
+					}
+
+					SPC()->log( sprintf(
+						'Addon install failed: slug=%s, file=%s, %s',
+						$addon,
+						$addon_item['file'],
+						$detail
+					) );
 				}
 			}
 			// echo 'Activating addon...';

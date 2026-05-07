@@ -975,7 +975,8 @@ function sunshine_meta_gallery_images_display() {
 			var request_data = {
 				'action': 'sunshine_gallery_import_list',
 				'gallery_id': <?php echo esc_js( $post->ID ); ?>,
-				'dir': selected_directory
+				'dir': selected_directory,
+				'security': '<?php echo esc_js( wp_create_nonce( 'sunshine_gallery_import' ) ); ?>'
 			};
 
 			$.post( ajaxurl, request_data )
@@ -998,7 +999,8 @@ function sunshine_meta_gallery_images_display() {
 							'gallery_id': <?php echo esc_js( $post->ID ); ?>,
 							'dir': selected_directory,
 							'item_number': item_number,
-							'watermark': ( watermark ) ? 1 : 0
+							'watermark': ( watermark ) ? 1 : 0,
+							'security': '<?php echo esc_js( wp_create_nonce( 'sunshine_gallery_import' ) ); ?>'
 						};
 
 						$.postq( 'sunshinegalleryimport', ajaxurl, data, function( response ) {
@@ -1724,7 +1726,9 @@ add_action( 'wp_ajax_sunshine_gallery_import_list', 'sunshine_ajax_gallery_impor
  * @return void
  */
 function sunshine_ajax_gallery_import_list() {
-	if ( ! current_user_can( 'upload_files' ) ) {
+	check_ajax_referer( 'sunshine_gallery_import', 'security' );
+
+	if ( ! current_user_can( 'edit_sunshine_galleries' ) ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'You do not have permission to import images.', 'sunshine-photo-cart' ),
@@ -1741,8 +1745,8 @@ function sunshine_ajax_gallery_import_list() {
 		);
 	}
 
-	$folder = sunshine_get_import_directory() . '/' . $dir;
-	if ( ! is_dir( $folder ) ) {
+	$folder = sunshine_validate_import_subdirectory( $dir );
+	if ( false === $folder ) {
 		wp_send_json_error(
 			array(
 				'message' => __( 'The selected directory is not available.', 'sunshine-photo-cart' ),
@@ -1771,11 +1775,32 @@ function sunshine_ajax_gallery_import_list() {
 add_action( 'wp_ajax_sunshine_gallery_import', 'sunshine_ajax_gallery_import' );
 function sunshine_ajax_gallery_import() {
 
+	check_ajax_referer( 'sunshine_gallery_import', 'security' );
+
+	if ( ! current_user_can( 'edit_sunshine_galleries' ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'You do not have permission to import images.', 'sunshine-photo-cart' ),
+			)
+		);
+	}
+
 	$gallery_id  = intval( $_POST['gallery_id'] );
 	$gallery     = sunshine_get_gallery( $gallery_id );
 	$item_number = intval( $_POST['item_number'] );
-	$dir         = sanitize_text_field( $_POST['dir'] );
+	$dir         = isset( $_POST['dir'] ) ? sanitize_text_field( wp_unslash( $_POST['dir'] ) ) : '';
 	$watermark   = ! empty( $_POST['watermark'] ) ? 1 : 0;
+
+	$folder = sunshine_validate_import_subdirectory( $dir );
+	if ( false === $folder ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'The selected directory is not available.', 'sunshine-photo-cart' ),
+			)
+		);
+	}
+
+	$dir = ltrim( substr( $folder, strlen( wp_normalize_path( sunshine_get_import_directory() ) ) ), '/' );
 
 	// Check if the image already exists in the gallery
 	$existing_file_names = array();
@@ -1786,7 +1811,6 @@ function sunshine_ajax_gallery_import() {
 		}
 	}
 
-	$folder = sunshine_get_import_directory() . '/' . $dir;
 	$images = sunshine_get_images_in_folder( $folder );
 
 	$file_path = $images[ $item_number - 1 ];

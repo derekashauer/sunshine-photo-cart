@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 3.6.7
+Stable tag: 3.6.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,12 +243,15 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.6.8 - April 28, 2026 =
+= 3.6.8 - May 7, 2026 =
+* Security: Hardened several admin and checkout endpoints with capability and nonce checks
 * New: Quick Edit support for galleries to inline-edit gallery type, password, allowed customers, access type, expiration, comments, sharing, products, and price level
 * New: Quick Edit support for products to inline-edit type, price, taxable, shipping, and quantity limits
 * New: Bulk Edit support for galleries to update gallery type, allowed customers, access type, expiration, comments, sharing, products, and price level across many galleries at once
 * New: Bulk Edit support for products to update type, taxable, shipping, and quantity limits across many products at once
 * New: `quick_edit` and `bulk_edit` field flags so add-ons can opt their meta box fields into the inline editors
+* New: Compatibility with Polylang and WPML so Sunshine pages (cart, checkout, account, etc.) resolve to the current-language translation
+* Fix: Discount coupons and store credits ignored by Stripe Checkout (redirect) flow, causing the full pre-discount amount to be charged
 
 = 3.6.7 - April 27, 2026 =
 * New: Filter `sunshine_store_product_item_link` to allow add-ons to replace the store product modal with a direct link

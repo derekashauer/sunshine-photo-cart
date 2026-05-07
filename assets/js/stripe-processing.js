@@ -19,13 +19,12 @@ jQuery( document ).on( 'sunshine_checkout_payment_change', async function ( even
 		sunshine_stripe_payment_intent_created = false;
 		
 		// Setup payment intent.
-		var testDelay = new URLSearchParams( window.location.search ).get( 'test_delay' );
 		jQuery.ajax({
 			url: spc_stripe_vars.ajax_url,
 			type: 'POST',
 			data: {
 				action: 'sunshine_stripe_create_payment_intent',
-				test_delay: testDelay // Testing delay parameter
+				security: spc_stripe_vars.security
 			},
 			timeout: 15000, // 15 second timeout for payment intent creation
 		}).then(function(result) {

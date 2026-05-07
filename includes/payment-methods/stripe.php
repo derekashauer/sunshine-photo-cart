@@ -1688,12 +1688,8 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 	public function create_payment_intent() {
 
-		// Testing: Add delay if test_delay parameter is provided
-		if ( ! empty( $_POST['test_delay'] ) && is_numeric( $_POST['test_delay'] ) ) {
-			$delay = intval( $_POST['test_delay'] );
-			if ( $delay > 0 && $delay <= 60 ) { // Max 60 seconds for safety
-				sleep( $delay );
-			}
+		if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'sunshine_stripe' ) ) {
+			wp_send_json_error();
 		}
 
 		$this->setup();
@@ -1954,6 +1950,16 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			);
 		}
 
+		// Apply cart-level discount + credits via a Stripe coupon. Stripe Checkout
+		// in payment mode rejects negative line items, so the discounts parameter
+		// (with a one-shot Coupon) is the supported path. Coupon ID is deterministic
+		// per order so retries don't duplicate.
+		$coupon_id = $this->get_or_create_order_discount_coupon( $order );
+		if ( is_wp_error( $coupon_id ) ) {
+			SPC()->log( 'Stripe Checkout discount coupon failed: ' . $coupon_id->get_error_message() );
+			return $coupon_id;
+		}
+
 		$args = array(
 			'mode'                => 'payment',
 			'success_url'         => add_query_arg( 'stripe_checkout_complete', '1', $order->get_received_permalink() ),
@@ -2007,6 +2013,14 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			$args['payment_intent_data']['application_fee_amount'] = $this->convert_amount_to_stripe( $fee_amount );
 		}
 
+		if ( ! empty( $coupon_id ) ) {
+			$args['discounts'] = array(
+				array( 'coupon' => $coupon_id ),
+			);
+		}
+
+		$args = apply_filters( 'sunshine_stripe_checkout_session_args', $args, $order );
+
 		$response = $this->make_stripe_request( 'checkout/sessions', $args, 'POST' );
 
 		if ( is_wp_error( $response ) ) {
@@ -2019,6 +2033,75 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		SPC()->log( 'Stripe Checkout Session created: ' . $response['id'] );
 
 		return $response;
+	}
+
+	/**
+	 * Get or create the Stripe coupon representing the order's cart-level
+	 * discount + applied credits.
+	 *
+	 * Uses a deterministic ID per order so checkout retries reuse the same
+	 * coupon. If the cart was modified mid-flow and the amount no longer
+	 * matches, the existing coupon is deleted and recreated (Stripe coupons
+	 * are immutable for amount_off).
+	 *
+	 * @param SPC_Order $order The order.
+	 * @return string|null|WP_Error Coupon ID, null if no discount/credits, or WP_Error on failure.
+	 */
+	private function get_or_create_order_discount_coupon( $order ) {
+		$discount_total = round( floatval( $order->get_discount() ) + floatval( $order->get_credits() ), 2 );
+		if ( $discount_total <= 0 ) {
+			return null;
+		}
+
+		$amount_off = $this->convert_amount_to_stripe( $discount_total );
+		$currency   = strtolower( $this->currency );
+		$coupon_id  = 'sunshine_order_' . $order->get_id();
+
+		$discount_names = $order->get_discount_names();
+		if ( is_array( $discount_names ) && ! empty( $discount_names ) ) {
+			$coupon_name = implode( ', ', $discount_names );
+		} else {
+			$coupon_name = __( 'Discount', 'sunshine-photo-cart' );
+		}
+
+		$existing = $this->make_stripe_request( 'coupons/' . $coupon_id );
+		if ( ! is_wp_error( $existing ) && ! empty( $existing['id'] ) ) {
+			$matches_amount   = isset( $existing['amount_off'] ) && intval( $existing['amount_off'] ) === intval( $amount_off );
+			$matches_currency = isset( $existing['currency'] ) && strtolower( $existing['currency'] ) === $currency;
+			if ( $matches_amount && $matches_currency ) {
+				return $coupon_id;
+			}
+
+			$delete_response = $this->make_stripe_request( 'coupons/' . $coupon_id, array(), 'DELETE' );
+			if ( is_wp_error( $delete_response ) ) {
+				return $delete_response;
+			}
+		} elseif ( is_wp_error( $existing ) ) {
+			$error_data = $existing->get_error_data();
+			$is_missing = is_array( $error_data ) && isset( $error_data['code'] ) && $error_data['code'] === 'resource_missing';
+			if ( ! $is_missing ) {
+				return $existing;
+			}
+		}
+
+		$coupon_args = array(
+			'id'         => $coupon_id,
+			'amount_off' => $amount_off,
+			'currency'   => $currency,
+			'duration'   => 'once',
+			'name'       => $coupon_name,
+			'metadata'   => array(
+				'order_id'   => $order->get_id(),
+				'order_name' => $order->get_name(),
+			),
+		);
+
+		$created = $this->make_stripe_request( 'coupons', $coupon_args, 'POST' );
+		if ( is_wp_error( $created ) ) {
+			return $created;
+		}
+
+		return $coupon_id;
 	}
 
 	/**

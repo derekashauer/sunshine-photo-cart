@@ -62,19 +62,17 @@ function sunshine_dump_var( $var, $echo = true ) {
 function is_sunshine_page( $page ) {
 	global $post;
 
-	if ( empty( $post ) ) {
-		return false;
-	}
+	$is_page = false;
 
-	if ( ! empty( $page ) && SPC()->get_page( $page ) == $post->ID ) {
+	if ( ! empty( $post ) && ! empty( $page ) && SPC()->get_page( $page ) == $post->ID ) {
+		$is_page = true;
 		if ( $page === 'checkout' && isset( $_GET['order_key'] ) ) {
 			// Special situation for checkout as the receipt page is technically still checkout page but with endpoint.
-			return false;
+			$is_page = false;
 		}
-		return true;
 	}
 
-	return false;
+	return apply_filters( 'is_sunshine_page', $is_page, $page, $post );
 
 }
 
@@ -599,4 +597,41 @@ add_action( 'sunshine_daily', 'sunshine_create_htaccess' );
 function sunshine_get_import_directory() {
 	$upload_dir = wp_upload_dir();
 	return apply_filters( 'sunshine_import_directory', $upload_dir['basedir'] . '/sunshine/upload' );
+}
+
+/**
+ * Resolve a user-supplied subdirectory against the import directory and
+ * confirm that the resolved path lies inside it. Returns the normalized
+ * absolute folder path on success, or false if the directory is invalid,
+ * does not exist, or escapes the import root via traversal sequences.
+ *
+ * @param string $dir Relative subdirectory from POST input.
+ * @return string|false
+ */
+function sunshine_validate_import_subdirectory( $dir ) {
+	$dir = str_replace( chr( 0 ), '', (string) $dir );
+	$dir = ltrim( $dir, '/\\' );
+
+	$base_raw = sunshine_get_import_directory();
+	$base     = realpath( $base_raw );
+	if ( ! $base ) {
+		return false;
+	}
+	$base = wp_normalize_path( $base );
+
+	$candidate = realpath( $base_raw . '/' . $dir );
+	if ( ! $candidate ) {
+		return false;
+	}
+	$candidate = wp_normalize_path( $candidate );
+
+	if ( $candidate !== $base && strpos( $candidate, $base . '/' ) !== 0 ) {
+		return false;
+	}
+
+	if ( ! is_dir( $candidate ) ) {
+		return false;
+	}
+
+	return $candidate;
 }

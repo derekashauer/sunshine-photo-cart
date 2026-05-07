@@ -156,6 +156,7 @@ class SPC_Admin_Order {
 						return {
 							search: params.term,
 							action: 'sunshine_customer_search',
+							security: '<?php echo esc_js( wp_create_nonce( 'sunshine_admin_search' ) ); ?>'
 						};
 					},
 					cache: true
@@ -178,6 +179,7 @@ class SPC_Admin_Order {
 						return {
 							search: params.term,
 							action: 'sunshine_gallery_search',
+							security: '<?php echo esc_js( wp_create_nonce( 'sunshine_admin_search' ) ); ?>'
 						};
 					},
 					cache: true
@@ -190,6 +192,10 @@ class SPC_Admin_Order {
 	}
 
 	function customer_search() {
+		check_ajax_referer( 'sunshine_admin_search', 'security' );
+		if ( ! current_user_can( 'edit_sunshine_orders' ) ) {
+			wp_send_json_error();
+		}
 		$data = array();
 		if ( isset( $_GET['search'] ) ) {
 			$customers = get_users(
@@ -212,6 +218,10 @@ class SPC_Admin_Order {
 	}
 
 	function gallery_search() {
+		check_ajax_referer( 'sunshine_admin_search', 'security' );
+		if ( ! current_user_can( 'edit_sunshine_galleries' ) ) {
+			wp_send_json_error();
+		}
 		$data = array();
 		if ( isset( $_GET['search'] ) ) {
 			$galleries = get_posts(
@@ -548,6 +558,7 @@ class SPC_Admin_Order {
 					<option value="<?php echo esc_attr( $action ); ?>"><?php echo esc_html( $title ); ?></option>
 				<?php } ?>
 			</select>
+			<?php wp_nonce_field( 'sunshine_order_action_' . $post->ID, 'sunshine_order_action_nonce' ); ?>
 			<?php do_action( 'sunshine_order_actions_options', $order ); ?>
 			<button class="button"><span><?php esc_html_e( 'Apply', 'sunshine-photo-cart' ); ?></span></button>
 
@@ -1129,12 +1140,27 @@ class SPC_Admin_Order {
 			return;
 		}
 
+		$post_id = intval( $_POST['post_ID'] );
+
+		if ( ! isset( $_POST['sunshine_order_action_nonce'] )
+			|| ! wp_verify_nonce( $_POST['sunshine_order_action_nonce'], 'sunshine_order_action_' . $post_id ) ) {
+			return;
+		}
+
+		if ( get_post_type( $post_id ) !== 'sunshine-order' ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+
 		$available_actions = $this->get_order_actions();
 		if ( ! array_key_exists( $_POST['sunshine_order_action'], $available_actions ) ) {
 			return false;
 		}
 
-		do_action( 'sunshine_order_process_action_' . sanitize_key( $_POST['sunshine_order_action'] ), intval( $_POST['post_ID'] ) );
+		do_action( 'sunshine_order_process_action_' . sanitize_key( $_POST['sunshine_order_action'] ), $post_id );
 
 	}
 

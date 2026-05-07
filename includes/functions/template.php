@@ -225,10 +225,15 @@ function sunshine_classes( $echo = true ) {
 		$classes[] = SPC()->frontend->current_gallery->post_name;
 	} elseif ( SPC()->frontend->is_order() ) {
 		$classes[] = 'sunshine--order';
-	} elseif ( ! empty( $post ) && in_array( $post->ID, SPC()->pages ) ) {
-		$page_class = array_search( $post->ID, SPC()->pages );
-		if ( $page_class ) {
-			$classes[] = 'sunshine--page--' . $page_class;
+	} elseif ( ! empty( $post ) ) {
+		foreach ( SPC()->pages as $page_key => $configured_id ) {
+			if ( empty( $configured_id ) ) {
+				continue;
+			}
+			if ( SPC()->get_page( $page_key ) == $post->ID ) {
+				$classes[] = 'sunshine--page--' . $page_key;
+				break;
+			}
 		}
 	}
 

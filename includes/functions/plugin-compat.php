@@ -1,6 +1,102 @@
 <?php
 // Trying to make Sunshine compatible with other plugins in unique situations.
 
+// Polylang — translate configured Sunshine page IDs to the current language so
+// page detection, URL generation, and theme content rendering work on
+// multilingual sites that create separate posts per translation.
+if ( function_exists( 'pll_get_post' ) ) {
+
+	add_filter( 'sunshine_get_page', 'sunshine_polylang_get_page', 10, 2 );
+	function sunshine_polylang_get_page( $page_id, $page ) {
+		$translated = pll_get_post( $page_id );
+		return $translated ? $translated : $page_id;
+	}
+
+	add_filter( 'sunshine_get_page_for_post_id', 'sunshine_polylang_get_page_for_post_id', 10, 3 );
+	function sunshine_polylang_get_page_for_post_id( $matched, $post_id, $pages ) {
+		if ( $matched || ! function_exists( 'pll_get_post_translations' ) ) {
+			return $matched;
+		}
+		foreach ( $pages as $configured_id ) {
+			if ( empty( $configured_id ) ) {
+				continue;
+			}
+			$translations = pll_get_post_translations( $configured_id );
+			if ( is_array( $translations ) && in_array( (int) $post_id, array_map( 'intval', $translations ), true ) ) {
+				return (int) $configured_id;
+			}
+		}
+		return $matched;
+	}
+
+	add_filter( 'sunshine_page_translation_ids', 'sunshine_polylang_page_translation_ids', 10, 2 );
+	function sunshine_polylang_page_translation_ids( $ids, $page_id ) {
+		if ( ! function_exists( 'pll_get_post_translations' ) ) {
+			return $ids;
+		}
+		$translations = pll_get_post_translations( $page_id );
+		if ( is_array( $translations ) ) {
+			$ids = array_merge( $ids, array_map( 'intval', array_values( $translations ) ) );
+		}
+		return array_values( array_unique( $ids ) );
+	}
+}
+
+// WPML — same idea as Polylang, using the wpml_object_id filter API.
+if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+
+	add_filter( 'sunshine_get_page', 'sunshine_wpml_get_page', 10, 2 );
+	function sunshine_wpml_get_page( $page_id, $page ) {
+		return apply_filters( 'wpml_object_id', $page_id, 'page', true );
+	}
+
+	add_filter( 'sunshine_get_page_for_post_id', 'sunshine_wpml_get_page_for_post_id', 10, 3 );
+	function sunshine_wpml_get_page_for_post_id( $matched, $post_id, $pages ) {
+		if ( $matched ) {
+			return $matched;
+		}
+		$languages = apply_filters( 'wpml_active_languages', array() );
+		if ( ! is_array( $languages ) ) {
+			return $matched;
+		}
+		foreach ( $pages as $configured_id ) {
+			if ( empty( $configured_id ) ) {
+				continue;
+			}
+			foreach ( $languages as $lang ) {
+				$code = is_array( $lang ) && isset( $lang['language_code'] ) ? $lang['language_code'] : null;
+				if ( ! $code ) {
+					continue;
+				}
+				$translated = apply_filters( 'wpml_object_id', $configured_id, 'page', false, $code );
+				if ( $translated && (int) $translated === (int) $post_id ) {
+					return (int) $configured_id;
+				}
+			}
+		}
+		return $matched;
+	}
+
+	add_filter( 'sunshine_page_translation_ids', 'sunshine_wpml_page_translation_ids', 10, 2 );
+	function sunshine_wpml_page_translation_ids( $ids, $page_id ) {
+		$languages = apply_filters( 'wpml_active_languages', array() );
+		if ( ! is_array( $languages ) ) {
+			return $ids;
+		}
+		foreach ( $languages as $lang ) {
+			$code = is_array( $lang ) && isset( $lang['language_code'] ) ? $lang['language_code'] : null;
+			if ( ! $code ) {
+				continue;
+			}
+			$translated = apply_filters( 'wpml_object_id', $page_id, 'page', false, $code );
+			if ( $translated ) {
+				$ids[] = (int) $translated;
+			}
+		}
+		return array_values( array_unique( $ids ) );
+	}
+}
+
 add_filter( 'jetpack_photon_skip_for_url', 'sunshine_photon_skip_for_url', 9, 4 );
 function sunshine_photon_skip_for_url( $skip, $url, $args, $scheme ) {
 	if ( str_contains( $url, 'uploads/sunshine' ) ) {

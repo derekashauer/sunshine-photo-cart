@@ -637,7 +637,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 	public function init_order() {
 
-		if ( empty( $_POST['security'] ) ) {
+		if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'sunshine_square' ) ) {
 			wp_send_json_error( array( 'reasons' => __( 'Failed to pass security', 'sunshine-photo-cart' ) ) );
 			return;
 		}
