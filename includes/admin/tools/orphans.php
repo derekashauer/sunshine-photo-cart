@@ -1,5 +1,24 @@
 <?php
+/**
+ * Orphaned-image cleanup tool.
+ *
+ * Looks for `wp-content/uploads/sunshine/{post_id}/` folders whose post_id
+ * no longer corresponds to a real post (gallery was deleted but the folder
+ * lingered) and removes them along with any contained files.
+ *
+ * Two execution paths share the same per-folder worker (`delete_orphan_folder`):
+ *
+ *   - Admin UI: `do_process()` renders a progress bar + JS that fires a
+ *     per-folder AJAX request against `clear_orphan` (one folder per request,
+ *     legacy behavior).
+ *   - REST API: `count_remaining()` + `process_batch()` let an external
+ *     caller drive the cleanup in batches of `batch_size` folders per call.
+ *     Default 25 because each step is cheap (file ops + a tiny DB lookup).
+ */
 class SPC_Tool_Orphans extends SPC_Tool {
+
+	protected $is_chunked = true;
+	protected $batch_size = 25;
 
 	function __construct() {
 		parent::__construct(
@@ -13,58 +32,13 @@ class SPC_Tool_Orphans extends SPC_Tool {
 	}
 
 	function pre_process() {
-		global $wpdb;
-
-		/*
-		$sql   = "SELECT COUNT(*) as total FROM {$wpdb->posts} AS p
-			INNER JOIN {$wpdb->postmeta} AS pm
-				ON p.ID = pm.post_id AND pm.meta_key = 'sunshine_file_name'
-			WHERE p.post_parent = 0 AND p.post_type = 'attachment'
-			AND pm.meta_value != ''
-			ORDER BY p.ID DESC";
-		$count = $wpdb->get_row( $sql )->total;
-		*/
-		$count = 0;
-
-		// Define the path to the parent folder
-		$upload_dir         = wp_upload_dir();
-		$parent_folder_path = $upload_dir['basedir'] . '/sunshine';
-
-		// Initialize an empty array to hold folder names that don't have a matching post ID
-		$orphan_folders = array();
-
-		// Scan the parent folder and get all the sub-folders
-		$sub_folders = scandir( $parent_folder_path );
-
-		// Loop through each sub-folder
-		foreach ( $sub_folders as $sub_folder ) {
-			// Skip the special entries '.' and '..'
-			if ( $sub_folder == '.' || $sub_folder == '..' ) {
-				continue;
-			}
-
-			// Check if the folder name is numeric
-			if ( is_numeric( $sub_folder ) ) {
-				// Convert the folder name to an integer
-				$post_id = intval( $sub_folder );
-
-				// Check if a post with this ID exists
-				$post = get_post( $post_id );
-
-				// If the post doesn't exist, add the folder name to the array
-				if ( null === $post ) {
-					$orphan_folders[] = $sub_folder;
-					$count++;
-				}
-			}
-		}
+		$count = $this->count_remaining();
 
 		if ( $count ) {
 			echo '<p>';
 			/* translators: %s is the number of orphaned folders */
 			echo esc_html( sprintf( __( 'Sunshine found %s orphaned folders of images.', 'sunshine-photo-cart' ), $count ) );
 			echo ' ';
-			/* translators: %s is the site name */
 			echo '<strong style="color: red;">';
 			esc_html_e( 'It is recommended to make a backup before running this tool. Images will be completely deleted from your server.', 'sunshine-photo-cart' );
 			echo '</strong></p>';
@@ -75,43 +49,109 @@ class SPC_Tool_Orphans extends SPC_Tool {
 		}
 	}
 
-	protected function do_process() {
-		global $wpdb;
+	/**
+	 * REST-API path. Counts orphan folders without deleting anything.
+	 */
+	public function count_remaining() {
+		return count( $this->find_orphan_folders() );
+	}
 
-		$upload_dir         = wp_upload_dir();
-		$parent_folder_path = $upload_dir['basedir'] . '/sunshine';
+	/**
+	 * REST-API path. Deletes up to $size orphan folders. Subsequent calls
+	 * pick up where this one left off because each call rescans for orphans.
+	 */
+	public function process_batch( $size = null, $params = array() ) {
+		$size      = max( 1, (int) ( $size ?: $this->get_batch_size() ) );
+		$orphans   = array_slice( $this->find_orphan_folders(), 0, $size );
+		$processed = 0;
+		$log       = array();
+		$errors    = array();
 
-		$count = 0;
-
-		// Initialize an empty array to hold folder names that don't have a matching post ID
-		$orphan_folders = array();
-
-		// Scan the parent folder and get all the sub-folders
-		$sub_folders = scandir( $parent_folder_path );
-
-		// Loop through each sub-folder
-		foreach ( $sub_folders as $sub_folder ) {
-			// Skip the special entries '.' and '..'
-			if ( $sub_folder == '.' || $sub_folder == '..' ) {
-				continue;
-			}
-
-			// Check if the folder name is numeric
-			if ( is_numeric( $sub_folder ) ) {
-				// Convert the folder name to an integer
-				$post_id = intval( $sub_folder );
-
-				// Check if a post with this ID exists
-				$post = get_post( $post_id );
-
-				// If the post doesn't exist, add the folder name to the array
-				if ( null === $post ) {
-					$orphan_folders[] = $sub_folder;
-					$count++;
-				}
+		foreach ( $orphans as $folder ) {
+			$result = $this->delete_orphan_folder( $folder );
+			if ( $result['ok'] ) {
+				$processed++;
+				$log[] = $result['folder'];
+			} else {
+				$errors[] = array(
+					'folder' => $result['folder'],
+					'error'  => $result['error'],
+				);
 			}
 		}
 
+		return array(
+			'processed'   => $processed,
+			'remaining'   => count( $this->find_orphan_folders() ),
+			// Orphan list shrinks as we delete, so the next batch always
+			// starts from the front. No cursor needed.
+			'next_offset' => 0,
+			'log'         => $log,
+			'errors'      => $errors,
+		);
+	}
+
+	/**
+	 * Find every numeric subfolder under uploads/sunshine/ whose post_id no
+	 * longer resolves to a real post. Pure read — no side effects.
+	 */
+	private function find_orphan_folders() {
+		$upload_dir         = wp_upload_dir();
+		$parent_folder_path = $upload_dir['basedir'] . '/sunshine';
+		$orphans            = array();
+
+		if ( ! is_dir( $parent_folder_path ) ) {
+			return $orphans;
+		}
+
+		$sub_folders = scandir( $parent_folder_path );
+		foreach ( $sub_folders as $sub_folder ) {
+			if ( '.' === $sub_folder || '..' === $sub_folder ) {
+				continue;
+			}
+			if ( ! is_numeric( $sub_folder ) ) {
+				continue;
+			}
+			if ( null === get_post( intval( $sub_folder ) ) ) {
+				$orphans[] = $sub_folder;
+			}
+		}
+
+		return $orphans;
+	}
+
+	/**
+	 * Worker: delete one orphan folder and any attachments inside.
+	 * Used by both the admin AJAX handler and the REST batch path.
+	 *
+	 * @param string $folder Numeric folder name under uploads/sunshine/.
+	 * @return array{ok:bool,folder:string,error?:string}
+	 */
+	private function delete_orphan_folder( $folder ) {
+		$upload_dir         = wp_upload_dir();
+		$parent_folder_path = $upload_dir['basedir'] . '/sunshine';
+		$sub_folder_path    = $parent_folder_path . '/' . $folder;
+
+		if ( ! is_dir( $sub_folder_path ) ) {
+			return array( 'ok' => false, 'folder' => $sub_folder_path, 'error' => 'directory_missing' );
+		}
+
+		$files = array_diff( scandir( $sub_folder_path ), array( '.', '..' ) );
+		foreach ( $files as $file ) {
+			$file_path = $sub_folder_path . '/' . $file;
+			@unlink( $file_path );
+			$attachment_id = attachment_url_to_postid( $file_path );
+			if ( $attachment_id ) {
+				wp_delete_attachment( $attachment_id, true );
+			}
+		}
+		@rmdir( $sub_folder_path );
+
+		return array( 'ok' => true, 'folder' => $sub_folder_path );
+	}
+
+	protected function do_process() {
+		$count = $this->count_remaining();
 		?>
 		<div id="progress-bar" style="background: #000; height: 30px; position: relative;">
 			<div id="percentage" style="height: 30px; background-color: green; width: 0%;"></div>
@@ -161,66 +201,27 @@ class SPC_Tool_Orphans extends SPC_Tool {
 		<?php
 	}
 
+	/**
+	 * Admin AJAX handler — preserved as-is for back-compat with the existing
+	 * progress-bar JS. Routes the per-folder call through the same worker
+	 * the REST batch path uses.
+	 */
 	function clear_orphan() {
-		global $wpdb;
-
 		if ( ! wp_verify_nonce( $_REQUEST['security'], 'sunshine_clear_orphan' ) || ! current_user_can( 'sunshine_manage_options' ) ) {
 			wp_send_json_error();
 		}
 
-		$upload_dir         = wp_upload_dir();
-		$parent_folder_path = $upload_dir['basedir'] . '/sunshine';
+		$orphans = $this->find_orphan_folders();
+		if ( empty( $orphans ) ) {
+			wp_send_json_success( array( 'folder' => '' ) );
+			exit;
+		}
 
-		// Scan the parent folder and get all the sub-folders
-		$sub_folders = scandir( $parent_folder_path );
-		// Loop through each sub-folder
-		foreach ( $sub_folders as $sub_folder ) {
-			// Skip the special entries '.' and '..'
-			if ( $sub_folder == '.' || $sub_folder == '..' ) {
-				continue;
-			}
-
-			// Check if the folder name is numeric
-			if ( is_numeric( $sub_folder ) ) {
-				// Convert the folder name to an integer (the post ID)
-				$post_id = intval( $sub_folder );
-
-				// Check if a post with this ID exists
-				$post = get_post( $post_id );
-
-				// If the post doesn't exist, delete files and the folder
-				if ( null === $post ) {
-					// Full path to the sub-folder
-					$sub_folder_path = $parent_folder_path . '/' . $sub_folder;
-
-					// Get all files in the sub-folder
-					$files = array_diff( scandir( $sub_folder_path ), array( '.', '..' ) );
-
-					// Loop through each file and delete it
-					foreach ( $files as $file ) {
-						unlink( $sub_folder_path . '/' . $file );
-
-						// Get attachment ID using file path
-						$attachment_id = attachment_url_to_postid( $sub_folder_path . '/' . $file );
-
-						// If found, delete the attachment post
-						if ( $attachment_id ) {
-							wp_delete_attachment( $attachment_id, true );
-						}
-					}
-
-					// Remove the folder itself
-					rmdir( $sub_folder_path );
-
-					wp_send_json_success(
-						array(
-							'folder' => $sub_folder_path,
-						)
-					);
-					exit;
-
-				}
-			}
+		$result = $this->delete_orphan_folder( $orphans[0] );
+		if ( $result['ok'] ) {
+			wp_send_json_success( array( 'folder' => $result['folder'] ) );
+		} else {
+			wp_send_json_error( array( 'file' => $result['folder'], 'error' => $result['error'] ) );
 		}
 		exit;
 	}
