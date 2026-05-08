@@ -1,7 +1,21 @@
 <?php
+/**
+ * Image-regeneration tool.
+ *
+ * Heavy per-image work: read original (often 10+ MB), build resized
+ * variants, apply watermarks, write back. Stays one-image-per-batch via
+ * `$batch_size = 1` to avoid blowing PHP memory on shared hosts.
+ *
+ * Both the admin UI's per-image AJAX handler and the API's
+ * `process_batch()` route their work through the same shared worker
+ * (`regenerate_one()`).
+ */
 class SPC_Tool_Regenerate extends SPC_Tool {
 
 	private $remove_image_sizes = false;
+
+	protected $is_chunked = true;
+	protected $batch_size = 1;
 
 	function __construct() {
 		parent::__construct(
@@ -25,6 +39,270 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 		return $actions;
 	}
 
+	/**
+	 * REST-API path: total images that need regenerating.
+	 *
+	 * Optional $gallery_id narrows to a single gallery; without it, every
+	 * Sunshine-uploaded attachment is counted.
+	 */
+	public function count_remaining( $gallery_id = 0 ) {
+		if ( ! empty( $gallery_id ) ) {
+			$gallery = sunshine_get_gallery( intval( $gallery_id ) );
+			return $gallery ? (int) $gallery->get_image_count() : 0;
+		}
+		$args  = array(
+			'post_type'      => 'attachment',
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'meta_key'       => 'sunshine_file_name',
+			'no_found_rows'  => false,
+		);
+		$query = new WP_Query( $args );
+		return (int) $query->found_posts;
+	}
+
+	/**
+	 * REST-API path: regenerate one image (or up to $size — capped at
+	 * $batch_size). Caller passes an `offset` cursor that points at the
+	 * Nth image in the queue. Per-image work is delegated to
+	 * `regenerate_one()` so this method and the admin AJAX handler call
+	 * the same code.
+	 *
+	 * Optional $params:
+	 *   gallery_id       int    Restrict to a single gallery.
+	 *   apply_watermark  '0|1'  Force-on watermark for previously skipped images.
+	 *   offset           int    Index into the work queue to start from.
+	 */
+	public function process_batch( $size = null, $params = array() ) {
+		$size            = min( $this->get_batch_size(), max( 1, (int) ( $size ?: $this->get_batch_size() ) ) );
+		$offset          = isset( $params['offset'] ) ? max( 0, (int) $params['offset'] ) : 0;
+		$gallery_id      = isset( $params['gallery_id'] ) ? intval( $params['gallery_id'] ) : 0;
+		$apply_watermark = isset( $params['apply_watermark'] ) ? sanitize_text_field( $params['apply_watermark'] ) : '';
+
+		$image_ids = $this->collect_image_ids( $gallery_id, $offset, $size );
+
+		$processed = 0;
+		$log       = array();
+		$errors    = array();
+
+		foreach ( $image_ids as $image_id ) {
+			set_time_limit( 600 );
+			$result = $this->regenerate_one( $image_id, $apply_watermark );
+			if ( $result['ok'] ) {
+				$processed++;
+				$log[] = array(
+					'image_id' => $image_id,
+					'file'     => $result['file'],
+				);
+			} else {
+				$errors[] = array(
+					'image_id' => $image_id,
+					'file'     => $result['file'],
+					'error'    => $result['error'],
+				);
+			}
+		}
+
+		$total = $this->count_remaining( $gallery_id );
+
+		return array(
+			'processed'   => $processed,
+			'remaining'   => max( 0, $total - ( $offset + count( $image_ids ) ) ),
+			'next_offset' => $offset + count( $image_ids ),
+			'log'         => $log,
+			'errors'      => $errors,
+		);
+	}
+
+	/**
+	 * Resolve the slice of image IDs at [offset, offset+size) — either from
+	 * a specific gallery's image list or from the global Sunshine attachment
+	 * query.
+	 */
+	private function collect_image_ids( $gallery_id, $offset, $size ) {
+		if ( ! empty( $gallery_id ) ) {
+			$gallery = sunshine_get_gallery( $gallery_id );
+			if ( ! $gallery ) {
+				return array();
+			}
+			$all = $gallery->get_image_ids();
+			if ( ! is_array( $all ) ) {
+				return array();
+			}
+			return array_slice( $all, $offset, $size );
+		}
+		$query = new WP_Query( array(
+			'post_type'      => 'attachment',
+			'post_status'    => 'any',
+			'offset'         => $offset,
+			'posts_per_page' => $size,
+			'fields'         => 'ids',
+			'meta_key'       => 'sunshine_file_name',
+		) );
+		return (array) $query->posts;
+	}
+
+	/**
+	 * Per-image worker. Called by both the admin AJAX handler and the API
+	 * batch path so behavior stays identical between the two transports.
+	 *
+	 * Returns ['ok' => bool, 'file' => string, 'image_id' => int, 'error' => string|null].
+	 */
+	public function regenerate_one( $image_id, $apply_watermark = '' ) {
+		global $intermediate_image_sizes;
+
+		$image = sunshine_get_image( $image_id );
+		if ( empty( $image ) ) {
+			return array( 'ok' => false, 'image_id' => (int) $image_id, 'file' => '', 'error' => 'image_not_found' );
+		}
+
+		if ( function_exists( 'wp_get_original_image_path' ) ) {
+			$file_path = wp_get_original_image_path( $image_id );
+		} else {
+			$file_path = get_attached_file( $image_id );
+		}
+		if ( is_wp_error( $file_path ) ) {
+			SPC()->log( 'Could not find original file to regenerate from, image ID: ' . $image_id );
+			return array(
+				'ok'       => false,
+				'image_id' => (int) $image_id,
+				'file'     => $image->get_name(),
+				'error'    => __( 'Could not find original file to regenerate from', 'sunshine-photo-cart' ),
+			);
+		}
+
+		SPC()->log( 'Regenerating image: ' . $image_id );
+
+		$upload_info              = wp_upload_dir();
+		$upload_dir               = $upload_info['basedir'];
+		$downloaded_from_cloud    = false;
+		$sunshine_cloud_offloaded = false;
+
+		// Sunshine Cloud Storage offload: pull the file local for processing.
+		$cloud_storage_key = get_post_meta( $image_id, 'sunshine_cloud_storage_key', true );
+		if ( ! empty( $cloud_storage_key ) && ( ! file_exists( $file_path ) || substr( $file_path, 0, 2 ) == 's3' ) ) {
+			$sunshine_cloud_offloaded = true;
+
+			if ( class_exists( 'Sunshine_Cloud_Storage_Client' ) ) {
+				$client = Sunshine_Cloud_Storage_Client::instance();
+
+				$local_path = $upload_dir . '/sunshine/' . $image->get_gallery_id() . '/' . basename( $cloud_storage_key );
+
+				$local_dir = dirname( $local_path );
+				if ( ! file_exists( $local_dir ) ) {
+					wp_mkdir_p( $local_dir );
+				}
+
+				SPC()->log( 'Cloud Storage: Downloading original file for regeneration: ' . $cloud_storage_key );
+
+				if ( $client->download_file( $cloud_storage_key, $local_path ) ) {
+					$file_path             = $local_path;
+					$downloaded_from_cloud = true;
+					SPC()->log( 'Cloud Storage: Successfully downloaded file for regeneration: ' . $local_path );
+				} else {
+					SPC()->log( 'Cloud Storage: Failed to download file for regeneration: ' . $cloud_storage_key );
+					return array(
+						'ok'       => false,
+						'image_id' => (int) $image_id,
+						'file'     => $image->get_name(),
+						'error'    => __( 'Could not download file from cloud storage for regeneration', 'sunshine-photo-cart' ),
+					);
+				}
+			} else {
+				SPC()->log( 'Cloud Storage: Client class not available for regeneration' );
+				return array(
+					'ok'       => false,
+					'image_id' => (int) $image_id,
+					'file'     => $image->get_name(),
+					'error'    => __( 'Cloud Storage addon is required to regenerate this offloaded image', 'sunshine-photo-cart' ),
+				);
+			}
+		} elseif ( substr( $file_path, 0, 2 ) == 's3' && function_exists( 'as3cf_get_attachment_url' ) ) {
+			// WP Offload Media: fetch the original locally for processing.
+			$remote_url = as3cf_get_attachment_url( $image_id );
+			$orig_image = file_get_contents( $remote_url );
+
+			$file_path = $upload_dir . '/sunshine/' . $image->get_gallery_id() . '/' . basename( $file_path );
+
+			$local_dir = dirname( $file_path );
+			if ( ! file_exists( $local_dir ) ) {
+				wp_mkdir_p( $local_dir );
+			}
+
+			file_put_contents( $file_path, $orig_image );
+			$downloaded_from_cloud = true;
+		}
+
+		// Wipe existing intermediate sizes so they get rebuilt.
+		if ( ! $downloaded_from_cloud && file_exists( $file_path ) ) {
+			$directory = dirname( $file_path );
+			$file_info = pathinfo( $file_path );
+			$filename  = $file_info['filename'];
+			$extension = isset( $file_info['extension'] ) ? $file_info['extension'] : '';
+
+			if ( ! empty( $extension ) ) {
+				$pattern      = $directory . '/' . $filename . '-*x*.' . $extension;
+				$extra_images = glob( $pattern );
+				foreach ( $extra_images as $extra_image ) {
+					wp_delete_file( $extra_image );
+				}
+			}
+		}
+
+		if ( $downloaded_from_cloud ) {
+			update_attached_file( $image_id, $file_path );
+		}
+
+		$created_timestamp = '';
+		if ( file_exists( $file_path ) && is_readable( $file_path ) ) {
+			$exif_data = @exif_read_data( $file_path, 'EXIF', true );
+
+			if ( ! empty( $exif_data['EXIF']['DateTimeOriginal'] ) ) {
+				$photo_time = $exif_data['EXIF']['DateTimeOriginal'];
+				$timestamp  = strtotime( str_replace( ':', '-', substr( $photo_time, 0, 10 ) ) . substr( $photo_time, 10 ) );
+				if ( $timestamp ) {
+					$created_timestamp          = $timestamp;
+					$readable_created_timestamp = gmdate( 'Y-m-d H:i:s', $created_timestamp );
+					SPC()->log( 'Found EXIF DateTimeOriginal for ' . basename( $file_path ) . ': ' . $readable_created_timestamp );
+				}
+			}
+		}
+
+		$new_metadata = wp_generate_attachment_metadata( $image_id, $file_path );
+
+		$new_metadata = sunshine_ensure_intermediate_sizes( $image_id, $new_metadata, $file_path );
+
+		$image_meta   = isset( $new_metadata['image_meta'] ) ? $new_metadata['image_meta'] : array();
+		if ( empty( $created_timestamp ) && ! empty( $image_meta['created_timestamp'] ) ) {
+			$created_timestamp = $image_meta['created_timestamp'];
+		}
+		if ( ! empty( $created_timestamp ) ) {
+			update_post_meta( $image_id, 'created_timestamp', $created_timestamp );
+		}
+
+		// Apply the watermark policy.
+		if ( '1' === $apply_watermark ) {
+			$watermark = 1;
+			update_post_meta( $image_id, 'sunshine_watermark', 1 );
+		} else {
+			$watermark = get_post_meta( $image_id, 'sunshine_watermark', true );
+			if ( $watermark === '' ) {
+				$watermark = 1;
+			}
+		}
+
+		do_action( 'sunshine_regenerate_image', $image_id );
+		do_action( 'sunshine_after_image_process', $image_id, $file_path, $watermark );
+		wp_update_attachment_metadata( $image_id, $new_metadata );
+
+		return array(
+			'ok'       => true,
+			'image_id' => (int) $image_id,
+			'file'     => $image->get_name(),
+			'error'    => null,
+		);
+	}
 
 	protected function do_process() {
 		global $wpdb;
@@ -34,7 +312,7 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 		$apply_watermark          = isset( $_GET['apply_watermark'] ) ? sanitize_text_field( wp_unslash( $_GET['apply_watermark'] ) ) : null;
 		$images_without_watermark = 0;
 
-		// Check for images without watermark before proceeding.
+		// Watermark prompt: count images that have watermark explicitly disabled.
 		if ( ! empty( $watermark_image ) && null === $apply_watermark ) {
 			if ( ! empty( $gallery_id ) ) {
 				$gallery   = sunshine_get_gallery( $gallery_id );
@@ -42,14 +320,12 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 				if ( ! empty( $image_ids ) && is_array( $image_ids ) ) {
 					foreach ( $image_ids as $image_id ) {
 						$watermark_meta = get_post_meta( $image_id, 'sunshine_watermark', true );
-						// Check if watermark is disabled (matches the check in sunshine_watermark_media_upload).
 						if ( 0 === $watermark_meta || '0' === $watermark_meta || false === $watermark_meta ) {
 							$images_without_watermark++;
 						}
 					}
 				}
 			} else {
-				// Check for all images without watermark.
 				$args_no_watermark        = array(
 					'post_type'   => 'attachment',
 					'post_status' => 'any',
@@ -72,7 +348,6 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			}
 		}
 
-		// Show watermark options if needed - must happen before any output.
 		if ( ! empty( $watermark_image ) && null === $apply_watermark && $images_without_watermark > 0 ) {
 			$this->show_watermark_options( $images_without_watermark, $gallery_id );
 			return;
@@ -85,14 +360,7 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			$count = $gallery->get_image_count();
 		} else {
 			$title = __( 'Regenerating images', 'sunshine-photo-cart' );
-			$args  = array(
-				'post_type'   => 'attachment',
-				'post_status' => 'any',
-				'nopaging'    => true,
-				'meta_key'    => 'sunshine_file_name',
-			);
-			$query = new WP_Query( $args );
-			$count = $query->found_posts;
+			$count = $this->count_remaining();
 		}
 
 		?>
@@ -153,9 +421,6 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 
 	/**
 	 * Show watermark options before regeneration.
-	 *
-	 * @param int    $images_without_watermark Number of images without watermark.
-	 * @param string $gallery_id               Optional gallery ID.
 	 */
 	private function show_watermark_options( $images_without_watermark, $gallery_id = '' ) {
 		$base_url = admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-tools&tool=regenerate-images' );
@@ -200,16 +465,20 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 		<?php
 	}
 
+	/**
+	 * Admin AJAX endpoint — preserved 1:1 with the existing JS contract.
+	 * Routes per-image work through `regenerate_one()` (shared with the
+	 * REST batch path).
+	 */
 	function regenerate_image() {
-		global $wpdb, $intermediate_image_sizes;
-
 		if ( ! wp_verify_nonce( $_REQUEST['security'], 'sunshine_regenerate_image' ) || ! current_user_can( 'sunshine_manage_options' ) ) {
 			wp_send_json_error();
 		}
 
 		set_time_limit( 600 );
 
-		$item_number = intval( $_POST['item_number'] );
+		$item_number     = intval( $_POST['item_number'] );
+		$apply_watermark = isset( $_POST['apply_watermark'] ) ? sanitize_text_field( wp_unslash( $_POST['apply_watermark'] ) ) : '';
 
 		if ( ! empty( $_POST['gallery'] ) ) {
 			$gallery   = sunshine_get_gallery( intval( $_POST['gallery'] ) );
@@ -227,188 +496,27 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			$image_id = $query->posts[0]->ID;
 		}
 
-		$image = sunshine_get_image( $image_id );
+		$result = $this->regenerate_one( $image_id, $apply_watermark );
 
-		if ( function_exists( 'wp_get_original_image_path' ) ) {
-			$file_path = wp_get_original_image_path( $image_id );
-		} else {
-			$file_path = get_attached_file( $image_id );
-		}
-		if ( is_wp_error( $file_path ) ) {
-			SPC()->log( 'Could not find original file to regenerate from, image ID: ' . $image_id );
+		if ( $result['ok'] ) {
 			wp_send_json(
 				array(
-					'status'   => 'error',
-					'file'     => $image->get_name(),
-					'image_id' => $image_id,
-					'error'    => __(
-						'Could not find original file to regenerate from',
-						'sunshine-photo-cart'
-					),
+					'status'   => 'success',
+					'file'     => $result['file'],
+					'image_id' => $result['image_id'],
 				)
 			);
 			return;
 		}
 
-		SPC()->log( 'Regenerating image: ' . $image_id );
-
-		$upload_info              = wp_upload_dir();
-		$upload_dir               = $upload_info['basedir'];
-		$downloaded_from_cloud    = false;
-		$sunshine_cloud_offloaded = false;
-
-		// Check if file is offloaded via Sunshine Cloud Storage addon.
-		$cloud_storage_key = get_post_meta( $image_id, 'sunshine_cloud_storage_key', true );
-		if ( ! empty( $cloud_storage_key ) && ( ! file_exists( $file_path ) || substr( $file_path, 0, 2 ) == 's3' ) ) {
-			$sunshine_cloud_offloaded = true;
-
-			// Try to download from Sunshine Cloud Storage.
-			if ( class_exists( 'Sunshine_Cloud_Storage_Client' ) ) {
-				$client = Sunshine_Cloud_Storage_Client::instance();
-
-				// Build local path for the downloaded file.
-				$local_path = $upload_dir . '/sunshine/' . $image->get_gallery_id() . '/' . basename( $cloud_storage_key );
-
-				// Ensure directory exists.
-				$local_dir = dirname( $local_path );
-				if ( ! file_exists( $local_dir ) ) {
-					wp_mkdir_p( $local_dir );
-				}
-
-				SPC()->log( 'Cloud Storage: Downloading original file for regeneration: ' . $cloud_storage_key );
-
-				if ( $client->download_file( $cloud_storage_key, $local_path ) ) {
-					$file_path             = $local_path;
-					$downloaded_from_cloud = true;
-					SPC()->log( 'Cloud Storage: Successfully downloaded file for regeneration: ' . $local_path );
-				} else {
-					SPC()->log( 'Cloud Storage: Failed to download file for regeneration: ' . $cloud_storage_key );
-					wp_send_json(
-						array(
-							'status'   => 'error',
-							'file'     => $image->get_name(),
-							'image_id' => $image_id,
-							'error'    => __(
-								'Could not download file from cloud storage for regeneration',
-								'sunshine-photo-cart'
-							),
-						)
-					);
-					return;
-				}
-			} else {
-				SPC()->log( 'Cloud Storage: Client class not available for regeneration' );
-				wp_send_json(
-					array(
-						'status'   => 'error',
-						'file'     => $image->get_name(),
-						'image_id' => $image_id,
-						'error'    => __(
-							'Cloud Storage addon is required to regenerate this offloaded image',
-							'sunshine-photo-cart'
-						),
-					)
-				);
-				return;
-			}
-		} elseif ( substr( $file_path, 0, 2 ) == 's3' && function_exists( 'as3cf_get_attachment_url' ) ) {
-			// If we have a remote file and we have the WP Offload Media plugin active.
-			$remote_url = as3cf_get_attachment_url( $image_id );
-			$orig_image = file_get_contents( $remote_url );
-
-			// Make the new local version of the file the source file path.
-			$file_path = $upload_dir . '/sunshine/' . $image->get_gallery_id() . '/' . basename( $file_path );
-
-			// Ensure directory exists.
-			$local_dir = dirname( $file_path );
-			if ( ! file_exists( $local_dir ) ) {
-				wp_mkdir_p( $local_dir );
-			}
-
-			$save                  = file_put_contents( $file_path, $orig_image );
-			$downloaded_from_cloud = true;
-		}
-
-		// Only delete existing thumbnails if file exists locally (not downloaded from cloud).
-		if ( ! $downloaded_from_cloud && file_exists( $file_path ) ) {
-			$directory = dirname( $file_path );
-			$file_info = pathinfo( $file_path );
-			$filename  = $file_info['filename']; // This will be 'lee-10'
-			$extension = isset( $file_info['extension'] ) ? $file_info['extension'] : '';
-
-			if ( ! empty( $extension ) ) {
-				// Find extra images and delete them.
-				$pattern      = $directory . '/' . $filename . '-*x*.' . $extension;
-				$extra_images = glob( $pattern );
-				foreach ( $extra_images as $extra_image ) {
-					wp_delete_file( $extra_image );
-				}
-			}
-		}
-
-		// If we downloaded from cloud, update the attached file path so WordPress knows where the file is.
-		// This is important for the cloud storage hook to find the file after regeneration.
-		if ( $downloaded_from_cloud ) {
-			update_attached_file( $image_id, $file_path );
-		}
-
-		$created_timestamp = '';
-		if ( file_exists( $file_path ) && is_readable( $file_path ) ) {
-			$exif_data = @exif_read_data( $file_path, 'EXIF', true );
-
-			if ( ! empty( $exif_data['EXIF']['DateTimeOriginal'] ) ) {
-				$photo_time = $exif_data['EXIF']['DateTimeOriginal'];
-
-				// Convert from format "YYYY:MM:DD HH:MM:SS" to timestamp
-				$timestamp = strtotime( str_replace( ':', '-', substr( $photo_time, 0, 10 ) ) . substr( $photo_time, 10 ) );
-
-				if ( $timestamp ) {
-					$created_timestamp          = $timestamp;
-					$readable_created_timestamp = gmdate( 'Y-m-d H:i:s', $created_timestamp );
-					SPC()->log( 'Found EXIF DateTimeOriginal for ' . basename( $file_path ) . ': ' . $readable_created_timestamp );
-				}
-			}
-		}
-
-		// Regenerate everything.
-		$new_metadata = wp_generate_attachment_metadata( $image_id, $file_path );
-
-		// Ensure intermediate sizes exist even when the image is smaller than the target size.
-		$new_metadata = sunshine_ensure_intermediate_sizes( $image_id, $new_metadata, $file_path );
-
-		$image_meta   = isset( $new_metadata['image_meta'] ) ? $new_metadata['image_meta'] : array();
-		if ( empty( $created_timestamp ) && ! empty( $image_meta['created_timestamp'] ) ) {
-			$created_timestamp = $image_meta['created_timestamp'];
-		}
-		if ( ! empty( $created_timestamp ) ) {
-			update_post_meta( $image_id, 'created_timestamp', $created_timestamp );
-		}
-
-		$apply_watermark = isset( $_POST['apply_watermark'] ) ? sanitize_text_field( wp_unslash( $_POST['apply_watermark'] ) ) : '';
-
-		// If user chose to apply watermark to all, force watermark on.
-		if ( '1' === $apply_watermark ) {
-			$watermark = 1;
-			update_post_meta( $image_id, 'sunshine_watermark', 1 );
-		} else {
-			$watermark = get_post_meta( $image_id, 'sunshine_watermark', true );
-			if ( $watermark === '' ) {
-				$watermark = 1; // If no watermark setting is there, assume we want it to be watermarked and current settings will dictate if that happens.
-			}
-		}
-
-		do_action( 'sunshine_regenerate_image', $image_id );
-		do_action( 'sunshine_after_image_process', $image_id, $file_path, $watermark );
-		wp_update_attachment_metadata( $image_id, $new_metadata );
-
 		wp_send_json(
 			array(
-				'status'   => 'success',
-				'file'     => $image->get_name(),
-				'image_id' => $image_id,
+				'status'   => 'error',
+				'file'     => $result['file'],
+				'image_id' => $result['image_id'],
+				'error'    => $result['error'],
 			)
 		);
-
 	}
 
 	public function remove_image_sizes( $sizes ) {
