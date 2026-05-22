@@ -1679,8 +1679,14 @@ function sunshine_meta_gallery_images_unique( $image_ids ) {
 // Attempt to not have an image uploaded as Featured Image automatically be part of the gallery
 add_filter( 'wp_insert_attachment_data', 'sunshine_featured_image_upload_situation', 10, 2 );
 function sunshine_featured_image_upload_situation( $data, $postarr ) {
+	// `get_current_screen()` is admin-only — bail when this filter fires
+	// outside the admin (e.g. during REST or CLI uploads, where there is no
+	// async-upload screen to detect anyway).
+	if ( ! function_exists( 'get_current_screen' ) ) {
+		return $data;
+	}
 	$screen = get_current_screen();
-	if ( isset( $_POST['action'] ) && $_POST['action'] == 'upload-attachment' && $screen->id == 'async-upload' ) {
+	if ( $screen && isset( $_POST['action'] ) && $_POST['action'] == 'upload-attachment' && $screen->id == 'async-upload' ) {
 		if ( ! empty( $data['post_parent'] ) && get_post_type( $data['post_parent'] ) == 'sunshine-gallery' ) {
 			$data['post_parent'] = 0;
 		}
