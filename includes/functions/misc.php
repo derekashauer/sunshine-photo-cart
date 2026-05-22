@@ -451,7 +451,25 @@ function sunshine_doing_upload( $gallery_id ) {
 		define( 'SUNSHINE_UPLOAD', intval( $gallery_id ) );
 	}
 	add_filter( 'upload_dir', 'sunshine_custom_upload_dir' );
+	// Restrict size generation to Sunshine's own thumbnail + large during the
+	// upload. Stock WP sizes (medium, 1536x1536, etc.) and add-on-registered
+	// sizes (digital-downloads' per-product sizes, etc.) are skipped here
+	// and lazily generated on demand when actually requested. Mirrors the
+	// existing Sunshine_Admin::image_sizes behavior for admin-ajax uploads,
+	// but runs in every context (REST, CLI, cron) since Sunshine_Admin only
+	// loads under is_admin().
+	add_filter( 'intermediate_image_sizes', 'sunshine_upload_image_sizes', 99999 );
 	set_time_limit( 600 );
+}
+
+/**
+ * Whitelist of intermediate sizes generated during a Sunshine upload.
+ * Add-ons can extend the list via the `sunshine_image_sizes` filter (the
+ * existing extension point used by the admin path).
+ */
+function sunshine_upload_image_sizes( $sizes ) {
+	$allowed = array( 'sunshine-thumbnail', 'sunshine-large' );
+	return (array) apply_filters( 'sunshine_image_sizes', $allowed );
 }
 
 function sunshine_custom_upload_dir( $param ) {
