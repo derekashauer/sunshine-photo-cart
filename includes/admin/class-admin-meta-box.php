@@ -728,71 +728,99 @@ class Sunshine_Admin_Meta_Boxes {
 			if ( empty( $field['conditions'] ) || ! is_array( $field['conditions'] ) ) {
 				continue;
 			}
+
+			// Group conditions by action_target. Conditions sharing the same target
+			// combine with unified semantics so multiple addons can each contribute
+			// rules without their else-branches contradicting each other.
+			$groups = array();
+			foreach ( $field['conditions'] as $condition ) {
+				if ( empty( $condition['compare'] ) || empty( $condition['field'] ) || empty( $condition['action'] ) ) {
+					continue;
+				}
+				if ( ! isset( $condition['value'] ) || '' === $condition['value'] ) {
+					continue;
+				}
+				if ( ! in_array( $condition['action'], array( 'show', 'hide' ), true ) ) {
+					continue;
+				}
+				if ( ! in_array( $condition['compare'], array( '==', '!=', '<', '>', '<=', '>=' ), true ) ) {
+					continue;
+				}
+				$action_target = ( isset( $condition['action_target'] ) ) ? $condition['action_target'] : '#sunshine-meta-fields-' . $field['id'];
+				if ( ! isset( $groups[ $action_target ] ) ) {
+					$groups[ $action_target ] = array();
+				}
+				$groups[ $action_target ][] = $condition;
+			}
+
+			if ( empty( $groups ) ) {
+				continue;
+			}
 			?>
 
 			<script id="sunshine-conditions-<?php echo esc_attr( $field['id'] ); ?>">
-
 			jQuery( document ).ready(function($){
+				<?php
+				$group_index = 0;
+				foreach ( $groups as $action_target => $group_conditions ) {
+					$group_index++;
+					$func_suffix = preg_replace( '/[^a-zA-Z0-9_]/', '_', $field['id'] ) . '_' . $group_index;
 
-			<?php
-			$i = 0;
-			foreach ( $field['conditions'] as $condition ) {
-				if ( empty( $condition['compare'] ) || empty( $condition['value'] ) || empty( $condition['field'] ) || empty( $condition['action'] ) ) {
-					continue;
-				}
-				if ( ! in_array( $condition['action'], array( 'show', 'hide' ) ) ) {
-					continue;
-				}
-				if ( ! in_array( $condition['compare'], array( '==', '!=', '<', '>', '<=', '>=' ) ) ) {
-					continue;
-				}
-				$i++;
-				?>
-					var condition_field_value_<?php echo esc_attr( $field['id'] ); ?> = sunshine_get_condition_field_value( '<?php echo esc_js( $condition['field'] ); ?>' );
-					function condition_field_action_<?php echo esc_attr( $field['id'] . $i ); ?>( value ) {
+					// Collect unique source fields so we bind one change handler per source.
+					$source_fields = array();
+					foreach ( $group_conditions as $c ) {
+						$source_fields[ $c['field'] ] = true;
+					}
+					$source_fields = array_keys( $source_fields );
+					?>
+					function sunshine_eval_<?php echo esc_js( $func_suffix ); ?>() {
+						var any_hide_matched = false;
+						var has_show_condition = false;
+						var any_show_matched = false;
 						<?php
-						$action_target          = ( isset( $condition['action_target'] ) ) ? $condition['action_target'] : '#sunshine-meta-fields-' . $field['id'];
-						$true_action            = ( $condition['action'] == 'show' ) ? 'show' : 'hide';
-						$false_action           = ( $condition['action'] == 'show' ) ? 'hide' : 'show';
-						$comparison_string_safe = '';
-						if ( is_array( $condition['value'] ) ) { // If value is an array, need to compare against each array value
-							$comparison_strings = array();
-							foreach ( $condition['value'] as $value ) {
-								$comparison_strings[] = '( value ' . esc_js( $condition['compare'] ) . ' "' . esc_js( $value ) . '" )';
+						foreach ( $group_conditions as $c ) {
+							if ( is_array( $c['value'] ) ) {
+								$value_json   = wp_json_encode( $c['value'] );
+								$compare_expr = '( ' . $value_json . '.indexOf( v ) !== -1 )';
+								if ( '!=' === $c['compare'] ) {
+									$compare_expr = '! ' . $compare_expr;
+								}
+							} else {
+								$compare_expr = '( v ' . esc_js( $c['compare'] ) . ' "' . esc_js( $c['value'] ) . '" )';
 							}
-							$comparison_string_safe = join( ' || ', $comparison_strings );
-						} else {
-							$comparison_string_safe = 'value ' . esc_js( $condition['compare'] ) . ' "' . esc_js( $condition['value'] ) . '"';
-						}
-						if ( is_array( $condition['value'] ) ) {
 							?>
-							var possible_values = <?php echo wp_json_encode( $condition['value'] ); ?>;
-							if ( possible_values.includes( value ) ) {
-								$( '<?php echo esc_js( $action_target ); ?>' ).<?php echo esc_js( $true_action ); ?>();
-							} else {
-								$( '<?php echo esc_js( $action_target ); ?>' ).<?php echo esc_js( $false_action ); ?>();
-							}
-						<?php } else { ?>
-							if ( <?php echo $comparison_string_safe; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> ) {
-								$( '<?php echo esc_js( $action_target ); ?>' ).<?php echo esc_js( $true_action ); ?>();
-							} else {
-								$( '<?php echo esc_js( $action_target ); ?>' ).<?php echo esc_js( $false_action ); ?>();
-							}
-						<?php } ?>
+							(function(){
+								var v = sunshine_get_condition_field_value( '<?php echo esc_js( $c['field'] ); ?>' );
+								var matches = <?php echo $compare_expr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;
+								<?php if ( 'hide' === $c['action'] ) : ?>
+								if ( matches ) { any_hide_matched = true; }
+								<?php else : ?>
+								has_show_condition = true;
+								if ( matches ) { any_show_matched = true; }
+								<?php endif; ?>
+							})();
+							<?php
+						}
+						?>
+						var should_hide = any_hide_matched || ( has_show_condition && ! any_show_matched );
+						if ( should_hide ) {
+							$( '<?php echo esc_js( $action_target ); ?>' ).hide();
+						} else {
+							$( '<?php echo esc_js( $action_target ); ?>' ).show();
+						}
 					}
 
-					// Default action
-					condition_field_action_<?php echo esc_attr( $field['id'] . $i ); ?>( condition_field_value_<?php echo esc_attr( $field['id'] ); ?> );
+					sunshine_eval_<?php echo esc_js( $func_suffix ); ?>();
 
-					// On change action
-					$( '#<?php echo esc_js( $condition['field'] ); ?>, #sunshine-meta-fields-<?php echo esc_js( $condition['field'] ); ?> input[type="radio"], #sunshine-meta-fields-<?php echo esc_js( $condition['field'] ); ?> input[type="checkbox"]' ).on( 'change', function(){
-						condition_field_value_<?php echo esc_attr( $field['id'] ); ?> = sunshine_get_condition_field_value( '<?php echo esc_js( $condition['field'] ); ?>' );
-						condition_field_action_<?php echo esc_attr( $field['id'] . $i ); ?>( condition_field_value_<?php echo esc_attr( $field['id'] ); ?> );
-					});
-
-				<?php
-			}
-			echo '});</script>';
+					<?php foreach ( $source_fields as $sf ) : ?>
+					$( '#<?php echo esc_js( $sf ); ?>, #sunshine-meta-fields-<?php echo esc_js( $sf ); ?> input[type="radio"], #sunshine-meta-fields-<?php echo esc_js( $sf ); ?> input[type="checkbox"]' ).on( 'change', sunshine_eval_<?php echo esc_js( $func_suffix ); ?> );
+					<?php endforeach; ?>
+					<?php
+				}
+				?>
+			});
+			</script>
+			<?php
 		}
 
 	}

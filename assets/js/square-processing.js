@@ -164,7 +164,7 @@ jQuery( document ).on( 'sunshine_payment_processing', async function( event, dat
 			if ( checkout_data.shipping_first_name ) {
 				square_billing_contact.firstName = checkout_data.shipping_first_name;
 			} else if ( checkout_data.customer_first_name ) {
-				square_billing_contact.firstName = data.customer_first_name;
+				square_billing_contact.firstName = checkout_data.customer_first_name;
 			}
 			if ( checkout_data.shipping_last_name ) {
 				square_billing_contact.lastName = checkout_data.shipping_last_name;

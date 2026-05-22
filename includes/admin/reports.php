@@ -141,7 +141,8 @@ function sunshine_reports_page() {
 add_action( 'sunshine_report_orders', 'sunshine_report_orders_display', 10, 3 );
 function sunshine_report_orders_display( $current_duration, $current_after, $current_before ) {
 
-	$transient_key = 'sunshine_reports_orders' . md5( $current_after . $current_before );
+	$mode          = ( isset( $_GET['test'] ) ) ? 'test' : 'live';
+	$transient_key = 'sunshine_reports_orders' . md5( $current_after . $current_before ) . $mode;
 	$data          = get_transient( $transient_key );
 
 	if ( ! $data || isset( $_GET['refresh'] ) ) {
@@ -159,7 +160,7 @@ function sunshine_report_orders_display( $current_duration, $current_after, $cur
 				'day'   => date( 'j', strtotime( $current_before ) ),
 			),
 		);
-		$paid_orders = sunshine_get_orders( $args );
+		$paid_orders = sunshine_get_orders( $args, $mode );
 
 		$args                 = array(
 			'status' => sunshine_order_statuses_needs_payment(),
@@ -174,7 +175,7 @@ function sunshine_report_orders_display( $current_duration, $current_after, $cur
 				'day'   => date( 'j', strtotime( $current_before ) ),
 			),
 		);
-		$needs_payment_orders = sunshine_get_orders( $args );
+		$needs_payment_orders = sunshine_get_orders( $args, $mode );
 
 		$paid_labels    = $paid_values = array();
 		$paid_count     = $paid_total = $needs_payment_count = $needs_payment_total = 0;

@@ -112,15 +112,29 @@ class SPC_License {
 					break;
 
 				case 'site_inactive':
-					$description = __( 'Your license is not active for this URL', 'sunshine-photo-cart' );
+				case 'no_activations_left':
+					$stored_url   = SPC()->get_option( 'license_url_' . $this->id );
+					$current_url  = home_url();
+					$licenses_url = 'https://www.sunshinephotocart.com/account/licenses/';
+					if ( $stored_url && untrailingslashit( $stored_url ) !== untrailingslashit( $current_url ) ) {
+						$description = sprintf(
+							/* translators: %1$s is the previous site URL, %2$s is the current site URL, %3$s is the URL to the sunshinephotocart.com account licenses page */
+							__( 'Your license was activated on %1$s but this site is now %2$s. To use the license here, <a href="%3$s" target="_blank">log in to your account</a>, click <strong>Manage Sites</strong> next to this license, deactivate the old URL, then return here and click Activate again.', 'sunshine-photo-cart' ),
+							'<code>' . esc_html( $stored_url ) . '</code>',
+							'<code>' . esc_html( $current_url ) . '</code>',
+							esc_url( $licenses_url )
+						);
+					} else {
+						$description = sprintf(
+							/* translators: %s is the URL to the sunshinephotocart.com account licenses page */
+							__( 'This license appears to be activated on a different site. <a href="%s" target="_blank">Log in to your account</a>, click <strong>Manage Sites</strong> next to this license, deactivate the old URL, then return here and click Activate again.', 'sunshine-photo-cart' ),
+							esc_url( $licenses_url )
+						);
+					}
 					break;
 
 				case 'item_name_mismatch':
 					$description = __( 'This appears to be an invalid license key', 'sunshine-photo-cart' );
-					break;
-
-				case 'no_activations_left':
-					$description = __( 'Your license key has reached its activation limit', 'sunshine-photo-cart' );
 					break;
 
 				case 'valid':
@@ -270,6 +284,8 @@ class SPC_License {
 			if ( false === $license_data->success ) {
 				$result = false;
 				SPC()->update_option( 'license_expiration_' . $this->id, '' );
+				// EDD returns failure-specific codes (e.g. no_activations_left) in `error`, not `license`.
+				$status_code = ! empty( $license_data->error ) ? $license_data->error : $license_data->license;
 			} else {
 				$result = true;
 				SPC()->update_option( 'license_expiration_' . $this->id, $license_key );
@@ -279,9 +295,11 @@ class SPC_License {
 				}
 				SPC()->update_option( 'license_' . $this->id, $license_key );
 				SPC()->update_option( 'license_expiration_' . $this->id, $license_data->expires );
+				SPC()->update_option( 'license_url_' . $this->id, home_url() );
+				$status_code = $license_data->license;
 			}
 
-			SPC()->update_option( 'license_status_' . $this->id, $license_data->license );
+			SPC()->update_option( 'license_status_' . $this->id, $status_code );
 
 			return $result;
 
@@ -332,6 +350,7 @@ class SPC_License {
 
 		SPC()->update_option( 'license_status_' . $this->id, '' );
 		SPC()->update_option( 'license_expiration_' . $this->id, '' );
+		SPC()->update_option( 'license_url_' . $this->id, '' );
 
 		if ( 'deactivated' === $license_data->license ) {
 			/* translators: %s is the product name */

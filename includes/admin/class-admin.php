@@ -1030,8 +1030,10 @@ class Sunshine_Admin {
 		}
 
 		$post_id = intval( $_GET['post'] );
+		$post    = get_post( $post_id );
 		$meta    = get_post_meta( $post_id );
-		echo '<!-- SUNSHINE DEBUG META -->';
+		echo '<!-- SUNSHINE DEBUG -->';
+		sunshine_dump_var( $post );
 		sunshine_dump_var( $meta );
 
 		// If this is a 'sunshine-gallery' post, get all the images and display paths and file dimensions.

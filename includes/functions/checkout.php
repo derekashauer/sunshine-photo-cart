@@ -1026,7 +1026,7 @@ function sunshine_checkout_update_state() {
 
 		SPC()->log( 'Checkout update state' );
 
-		SPC()->cart->set_checkout_data_item( $prefix . '_country', $country );
+		SPC()->cart->set_checkout_data_item( $prefix . 'country', $country );
 
 		$output_safe    = '';
 		$address_fields = SPC()->countries->get_address_fields( $country, $prefix );

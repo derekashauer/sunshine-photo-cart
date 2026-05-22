@@ -631,6 +631,7 @@ tr.sunshine-meta-field-upgrade td:before { content: "\f133"; font-family: "Sunsh
 #sunshine-order-buttons a.delete:before { content: "\f10c"; font-family: "SunshineIcons"; display: inline-block; margin-right: 5px; }
 a.invoice:before { content: "\f11e"; font-family: "SunshineIcons"; display: inline-block; margin-right: 5px; }
 a.download-all:before { content: "\f107"; font-family: "SunshineIcons"; display: inline-block; margin-right: 5px; }
+a.view-products:before { content: "\f137"; font-family: "SunshineIcons"; display: inline-block; margin-right: 5px; }
 
 #sunshine-order-general label { font-weight: bold; }
 #sunshine-order-general p#order-status-change-notify label { font-weight: normal; }

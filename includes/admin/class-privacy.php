@@ -476,6 +476,13 @@ class SPC_Privacy {
 			'posts_per_page' => 20,
 			'post_status'    => array( 'publish', 'draft', 'pending', 'private' ),
 			'meta_query'     => array(
+				'relation' => 'AND',
+				array(
+					'key'     => 'end_date',
+					'value'   => 0,
+					'compare' => '>',
+					'type'    => 'NUMERIC',
+				),
 				array(
 					'key'     => 'end_date',
 					'value'   => $cutoff,

@@ -160,7 +160,7 @@ if ( ! empty( $file_names ) ) {
 <div id="order-customer">
 	<h3><?php esc_html_e( 'Customer Information', 'sunshine-photo-cart' ); ?></h3>
 	<p><?php echo esc_html( $order->get_customer_name() ); ?></p>
-	<p><a href="mailto:<?php echo esc_url( $order->get_email() ); ?>"><?php echo esc_html( $order->get_email() ); ?></a></p>
+	<p><a href="<?php echo esc_url( 'mailto:' . $order->get_email() ); ?>"><?php echo esc_html( $order->get_email() ); ?></a></p>
 	<?php
 	if ( $order->get_phone() ) {
 		echo '<p>' . esc_html( $order->get_phone() ) . '</p>';

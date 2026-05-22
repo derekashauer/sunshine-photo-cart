@@ -4,6 +4,7 @@ class SPC_Order_Item extends SPC_Cart_Item {
 	protected $id;
 	protected $order_id;
 	protected $order;
+	protected $order_display_price;
 
 	function __construct( $item ) {
 		global $wpdb;
@@ -176,6 +177,47 @@ class SPC_Order_Item extends SPC_Cart_Item {
 	public function get_price() {
 		$price = (float) $this->price + (float) ( $this->options_total ?? 0 );
 		return $price;
+	}
+
+	public function get_price_formatted() {
+		$price = $this->get_price();
+		if ( $this->discount_per_item > 0 ) {
+			$price_formatted = '<s>' . $this->format_price_to_display( $price, $this->tax ) . '</s> ' . $this->format_price_to_display( $price - $this->discount_per_item, $this->tax );
+		} else {
+			$price_formatted = $this->format_price_to_display( $price, $this->tax );
+		}
+		return $price_formatted;
+	}
+
+	public function get_subtotal_formatted() {
+		if ( $this->discount > 0 ) {
+			$price_formatted = '<s>' . $this->format_price_to_display( $this->original_subtotal, $this->original_tax_total ) . '</s> ' . $this->format_price_to_display( $this->total, $this->tax_total );
+		} else {
+			$subtotal        = $this->get_subtotal();
+			$price_formatted = $this->format_price_to_display( $subtotal, $this->tax_total );
+		}
+		return $price_formatted;
+	}
+
+	protected function format_price_to_display( $price, $tax = 0 ) {
+		if ( ! isset( $this->order_display_price ) ) {
+			$order_id = ! empty( $this->item['order_id'] ) ? intval( $this->item['order_id'] ) : 0;
+			$snapshot = $order_id ? get_post_meta( $order_id, 'display_price', true ) : '';
+			$this->order_display_price = ! empty( $snapshot ) ? $snapshot : SPC()->get_option( 'display_price' );
+		}
+		$suffix = SPC()->get_option( 'price_suffix' );
+
+		if ( 'with_tax' === $this->order_display_price ) {
+			$price += $tax;
+		}
+
+		$price_formatted = sunshine_price( $price );
+
+		if ( $price > 0 && $suffix && $tax ) {
+			$price_formatted .= ' <small class="sunshine--price--suffix">' . $suffix . '</small>';
+		}
+
+		return $price_formatted;
 	}
 
 	public function get_type() {

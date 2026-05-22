@@ -596,11 +596,20 @@ class SPC_Customer extends WP_User {
 
 	/* ORDERS */
 	public function get_orders() {
+		if ( ! $this->ID ) {
+			return array();
+		}
 		$orders = array();
 		$args   = array(
 			'post_type'      => 'sunshine-order',
 			'posts_per_page' => -1,
-			'author'         => $this->ID,
+			'meta_query'     => array(
+				array(
+					'key'   => 'customer_id',
+					'value' => $this->ID,
+					'type'  => 'NUMERIC',
+				),
+			),
 		);
 		$query  = new WP_Query( $args );
 		while ( $query->have_posts() ) :
@@ -701,7 +710,13 @@ class SPC_Customer extends WP_User {
 		$args  = array(
 			'post_type'      => 'sunshine-order',
 			'posts_per_page' => -1,
-			'author'         => $this->ID,
+			'meta_query'     => array(
+				array(
+					'key'   => 'customer_id',
+					'value' => $this->ID,
+					'type'  => 'NUMERIC',
+				),
+			),
 		);
 		$query = new WP_Query( $args );
 		$this->set_order_count( $query->found_posts );

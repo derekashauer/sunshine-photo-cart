@@ -243,6 +243,22 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.6.9 - May 22, 2026 =
+* New: Order admin "View packing list" bulk action redesigned as a print-ready fulfillment checklist with per-order customer/delivery/address header, checkbox column, and page break between orders
+* New: "View packing list" link on the single order screen to open the fulfillment checklist for that order
+* New: Filter `sunshine_admin_order_items_custom_rows` lets add-ons replace the default row rendering in the fulfillment checklist for custom cart item types
+* Enhancement: Square payments - fixes stuck pending orders, duplicate charges, missing buyer info, and 3D Secure handling. Itemizes line items, tax, shipping, and discounts via Square's Orders API. Passes the Sunshine order number to transactions, stores card brand/last 4/expiry on orders, and tracks Square processing fees (auto-refreshed daily) as a new column on the order export
+* Enhancement: Stripe Hosted Checkout - tax now passed via Stripe's tax_rates so it appears in Stripe's tax reports, shipping uses Stripe's shipping_options for proper categorization, transaction descriptions match the inline checkout format, and Stripe processing fees appear in a new column on the order export
+* Enhancement: Digital download line items skip the checkbox in the fulfillment checklist since they're already delivered
+* Enhancement: License settings now tell you how to fix activation when a license is still in use on a previous site URL, including a direct link to manage your sites on sunshinephotocart.com
+* Fix: Product meta box field conditions from multiple add-ons stacked on the same field no longer contradict each other when toggling product type
+* Fix: Order line item prices in the admin and on order receipts used the current tax display setting instead of the one saved when the order was placed
+* Fix: Galleries with a cleared expiration date could be permanently deleted by the daily privacy cleanup cron when expired-gallery deletion was enabled
+* Fix: Customer email link in order receipt and status emails prepended `http://` instead of using a `mailto:` link
+* Fix: Duplicate customer and admin receipt emails sent for Stripe hosted checkout orders when webhooks were enabled
+* Fix: Country dropdown change at checkout saved to an incorrect session key
+* Fix: An admin's own customer profile page in admin view could show orders belonging to guests
+
 = 3.6.8 - May 7, 2026 =
 * Security: Hardened several admin and checkout endpoints with capability and nonce checks
 * New: Quick Edit support for galleries to inline-edit gallery type, password, allowed customers, access type, expiration, comments, sharing, products, and price level

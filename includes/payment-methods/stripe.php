@@ -366,6 +366,23 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 		add_action( 'sunshine_checkout_validation', array( $this, 'checkout_validation' ) );
 
+		add_filter( 'sunshine_export_order_headers', array( $this, 'export_header' ) );
+		add_filter( 'sunshine_export_order_row', array( $this, 'export_row' ), 10, 2 );
+
+	}
+
+	public function export_header( $headers ) {
+		$headers[] = __( 'Stripe Processing Fee', 'sunshine-photo-cart' );
+		return $headers;
+	}
+
+	public function export_row( $row, $order ) {
+		$fee = '';
+		if ( $order->get_payment_method() === $this->id ) {
+			$fee = $order->get_meta_value( 'stripe_processing_fee' );
+		}
+		$row[] = $fee ? $fee : '';
+		return $row;
 	}
 
 	/**
@@ -1860,6 +1877,68 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	}
 
 	/**
+	 * Find an existing Stripe Tax Rate by percentage/inclusive flag, or create one.
+	 * IDs are cached in the gateway option so repeat checkouts at the same rate reuse them.
+	 *
+	 * @param string $percentage Percentage as a decimal string (e.g. "8.0000").
+	 * @param bool   $inclusive  Whether prices include tax.
+	 * @return string|false Stripe Tax Rate ID, or false on failure.
+	 */
+	private function find_or_create_stripe_tax_rate( $percentage, $inclusive ) {
+		$cache = $this->get_option( 'stripe_tax_rate_ids' );
+		$cache = is_array( $cache ) ? $cache : array();
+		$key   = $percentage . '|' . ( $inclusive ? '1' : '0' );
+
+		if ( ! empty( $cache[ $key ] ) ) {
+			return $cache[ $key ];
+		}
+
+		$response = $this->make_stripe_request(
+			'tax_rates',
+			array(
+				'display_name' => __( 'Sales Tax', 'sunshine-photo-cart' ),
+				'percentage'   => $percentage,
+				'inclusive'    => $inclusive ? 'true' : 'false',
+			),
+			'POST'
+		);
+
+		if ( is_wp_error( $response ) || empty( $response['id'] ) ) {
+			SPC()->log( 'Failed to create Stripe Tax Rate: ' . ( is_wp_error( $response ) ? $response->get_error_message() : 'no id returned' ) );
+			return false;
+		}
+
+		$cache[ $key ] = $response['id'];
+		$this->update_option( 'stripe_tax_rate_ids', $cache );
+		return $response['id'];
+	}
+
+	/**
+	 * Per-unit unit_amount for a Stripe line item, accounting for tax mode and line discounts.
+	 *
+	 * For tax-inclusive pricing + taxable items, returns the per-unit with-tax price
+	 * (so it can be paired with an inclusive Stripe Tax Rate). For other cases,
+	 * returns the per-unit base (post-discount).
+	 *
+	 * @param SPC_Cart_Item $item          Cart item.
+	 * @param bool          $price_has_tax Whether prices include tax.
+	 * @param float         $rate          Tax rate as decimal (e.g. 0.08).
+	 * @return float Per-unit amount in store currency.
+	 */
+	private function compute_line_unit_amount( $item, $rate, $using_inclusive_tax_rate ) {
+		$qty      = max( 1, intval( $item->get_qty() ) );
+		$discount = floatval( $item->get_discount() );
+
+		if ( $using_inclusive_tax_rate && $item->is_taxable() && $rate > 0 ) {
+			$per_unit_with_tax            = floatval( $item->get_price() ) + floatval( $item->get_tax() );
+			$line_with_tax_after_discount = ( $per_unit_with_tax * $qty ) - $discount;
+			return $line_with_tax_after_discount / $qty;
+		}
+
+		return $item->get_total() / $qty;
+	}
+
+	/**
 	 * Create a Stripe Checkout Session for hosted checkout
 	 *
 	 * @param SPC_Order $order The order object
@@ -1877,46 +1956,87 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$line_items     = array();
 		$tax_mode       = $this->get_option( 'tax_mode' );
 		$use_stripe_tax = ( $tax_mode === 'stripe' );
+		$price_has_tax  = ( SPC()->get_option( 'price_has_tax' ) === 'yes' );
+
+		$sunshine_tax_rate = SPC()->cart->get_tax_rate();
+		$rate              = ! empty( $sunshine_tax_rate['rate'] ) ? floatval( $sunshine_tax_rate['rate'] ) : 0;
+
+		// In manual tax mode, find/create a Stripe Tax Rate matching the order's
+		// configured rate so tax appears in Stripe's tax reports as real tax data
+		// (not as a regular line item).
+		$tax_rate_id = null;
+		if ( ! $use_stripe_tax && $order->get_tax() > 0 && $rate > 0 ) {
+			$percentage  = number_format( $rate * 100, 4, '.', '' );
+			$tax_rate_id = $this->find_or_create_stripe_tax_rate( $percentage, $price_has_tax );
+		}
+
+		$using_inclusive_tax_rate = ( ! empty( $tax_rate_id ) && $price_has_tax );
 
 		// Build line items from order
 		foreach ( $order->get_items() as $item ) {
+			$per_unit = $this->compute_line_unit_amount( $item, $rate, $using_inclusive_tax_rate );
+
 			$line_item = array(
 				'price_data' => array(
 					'currency'     => strtolower( $this->currency ),
 					'product_data' => array(
 						'name' => $item->get_name_raw(),
 					),
-					'unit_amount'  => $this->convert_amount_to_stripe( $item->get_price() - $item->get_discount_per_item() ),
+					'unit_amount'  => $this->convert_amount_to_stripe( $per_unit ),
 				),
-				'quantity'   => $item->get_qty(),
+				'quantity'   => max( 1, intval( $item->get_qty() ) ),
 			);
 
-			// If using Stripe Tax, set tax behavior
 			if ( $use_stripe_tax ) {
 				$line_item['price_data']['tax_behavior'] = 'exclusive';
+			} elseif ( ! empty( $tax_rate_id ) && $item->is_taxable() ) {
+				$line_item['tax_rates'] = array( $tax_rate_id );
 			}
 
 			$line_items[] = $line_item;
 		}
 
-		// Add shipping if applicable
+		// Add shipping. Use Stripe's shipping_options (a first-class shipping
+		// concept) unless we'd lose tax visibility by doing so — Stripe's
+		// shipping_options doesn't accept tax_rates, so manual tax mode with
+		// taxable shipping keeps shipping as a line_item to preserve tax
+		// reporting on the shipping portion.
+		$shipping_options = null;
 		if ( $order->get_shipping() > 0 ) {
-			$shipping_item = array(
-				'price_data' => array(
-					'currency'     => strtolower( $this->currency ),
-					'product_data' => array(
-						'name' => $order->get_shipping_method_name() ? $order->get_shipping_method_name() : __( 'Shipping', 'sunshine-photo-cart' ),
+			$shipping_name        = $order->get_shipping_method_name() ? $order->get_shipping_method_name() : __( 'Shipping', 'sunshine-photo-cart' );
+			$use_shipping_options = $use_stripe_tax || $order->get_shipping_tax() == 0;
+
+			if ( $use_shipping_options ) {
+				$shipping_rate_data = array(
+					'display_name' => $shipping_name,
+					'type'         => 'fixed_amount',
+					'fixed_amount' => array(
+						'amount'   => $this->convert_amount_to_stripe( $order->get_shipping() ),
+						'currency' => strtolower( $this->currency ),
 					),
-					'unit_amount'  => $this->convert_amount_to_stripe( $order->get_shipping() ),
-				),
-				'quantity'   => 1,
-			);
-
-			if ( $use_stripe_tax ) {
-				$shipping_item['price_data']['tax_behavior'] = 'exclusive';
+				);
+				if ( $use_stripe_tax ) {
+					$shipping_rate_data['tax_behavior'] = 'exclusive';
+				}
+				$shipping_options = array(
+					array( 'shipping_rate_data' => $shipping_rate_data ),
+				);
+			} else {
+				$shipping_item = array(
+					'price_data' => array(
+						'currency'     => strtolower( $this->currency ),
+						'product_data' => array(
+							'name' => $shipping_name,
+						),
+						'unit_amount'  => $this->convert_amount_to_stripe( $order->get_shipping() ),
+					),
+					'quantity'   => 1,
+				);
+				if ( ! empty( $tax_rate_id ) ) {
+					$shipping_item['tax_rates'] = array( $tax_rate_id );
+				}
+				$line_items[] = $shipping_item;
 			}
-
-			$line_items[] = $shipping_item;
 		}
 
 		// Add fees (e.g. payment gateway fee) as line items
@@ -1936,8 +2056,11 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			}
 		}
 
-		// Add tax as line item ONLY if NOT using Stripe Tax
-		if ( ! $use_stripe_tax && $order->get_tax() > 0 ) {
+		// Fallback: if we needed a Stripe Tax Rate but couldn't create one,
+		// add the tax as a regular line item so the session total still
+		// matches the Sunshine order total. Tax won't appear in Stripe's
+		// tax reports in this case but the charge amount is correct.
+		if ( ! $use_stripe_tax && $order->get_tax() > 0 && empty( $tax_rate_id ) ) {
 			$line_items[] = array(
 				'price_data' => array(
 					'currency'     => strtolower( $this->currency ),
@@ -1975,13 +2098,18 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 				'site'       => get_bloginfo( 'name' ),
 			),
 			'payment_intent_data' => array(
-				'metadata' => array(
+				'description' => $order->get_name() . ', ' . $order->get_customer_name(),
+				'metadata'    => array(
 					'order_id'   => $order->get_id(),
 					'order_name' => $order->get_name(),
 					'site'       => get_bloginfo( 'name' ),
 				),
 			),
 		);
+
+		if ( ! empty( $shipping_options ) ) {
+			$args['shipping_options'] = $shipping_options;
+		}
 
 		// Pass customer ID if available, fall back to email
 		if ( ! empty( $stripe_customer_id ) ) {
@@ -2031,6 +2159,17 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		// Store session ID in order meta
 		$order->update_meta_value( 'stripe_checkout_session_id', $response['id'] );
 		SPC()->log( 'Stripe Checkout Session created: ' . $response['id'] );
+
+		// Sanity-check Stripe's computed total against Sunshine's. Skip for Stripe Tax
+		// mode (Stripe calculates tax from customer location; total isn't known until
+		// the customer enters their address in Checkout).
+		if ( ! $use_stripe_tax && isset( $response['amount_total'] ) ) {
+			$stripe_total   = intval( $response['amount_total'] );
+			$sunshine_total = intval( round( $order->get_total() * 100 ) );
+			if ( $stripe_total !== $sunshine_total ) {
+				SPC()->log( sprintf( 'Stripe Checkout Session total %d does not match Sunshine total %d', $stripe_total, $sunshine_total ) );
+			}
+		}
 
 		return $response;
 	}
@@ -2217,6 +2356,19 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		}
 		if ( ! empty( $payment_intent_object['application_fee_amount'] ) ) {
 			$order->update_meta_value( 'application_fee_amount', $this->convert_amount_from_stripe( $payment_intent_object['application_fee_amount'] ) );
+		}
+
+		$charge_id = ! empty( $payment_intent_object['latest_charge'] )
+			? $payment_intent_object['latest_charge']
+			: ( ! empty( $payment_intent_object['charges']['data'][0]['id'] ) ? $payment_intent_object['charges']['data'][0]['id'] : '' );
+		if ( ! empty( $charge_id ) ) {
+			$charge = $this->make_stripe_request( "charges/{$charge_id}" );
+			if ( ! is_wp_error( $charge ) && ! empty( $charge['balance_transaction'] ) ) {
+				$bt = $this->make_stripe_request( "balance_transactions/{$charge['balance_transaction']}" );
+				if ( ! is_wp_error( $bt ) && isset( $bt['fee'] ) ) {
+					$order->update_meta_value( 'stripe_processing_fee', $this->convert_amount_from_stripe( $bt['fee'] ) );
+				}
+			}
 		}
 
 		// Continue to update metadata in Stripe.
@@ -2513,6 +2665,13 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			if ( ! $order || ! $order->exists() ) {
 				SPC()->log( 'Could not find order by payment intent in webhook: ' . $payment_intent['id'] );
 				status_header( 400 );
+				exit;
+			}
+
+			// Hosted checkout orders are processed via checkout.session.completed; payment_intent.succeeded would duplicate emails.
+			if ( $order->get_meta_value( 'stripe_checkout_session_id' ) ) {
+				SPC()->log( 'Stripe Webhook: Skipping payment_intent.succeeded for hosted checkout order ' . $order->get_id() );
+				status_header( 200 );
 				exit;
 			}
 

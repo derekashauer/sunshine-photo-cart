@@ -254,7 +254,11 @@ class SPC_Admin_Order {
 		global $pagenow;
 		if ( is_admin() && $query->is_main_query() && $pagenow == 'edit.php' && isset( $query->query_vars['post_type'] ) && $query->query_vars['post_type'] == 'sunshine-order' ) {
 			if ( ! empty( $_GET['customer'] ) ) {
-				$query->set( 'author', intval( $_GET['customer'] ) );
+				$meta_query[] = array(
+					'key'   => 'customer_id',
+					'value' => intval( $_GET['customer'] ),
+					'type'  => 'NUMERIC',
+				);
 			}
 			if ( ! empty( $_GET['mode'] ) ) {
 				$meta_query[] = array(
@@ -345,7 +349,7 @@ class SPC_Admin_Order {
 
 		unset( $actions['edit'] );
 
-		$actions['sunshine_order_view_items'] = __( 'View ordered products', 'sunshine-photo-cart' );
+		$actions['sunshine_order_view_items'] = __( 'View packing list', 'sunshine-photo-cart' );
 
 		$statuses = sunshine_get_order_statuses( 'object' );
 		foreach ( $statuses as $status ) {
@@ -435,7 +439,7 @@ class SPC_Admin_Order {
 				if ( get_post_meta( $post_id, '_sunshine_personal_data_removed', true ) ) {
 					echo '<em>' . esc_html__( 'Personal data removed', 'sunshine-photo-cart' ) . '</em>';
 				} elseif ( $order->get_customer_id() ) {
-					echo '<a href="' . esc_url( admin_url( 'user-edit.php?user_id=' . esc_attr( $order->get_customer_id() ) ) ) . '">' . esc_html( $order->get_customer_name() ) . '</a>';
+					echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-customers&customer=' . esc_attr( $order->get_customer_id() ) ) ) . '">' . esc_html( $order->get_customer_name() ) . '</a>';
 				} else {
 					echo esc_html( $order->get_customer_name() );
 				}
@@ -543,6 +547,23 @@ class SPC_Admin_Order {
 			}
 			?>
 			<a href="<?php echo esc_url( admin_url( 'post.php?sunshine_invoice=1&post=' . esc_attr( $post->ID ) ) ); ?>" class="invoice"><?php esc_html_e( 'View invoice', 'sunshine-photo-cart' ); ?></a>
+			<a href="
+			<?php
+			echo esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'post_type' => 'sunshine-order',
+							'action'    => 'sunshine_order_view_items',
+							'post'      => array( $post->ID ),
+						),
+						admin_url( 'edit.php' )
+					),
+					'bulk-posts'
+				)
+			);
+			?>
+			" class="view-products" target="_blank"><?php esc_html_e( 'View packing list', 'sunshine-photo-cart' ); ?></a>
 			<?php do_action( 'sunshine_admin_order_buttons', $order ); ?>
 		</div>
 
@@ -1194,7 +1215,8 @@ class SPC_Admin_Order {
 
 	public function trash( $post_id ) {
 		if ( get_post_type( $post_id ) == 'sunshine-order' ) {
-			$customer_id = get_post_field( 'post_author', $post_id );
+			$order       = new SPC_Order( $post_id );
+			$customer_id = $order->get_customer_id();
 			$customer    = new SPC_Customer( $customer_id );
 			$customer->recalculate_stats();
 		}
@@ -1208,7 +1230,8 @@ class SPC_Admin_Order {
 					'post_status' => 'publish',
 				)
 			);
-			$customer_id = get_post_field( 'post_author', $post_id );
+			$order       = new SPC_Order( $post_id );
+			$customer_id = $order->get_customer_id();
 			$customer    = new SPC_Customer( $customer_id );
 			$customer->recalculate_stats();
 		}
