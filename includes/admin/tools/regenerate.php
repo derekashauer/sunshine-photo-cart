@@ -157,6 +157,16 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 	protected function regenerate_one( $image_id, $apply_watermark = '' ) {
 		global $intermediate_image_sizes;
 
+		// wp_generate_attachment_metadata, wp_handle_upload, etc. live in
+		// wp-admin/includes/ — autoloaded for admin requests but absent when
+		// the API or CLI drives this worker. Load them on demand.
+		if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/image.php';
+		}
+		if ( ! function_exists( 'wp_read_image_metadata' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/image.php';
+		}
+
 		$image = sunshine_get_image( $image_id );
 		if ( empty( $image ) ) {
 			return array( 'ok' => false, 'image_id' => (int) $image_id, 'file' => '', 'error' => 'image_not_found' );
@@ -237,6 +247,20 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 
 			file_put_contents( $file_path, $orig_image );
 			$downloaded_from_cloud = true;
+		}
+
+		// After the cloud-pull branch above we should have a usable local file.
+		// If we still don't, the attachment is in a half-broken state (no cloud
+		// key but local file deleted) — report it as an error rather than
+		// silently producing bad output further down the pipeline.
+		if ( ! file_exists( $file_path ) ) {
+			SPC()->log( 'Regenerate: original file missing for image ' . $image_id . ' (' . $file_path . ')' );
+			return array(
+				'ok'       => false,
+				'image_id' => (int) $image_id,
+				'file'     => $image->get_name(),
+				'error'    => __( 'Original file is missing locally and no cloud-storage key is set.', 'sunshine-photo-cart' ),
+			);
 		}
 
 		// Wipe existing intermediate sizes so they get rebuilt.
