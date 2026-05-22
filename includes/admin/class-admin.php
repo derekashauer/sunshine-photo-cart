@@ -133,8 +133,17 @@ class Sunshine_Admin {
 				// Get the version of the plugin
 				$version = $plugin_data['Version'];
 
-				// Check if the version is less than 3.0
-				if ( version_compare( $version, '2.99', '<' ) ) {
+				// The original intent of this check was to catch Sunshine 2
+				// add-ons (which were versioned 2.x.x) running alongside
+				// Sunshine 3 core. A bare `< 2.99` would also flag any *new*
+				// add-on starting fresh at 1.x.x as if it were Sunshine 2 era.
+				// Narrow to 2.x.x explicitly so new add-ons can pick their
+				// own version line without being mistaken for legacy.
+				if (
+					! empty( $version )
+					&& version_compare( $version, '2.0', '>=' )
+					&& version_compare( $version, '2.99', '<' )
+				) {
 					// Add plugin name to error list
 					$addons[] = $plugin_data['Name'];
 					// Deactivate the plugin

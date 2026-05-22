@@ -633,8 +633,14 @@ class Sunshine_Admin_Meta_Boxes {
 			case 'date_time':
 				$date = $time = '';
 				if ( ! empty( $meta_value ) ) {
-					$date = date( 'Y-m-d', $meta_value );
-					$time = date( 'H:i', $meta_value );
+					// Historical data + REST writes can land here as strings
+					// ("2026-06-21") rather than the canonical Unix timestamp.
+					// Coerce so date() doesn't fatal on non-int input.
+					$ts = is_numeric( $meta_value ) ? (int) $meta_value : strtotime( (string) $meta_value );
+					if ( $ts ) {
+						$date = date( 'Y-m-d', $ts );
+						$time = date( 'H:i', $ts );
+					}
 				}
 				$html .= '<input id="' . esc_attr( $field['id'] ) . '_date" type="date" name="' . esc_attr( $meta_key ) . '[date]" value="' . esc_attr( $date ) . '" />' . "\n";
 				$html .= '<input id="' . esc_attr( $field['id'] ) . '_time" type="time" name="' . esc_attr( $meta_key ) . '[time]" value="' . esc_attr( $time ) . '" />' . "\n";
