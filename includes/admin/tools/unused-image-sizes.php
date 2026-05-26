@@ -103,9 +103,12 @@ class SPC_Tool_Unused_Images extends SPC_Tool {
 	 * Per-attachment worker. Strips every non-`sunshine-*` intermediate
 	 * size's file + metadata entry. Used by both transports.
 	 *
+	 * Visibility note: `protected` so external callers can't bypass the
+	 * cap check the AJAX handler and `process_batch()` enforce.
+	 *
 	 * @return array{files:string[]} Files removed (basenames only).
 	 */
-	public function process_one( $attachment_id ) {
+	protected function process_one( $attachment_id ) {
 		$object = get_post( $attachment_id );
 		if ( ! $object ) {
 			return array( 'files' => array() );

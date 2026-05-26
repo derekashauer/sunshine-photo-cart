@@ -147,9 +147,14 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 	 * Per-image worker. Called by both the admin AJAX handler and the API
 	 * batch path so behavior stays identical between the two transports.
 	 *
+	 * Visibility note: this is `protected` so external code can't call it
+	 * without going through one of the cap-checked wrappers
+	 * (`regenerate_image()` for the admin AJAX path, `process_batch()`
+	 * for the REST path). Subclasses can still override.
+	 *
 	 * Returns ['ok' => bool, 'file' => string, 'image_id' => int, 'error' => string|null].
 	 */
-	public function regenerate_one( $image_id, $apply_watermark = '' ) {
+	protected function regenerate_one( $image_id, $apply_watermark = '' ) {
 		global $intermediate_image_sizes;
 
 		$image = sunshine_get_image( $image_id );
