@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 3.6.9
+Stable tag: 3.6.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -242,6 +242,15 @@ Security is important to us. Please report security bugs through the [Patchstack
 11. Admin gallery management - Easy-to-use admin interface to create galleries, upload images, and manage your client photo galleries and photo proofing workflow.
 
 == Changelog ==
+
+= 3.6.10 =
+* New: Pickup is now a cloneable shipping method. Configure multiple pickup locations — each with its own price, taxability, and customer-facing details — and each appears as its own option at the delivery step on checkout
+* New: "Pickup Location Details" field on each pickup method for sharing the address, hours, and instructions with customers
+* Enhancement: Pickup details show up in order receipts, customer and admin emails, and the printable invoice
+* Enhancement: Existing installs with the legacy Pickup delivery method enabled get one pickup shipping method created automatically from the previous label and description; existing pickup orders are re-pointed at the new instance
+* Enhancement: When "Ship" is the only delivery method and there's only one ship method active, it's auto-selected to save a click
+* Fix: Disabling favorites in settings did not hide the favorite button in the image menu or the Favorites link in the main navigation
+* Fix: Update detection used a string comparison that failed for certain version transitions, so post-update routines did not run
 
 = 3.6.9 - May 22, 2026 =
 * New: Order admin "View packing list" bulk action redesigned as a print-ready fulfillment checklist with per-order customer/delivery/address header, checkbox column, and page break between orders

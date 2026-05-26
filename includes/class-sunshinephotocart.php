@@ -108,6 +108,7 @@ final class Sunshine_Photo_Cart {
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/shipping-methods/local.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/shipping-methods/flat-rate.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/shipping-methods/free.php';
+		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/shipping-methods/pickup.php';
 
 		// Payment Methods
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/class-payment-methods.php';
@@ -637,11 +638,12 @@ final class Sunshine_Photo_Cart {
 	}
 
 	public function get_option( $key, $default = false ) {
-		$value = get_option( $this->prefix . $key, $default );
-		if ( empty( $value ) && $default ) {
-			$value = $default;
+		$sentinel = "\0__spc_not_set__\0";
+		$value    = get_option( $this->prefix . $key, $sentinel );
+		if ( $value === $sentinel ) {
+			return $default;
 		}
-		return ( $value !== '' ) ? maybe_unserialize( $value ) : '';
+		return maybe_unserialize( $value );
 	}
 
 	public function update_option( $key, $value, $autoload = false ) {

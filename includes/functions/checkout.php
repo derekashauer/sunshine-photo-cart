@@ -214,15 +214,13 @@ function sunshine_checkout_scripts() {
 					security: "<?php echo esc_js( wp_create_nonce( 'sunshine-checkout-select-delivery-method' ) ); ?>"
 				},
 				success: function( result, textStatus, XMLHttpRequest ) {
-					if ( result.data.summary ) {
+					if ( result.data && result.data.summary ) {
 						$( '#sunshine--checkout--summary' ).html( result.data.summary );
 					}
-					if ( result.data.needs_shipping ) {
-						$( '#sunshine--checkout--shipping, #sunshine--checkout--shipping_method' ).show();
-					} else {
-						$( '#sunshine--checkout--shipping, #sunshine--checkout--shipping_method' ).hide();
-					}
-					sunshine_checkout_updating_done();
+					// Reload the full checkout form so the address/shipping_method/pickup sections
+					// reflect the new delivery method (pickup methods carry their own state and
+					// require a fresh render, not just a show/hide toggle).
+					sunshine_reload_checkout();
 				},
 				error: function(MLHttpRequest, textStatus, errorThrown) {
 					alert( '<?php echo esc_js( __( 'Sorry, there was an error with your request', 'sunshine-photo-cart' ) ); ?>' );
@@ -891,9 +889,22 @@ function sunshine_checkout_select_delivery_method() {
 
 	$selected_delivery_method = sanitize_text_field( $_REQUEST['delivery_method'] );
 	$delivery_methods         = sunshine_get_delivery_methods();
-	if ( array_key_exists( $selected_delivery_method, $delivery_methods ) ) {
+	$this_delivery_method     = null;
 
+	if ( array_key_exists( $selected_delivery_method, $delivery_methods ) ) {
 		$this_delivery_method = sunshine_get_delivery_method_by_id( $selected_delivery_method );
+	} else {
+		// Each pickup shipping method instance is exposed as its own delivery method option
+		// at checkout, so the posted value may be a pickup instance hash rather than a
+		// registered delivery method id.
+		$shipping_method_instance = sunshine_get_shipping_method_by_instance( $selected_delivery_method );
+		if ( $shipping_method_instance && $shipping_method_instance->get_id() === 'pickup' ) {
+			$this_delivery_method = sunshine_get_delivery_method_by_id( 'pickup' );
+		}
+	}
+
+	if ( $this_delivery_method ) {
+
 		SPC()->cart->set_delivery_method( $selected_delivery_method );
 		SPC()->cart->update();
 

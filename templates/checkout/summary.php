@@ -28,17 +28,28 @@
 			<th><?php esc_html_e( 'Subtotal', 'sunshine-photo-cart' ); ?></th>
 			<td><?php echo wp_kses_post( SPC()->cart->get_subtotal_formatted() ); ?></td>
 		</tr>
+		<?php
+		$selected_shipping_method = SPC()->cart->get_shipping_method();
+		$is_pickup_method         = $selected_shipping_method && ! $selected_shipping_method->needs_shipping_address();
+		?>
 		<tr id="sunshine--checkout--order-review--shipping"
 		<?php
-		if ( ! SPC()->cart->needs_shipping() ) {
+		if ( ! SPC()->cart->needs_shipping() && ! $is_pickup_method ) {
 			echo ' style="display: none;"'; }
 		?>
 		>
-			<th><?php esc_html_e( 'Shipping', 'sunshine-photo-cart' ); ?></th>
+			<th>
+				<?php
+				if ( $is_pickup_method ) {
+					echo esc_html( $selected_shipping_method->get_name() );
+				} else {
+					esc_html_e( 'Shipping', 'sunshine-photo-cart' );
+				}
+				?>
+			</th>
 			<td>
 				<?php
-				if ( ! empty( SPC()->cart->get_shipping_method() ) ) {
-					// Show shipping total
+				if ( ! empty( $selected_shipping_method ) ) {
 					echo wp_kses_post( SPC()->cart->get_shipping_formatted() );
 				} else {
 					esc_html_e( 'Select shipping method', 'sunshine-photo-cart' );

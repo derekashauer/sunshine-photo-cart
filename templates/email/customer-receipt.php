@@ -49,13 +49,24 @@ if ( ! empty( $message ) ) {
 						<th><?php esc_html_e( 'Subtotal', 'sunshine-photo-cart' ); ?></th>
 						<td><?php echo wp_kses_post( $order->get_subtotal_formatted() ); ?></td>
 					</tr>
-					<?php if ( $order->has_shipping_address() ) { ?>
+					<?php
+					$order_is_pickup = $order->get_delivery_method() === 'pickup';
+					if ( $order->has_shipping_address() || $order_is_pickup ) :
+						?>
 					<tr id="order-shipping">
-						<?php /* translators: %s is the shipping method name */ ?>
-						<th><?php echo esc_html( sprintf( __( 'Shipping via %s', 'sunshine-photo-cart' ), $order->get_shipping_method_name() ) ); ?></th>
+						<th>
+							<?php
+							if ( $order_is_pickup ) {
+								echo esc_html( $order->get_shipping_method_name() );
+							} else {
+								/* translators: %s is the shipping method name */
+								echo esc_html( sprintf( __( 'Shipping via %s', 'sunshine-photo-cart' ), $order->get_shipping_method_name() ) );
+							}
+							?>
+						</th>
 						<td><?php echo wp_kses_post( $order->get_shipping_formatted() ); ?></td>
 					</tr>
-					<?php } ?>
+					<?php endif; ?>
 					<?php
 					$discount_after_tax = $order->get_meta_value( 'discount_after_tax' );
 					if ( ! $discount_after_tax && ! empty( $order->has_discount() ) ) {

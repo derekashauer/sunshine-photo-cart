@@ -11,11 +11,11 @@ class SPC_Update {
 	function __construct() {
 
 		$this->current_version = get_option( 'sunshine_version' );
-		if ( $this->current_version < SUNSHINE_PHOTO_CART_VERSION ) {
+		if ( version_compare( $this->current_version, SUNSHINE_PHOTO_CART_VERSION, '<' ) ) {
 			$this->need_update = true;
 		}
 
-		$this->update_actions = array( '3.0', '3.0.17', '3.0.18', '3.5.6', '3.6.0', '3.6.2', '3.6.3' );
+		$this->update_actions = array( '3.0', '3.0.17', '3.0.18', '3.5.6', '3.6.0', '3.6.2', '3.6.3', '3.6.10' );
 
 		add_action( 'admin_init', array( $this, 'update_check' ) );
 		add_action( 'admin_menu', array( $this, 'menu' ) );
@@ -40,6 +40,7 @@ class SPC_Update {
 		add_action( 'sunshine_update_3.6.0', array( $this, 'update_3_6_0' ) );
 		add_action( 'sunshine_update_3.6.2', array( $this, 'update_3_6_2' ) );
 		add_action( 'sunshine_update_3.6.3', array( $this, 'update_3_6_3' ) );
+		add_action( 'sunshine_update_3.6.10', array( $this, 'update_3_6_10' ) );
 
 		add_action( 'activated_plugin', array( $this, 'check_plugin_activation' ), 10, 2 );
 		add_action( 'admin_notices', array( $this, 'show_deactivation_notice' ), 10, 2 );
@@ -301,6 +302,81 @@ class SPC_Update {
 		} else {
 			update_option( 'sunshine_keywords_migrated', time(), false );
 		}
+	}
+
+	/**
+	 * Pickup converted from a singleton delivery method to a cloneable shipping method.
+	 * If the old pickup_enabled checkbox was set, create one pickup shipping method instance
+	 * carrying the old label/description, then re-point existing pickup orders at it so the
+	 * delivery_method/shipping_method fields reflect the new model.
+	 */
+	function update_3_6_10() {
+
+		if ( SPC()->get_option( 'pickup_migrated_to_shipping_method' ) ) {
+			return;
+		}
+
+		$pickup_enabled = SPC()->get_option( 'pickup_enabled' );
+		if ( empty( $pickup_enabled ) ) {
+			SPC()->update_option( 'pickup_migrated_to_shipping_method', time() );
+			return;
+		}
+
+		$pickup_label       = SPC()->get_option( 'pickup_label' );
+		$pickup_description = SPC()->get_option( 'pickup_description' );
+
+		if ( empty( $pickup_label ) ) {
+			$pickup_label = __( 'Pickup', 'sunshine-photo-cart' );
+		}
+
+		// Create the new pickup shipping method instance.
+		$shipping_methods = SPC()->get_option( 'shipping_methods' );
+		if ( ! is_array( $shipping_methods ) ) {
+			$shipping_methods = array();
+		}
+
+		$instance_id                      = wp_hash( 'pickup' . current_time( 'timestamp' ) );
+		$shipping_methods[ $instance_id ] = array(
+			'id'     => 'pickup',
+			'active' => 1,
+		);
+		SPC()->update_option( 'shipping_methods', $shipping_methods );
+		SPC()->update_option( 'pickup_name_' . $instance_id, $pickup_label );
+		if ( ! empty( $pickup_description ) ) {
+			SPC()->update_option( 'pickup_description_' . $instance_id, $pickup_description );
+		}
+		SPC()->update_option( 'pickup_price_' . $instance_id, 0 );
+
+		// Re-point existing pickup orders at the new shipping method instance.
+		$pickup_orders = get_posts(
+			array(
+				'post_type'      => 'sunshine-order',
+				'post_status'    => 'any',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				'meta_query'     => array(
+					array(
+						'key'   => 'delivery_method',
+						'value' => 'pickup',
+					),
+				),
+			)
+		);
+
+		if ( ! empty( $pickup_orders ) ) {
+			foreach ( $pickup_orders as $order_id ) {
+				update_post_meta( $order_id, 'delivery_method', 'shipping' );
+				update_post_meta( $order_id, 'delivery_method_name', __( 'Ship', 'sunshine-photo-cart' ) );
+				update_post_meta( $order_id, 'shipping_method', $instance_id );
+				update_post_meta( $order_id, 'shipping_method_name', $pickup_label );
+			}
+			SPC()->log( 'Migrated ' . count( $pickup_orders ) . ' pickup orders to new pickup shipping method instance ' . $instance_id );
+		}
+
+		// Disable the legacy option so the old delivery method definition stays dormant.
+		SPC()->update_option( 'pickup_enabled', '' );
+		SPC()->update_option( 'pickup_migrated_to_shipping_method', time() );
+
 	}
 
 	public function update_3_settings_data() {

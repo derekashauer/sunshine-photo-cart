@@ -3,12 +3,24 @@
 		<th><?php esc_html_e( 'Subtotal', 'sunshine-photo-cart' ); ?></th>
 		<td><?php echo wp_kses_post( SPC()->cart->get_subtotal_formatted() ); ?></td>
 	</tr>
-	<?php if ( ! empty( SPC()->cart->get_shipping_method() ) ) { ?>
+	<?php
+	$cart_shipping_method  = SPC()->cart->get_shipping_method();
+	$cart_is_pickup_method = $cart_shipping_method && ! $cart_shipping_method->needs_shipping_address();
+	if ( ! empty( $cart_shipping_method ) ) :
+		?>
 	<tr class="sunshine--cart--shipping">
-		<th><?php esc_html_e( 'Shipping', 'sunshine-photo-cart' ); ?></th>
+		<th>
+			<?php
+			if ( $cart_is_pickup_method ) {
+				echo esc_html( $cart_shipping_method->get_name() );
+			} else {
+				esc_html_e( 'Shipping', 'sunshine-photo-cart' );
+			}
+			?>
+		</th>
 		<td><?php echo wp_kses_post( SPC()->cart->get_shipping_formatted() ); ?></td>
 	</tr>
-	<?php } ?>
+	<?php endif; ?>
 	<?php
 	$discount_after_tax = SPC()->get_option( 'discount_after_tax' );
 	if ( ! $discount_after_tax && SPC()->cart->get_discount() > 0 ) {

@@ -65,6 +65,13 @@ class SPC_Shipping_Method {
 	protected $can_be_cloned = false;
 
 	/**
+	 * Whether this shipping method requires a shipping address from the customer.
+	 *
+	 * @var boolean
+	 */
+	protected $needs_shipping_address = true;
+
+	/**
 	 * Shipping price.
 	 *
 	 * @var float
@@ -278,6 +285,15 @@ class SPC_Shipping_Method {
 	 */
 	public function can_be_cloned() {
 		return $this->can_be_cloned;
+	}
+
+	/**
+	 * Whether this shipping method requires the customer to provide a shipping address.
+	 *
+	 * @return boolean
+	 */
+	public function needs_shipping_address() {
+		return $this->needs_shipping_address;
 	}
 
 	/**

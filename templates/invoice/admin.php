@@ -256,13 +256,24 @@
 		<th><?php esc_html_e( 'Subtotal', 'sunshine-photo-cart' ); ?></th>
 		<td><?php echo wp_kses_post( $order->get_subtotal_formatted() ); ?></td>
 	</tr>
-	<?php if ( ! empty( $order->get_shipping_method() ) ) { ?>
+	<?php
+	$order_is_pickup = $order->get_delivery_method() === 'pickup';
+	if ( ! empty( $order->get_shipping_method() ) ) :
+		?>
 	<tr class="sunshine-shipping">
-		<?php /* translators: %s is the shipping method name */ ?>
-		<th><?php echo wp_kses_post( sprintf( __( 'Shipping via %s', 'sunshine-photo-cart' ), $order->get_shipping_method_name() ) ); ?></th>
+		<th>
+			<?php
+			if ( $order_is_pickup ) {
+				echo wp_kses_post( $order->get_shipping_method_name() );
+			} else {
+				/* translators: %s is the shipping method name */
+				echo wp_kses_post( sprintf( __( 'Shipping via %s', 'sunshine-photo-cart' ), $order->get_shipping_method_name() ) );
+			}
+			?>
+		</th>
 		<td><?php echo wp_kses_post( $order->get_shipping_formatted() ); ?></td>
 	</tr>
-	<?php } ?>
+	<?php endif; ?>
 	<?php if ( $order->has_discount() ) { ?>
 	<tr class="sunshine-discount">
 		<th><?php esc_html_e( 'Discounts', 'sunshine-photo-cart' ); ?></th>

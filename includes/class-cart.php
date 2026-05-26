@@ -87,15 +87,19 @@ class SPC_Cart {
 			}
 		}
 
-		// Set shipping method.
-		if ( $this->needs_shipping() && array_key_exists( 'shipping', $delivery_methods ) ) {
-			$allowed_shipping_methods = sunshine_get_allowed_shipping_methods();
-			if ( ! empty( $allowed_shipping_methods ) ) {
-				// Check if this shipping method is still
-				if ( array_key_exists( 'shipping_method', $this->data ) && is_array( $allowed_shipping_methods ) && array_key_exists( $this->data['shipping_method'], $allowed_shipping_methods ) ) {
-					$this->set_shipping_method( $this->data['shipping_method'] );
-				} elseif ( $this->delivery_method == 'ship' && count( $allowed_shipping_methods ) == 1 ) {
-					$this->set_shipping_method( array_key_first( $allowed_shipping_methods ) );
+		// Set shipping method. Pickup instances are stored as the shipping method too,
+		// so re-hydrate from saved data regardless of needs_shipping().
+		$allowed_shipping_methods = sunshine_get_allowed_shipping_methods();
+		if ( ! empty( $allowed_shipping_methods ) && is_array( $allowed_shipping_methods ) ) {
+			if ( array_key_exists( 'shipping_method', $this->data ) && array_key_exists( $this->data['shipping_method'], $allowed_shipping_methods ) ) {
+				$this->set_shipping_method( $this->data['shipping_method'] );
+			} elseif ( $this->needs_shipping() && array_key_exists( 'shipping', $delivery_methods ) && $this->delivery_method && $this->delivery_method->get_id() === 'shipping' && count( $allowed_shipping_methods ) === 1 ) {
+				$only_instance_id = array_key_first( $allowed_shipping_methods );
+				$only_method      = sunshine_get_shipping_method_by_instance( $only_instance_id );
+				// Don't auto-select a pickup-style method when the customer chose Ship —
+				// pickup instances are their own delivery method options.
+				if ( $only_method && $only_method->needs_shipping_address() ) {
+					$this->set_shipping_method( $only_instance_id );
 				}
 			}
 		}
@@ -889,19 +893,32 @@ class SPC_Cart {
 	}
 
 	public function set_delivery_method( $method ) {
-		if ( is_string( $method ) ) {
-			// Let's see if this string is in the available instances
-			$active_methods = sunshine_get_delivery_methods();
-			if ( array_key_exists( $method, $active_methods ) ) {
-				$this->delivery_method = sunshine_get_delivery_method_by_id( $method );
-				$this->set_checkout_data_item( 'delivery_method', $method );
-			}
-		} else {
+		if ( ! is_string( $method ) ) {
 			$this->delivery_method = $method;
+			$this->set_checkout_data_item( 'delivery_method', $this->delivery_method->get_id() );
+			$this->set_checkout_data_item( 'shipping_method', '' );
+			$this->shipping_method = '';
+			return;
 		}
-		$this->set_checkout_data_item( 'delivery_method', $this->delivery_method->get_id() );
-		$this->set_checkout_data_item( 'shipping_method', '' );
-		$this->shipping_method = '';
+
+		if ( array_key_exists( $method, sunshine_get_delivery_methods() ) ) {
+			$this->delivery_method = sunshine_get_delivery_method_by_id( $method );
+			$this->set_checkout_data_item( 'delivery_method', $method );
+			$this->set_checkout_data_item( 'shipping_method', '' );
+			$this->shipping_method = '';
+			return;
+		}
+
+		// Each pickup shipping method instance is exposed as its own delivery method
+		// option at checkout. When the value posted matches a pickup instance hash,
+		// resolve it to the pickup delivery method and store the instance as the
+		// shipping method in one step.
+		$shipping_method = sunshine_get_shipping_method_by_instance( $method );
+		if ( $shipping_method && $shipping_method->get_id() === 'pickup' ) {
+			$this->delivery_method = sunshine_get_delivery_method_by_id( 'pickup' );
+			$this->set_checkout_data_item( 'delivery_method', 'pickup' );
+			$this->set_shipping_method( $method );
+		}
 	}
 
 	public function get_delivery_method_id() {
@@ -1282,13 +1299,13 @@ class SPC_Cart {
 		}
 
 		// Get allowed shipping methods from the start so delivery method section works.
+		// Partition into ship (needs a shipping address) and pickup (does not).
 		$allowed_shipping_methods = sunshine_get_allowed_shipping_methods();
-		$shipping_methods         = array();
+		$ship_methods             = array();
+		$pickup_methods           = array();
 		if ( $allowed_shipping_methods ) {
 			foreach ( $allowed_shipping_methods as $instance_id => $allowed_shipping_method ) {
 				$this_shipping_method = sunshine_get_shipping_method_by_instance( $instance_id );
-				$label                = $this_shipping_method->get_name();
-				$price_html           = '';
 				$price                = $this_shipping_method->get_price();
 				$price_html           = '<span class="sunshine--checkout--shipping-method--price" data-price="' . esc_attr( $price ) . '">' . sunshine_get_price_to_display( $price, $this_shipping_method->get_tax() ) . '</span>';
 				$description_html     = '';
@@ -1296,7 +1313,12 @@ class SPC_Cart {
 				if ( $description ) {
 					$description_html = '<span class="sunshine--checkout--shipping-method--description">' . $description . '</span>';
 				}
-				$shipping_methods[ $instance_id ] = $label . $price_html . $description_html;
+				$option_html = $this_shipping_method->get_name() . $price_html . $description_html;
+				if ( ! $this_shipping_method->needs_shipping_address() ) {
+					$pickup_methods[ $instance_id ] = $option_html;
+				} else {
+					$ship_methods[ $instance_id ] = $option_html;
+				}
 			}
 		}
 
@@ -1391,31 +1413,52 @@ class SPC_Cart {
 				}
 			}
 
-			$delivery_fields = array();
-			if ( ! empty( $delivery_methods ) && is_array( $delivery_methods ) ) {
-				if ( count( $delivery_methods ) == 1 && ! array_key_exists( 'pickup', $delivery_methods ) ) {
-					$delivery_method_id                     = array_key_first( $delivery_methods );
-					$this->hidden_fields['delivery_method'] = $delivery_methods[ $delivery_method_id ]['id'];
-				} else {
-					$delivery_methods_options = array();
-					foreach ( $delivery_methods as $delivery_method ) {
-						$delivery_method = sunshine_get_delivery_method_by_id( $delivery_method['id'] );
-						$label           = $delivery_method->get_display_name();
-						$description     = $delivery_method->get_description();
-						if ( ! empty( $description ) ) {
-							$label .= '<div class="sunshine--checkout--delivery-method--description">' . $description . '</div>';
-						}
-						$delivery_methods_options[ $delivery_method->get_id() ] = $label;
-					}
+			// If there are no ship-type shipping methods active, drop the Ship delivery method entirely.
+			if ( ! empty( $delivery_methods['shipping'] ) && empty( $ship_methods ) ) {
+				unset( $delivery_methods['shipping'] );
+			}
 
+			// Build delivery method options. The pickup delivery method expands into one
+			// option per active pickup shipping method instance — each pickup location is
+			// its own top-level choice (rather than a sub-step under a single "Pickup").
+			$delivery_methods_options = array();
+			if ( ! empty( $delivery_methods ) && is_array( $delivery_methods ) ) {
+				foreach ( $delivery_methods as $delivery_method ) {
+					if ( $delivery_method['id'] === 'pickup' ) {
+						foreach ( $pickup_methods as $pickup_instance_id => $pickup_option_html ) {
+							$delivery_methods_options[ $pickup_instance_id ] = $pickup_option_html;
+						}
+						continue;
+					}
+					$delivery_method_obj = sunshine_get_delivery_method_by_id( $delivery_method['id'] );
+					$label               = $delivery_method_obj->get_display_name();
+					$description         = $delivery_method_obj->get_description();
+					if ( ! empty( $description ) ) {
+						$label .= '<div class="sunshine--checkout--delivery-method--description">' . $description . '</div>';
+					}
+					$delivery_methods_options[ $delivery_method_obj->get_id() ] = $label;
+				}
+			}
+
+			$delivery_fields = array();
+			if ( ! empty( $delivery_methods_options ) ) {
+				if ( count( $delivery_methods_options ) === 1 ) {
+					$this->hidden_fields['delivery_method'] = array_key_first( $delivery_methods_options );
+				} else {
+					$current_selection = '';
+					if ( ! empty( $this->delivery_method ) ) {
+						$current_selection = $this->delivery_method->get_id();
+						if ( $current_selection === 'pickup' && ! empty( $this->shipping_method ) && array_key_exists( $this->shipping_method->get_instance_id(), $pickup_methods ) ) {
+							$current_selection = $this->shipping_method->get_instance_id();
+						}
+					}
 					$delivery_fields = array(
 						array(
 							'id'       => 'delivery_method',
 							'type'     => 'radio',
-							// 'name' => __( 'Choose method of delivery', 'sunshine-photo-cart' ),
 							'required' => true,
 							'options'  => $delivery_methods_options,
-							'default'  => ( ! $this->delivery_method ) ? array_key_first( $delivery_methods ) : $this->delivery_method->get_id(),
+							'default'  => $current_selection ? $current_selection : array_key_first( $delivery_methods_options ),
 						),
 					);
 				}
@@ -1429,7 +1472,11 @@ class SPC_Cart {
 				);
 
 				if ( sunshine_checkout_section_completed( 'delivery' ) && ! empty( $this->delivery_method ) ) {
-					$fields['delivery']['summary'] = $this->delivery_method->get_name();
+					$summary = $this->delivery_method->get_name();
+					if ( $this->delivery_method->get_id() === 'pickup' && ! empty( $this->shipping_method ) ) {
+						$summary = $this->shipping_method->get_name();
+					}
+					$fields['delivery']['summary'] = $summary;
 				}
 
 				$fields['delivery'] = apply_filters( 'sunshine_checkout_section_delivery', $fields['delivery'] );
@@ -1469,13 +1516,13 @@ class SPC_Cart {
 
 			$fields['shipping'] = apply_filters( 'sunshine_checkout_section_shipping', $fields['shipping'] );
 
-			if ( ! empty( $shipping_methods ) ) {
+			if ( ! empty( $ship_methods ) ) {
 
 				$default_shipping = '';
-				if ( count( $allowed_shipping_methods ) == 1 ) {
-					$default = array_key_first( $allowed_shipping_methods );
-				} elseif ( ! empty( $this->shipping_method ) ) {
-					$default = $this->shipping_method->get_instance_id();
+				if ( count( $ship_methods ) == 1 ) {
+					$default_shipping = array_key_first( $ship_methods );
+				} elseif ( ! empty( $this->shipping_method ) && array_key_exists( $this->shipping_method->get_instance_id(), $ship_methods ) ) {
+					$default_shipping = $this->shipping_method->get_instance_id();
 				}
 
 				$fields['shipping_method'] = array(
@@ -1485,8 +1532,7 @@ class SPC_Cart {
 						array(
 							'id'       => 'shipping_method',
 							'type'     => 'radio',
-							// 'name' => __( 'Shipping Method', 'sunshine-photo-cart' ),
-							'options'  => $shipping_methods,
+							'options'  => $ship_methods,
 							'default'  => $default_shipping,
 							'required' => true,
 						),
@@ -1496,7 +1542,9 @@ class SPC_Cart {
 					$fields['shipping_method']['summary'] = $this->shipping_method->get_name();
 				}
 			}
-		} elseif ( SPC()->get_option( 'require_address' ) || sunshine_tax_rates_need_address() ) {
+		}
+
+		if ( ! $this->needs_shipping() && ( SPC()->get_option( 'require_address' ) || sunshine_tax_rates_need_address() ) ) {
 
 			$default_country = SPC()->customer->get_shipping_country();
 			if ( $this->get_checkout_data_item( 'customer_country' ) ) {

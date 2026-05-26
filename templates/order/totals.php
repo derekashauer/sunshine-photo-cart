@@ -5,13 +5,24 @@
 			<th><?php esc_html_e( 'Subtotal', 'sunshine-photo-cart' ); ?></th>
 			<td><?php echo wp_kses_post( $order->get_subtotal_formatted() ); ?></td>
 		</tr>
-		<?php if ( ! empty( $order->get_shipping() ) ) { ?>
+		<?php
+		$order_is_pickup = $order->get_delivery_method() === 'pickup';
+		if ( ! empty( $order->get_shipping() ) || $order_is_pickup ) :
+			?>
 		<tr class="sunshine--cart--shipping">
-			<?php /* translators: %s is the shipping method name */ ?>
-			<th><?php echo esc_html( sprintf( __( 'Shipping via %s', 'sunshine-photo-cart' ), $order->get_shipping_method_name() ) ); ?></th>
+			<th>
+				<?php
+				if ( $order_is_pickup ) {
+					echo esc_html( $order->get_shipping_method_name() );
+				} else {
+					/* translators: %s is the shipping method name */
+					echo esc_html( sprintf( __( 'Shipping via %s', 'sunshine-photo-cart' ), $order->get_shipping_method_name() ) );
+				}
+				?>
+			</th>
 			<td><?php echo wp_kses_post( $order->get_shipping_formatted() ); ?></td>
 		</tr>
-		<?php } ?>
+		<?php endif; ?>
 		<?php if ( $order->get_tax() && $order->get_meta_value( 'display_price' ) !== 'with_tax' ) { ?>
 		<tr class="sunshine--cart--tax">
 			<th><?php esc_html_e( 'Tax', 'sunshine-photo-cart' ); ?></th>
