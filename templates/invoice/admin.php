@@ -257,7 +257,7 @@
 		<td><?php echo wp_kses_post( $order->get_subtotal_formatted() ); ?></td>
 	</tr>
 	<?php
-	$order_is_pickup = $order->get_delivery_method() === 'pickup';
+	$order_is_pickup = $order->is_pickup_order();
 	if ( ! empty( $order->get_shipping_method() ) ) :
 		?>
 	<tr class="sunshine-shipping">

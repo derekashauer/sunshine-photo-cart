@@ -46,7 +46,7 @@ if ( ! empty( $message ) ) {
 						<td><?php echo wp_kses_post( $order->get_subtotal_formatted() ); ?></td>
 					</tr>
 					<?php
-					$order_is_pickup = $order->get_delivery_method() === 'pickup';
+					$order_is_pickup = $order->is_pickup_order();
 					if ( $order->has_shipping_address() || $order_is_pickup ) :
 						?>
 					<tr id="order-shipping">

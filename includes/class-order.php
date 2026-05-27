@@ -44,6 +44,7 @@ class SPC_Order extends Sunshine_Data {
 		'delivery_method_name' => '',
 		'shipping_method'      => '',
 		'shipping_method_name' => '',
+		'pickup_location_details' => '',
 		'payment_method'       => '',
 		'payment_method_name'  => '',
 		'transaction_id'       => '',
@@ -641,6 +642,28 @@ class SPC_Order extends Sunshine_Data {
 	public function set_shipping_method( $value ) {
 		$this->update_meta_value( 'shipping_method', $value );
 	}
+	public function get_pickup_location_details() {
+		return $this->get_meta_value( 'pickup_location_details' );
+	}
+
+	/**
+	 * Whether this order's shipping is a pickup. True if either the stored delivery_method
+	 * is 'pickup' OR the shipping_method instance resolves to a pickup-style method that
+	 * doesn't need a shipping address.
+	 */
+	public function is_pickup_order() {
+		if ( $this->get_delivery_method() === 'pickup' ) {
+			return true;
+		}
+		$shipping_method_instance = $this->get_meta_value( 'shipping_method' );
+		if ( $shipping_method_instance ) {
+			$shipping_method = sunshine_get_shipping_method_by_instance( $shipping_method_instance );
+			if ( $shipping_method && method_exists( $shipping_method, 'needs_shipping_address' ) && ! $shipping_method->needs_shipping_address() ) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public function get_payment_method() {
 		return $this->get_meta_value( 'payment_method' );
@@ -899,6 +922,9 @@ class SPC_Order extends Sunshine_Data {
 			$shipping_method = sunshine_get_shipping_method_by_instance( $shipping_method_instance );
 			if ( $shipping_method ) {
 				$this->update_meta_value( 'shipping_method_name', $shipping_method->get_name() );
+				if ( $shipping_method->get_id() === 'pickup' && $shipping_method instanceof SPC_Shipping_Method_Pickup ) {
+					$this->update_meta_value( 'pickup_location_details', $shipping_method->get_location_details() );
+				}
 			}
 		}
 
@@ -1008,6 +1034,9 @@ class SPC_Order extends Sunshine_Data {
 			$shipping_method = sunshine_get_shipping_method_by_instance( $shipping_method_instance );
 			if ( $shipping_method ) {
 				$this->update_meta_value( 'shipping_method_name', $shipping_method->get_name() );
+				if ( $shipping_method->get_id() === 'pickup' && $shipping_method instanceof SPC_Shipping_Method_Pickup ) {
+					$this->update_meta_value( 'pickup_location_details', $shipping_method->get_location_details() );
+				}
 			}
 		}
 

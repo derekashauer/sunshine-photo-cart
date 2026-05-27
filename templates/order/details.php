@@ -22,7 +22,7 @@
 			<div class="sunshine--order--data--label"><?php esc_html_e( 'Payment Method', 'sunshine-photo-cart' ); ?></div>
 			<div class="sunshine--order--data--value"><?php echo esc_html( $order->get_payment_method_name() ); ?></div>
 		</div>
-		<?php if ( $order->get_delivery_method_name() ) { ?>
+		<?php if ( $order->get_delivery_method_name() || $order->get_shipping_method_name() ) { ?>
 			<div class="sunshine--order--data--item">
 				<div class="sunshine--order--data--label"><?php esc_html_e( 'Delivery', 'sunshine-photo-cart' ); ?></div>
 				<div class="sunshine--order--data--value">
