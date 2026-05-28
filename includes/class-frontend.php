@@ -538,7 +538,7 @@ class SPC_Frontend {
 			}
 		}
 
-		if ( SPC()->get_option( 'page_favorites' ) && SPC()->get_option( 'enable_favorites', true ) ) {
+		if ( SPC()->get_option( 'page_favorites' ) && SPC()->get_option( 'enable_favorites' ) ) {
 			$favorites_count = SPC()->customer->get_favorite_count();
 			$count           = $favorites_count > 0 ? '<span class="sunshine--count sunshine--favorites--count">' . $favorites_count . '</span>' : '';
 
@@ -617,7 +617,7 @@ class SPC_Frontend {
 			);
 		}
 
-		if ( SPC()->get_option( 'enable_favorites', true ) && $image->allow_favorites() ) {
+		if ( SPC()->get_option( 'enable_favorites' ) && $image->allow_favorites() ) {
 			// Always use sunshine--add-to-favorites; JS handles guest flow.
 			$menu[10] = array(
 				'name'    => __( 'Favorite', 'sunshine-photo-cart' ) . ': ' . $image->get_name(),

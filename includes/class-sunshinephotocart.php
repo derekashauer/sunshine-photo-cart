@@ -643,12 +643,11 @@ final class Sunshine_Photo_Cart {
 	}
 
 	public function get_option( $key, $default = false ) {
-		$sentinel = "\0__spc_not_set__\0";
-		$value    = get_option( $this->prefix . $key, $sentinel );
-		if ( $value === $sentinel ) {
-			return $default;
+		$value = get_option( $this->prefix . $key, $default );
+		if ( empty( $value ) && $default ) {
+			$value = $default;
 		}
-		return maybe_unserialize( $value );
+		return ( $value !== '' ) ? maybe_unserialize( $value ) : '';
 	}
 
 	public function update_option( $key, $value, $autoload = false ) {

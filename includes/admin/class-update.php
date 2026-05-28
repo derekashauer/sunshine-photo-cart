@@ -15,7 +15,7 @@ class SPC_Update {
 			$this->need_update = true;
 		}
 
-		$this->update_actions = array( '3.0', '3.0.17', '3.0.18', '3.5.6', '3.6.0', '3.6.2', '3.6.3', '3.6.10' );
+		$this->update_actions = array( '3.0', '3.0.17', '3.0.18', '3.5.6', '3.6.0', '3.6.2', '3.6.3', '3.6.10', '3.6.10.1' );
 
 		add_action( 'admin_init', array( $this, 'update_check' ) );
 		add_action( 'admin_menu', array( $this, 'menu' ) );
@@ -41,6 +41,7 @@ class SPC_Update {
 		add_action( 'sunshine_update_3.6.2', array( $this, 'update_3_6_2' ) );
 		add_action( 'sunshine_update_3.6.3', array( $this, 'update_3_6_3' ) );
 		add_action( 'sunshine_update_3.6.10', array( $this, 'update_3_6_10' ) );
+		add_action( 'sunshine_update_3.6.10.1', array( $this, 'update_3_6_10_1' ) );
 
 		add_action( 'activated_plugin', array( $this, 'check_plugin_activation' ), 10, 2 );
 		add_action( 'admin_notices', array( $this, 'show_deactivation_notice' ), 10, 2 );
@@ -377,6 +378,19 @@ class SPC_Update {
 		SPC()->update_option( 'pickup_enabled', '' );
 		SPC()->update_option( 'pickup_migrated_to_shipping_method', time() );
 
+	}
+
+	/**
+	 * update_3_6_0() migrated disable_favorites -> enable_favorites but only wrote the
+	 * "enabled" branch, leaving sunshine_enable_favorites absent for sites that had
+	 * favorites turned off. That worked only because the call sites read the option
+	 * with no default. Persist the intent explicitly so a future caller using a
+	 * truthy default can't silently flip those sites back on.
+	 */
+	function update_3_6_10_1() {
+		if ( get_option( 'sunshine_enable_favorites', null ) === null ) {
+			SPC()->update_option( 'enable_favorites', false );
+		}
 	}
 
 	public function update_3_settings_data() {

@@ -129,61 +129,15 @@ class SPC_Dashboard_Widget {
 			$current_month_start = date( 'Y-m-01 00:00:00' );
 			$current_month_end   = date( 'Y-m-t 23:59:59' );
 
-			// Prepare the SQL query
-			$query = $wpdb->prepare(
-				"
-			SELECT SUM(pm.meta_value) AS order_total, COUNT(p.ID) AS order_count
-			FROM {$wpdb->posts} p
-			INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
-			INNER JOIN {$wpdb->postmeta} pm2 ON p.ID = pm2.post_id
-			INNER JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
-			INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
-			INNER JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
-			WHERE p.post_type = 'sunshine-order'
-			AND pm.meta_key = 'total'
-			AND pm2.meta_key = 'mode' AND pm2.meta_value = 'live'
-			AND tt.taxonomy = 'sunshine-order-status'
-			AND t.slug IN ( $term_placeholders )
-		    AND p.post_date >= %s
-		    AND p.post_date <= %s
-			AND p.post_status = 'publish'
-		",
-				array_merge( $paid_statuses, array( $current_month_start, $current_month_end ) )
-			);
-
-			// Retrieve the results
-			$this_month = $wpdb->get_row( $query );
-
-			$last_month_start = date( 'Y-m-01 00:00:00', strtotime( '-1 month' ) );
-			$last_month_end   = date( 'Y-m-t 23:59:59', strtotime( '-1 month' ) );
-
-			// Prepare the SQL query
-			$query = $wpdb->prepare(
-				"
-			SELECT SUM(pm.meta_value) AS order_total, COUNT(p.ID) AS order_count
-			FROM {$wpdb->posts} p
-			INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
-			INNER JOIN {$wpdb->postmeta} pm2 ON p.ID = pm2.post_id
-			INNER JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
-			INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
-			INNER JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
-			WHERE p.post_type = 'sunshine-order'
-			AND pm.meta_key = 'total'
-			AND pm2.meta_key = 'mode' AND pm2.meta_value = 'live'
-			AND tt.taxonomy = 'sunshine-order-status'
-			AND t.slug IN ( $term_placeholders )
-			AND p.post_date >= %s
-			AND p.post_date <= %s
-		",
-				array_merge( $paid_statuses, array( $last_month_start, $last_month_end ) )
-			);
-
-			// Retrieve the results
-			$last_month = $wpdb->get_row( $query );
-
-			$query = $wpdb->prepare(
-				"
-				SELECT SUM(pm.meta_value) AS order_total, COUNT(p.ID) AS order_count
+			// Reusable SQL shape for the three buckets. GROUP_CONCAT collects
+			// matching order IDs so we can subtract refund totals afterwards —
+			// gross meta_value from `total` doesn't account for refunds, so
+			// the dashboard used to overstate revenue whenever a paid order
+			// had a partial or full refund recorded against it.
+			$select_orders_sql = "
+				SELECT SUM(pm.meta_value) AS order_total,
+				       COUNT(p.ID) AS order_count,
+				       GROUP_CONCAT(p.ID) AS order_ids
 				FROM {$wpdb->posts} p
 				INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
 				INNER JOIN {$wpdb->postmeta} pm2 ON p.ID = pm2.post_id
@@ -195,12 +149,37 @@ class SPC_Dashboard_Widget {
 				AND pm2.meta_key = 'mode' AND pm2.meta_value = 'live'
 				AND tt.taxonomy = 'sunshine-order-status'
 				AND t.slug IN ( $term_placeholders )
-			",
-				$paid_statuses
-			);
+				AND p.post_status = 'publish'
+			";
 
-			// Retrieve the results
+			$query = $wpdb->prepare(
+				$select_orders_sql . ' AND p.post_date >= %s AND p.post_date <= %s',
+				array_merge( $paid_statuses, array( $current_month_start, $current_month_end ) )
+			);
+			$this_month = $wpdb->get_row( $query );
+
+			$last_month_start = date( 'Y-m-01 00:00:00', strtotime( '-1 month' ) );
+			$last_month_end   = date( 'Y-m-t 23:59:59', strtotime( '-1 month' ) );
+
+			$query = $wpdb->prepare(
+				$select_orders_sql . ' AND p.post_date >= %s AND p.post_date <= %s',
+				array_merge( $paid_statuses, array( $last_month_start, $last_month_end ) )
+			);
+			$last_month = $wpdb->get_row( $query );
+
+			$query    = $wpdb->prepare( $select_orders_sql, $paid_statuses );
 			$lifetime = $wpdb->get_row( $query );
+
+			// Subtract refunds so the dashboard shows NET revenue. A partial
+			// refund on an otherwise-paid order should reduce the figure;
+			// the gross meta_value from `total` doesn't reflect that on its own.
+			foreach ( array( $this_month, $last_month, $lifetime ) as $row ) {
+				if ( empty( $row->order_ids ) ) {
+					continue;
+				}
+				$ids               = array_map( 'intval', explode( ',', $row->order_ids ) );
+				$row->order_total  = max( 0.0, (float) $row->order_total - sunshine_get_orders_refund_total( $ids ) );
+			}
 
 			$new_orders = $wpdb->get_row(
 				"SELECT COUNT(*) as order_count FROM {$wpdb->posts} p

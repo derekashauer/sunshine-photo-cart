@@ -51,7 +51,8 @@ function sunshine_tracking_send() {
 
 	$sql                 = "SELECT
 				COUNT({$wpdb->prefix}posts.ID) AS order_count,
-				SUM(meta_total.meta_value) AS total
+				SUM(meta_total.meta_value) AS total,
+				GROUP_CONCAT({$wpdb->prefix}posts.ID) AS order_ids
 			FROM {$wpdb->prefix}posts
 			JOIN {$wpdb->prefix}postmeta AS meta_total ON {$wpdb->prefix}posts.ID = meta_total.post_id
 			JOIN {$wpdb->prefix}postmeta AS meta_mode ON {$wpdb->prefix}posts.ID = meta_mode.post_id
@@ -60,8 +61,14 @@ function sunshine_tracking_send() {
 			AND meta_mode.meta_value = 'live'
 			AND meta_total.meta_key = 'total'";
 	$orders              = $wpdb->get_row( $sql );
+	$order_ids           = ! empty( $orders->order_ids ) ? array_map( 'intval', explode( ',', $orders->order_ids ) ) : array();
+	$refunds_total       = sunshine_get_orders_refund_total( $order_ids );
 	$data['order_count'] = $orders->order_count;
 	$data['order_total'] = round( $orders->total, 2 );
+	// `order_total` stays gross for backward compatibility with anyone parsing
+	// existing telemetry. The two new fields below let us see the refund picture.
+	$data['order_refunds_total'] = round( $refunds_total, 2 );
+	$data['order_total_net']     = round( max( 0.0, (float) $orders->total - $refunds_total ), 2 );
 
 	$sql                  = "SELECT
 			    COUNT(DISTINCT {$wpdb->prefix}posts.ID) AS order_count,

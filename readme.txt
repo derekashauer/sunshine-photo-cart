@@ -243,6 +243,11 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.6.10.1 - May 28, 2026 =
+* Fix: Galleries returning 404 after upgrading to 3.6.10 caused by a change in how option defaults were resolved
+* Fix: Sites that had favorites disabled before 3.6.0 had their setting silently re-enabled by the 3.6.0 migration; favorites are now restored to their original disabled state
+* Enhancement: Dashboard widget now reports net revenue (gross minus refunds) for this month, last month, and lifetime totals
+
 = 3.6.10 =
 * New: Pickup is now a cloneable shipping method. Configure multiple pickup locations — each with its own price, taxability, and customer-facing details — and each appears as its own option at the delivery step on checkout
 * Fix: Disabling favorites in settings did not hide the favorite button in the image menu or the Favorites link in the main navigation

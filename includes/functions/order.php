@@ -136,6 +136,52 @@ function sunshine_order_statuses_completed() {
 	return apply_filters( 'sunshine_order_statuses_paid', array( 'pickup', 'shipped' ) );
 }
 
+/**
+ * Sums refund amounts across a set of orders.
+ *
+ * Refunds are stored on each order as the `refunds` postmeta — a serialized
+ * array of refund records (amount, reason, date, tx_id). Pulls all refund
+ * records for the given orders in one query and sums their amounts.
+ *
+ * Returns 0 for orders that have never been refunded. Used by the admin
+ * dashboard, tracking telemetry, and any other revenue calculation that
+ * needs to report NET revenue (gross paid minus refunds returned).
+ *
+ * @param int[] $order_ids
+ *
+ * @return float Total refunded amount across the given orders.
+ */
+function sunshine_get_orders_refund_total( array $order_ids ) {
+	$order_ids = array_values( array_filter( array_map( 'intval', $order_ids ) ) );
+	if ( empty( $order_ids ) ) {
+		return 0.0;
+	}
+
+	global $wpdb;
+	$placeholders = implode( ',', array_fill( 0, count( $order_ids ), '%d' ) );
+	$rows         = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT meta_value FROM {$wpdb->postmeta}
+			 WHERE meta_key = 'refunds' AND post_id IN ({$placeholders})",
+			$order_ids
+		)
+	);
+
+	$total = 0.0;
+	foreach ( (array) $rows as $row ) {
+		$refunds = maybe_unserialize( $row->meta_value );
+		if ( ! is_array( $refunds ) ) {
+			continue;
+		}
+		foreach ( $refunds as $refund ) {
+			if ( is_array( $refund ) && isset( $refund['amount'] ) ) {
+				$total += (float) $refund['amount'];
+			}
+		}
+	}
+	return $total;
+}
+
 function sunshine_order_is_completed( $status ) {
 	$completed_statuses = sunshine_order_statuses_completed();
 	if ( in_array( $status, $completed_statuses ) ) {
