@@ -47,6 +47,6 @@ if ( $images ) {
 
 <?php } else { ?>
 	<div id="sunshine--multi-image-select--source-<?php echo esc_attr( $gallery->get_id() ); ?>--<?php echo esc_attr( $id ); ?>" class="sunshine--multi-image-select--source--list">
-		<?php esc_html_e( 'No images in this gallery', 'sunshine-photo-cart' ); ?>
+		<?php esc_html_e( 'No available selections', 'sunshine-photo-cart' ); ?>
 	</div>
 <?php } ?>

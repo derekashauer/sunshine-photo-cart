@@ -153,6 +153,8 @@ function sunshine_multi_image_select_images() {
 		'selected'        => ( ! empty( $selected ) ) ? explode( ',', $selected ) : array(),
 	);
 
+	do_action( 'sunshine_before_multi_image_select_images', $product, $gallery );
+
 	$result = array(
 		'html' => sunshine_get_template_html(
 			'multi-image-select/select-images',
@@ -202,6 +204,8 @@ function sunshine_multi_image_select_gallery_images() {
 	}
 
 	$args['id'] = ( ! empty( $_POST['id'] ) ) ? sanitize_text_field( $_POST['id'] ) : '';
+
+	do_action( 'sunshine_before_multi_image_select_images', $args['product'], $args['gallery'] );
 
 	$html = sunshine_get_template_html( 'multi-image-select/gallery-list', $args );
 	wp_send_json_success( array( 'html' => $html ) );
