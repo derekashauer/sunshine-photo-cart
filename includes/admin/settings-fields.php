@@ -306,7 +306,7 @@ function sunshine_get_settings_fields() {
 		'type'     => 'text',
 		'callback' => 'sanitize_title_with_dashes',
 		'required' => true,
-		'default'  => 'view-order',
+		'default'  => 'order-details',
 	);
 	$pages_fields['3200'] = array(
 		'id'       => 'account_addresses_endpoint',
@@ -330,7 +330,7 @@ function sunshine_get_settings_fields() {
 		'type'     => 'text',
 		'callback' => 'sanitize_title_with_dashes',
 		'required' => true,
-		'default'  => 'my-details',
+		'default'  => 'my-profile',
 	);
 	$pages_fields['3400'] = array(
 		'id'       => 'account_login_endpoint',

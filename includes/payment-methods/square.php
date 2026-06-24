@@ -35,6 +35,19 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 		add_action( 'sunshine_square_access_token_refresh', array( $this, 'refresh_token' ) );
 		add_action( 'sunshine_square_refresh_fees', array( $this, 'refresh_processing_fees' ) );
+		add_action( 'sunshine_square_reconcile_pending', array( $this, 'reconcile_pending_orders' ) );
+
+		// Background reconcile is a safety net only - normal orders finalize
+		// synchronously at checkout. Scheduled here (not just at connect time) so
+		// already-connected sites pick it up on upgrade. Filterable off.
+		add_filter( 'cron_schedules', array( $this, 'add_cron_schedule' ) );
+		if ( apply_filters( 'sunshine_square_background_reconcile', true ) ) {
+			if ( ! wp_next_scheduled( 'sunshine_square_reconcile_pending' ) ) {
+				wp_schedule_event( time(), 'sunshine_square_quarter_hour', 'sunshine_square_reconcile_pending' );
+			}
+		} elseif ( wp_next_scheduled( 'sunshine_square_reconcile_pending' ) ) {
+			wp_clear_scheduled_hook( 'sunshine_square_reconcile_pending' );
+		}
 
 		add_action( 'wp', array( $this, 'init_setup' ) );
 
@@ -46,8 +59,9 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 		add_action( 'sunshine_checkout_process_payment_square', array( $this, 'process_payment' ) );
 
+		add_action( 'wp', array( $this, 'check_order_paid' ) );
+
 		// add_action( 'template_redirect', array( $this, 'square_return_listener' ), 999 );
-		// add_action( 'template_redirect', array( $this, 'webhooks' ) );
 
 		// add_filter( 'sunshine_order_transaction_url', array( $this, 'transaction_url' ) );
 
@@ -57,6 +71,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		add_action( 'sunshine_order_actions', array( $this, 'order_actions' ), 10, 2 );
 		add_action( 'sunshine_order_actions_options', array( $this, 'order_actions_options' ) );
 		add_action( 'sunshine_order_process_action_square_refund', array( $this, 'process_refund' ) );
+		add_action( 'sunshine_order_process_action_square_recheck', array( $this, 'process_recheck' ) );
 
 		add_action( 'sunshine_checkout_validation', array( $this, 'checkout_validation' ) );
 
@@ -821,23 +836,22 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			$qty      = max( 1, intval( $item->get_qty() ) );
 			$discount = floatval( $item->get_discount() );
 
-			if ( $price_has_tax && $item->is_taxable() && $rate > 0 && $discount > 0 ) {
-				// Tax-inclusive mode + line discount: discount is in with-tax currency.
-				// Reload from DB bypasses the re-extraction in class-cart-item.php so
-				// $item->get_total() is wrong for this case. Recompute manually.
-				$per_unit_with_tax            = floatval( $item->get_price() ) + floatval( $item->get_tax() );
-				$line_with_tax_after_discount = ( $per_unit_with_tax * $qty ) - $discount;
-				$line_base                    = round( $line_with_tax_after_discount / ( 1 + $rate ), 2 );
-				$per_unit_base                = $line_base / $qty;
+			if ( $price_has_tax && $item->is_taxable() ) {
+				// Tax-inclusive mode: send the per-unit price the customer actually sees.
+				// Square is told (via the taxes block below) that this tax is INCLUSIVE
+				// so it does not add it again. Per-line discount is also in inclusive currency.
+				$per_unit_inclusive = floatval( $item->get_price() ) + floatval( $item->get_tax() );
+				$line_inclusive     = ( $per_unit_inclusive * $qty ) - $discount;
+				$per_unit_for_square = $line_inclusive / $qty;
 			} else {
-				$per_unit_base = $item->get_total() / $qty;
+				$per_unit_for_square = $item->get_total() / $qty;
 			}
 
 			$line_item = array(
 				'name'             => substr( $item->get_name_raw(), 0, 512 ),
 				'quantity'         => (string) $qty,
 				'base_price_money' => array(
-					'amount'   => intval( round( $per_unit_base * 100 ) ),
+					'amount'   => intval( round( $per_unit_for_square * 100 ) ),
 					'currency' => $this->currency,
 				),
 			);
@@ -868,18 +882,25 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		);
 
 		if ( $order->get_shipping() > 0 ) {
-			$shipping_name = $order->get_shipping_method_name() ? $order->get_shipping_method_name() : __( 'Shipping', 'sunshine-photo-cart' );
+			$shipping_name    = $order->get_shipping_method_name() ? $order->get_shipping_method_name() : __( 'Shipping', 'sunshine-photo-cart' );
+			$shipping_taxable = ( $order->get_shipping_tax() > 0 );
+			$shipping_amount  = floatval( $order->get_shipping() );
+			if ( $price_has_tax && $shipping_taxable ) {
+				// INCLUSIVE tax: send the inclusive shipping amount so it agrees
+				// with the inclusive-priced line items above.
+				$shipping_amount += floatval( $order->get_shipping_tax() );
+			}
 			$service_charge = array(
 				'uid'                => 'shipping',
 				'name'               => substr( $shipping_name, 0, 255 ),
 				'amount_money'       => array(
-					'amount'   => intval( round( $order->get_shipping() * 100 ) ),
+					'amount'   => intval( round( $shipping_amount * 100 ) ),
 					'currency' => $this->currency,
 				),
 				'calculation_phase'  => 'SUBTOTAL_PHASE',
-				'taxable'            => ( $order->get_shipping_tax() > 0 ),
+				'taxable'            => $shipping_taxable,
 			);
-			if ( $order->get_shipping_tax() > 0 ) {
+			if ( $shipping_taxable ) {
 				$service_charge['applied_taxes'] = array( array( 'tax_uid' => 'tax-1' ) );
 			}
 			$order_data['service_charges'] = array( $service_charge );
@@ -894,7 +915,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 						'name'       => __( 'Tax', 'sunshine-photo-cart' ),
 						'percentage' => number_format( $tax_rate['rate'] * 100, 5, '.', '' ),
 						'scope'      => 'LINE_ITEM',
-						'type'       => 'ADDITIVE',
+						'type'       => $price_has_tax ? 'INCLUSIVE' : 'ADDITIVE',
 					),
 				);
 			}
@@ -924,6 +945,64 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 	}
 
+	private function cancel_square_order( $square_order_id, $version ) {
+		if ( empty( $square_order_id ) ) {
+			return;
+		}
+		$response = $this->api_request(
+			'v2/orders/' . $square_order_id,
+			array(
+				'order'           => array(
+					'version' => max( 1, intval( $version ) ),
+					'state'   => 'CANCELED',
+				),
+				'idempotency_key' => substr( 'c_' . sha1( 'cancel:' . $square_order_id ), 0, 40 ),
+			),
+			'PUT'
+		);
+		if ( is_wp_error( $response ) ) {
+			SPC()->log( 'Square Orders API: failed to cancel orphan order ' . $square_order_id . ': ' . $response->get_error_message() );
+			return;
+		}
+		$code = wp_remote_retrieve_response_code( $response );
+		if ( $code >= 200 && $code < 300 ) {
+			SPC()->log( 'Square Orders API: cancelled orphan order ' . $square_order_id );
+		} else {
+			SPC()->log( 'Square Orders API: cancel returned HTTP ' . $code . ' for ' . $square_order_id . ' body: ' . wp_remote_retrieve_body( $response ) );
+		}
+	}
+
+	/**
+	 * Retrieve a Square Order and return the payment id of its first tender, if
+	 * any. Used to recover a payment whose CreatePayment response was lost before
+	 * we could store its id: the order holds a tender that references the payment.
+	 * Returns '' when the order has no completed tender yet.
+	 */
+	private function get_payment_id_from_order( $square_order_id, $mode ) {
+		if ( empty( $square_order_id ) || ! $this->get_access_token( $mode ) ) {
+			return '';
+		}
+		$this->environmentUrl = ( $mode === 'live' ) ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com';
+		$response = $this->api_request( 'v2/orders/' . $square_order_id, '', 'GET', $mode );
+		if ( is_wp_error( $response ) ) {
+			SPC()->log( 'get_payment_id_from_order: WP_Error ' . $response->get_error_message() );
+			return '';
+		}
+		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( empty( $body['order']['tenders'] ) || ! is_array( $body['order']['tenders'] ) ) {
+			return '';
+		}
+		foreach ( $body['order']['tenders'] as $tender ) {
+			if ( ! empty( $tender['payment_id'] ) ) {
+				return $tender['payment_id'];
+			}
+			if ( ! empty( $tender['id'] ) ) {
+				return $tender['id'];
+			}
+		}
+		return '';
+	}
+
 	public function init_order() {
 
 		if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( $_POST['security'], 'sunshine_square' ) ) {
@@ -944,6 +1023,18 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 		$order_id = SPC()->session->get( 'checkout_order_id' );
 		$order    = $order_id ? sunshine_get_order( $order_id ) : null;
+
+		// If this order is already paid, do not charge again. This happens when a
+		// prior attempt succeeded but the customer re-submitted (re-entered card,
+		// double-click, refresh). Each card entry produces a new single-use Square
+		// token, so charging again would either double-charge or trip Square's
+		// idempotency-reuse error. Return success so the checkout flow continues to
+		// the received page; process_order() bails on its own is_paid() guard.
+		if ( $order && $order->exists() && $order->is_paid() ) {
+			SPC()->log( 'Square init order: order ' . $order->get_id() . ' is already paid, skipping charge' );
+			wp_send_json_success( array( 'payment_id' => $order->get_meta_value( 'square_payment_id' ) ) );
+			return;
+		}
 
 		// Reuse the same idempotency key for every attempt on this order so
 		// refreshes, network retries, and double-submits don't create duplicate
@@ -1035,6 +1126,11 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 					if ( $square_total === intval( $this->total ) ) {
 						$square_order_id  = $order_body['order']['id'];
 						$args['order_id'] = $square_order_id;
+					} else {
+						// Cancel the orphan Square Order so the merchant does not see
+						// an OPEN unpaid order with the wrong total sitting in their
+						// dashboard. The fallback bare payment still goes through.
+						$this->cancel_square_order( $order_body['order']['id'], intval( $order_body['order']['version'] ?? 1 ) );
 					}
 				} else {
 					SPC()->log( 'Square Orders API: missing order.id or total_money in response' );
@@ -1053,14 +1149,65 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 		if ( ! empty( $body['errors'] ) ) {
 			SPC()->log( 'Failed Square payment body: ' . print_r( $body, 1 ) );
+
+			$is_payment_method_error = false;
+			$is_idempotency_reuse    = false;
 			foreach ( $body['errors'] as $error ) {
-				if ( isset( $error['category'] ) && $error['category'] === 'PAYMENT_METHOD_ERROR' ) {
-					if ( $order && $order->exists() ) {
-						$order->update_meta_value( 'square_idempotency_key', '' );
-					}
-					break;
+				$category = isset( $error['category'] ) ? $error['category'] : '';
+				$code     = isset( $error['code'] ) ? $error['code'] : '';
+				if ( $category === 'PAYMENT_METHOD_ERROR' ) {
+					$is_payment_method_error = true;
+				}
+				if ( $code === 'IDEMPOTENCY_KEY_REUSED' ) {
+					$is_idempotency_reuse = true;
 				}
 			}
+
+			// Declined card etc. - clear the stored key so the customer can retry
+			// with another card on a fresh key.
+			if ( $is_payment_method_error && $order && $order->exists() ) {
+				$order->update_meta_value( 'square_idempotency_key', '' );
+			}
+
+			// Idempotency reuse: the customer re-entered their card (Square issues a
+			// new single-use token each time), so this request carried the stored key
+			// from a prior attempt but a different source_id, and Square rejected the
+			// mismatch. A prior attempt already exists under that key - recover it
+			// rather than charging again or showing the raw Square error.
+			if ( $is_idempotency_reuse && $order && $order->exists() ) {
+				SPC()->log( 'Square payment: IDEMPOTENCY_KEY_REUSED for order ' . $order->get_id() . ', attempting recovery' );
+
+				$known_payment_id = $order->get_meta_value( 'square_payment_id' );
+
+				// If we never recorded a payment id, the first attempt's payment may
+				// have succeeded but its response was lost before we could store it.
+				// The Square Order created earlier in THIS request is the same one the
+				// first attempt created (the order idempotency key is deterministic),
+				// so pull the payment id off its tender and recover from that.
+				if ( empty( $known_payment_id ) && ! empty( $square_order_id ) ) {
+					$recovered_payment_id = $this->get_payment_id_from_order( $square_order_id, $order->get_mode() );
+					if ( $recovered_payment_id ) {
+						$order->update_meta_value( 'square_payment_id', $recovered_payment_id );
+						$known_payment_id = $recovered_payment_id;
+						SPC()->log( 'Square payment: recovered payment id ' . $recovered_payment_id . ' from Square order ' . $square_order_id );
+					}
+				}
+
+				if ( $known_payment_id ) {
+					$result = $this->reconcile_order( $order, array( 'force' => true ) );
+					if ( ! empty( $result['action'] ) && $result['action'] === 'finalized' ) {
+						wp_send_json_success( array( 'payment_id' => $order->get_meta_value( 'square_payment_id' ) ) );
+						return;
+					}
+				}
+				wp_send_json_error(
+					array(
+						'reasons' => __( 'Your payment was already submitted and is being verified. Please refresh this page in a moment to continue - you do not need to re-enter your card.', 'sunshine-photo-cart' ),
+					)
+				);
+				return;
+			}
+
 			wp_send_json_error( array( 'reasons' => $body['errors'][0]['detail'] ) );
 			return;
 		}
@@ -1071,41 +1218,60 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			return;
 		}
 
-		SPC()->log( 'Square successful payment' );
+		$payment        = $body['payment'];
+		$payment_status = isset( $payment['status'] ) ? strtoupper( $payment['status'] ) : '';
 
-		$payment = $body['payment'];
+		// PENDING / APPROVED / FAILED / CANCELED handling. Square's autocomplete=true
+		// typically yields COMPLETED, but the API can return non-final states. Without
+		// this branch the gateway used to forward every status as success and the
+		// order would mark itself paid based on a non-final payment.
+		if ( $payment_status === 'FAILED' || $payment_status === 'CANCELED' ) {
+			SPC()->log( 'Square payment ' . $payment['id'] . ' returned status ' . $payment_status );
+			if ( $order && $order->exists() ) {
+				$reason = '';
+				if ( ! empty( $payment['failure_reason'] ) ) {
+					$reason = $payment['failure_reason'];
+				} elseif ( ! empty( $payment['delay_reason'] ) ) {
+					$reason = $payment['delay_reason'];
+				}
+				$order->update_meta_value( 'square_idempotency_key', '' );
+				$log_msg = sprintf( __( 'Square reports payment %1$s as %2$s', 'sunshine-photo-cart' ), $payment['id'], $payment_status );
+				if ( $reason ) {
+					$log_msg .= ': ' . $reason;
+				}
+				$order->set_status( 'failed', $log_msg );
+			}
+			$reason_text = ! empty( $payment['failure_reason'] ) ? $payment['failure_reason'] : __( 'Payment could not be completed', 'sunshine-photo-cart' );
+			wp_send_json_error( array( 'reasons' => $reason_text ) );
+			return;
+		}
+
+		if ( $payment_status !== 'COMPLETED' && $payment_status !== 'APPROVED' ) {
+			// PENDING or unknown - store the payment id so the recovery paths can
+			// finish the order when Square eventually resolves it, but do not let
+			// the form post. Keep the idempotency key so retries land on the same
+			// Square payment instead of creating a parallel one.
+			SPC()->log( 'Square payment ' . $payment['id'] . ' returned non-final status: ' . $payment_status );
+			if ( $order && $order->exists() ) {
+				$this->store_payment_meta( $order, $payment, $square_order_id );
+				$order->add_log( sprintf( __( 'Square payment %1$s returned status %2$s - waiting for completion', 'sunshine-photo-cart' ), $payment['id'], $payment_status ?: 'unknown' ) );
+			}
+			wp_send_json_error(
+				array(
+					'reasons' => __( 'Your payment is still being verified by Square. Please wait a moment and refresh the page to continue.', 'sunshine-photo-cart' ),
+				)
+			);
+			return;
+		}
+
+		if ( $payment_status === 'APPROVED' ) {
+			SPC()->log( 'Square payment ' . $payment['id'] . ' returned APPROVED instead of COMPLETED - forwarding as success since the customer was charged' );
+		} else {
+			SPC()->log( 'Square successful payment' );
+		}
 
 		if ( $order && $order->exists() ) {
-			$order->update_meta_value( 'square_payment_id', $payment['id'] );
-			if ( ! empty( $square_order_id ) ) {
-				$order->update_meta_value( 'square_order_id', $square_order_id );
-			}
-			if ( ! empty( $payment['app_fee_money'] ) ) {
-				$order->update_meta_value( 'square_app_fee', $payment['app_fee_money']['amount'] / 100 );
-			}
-			if ( ! empty( $payment['processing_fee'] ) ) {
-				$processing_fee_total = 0;
-				foreach ( $payment['processing_fee'] as $fee_entry ) {
-					if ( isset( $fee_entry['amount_money']['amount'] ) ) {
-						$processing_fee_total += intval( $fee_entry['amount_money']['amount'] );
-					}
-				}
-				if ( $processing_fee_total > 0 ) {
-					$order->update_meta_value( 'square_processing_fee', $processing_fee_total / 100 );
-				}
-			}
-			if ( ! empty( $payment['card_details']['card'] ) ) {
-				$card = $payment['card_details']['card'];
-				if ( ! empty( $card['last_4'] ) ) {
-					$order->update_meta_value( 'square_card_last_4', $card['last_4'] );
-				}
-				if ( ! empty( $card['card_brand'] ) ) {
-					$order->update_meta_value( 'square_card_brand', $card['card_brand'] );
-				}
-				if ( ! empty( $card['exp_month'] ) && ! empty( $card['exp_year'] ) ) {
-					$order->update_meta_value( 'square_card_expiry', $card['exp_month'] . '/' . $card['exp_year'] );
-				}
-			}
+			$this->store_payment_meta( $order, $payment, $square_order_id );
 		}
 
 		wp_send_json_success( array( 'payment_id' => $payment['id'] ) );
@@ -1125,6 +1291,269 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			return 'new'; // Straight to new.
 		}
 		return $status;
+	}
+
+	private function store_payment_meta( $order, $payment, $square_order_id = '' ) {
+		if ( ! $order || ! $order->exists() || empty( $payment['id'] ) ) {
+			return;
+		}
+		$order->update_meta_value( 'square_payment_id', $payment['id'] );
+		if ( ! empty( $square_order_id ) ) {
+			$order->update_meta_value( 'square_order_id', $square_order_id );
+		}
+		if ( ! empty( $payment['app_fee_money']['amount'] ) ) {
+			$order->update_meta_value( 'square_app_fee', $payment['app_fee_money']['amount'] / 100 );
+		}
+		if ( ! empty( $payment['processing_fee'] ) ) {
+			$processing_fee_total = 0;
+			foreach ( $payment['processing_fee'] as $fee_entry ) {
+				if ( isset( $fee_entry['amount_money']['amount'] ) ) {
+					$processing_fee_total += intval( $fee_entry['amount_money']['amount'] );
+				}
+			}
+			if ( $processing_fee_total > 0 ) {
+				$order->update_meta_value( 'square_processing_fee', $processing_fee_total / 100 );
+			}
+		}
+		if ( ! empty( $payment['card_details']['card'] ) ) {
+			$card = $payment['card_details']['card'];
+			if ( ! empty( $card['last_4'] ) ) {
+				$order->update_meta_value( 'square_card_last_4', $card['last_4'] );
+			}
+			if ( ! empty( $card['card_brand'] ) ) {
+				$order->update_meta_value( 'square_card_brand', $card['card_brand'] );
+			}
+			if ( ! empty( $card['exp_month'] ) && ! empty( $card['exp_year'] ) ) {
+				$order->update_meta_value( 'square_card_expiry', $card['exp_month'] . '/' . $card['exp_year'] );
+			}
+		}
+	}
+
+	public function check_order_paid() {
+
+		if ( ! is_sunshine_page( 'checkout' ) ) {
+			return;
+		}
+
+		$order_id = SPC()->session->get( 'checkout_order_id' );
+		if ( empty( $order_id ) ) {
+			return;
+		}
+
+		$order = sunshine_get_order( $order_id );
+		if ( ! $order || ! $order->exists() ) {
+			return;
+		}
+		if ( $order->get_payment_method() !== $this->id ) {
+			return;
+		}
+		if ( $order->is_paid() ) {
+			return;
+		}
+		if ( empty( $order->get_meta_value( 'square_payment_id' ) ) ) {
+			return;
+		}
+
+		// Burn the 3-attempt retry only inside the fresh-charge window where Square may
+		// still be transitioning APPROVED -> COMPLETED. Outside that window a single
+		// shot is enough; the throttle inside reconcile_order prevents reload-loop hammering.
+		$post_time   = (int) get_post_time( 'U', true, $order->get_id() );
+		$age_seconds = $post_time ? ( time() - $post_time ) : 0;
+		$retry       = ( $age_seconds <= 60 ) ? 3 : 1;
+
+		$result = $this->reconcile_order( $order, array( 'retry' => $retry ) );
+
+		if ( ! empty( $result['action'] ) && $result['action'] === 'finalized' ) {
+			wp_safe_redirect( $order->get_received_permalink() );
+			exit;
+		}
+	}
+
+	public function add_cron_schedule( $schedules ) {
+		if ( ! isset( $schedules['sunshine_square_quarter_hour'] ) ) {
+			$schedules['sunshine_square_quarter_hour'] = array(
+				'interval' => 15 * MINUTE_IN_SECONDS,
+				'display'  => __( 'Every 15 minutes', 'sunshine-photo-cart' ),
+			);
+		}
+		return $schedules;
+	}
+
+	/**
+	 * Safety-net cron: re-check recent orders still stuck in pending against
+	 * Square, in case the synchronous checkout flow never finalized them (e.g.
+	 * the customer was charged then closed the browser before the page returned).
+	 * This NEVER touches a healthy order - those are already paid and excluded
+	 * from the query, and reconcile_order() bails on its is_paid() guard anyway.
+	 */
+	public function reconcile_pending_orders() {
+
+		if ( ! apply_filters( 'sunshine_square_background_reconcile', true ) ) {
+			return;
+		}
+
+		$query = new WP_Query(
+			array(
+				'post_type'      => 'sunshine-order',
+				'post_status'    => 'any',
+				'posts_per_page' => 50,
+				'fields'         => 'ids',
+				'date_query'     => array(
+					array(
+						'after' => '3 days ago',
+					),
+				),
+				'tax_query'      => array(
+					array(
+						'taxonomy' => 'sunshine-order-status',
+						'field'    => 'slug',
+						'terms'    => 'pending',
+					),
+				),
+				'meta_query'     => array(
+					'relation' => 'AND',
+					array(
+						'key'   => 'payment_method',
+						'value' => $this->id,
+					),
+					array(
+						'key'     => 'square_payment_id',
+						'value'   => '',
+						'compare' => '!=',
+					),
+				),
+			)
+		);
+
+		if ( empty( $query->posts ) ) {
+			return;
+		}
+
+		SPC()->log( 'Square background reconcile: checking ' . count( $query->posts ) . ' pending order(s)' );
+
+		$finalized = 0;
+		foreach ( $query->posts as $order_id ) {
+			$order = sunshine_get_order( $order_id );
+			if ( ! $order || ! $order->exists() ) {
+				continue;
+			}
+			$result = $this->reconcile_order( $order );
+			if ( ! empty( $result['action'] ) && $result['action'] === 'finalized' ) {
+				++$finalized;
+			}
+		}
+
+		SPC()->log( 'Square background reconcile: finalized ' . $finalized . ' order(s)' );
+	}
+
+	public function reconcile_order( $order, $args = array() ) {
+
+		$defaults = array(
+			'retry' => 1,
+			'force' => false,
+		);
+		$args     = wp_parse_args( $args, $defaults );
+		$retry    = max( 1, intval( $args['retry'] ) );
+		$force    = ! empty( $args['force'] );
+
+		if ( ! $order || ! $order->exists() ) {
+			return array( 'ok' => false, 'action' => 'invalid', 'error' => 'Order missing' );
+		}
+
+		if ( $order->get_payment_method() !== $this->id ) {
+			return array( 'ok' => false, 'action' => 'invalid', 'error' => 'Not a Square order' );
+		}
+
+		if ( $order->is_paid() ) {
+			return array( 'ok' => true, 'action' => 'already_paid' );
+		}
+
+		$payment_id = $order->get_meta_value( 'square_payment_id' );
+		if ( empty( $payment_id ) ) {
+			return array( 'ok' => false, 'action' => 'invalid', 'error' => 'No square_payment_id on order' );
+		}
+
+		if ( ! $force ) {
+			$last_check = (int) $order->get_meta_value( 'square_last_reconcile_check' );
+			if ( $last_check && ( current_time( 'timestamp' ) - $last_check ) < 30 ) {
+				return array( 'ok' => true, 'action' => 'throttled' );
+			}
+		}
+
+		$lock_key = 'spc_square_reconcile_' . $payment_id;
+		if ( get_transient( $lock_key ) ) {
+			return array( 'ok' => true, 'action' => 'in_progress' );
+		}
+		set_transient( $lock_key, 1, 30 );
+
+		$mode = $order->get_mode();
+		if ( ! $this->get_access_token( $mode ) ) {
+			delete_transient( $lock_key );
+			return array( 'ok' => false, 'action' => 'invalid', 'error' => 'No Square access token for mode ' . $mode );
+		}
+		$this->environmentUrl = ( $mode === 'live' ) ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com';
+
+		$payment = null;
+		for ( $attempt = 1; $attempt <= $retry; $attempt++ ) {
+			$response = $this->api_request( 'v2/payments/' . $payment_id, '', 'GET', $mode );
+			if ( is_wp_error( $response ) ) {
+				SPC()->log( 'reconcile_order: Square API WP_Error for ' . $payment_id . ': ' . $response->get_error_message() );
+				delete_transient( $lock_key );
+				return array( 'ok' => false, 'action' => 'error', 'error' => $response->get_error_message() );
+			}
+			$body = json_decode( wp_remote_retrieve_body( $response ), true );
+			if ( ! empty( $body['payment']['status'] ) ) {
+				$payment = $body['payment'];
+				if ( strtoupper( $payment['status'] ) === 'COMPLETED' ) {
+					break;
+				}
+			}
+			if ( $attempt < $retry ) {
+				sleep( 1 );
+			}
+		}
+
+		$order->update_meta_value( 'square_last_reconcile_check', current_time( 'timestamp' ) );
+
+		if ( empty( $payment ) ) {
+			delete_transient( $lock_key );
+			SPC()->log( 'reconcile_order: empty payment response for ' . $payment_id );
+			return array( 'ok' => false, 'action' => 'error', 'error' => 'Empty Square response' );
+		}
+
+		$status = strtoupper( $payment['status'] );
+
+		if ( $status === 'COMPLETED' ) {
+			$square_order_id = ! empty( $payment['order_id'] ) ? $payment['order_id'] : '';
+			$this->store_payment_meta( $order, $payment, $square_order_id );
+			$order->add_log( sprintf( __( 'Square payment %s reconciled as COMPLETED', 'sunshine-photo-cart' ), $payment_id ) );
+			SPC()->log( 'reconcile_order: finalizing order ' . $order->get_id() . ' for Square payment ' . $payment_id );
+			SPC()->cart->post_process_order( $order );
+			$order->update_meta_value( 'paid_date', current_time( 'timestamp' ) );
+			delete_transient( $lock_key );
+			return array( 'ok' => true, 'action' => 'finalized' );
+		}
+
+		if ( $status === 'FAILED' || $status === 'CANCELED' ) {
+			$reason = '';
+			if ( ! empty( $payment['failure_reason'] ) ) {
+				$reason = $payment['failure_reason'];
+			} elseif ( ! empty( $payment['delay_reason'] ) ) {
+				$reason = $payment['delay_reason'];
+			}
+			$log_msg = sprintf( __( 'Square reports payment %1$s as %2$s', 'sunshine-photo-cart' ), $payment_id, $status );
+			if ( $reason ) {
+				$log_msg .= ': ' . $reason;
+			}
+			$order->set_status( 'failed', $log_msg );
+			$order->update_meta_value( 'square_idempotency_key', '' );
+			delete_transient( $lock_key );
+			return array( 'ok' => true, 'action' => 'marked_failed', 'error' => $reason );
+		}
+
+		// APPROVED, PENDING, or anything else - leave alone, recovery will try again later.
+		delete_transient( $lock_key );
+		return array( 'ok' => true, 'action' => 'still_pending', 'error' => $status );
 	}
 
 	public function get_transaction_id( $order ) {
@@ -1211,6 +1640,11 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 	function order_actions( $actions, $post_id ) {
 		$order = new SPC_Order( $post_id );
 		if ( $order->get_payment_method() == $this->id ) {
+			// Only offer recheck for orders still awaiting payment that have a
+			// Square payment id to look up. Paid orders have nothing to recover.
+			if ( ! $order->is_paid() && $order->get_meta_value( 'square_payment_id' ) ) {
+				$actions['square_recheck'] = __( 'Recheck payment status in Square', 'sunshine-photo-cart' );
+			}
 			$actions['square_refund'] = __( 'Refund payment in Square', 'sunshine-photo-cart' );
 		}
 		return $actions;
@@ -1259,6 +1693,19 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 		$payment_id = $this->get_transaction_id( $order );
 
+		// Refunds run against the mode the order was placed in. If there are no
+		// Square credentials for that mode (e.g. the order was placed in a different
+		// mode than is currently connected), fail clearly instead of letting the
+		// request go out with an empty environment URL.
+		if ( ! $this->get_access_token( $order->get_mode() ) ) {
+			/* translators: %s is the order's Square mode (live or test) */
+			$msg = sprintf( __( 'Could not refund payment: no Square credentials are connected for this order\'s mode (%s). This order may have been placed under a different Square connection.', 'sunshine-photo-cart' ), $order->get_mode() );
+			SPC()->log( 'Square refund aborted for order ' . $order_id . ': ' . $msg );
+			SPC()->notices->delete_admin( 'square_refund_fail_' . $payment_id );
+			SPC()->notices->add_admin( 'square_refund_fail_' . $payment_id, $msg, 'error' );
+			return;
+		}
+
 		$args = array(
 			'idempotency_key' => md5( time() . $payment_id ),
 			'payment_id'      => $payment_id,
@@ -1278,23 +1725,39 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			);
 		}
 
+		$fail_key = 'square_refund_fail_' . $payment_id;
+		// Clear any prior failure notice for this payment so a fresh attempt always
+		// surfaces its result (admin notices dedupe by key and skip when dismissed).
+		SPC()->notices->delete_admin( $fail_key );
+
+		SPC()->log( 'Square refund request for payment ' . $payment_id . ': ' . wp_json_encode( $args ) );
+
 		$response = $this->api_request( 'v2/refunds', $args );
 
 		if ( is_wp_error( $response ) ) {
-			/* translators: %s is the error reasons */
-			SPC()->notices->add_admin( 'square_refund_fail_' . $payment_id, sprintf( __( 'Could not refund payment: %s', 'sunshine-photo-cart' ), print_r( $reasons, 1 ) ), 'error' );
+			$error_message = $response->get_error_message();
+			SPC()->log( 'Square refund WP_Error for payment ' . $payment_id . ': ' . $error_message );
+			/* translators: %s is the error message */
+			SPC()->notices->add_admin( $fail_key, sprintf( __( 'Could not refund payment: %s', 'sunshine-photo-cart' ), $error_message ), 'error' );
 			return;
 		}
 
-		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+		$response_code = wp_remote_retrieve_response_code( $response );
+		$raw_body      = wp_remote_retrieve_body( $response );
+		SPC()->log( 'Square refund response (HTTP ' . $response_code . ') for payment ' . $payment_id . ': ' . $raw_body );
+
+		$body = json_decode( $raw_body, true );
 		if ( ! empty( $body['errors'] ) ) {
+			$detail = ! empty( $body['errors'][0]['detail'] ) ? $body['errors'][0]['detail'] : ( ! empty( $body['errors'][0]['code'] ) ? $body['errors'][0]['code'] : __( 'Unknown error', 'sunshine-photo-cart' ) );
+			SPC()->log( 'Square refund errors for payment ' . $payment_id . ': ' . wp_json_encode( $body['errors'] ) );
 			/* translators: %s is the error detail message */
-			SPC()->notices->add_admin( 'square_refund_fail_' . $payment_id, sprintf( __( 'Could not refund payment: %s', 'sunshine-photo-cart' ), $body['errors'][0]['detail'] ), 'error' );
+			SPC()->notices->add_admin( $fail_key, sprintf( __( 'Could not refund payment: %s', 'sunshine-photo-cart' ), $detail ), 'error' );
 			return;
 		}
 
 		if ( empty( $body['refund'] ) ) {
-			SPC()->notices->add_admin( 'square_refund_fail_' . $payment_id, __( 'Could not refund payment', 'sunshine-photo-cart' ), 'error' );
+			SPC()->log( 'Square refund: no refund object in response for payment ' . $payment_id . ': ' . $raw_body );
+			SPC()->notices->add_admin( $fail_key, __( 'Could not refund payment: Square did not return a refund', 'sunshine-photo-cart' ), 'error' );
 			return;
 		}
 
@@ -1313,6 +1776,48 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		if ( ! empty( $_POST['square_refund_notify'] ) ) {
 			$order->notify( false );
 			SPC()->notices->add_admin( 'square_refund_notify_' . $payment_id, __( 'Customer sent email about refund', 'sunshine-photo-cart' ) );
+		}
+
+	}
+
+	public function process_recheck( $order_id ) {
+
+		$order = new SPC_Order( $order_id );
+		if ( ! $order || ! $order->exists() ) {
+			return;
+		}
+
+		$payment_id = $order->get_meta_value( 'square_payment_id' );
+
+		$result = $this->reconcile_order( $order, array( 'force' => true ) );
+		$action = isset( $result['action'] ) ? $result['action'] : 'unknown';
+		$key    = 'square_recheck_' . $payment_id;
+
+		switch ( $action ) {
+			case 'finalized':
+				SPC()->notices->add_admin( $key, __( 'Square confirmed this payment was completed. The order has been finalized.', 'sunshine-photo-cart' ), 'success' );
+				break;
+			case 'already_paid':
+				SPC()->notices->add_admin( $key, __( 'This order is already marked as paid.', 'sunshine-photo-cart' ) );
+				break;
+			case 'marked_failed':
+				$reason = ! empty( $result['error'] ) ? ' (' . $result['error'] . ')' : '';
+				/* translators: %s is the Square failure reason, if any */
+				SPC()->notices->add_admin( $key, sprintf( __( 'Square reports this payment failed or was canceled%s. The order has been marked as failed.', 'sunshine-photo-cart' ), $reason ), 'error' );
+				break;
+			case 'still_pending':
+				$status = ! empty( $result['error'] ) ? $result['error'] : 'PENDING';
+				/* translators: %s is the Square payment status */
+				SPC()->notices->add_admin( $key, sprintf( __( 'Square still reports this payment as %s. The order remains pending. Try again in a moment.', 'sunshine-photo-cart' ), $status ), 'warning' );
+				break;
+			case 'in_progress':
+				SPC()->notices->add_admin( $key, __( 'A recheck for this payment is already running. Please wait a moment and try again.', 'sunshine-photo-cart' ), 'warning' );
+				break;
+			default:
+				$error = ! empty( $result['error'] ) ? $result['error'] : __( 'Could not reach Square', 'sunshine-photo-cart' );
+				/* translators: %s is the error message */
+				SPC()->notices->add_admin( $key, sprintf( __( 'Could not recheck this payment: %s', 'sunshine-photo-cart' ), $error ), 'error' );
+				break;
 		}
 
 	}

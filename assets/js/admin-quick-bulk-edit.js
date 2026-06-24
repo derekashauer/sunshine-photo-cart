@@ -63,10 +63,17 @@
 		if ( ! $inputs.length ) {
 			return;
 		}
+		// Checkbox fields render a hidden "0" input alongside the checkbox under the
+		// same name, so target the checkbox itself and set only its checked state.
+		// Calling .val() here would overwrite the checkbox's value="1", making a
+		// checked box submit an empty value.
+		var $checkbox = $inputs.filter( 'input[type="checkbox"]' );
+		if ( $checkbox.length ) {
+			$checkbox.prop( 'checked', value === '1' );
+			return;
+		}
 		var first = $inputs.get( 0 );
-		if ( first.type === 'checkbox' ) {
-			$inputs.prop( 'checked', value === '1' );
-		} else if ( first.type === 'radio' ) {
+		if ( first.type === 'radio' ) {
 			$inputs.each( function () {
 				$( this ).prop( 'checked', this.value === value );
 			} );

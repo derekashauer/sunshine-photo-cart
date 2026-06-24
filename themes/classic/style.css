@@ -9,7 +9,7 @@ body { padding: 0; margin: 0; min-height: 100%; }
 #sunshine--logo img { max-width: 100%; }
 #sunshine--logo a { color: #FFF; }
 
-#sunshine--header .sunshine--main-menu { margin: 30px auto; }
+#sunshine--header .sunshine--main-menu { margin: 30px auto; background: none; }
 #sunshine--header .sunshine--main-menu--toggle,
 #sunshine--header .sunshine--main-menu input { display: none; }
 #sunshine--header .sunshine--main-menu ul { display: flex; flex-direction: column; gap: 20px; padding: 0; margin: 0; }
@@ -38,8 +38,6 @@ body > #sunshine--main-menu { position: fixed; z-index: 99997; left: 0; bottom: 
 	#sunshine--logo img { max-width: 200px; }
 	#sunshine--main-menu { margin: 30px 0 0 0; }
 	#sunshine--main-menu ul { flex-direction: row; }
-	#sunshine--main-menu li.sunshine--account,
-	#sunshine--main-menu li.sunshine--login { flex-grow: 10; text-align: right; }
 
 	#sunshine { padding: 75px 5%; }
 
@@ -60,5 +58,7 @@ body > #sunshine--main-menu { position: fixed; z-index: 99997; left: 0; bottom: 
 	#sunshine--header #sunshine--main-menu input[type="checkbox"]:checked ~ .sunshine--main-menu--close { display: block !important; position: fixed; z-index: 99999; top: 15px; right: 15px; }
 	#sunshine--header #sunshine--main-menu ul { flex-direction: column; position: relative; top: 50%; transform: translateY(-50%); text-align: center; }
 	#sunshine--header #sunshine--main-menu li { display: block !important; text-align: center !important; }
+	#sunshine--main-menu li.sunshine--account,
+	#sunshine--main-menu li.sunshine--login { flex-grow: 10; text-align: right; }
 
 }

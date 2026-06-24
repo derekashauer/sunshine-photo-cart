@@ -13,6 +13,7 @@ class SPC_Cart {
 	protected $discount_names         = array();
 	protected $discount               = 0.00;
 	protected $discount_taxable_total = 0.00;
+	protected $discount_tax           = 0.00;
 	// protected $taxable     = 0.00;
 	protected $tax_rate    = array();
 	public $tax            = 0.00;
@@ -122,6 +123,19 @@ class SPC_Cart {
 		} else {
 			$this->set_discounts();
 			$this->set_tax();
+		}
+
+		// Recalculate the payment method fee now that discounts and tax are set.
+		// A percentage fee is based on get_total( array( 'fees' ) ), but set_payment_method()
+		// runs earlier in setup() (before set_discounts()), so without this the fee would be a
+		// percentage of the pre-discount total and gateways would be sent a higher amount.
+		if ( $this->payment_method ) {
+			$fee = $this->payment_method->get_fee();
+			if ( ! empty( $fee ) ) {
+				$this->add_fee( 'payment_method', $fee['amount'], $fee['name'] );
+			} else {
+				$this->remove_fee( 'payment_method' );
+			}
 		}
 
 		$this->get_total();
@@ -639,8 +653,14 @@ class SPC_Cart {
 	public function get_discount() {
 		return number_format( $this->discount, 2, '.', '' );
 	}
+	public function get_discount_tax() {
+		return number_format( round( $this->discount_tax, 2 ), 2, '.', '' );
+	}
 	public function get_discount_formatted() {
-		return '-' . sunshine_price( $this->get_discount() );
+		// Mirror get_subtotal_formatted()/get_shipping_formatted(): show the gross discount in
+		// with-tax mode and the ex-tax (base) discount in without-tax mode so the column balances.
+		$discount_tax = (float) $this->get_discount_tax();
+		return '-' . sunshine_get_price_to_display( (float) $this->get_discount() - $discount_tax, $discount_tax );
 	}
 
 	public function get_tax_rate() {
@@ -756,8 +776,9 @@ class SPC_Cart {
 
 	public function set_tax() {
 
-		$this->tax      = 0;
-		$this->tax_rate = $this->get_tax_rate();
+		$this->tax          = 0;
+		$this->discount_tax = 0;
+		$this->tax_rate     = $this->get_tax_rate();
 
 		if ( ! $this->tax_rate ) {
 			return;
@@ -781,6 +802,11 @@ class SPC_Cart {
 				$discounted      = max( $taxable_items_total - $this->discount_taxable_total, 0 );
 				$discounted_base = round( $discounted / ( $this->tax_rate['rate'] + 1 ), 2 );
 				$this->tax       = $discounted - $discounted_base;
+
+				// The discount itself is tax-inclusive, so split out its tax portion.
+				// This lets gateways (PayPal) and ex-tax displays reconcile the breakdown.
+				$discount_base      = round( $this->discount_taxable_total / ( $this->tax_rate['rate'] + 1 ), 2 );
+				$this->discount_tax = $this->discount_taxable_total - $discount_base;
 			} else {
 				// No cart-level discount, sum item taxes.
 				foreach ( $contents as $item ) {
@@ -2146,6 +2172,7 @@ class SPC_Cart {
 		$order->set_shipping_tax( $this->get_shipping_tax() );
 		$order->set_tax( $this->get_tax() );
 		$order->set_discount( $this->get_discount() );
+		$order->set_discount_tax( $this->get_discount_tax() );
 		$order->set_discount_names( $this->get_discount_names() );
 		$order->set_discounts( $this->get_discounts() );
 		$order->set_credits( $this->get_credits_applied() );

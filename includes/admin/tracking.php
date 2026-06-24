@@ -64,7 +64,7 @@ function sunshine_tracking_send() {
 	$order_ids           = ! empty( $orders->order_ids ) ? array_map( 'intval', explode( ',', $orders->order_ids ) ) : array();
 	$refunds_total       = sunshine_get_orders_refund_total( $order_ids );
 	$data['order_count'] = $orders->order_count;
-	$data['order_total'] = round( $orders->total, 2 );
+	$data['order_total'] = round( (float) $orders->total, 2 );
 	// `order_total` stays gross for backward compatibility with anyone parsing
 	// existing telemetry. The two new fields below let us see the refund picture.
 	$data['order_refunds_total'] = round( $refunds_total, 2 );
@@ -93,7 +93,7 @@ function sunshine_tracking_send() {
 			WHERE {$wpdb->prefix}posts.post_type = 'sunshine-order'
 			";
 	$orders                       = $wpdb->get_row( $sql );
-	$data['square_app_fee']       = round( $orders->total, 2 );
+	$data['square_app_fee']       = round( (float) $orders->total, 2 );
 	$data['square_app_fee_count'] = (int) $orders->order_count;
 
 	// Stripe app fee totals
@@ -106,7 +106,7 @@ function sunshine_tracking_send() {
 			WHERE {$wpdb->prefix}posts.post_type = 'sunshine-order'
 			";
 	$orders                       = $wpdb->get_row( $sql );
-	$data['stripe_app_fee']       = round( $orders->total, 2 );
+	$data['stripe_app_fee']       = round( (float) $orders->total, 2 );
 	$data['stripe_app_fee_count'] = (int) $orders->order_count;
 
 	$result              = $wpdb->get_var(

@@ -962,7 +962,7 @@ class Sunshine_Admin {
 			$form_fields['sunshine_watermark'] = array(
 				'label' => __( 'Watermark', 'sunshine-photo-cart' ),
 				'input' => 'html',
-				'html'  => "<input type='checkbox' name='attachments[{$post->ID}][sunshine_watermark]' value='1' " . checked( $watermark, 1, false ) . ' />',
+				'html'  => "<input type='checkbox' name='attachments[{$post->ID}][sunshine_watermark]' value='1' " . checked( ! empty( $watermark ), true, false ) . ' />',
 			);
 
 		}

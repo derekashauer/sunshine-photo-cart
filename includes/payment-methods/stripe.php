@@ -398,26 +398,24 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		}
 		$result   = wp_unslash( $_POST['result'] );
 		$order_id = SPC()->session->get( 'checkout_order_id' );
-		if ( $order_id ) {
-			$order = sunshine_get_order( $order_id );
-
-			if ( ! empty( $result['error'] ) ) {
-				SPC()->log( 'Stripe payment error: ' . print_r( $result['error'], true ) );
-				// Set order to failed.
-				$order_id = SPC()->session->get( 'checkout_order_id' );
-				if ( $order_id ) {
-					$order = sunshine_get_order( $order_id );
-					$order->set_status( 'failed' );
-					SPC()->log( 'Stripe payment error: ' . print_r( $result['error'], true ) );
-				}
-				return;
-			}
-
-			SPC()->log( 'Stripe payment result logged: ' . print_r( $result, true ) );
-			if ( ! empty( $result['error'] ) ) {
-				$order->add_log( 'Stripe payment error: ' . $result['error']['message'] );
-			}
+		if ( ! $order_id ) {
+			return;
 		}
+
+		$order = sunshine_get_order( $order_id );
+
+		if ( ! empty( $result['error'] ) ) {
+			SPC()->log( 'Stripe payment error: ' . print_r( $result['error'], true ) );
+			$order->add_log( 'Stripe payment error: ' . $result['error']['message'] );
+			// A JS error can be transient (e.g. a failed first attempt before a successful retry on
+			// the same intent). Never fail an order the webhook has already marked paid.
+			if ( ! $order->is_paid() ) {
+				$order->set_status( 'failed' );
+			}
+			return;
+		}
+
+		SPC()->log( 'Stripe payment result logged: ' . print_r( $result, true ) );
 	}
 
 	public function show_payment_intent_id() {
@@ -2349,6 +2347,11 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 		SPC()->log( 'Stripe payment intent verified as succeeded: ' . $payment_intent_id );
 
+		// Resync the stored intent ID to the one that actually paid. init_order stored the intent
+		// from page load, which can be stale if the intent was recreated mid-checkout; keeping this
+		// accurate ensures the webhook and refunds can match the order by intent ID.
+		$order->update_meta_value( 'stripe_payment_intent_id', $payment_intent_id );
+
 		$order->update_meta_value( 'paid_date', current_time( 'timestamp' ) );
 
 		if ( ! empty( $payment_intent_object['source'] ) ) {
@@ -2441,20 +2444,31 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			return;
 		}
 
-		if ( ! empty( $payment_intent_object['status'] ) && $payment_intent_object['status'] == 'succeeded' ) {
-			$order = SPC()->cart->process_order();
-			if ( $order ) {
-				$url = apply_filters( 'sunshine_checkout_redirect', $order->get_received_permalink() );
-				SPC()->log( 'Created new order after stripe asynchronous payment and is redirecting' );
-				wp_safe_redirect( $url );
-				exit;
-			}
+		$status = ! empty( $payment_intent_object['status'] ) ? $payment_intent_object['status'] : '';
+
+		// Payment succeeded. Complete the order if we still can; otherwise the webhook has already
+		// (or will) complete it. Never mark a succeeded payment failed.
+		if ( $status == 'succeeded' ) {
+			$processed = SPC()->cart->process_order();
+			$redirect  = ( $processed ) ? $processed->get_received_permalink() : $order->get_received_permalink();
+			SPC()->log( 'Stripe asynchronous payment succeeded, redirecting to order received' );
+			wp_safe_redirect( apply_filters( 'sunshine_checkout_redirect', $redirect ) );
+			exit;
 		}
 
-		$order->set_status( 'failed' );
-		$order->add_log( 'Order failed from stripe asynchronous payment' );
-		SPC()->notices->add( __( 'Could not process order, please try another payment method', 'sunshine-photo-cart' ), 'error' );
-		wp_safe_redirect( sunshine_get_page_url( 'checkout' ) );
+		// Only mark failed on a genuinely terminal state, and never override an already-paid order.
+		if ( ! $order->is_paid() && in_array( $status, array( 'canceled', 'requires_payment_method' ), true ) ) {
+			$order->set_status( 'failed' );
+			$order->add_log( 'Order failed from stripe asynchronous payment (status: ' . $status . ')' );
+			SPC()->notices->add( __( 'Could not process order, please try another payment method', 'sunshine-photo-cart' ), 'error' );
+			wp_safe_redirect( sunshine_get_page_url( 'checkout' ) );
+			exit;
+		}
+
+		// Still processing (e.g. processing / requires_action) — leave the order pending and let the
+		// webhook complete it. Send the customer to the order received page rather than failing.
+		SPC()->log( 'Stripe asynchronous payment not yet complete (status: ' . $status . '), leaving for webhook' );
+		wp_safe_redirect( $order->get_received_permalink() );
 		exit;
 
 	}
@@ -2661,6 +2675,17 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		if ( $event_type === 'payment_intent.succeeded' ) {
 			$payment_intent = $event['data']['object'];
 			$order          = $this->get_order_by_payment_intent( $payment_intent['id'] );
+
+			// Fallback: the stored intent ID can be stale if the intent was recreated mid-checkout
+			// (amount change, idempotency retry, customer re-attempt). The succeeded intent always
+			// carries the order post ID in metadata, so match on that and resync the stored ID.
+			if ( ( ! $order || ! $order->exists() ) && ! empty( $payment_intent['metadata']['order_id'] ) ) {
+				$order = sunshine_get_order( $payment_intent['metadata']['order_id'] );
+				if ( $order && $order->exists() ) {
+					$order->update_meta_value( 'stripe_payment_intent_id', $payment_intent['id'] );
+					SPC()->log( 'Stripe Webhook: matched order via metadata.order_id fallback: ' . $order->get_id() );
+				}
+			}
 
 			if ( ! $order || ! $order->exists() ) {
 				SPC()->log( 'Could not find order by payment intent in webhook: ' . $payment_intent['id'] );

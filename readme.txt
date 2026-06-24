@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 3.6.10.1
+Stable tag: 3.6.11-beta3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,12 +243,31 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.6.11 =
+* New: As a safety net, Square re-checks recent pending orders in the background so a payment that completes after the customer closes their browser still finalizes on its own. Normal orders are unaffected (they finalize instantly at checkout), and this background check can be disabled with the sunshine_square_background_reconcile filter
+* New: Reconcile Pending Square Orders tool under Sunshine → Tools to check any existing pending Square orders against Square's API and finalize the ones Square reports as completed
+* New: "Recheck payment status in Square" order action to verify a single pending Square order against Square and finalize it from the order screen
+* Fix: Re-submitting a Square payment (re-entering a card after a prior attempt) no longer shows a confusing "Different request parameters used for the same idempotency_key" error; the gateway now skips charging an already-paid order and recovers the original payment instead of charging again, including the case where the first charge succeeded but its response was lost before the order recorded it (the payment is located via the Square order and the order is finalized)
+* Fix: The checkout button is now disabled and shows "Processing payment..." while a Square charge is in flight, so a slow charge no longer tempts buyers to click again or refresh (which was the main cause of the duplicate-submission error)
+* Fix: A failed Square refund now reports the actual reason in the admin notice and the log instead of failing silently, and refunds against an order whose Square mode has no connected credentials now show a clear message
+* Fix: Quick Edit checkbox fields (such as a product's Taxable setting) did not save when checked, leaving the value empty
+* Security: Removed three unused admin AJAX handlers that lacked capability and nonce checks, which could let a logged-in non-admin read or alter image metadata on photos in private galleries
+* Fix: The per-image Watermark checkbox on the attachment edit screen showed unchecked even when the image was set to be watermarked
+* Fix: PayPal rejecting tax-included orders with a discount due to a breakdown mismatch
+* Fix: Percentage payment fees charging more than the cart total when a discount was applied
+* Fix: Account endpoints could return a 404 after their slug was changed because the rewrite rules were never refreshed; saving any account endpoint setting now flushes rewrite rules automatically, and rewrite rules are also refreshed when the plugin updates
+* Fix: The Account Details and View Order account endpoints used a different default slug on the settings screen than the one actually registered, which could cause those pages to 404 after saving settings; the defaults now match
+* Fix: Square orders could be left in pending status after the customer was charged at Square. The gateway now validates Square's payment status before completing the order and recovers any stuck orders on the next checkout page load
+* Fix: Square orders on stores with tax-inclusive pricing and a discount sent a total to Square that did not match Sunshine's total, so the line-item breakdown did not appear in the Square dashboard; Square is now told the tax is included in the price so its computed total matches and the itemization shows
+* Fix: Stripe orders could be left on "Pending Payment" after a successful charge when the payment was retried at checkout
+* Fix: Stripe orders could be marked "Failed" even though the payment succeeded
+
 = 3.6.10.1 - May 28, 2026 =
 * Fix: Galleries returning 404 after upgrading to 3.6.10 caused by a change in how option defaults were resolved
 * Fix: Sites that had favorites disabled before 3.6.0 had their setting silently re-enabled by the 3.6.0 migration; favorites are now restored to their original disabled state
 * Enhancement: Dashboard widget now reports net revenue (gross minus refunds) for this month, last month, and lifetime totals
 
-= 3.6.10 =
+= 3.6.10 - May 27, 2026 =
 * New: Pickup is now a cloneable shipping method. Configure multiple pickup locations — each with its own price, taxability, and customer-facing details — and each appears as its own option at the delivery step on checkout
 * Fix: Disabling favorites in settings did not hide the favorite button in the image menu or the Favorites link in the main navigation
 * Fix: Update detection used a string comparison that failed for certain version transitions, so post-update routines did not run

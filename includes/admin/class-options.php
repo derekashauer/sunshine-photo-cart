@@ -938,15 +938,24 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 		}
 
 		function flush_endpoint_rewrite_rules_check() {
+			if ( empty( $this->settings ) || ! is_array( $this->settings ) ) {
+				return;
+			}
 			$flush = false;
-			if ( isset( $_POST['sunshine_endpoint_gallery'] ) && SPC()->get_option( 'endpoint_gallery' ) != $_POST['sunshine_endpoint_gallery'] ) {
-				$flush = true;
-			}
-			if ( isset( $_POST['sunshine_endpoint_order_received'] ) && SPC()->get_option( 'endpoint_order_received' ) != $_POST['sunshine_endpoint_order_received'] ) {
-				$flush = true;
-			}
-			if ( isset( $_POST['sunshine_endpoint_store'] ) && SPC()->get_option( 'endpoint_store' ) != $_POST['sunshine_endpoint_store'] ) {
-				$flush = true;
+			foreach ( $this->settings as $section ) {
+				if ( empty( $section['fields'] ) ) {
+					continue;
+				}
+				foreach ( $section['fields'] as $field ) {
+					if ( empty( $field['id'] ) || strpos( $field['id'], 'endpoint' ) === false ) {
+						continue;
+					}
+					$post_key = $this->prefix . $field['id'];
+					if ( isset( $_POST[ $post_key ] ) && SPC()->get_option( $field['id'] ) != $_POST[ $post_key ] ) {
+						$flush = true;
+						break 2;
+					}
+				}
 			}
 			if ( $flush ) {
 				update_option( 'sunshine_flush_rewrite_rules', true, false );

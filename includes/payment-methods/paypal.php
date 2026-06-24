@@ -490,12 +490,15 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 
 		check_ajax_referer( 'sunshine_checkout_paypal_create_order', 'security' );
 
-		$items = array();
+		$items      = array();
+		$item_total = 0;
 		foreach ( SPC()->cart->get_cart_items() as $cart_item ) {
-			$items[] = array(
+			$unit_amount = round( $cart_item->get_price(), 2 );
+			$item_total += $unit_amount * $cart_item->get_qty();
+			$items[]     = array(
 				'name'        => $cart_item->get_name_raw(),
 				'unit_amount' => array(
-					'value'         => (string) round( $cart_item->get_price(), 2 ),
+					'value'         => (string) $unit_amount,
 					'currency_code' => SPC()->get_option( 'currency' ),
 				),
 				'quantity'    => $cart_item->get_qty(),
@@ -505,10 +508,12 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 		$fees = SPC()->cart->get_fees();
 		if ( ! empty( $fees ) ) {
 			foreach ( $fees as $fee ) {
-				$items[] = array(
+				$unit_amount = round( $fee['amount'], 2 );
+				$item_total += $unit_amount;
+				$items[]     = array(
 					'name'        => $fee['name'],
 					'unit_amount' => array(
-						'value'         => (string) round( $fee['amount'], 2 ),
+						'value'         => (string) $unit_amount,
 						'currency_code' => SPC()->get_option( 'currency' ),
 					),
 					'quantity'    => 1,
@@ -516,28 +521,45 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 			}
 		}
 
+		// PayPal requires the breakdown to reconcile exactly or it returns 422:
+		//   1. item_total == sum( unit_amount * quantity ) across items[] (guaranteed above).
+		//   2. amount.value == item_total + tax_total + shipping - discount.
+		// amount.value is the true charge (get_total()); tax and shipping are sent ex-tax-of-discount
+		// already, so the discount line is whatever balances the equation. With the cart's discount
+		// tax/base split now correct, this equals the real ex-tax discount (cart + line-item + credits).
+		$item_total      = round( $item_total, 2 );
+		$tax_total       = round( SPC()->cart->get_tax(), 2 );
+		$shipping_amount = round( SPC()->cart->get_shipping(), 2 );
+		$amount          = (float) SPC()->cart->get_total();
+		$discount        = round( $item_total + $tax_total + $shipping_amount - $amount, 2 );
+		if ( $discount < 0 ) {
+			// Should never happen; would indicate an upstream total/breakdown bug.
+			SPC()->log( 'PayPal breakdown produced a negative discount (' . $discount . '); clamping to 0. item_total=' . $item_total . ' tax=' . $tax_total . ' shipping=' . $shipping_amount . ' amount=' . $amount );
+			$discount = 0;
+		}
+
 		$order_args = array(
 			'intent'              => 'CAPTURE',
 			'purchase_units'      => array(
 				array(
 					'amount' => array(
-						'value'         => (string) SPC()->cart->get_total(),
+						'value'         => (string) $amount,
 						'currency_code' => SPC()->get_option( 'currency' ),
 						'breakdown'     => array(
 							'item_total' => array(
-								'value'         => (string) round( SPC()->cart->get_subtotal() + SPC()->cart->get_fees_total(), 2 ),
+								'value'         => (string) $item_total,
 								'currency_code' => SPC()->get_option( 'currency' ),
 							),
 							'tax_total'  => array(
-								'value'         => (string) round( SPC()->cart->get_tax(), 2 ),
+								'value'         => (string) $tax_total,
 								'currency_code' => SPC()->get_option( 'currency' ),
 							),
 							'shipping'   => array(
-								'value'         => (string) round( SPC()->cart->get_shipping(), 2 ),
+								'value'         => (string) $shipping_amount,
 								'currency_code' => SPC()->get_option( 'currency' ),
 							),
 							'discount'   => array(
-								'value'         => (string) round( SPC()->cart->get_discount() + SPC()->cart->get_credits_applied(), 2 ),
+								'value'         => (string) $discount,
 								'currency_code' => SPC()->get_option( 'currency' ),
 							),
 						),
@@ -573,6 +595,29 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 
 		SPC()->log( $order_args );
 
+		// DEBUG: Verify the breakdown reconciles before sending to PayPal.
+		// PayPal rejects (422) unless BOTH of these hold:
+		//   1. item_total == sum( unit_amount * quantity ) across items[]
+		//   2. amount.value == item_total + tax_total + shipping - discount
+		$dbg_items_sum = 0;
+		foreach ( $items as $dbg_item ) {
+			$dbg_items_sum += round( (float) $dbg_item['unit_amount']['value'], 2 ) * (float) $dbg_item['quantity'];
+		}
+		$dbg_items_sum     = round( $dbg_items_sum, 2 );
+		$dbg_breakdown_sum = round( $item_total + $tax_total + $shipping_amount - $discount, 2 );
+		SPC()->log(
+			'PayPal breakdown debug | price_has_tax=' . SPC()->get_option( 'price_has_tax' ) .
+			' display_price=' . SPC()->get_option( 'display_price' ) .
+			' | item_total=' . $item_total .
+			' tax_total=' . $tax_total .
+			' shipping=' . $shipping_amount .
+			' discount=' . $discount .
+			' amount=' . $amount .
+			' | cart: subtotal=' . SPC()->cart->get_subtotal() . ' tax=' . SPC()->cart->get_tax() . ' discount=' . SPC()->cart->get_discount() . ' discount_tax=' . SPC()->cart->get_discount_tax() . ' credits=' . SPC()->cart->get_credits_applied() .
+			' || INVARIANT#1 items_sum=' . $dbg_items_sum . ' vs item_total=' . $item_total . ' (' . ( abs( $dbg_items_sum - $item_total ) < 0.005 ? 'OK' : 'MISMATCH ' . round( $dbg_items_sum - $item_total, 2 ) ) . ')' .
+			' || INVARIANT#2 breakdown_sum=' . $dbg_breakdown_sum . ' vs amount=' . $amount . ' (' . ( abs( $dbg_breakdown_sum - $amount ) < 0.005 ? 'OK' : 'MISMATCH ' . round( $dbg_breakdown_sum - $amount, 2 ) ) . ')'
+		);
+
 		$order = $this->make_request( 'checkout/orders', $order_args );
 		if ( ! empty( $order->id ) ) {
 			wp_send_json_success( array( 'order_id' => $order->id ) );
@@ -582,6 +627,12 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 		// SPC()->notices->add( __( 'Error connecting to PayPal', 'sunshine-photo-cart' ), 'error' );
 
 		SPC()->log( 'Error creating order for PayPal: ' . print_r( $order, 1 ) );
+		// DEBUG: Surface PayPal's specific rejection reason(s), which live in the details array.
+		if ( ! empty( $order->details ) ) {
+			foreach ( $order->details as $detail ) {
+				SPC()->log( 'PayPal error detail: ' . ( isset( $detail->issue ) ? $detail->issue : '' ) . ' - ' . ( isset( $detail->description ) ? $detail->description : '' ) );
+			}
+		}
 		wp_send_json_error();
 
 	}

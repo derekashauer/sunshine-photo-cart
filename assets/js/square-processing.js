@@ -125,6 +125,24 @@ jQuery( document ).on( 'sunshine_payment_processing', async function( event, dat
     const { payment_method, resolve, reject, checkout_data } = data;
 	if ( payment_method === 'square' ) {
 
+		// Prevent double submission and give the buyer clear feedback while the
+		// charge is in flight. Without this, a slow charge can tempt the buyer to
+		// click again or refresh, which re-tokenizes the card and trips Square's
+		// "Different request parameters used for the same idempotency_key" error.
+		var $sunshineSquareSubmit = jQuery( '#sunshine--checkout--submit' );
+		if ( $sunshineSquareSubmit.data( 'square-processing' ) ) {
+			reject( new Error( 'Payment already in progress' ) );
+			return;
+		}
+		$sunshineSquareSubmit.data( 'square-processing', true );
+		var sunshineSquareBtnText = $sunshineSquareSubmit.html();
+		$sunshineSquareSubmit.prop( 'disabled', true ).html( 'Processing payment...' );
+
+		function sunshineSquareResetButton() {
+			$sunshineSquareSubmit.data( 'square-processing', false );
+			$sunshineSquareSubmit.prop( 'disabled', false ).html( sunshineSquareBtnText );
+		}
+
 		if ( jQuery( '#sunshine--checkout form input[name="billing_first_name"]' ).is( ':visible' ) ) {
 			square_billing_contact = {
 				firstName: jQuery( '#sunshine--checkout form input[name="billing_first_name"]' ).val(),
@@ -177,10 +195,13 @@ jQuery( document ).on( 'sunshine_payment_processing', async function( event, dat
 			const payments = window.Square.payments(spc_square_vars.application_id, spc_square_vars.location_id);
 			const verificationToken = await sunshine_square_verify_buyer(payments, sunshine_square_token);
 			await sunshine_square_create_payment(sunshine_square_token, verificationToken);
+			// Leave the button disabled on success - the form is about to submit
+			// and navigate away to the receipt page.
 			resolve();
 		} catch (e) {
 			//sunshine_square_display_payment_results('FAILURE');
 			reject(e);
+			sunshineSquareResetButton();
 			sunshine_checkout_updating_done();
 		}
 	}

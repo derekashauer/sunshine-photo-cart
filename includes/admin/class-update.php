@@ -154,6 +154,9 @@ class SPC_Update {
 
 		sunshine_create_htaccess( true );
 
+		// Flush rewrite rules so any changes to endpoint defaults take effect on existing sites.
+		flush_rewrite_rules();
+
 		sunshine_tracking_send();
 
 	}

@@ -1017,14 +1017,6 @@ a.sunshine-install--continue { text-decoration: none; border: 1px solid #CCC; bo
 #sunshine--session-schedule table th { text-align: left; padding: 0 15px 5px 0; border-bottom: 1px solid #000; }
 #sunshine--session-schedule table td { padding: 10px 15px 10px 0; border-bottom: 1px solid #CCC; }
 
-/* Edit attachment */
-#sunshine-edit-attachment .attachment-details { padding: 40px 60px; }
-#sunshine-edit-attachment table.slidetoggle { display: flex; justify-content: space-between; }
-#sunshine-edit-attachment table.slidetoggle thead { flex-basis: 50%; }
-#sunshine-edit-attachment table.slidetoggle thead td:nth-child( 2 ) { display: none; }
-#sunshine-edit-attachment table.slidetoggle thead img.thumbnail { max-width: 100%; height: auto; }
-#sunshine-edit-attachment table.slidetoggle tbody { flex-basis: 40%; }
-
 .sunshine-tooltip-ui {
 	background: #fff;
 	border: 1px solid #ccc;
