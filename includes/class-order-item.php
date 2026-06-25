@@ -6,20 +6,28 @@ class SPC_Order_Item extends SPC_Cart_Item {
 	protected $order;
 	protected $order_display_price;
 
-	function __construct( $item ) {
+	function __construct( $item, $preloaded_meta = null ) {
 		global $wpdb;
 
 		parent::__construct( $item );
 
-		$meta = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}sunshine_order_itemmeta WHERE order_item_id=%d",
-				$this->get_id()
-			)
-		);
-		if ( $meta ) {
-			foreach ( $meta as $meta_item ) {
-				$this->meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
+		if ( is_array( $preloaded_meta ) ) {
+			// Meta was bulk-loaded by the caller (see SPC_Order::get_items()) to avoid
+			// one query per item. Values are already unserialized.
+			foreach ( $preloaded_meta as $meta_key => $meta_value ) {
+				$this->meta[ $meta_key ] = $meta_value;
+			}
+		} else {
+			$meta = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM {$wpdb->prefix}sunshine_order_itemmeta WHERE order_item_id=%d",
+					$this->get_id()
+				)
+			);
+			if ( $meta ) {
+				foreach ( $meta as $meta_item ) {
+					$this->meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
+				}
 			}
 		}
 

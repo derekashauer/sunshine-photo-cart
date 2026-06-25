@@ -712,9 +712,29 @@ class SPC_Order extends Sunshine_Data {
 			)
 		);
 
+		if ( empty( $results ) ) {
+			return array();
+		}
+
+		// Bulk-load every item's meta in a single query, then hand each item its own
+		// meta, instead of each SPC_Order_Item querying sunshine_order_itemmeta on its
+		// own (an N+1 — e.g. a 30-item order ran 30+ extra queries).
+		$item_ids     = array_map( 'intval', wp_list_pluck( $results, 'order_item_id' ) );
+		$meta_by_item = array();
+		if ( ! empty( $item_ids ) ) {
+			$ids_in    = implode( ',', $item_ids );
+			$meta_rows = $wpdb->get_results(
+				"SELECT order_item_id, meta_key, meta_value FROM {$wpdb->prefix}sunshine_order_itemmeta WHERE order_item_id IN ($ids_in)"
+			);
+			foreach ( $meta_rows as $meta_row ) {
+				$meta_by_item[ $meta_row->order_item_id ][ $meta_row->meta_key ] = maybe_unserialize( $meta_row->meta_value );
+			}
+		}
+
 		$items = array();
 		foreach ( $results as $item ) {
-			$items[] = new SPC_Order_Item( (array) $item );
+			$item_meta = isset( $meta_by_item[ $item->order_item_id ] ) ? $meta_by_item[ $item->order_item_id ] : array();
+			$items[]   = new SPC_Order_Item( (array) $item, $item_meta );
 		}
 		return $items;
 
