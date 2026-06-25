@@ -261,6 +261,9 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: Square orders on stores with tax-inclusive pricing and a discount sent a total to Square that did not match Sunshine's total, so the line-item breakdown did not appear in the Square dashboard; Square is now told the tax is included in the price so its computed total matches and the itemization shows
 * Fix: Stripe orders could be left on "Pending Payment" after a successful charge when the payment was retried at checkout
 * Fix: Stripe orders could be marked "Failed" even though the payment succeeded
+* Enhancement: Galleries with large numbers of photos load with fewer database queries; the gallery no longer re-reads its full photo list from the database on every internal lookup
+* Enhancement: Orders with many items load with far fewer database queries on the order, account order history, and receipt screens by loading all item details in a single query instead of one query per item
+* Fix: Viewing an order with no stored cart snapshot (such as an imported order) could cause an error on the order's items screen
 
 = 3.6.10.1 - May 28, 2026 =
 * Fix: Galleries returning 404 after upgrading to 3.6.10 caused by a change in how option defaults were resolved
