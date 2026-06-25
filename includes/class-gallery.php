@@ -216,10 +216,13 @@ class SPC_Gallery extends Sunshine_Data {
 	}
 	*/
 	public function get_image_ids() {
-		// Force fresh read from database to avoid stale cache issues when multiple uploads happen quickly
-		// Clear WordPress meta cache to ensure we get the latest value
-		wp_cache_delete( $this->id, 'post_meta' );
-		// Clear object's cached meta to force reload
+		// Re-read the images meta fresh on each call so newly added images appear
+		// immediately during uploads. We clear only this object's cached copy and re-read
+		// through the WordPress meta cache; writes (set_image_ids()) already invalidate
+		// that cache, so we stay current without deleting the entire post_meta cache on
+		// every read. The old wp_cache_delete() here forced a fresh DB query for the
+		// gallery meta on every call, which is very costly when iterating images (e.g.
+		// can_purchase() runs per image in the lightbox).
 		if ( isset( $this->meta['images'] ) ) {
 			unset( $this->meta['images'] );
 		}
