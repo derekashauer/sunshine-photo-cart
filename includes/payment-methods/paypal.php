@@ -595,29 +595,6 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 
 		SPC()->log( $order_args );
 
-		// DEBUG: Verify the breakdown reconciles before sending to PayPal.
-		// PayPal rejects (422) unless BOTH of these hold:
-		//   1. item_total == sum( unit_amount * quantity ) across items[]
-		//   2. amount.value == item_total + tax_total + shipping - discount
-		$dbg_items_sum = 0;
-		foreach ( $items as $dbg_item ) {
-			$dbg_items_sum += round( (float) $dbg_item['unit_amount']['value'], 2 ) * (float) $dbg_item['quantity'];
-		}
-		$dbg_items_sum     = round( $dbg_items_sum, 2 );
-		$dbg_breakdown_sum = round( $item_total + $tax_total + $shipping_amount - $discount, 2 );
-		SPC()->log(
-			'PayPal breakdown debug | price_has_tax=' . SPC()->get_option( 'price_has_tax' ) .
-			' display_price=' . SPC()->get_option( 'display_price' ) .
-			' | item_total=' . $item_total .
-			' tax_total=' . $tax_total .
-			' shipping=' . $shipping_amount .
-			' discount=' . $discount .
-			' amount=' . $amount .
-			' | cart: subtotal=' . SPC()->cart->get_subtotal() . ' tax=' . SPC()->cart->get_tax() . ' discount=' . SPC()->cart->get_discount() . ' discount_tax=' . SPC()->cart->get_discount_tax() . ' credits=' . SPC()->cart->get_credits_applied() .
-			' || INVARIANT#1 items_sum=' . $dbg_items_sum . ' vs item_total=' . $item_total . ' (' . ( abs( $dbg_items_sum - $item_total ) < 0.005 ? 'OK' : 'MISMATCH ' . round( $dbg_items_sum - $item_total, 2 ) ) . ')' .
-			' || INVARIANT#2 breakdown_sum=' . $dbg_breakdown_sum . ' vs amount=' . $amount . ' (' . ( abs( $dbg_breakdown_sum - $amount ) < 0.005 ? 'OK' : 'MISMATCH ' . round( $dbg_breakdown_sum - $amount, 2 ) ) . ')'
-		);
-
 		$order = $this->make_request( 'checkout/orders', $order_args );
 		if ( ! empty( $order->id ) ) {
 			wp_send_json_success( array( 'order_id' => $order->id ) );
