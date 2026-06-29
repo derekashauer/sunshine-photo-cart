@@ -247,11 +247,13 @@ Security is important to us. Please report security bugs through the [Patchstack
 * New: As a safety net, Square re-checks recent pending orders in the background so a payment that completes after the customer closes their browser still finalizes on its own. Normal orders are unaffected (they finalize instantly at checkout), and this background check can be disabled with the sunshine_square_background_reconcile filter
 * New: Reconcile Pending Square Orders tool under Sunshine → Tools to check any existing pending Square orders against Square's API and finalize the ones Square reports as completed
 * New: "Recheck payment status in Square" order action to verify a single pending Square order against Square and finalize it from the order screen
+* Security: Removed three unused admin AJAX handlers that lacked capability and nonce checks, which could let a logged-in non-admin read or alter image metadata on photos in private galleries
+* Enhancement: Galleries with large numbers of photos load with fewer database queries; the gallery no longer re-reads its full photo list from the database on every internal lookup
+* Enhancement: Orders with many items load with far fewer database queries on the order, account order history, and receipt screens by loading all item details in a single query instead of one query per item
 * Fix: Re-submitting a Square payment (re-entering a card after a prior attempt) no longer shows a confusing "Different request parameters used for the same idempotency_key" error; the gateway now skips charging an already-paid order and recovers the original payment instead of charging again, including the case where the first charge succeeded but its response was lost before the order recorded it (the payment is located via the Square order and the order is finalized)
 * Fix: The checkout button is now disabled and shows "Processing payment..." while a Square charge is in flight, so a slow charge no longer tempts buyers to click again or refresh (which was the main cause of the duplicate-submission error)
 * Fix: A failed Square refund now reports the actual reason in the admin notice and the log instead of failing silently, and refunds against an order whose Square mode has no connected credentials now show a clear message
 * Fix: Quick Edit checkbox fields (such as a product's Taxable setting) did not save when checked, leaving the value empty
-* Security: Removed three unused admin AJAX handlers that lacked capability and nonce checks, which could let a logged-in non-admin read or alter image metadata on photos in private galleries
 * Fix: The per-image Watermark checkbox on the attachment edit screen showed unchecked even when the image was set to be watermarked
 * Fix: PayPal rejecting tax-included orders with a discount due to a breakdown mismatch
 * Fix: Percentage payment fees charging more than the cart total when a discount was applied
@@ -261,8 +263,6 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: Square orders on stores with tax-inclusive pricing and a discount sent a total to Square that did not match Sunshine's total, so the line-item breakdown did not appear in the Square dashboard; Square is now told the tax is included in the price so its computed total matches and the itemization shows
 * Fix: Stripe orders could be left on "Pending Payment" after a successful charge when the payment was retried at checkout
 * Fix: Stripe orders could be marked "Failed" even though the payment succeeded
-* Enhancement: Galleries with large numbers of photos load with fewer database queries; the gallery no longer re-reads its full photo list from the database on every internal lookup
-* Enhancement: Orders with many items load with far fewer database queries on the order, account order history, and receipt screens by loading all item details in a single query instead of one query per item
 * Fix: Viewing an order with no stored cart snapshot (such as an imported order) could cause an error on the order's items screen
 
 = 3.6.10.1 - May 28, 2026 =
