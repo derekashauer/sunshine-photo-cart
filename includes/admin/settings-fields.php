@@ -1614,3 +1614,114 @@ function sunshine_get_settings_fields() {
 	return $settings;
 
 }
+
+/**
+ * Decide whether a settings field's option should be autoloaded.
+ *
+ * Frequently-read settings should be autoloaded so they ride the single
+ * alloptions query instead of costing a separate query each on every page.
+ * Credentials/secrets and large values are kept out of alloptions. A field can
+ * override the decision by declaring 'autoload' => true|false in its definition.
+ *
+ * @param array $field The settings field definition.
+ * @param mixed $value The stored option value (used for the size check).
+ * @return bool
+ */
+function sunshine_setting_should_autoload( $field, $value = null ) {
+
+	// An explicit declaration on the field always wins.
+	if ( isset( $field['autoload'] ) ) {
+		return (bool) $field['autoload'];
+	}
+
+	$id = isset( $field['id'] ) ? (string) $field['id'] : '';
+
+	// Credentials / secrets: never autoload (kept out of the site-wide alloptions array).
+	if ( $id && preg_match( '/(secret|password|private_key|api_key|access_key|client_secret|_token|webhook|gcs_json)/i', $id ) ) {
+		return false;
+	}
+
+	// Large values (rich-text email bodies, JSON blobs, big CSS) stay non-autoloaded.
+	$length = is_array( $value ) ? strlen( maybe_serialize( $value ) ) : strlen( (string) $value );
+	if ( $length > 1000 ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Set the autoload flag on Sunshine's option rows to match how often they are
+ * read: small, frequently-read settings are autoloaded (folded into the single
+ * alloptions query); credentials, large content, and one-time data are not.
+ *
+ * Idempotent. Runs on upgrade (see SPC_Update::common_updates()) and after the
+ * settings screen is saved.
+ */
+function sunshine_reconcile_settings_autoload() {
+
+	if ( ! function_exists( 'sunshine_get_settings_fields' ) || ! function_exists( 'wp_set_options_autoload' ) ) {
+		return;
+	}
+
+	$autoload_on  = array();
+	$autoload_off = array();
+
+	foreach ( sunshine_get_settings_fields() as $section ) {
+		if ( empty( $section['fields'] ) ) {
+			continue;
+		}
+		foreach ( $section['fields'] as $field ) {
+			if ( empty( $field['id'] ) || ( isset( $field['type'] ) && $field['type'] === 'header' ) ) {
+				continue;
+			}
+			$option_name = 'sunshine_' . $field['id'];
+			$value       = get_option( $option_name, null );
+			if ( null === $value ) {
+				continue; // Option does not exist; nothing to set.
+			}
+			if ( sunshine_setting_should_autoload( $field, $value ) ) {
+				$autoload_on[] = $option_name;
+			} else {
+				$autoload_off[] = $option_name;
+			}
+		}
+	}
+
+	// One-time / runtime data that is not a setting but has historically been autoloaded.
+	$autoload_off = array_merge(
+		$autoload_off,
+		array(
+			'sunshine_cloud_storage_migration_progress',
+			'sunshine_cloud_storage_offload_migration_progress',
+			'sunshine_repaired_term_order_meta',
+		)
+	);
+
+	if ( $autoload_on ) {
+		wp_set_options_autoload( array_unique( $autoload_on ), true );
+	}
+	if ( $autoload_off ) {
+		wp_set_options_autoload( array_unique( $autoload_off ), false );
+	}
+}
+
+/**
+ * Reconcile autoload once after the Sunshine settings screen is saved, so new or
+ * changed settings get the right autoload flag going forward (WordPress would
+ * otherwise autoload anything small, including credentials).
+ */
+function sunshine_reconcile_settings_autoload_on_save( $option ) {
+	static $done = false;
+	if ( $done ) {
+		return;
+	}
+	// Only react to a Sunshine settings-form submission, not arbitrary option writes.
+	if ( empty( $_POST['option_page'] ) || strpos( sanitize_key( $_POST['option_page'] ), 'sunshine_' ) !== 0 ) {
+		return;
+	}
+	$done = true;
+	sunshine_reconcile_settings_autoload();
+}
+add_action( 'updated_option', 'sunshine_reconcile_settings_autoload_on_save', 10, 1 );
+add_action( 'added_option', 'sunshine_reconcile_settings_autoload_on_save', 10, 1 );

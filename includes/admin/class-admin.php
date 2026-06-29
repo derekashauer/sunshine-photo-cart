@@ -831,7 +831,7 @@ class Sunshine_Admin {
 				}
 			}
 		}
-		update_option( 'sunshine_repaired_term_order_meta', true, true );
+		update_option( 'sunshine_repaired_term_order_meta', true, false );
 	}
 
 	public function delete_post( $post_id, $post ) {

@@ -157,6 +157,12 @@ class SPC_Update {
 		// Flush rewrite rules so any changes to endpoint defaults take effect on existing sites.
 		flush_rewrite_rules();
 
+		// Autoload frequently-read settings (and keep credentials/large data out of alloptions)
+		// so settings don't cost a query each on every page.
+		if ( function_exists( 'sunshine_reconcile_settings_autoload' ) ) {
+			sunshine_reconcile_settings_autoload();
+		}
+
 		sunshine_tracking_send();
 
 	}
