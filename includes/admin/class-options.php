@@ -966,6 +966,7 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 			$flush = get_option( 'sunshine_flush_rewrite_rules' );
 			if ( $flush ) {
 				flush_rewrite_rules();
+				delete_option( 'sunshine_flush_rewrite_rules' );
 			}
 		}
 
