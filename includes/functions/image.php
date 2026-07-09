@@ -302,3 +302,119 @@ function sunshine_show_caption_single_image( $image ) {
 		echo '<div class="sunshine--image--caption">' . esc_html( $caption ) . '</div>';
 	}
 }
+
+/**
+ * Get the server-side secret used to sign lab-file URLs.
+ *
+ * Generated once and stored (autoloaded). Never sent anywhere — only the
+ * server can mint or verify a signed lab-file URL.
+ *
+ * @return string
+ */
+function sunshine_get_file_signing_secret() {
+	$secret = SPC()->get_option( 'file_signing_secret' );
+	if ( empty( $secret ) ) {
+		$secret = bin2hex( random_bytes( 32 ) );
+		SPC()->update_option( 'file_signing_secret', $secret, true );
+	}
+	return $secret;
+}
+
+/**
+ * Build a signed, time-limited URL that lets an external service (e.g. a print
+ * lab) fetch the full-resolution original of an attachment.
+ *
+ * The URL is served through PHP, so it bypasses the referer-based hotlink
+ * .htaccess without weakening it. The signature covers the attachment ID and
+ * expiry, so it can't be altered to reach a different file or extend its life.
+ *
+ * @param int      $attachment_id The attachment ID.
+ * @param int|null $ttl           Seconds the URL stays valid (default 30 days).
+ * @return string The signed URL, or '' if the attachment ID is invalid.
+ */
+function sunshine_get_lab_file_url( $attachment_id, $ttl = null ) {
+	$attachment_id = intval( $attachment_id );
+	if ( ! $attachment_id ) {
+		return '';
+	}
+
+	if ( is_null( $ttl ) ) {
+		$ttl = 30 * DAY_IN_SECONDS;
+	}
+	$ttl     = intval( apply_filters( 'sunshine_lab_file_url_ttl', $ttl, $attachment_id ) );
+	$expires = time() + $ttl;
+
+	$sig = hash_hmac( 'sha256', $attachment_id . '|' . $expires, sunshine_get_file_signing_secret() );
+
+	return add_query_arg(
+		array(
+			'sunshine_lab_file' => $attachment_id,
+			'expires'           => $expires,
+			'sig'               => $sig,
+		),
+		home_url( '/' )
+	);
+}
+
+/**
+ * Serve a full-resolution original in response to a valid signed lab-file URL.
+ */
+add_action( 'wp', 'sunshine_handle_lab_file' );
+function sunshine_handle_lab_file() {
+
+	if ( empty( $_GET['sunshine_lab_file'] ) ) {
+		return;
+	}
+
+	$attachment_id = intval( $_GET['sunshine_lab_file'] );
+	$expires       = isset( $_GET['expires'] ) ? intval( $_GET['expires'] ) : 0;
+	$sig           = isset( $_GET['sig'] ) ? (string) $_GET['sig'] : '';
+
+	// Expired links are Gone.
+	if ( ! $expires || time() > $expires ) {
+		status_header( 410 );
+		exit;
+	}
+
+	// Verify the signature in constant time.
+	$expected = hash_hmac( 'sha256', $attachment_id . '|' . $expires, sunshine_get_file_signing_secret() );
+	if ( empty( $sig ) || ! hash_equals( $expected, $sig ) ) {
+		status_header( 403 );
+		exit;
+	}
+
+	if ( 'attachment' !== get_post_type( $attachment_id ) ) {
+		status_header( 404 );
+		exit;
+	}
+
+	// If the original has been offloaded to cloud storage, redirect to the
+	// provider's freshly-signed URL (the cloud-storage addon filters this).
+	$local_path = get_attached_file( $attachment_id );
+	if ( empty( $local_path ) || ! file_exists( $local_path ) ) {
+		$remote_url = wp_get_attachment_url( $attachment_id );
+		if ( $remote_url ) {
+			wp_redirect( esc_url_raw( $remote_url ) );
+			exit;
+		}
+		status_header( 404 );
+		exit;
+	}
+
+	$mime = get_post_mime_type( $attachment_id );
+	if ( ! $mime ) {
+		$filetype = wp_check_filetype( $local_path );
+		$mime     = ! empty( $filetype['type'] ) ? $filetype['type'] : 'application/octet-stream';
+	}
+
+	while ( ob_get_level() > 0 ) {
+		ob_end_clean();
+	}
+
+	nocache_headers();
+	header( 'Content-Type: ' . $mime );
+	header( 'Content-Disposition: inline; filename="' . basename( $local_path ) . '"' );
+	header( 'Content-Length: ' . filesize( $local_path ) );
+	readfile( $local_path );
+	exit;
+}

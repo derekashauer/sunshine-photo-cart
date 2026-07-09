@@ -15,7 +15,7 @@ class SPC_Update {
 			$this->need_update = true;
 		}
 
-		$this->update_actions = array( '3.0', '3.0.17', '3.0.18', '3.5.6', '3.6.0', '3.6.2', '3.6.3', '3.6.10', '3.6.10.1' );
+		$this->update_actions = array( '3.0', '3.0.17', '3.0.18', '3.5.6', '3.6.0', '3.6.2', '3.6.3', '3.6.10', '3.6.10.1', '3.6.12' );
 
 		add_action( 'admin_init', array( $this, 'update_check' ) );
 		add_action( 'admin_menu', array( $this, 'menu' ) );
@@ -42,6 +42,7 @@ class SPC_Update {
 		add_action( 'sunshine_update_3.6.3', array( $this, 'update_3_6_3' ) );
 		add_action( 'sunshine_update_3.6.10', array( $this, 'update_3_6_10' ) );
 		add_action( 'sunshine_update_3.6.10.1', array( $this, 'update_3_6_10_1' ) );
+		add_action( 'sunshine_update_3.6.12', array( $this, 'update_3_6_12' ) );
 
 		add_action( 'activated_plugin', array( $this, 'check_plugin_activation' ), 10, 2 );
 		add_action( 'admin_notices', array( $this, 'show_deactivation_notice' ), 10, 2 );
@@ -152,6 +153,12 @@ class SPC_Update {
 
 		sunshine_set_roles();
 
+		// Ensure the lab-file signing secret exists (autoloaded) before any
+		// signed URL is minted, so first use never races to create it.
+		if ( function_exists( 'sunshine_get_file_signing_secret' ) ) {
+			sunshine_get_file_signing_secret();
+		}
+
 		sunshine_create_htaccess( true );
 
 		// Flush rewrite rules so any changes to endpoint defaults take effect on existing sites.
@@ -199,6 +206,12 @@ class SPC_Update {
 	function update_3_5_6() {
 		global $wpdb;
 		// Delete all usermeta with key "sunshine_customer_notes"
+		$wpdb->query( "DELETE FROM {$wpdb->prefix}usermeta WHERE meta_key = 'sunshine_customer_notes'" );
+	}
+
+	function update_3_6_12() {
+		global $wpdb;
+		// Remove any residual order notes wrongly stored on the customer.
 		$wpdb->query( "DELETE FROM {$wpdb->prefix}usermeta WHERE meta_key = 'sunshine_customer_notes'" );
 	}
 
