@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 3.6.11
+Stable tag: 3.6.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,7 +243,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.6.12 =
+= 3.6.12 - July 21, 2026 =
 * New: Zip/postal code fields for tax rates and the Local Delivery method now accept wildcard prefixes (902* matches any code starting with 902) and numeric ranges (90210...99000), in addition to exact comma-separated codes
 * Security: Comments on images in password-protected, private, or otherwise access-restricted galleries could be retrieved without passing the gallery's access check; the comments endpoint now enforces the same access control as the rest of the gallery
 * Fix: Photos imported with pre-processed thumbnails (including cloud imports) whose dimensions were unknown could render as an empty gallery in the justified layout; they now fall back to a default size so they always display
