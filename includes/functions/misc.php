@@ -187,6 +187,62 @@ function sunshine_in_array_r( $needle, $haystack, $strict = false ) {
 }
 
 /**
+ * Test a postcode against a comma-separated list of patterns.
+ *
+ * Each pattern can be an exact code (90210), a wildcard prefix (902* matches
+ * anything starting with 902, including zip+4 and alphanumeric codes like CB23*),
+ * or a numeric range (90210...99000 matches any code between the two numbers).
+ * Both the postcode and patterns are uppercased and space-stripped before comparing.
+ *
+ * @since 3.6.12
+ * @param string $postcode The customer postcode to test.
+ * @param string $patterns Comma-separated list of postcode patterns.
+ * @return boolean
+ */
+function sunshine_postcode_matches( $postcode, $patterns ) {
+
+	$postcode = strtoupper( str_replace( ' ', '', trim( $postcode ) ) );
+	if ( '' === $postcode || '' === trim( (string) $patterns ) ) {
+		return false;
+	}
+
+	$patterns = explode( ',', strtoupper( str_replace( ' ', '', $patterns ) ) );
+
+	foreach ( $patterns as $pattern ) {
+
+		if ( '' === $pattern ) {
+			continue;
+		}
+
+		// Range: 90210...99000 (numeric only).
+		if ( false !== strpos( $pattern, '...' ) ) {
+			$range = explode( '...', $pattern );
+			if ( 2 === count( $range ) && is_numeric( $range[0] ) && is_numeric( $range[1] ) && is_numeric( $postcode )
+				&& (int) $postcode >= (int) $range[0] && (int) $postcode <= (int) $range[1] ) {
+				return true;
+			}
+			continue;
+		}
+
+		// Wildcard: 902* or CB23*.
+		if ( false !== strpos( $pattern, '*' ) ) {
+			$regex = '/^' . str_replace( '\*', '.*', preg_quote( $pattern, '/' ) ) . '$/';
+			if ( preg_match( $regex, $postcode ) ) {
+				return true;
+			}
+			continue;
+		}
+
+		// Exact match.
+		if ( $postcode === $pattern ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Sort an array by a specific key/column
  *
  * @since 1.8

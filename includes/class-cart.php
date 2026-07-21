@@ -92,6 +92,19 @@ class SPC_Cart {
 		// so re-hydrate from saved data regardless of needs_shipping().
 		$allowed_shipping_methods = sunshine_get_allowed_shipping_methods();
 		if ( ! empty( $allowed_shipping_methods ) && is_array( $allowed_shipping_methods ) ) {
+
+			// If a shipping method was previously selected but is no longer among the
+			// methods allowed for the current cart (e.g. the customer changed their cart
+			// after selecting), clear the stale selection and re-open the shipping method
+			// step so they must choose a valid one again.
+			if ( ! empty( $this->data['shipping_method'] ) && ! array_key_exists( $this->data['shipping_method'], $allowed_shipping_methods ) ) {
+				SPC()->log( 'Cleared stale shipping method no longer available for the current cart: ' . $this->data['shipping_method'] );
+				$this->set_checkout_data_item( 'shipping_method', '' );
+				$this->data['shipping_method'] = '';
+				$this->shipping_method         = '';
+				$this->uncomplete_checkout_section( 'shipping_method' );
+			}
+
 			if ( array_key_exists( 'shipping_method', $this->data ) && array_key_exists( $this->data['shipping_method'], $allowed_shipping_methods ) ) {
 				$this->set_shipping_method( $this->data['shipping_method'] );
 			} elseif ( $this->needs_shipping() && array_key_exists( 'shipping', $delivery_methods ) && $this->delivery_method && $this->delivery_method->get_id() === 'shipping' && count( $allowed_shipping_methods ) === 1 ) {
@@ -740,8 +753,7 @@ class SPC_Cart {
 			} else
 			*/
 			if ( ! empty( $tax_rate['postcode'] ) ) {
-				$postcodes = explode( ',', str_replace( ' ', '', $tax_rate['postcode'] ) );
-				if ( in_array( $customer_postcode, $postcodes ) ) {
+				if ( sunshine_postcode_matches( $customer_postcode, $tax_rate['postcode'] ) ) {
 					if ( ! empty( $tax_rate['state'] ) && $customer_state == $tax_rate['state'] ) {
 						if ( ! empty( $tax_rate['country'] ) && $customer_country == $tax_rate['country'] ) {
 							$this->tax_rate = $tax_rate;
@@ -968,6 +980,17 @@ class SPC_Cart {
 			$this->shipping_method = $method;
 		}
 		$this->set_checkout_data_item( 'shipping_method', $this->shipping_method->get_instance_id() );
+	}
+
+	// Whether a shipping method is selected AND still allowed for the current cart.
+	// Used as the authoritative final gate before an order is created/paid, since the
+	// allowed methods can change if the cart changes after a method was selected.
+	public function has_valid_shipping_method() {
+		if ( empty( $this->shipping_method ) ) {
+			return false;
+		}
+		$allowed = sunshine_get_allowed_shipping_methods();
+		return is_array( $allowed ) && array_key_exists( $this->shipping_method->get_instance_id(), $allowed );
 	}
 
 	public function get_payment_method() {
@@ -1855,7 +1878,7 @@ class SPC_Cart {
 		}
 
 		// Fallback to user's stored data
-		if ( empty( $value ) && ( $id != 'payment_method' && $id != 'shipping_method' && $id != 'use_credits' ) ) {
+		if ( empty( $value ) && ( $id != 'payment_method' && $id != 'shipping_method' && $id != 'use_credits' && $id != 'customer_notes' ) ) {
 			$value = SPC()->customer->get_meta( $id );
 		}
 
@@ -2022,6 +2045,12 @@ class SPC_Cart {
 			return false;
 		}
 
+		if ( $this->needs_shipping() && ! $this->has_valid_shipping_method() ) {
+			SPC()->log( 'Blocked payment: cart needs shipping but no valid shipping method selected' );
+			$this->add_error( __( 'Please select a shipping method before completing your order.', 'sunshine-photo-cart' ) );
+			return false;
+		}
+
 		$order = $this->process_order();
 		if ( $order ) {
 			$url = apply_filters( 'sunshine_checkout_redirect', $order->get_received_permalink(), $order );
@@ -2047,6 +2076,16 @@ class SPC_Cart {
 		$data                         = $this->get_checkout_data();
 		$data[ sanitize_key( $key ) ] = sanitize_text_field( $value );
 		SPC()->session->set( 'checkout_data', $data );
+	}
+
+	// Mark a previously completed checkout section as incomplete so the customer is
+	// routed back through it (e.g. when a prior selection is no longer valid).
+	private function uncomplete_checkout_section( $section ) {
+		$completed = SPC()->session->get( 'checkout_sections_completed' );
+		if ( is_array( $completed ) && in_array( $section, $completed, true ) ) {
+			$completed = array_values( array_diff( $completed, array( $section ) ) );
+			SPC()->session->set( 'checkout_sections_completed', $completed );
+		}
 	}
 
 	public function get_checkout_data() {
@@ -2181,6 +2220,14 @@ class SPC_Cart {
 
 		$fees = $this->get_fees();
 		$order->update_fees( $fees );
+
+		if ( $this->needs_shipping() && ! $this->has_valid_shipping_method() ) {
+			// Diagnostic: this has been an unreproducible failure for this site for years.
+			// Log the session state so a real occurrence finally leaves a trace.
+			SPC()->log( 'Blocked order init: cart needs shipping but no valid shipping method selected. checkout_data: ' . json_encode( $this->get_checkout_data() ) );
+			$this->add_error( __( 'Please select a shipping method before completing your order.', 'sunshine-photo-cart' ) );
+			wp_send_json_error();
+		}
 
 		if ( ! empty( $this->delivery_method ) ) {
 			$order->set_delivery_method( $this->delivery_method->get_id() );

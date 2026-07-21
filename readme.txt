@@ -243,7 +243,16 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.6.11 =
+= 3.6.12 =
+* New: Zip/postal code fields for tax rates and the Local Delivery method now accept wildcard prefixes (902* matches any code starting with 902) and numeric ranges (90210...99000), in addition to exact comma-separated codes
+* Security: Comments on images in password-protected, private, or otherwise access-restricted galleries could be retrieved without passing the gallery's access check; the comments endpoint now enforces the same access control as the rest of the gallery
+* Fix: Photos imported with pre-processed thumbnails (including cloud imports) whose dimensions were unknown could render as an empty gallery in the justified layout; they now fall back to a default size so they always display
+* Fix: Notes entered on one order could prefill the Notes field on a customer's later orders at checkout; order notes no longer carry over between orders
+* Fix: Stripe webhook no longer reports a failure to Stripe when it receives a payment that wasn't made through Sunshine (such as a Stripe Payment Link or another app on the same account); those events are now acknowledged and skipped instead of returning an error, which keeps Stripe from disabling the endpoint
+* Fix: Fatal error on every page load when no payment methods are available (such as when an addon disables them all) and a visitor's session had a previously selected payment method
+* Fix: Checkout now requires a valid shipping method before an order can be completed, and re-prompts when a cart change makes the selected method unavailable
+
+= 3.6.11 - June 29, 2026 =
 * New: As a safety net, Square re-checks recent pending orders in the background so a payment that completes after the customer closes their browser still finalizes on its own. Normal orders are unaffected (they finalize instantly at checkout), and this background check can be disabled with the sunshine_square_background_reconcile filter
 * New: Reconcile Pending Square Orders tool under Sunshine → Tools to check any existing pending Square orders against Square's API and finalize the ones Square reports as completed
 * New: "Recheck payment status in Square" order action to verify a single pending Square order against Square and finalize it from the order screen

@@ -282,10 +282,10 @@ class SPC_Image extends Sunshine_Data {
 
 	public function get_size_info( $size = 'sunshine-large' ) {
 		$size_info = image_get_intermediate_size( $this->get_id(), $size );
-		if ( empty( $size_info ) ) {
+		if ( empty( $size_info['width'] ) || empty( $size_info['height'] ) ) {
 			$size_info = image_get_intermediate_size( $this->get_id(), 'full' );
 		}
-		if ( empty( $size_info ) ) {
+		if ( empty( $size_info['width'] ) || empty( $size_info['height'] ) ) {
 			$size_info = array(
 				'width'  => sunshine_get_thumbnail_dimension( 'w' ),
 				'height' => sunshine_get_thumbnail_dimension( 'h' ),

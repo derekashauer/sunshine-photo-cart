@@ -15,7 +15,7 @@ class SPC_Shipping_Method_Local extends SPC_Shipping_Method {
 			'name'        => __( 'Allowed Zip / Post codes', 'sunshine-photo-cart' ),
 			'id'          => $this->id . '_postcodes_' . $instance_id,
 			'type'        => 'textarea',
-			'description' => __( 'Allowed zipcode or postal codes that are allowed for this shipping option, separated by commas. Ex: 80525,80526,80527. Leave empty to allow all.', 'sunshine-photo-cart' ),
+			'description' => __( 'Allowed zip or postal codes for this shipping option, separated by commas. Ex: 80525,80526,80527. Use * as a wildcard (805* matches anything starting with 805) or ... for a numeric range (80525...80527). Leave empty to allow all.', 'sunshine-photo-cart' ),
 		);
 		return $fields;
 	}
@@ -39,8 +39,7 @@ class SPC_Shipping_Method_Local extends SPC_Shipping_Method {
 			}
 
 			// Customer zipcode not in allowed zipcodes
-			$postcodes = explode( ',', str_replace( ' ', '', $postcodes ) );
-			if ( ! in_array( $customer_postcode, $postcodes ) ) {
+			if ( ! sunshine_postcode_matches( $customer_postcode, $postcodes ) ) {
 				return false;
 			}
 		}

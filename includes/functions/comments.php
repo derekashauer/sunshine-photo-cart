@@ -11,6 +11,11 @@ function sunshine_modal_display_comments() {
 		wp_send_json_error( __( 'Not a valid image ID', 'sunshine-photo-cart' ) );
 	}
 
+	// Verify user has access to the image's gallery.
+	if ( ! $image->can_access() ) {
+		wp_send_json_error( array( 'reason' => __( 'Access denied', 'sunshine-photo-cart' ) ) );
+	}
+
 	$comments = $image->get_comments();
 	$result   = array(
 		'html' => sunshine_get_template_html(

@@ -30,7 +30,8 @@ function sunshine_get_active_payment_methods() {
 function sunshine_get_allowed_payment_methods() {
 	$payment_methods = sunshine_get_payment_methods();
 	if ( empty( $payment_methods ) || ! is_array( $payment_methods ) ) {
-		return false;
+		// Empty array, not false: consumers pass this to array_key_exists()/count().
+		return array();
 	}
 	$final_payment_methods = array();
 	foreach ( $payment_methods as $id => $payment_method ) {

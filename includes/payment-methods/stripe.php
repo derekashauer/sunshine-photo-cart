@@ -2614,8 +2614,11 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			$order_id = $session['metadata']['order_id'] ?? null;
 
 			if ( ! $order_id ) {
-				SPC()->log( 'Stripe Webhook: No order_id in checkout session metadata' );
-				status_header( 400 );
+				// Not a Sunshine checkout session (e.g. a Payment Link or a Checkout created by other
+				// software on the same Stripe account). Acknowledge so it doesn't count as a failed
+				// delivery and mark the endpoint unhealthy.
+				SPC()->log( 'Stripe Webhook: ignoring checkout.session.completed not tied to a Sunshine order: ' . ( $session['id'] ?? '' ) );
+				status_header( 200 );
 				exit;
 			}
 
@@ -2688,6 +2691,16 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			}
 
 			if ( ! $order || ! $order->exists() ) {
+
+				// No Sunshine order_id on the intent → it isn't ours (Payment Link / invoice / other
+				// software). Acknowledge and skip so it doesn't fail the endpoint.
+				if ( empty( $payment_intent['metadata']['order_id'] ) ) {
+					SPC()->log( 'Stripe Webhook: ignoring payment_intent.succeeded not tied to a Sunshine order: ' . $payment_intent['id'] );
+					status_header( 200 );
+					exit;
+				}
+
+				// Has our order_id but the order couldn't be loaded — a real problem; let Stripe retry.
 				SPC()->log( 'Could not find order by payment intent in webhook: ' . $payment_intent['id'] );
 				status_header( 400 );
 				exit;

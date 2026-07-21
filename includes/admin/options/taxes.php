@@ -82,6 +82,8 @@ function sunshine_taxes_display() {
 		</tbody>
 	</table>
 
+	<p class="description"><?php esc_html_e( 'Zip/Postal Code(s): separate multiple codes with commas. Use * as a wildcard (902* matches anything starting with 902) or ... for a numeric range (90210...99000). Leave empty to match the whole state or country.', 'sunshine-photo-cart' ); ?></p>
+
 	<script>
 	jQuery( document ).ready(function($){
 
