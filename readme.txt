@@ -243,6 +243,14 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.6.13 =
+* Performance: The session cookie is now only set once a visitor has something to remember (items in the cart, a favorite, a gallery password), instead of on every request. Pages with no Sunshine content no longer send a cookie, so hosts and caching plugins can serve them from cache again
+* Performance: Visitors who already have a session are no longer sent a replacement cookie on every page view, only when the existing one is close to expiring
+* Performance: The session cookie is now removed once there is nothing left to remember, such as after a cart is emptied, so returning visitors can be served cached pages again instead of waiting for the cookie to expire
+* Performance: With an empty cart, the shipping, delivery, payment, tax and checkout form setup no longer runs on every page load, cutting around 11 database queries from every request across the whole site
+* Security: The session cookie is now flagged HttpOnly, and Secure on sites served over HTTPS, so it can no longer be read by scripts in the browser
+* Dev: New filters sunshine_session_lazy_cookie and sunshine_session_destroy_when_empty to restore the previous session cookie behavior
+
 = 3.6.12 - July 21, 2026 =
 * New: Zip/postal code fields for tax rates and the Local Delivery method now accept wildcard prefixes (902* matches any code starting with 902) and numeric ranges (90210...99000), in addition to exact comma-separated codes
 * Security: Comments on images in password-protected, private, or otherwise access-restricted galleries could be retrieved without passing the gallery's access check; the comments endpoint now enforces the same access control as the rest of the gallery
