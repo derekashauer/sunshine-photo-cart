@@ -75,6 +75,14 @@ class SPC_Cart {
 		// Get any session saved data for the cart
 		$this->setup_checkout_data();
 
+		// With nothing in the cart and no checkout in progress there is nothing to price,
+		// ship, tax or build a checkout form for. Everything below runs on every front end
+		// request, so stopping here keeps ordinary pages off the shipping, payment and
+		// checkout field code paths entirely.
+		if ( ! $force && $this->is_empty() && empty( $this->data ) ) {
+			return;
+		}
+
 		// Set delivery method
 		$delivery_methods = sunshine_get_delivery_methods();
 		if ( empty( $this->delivery_method ) ) {
