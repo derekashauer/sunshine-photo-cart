@@ -102,6 +102,11 @@ class SPC_Session {
 		if ( ! $this->started ) {
 			$this->start();
 		}
+		// Some add-ons store data against the raw ID instead of in this session.
+		if ( $this->started && ! isset( $this->data['_identity'] ) ) {
+			$this->data['_identity'] = '1';
+			$this->dirty             = true;
+		}
 		return $this->session_id;
 	}
 
@@ -389,11 +394,16 @@ class SPC_Session {
 		}
 
 		if ( is_array( $value ) ) {
-			$this->data[ $key ] = wp_json_encode( $value );
+			$stored_value = wp_json_encode( $value );
 		} else {
-			$this->data[ $key ] = sanitize_text_field( $value );
+			$stored_value = sanitize_text_field( $value );
 		}
 
+		if ( array_key_exists( $key, $this->data ) && $this->data[ $key ] === $stored_value ) {
+			return $stored_value;
+		}
+
+		$this->data[ $key ] = $stored_value;
 		$this->dirty = true;
 
 		return $this->data[ $key ];
