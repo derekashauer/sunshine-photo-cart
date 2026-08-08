@@ -273,31 +273,49 @@ function sunshine_get_gallery_descendants( $gallery_id, $status = 'publish' ) {
 }
 
 function sunshine_get_gallery_descendant_ids( $gallery_id, $status = 'publish' ) {
-	// Optimized to fetch only IDs instead of full post objects.
-	$children  = array();
-	$galleries = get_posts(
+	// Optimized to fetch only IDs instead of full post objects. One query
+	// fetches every gallery's ID and parent, then the tree is walked in PHP —
+	// the same strategy core's get_page_children() uses — instead of running
+	// one query per gallery node, which does not scale on sites with
+	// thousands of sub-galleries.
+	$relationships = get_posts(
 		array(
 			'post_type'      => 'sunshine-gallery',
-			'post_parent'    => $gallery_id,
 			'post_status'    => $status,
-			'fields'         => 'ids',
+			'fields'         => 'id=>parent',
 			'posts_per_page' => -1,
 			'no_found_rows'  => true,
 		)
 	);
 
-	if ( ! empty( $galleries ) ) {
-		$children = $galleries;
-		// Recursively get grandchildren, great-grandchildren, etc.
-		foreach ( $galleries as $child_id ) {
-			$grandchildren = sunshine_get_gallery_descendant_ids( $child_id, $status );
-			if ( ! empty( $grandchildren ) ) {
-				$children = array_merge( $children, $grandchildren );
+	if ( empty( $relationships ) ) {
+		return array();
+	}
+
+	$children_by_parent = array();
+	foreach ( $relationships as $relationship ) {
+		$children_by_parent[ (int) $relationship->post_parent ][] = (int) $relationship->ID;
+	}
+
+	// Breadth-first walk down from the requested gallery. Collecting into keys
+	// guards against corrupted parent pointers ever looping.
+	$children = array();
+	$queue    = array( (int) $gallery_id );
+	while ( ! empty( $queue ) ) {
+		$parent_id = array_shift( $queue );
+		if ( empty( $children_by_parent[ $parent_id ] ) ) {
+			continue;
+		}
+		foreach ( $children_by_parent[ $parent_id ] as $child_id ) {
+			if ( isset( $children[ $child_id ] ) ) {
+				continue;
 			}
+			$children[ $child_id ] = true;
+			$queue[]               = $child_id;
 		}
 	}
 
-	return $children;
+	return array_keys( $children );
 }
 
 function sunshine_get_image_dimensions( $size = 'thumbnail' ) {
