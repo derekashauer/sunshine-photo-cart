@@ -200,16 +200,16 @@ class SPC_Frontend {
 			$args              = array(
 				's' => $this->search_term,
 			);
+			$descendant_ids = array();
 			if ( $this->is_gallery() ) {
 				$args['post_parent__in'] = array( $this->current_gallery->get_id() );
-				$descendants             = sunshine_get_gallery_descendants( $this->current_gallery->get_id() );
-				if ( ! empty( $descendants ) ) {
-					foreach ( $descendants as $descendant ) {
-						$descendant_gallery = sunshine_get_gallery( $descendant );
-						if ( $descendant_gallery->can_access() ) {
-							$args['post_parent__in'][] = $descendant->ID;
-						}
-					}
+				// Work with descendant IDs and the lightweight visibility filter;
+				// loading every descendant as a full object exhausts memory on
+				// sites with thousands of sub-galleries.
+				$descendant_ids = sunshine_get_gallery_descendant_ids( $this->current_gallery->get_id() );
+				if ( ! empty( $descendant_ids ) ) {
+					$accessible_ids          = sunshine_filter_gallery_ids_by_visibility( $descendant_ids, 'access' );
+					$args['post_parent__in'] = array_merge( $args['post_parent__in'], $accessible_ids );
 				}
 			}
 			$args                 = apply_filters( 'sunshine_search_args', $args );
@@ -217,17 +217,11 @@ class SPC_Frontend {
 
 			// Search for matching sub-galleries when searching within a gallery.
 			if ( $this->is_gallery() ) {
-				// Get all descendant gallery IDs to search within.
-				$descendant_ids = array( $this->current_gallery->get_id() );
-				$descendants    = sunshine_get_gallery_descendants( $this->current_gallery->get_id() );
-				if ( ! empty( $descendants ) ) {
-					foreach ( $descendants as $descendant ) {
-						$descendant_ids[] = $descendant->ID;
-					}
-				}
+				// Search within the current gallery and all of its descendants,
+				// reusing the descendant IDs fetched above.
 				$gallery_args                 = array(
 					's'               => $this->search_term,
-					'post_parent__in' => $descendant_ids,
+					'post_parent__in' => array_merge( array( $this->current_gallery->get_id() ), $descendant_ids ),
 				);
 				$gallery_args                 = apply_filters( 'sunshine_search_gallery_args', $gallery_args );
 				$this->gallery_search_results = sunshine_get_galleries( $gallery_args, 'access' );

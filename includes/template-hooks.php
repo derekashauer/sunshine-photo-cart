@@ -47,11 +47,14 @@ function sunshine_gallery_loop_display( $galleries = array() ) {
 	}
 
 	if ( empty( $galleries ) ) {
-		$galleries = sunshine_get_galleries( array( 'post_parent' => 0 ), 'view' );
-	}
-
-	if ( empty( $galleries ) ) {
-		sunshine_get_template( 'galleries/empty' );
+		// Don't fetch the full gallery set here — the galleries template fetches
+		// just the current page itself, keeping memory constant on large sites.
+		// A lightweight ID-based count decides whether to show the empty state.
+		if ( ! sunshine_get_galleries_count( array( 'post_parent' => 0 ), 'view' ) ) {
+			sunshine_get_template( 'galleries/empty' );
+			return;
+		}
+		sunshine_get_template( 'galleries/galleries' );
 		return;
 	}
 
