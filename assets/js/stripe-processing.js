@@ -54,6 +54,10 @@ jQuery( document ).on( 'sunshine_checkout_payment_change', async function ( even
 		const payment_options = {
 			layout: {
 				type: spc_stripe_vars.layout,
+			},
+			wallets: {
+				applePay: spc_stripe_vars.apple_pay,
+				googlePay: spc_stripe_vars.google_pay,
 			}
 		};
 		

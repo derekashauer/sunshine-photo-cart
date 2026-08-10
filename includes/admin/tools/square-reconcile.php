@@ -137,12 +137,14 @@ class SPC_Tool_Square_Reconcile extends SPC_Tool {
 				return array(
 					'ok'      => true,
 					'order'   => $order->get_name(),
+					/* translators: %s: order name */
 					'summary' => sprintf( __( '%s: finalized', 'sunshine-photo-cart' ), $order->get_name() ),
 				);
 			case 'already_paid':
 				return array(
 					'ok'      => true,
 					'order'   => $order->get_name(),
+					/* translators: %s: order name */
 					'summary' => sprintf( __( '%s: already paid', 'sunshine-photo-cart' ), $order->get_name() ),
 				);
 			case 'marked_failed':
@@ -150,6 +152,7 @@ class SPC_Tool_Square_Reconcile extends SPC_Tool {
 				return array(
 					'ok'      => true,
 					'order'   => $order->get_name(),
+					/* translators: %1$s: order name, %2$s: failure reason reported by Square */
 					'summary' => sprintf( __( '%1$s: marked failed (Square: %2$s)', 'sunshine-photo-cart' ), $order->get_name(), $reason ?: 'declined' ),
 				);
 			case 'still_pending':
@@ -157,12 +160,14 @@ class SPC_Tool_Square_Reconcile extends SPC_Tool {
 				return array(
 					'ok'      => true,
 					'order'   => $order->get_name(),
+					/* translators: %1$s: order name, %2$s: Square payment status */
 					'summary' => sprintf( __( '%1$s: still pending at Square (%2$s)', 'sunshine-photo-cart' ), $order->get_name(), $status ),
 				);
 			case 'in_progress':
 				return array(
 					'ok'      => true,
 					'order'   => $order->get_name(),
+					/* translators: %s: order name */
 					'summary' => sprintf( __( '%s: another reconcile already running, skipped', 'sunshine-photo-cart' ), $order->get_name() ),
 				);
 			default:

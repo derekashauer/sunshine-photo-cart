@@ -620,7 +620,8 @@ class SPC_Frontend {
 		if ( SPC()->get_option( 'enable_favorites' ) && $image->allow_favorites() ) {
 			// Always use sunshine--add-to-favorites; JS handles guest flow.
 			$menu[10] = array(
-				'name'    => __( 'Favorite', 'sunshine-photo-cart' ) . ': ' . $image->get_name(),
+				/* translators: %s: image name */
+				'name'    => sprintf( __( 'Favorite: %s', 'sunshine-photo-cart' ), $image->get_name() ),
 				'class'   => 'sunshine--favorite',
 				'a_class' => 'sunshine--add-to-favorites',
 				'attr'    => array(
@@ -632,7 +633,8 @@ class SPC_Frontend {
 		if ( $image->can_purchase() && ! SPC()->get_option( 'proofing', false ) ) {
 			if ( SPC()->get_option( 'products_require_account' ) && ! is_user_logged_in() ) {
 				$menu[20] = array(
-					'name'    => __( 'Purchase options', 'sunshine-photo-cart' ) . ': ' . $image->get_name(),
+					/* translators: %s: image name */
+					'name'    => sprintf( __( 'Purchase options: %s', 'sunshine-photo-cart' ), $image->get_name() ),
 					'class'   => 'sunshine--purchase',
 					'a_class' => 'sunshine--open-modal',
 					'attr'    => array(
@@ -644,7 +646,8 @@ class SPC_Frontend {
 				);
 			} else {
 				$menu[20] = array(
-					'name'    => __( 'Purchase options', 'sunshine-photo-cart' ) . ': ' . $image->get_name(),
+					/* translators: %s: image name */
+					'name'    => sprintf( __( 'Purchase options: %s', 'sunshine-photo-cart' ), $image->get_name() ),
 					'class'   => 'sunshine--purchase',
 					'a_class' => 'sunshine--open-modal',
 					'attr'    => array(
@@ -663,7 +666,8 @@ class SPC_Frontend {
 				$after_a = '<span class="sunshine--count sunshine--comment-count">' . esc_html( $comment_count ) . '</span>';
 			}
 			$menu[30] = array(
-				'name'    => __( 'Comments', 'sunshine-photo-cart' ) . ': ' . $image->get_name(),
+				/* translators: %s: image name */
+				'name'    => sprintf( __( 'Comments: %s', 'sunshine-photo-cart' ), $image->get_name() ),
 				// 'url'     => $image->get_permalink() . '#comments',
 				'class'   => 'sunshine--comments',
 				'after_a' => $after_a,

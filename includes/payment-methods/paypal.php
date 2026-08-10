@@ -48,7 +48,12 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 
 	public function options( $options ) {
 
-		$options[10]['description'] = 'Learn how to <a href="https://www.sunshinephotocart.com/docs/paypal" target="_blank">get your API connection Client ID and Secret</a>';
+		$options[10]['description'] = sprintf(
+			/* translators: 1: URL to the PayPal Developer Dashboard Apps & Credentials page, 2: URL to the Sunshine PayPal setup guide */
+			__( 'Sunshine connects to PayPal using <strong>REST API</strong> credentials: a <strong>Client ID</strong> and <strong>Secret</strong>. Create an app in the <a href="%1$s" target="_blank">PayPal Developer Dashboard</a> under <strong>Apps &amp; Credentials</strong> (a PayPal Business account is required) and copy its Client ID and Secret into the fields below. These are long codes, not your PayPal login email, account username, or website address. Need help? Follow the <a href="%2$s" target="_blank">step-by-step setup guide</a>.', 'sunshine-photo-cart' ),
+			'https://developer.paypal.com/dashboard/applications/live',
+			'https://www.sunshinephotocart.com/docs/paypal'
+		);
 
 		$options[] = array(
 			'name'    => __( 'Mode', 'sunshine-photo-cart' ),
@@ -64,6 +69,8 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 			'name'             => __( 'Live Client ID', 'sunshine-photo-cart' ),
 			'id'               => $this->id . '_client_id',
 			'type'             => 'text',
+			/* translators: %s is the URL to the PayPal Developer Dashboard Apps & Credentials page */
+			'description'      => sprintf( __( 'The Client ID from your <strong>Live</strong> app under <a href="%s" target="_blank">Apps &amp; Credentials</a>. It is a long code, not your PayPal email or website address.', 'sunshine-photo-cart' ), 'https://developer.paypal.com/dashboard/applications/live' ),
 			'conditions'       => array(
 				array(
 					'field'   => $this->id . '_mode',
@@ -78,6 +85,7 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 			'name'             => __( 'Live Secret', 'sunshine-photo-cart' ),
 			'id'               => $this->id . '_secret',
 			'type'             => 'text',
+			'description'      => __( 'The Secret from the same <strong>Live</strong> app. In the PayPal dashboard, click <strong>Show</strong> under Secret Key, then copy it here.', 'sunshine-photo-cart' ),
 			'conditions'       => array(
 				array(
 					'field'   => $this->id . '_mode',
@@ -92,6 +100,8 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 			'name'             => __( 'Sandbox Client ID', 'sunshine-photo-cart' ),
 			'id'               => $this->id . '_client_id_sandbox',
 			'type'             => 'text',
+			/* translators: %s is the URL to the PayPal Developer Dashboard Apps & Credentials page */
+			'description'      => sprintf( __( 'The Client ID from your <strong>Sandbox</strong> app under <a href="%s" target="_blank">Apps &amp; Credentials</a>. Used only for test payments.', 'sunshine-photo-cart' ), 'https://developer.paypal.com/dashboard/applications/sandbox' ),
 			'conditions'       => array(
 				array(
 					'field'   => $this->id . '_mode',
@@ -104,9 +114,10 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 			'hide_system_info' => true,
 		);
 		$options[] = array(
-			'name'             => __( 'Sandbox Live Secret', 'sunshine-photo-cart' ),
+			'name'             => __( 'Sandbox Secret', 'sunshine-photo-cart' ),
 			'id'               => $this->id . '_secret_sandbox',
 			'type'             => 'text',
+			'description'      => __( 'The Secret from the same <strong>Sandbox</strong> app. Used only for test payments.', 'sunshine-photo-cart' ),
 			'conditions'       => array(
 				array(
 					'field'   => $this->id . '_mode',
@@ -363,6 +374,14 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 					  }).then(function(result) {
 						  return result.json();
 					  }).then(function ( result ) {
+							if ( ! result.success ) {
+								var message = ( result.data && result.data.message ) ? result.data.message : '<?php echo esc_js( __( 'Could not connect to PayPal', 'sunshine-photo-cart' ) ); ?>';
+								console.error( 'PayPal create order failed: ' + message );
+								jQuery( '#sunshine--checkout--paypal-errors' ).remove();
+								jQuery( '#sunshine--checkout--paypal-buttons' ).before( '<div id="sunshine--checkout--paypal-errors">' + message + '</div>' );
+								sunshine_checkout_updating_done();
+								throw new Error( message );
+							}
 							return result.data.order_id; // the data is the order object returned from the api call, its not the BrainTree.Response object
 						 });
 					},
@@ -605,12 +624,23 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 
 		SPC()->log( 'Error creating order for PayPal: ' . print_r( $order, 1 ) );
 		// DEBUG: Surface PayPal's specific rejection reason(s), which live in the details array.
+		$reasons = array();
 		if ( ! empty( $order->details ) ) {
 			foreach ( $order->details as $detail ) {
 				SPC()->log( 'PayPal error detail: ' . ( isset( $detail->issue ) ? $detail->issue : '' ) . ' - ' . ( isset( $detail->description ) ? $detail->description : '' ) );
+				if ( ! empty( $detail->description ) ) {
+					$reasons[] = $detail->description;
+				}
 			}
 		}
-		wp_send_json_error();
+		if ( ! empty( $reasons ) ) {
+			$message = implode( ' ', $reasons );
+		} elseif ( ! empty( $order->message ) ) {
+			$message = $order->message;
+		} else {
+			$message = __( 'Could not connect to PayPal', 'sunshine-photo-cart' );
+		}
+		wp_send_json_error( array( 'message' => $message ) );
 
 	}
 
@@ -795,6 +825,9 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 	public function checkout_validation( $section ) {
 		if ( $section == 'payment' && SPC()->cart->get_total() > 0 && SPC()->cart->get_checkout_data_item( 'payment_method' ) == $this->id ) {
 			if ( empty( $_POST['paypal_order_id'] ) ) {
+				// Log which PayPal fields the buyer's browser did/didn't submit so we can tell
+				// "onApprove never ran" (none present) from a partial/odd submit path.
+				SPC()->log( 'PayPal validation failed: paypal_order_id missing. Submitted PayPal fields - paypal_order_id: ' . ( empty( $_POST['paypal_order_id'] ) ? 'empty' : 'present' ) . ', paypal_payer_id: ' . ( empty( $_POST['paypal_payer_id'] ) ? 'empty' : 'present' ) . ', paypal_payment_source: ' . ( empty( $_POST['paypal_payment_source'] ) ? 'empty' : 'present' ) );
 				SPC()->cart->add_error( __( 'Invalid payment', 'sunshine-photo-cart' ) );
 			}
 		}

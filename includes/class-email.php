@@ -309,6 +309,7 @@ class SPC_Email {
 		if ( ! empty( $this->reply_to ) ) {
 			$headers[] = 'Reply-To: ' . $this->reply_to;
 		}
+		$headers = apply_filters( 'sunshine_email_headers', $headers, $this );
 
 		// Make sure we get any custom message that may exist.
 		$this->args['message']  = $this->get_message();

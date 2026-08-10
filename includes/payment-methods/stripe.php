@@ -162,28 +162,27 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			'currency' => $this->currency,
 		);
 
-		// Only include payment method configuration when creating new payment intents.
+		// Configure which payment methods appear. Optimized Checkout lets Stripe apply the
+		// account's default configuration implicitly; manual selection passes that same
+		// configuration explicitly so the merchant's grid toggles apply. Unlike the legacy
+		// payment_method_types list, a configuration supports wallets (Apple Pay, Google Pay).
+		$optimized_checkout = $this->get_option( 'optimized_checkout' );
+		$is_optimized       = ( $optimized_checkout === 'yes' || $optimized_checkout === '1' || $optimized_checkout === false );
+
+		SPC()->log( 'Stripe optimized_checkout setting value: ' . var_export( $optimized_checkout, true ) );
+
+		// automatic_payment_methods can only be set when creating an intent, not when updating one.
 		if ( ! $for_update ) {
-			$optimized_checkout = $this->get_option( 'optimized_checkout' );
+			$args['automatic_payment_methods'] = array(
+				'enabled' => 'true',
+			);
+		}
 
-			SPC()->log( 'Stripe optimized_checkout setting value: ' . var_export( $optimized_checkout, true ) );
-
-			if ( $optimized_checkout === 'yes' || $optimized_checkout === '1' || $optimized_checkout === false ) {
-				// Use automatic payment methods (Optimized Checkout).
-				$args['automatic_payment_methods'] = array(
-					'enabled' => 'true',
-				);
-				SPC()->log( 'Using automatic_payment_methods (Optimized Checkout)' );
-			} else {
-				// Use manually selected payment methods
-				$enabled_methods = $this->get_enabled_payment_methods();
-				SPC()->log( 'Manually selected payment methods: ' . implode( ', ', $enabled_methods ) );
-				if ( ! empty( $enabled_methods ) ) {
-					$args['payment_method_types'] = $enabled_methods;
-				} else {
-					// Fallback to card only
-					$args['payment_method_types'] = array( 'card' );
-				}
+		if ( ! $is_optimized ) {
+			$pmc_id = $this->get_pmc_id();
+			if ( $pmc_id ) {
+				$args['payment_method_configuration'] = $pmc_id;
+				SPC()->log( 'Using payment method configuration: ' . $pmc_id );
 			}
 		}
 
@@ -774,9 +773,10 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$optimized_checkout = $this->get_option( 'optimized_checkout' );
 		// Optimized is ON if: value is 'yes', '1', or false (never saved, use default 'yes')
 		// Optimized is OFF if: value is '' (explicitly unchecked and saved)
-		$is_optimized      = ( $optimized_checkout === 'yes' || $optimized_checkout === '1' || $optimized_checkout === false );
-		$enabled_methods   = $this->get_enabled_payment_methods();
-		$available_methods = $this->get_available_payment_methods();
+		$is_optimized = ( $optimized_checkout === 'yes' || $optimized_checkout === '1' || $optimized_checkout === false );
+
+		// Per-method state comes from the connected account's Stripe payment method configuration.
+		$pmc = $this->get_pmc();
 
 		// Define all known payment methods with their display names
 		$all_payment_methods = $this->get_all_payment_method_definitions();
@@ -794,10 +794,19 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 				<div class="sunshine-stripe-payment-methods-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;">
 					<?php foreach ( $all_payment_methods as $method_id => $method_info ) : ?>
 						<?php
-						$is_enabled   = in_array( $method_id, $enabled_methods );
-						$is_available = empty( $available_methods ) || in_array( $method_id, $available_methods );
+						$method_pmc     = isset( $pmc[ $method_id ] ) ? $pmc[ $method_id ] : array();
+						$pref_value     = isset( $method_pmc['display_preference']['value'] ) ? $method_pmc['display_preference']['value'] : 'off';
+						$is_card        = ( 'card' === $method_id );
+						$is_available   = $is_card || ! empty( $method_pmc['available'] );
+						$is_enabled     = $is_card || ( $is_available && 'on' === $pref_value );
+						$is_overridable = ! empty( $method_pmc['display_preference']['overridable'] );
+						// The toggle can't be changed for card (always on) or for methods that are
+						// unavailable / not overridable. Only unavailable methods are faded — card and
+						// other available methods stay full-opacity so "on" doesn't read as "disabled".
+						$is_disabled    = $is_card || ! $is_available || ! $is_overridable;
+						$is_greyed      = ! $is_available;
 						?>
-						<div class="sunshine-stripe-payment-method" style="background: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 12px; display: flex; align-items: center; justify-content: space-between; <?php echo ! $is_available ? 'opacity: 0.5;' : ''; ?>">
+						<div class="sunshine-stripe-payment-method" style="background: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 12px; display: flex; align-items: center; justify-content: space-between; <?php echo $is_greyed ? 'opacity: 0.5;' : ''; ?>">
 							<div style="display: flex; align-items: center; gap: 10px;">
 								<span style="font-weight: 500;"><?php echo esc_html( $method_info['name'] ); ?></span>
 							</div>
@@ -806,7 +815,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 									class="sunshine-stripe-payment-method-toggle"
 									data-method="<?php echo esc_attr( $method_id ); ?>"
 									<?php checked( $is_enabled ); ?>
-									<?php disabled( ! $is_available ); ?>
+									<?php disabled( $is_locked ); ?>
 									style="opacity: 0; width: 0; height: 0;">
 								<span class="sunshine-toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: <?php echo $is_enabled ? '#635bff' : '#ccc'; ?>; border-radius: 24px; transition: 0.3s;">
 									<span style="position: absolute; content: ''; height: 18px; width: 18px; left: <?php echo $is_enabled ? '23px' : '3px'; ?>; bottom: 3px; background-color: white; border-radius: 50%; transition: 0.3s;"></span>
@@ -815,6 +824,17 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 						</div>
 					<?php endforeach; ?>
 				</div>
+
+				<p class="description" style="margin: 0 0 15px;">
+					<?php esc_html_e( 'Greyed-out methods are not active on your Stripe account. Enable them in your Stripe Dashboard, then use Sync Payment Methods.', 'sunshine-photo-cart' ); ?><br>
+					<?php
+					printf(
+						/* translators: %s is a link to the Stripe Dashboard Link settings page */
+						esc_html__( 'When Link is enabled, Stripe automatically offers customers Link\'s own options (bank transfer and Buy Now, Pay Later). Stripe does not allow these to be turned off individually: turn Link off below to remove them, or manage Buy Now, Pay Later in your %s.', 'sunshine-photo-cart' ),
+						'<a href="https://dashboard.stripe.com/settings/link" target="_blank">' . esc_html__( 'Stripe Dashboard Link settings', 'sunshine-photo-cart' ) . '</a>'
+					);
+					?>
+				</p>
 
 				<button type="button" id="sunshine-stripe-sync-payment-methods" class="button">
 					<?php esc_html_e( 'Sync Payment Methods', 'sunshine-photo-cart' ); ?>
@@ -979,34 +999,139 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	}
 
 	/**
-	 * Get enabled payment methods from options
+	 * Get the ID of the Stripe payment method configuration to manage.
 	 *
-	 * @return array Array of enabled payment method IDs
+	 * Uses the connected account's existing default configuration, which reflects the
+	 * account's real capabilities and (unlike the legacy payment_method_types list)
+	 * supports wallets like Apple Pay and Google Pay. Discovered once and cached.
+	 *
+	 * @return string|false Configuration ID, or false if none could be found.
 	 */
-	private function get_enabled_payment_methods() {
-		$enabled = SPC()->get_option( 'stripe_enabled_payment_methods' );
-		if ( empty( $enabled ) || ! is_array( $enabled ) ) {
-			// Default to card only
-			return array( 'card' );
+	private function get_pmc_id() {
+		$mode   = $this->get_mode_value();
+		$pmc_id = SPC()->get_option( 'stripe_pmc_id_' . $mode );
+		if ( ! empty( $pmc_id ) ) {
+			return $pmc_id;
 		}
-		return $enabled;
+		return $this->discover_pmc_id();
 	}
 
 	/**
-	 * Get available payment methods from Stripe (cached)
+	 * Find the connected account's editable default payment method configuration.
 	 *
-	 * @return array Array of available payment method IDs, or empty if not synced
+	 * Prefers the platform-managed default (has a parent and overridable methods) — this is
+	 * the configuration Stripe applies to automatic payment methods and that the account can
+	 * toggle. Falls back to any active default. Caches the ID in an option.
+	 *
+	 * @return string|false Configuration ID, or false on failure.
 	 */
-	private function get_available_payment_methods() {
-		$mode      = $this->get_mode_value();
-		$cache_key = 'sunshine_stripe_available_methods_' . $mode;
-		$cached    = get_transient( $cache_key );
+	private function discover_pmc_id() {
+		$mode = $this->get_mode_value();
 
+		if ( empty( $this->get_account_id( $mode ) ) || empty( $this->get_secret_key( $mode ) ) ) {
+			return false;
+		}
+
+		$response = $this->make_stripe_request( 'payment_method_configurations', array( 'limit' => 100 ) );
+		if ( is_wp_error( $response ) || empty( $response['data'] ) ) {
+			if ( is_wp_error( $response ) ) {
+				SPC()->log( 'Failed listing Stripe payment method configurations: ' . $response->get_error_message() );
+			}
+			return false;
+		}
+
+		$fallback = false;
+		foreach ( $response['data'] as $config ) {
+			if ( empty( $config['is_default'] ) || empty( $config['active'] ) ) {
+				continue;
+			}
+			// Prefer the editable platform-managed default (parented, methods overridable).
+			if ( ! empty( $config['parent'] ) && ! empty( $config['card']['display_preference']['overridable'] ) ) {
+				SPC()->update_option( 'stripe_pmc_id_' . $mode, $config['id'] );
+				return $config['id'];
+			}
+			if ( ! $fallback ) {
+				$fallback = $config['id'];
+			}
+		}
+
+		if ( $fallback ) {
+			SPC()->update_option( 'stripe_pmc_id_' . $mode, $fallback );
+		}
+
+		return $fallback;
+	}
+
+	/**
+	 * Get the payment method configuration from Stripe (cached).
+	 *
+	 * @return array Map of method ID => Stripe method object (with `available` and
+	 *               `display_preference`), or empty array if unavailable.
+	 */
+	private function get_pmc() {
+		$mode      = $this->get_mode_value();
+		$cache_key = 'sunshine_stripe_pmc_' . $mode;
+		$cached    = get_transient( $cache_key );
 		if ( $cached !== false ) {
 			return $cached;
 		}
 
-		return array(); // Return empty if not synced yet (shows all as available)
+		$pmc_id = $this->get_pmc_id();
+		if ( empty( $pmc_id ) ) {
+			return array();
+		}
+
+		$response = $this->make_stripe_request( 'payment_method_configurations/' . $pmc_id );
+		if ( is_wp_error( $response ) ) {
+			SPC()->log( 'Failed retrieving Stripe payment method configuration: ' . $response->get_error_message() );
+			// Stored ID may be stale; clear it so it is re-discovered next time.
+			SPC()->update_option( 'stripe_pmc_id_' . $mode, '' );
+			return array();
+		}
+
+		// Reduce to the methods we know about.
+		$methods = array();
+		foreach ( array_keys( $this->get_all_payment_method_definitions() ) as $method ) {
+			if ( isset( $response[ $method ] ) && is_array( $response[ $method ] ) ) {
+				$methods[ $method ] = $response[ $method ];
+			}
+		}
+
+		set_transient( $cache_key, $methods, DAY_IN_SECONDS );
+
+		return $methods;
+	}
+
+	/**
+	 * Enable or disable a single method in the Sunshine payment method configuration.
+	 *
+	 * @param string $method  Payment method ID.
+	 * @param bool   $enabled Whether the method should be enabled.
+	 * @return bool True on success, false on failure.
+	 */
+	private function update_pmc_method( $method, $enabled ) {
+		$pmc_id = $this->get_pmc_id();
+		if ( empty( $pmc_id ) ) {
+			return false;
+		}
+
+		$args = array(
+			$method => array(
+				'display_preference' => array(
+					'preference' => $enabled ? 'on' : 'off',
+				),
+			),
+		);
+
+		$response = $this->make_stripe_request( 'payment_method_configurations/' . $pmc_id, $args, 'POST' );
+		if ( is_wp_error( $response ) ) {
+			SPC()->log( 'Failed updating Stripe payment method configuration: ' . $response->get_error_message() );
+			return false;
+		}
+
+		delete_transient( 'sunshine_stripe_pmc_' . $this->get_mode_value() );
+
+		return true;
 	}
 
 	/**
@@ -1021,87 +1146,17 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			wp_send_json_error( __( 'Permission denied', 'sunshine-photo-cart' ) );
 		}
 
-		$this->setup();
+		// Clear the cached configuration and re-fetch it fresh from Stripe.
+		delete_transient( 'sunshine_stripe_pmc_' . $this->get_mode_value() );
 
-		// Fetch payment method configurations from Stripe
-		$response = $this->make_stripe_request( 'payment_method_configurations', array( 'limit' => 100 ) );
-
-		if ( is_wp_error( $response ) ) {
-			SPC()->log( 'Failed to sync payment methods: ' . $response->get_error_message() );
-			wp_send_json_error( $response->get_error_message() );
+		$pmc = $this->get_pmc();
+		if ( empty( $pmc ) ) {
+			wp_send_json_error( __( 'Could not sync payment methods from Stripe', 'sunshine-photo-cart' ) );
 		}
 
-		$available_methods = array();
+		SPC()->log( 'Synced Stripe payment method configuration: ' . implode( ', ', array_keys( $pmc ) ) );
 
-		// Parse the response to get available payment methods
-		if ( ! empty( $response['data'] ) ) {
-			foreach ( $response['data'] as $config ) {
-				// Each config has payment method types
-				if ( ! empty( $config ) && is_array( $config ) ) {
-					foreach ( $config as $key => $value ) {
-						// Check for enabled payment methods
-						if ( is_array( $value ) && isset( $value['available'] ) && $value['available'] ) {
-							$available_methods[] = $key;
-						}
-					}
-				}
-			}
-		}
-
-		// If we couldn't parse properly, try alternative endpoint
-		if ( empty( $available_methods ) ) {
-			// Fallback: Use account capabilities
-			$account_id = $this->get_account_id();
-			if ( $account_id ) {
-				$account_response = $this->make_stripe_request( 'accounts/' . $account_id );
-				if ( ! is_wp_error( $account_response ) && ! empty( $account_response['capabilities'] ) ) {
-					foreach ( $account_response['capabilities'] as $capability => $status ) {
-						if ( $status === 'active' ) {
-							// Map capability names to payment method types
-							$method_map = array(
-								'card_payments'       => 'card',
-								'transfers'           => null, // Not a payment method
-								'us_bank_account_ach_payments' => 'us_bank_account',
-								'affirm_payments'     => 'affirm',
-								'afterpay_clearpay_payments' => 'afterpay_clearpay',
-								'klarna_payments'     => 'klarna',
-								'link_payments'       => 'link',
-								'cashapp_payments'    => 'cashapp',
-								'eps_payments'        => 'eps',
-								'giropay_payments'    => 'giropay',
-								'ideal_payments'      => 'ideal',
-								'p24_payments'        => 'p24',
-								'sepa_debit_payments' => 'sepa_debit',
-								'sofort_payments'     => 'sofort',
-								'bancontact_payments' => 'bancontact',
-								'alipay_payments'     => 'alipay',
-								'wechat_pay_payments' => 'wechat_pay',
-							);
-
-							if ( isset( $method_map[ $capability ] ) && $method_map[ $capability ] ) {
-								$available_methods[] = $method_map[ $capability ];
-							}
-						}
-					}
-				}
-			}
-		}
-
-		// Always include card as it's the most basic
-		if ( ! in_array( 'card', $available_methods ) ) {
-			array_unshift( $available_methods, 'card' );
-		}
-
-		$available_methods = array_unique( $available_methods );
-
-		// Cache for 24 hours
-		$mode      = $this->get_mode_value();
-		$cache_key = 'sunshine_stripe_available_methods_' . $mode;
-		set_transient( $cache_key, $available_methods, DAY_IN_SECONDS );
-
-		SPC()->log( 'Synced payment methods from Stripe: ' . implode( ', ', $available_methods ) );
-
-		wp_send_json_success( array( 'methods' => $available_methods ) );
+		wp_send_json_success();
 	}
 
 	/**
@@ -1119,27 +1174,16 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$method  = isset( $_POST['method'] ) ? sanitize_text_field( $_POST['method'] ) : '';
 		$enabled = isset( $_POST['enabled'] ) ? (bool) $_POST['enabled'] : false;
 
-		if ( empty( $method ) ) {
+		// Card is always on and cannot be toggled.
+		if ( empty( $method ) || 'card' === $method || ! array_key_exists( $method, $this->get_all_payment_method_definitions() ) ) {
 			wp_send_json_error( __( 'Invalid payment method', 'sunshine-photo-cart' ) );
 		}
 
-		$enabled_methods = $this->get_enabled_payment_methods();
-
-		if ( $enabled ) {
-			if ( ! in_array( $method, $enabled_methods ) ) {
-				$enabled_methods[] = $method;
-			}
-		} else {
-			$enabled_methods = array_diff( $enabled_methods, array( $method ) );
-			// Ensure at least card is enabled
-			if ( empty( $enabled_methods ) ) {
-				$enabled_methods = array( 'card' );
-			}
+		if ( ! $this->update_pmc_method( $method, $enabled ) ) {
+			wp_send_json_error( __( 'Could not update payment method', 'sunshine-photo-cart' ) );
 		}
 
-		SPC()->update_option( 'stripe_enabled_payment_methods', array_values( $enabled_methods ) );
-
-		wp_send_json_success( array( 'enabled_methods' => $enabled_methods ) );
+		wp_send_json_success();
 	}
 
 	private function get_webhook_url() {
@@ -1234,6 +1278,10 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		SPC()->update_option( 'stripe_secret_key_' . $mode, sanitize_text_field( $_GET['secret_key'] ) );
 		SPC()->update_option( 'stripe_mode', $mode );
 
+		// Clear any cached payment method configuration from a previous account.
+		SPC()->update_option( 'stripe_pmc_id_' . $mode, '' );
+		delete_transient( 'sunshine_stripe_pmc_' . $mode );
+
 		SPC()->notices->add_admin( 'stripe_connected', __( 'Stripe has successfully been connected', 'sunshine-photo-cart' ), 'success' );
 
 		$this->setup_payment_domain( $mode );
@@ -1264,6 +1312,8 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		SPC()->update_option( 'stripe_account_id_' . $mode, '' );
 		SPC()->update_option( 'stripe_publishable_key_' . $mode, '' );
 		SPC()->update_option( 'stripe_secret_key_' . $mode, '' );
+		SPC()->update_option( 'stripe_pmc_id_' . $mode, '' );
+		delete_transient( 'sunshine_stripe_pmc_' . $mode );
 
 		SPC()->notices->add_admin( 'stripe_disconnected_success', __( 'Stripe has successfully been disconnected', 'sunshine-photo-cart' ), 'success' );
 
@@ -1497,6 +1547,19 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			return; // No JS needed for hosted checkout - redirect handles everything
 		}
 
+		// Wallet visibility. In manual mode, mirror the configuration's Apple/Google Pay
+		// state so a toggled-off wallet is also hidden client-side. Optimized Checkout
+		// leaves both on 'auto' and lets Stripe decide.
+		$apple_pay          = 'auto';
+		$google_pay         = 'auto';
+		$optimized_checkout = $this->get_option( 'optimized_checkout' );
+		$is_optimized       = ( $optimized_checkout === 'yes' || $optimized_checkout === '1' || $optimized_checkout === false );
+		if ( ! $is_optimized && SPC()->get_option( 'stripe_pmc_id_' . $this->get_mode_value() ) ) {
+			$pmc        = $this->get_pmc();
+			$apple_pay  = ( ! empty( $pmc['apple_pay']['available'] ) && isset( $pmc['apple_pay']['display_preference']['value'] ) && 'on' === $pmc['apple_pay']['display_preference']['value'] ) ? 'auto' : 'never';
+			$google_pay = ( ! empty( $pmc['google_pay']['available'] ) && isset( $pmc['google_pay']['display_preference']['value'] ) && 'on' === $pmc['google_pay']['display_preference']['value'] ) ? 'auto' : 'never';
+		}
+
 		wp_enqueue_script( 'sunshine-stripe', 'https://js.stripe.com/v3/' );
 		wp_enqueue_script( 'sunshine-stripe-processing', SUNSHINE_PHOTO_CART_URL . 'assets/js/stripe-processing.js', array( 'jquery' ), SUNSHINE_PHOTO_CART_VERSION, true );
 		wp_localize_script(
@@ -1505,6 +1568,8 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			array(
 				'publishable_key' => $this->get_publishable_key(),
 				'account_id'      => $this->get_account_id(),
+				'apple_pay'       => $apple_pay,
+				'google_pay'      => $google_pay,
 				'layout'          => ( $this->get_option( 'layout' ) ) ? $this->get_option( 'layout' ) : 'tabs',
 				'return_url'      => sunshine_get_page_url( 'checkout' ) . '?section=payment&stripe_payment_return',
 				'ajax_url'        => admin_url( 'admin-ajax.php' ),

@@ -143,7 +143,8 @@ class SPC_Shipping_Method {
 	public function default_options( $fields, $instance_id ) {
 		$fields['1']  = array(
 			'id'          => $this->id . '_header_' . $instance_id,
-			'name'        => $this->name . ' <span style="float: right; font-size: 14px; font-weight: normal; color: #999;">' . __( 'Instance ID', 'sunshine-photo-cart' ) . ': ' . $instance_id . '</span>',
+			/* translators: %s: unique instance ID for this shipping method */
+			'name'        => $this->name . ' <span style="float: right; font-size: 14px; font-weight: normal; color: #999;">' . sprintf( __( 'Instance ID: %s', 'sunshine-photo-cart' ), $instance_id ) . '</span>',
 			'type'        => 'header',
 			'description' => '',
 		);

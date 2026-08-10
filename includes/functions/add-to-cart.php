@@ -105,7 +105,13 @@ function sunshine_modal_add_items_to_cart( $product, $product_id, $image_id, $ga
 	if ( $product->get_type() !== 'multi-image' && ! empty( $image_ids_option ) ) {
 		unset( $options['images'] );
 		foreach ( $image_ids_option as $selected_image_id ) {
-			$add_to_cart_result = SPC()->cart->add_item( $product_id, $selected_image_id, $gallery_id, $price_level, ( ! empty( $options ) ) ? $options : '', intval( $qty ), $comments );
+			// Each image uses the price level and gallery assigned to it, not the one the modal was opened from.
+			$selected_image = sunshine_get_image( $selected_image_id );
+			if ( ! $selected_image->exists() || ! $selected_image->can_view() ) {
+				SPC()->log( 'Add to cart - Skipping invalid image ID provided: ' . $selected_image_id );
+				continue;
+			}
+			$add_to_cart_result = SPC()->cart->add_item( $product_id, $selected_image_id, $selected_image->get_gallery_id(), $selected_image->get_price_level(), ( ! empty( $options ) ) ? $options : '', intval( $qty ), $comments );
 		}
 		return $add_to_cart_result;
 	}
@@ -216,6 +222,12 @@ function sunshine_modal_add_item_to_cart() {
 
 	$image = $product = $gallery = $price_level = '';
 
+	// Only applies to products with no gallery or image, like gift cards and store products.
+	// Anything tied to a gallery or image gets the price level assigned to it below instead.
+	if ( ! empty( $_POST['price_level'] ) ) {
+		$price_level = intval( $_POST['price_level'] );
+	}
+
 	if ( ! empty( $gallery_id ) ) {
 		$gallery = sunshine_get_gallery( $gallery_id );
 		if ( $gallery->exists() ) {
@@ -232,10 +244,6 @@ function sunshine_modal_add_item_to_cart() {
 			wp_send_json_error( array( 'message' => __( 'Invalid image provided', 'sunshine-photo-cart' ) ) );
 		}
 		$price_level = $image->get_price_level();
-	}
-
-	if ( ! empty( $_POST['price_level'] ) ) {
-		$price_level = intval( $_POST['price_level'] );
 	}
 
 	$product_id = intval( $_POST['product_id'] );

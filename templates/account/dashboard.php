@@ -1,8 +1,8 @@
 <p>
 	<?php
 	printf(
-		/* translators: 1: user display name 2: logout url */
 		wp_kses(
+			/* translators: %1$s: user display name, %2$s: logout URL */
 			__( 'Hello %1$s (not %1$s? <a href="%2$s">Log out</a>)', 'sunshine-photo-cart' ),
 			array(
 				'a' => array(

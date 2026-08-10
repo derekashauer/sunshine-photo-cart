@@ -250,6 +250,9 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Performance: With an empty cart, the shipping, delivery, payment, tax and checkout form setup no longer runs on every page load, cutting around 11 database queries from every request across the whole site
 * Security: The session cookie is now flagged HttpOnly, and Secure on sites served over HTTPS, so it can no longer be read by scripts in the browser
 * Dev: New filters sunshine_session_lazy_cookie and sunshine_session_destroy_when_empty to restore the previous session cookie behavior
+* Dev: New filter sunshine_email_headers to modify outgoing email headers
+* Fix: Removing the last product that requires shipping from the cart (leaving only digital products) now removes the shipping fee instead of leaving it applied at checkout
+* Fix: Selecting Apple Pay or Google Pay in the Stripe payment method settings no longer causes a checkout error, and payment methods your Stripe account can't process are now greyed out so they can't be enabled by mistake
 
 = 3.6.12 - July 21, 2026 =
 * New: Zip/postal code fields for tax rates and the Local Delivery method now accept wildcard prefixes (902* matches any code starting with 902) and numeric ranges (90210...99000), in addition to exact comma-separated codes

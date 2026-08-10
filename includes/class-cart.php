@@ -101,6 +101,17 @@ class SPC_Cart {
 		$allowed_shipping_methods = sunshine_get_allowed_shipping_methods();
 		if ( ! empty( $allowed_shipping_methods ) && is_array( $allowed_shipping_methods ) ) {
 
+			// If the cart no longer contains any product that requires shipping (e.g. the
+			// customer removed the only print product, leaving digital-only items), remove any
+			// previously selected shipping method so its fee is not carried into the totals.
+			if ( ! empty( $this->data['shipping_method'] ) && ! $this->has_shippable_items() ) {
+				SPC()->log( 'Cleared shipping method because the cart no longer contains any product requiring shipping: ' . $this->data['shipping_method'] );
+				$this->set_checkout_data_item( 'shipping_method', '' );
+				$this->data['shipping_method'] = '';
+				$this->shipping_method         = '';
+				$this->uncomplete_checkout_section( 'shipping_method' );
+			}
+
 			// If a shipping method was previously selected but is no longer among the
 			// methods allowed for the current cart (e.g. the customer changed their cart
 			// after selecting), clear the stale selection and re-open the shipping method
@@ -1062,6 +1073,21 @@ class SPC_Cart {
 		}
 
 		return apply_filters( 'sunshine_cart_needs_delivery', $needs_delivery );
+	}
+
+	// Whether any product currently in the cart requires shipping. Unlike needs_shipping(),
+	// this is purely product-level and ignores the selected delivery method (pickup, etc.),
+	// so it can be used to decide when a stale shipping selection should be dropped.
+	public function has_shippable_items() {
+		if ( SPC()->cart->is_empty() ) {
+			return false;
+		}
+		foreach ( SPC()->cart->get_cart_items() as $item ) {
+			if ( $item->product->needs_shipping() ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public function needs_shipping() {

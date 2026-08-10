@@ -1,0 +1,57 @@
+Sunshine Photo Cart — Translation Glossary & Rules
+==================================================
+
+Read this before translating. It applies to EVERY locale. The /update-translations
+skill uses these rules when filling in new/changed strings.
+
+--------------------------------------------------------------------------------
+TONE — casual / informal, always
+--------------------------------------------------------------------------------
+Use the INFORMAL second person in every language. Never the formal register.
+  - German:     du / dein   (never Sie / Ihr)
+  - French:     tu-form     (never vous as the polite singular)
+  - Spanish:    tú          (never usted)
+  - Dutch:      je / jij    (never u)
+  - Italian:    tu          (never Lei)
+  - Portuguese: você/tu, informal tone
+  - (same principle for every other language)
+Sunshine's voice is grounded, warm, and plain. Translate for a friendly, capable
+peer — not a formal manual.
+
+--------------------------------------------------------------------------------
+DO NOT TRANSLATE — keep these exactly as written
+--------------------------------------------------------------------------------
+Brand:            Sunshine Photo Cart, Sunshine, WP Sunshine
+Payment gateways: Stripe, Square, PayPal, Authorize.Net, Mollie, PayFast,
+                  Paystack, Mercado Pago, QuickPay
+Fulfillment/other proper nouns: WHCC, Mailchimp, Campaign Monitor, Lightroom
+Technical tokens: any shortcode like [sunshine], HTML tags/attributes, URLs,
+                  file extensions, and code identifiers.
+
+--------------------------------------------------------------------------------
+PLACEHOLDERS & FORMATTING — preserve exactly
+--------------------------------------------------------------------------------
+- Keep every printf placeholder verbatim and in a sensible order for the target
+  language: %s, %d, %1$s, %2$s, %%.  Numbered placeholders (%1$s) may be reordered
+  to fit grammar; unnumbered ones (%s) must stay in source order.
+- Keep HTML unchanged: <a ...>, <strong>, <br>, spans, etc. Translate the visible
+  text between tags, never the tag names or attributes.
+- Preserve leading/trailing spaces and newlines exactly as in the source msgid.
+- Read the "translators:" comment (#. line) — it explains what each placeholder is.
+
+--------------------------------------------------------------------------------
+CONSISTENCY — reuse established terms
+--------------------------------------------------------------------------------
+Translate these core nouns the SAME way every time within a language (pick the
+term already used in the existing .po and stay consistent):
+  gallery, image/photo, cart, order, product, download, checkout, favorite,
+  price list, coupon/discount, shipping, customer.
+When unsure, prefer the term already present in the locale's existing translations.
+
+--------------------------------------------------------------------------------
+WHEN UNCERTAIN
+--------------------------------------------------------------------------------
+If a string is genuinely ambiguous or you are not confident, LEAVE IT FUZZY
+(#, fuzzy) rather than guessing. Fuzzy entries are excluded from the shipped
+.mo/.l10n.php and fall back to English — a correct English string beats a wrong
+translation.

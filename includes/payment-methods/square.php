@@ -431,6 +431,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 		$response = $this->api_request( 'v2/payments/' . $payment_id, '', 'GET' );
 		if ( is_wp_error( $response ) ) {
+			/* translators: %s: error message from Square */
 			SPC()->notices->add_admin( 'square_refresh_fee_fail_' . $payment_id, sprintf( __( 'Could not refresh Square processing fee: %s', 'sunshine-photo-cart' ), $response->get_error_message() ), 'error' );
 			wp_redirect( admin_url( 'post.php?post=' . $order_id . '&action=edit' ) );
 			exit;
@@ -1235,6 +1236,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 					$reason = $payment['delay_reason'];
 				}
 				$order->update_meta_value( 'square_idempotency_key', '' );
+				/* translators: %1$s: Square payment ID, %2$s: payment status */
 				$log_msg = sprintf( __( 'Square reports payment %1$s as %2$s', 'sunshine-photo-cart' ), $payment['id'], $payment_status );
 				if ( $reason ) {
 					$log_msg .= ': ' . $reason;
@@ -1254,6 +1256,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			SPC()->log( 'Square payment ' . $payment['id'] . ' returned non-final status: ' . $payment_status );
 			if ( $order && $order->exists() ) {
 				$this->store_payment_meta( $order, $payment, $square_order_id );
+				/* translators: %1$s: Square payment ID, %2$s: payment status */
 				$order->add_log( sprintf( __( 'Square payment %1$s returned status %2$s - waiting for completion', 'sunshine-photo-cart' ), $payment['id'], $payment_status ?: 'unknown' ) );
 			}
 			wp_send_json_error(
@@ -1526,6 +1529,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		if ( $status === 'COMPLETED' ) {
 			$square_order_id = ! empty( $payment['order_id'] ) ? $payment['order_id'] : '';
 			$this->store_payment_meta( $order, $payment, $square_order_id );
+			/* translators: %s: Square payment ID */
 			$order->add_log( sprintf( __( 'Square payment %s reconciled as COMPLETED', 'sunshine-photo-cart' ), $payment_id ) );
 			SPC()->log( 'reconcile_order: finalizing order ' . $order->get_id() . ' for Square payment ' . $payment_id );
 			SPC()->cart->post_process_order( $order );
@@ -1541,6 +1545,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			} elseif ( ! empty( $payment['delay_reason'] ) ) {
 				$reason = $payment['delay_reason'];
 			}
+			/* translators: %1$s: Square payment ID, %2$s: payment status */
 			$log_msg = sprintf( __( 'Square reports payment %1$s as %2$s', 'sunshine-photo-cart' ), $payment_id, $status );
 			if ( $reason ) {
 				$log_msg .= ': ' . $reason;
