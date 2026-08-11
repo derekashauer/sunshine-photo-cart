@@ -208,7 +208,21 @@ class SPC_Frontend {
 				// sites with thousands of sub-galleries.
 				$descendant_ids = sunshine_get_gallery_descendant_ids( $this->current_gallery->get_id() );
 				if ( ! empty( $descendant_ids ) ) {
-					$accessible_ids          = sunshine_filter_gallery_ids_by_visibility( $descendant_ids, 'access' );
+					$visibility_args = sunshine_get_galleries_query_args(
+						array(
+							'post__in' => $descendant_ids,
+						),
+						'access'
+					);
+					$use_optimized_query = sunshine_galleries_use_optimized_query( $visibility_args, 'access' );
+					// URL-only descendants were included by the previous can_access()
+					// implementation, so do not apply listing-page URL exclusion here.
+					$accessible_ids = sunshine_filter_gallery_ids_by_visibility(
+						$descendant_ids,
+						'access',
+						false,
+						$use_optimized_query
+					);
 					$args['post_parent__in'] = array_merge( $args['post_parent__in'], $accessible_ids );
 				}
 			}

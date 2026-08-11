@@ -149,20 +149,13 @@ function sunshine_get_seo_sitemap_exclude_ids() {
 	);
 	// Only IDs are needed here; constructing full gallery objects for every
 	// matching gallery exhausts memory on sites with thousands of galleries.
-	$args        = array_merge(
-		$args,
-		array(
-			'post_type'              => 'sunshine-gallery',
-			'post_status'            => 'publish',
-			'posts_per_page'         => -1,
-			'fields'                 => 'ids',
-			'no_found_rows'          => true,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-			'suppress_filters'       => false,
-		)
-	);
-	$gallery_ids = get_posts( $args );
+	$args                           = sunshine_get_galleries_query_args( $args, 'all' );
+	$args['fields']                 = 'ids';
+	$args['no_found_rows']          = true;
+	$args['update_post_meta_cache'] = false;
+	$args['update_post_term_cache'] = false;
+	$gallery_query                  = new WP_Query( $args );
+	$gallery_ids                    = $gallery_query->posts;
 	if ( ! empty( $gallery_ids ) ) {
 		$exclude_galleries = array_map( 'intval', $gallery_ids );
 	}

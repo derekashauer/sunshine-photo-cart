@@ -458,6 +458,9 @@ function sunshine_galleries_pagination_load() {
 
 	$per_page = sunshine_galleries_per_page();
 	$page     = intval( $_POST['page'] );
+	if ( $per_page <= 0 ) {
+		wp_send_json_error();
+	}
 
 	// The incoming page value is the number of pages already shown, so the next
 	// page to load is $page + 1. Only that page of galleries is constructed.

@@ -104,9 +104,11 @@ function sunshine_get_gallery_visibility_meta( $gallery_ids ) {
  * Filters a list of published gallery IDs down to the ones the current user can
  * see, without constructing full gallery objects or loading full gallery meta.
  * The real SPC_Gallery::can_view()/can_access() checks run against lightweight
- * objects seeded with only the meta those checks read.
+ * objects seeded with only the meta those checks read. Callers can retain URL
+ * galleries or use the standard metadata API when their previous behavior
+ * requires it.
  */
-function sunshine_filter_gallery_ids_by_visibility( $gallery_ids, $conditional_method = 'access' ) {
+function sunshine_filter_gallery_ids_by_visibility( $gallery_ids, $conditional_method = 'access', $exclude_url = true, $use_optimized_query = true ) {
 
 	if ( empty( $gallery_ids ) ) {
 		return array();
@@ -120,21 +122,30 @@ function sunshine_filter_gallery_ids_by_visibility( $gallery_ids, $conditional_m
 		return $gallery_ids;
 	}
 
-	$visibility_meta = sunshine_get_gallery_visibility_meta( $gallery_ids );
+	$visibility_meta = $use_optimized_query ? sunshine_get_gallery_visibility_meta( $gallery_ids ) : array();
 
 	$visible = array();
 	foreach ( $gallery_ids as $gallery_id ) {
-		$gallery = new SPC_Gallery(
-			(object) array(
-				'ID'          => $gallery_id,
-				'post_type'   => 'sunshine-gallery',
-				'post_status' => 'publish',
-				'post_parent' => 0,
-				'post_title'  => '',
-			)
-		);
-		$gallery->prefetch_meta( $visibility_meta[ $gallery_id ] );
-		if ( $gallery->get_access_type() == 'url' ) {
+		if ( $use_optimized_query ) {
+			$gallery = new SPC_Gallery(
+				(object) array(
+					'ID'          => $gallery_id,
+					'post_type'   => 'sunshine-gallery',
+					'post_status' => 'publish',
+					'post_parent' => 0,
+					'post_title'  => '',
+				)
+			);
+			$gallery->prefetch_meta( $visibility_meta[ $gallery_id ] );
+		} else {
+			// Use the standard metadata API so get_post_metadata filters and other
+			// dynamic visibility customizations retain their previous behavior.
+			$gallery = sunshine_get_gallery( $gallery_id );
+		}
+		if ( empty( $gallery ) || ! $gallery->get_id() ) {
+			continue;
+		}
+		if ( $exclude_url && $gallery->get_access_type() == 'url' ) {
 			continue;
 		}
 		if ( $conditional_method === 'view' && ! $gallery->can_view() ) {
@@ -149,6 +160,10 @@ function sunshine_filter_gallery_ids_by_visibility( $gallery_ids, $conditional_m
 	return $visible;
 }
 
+function sunshine_galleries_use_optimized_query( $args, $conditional_method = 'access' ) {
+	return (bool) apply_filters( 'sunshine_galleries_optimized_query', true, $args, $conditional_method );
+}
+
 /*
  * Returns the ordered IDs of galleries matching the args that the current user
  * is allowed to see, without loading full post or meta data. Returns false when
@@ -159,7 +174,7 @@ function sunshine_get_visible_gallery_ids( $custom_args = array(), $conditional_
 
 	$args = sunshine_get_galleries_query_args( $custom_args, $conditional_method );
 
-	if ( ! apply_filters( 'sunshine_galleries_optimized_query', true, $args, $conditional_method ) ) {
+	if ( ! sunshine_galleries_use_optimized_query( $args, $conditional_method ) ) {
 		return false;
 	}
 
@@ -239,10 +254,6 @@ function sunshine_get_galleries_paginated( $custom_args = array(), $conditional_
 }
 
 function sunshine_get_galleries_count( $custom_args = array(), $conditional_method = 'access' ) {
-	$visible_ids = sunshine_get_visible_gallery_ids( $custom_args, $conditional_method );
-	if ( $visible_ids !== false ) {
-		return count( $visible_ids );
-	}
 	$galleries = sunshine_get_galleries( $custom_args, $conditional_method );
 	if ( $galleries ) {
 		return count( $galleries );

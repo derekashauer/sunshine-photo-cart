@@ -1,5 +1,8 @@
 <?php
-if ( empty( $galleries ) ) {
+if ( ! empty( $paginated_galleries ) ) {
+	$galleries       = $paginated_galleries['galleries'];
+	$total_galleries = $paginated_galleries['total'];
+} elseif ( empty( $galleries ) ) {
 	// Fetch only the current page of galleries; the per-page limit is applied
 	// before gallery objects are constructed so memory use stays constant no
 	// matter how many galleries exist.
@@ -8,6 +11,10 @@ if ( empty( $galleries ) ) {
 	$paginated       = sunshine_get_galleries_paginated( array( 'post_parent' => 0 ), 'view', $current_page, $per_page );
 	$galleries       = $paginated['galleries'];
 	$total_galleries = $paginated['total'];
+	if ( empty( $galleries ) && empty( $total_galleries ) ) {
+		sunshine_get_template( 'galleries/empty' );
+		return;
+	}
 } else {
 	// Galleries were supplied by the caller; paginate the given set.
 	$total_galleries = count( $galleries );
