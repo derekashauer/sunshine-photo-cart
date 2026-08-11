@@ -7,6 +7,11 @@ abstract class Sunshine_Data {
 	protected $meta = array();
 	protected $post_type;
 	protected $taxonomy;
+	// When true, meta is read per-key on demand (through the WordPress meta cache)
+	// instead of copying and unserializing every meta row into the object up front.
+	protected $lazy_meta = false;
+	protected $meta_fully_loaded = false;
+	protected $prefetched_meta_keys = array();
 
 	public function __get( $key ) {
 		if ( array_key_exists( $key, $this->meta ) ) {
@@ -35,10 +40,25 @@ abstract class Sunshine_Data {
 	}
 
 	public function get_meta_data() {
-		if ( empty( $this->meta ) ) {
+		if ( empty( $this->meta ) || ( $this->lazy_meta && ! $this->meta_fully_loaded ) ) {
 			$this->set_meta_data();
 		}
 		return $this->meta;
+	}
+
+	// Seed specific meta values (raw, as stored) fetched in bulk elsewhere, so
+	// permission checks on large sets of galleries do not trigger a database
+	// lookup per object. Keys registered here that have no value are remembered
+	// as empty so reads of them can skip the database entirely.
+	public function prefetch_meta( $meta ) {
+		foreach ( (array) $meta as $key => $value ) {
+			if ( ! in_array( $key, $this->prefetched_meta_keys, true ) ) {
+				$this->prefetched_meta_keys[] = $key;
+			}
+			if ( ! empty( $value ) && ! array_key_exists( $key, $this->meta ) ) {
+				$this->meta[ $key ] = $value;
+			}
+		}
 	}
 
 	public function update_meta_data() {
@@ -53,10 +73,15 @@ abstract class Sunshine_Data {
 		} else {
 			$meta = get_post_meta( $this->id );
 		}
+		$this->meta_fully_loaded = true;
 		if ( empty( $meta ) ) {
 			return;
 		}
 		foreach ( $meta as $key => $value ) {
+			if ( array_key_exists( $key, $this->meta ) ) {
+				// Values already set at runtime win over stored values.
+				continue;
+			}
 			if ( ! empty( $value ) ) {
 				if ( count( $value ) == 1 ) {
 					$this->meta[ $key ] = maybe_unserialize( $value[0] );
@@ -89,11 +114,15 @@ abstract class Sunshine_Data {
 	}
 
 	public function get_meta_value( $key, $check_ancestors = false ) {
-		if ( empty( $this->meta ) ) {
+		if ( empty( $this->meta ) && ! $this->lazy_meta ) {
 			$this->set_meta_data();
 		}
 		if ( array_key_exists( $key, $this->meta ) && ! empty( $this->meta[ $key ] ) ) {
 			return maybe_unserialize( $this->meta[ $key ] );
+		}
+		if ( ! $check_ancestors && in_array( $key, $this->prefetched_meta_keys, true ) ) {
+			// Key was prefetched in bulk and has no value; skip the per-object lookup.
+			return false;
 		}
 		if ( ! empty( $this->taxonomy ) ) {
 			$value = get_term_meta( $this->id, $key, true );
@@ -112,6 +141,10 @@ abstract class Sunshine_Data {
 			}
 		}
 		if ( ! empty( $value ) ) {
+			if ( $this->lazy_meta && ! $check_ancestors ) {
+				// Cache for future reads; an ancestor's value must not be cached as our own.
+				$this->meta[ $key ] = $value;
+			}
 			return maybe_unserialize( $value );
 		}
 		return false;
