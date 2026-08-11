@@ -1,10 +1,22 @@
 <?php
-if ( empty( $galleries ) ) {
-	$galleries = sunshine_get_galleries( array( 'post_parent' => 0 ), 'view' );
-}
-
-if ( ! empty( $galleries ) ) {
-
+if ( ! empty( $paginated_galleries ) ) {
+	$galleries       = $paginated_galleries['galleries'];
+	$total_galleries = $paginated_galleries['total'];
+} elseif ( empty( $galleries ) ) {
+	// Fetch only the current page of galleries; the per-page limit is applied
+	// before gallery objects are constructed so memory use stays constant no
+	// matter how many galleries exist.
+	$per_page        = sunshine_galleries_per_page();
+	$current_page    = ( isset( $_GET['galleries_pagination'] ) ) ? max( 1, intval( $_GET['galleries_pagination'] ) ) : 1;
+	$paginated       = sunshine_get_galleries_paginated( array( 'post_parent' => 0 ), 'view', $current_page, $per_page );
+	$galleries       = $paginated['galleries'];
+	$total_galleries = $paginated['total'];
+	if ( empty( $galleries ) && empty( $total_galleries ) ) {
+		sunshine_get_template( 'galleries/empty' );
+		return;
+	}
+} else {
+	// Galleries were supplied by the caller; paginate the given set.
 	$total_galleries = count( $galleries );
 	$per_page        = sunshine_galleries_per_page();
 
@@ -14,6 +26,9 @@ if ( ! empty( $galleries ) ) {
 		$offset            = ( $current_page - 1 ) * $per_page;
 		$galleries         = array_slice( $galleries, $offset, $per_page );
 	}
+}
+
+if ( ! empty( $galleries ) ) {
 ?>
 
 	<div id="sunshine--gallery-items" class="sunshine--layout--<?php echo esc_attr( SPC()->get_option( 'gallery_layout', 'standard' ) ); ?> sunshine--col-<?php echo esc_attr( SPC()->get_option( 'galleries_columns', SPC()->get_option( 'columns' ) ) ); ?>">

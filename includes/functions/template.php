@@ -456,24 +456,26 @@ function sunshine_galleries_pagination_load() {
 
 	check_ajax_referer( 'sunshinephotocart', 'security' );
 
-	$per_page   = sunshine_galleries_per_page();
-	$page       = intval( $_POST['page'] );
-	$offset     = $per_page * $page;
-	$galleries  = sunshine_get_galleries( array( 'post_parent' => 0 ), 'view' );
+	$per_page = sunshine_galleries_per_page();
+	$page     = intval( $_POST['page'] );
+	if ( $per_page <= 0 ) {
+		wp_send_json_error();
+	}
 
-	if ( $galleries ) {
-		$galleries_slice = array_slice( $galleries, $offset, $per_page );
-		if ( ! empty( $galleries_slice ) ) {
-			$html = '';
-			foreach ( $galleries_slice as $gallery ) {
-				$html .= sunshine_get_template_html( 'galleries/gallery-item', array( 'gallery' => $gallery ) );
-			}
-			wp_send_json_success(
-				array(
-					'html' => $html,
-				)
-			);
+	// The incoming page value is the number of pages already shown, so the next
+	// page to load is $page + 1. Only that page of galleries is constructed.
+	$paginated = sunshine_get_galleries_paginated( array( 'post_parent' => 0 ), 'view', $page + 1, $per_page );
+
+	if ( ! empty( $paginated['galleries'] ) ) {
+		$html = '';
+		foreach ( $paginated['galleries'] as $gallery ) {
+			$html .= sunshine_get_template_html( 'galleries/gallery-item', array( 'gallery' => $gallery ) );
 		}
+		wp_send_json_success(
+			array(
+				'html' => $html,
+			)
+		);
 	}
 
 	wp_send_json_error();

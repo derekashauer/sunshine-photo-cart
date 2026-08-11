@@ -248,6 +248,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Performance: Visitors who already have a session are no longer sent a replacement cookie on every page view, only when the existing one is close to expiring
 * Performance: The session cookie is now removed once there is nothing left to remember, such as after a cart is emptied, so returning visitors can be served cached pages again instead of waiting for the cookie to expire
 * Performance: With an empty cart, the shipping, delivery, payment, tax and checkout form setup no longer runs on every page load, cutting around 11 database queries from every request across the whole site
+* Performance: The galleries page now loads galleries a page at a time instead of all at once, significantly reducing memory usage on sites with a large number of galleries
 * Security: The session cookie is now flagged HttpOnly, and Secure on sites served over HTTPS, so it can no longer be read by scripts in the browser
 * Dev: New filters sunshine_session_lazy_cookie and sunshine_session_destroy_when_empty to restore the previous session cookie behavior
 * Dev: New filter sunshine_email_headers to modify outgoing email headers

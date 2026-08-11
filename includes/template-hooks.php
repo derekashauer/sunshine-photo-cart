@@ -47,11 +47,16 @@ function sunshine_gallery_loop_display( $galleries = array() ) {
 	}
 
 	if ( empty( $galleries ) ) {
-		$galleries = sunshine_get_galleries( array( 'post_parent' => 0 ), 'view' );
-	}
-
-	if ( empty( $galleries ) ) {
-		sunshine_get_template( 'galleries/empty' );
+		$per_page     = sunshine_galleries_per_page();
+		$current_page = ( isset( $_GET['galleries_pagination'] ) ) ? max( 1, intval( $_GET['galleries_pagination'] ) ) : 1;
+		$paginated    = sunshine_get_galleries_paginated( array( 'post_parent' => 0 ), 'view', $current_page, $per_page );
+		if ( empty( $paginated['total'] ) ) {
+			sunshine_get_template( 'galleries/empty' );
+			return;
+		}
+		// The bundled template consumes this result directly. Older template
+		// overrides ignore it and retain their existing fallback behavior.
+		sunshine_get_template( 'galleries/galleries', array( 'paginated_galleries' => $paginated ) );
 		return;
 	}
 

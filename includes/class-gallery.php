@@ -5,6 +5,11 @@ class SPC_Gallery extends Sunshine_Data {
 	protected $name;
 	private $parent_gallery_id;
 
+	// Galleries read meta per-key on demand. Loading and unserializing every meta
+	// row up front costs megabytes per gallery on large sites (the `images` array
+	// and add-on meta), and listing pages construct many galleries at once.
+	protected $lazy_meta = true;
+
 	public function __construct( $object ) {
 
 		if ( is_numeric( $object ) && $object > 0 ) {
@@ -23,7 +28,6 @@ class SPC_Gallery extends Sunshine_Data {
 			$this->data              = $object;
 			$this->name              = $this->data->post_title;
 			$this->parent_gallery_id = $this->data->post_parent;
-			$this->set_meta_data();
 		}
 
 	}

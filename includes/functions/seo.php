@@ -147,11 +147,17 @@ function sunshine_get_seo_sitemap_exclude_ids() {
 			),
 		),
 	);
-	$galleries         = sunshine_get_galleries( $args, 'all' );
-	if ( ! empty( $galleries ) ) {
-		foreach ( $galleries as $gallery ) {
-			$exclude_galleries[] = $gallery->get_id();
-		}
+	// Only IDs are needed here; constructing full gallery objects for every
+	// matching gallery exhausts memory on sites with thousands of galleries.
+	$args                           = sunshine_get_galleries_query_args( $args, 'all' );
+	$args['fields']                 = 'ids';
+	$args['no_found_rows']          = true;
+	$args['update_post_meta_cache'] = false;
+	$args['update_post_term_cache'] = false;
+	$gallery_query                  = new WP_Query( $args );
+	$gallery_ids                    = $gallery_query->posts;
+	if ( ! empty( $gallery_ids ) ) {
+		$exclude_galleries = array_map( 'intval', $gallery_ids );
 	}
 	return $exclude_galleries;
 }
