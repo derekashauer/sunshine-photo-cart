@@ -1098,9 +1098,12 @@ class SPC_Cart {
 
 		$needs_shipping = false;
 
-		// If there are no shipping methods setup, then we absolutely don't need it.
-		$allowed_shipping_methods = sunshine_get_allowed_shipping_methods();
-		if ( empty( $allowed_shipping_methods ) || count( $allowed_shipping_methods ) == 0 ) {
+		// If there are no shipping methods setup at all, then we absolutely don't need it.
+		// Note: this must check active methods, not allowed-for-this-address methods --
+		// otherwise a store with shipping methods but none matching the customer's
+		// address incorrectly looks like a store with no shipping at all.
+		$active_shipping_methods = sunshine_get_active_shipping_methods();
+		if ( empty( $active_shipping_methods ) ) {
 			return false;
 		}
 
@@ -1624,6 +1627,18 @@ class SPC_Cart {
 				if ( sunshine_checkout_section_completed( 'shipping_method' ) && ! empty( $this->shipping_method ) ) {
 					$fields['shipping_method']['summary'] = $this->shipping_method->get_name();
 				}
+			} else {
+				$fields['shipping_method'] = array(
+					'active' => false,
+					'name'   => __( 'Shipping Method', 'sunshine-photo-cart' ),
+					'fields' => array(
+						array(
+							'id'   => 'shipping_method_unavailable_notice',
+							'type' => 'html',
+							'html' => '<p class="sunshine--checkout--shipping-method-unavailable">' . esc_html__( 'Sorry, shipping is not available to the address you entered. Please double check the address or try a different shipping address.', 'sunshine-photo-cart' ) . '</p>',
+						),
+					),
+				);
 			}
 		}
 
