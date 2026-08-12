@@ -24,8 +24,7 @@ class SPC_Cart {
 
 	// Checkout variables
 	private $active_section;
-	private $fields        = array();
-	private $hidden_fields = array();
+	private $fields = array();
 	private $delivery_method;
 	private $shipping_method;
 	private $payment_method;
@@ -175,29 +174,79 @@ class SPC_Cart {
 		// TODO: Do the rest on checkout page.
 		$this->set_checkout_fields();
 
+		// Drop completed flags for sections that no longer exist. Sections come and go as the
+		// cart and the customer's choices change -- switching from Ship to Pickup removes the
+		// shipping address step entirely -- and a leftover flag would let the checkout treat a
+		// step the customer never actually filled in as done.
+		$checkout_sections_completed = SPC()->session->get( 'checkout_sections_completed' );
+		if ( ! empty( $checkout_sections_completed ) && is_array( $checkout_sections_completed ) ) {
+			$still_exist = array_values( array_intersect( $checkout_sections_completed, array_keys( $this->fields ) ) );
+			if ( count( $still_exist ) !== count( $checkout_sections_completed ) ) {
+				SPC()->log( 'Cleared completed checkout sections that no longer apply: ' . json_encode( array_values( array_diff( $checkout_sections_completed, $still_exist ) ) ) );
+				SPC()->session->set( 'checkout_sections_completed', $still_exist );
+			}
+		}
+
 		// Set which section we are in
 		if ( isset( $_GET['section'] ) ) {
-			$this->active_section = sanitize_key( $_GET['section'] );
-			// TODO: Make other sections after this one not completed?
+			$this->active_section = $this->get_allowed_section( sanitize_key( $_GET['section'] ) );
 		} elseif ( isset( $_POST['sunshine_checkout_section'] ) ) {
 			// Check POST data for section (form submissions)
 			$this->active_section = sanitize_key( $_POST['sunshine_checkout_section'] );
 		}
 
-		// If still no active section, go through all sections to see if any are completed and set the first one not completed to active
+		// If still no active section, start the customer at the first one they have not done.
 		if ( empty( $this->active_section ) ) {
-			foreach ( $this->fields as $section_id => $section ) {
-				if ( sunshine_checkout_section_completed( $section_id ) ) {
-					continue;
-				}
-				if ( empty( $section['fields'] ) ) { // If no fields in this section, we can skip as well
-					continue;
-				}
-				$this->active_section = $section_id;
-				break;
-			}
+			$this->active_section = $this->get_first_incomplete_section();
 		}
 
+	}
+
+	/**
+	 * The first section the customer still needs to fill in, or an empty string once they are
+	 * all done. A section with no fields can never be completed, so it is skipped rather than
+	 * becoming a step the customer can never get past.
+	 */
+	private function get_first_incomplete_section() {
+		foreach ( $this->fields as $section_id => $section ) {
+			if ( sunshine_checkout_section_completed( $section_id ) ) {
+				continue;
+			}
+			if ( empty( $section['fields'] ) ) {
+				continue;
+			}
+			return $section_id;
+		}
+		return '';
+	}
+
+	/**
+	 * The active section can be set from the URL, which otherwise lets a customer jump
+	 * straight to a later step -- payment included -- without filling in the ones before it.
+	 * Clamp the request back to the first step that still needs attention.
+	 *
+	 * @param string $requested_section Section id asked for in the request.
+	 * @return string Section id to actually use, or an empty string if it is not a real section.
+	 */
+	private function get_allowed_section( $requested_section ) {
+
+		$sections = array_keys( $this->fields );
+		if ( ! in_array( $requested_section, $sections, true ) ) {
+			return '';
+		}
+
+		$first_incomplete = $this->get_first_incomplete_section();
+
+		// Nothing left outstanding, so they are free to go back and edit whatever they like.
+		if ( empty( $first_incomplete ) ) {
+			return $requested_section;
+		}
+
+		if ( array_search( $requested_section, $sections, true ) > array_search( $first_incomplete, $sections, true ) ) {
+			return $first_incomplete;
+		}
+
+		return $requested_section;
 	}
 
 	// An alternate name for this to make it easier to understand elsewhere
@@ -1386,6 +1435,13 @@ class SPC_Cart {
 
 		// Get allowed shipping methods from the start so delivery method section works.
 		// Partition into ship (needs a shipping address) and pickup (does not).
+		//
+		// Which shipping rates are allowed depends on the address the customer has entered
+		// so far, so this list changes as they work through the checkout. It is therefore
+		// only safe to use for the Shipping Method step, which comes after the address.
+		// The Delivery Method step asks a question the address cannot answer -- ship or
+		// pick up -- and is built from $has_active_ship_method below instead, so the list
+		// of sections stays stable from the first render to the last.
 		$allowed_shipping_methods = sunshine_get_allowed_shipping_methods();
 		$ship_methods             = array();
 		$pickup_methods           = array();
@@ -1404,6 +1460,22 @@ class SPC_Cart {
 					$pickup_methods[ $instance_id ] = $option_html;
 				} else {
 					$ship_methods[ $instance_id ] = $option_html;
+				}
+			}
+		}
+
+		// Can this order be shipped at all? Answered from the active methods rather than the
+		// allowed ones, because whether shipping is an option must not change once the
+		// customer enters an address. If they pick Ship and no rate ends up matching their
+		// address, the Shipping Method step says so -- see the notice built further below.
+		$has_active_ship_method  = false;
+		$active_shipping_methods = sunshine_get_active_shipping_methods();
+		if ( ! empty( $active_shipping_methods ) && is_array( $active_shipping_methods ) ) {
+			foreach ( $active_shipping_methods as $active_instance_id => $active_shipping_method ) {
+				$this_active_method = sunshine_get_shipping_method_by_instance( $active_instance_id );
+				if ( $this_active_method && $this_active_method->needs_shipping_address() ) {
+					$has_active_ship_method = true;
+					break;
 				}
 			}
 		}
@@ -1499,8 +1571,10 @@ class SPC_Cart {
 				}
 			}
 
-			// If there are no ship-type shipping methods active, drop the Ship delivery method entirely.
-			if ( ! empty( $delivery_methods['shipping'] ) && empty( $ship_methods ) ) {
+			// If there are no ship-type shipping methods active, drop the Ship delivery method
+			// entirely. Deliberately checks the active methods, not the allowed ones: a rate
+			// being ruled out by the customer's address must not remove Ship as a choice.
+			if ( ! empty( $delivery_methods['shipping'] ) && ! $has_active_ship_method ) {
 				unset( $delivery_methods['shipping'] );
 			}
 
@@ -1529,7 +1603,24 @@ class SPC_Cart {
 			$delivery_fields = array();
 			if ( ! empty( $delivery_methods_options ) ) {
 				if ( count( $delivery_methods_options ) === 1 ) {
-					$this->hidden_fields['delivery_method'] = array_key_first( $delivery_methods_options );
+					// Only one way to receive this order, so there is nothing to ask. Apply it to
+					// the cart rather than rendering a step with a single choice in it.
+					$only_delivery_option    = array_key_first( $delivery_methods_options );
+					$current_delivery_option = '';
+					if ( ! empty( $this->delivery_method ) ) {
+						$current_delivery_option = $this->delivery_method->get_id();
+						// Pickup locations are offered as individual options, so compare against
+						// the selected instance rather than the generic pickup id.
+						if ( $current_delivery_option === 'pickup' && ! empty( $this->shipping_method ) ) {
+							$current_delivery_option = $this->shipping_method->get_instance_id();
+						}
+					}
+					// Only apply when it would actually change something: set_delivery_method()
+					// clears the selected shipping method, which would wipe the customer's choice
+					// on every render if called unconditionally.
+					if ( $current_delivery_option !== $only_delivery_option ) {
+						$this->set_delivery_method( $only_delivery_option );
+					}
 				} else {
 					$current_selection = '';
 					if ( ! empty( $this->delivery_method ) ) {
@@ -1940,6 +2031,97 @@ class SPC_Cart {
 		echo $this->get_checkout_field_html( $id, $field ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
+	/**
+	 * Whether a field's conditions mean it is actually on screen for the customer. A field that
+	 * is hidden is not subject to its own required rule -- the browser strips hidden inputs out
+	 * of the submission, so enforcing them would block a checkout that was filled in correctly.
+	 *
+	 * @param array $field Field definition.
+	 * @param array $data  Values the conditions are compared against.
+	 * @return bool
+	 */
+	private function is_checkout_field_visible( $field, $data ) {
+
+		if ( empty( $field['conditions'] ) ) {
+			return true;
+		}
+
+		foreach ( $field['conditions'] as $condition ) {
+
+			if ( empty( $condition['field'] ) || empty( $condition['value'] ) || empty( $condition['compare'] ) || empty( $condition['action'] ) ) {
+				continue;
+			}
+
+			$comparison_field_value = ! empty( $data[ $condition['field'] ] ) ? $data[ $condition['field'] ] : '';
+			$comparison_state       = sunshine_value_comparison( $comparison_field_value, $condition['value'], $condition['compare'] );
+
+			if ( ( $comparison_state && $condition['action'] == 'show' ) || ( ! $comparison_state && $condition['action'] == 'hide' ) ) {
+				continue;
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Sections that still have a required field the customer can see but has not filled in.
+	 *
+	 * Sections are validated one at a time as the customer moves through them, and the result
+	 * is remembered in the session. That record can end up out of step with what was actually
+	 * entered -- a section can appear after it was passed, two overlapping requests can
+	 * overwrite each other's saved values, or the session can be cleared by a finished order.
+	 * This re-checks the whole form against what is stored right now, so an order is never
+	 * built from a checkout that was not really completed.
+	 *
+	 * @param array $extra_data Values not yet saved to the session, e.g. the payment method
+	 *                          posted with the submit request.
+	 * @return array Section name keyed by section id. Empty when the checkout is complete.
+	 */
+	public function get_incomplete_checkout_sections( $extra_data = array() ) {
+
+		$incomplete = array();
+		$data       = array_merge( $this->get_checkout_data(), $extra_data );
+
+		foreach ( $this->fields as $section_id => $section ) {
+
+			if ( empty( $section['fields'] ) ) {
+				continue;
+			}
+
+			foreach ( $section['fields'] as $field ) {
+
+				if ( empty( $field['type'] ) || $field['type'] == 'submit' || $field['type'] == 'legend' ) {
+					continue;
+				}
+
+				if ( empty( $field['required'] ) ) {
+					continue;
+				}
+
+				// Passwords are deliberately never written to the session, so there is nothing
+				// here to check them against. Account creation handles its own validation.
+				if ( $field['type'] == 'password' ) {
+					continue;
+				}
+
+				if ( ! $this->is_checkout_field_visible( $field, $data ) ) {
+					continue;
+				}
+
+				if ( ! empty( $data[ $field['id'] ] ) ) {
+					continue;
+				}
+
+				$incomplete[ $section_id ] = ! empty( $section['name'] ) ? $section['name'] : $section_id;
+				continue 2;
+			}
+		}
+
+		return $incomplete;
+	}
+
 	// This only happens on ajax call.
 	public function process_section( $section, $data ) {
 
@@ -1976,22 +2158,8 @@ class SPC_Cart {
 			}
 
 			// Check conditional state, is this even showing to the user to truly make it required?
-			if ( ! empty( $field['conditions'] ) ) {
-				foreach ( $field['conditions'] as $condition ) {
-					if ( empty( $condition['field'] ) || empty( $condition['value'] ) || empty( $condition['compare'] ) || empty( $condition['action'] ) ) {
-						continue;
-					}
-					$comparison_field       = $this->get_checkout_field( $condition['field'] );
-					$comparison_field_value = ! empty( $data[ $condition['field'] ] ) ? $data[ $condition['field'] ] : '';
-					$comparison_state       = sunshine_value_comparison( $comparison_field_value, $condition['value'], $condition['compare'] );
-
-					if ( ( $comparison_state && $condition['action'] == 'show' ) || ( ! $comparison_state && $condition['action'] == 'hide' ) ) {
-						// This field is shown and thus subject to additional validation so it it go through
-					} else {
-						// Field not being shown so don't validate, go to next field
-						continue 2;
-					}
-				}
+			if ( ! $this->is_checkout_field_visible( $field, $data ) ) {
+				continue;
 			}
 
 			if ( isset( $field['required'] ) && $field['required'] && empty( $value ) ) {
@@ -2024,6 +2192,24 @@ class SPC_Cart {
 			}
 		}
 
+		// When no shipping method covers the address the customer gave, the Shipping Method
+		// step renders as a notice with nothing to pick. It has no required field of its own,
+		// so without this the customer could carry on to payment and only be stopped there,
+		// away from the message telling them what to do about it.
+		if ( 'shipping_method' === $this->active_section && $this->needs_shipping() ) {
+			$has_ship_option = false;
+			foreach ( (array) sunshine_get_allowed_shipping_methods() as $instance_id => $allowed_shipping_method ) {
+				$this_shipping_method = sunshine_get_shipping_method_by_instance( $instance_id );
+				if ( $this_shipping_method && $this_shipping_method->needs_shipping_address() ) {
+					$has_ship_option = true;
+					break;
+				}
+			}
+			if ( ! $has_ship_option ) {
+				$this->add_error( __( 'Sorry, shipping is not available to the address you entered. Please double check the address or try a different shipping address.', 'sunshine-photo-cart' ) );
+			}
+		}
+
 		// This is where other add-ons can hook in to check stuff.
 		do_action( 'sunshine_checkout_validation', $this->active_section, $data );
 
@@ -2052,17 +2238,13 @@ class SPC_Cart {
 			SPC()->log( 'All checkout sections completed: ' . json_encode( $checkout_sections_completed ) );
 		}
 
-		$next_section = '';
-		$sections     = array_keys( $this->fields ); // Get all section keys.
-
-		foreach ( $sections as $section ) {
-			if ( ! in_array( $section, $checkout_sections_completed ) ) {
-				$next_section = $section;
-				break;
-			}
-		}
-
+		// Rebuild the cart and the section list before choosing where to send the customer.
+		// What they just entered can change which sections exist -- an address can rule
+		// shipping rates in or out -- so picking from the pre-update list can send them to a
+		// section that no longer applies, or walk them past one that has just appeared.
 		$this->update();
+
+		$next_section = $this->get_first_incomplete_section();
 
 		do_action( 'sunshine_checkout_section_' . $this->active_section . '_process', $data );
 
@@ -2198,6 +2380,19 @@ class SPC_Cart {
 		}
 
 		$payment_method = ! empty( $_POST['payment_method'] ) ? sanitize_text_field( $_POST['payment_method'] ) : '';
+
+		// Confirm the checkout was genuinely completed before building anything. Sections are
+		// validated one at a time and the result is kept in the session, which can drift from
+		// what was actually entered, and nothing else here re-checks it -- the submit request
+		// carries no form fields. Without this an order can be saved with no address on it.
+		$this->setup( true );
+		$incomplete_sections = $this->get_incomplete_checkout_sections( array( 'payment_method' => $payment_method ) );
+		if ( ! empty( $incomplete_sections ) ) {
+			SPC()->log( 'Blocked order init: checkout is not complete. Still needed: ' . json_encode( array_keys( $incomplete_sections ) ) . ' | checkout_data: ' . json_encode( $this->get_checkout_data() ) );
+			/* translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment" */
+			$this->add_error( sprintf( __( 'Please complete the following before submitting your order: %s', 'sunshine-photo-cart' ), join( ', ', $incomplete_sections ) ) );
+			wp_send_json_error();
+		}
 
 		$order_id = SPC()->session->get( 'checkout_order_id' );
 		if ( $order_id ) {

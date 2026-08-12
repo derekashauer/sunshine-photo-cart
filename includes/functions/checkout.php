@@ -873,6 +873,16 @@ function sunshine_checkout_process_section() {
 	$current_section = sanitize_text_field( $_POST['sunshine_checkout_section'] );
 	SPC()->cart->setup();
 	$next_section = SPC()->cart->process_section( $current_section, $_POST );
+
+	// process_section() returns false when the section did not validate, and null when the
+	// section was not a real one. Reporting success in those cases leaves the browser with
+	// nothing to act on, so the loading overlay stays up and the customer is simply stuck.
+	// Sending an error instead reloads the section so the notices explaining why are shown.
+	if ( ! is_string( $next_section ) || SPC()->cart->has_errors() ) {
+		SPC()->log( 'Checkout section did not validate: ' . $current_section );
+		wp_send_json_error();
+	}
+
 	SPC()->log( 'Going to next checkout section: ' . $next_section );
 
 	wp_send_json_success( array( 'next_section' => $next_section ) );

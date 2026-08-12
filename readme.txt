@@ -252,6 +252,12 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Security: The session cookie is now flagged HttpOnly, and Secure on sites served over HTTPS, so it can no longer be read by scripts in the browser
 * Dev: New filters sunshine_session_lazy_cookie and sunshine_session_destroy_when_empty to restore the previous session cookie behavior
 * Dev: New filter sunshine_email_headers to modify outgoing email headers
+* Fix: Orders can no longer be submitted with a required section left unfilled, which could produce an order with no address on it at all. Checkout now re-checks every required field before the order is created and sends the customer back to whatever still needs completing
+* Fix: The Delivery Method step no longer appears or disappears partway through checkout, which could walk customers through the steps out of order (shipping address before delivery method). Whether an order can be shipped or picked up is now decided independently of the address, and shipping options that don't cover the customer's address are reported at the Shipping Method step instead
+* Fix: A customer can no longer skip ahead to a later checkout step, including payment, by way of the section links in the page URL
+* Fix: A checkout step that no longer applies after the customer changes their delivery method is no longer remembered as completed, which could let its address step be skipped
+* Fix: When no shipping option covers the address entered, the Shipping Method step can no longer be stepped past. Previously the customer could continue and only be stopped at payment, away from the message explaining the problem
+* Fix: A checkout step that fails validation on the server no longer leaves the page sitting on the loading spinner. The step now reloads and shows what needs fixing
 * Fix: Removing the last product that requires shipping from the cart (leaving only digital products) now removes the shipping fee instead of leaving it applied at checkout
 * Fix: Selecting Apple Pay or Google Pay in the Stripe payment method settings no longer causes a checkout error, and payment methods your Stripe account can't process are now greyed out so they can't be enabled by mistake
 
