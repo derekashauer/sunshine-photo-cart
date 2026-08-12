@@ -25505,3 +25505,40 @@ msgstr ""
 
 #~ msgid "%1$sView version %2$s details%3$s or %4$supdate now%5$s."
 #~ msgstr "%1$sVer versão %2$s detalhes%3$s ou %4$satualizar agora%5$s."
+
+#. translators: %d is the number of images
+#: admin/tools.php:1273
+#, php-format
+msgid "%d images migrated from WP Offload Media are missing bucket location data. Their full-size download links can expire and stop working. Run the repair below to fix them."
+msgstr "%d imagens migradas do WP Offload Media não têm dados de localização do bucket. Os links de download em tamanho completo podem expirar e deixar de funcionar. Executa a reparação abaixo para as corrigir."
+
+#: admin/tools.php:1279
+msgid "Repair Metadata"
+msgstr "Reparar metadados"
+
+#: admin/tools.php:1299
+msgid "Error running repair."
+msgstr "Erro ao executar a reparação."
+
+#: admin/tools.php:1308
+msgid "items repaired."
+msgstr "itens reparados."
+
+#: admin/tools.php:1308
+msgid "couldn't be repaired automatically — their original WP Offload Media data is no longer available. Contact support if you need help."
+msgstr "não puderam ser reparados automaticamente — os dados originais do WP Offload Media já não estão disponíveis. Contacta o suporte se precisares de ajuda."
+
+#: admin/tools.php:1314
+msgid "repaired so far..."
+msgstr "reparados até agora..."
+
+#: admin/tools.php:1319
+msgid "Network error. Please try again."
+msgstr "Erro de rede. Tenta novamente."
+
+#. translators: 1: number of images, 2: link opening tag, 3: link closing tag
+#: admin/tools.php:1822
+#, php-format
+msgid "%1$d images migrated from WP Offload Media are missing bucket location data and their downloads may fail. %2$sRun the repair tool%3$s to fix them."
+msgstr "%1$d imagens migradas do WP Offload Media não têm dados de localização do bucket e os downloads podem falhar. %2$sExecuta a ferramenta de reparação%3$s para as corrigir."
+

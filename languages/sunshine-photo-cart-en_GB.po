@@ -25370,3 +25370,40 @@ msgstr ""
 
 #~ msgid "Invalid email address provided for "
 #~ msgstr "Invalid email address provided for "
+
+#. translators: %d is the number of images
+#: admin/tools.php:1273
+#, php-format
+msgid "%d images migrated from WP Offload Media are missing bucket location data. Their full-size download links can expire and stop working. Run the repair below to fix them."
+msgstr "%d images migrated from WP Offload Media are missing bucket location data. Their full-size download links can expire and stop working. Run the repair below to fix them."
+
+#: admin/tools.php:1279
+msgid "Repair Metadata"
+msgstr "Repair Metadata"
+
+#: admin/tools.php:1299
+msgid "Error running repair."
+msgstr "Error running repair."
+
+#: admin/tools.php:1308
+msgid "items repaired."
+msgstr "items repaired."
+
+#: admin/tools.php:1308
+msgid "couldn't be repaired automatically — their original WP Offload Media data is no longer available. Contact support if you need help."
+msgstr "couldn't be repaired automatically — their original WP Offload Media data is no longer available. Contact support if you need help."
+
+#: admin/tools.php:1314
+msgid "repaired so far..."
+msgstr "repaired so far..."
+
+#: admin/tools.php:1319
+msgid "Network error. Please try again."
+msgstr "Network error. Please try again."
+
+#. translators: 1: number of images, 2: link opening tag, 3: link closing tag
+#: admin/tools.php:1822
+#, php-format
+msgid "%1$d images migrated from WP Offload Media are missing bucket location data and their downloads may fail. %2$sRun the repair tool%3$s to fix them."
+msgstr "%1$d images migrated from WP Offload Media are missing bucket location data and their downloads may fail. %2$sRun the repair tool%3$s to fix them."
+

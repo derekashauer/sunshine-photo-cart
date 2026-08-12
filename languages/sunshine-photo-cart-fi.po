@@ -25412,3 +25412,40 @@ msgstr ""
 
 #~ msgid "%1$sView version %2$s details%3$s or %4$supdate now%5$s."
 #~ msgstr "%1$sNäytä versio %2$s tiedot%3$s tai %4$späivitä nyt%5$s."
+
+#. translators: %d is the number of images
+#: admin/tools.php:1273
+#, php-format
+msgid "%d images migrated from WP Offload Media are missing bucket location data. Their full-size download links can expire and stop working. Run the repair below to fix them."
+msgstr "%d WP Offload Mediasta siirrettyä kuvaa puuttuu bucket-sijaintitiedot. Täysikokoiset latauslinkit voivat vanhentua ja lakata toimimasta. Suorita alla oleva korjaus korjataksesi ne."
+
+#: admin/tools.php:1279
+msgid "Repair Metadata"
+msgstr "Korjaa metatiedot"
+
+#: admin/tools.php:1299
+msgid "Error running repair."
+msgstr "Virhe korjausta suoritettaessa."
+
+#: admin/tools.php:1308
+msgid "items repaired."
+msgstr "kohdetta korjattu."
+
+#: admin/tools.php:1308
+msgid "couldn't be repaired automatically — their original WP Offload Media data is no longer available. Contact support if you need help."
+msgstr "ei voitu korjata automaattisesti — alkuperäiset WP Offload Media -tiedot eivät ole enää saatavilla. Ota yhteyttä tukeen, jos tarvitset apua."
+
+#: admin/tools.php:1314
+msgid "repaired so far..."
+msgstr "korjattu tähän mennessä..."
+
+#: admin/tools.php:1319
+msgid "Network error. Please try again."
+msgstr "Verkkovirhe. Yritä uudelleen."
+
+#. translators: 1: number of images, 2: link opening tag, 3: link closing tag
+#: admin/tools.php:1822
+#, php-format
+msgid "%1$d images migrated from WP Offload Media are missing bucket location data and their downloads may fail. %2$sRun the repair tool%3$s to fix them."
+msgstr "%1$d WP Offload Mediasta siirrettyä kuvaa puuttuu bucket-sijaintitiedot, ja niiden lataukset voivat epäonnistua. %2$sSuorita korjaustyökalu%3$s korjataksesi ne."
+

@@ -25463,3 +25463,40 @@ msgstr ""
 
 #~ msgid "Invalid email address provided for "
 #~ msgstr "Ongeldig e-mailadres opgegeven voor"
+
+#. translators: %d is the number of images
+#: admin/tools.php:1273
+#, php-format
+msgid "%d images migrated from WP Offload Media are missing bucket location data. Their full-size download links can expire and stop working. Run the repair below to fix them."
+msgstr "%d afbeeldingen die zijn gemigreerd vanuit WP Offload Media missen bucketlocatiegegevens. De downloadlinks op volledige grootte kunnen verlopen en niet meer werken. Voer de reparatie hieronder uit om ze te herstellen."
+
+#: admin/tools.php:1279
+msgid "Repair Metadata"
+msgstr "Metadata repareren"
+
+#: admin/tools.php:1299
+msgid "Error running repair."
+msgstr "Fout bij uitvoeren van reparatie."
+
+#: admin/tools.php:1308
+msgid "items repaired."
+msgstr "items gerepareerd."
+
+#: admin/tools.php:1308
+msgid "couldn't be repaired automatically — their original WP Offload Media data is no longer available. Contact support if you need help."
+msgstr "konden niet automatisch worden gerepareerd — de originele WP Offload Media-gegevens zijn niet meer beschikbaar. Neem contact op met support als je hulp nodig hebt."
+
+#: admin/tools.php:1314
+msgid "repaired so far..."
+msgstr "tot nu toe gerepareerd..."
+
+#: admin/tools.php:1319
+msgid "Network error. Please try again."
+msgstr "Netwerkfout. Probeer het opnieuw."
+
+#. translators: 1: number of images, 2: link opening tag, 3: link closing tag
+#: admin/tools.php:1822
+#, php-format
+msgid "%1$d images migrated from WP Offload Media are missing bucket location data and their downloads may fail. %2$sRun the repair tool%3$s to fix them."
+msgstr "%1$d afbeeldingen die zijn gemigreerd vanuit WP Offload Media missen bucketlocatiegegevens en de downloads kunnen mislukken. %2$sVoer de reparatietool uit%3$s om ze te herstellen."
+

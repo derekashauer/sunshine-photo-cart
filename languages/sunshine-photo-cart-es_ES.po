@@ -25536,3 +25536,40 @@ msgstr ""
 
 #~ msgid "Invalid email address provided for "
 #~ msgstr "Dirección de correo electrónico no válida"
+
+#. translators: %d is the number of images
+#: admin/tools.php:1273
+#, php-format
+msgid "%d images migrated from WP Offload Media are missing bucket location data. Their full-size download links can expire and stop working. Run the repair below to fix them."
+msgstr "%d imágenes migradas desde WP Offload Media no tienen datos de ubicación del bucket. Sus enlaces de descarga a tamaño completo pueden caducar y dejar de funcionar. Ejecuta la reparación de abajo para solucionarlo."
+
+#: admin/tools.php:1279
+msgid "Repair Metadata"
+msgstr "Reparar metadatos"
+
+#: admin/tools.php:1299
+msgid "Error running repair."
+msgstr "Error al ejecutar la reparación."
+
+#: admin/tools.php:1308
+msgid "items repaired."
+msgstr "elementos reparados."
+
+#: admin/tools.php:1308
+msgid "couldn't be repaired automatically — their original WP Offload Media data is no longer available. Contact support if you need help."
+msgstr "no se pudieron reparar automáticamente — sus datos originales de WP Offload Media ya no están disponibles. Contacta con soporte si necesitas ayuda."
+
+#: admin/tools.php:1314
+msgid "repaired so far..."
+msgstr "reparados hasta ahora..."
+
+#: admin/tools.php:1319
+msgid "Network error. Please try again."
+msgstr "Error de red. Inténtalo de nuevo."
+
+#. translators: 1: number of images, 2: link opening tag, 3: link closing tag
+#: admin/tools.php:1822
+#, php-format
+msgid "%1$d images migrated from WP Offload Media are missing bucket location data and their downloads may fail. %2$sRun the repair tool%3$s to fix them."
+msgstr "%1$d imágenes migradas desde WP Offload Media no tienen datos de ubicación del bucket y sus descargas pueden fallar. %2$sEjecuta la herramienta de reparación%3$s para solucionarlo."
+
