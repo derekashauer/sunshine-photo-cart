@@ -18,6 +18,8 @@ class SPC_Delivery_Method_Pickup extends SPC_Delivery_Method {
 		$this->description    = __( 'Pick up your order at a designated location', 'sunshine-photo-cart' );
 		$this->needs_shipping = false;
 		$this->can_be_enabled = false;
+		// Collected in person, so the goods change hands at the store and are taxed there.
+		$this->taxed_at_store = true;
 	}
 
 	public function is_enabled() {

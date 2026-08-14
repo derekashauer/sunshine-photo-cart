@@ -376,47 +376,17 @@ function sunshine_checkout_scripts() {
 					},
 					success: function(output, textStatus, XMLHttpRequest) {
 						if ( output ) {
-							console.log( output );
-							$( '#sunshine--checkout--payment div[id*="billing_"]' ).remove();
-							//$( '#sunshine-checkout-payment .sunshine--form--fields' ).append( output );
-							$( output ).insertAfter( '#sunshine--form--field--shipping_as_billing' );
-							//sunshine_mark_filled();
+							// The billing section can also hold the "use shipping address" checkbox,
+							// so swap out only the address fields rather than the whole section.
+							$( '#sunshine--checkout--billing div[id*="billing_"]' ).remove();
+							var sunshine_same_as_shipping = $( '#sunshine--form--field--shipping_as_billing' );
+							if ( sunshine_same_as_shipping.length ) {
+								$( output ).insertAfter( sunshine_same_as_shipping );
+							} else {
+								$( '#sunshine--checkout--billing .sunshine--form--fields' ).append( output );
+							}
 						}
-						sunshine_checkout_updating_done();
-					},
-					error: function(MLHttpRequest, textStatus, errorThrown) {
-						alert('Sorry, there was an error with your request');
-					}
-				});
-			}, 500);
-			return false;
-		});
-
-		$( document ).on( 'change', 'select[name="customer_country"]', function(){
-			console.log( 'changing customer country' );
-			sunshine_checkout_updating();
-			var sunshine_selected_customer_country = $( this ).val();
-			var sunshine_selected_customer_country_required;
-			if ( $( this ).prop( 'required' ) ) {
-				sunshine_selected_customer_country_required = true;
-			}
-			setTimeout( function () {
-				$.ajax({
-					type: 'POST',
-					url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
-					data: {
-						action: 'sunshine_checkout_update_state',
-						country: sunshine_selected_customer_country,
-						type: 'customer',
-						required: sunshine_selected_customer_country_required,
-						security: sunshine_state_change_security
-					},
-					success: function(output, textStatus, XMLHttpRequest) {
-						if ( output ) {
-							$( '#sunshine--checkout--address .sunshine--form--fields' ).html( '' );
-							$( '#sunshine--checkout--address .sunshine--form--fields' ).html( output );
-						}
-						$( document ).trigger( 'sunshine_address_country_change', [ sunshine_selected_customer_country ] );
+						$( document ).trigger( 'sunshine_billing_country_change', [ sunshine_selected_billing_country ] );
 						sunshine_checkout_updating_done();
 					},
 					error: function(MLHttpRequest, textStatus, errorThrown) {
@@ -725,7 +695,6 @@ function sunshine_checkout_scripts() {
 		function sunshine_load_address_autocomplete() {
 			sunshine_init_address_autocomplete( 'shipping' );
 			sunshine_init_address_autocomplete( 'billing' );
-			sunshine_init_address_autocomplete( 'customer' );
 		}
 
 		function sunshine_init_address_autocomplete( section, default_country = '<?php echo esc_js( $default_country ); ?>' ) {
@@ -753,8 +722,8 @@ function sunshine_checkout_scripts() {
 			sunshine_init_address_autocomplete( 'shipping', country );
 		});
 
-		jQuery( document ).on( 'sunshine_address_country_change', function( event, country ){
-			sunshine_init_address_autocomplete( 'customer', country );
+		jQuery( document ).on( 'sunshine_billing_country_change', function( event, country ){
+			sunshine_init_address_autocomplete( 'billing', country );
 		});
 
 		jQuery( document ).on( 'sunshine_reload_checkout', function( event, data ) {
@@ -763,8 +732,6 @@ function sunshine_checkout_scripts() {
 				sunshine_init_address_autocomplete( 'shipping', jQuery( '#shipping_country' ).val() );
 			} else if ( section == 'billing' ) {
 				sunshine_init_address_autocomplete( 'billing', jQuery( '#billing_country' ).val() );
-			} else if ( section == 'address' ) {
-				sunshine_init_address_autocomplete( 'customer', jQuery( '#customer_country' ).val() );
 			}
 		});
 
@@ -1037,8 +1004,6 @@ function sunshine_checkout_update_state() {
 		$type = sanitize_key( $_POST['type'] );
 		if ( $type == 'shipping' ) {
 			$prefix = 'shipping_';
-		} elseif ( $type == 'customer' ) {
-			$prefix = 'customer_';
 		} else {
 			$prefix = 'billing_';
 		}

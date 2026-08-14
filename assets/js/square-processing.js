@@ -143,53 +143,43 @@ jQuery( document ).on( 'sunshine_payment_processing', async function( event, dat
 			$sunshineSquareSubmit.prop( 'disabled', false ).html( sunshineSquareBtnText );
 		}
 
-		if ( jQuery( '#sunshine--checkout form input[name="billing_first_name"]' ).is( ':visible' ) ) {
-			square_billing_contact = {
-				firstName: jQuery( '#sunshine--checkout form input[name="billing_first_name"]' ).val(),
-				lastName: jQuery( '#sunshine--checkout form input[name="billing_last_name"]' ).val(),
-				addressLines: [jQuery( '#sunshine--checkout form input[name="billing_address1"]' ).val()],
-				city: jQuery( '#sunshine--checkout form input[name="billing_city"]' ).val(),
-				state: jQuery( '#sunshine--checkout form input[name="billing_state"]' ).val(),
-				postalCode: jQuery( '#sunshine--checkout form input[name="billing_postcode"]' ).val(),
-				country: jQuery( '#sunshine--checkout form select[name="billing_country"]' ).val()
+		// The billing address is collected at its own step, which is already completed and
+		// closed by the time the payment runs, so its inputs are no longer on the page to read
+		// from. Take it from the checkout data the server sends back instead, which is where
+		// the address ends up whether the buyer typed one or reused their shipping address.
+		function sunshineSquareAddressValue( field ) {
+			if ( checkout_data[ 'billing_' + field ] ) {
+				return checkout_data[ 'billing_' + field ];
 			}
-		} else {
-			if ( checkout_data.shipping_address1 ) {
-				square_billing_contact.addressLines = [checkout_data.shipping_address1];
-			} else if ( checkout_data.customer_address1 ) {
-				square_billing_contact.addressLines = [checkout_data.customer_address1];
+			if ( checkout_data[ 'shipping_' + field ] ) {
+				return checkout_data[ 'shipping_' + field ];
 			}
-			if ( checkout_data.shipping_city ) {
-				square_billing_contact.city = checkout_data.shipping_city;
-			} else if ( checkout_data.customer_city ) {
-				square_billing_contact.city = checkout_data.customer_city;
-			}
-			if ( checkout_data.shipping_state ) {
-				square_billing_contact.state = checkout_data.shipping_state;
-			} else if ( checkout_data.customer_state ) {
-				square_billing_contact.state = checkout_data.customer_state;
-			}
-			if ( checkout_data.shipping_postcode ) {
-				square_billing_contact.postalCode = checkout_data.shipping_postcode;
-			} else if ( checkout_data.customer_postcode ) {
-				square_billing_contact.postalCode = checkout_data.customer_postcode;
-			}
-			if ( checkout_data.shipping_country ) {
-				square_billing_contact.country = checkout_data.shipping_country;
-			} else if ( checkout_data.customer_country ) {
-				square_billing_contact.country = checkout_data.customer_country;
-			}
-			if ( checkout_data.shipping_first_name ) {
-				square_billing_contact.firstName = checkout_data.shipping_first_name;
-			} else if ( checkout_data.customer_first_name ) {
-				square_billing_contact.firstName = checkout_data.customer_first_name;
-			}
-			if ( checkout_data.shipping_last_name ) {
-				square_billing_contact.lastName = checkout_data.shipping_last_name;
-			} else if ( checkout_data.customer_last_name ) {
-				square_billing_contact.lastName = checkout_data.customer_last_name;
-			}
+			return '';
 		}
+
+		square_billing_contact = {};
+
+		var sunshineSquareAddress1 = sunshineSquareAddressValue( 'address1' );
+		if ( sunshineSquareAddress1 ) {
+			square_billing_contact.addressLines = [ sunshineSquareAddress1 ];
+		}
+
+		jQuery.each(
+			{
+				city: 'city',
+				state: 'state',
+				postalCode: 'postcode',
+				country: 'country',
+				firstName: 'first_name',
+				lastName: 'last_name'
+			},
+			function( contactKey, field ) {
+				var value = sunshineSquareAddressValue( field );
+				if ( value ) {
+					square_billing_contact[ contactKey ] = value;
+				}
+			}
+		);
 		try {
 			const sunshine_square_token = await sunshine_square_tokenize(sunshine_square_card);
 			const payments = window.Square.payments(spc_square_vars.application_id, spc_square_vars.location_id);

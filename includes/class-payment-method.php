@@ -21,6 +21,7 @@ class SPC_Payment_Method {
 		add_filter( 'sunshine_create_order_status', array( $this, 'create_order_status' ), 10, 2 );
 		add_filter( 'sunshine_order_transaction_url', array( $this, 'get_transaction_url' ) );
 		add_filter( 'sunshine_checkout_create_order_mode', array( $this, 'mode' ), 10, 2 );
+		add_filter( 'sunshine_checkout_needs_billing_address', array( $this, 'checkout_needs_billing_address' ), 10, 2 );
 	}
 
 	public function init() { }
@@ -173,6 +174,41 @@ class SPC_Payment_Method {
 
 	public function needs_billing_address() {
 		return $this->needs_billing_address;
+	}
+
+	/**
+	 * Tell the checkout to collect a billing address when this payment method needs one.
+	 *
+	 * A payment method only has to set $needs_billing_address to true -- the checkout never
+	 * needs to know which ones those are, so an add-on gateway can declare it the same way
+	 * the built in ones do.
+	 *
+	 * The customer does not choose a payment method until the last step, which is after the
+	 * billing address would be asked for, so any available method needing one means it is
+	 * collected for all of them.
+	 *
+	 * @param bool     $needs_billing_address Whether the checkout already needs one.
+	 * @param SPC_Cart $cart                  The cart being checked out.
+	 * @return bool
+	 */
+	public function checkout_needs_billing_address( $needs_billing_address, $cart = null ) {
+
+		if ( $needs_billing_address || ! $this->needs_billing_address() ) {
+			return $needs_billing_address;
+		}
+
+		// Checked against the allowed list rather than is_allowed() directly, so a method a
+		// site has filtered out of checkout does not still ask for an address.
+		if ( ! array_key_exists( $this->id, (array) sunshine_get_allowed_payment_methods() ) ) {
+			return $needs_billing_address;
+		}
+
+		// Nothing to pay means no payment method is used, so none of them need an address.
+		if ( $cart && $cart->get_total() <= 0 ) {
+			return $needs_billing_address;
+		}
+
+		return true;
 	}
 
 	public function get_transaction_id( $order ) {
