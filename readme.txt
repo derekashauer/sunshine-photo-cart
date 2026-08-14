@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 3.6.12
+Stable tag: 3.7-beta1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,7 +243,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.6.13 =
+= 3.7 =
 * New: Billing address is now its own step at checkout, so you can record the address of the person paying even when the order is being shipped somewhere else. Invoices need the buyer's address, and the buyer is not always who the parcel goes to. On orders that ship, the customer gets a "use shipping address as billing address" box that is already ticked, so nothing extra to fill in unless the two differ
 * Change: The "Always collect an address" setting is now "Always collect a billing address" and applies to every order, not only orders with nothing to ship
 * Change: Payment methods that require a billing address, such as Square, now collect it at its own step rather than partway through the payment step
@@ -251,6 +251,8 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: Tax shown on the first view of the cart or checkout could be based on a different address than the order total used, because items worked out their own tax before the delivery method was known
 * Fix: Choosing a pickup location and continuing no longer leaves the order thinking it still needs shipping. The pickup location was being saved in a form the checkout could not read back, so the order was treated as being shipped, which could apply the wrong tax and ask for a shipping address that was not needed
 * Fix: Changing the address at checkout to one that no tax rate covers now correctly removes the tax. Previously the rate found for the earlier address stayed applied, so a customer could be charged tax that does not apply where they are, at an amount that shrank each time the checkout refreshed
+* Fix: Square was being sent the buyer's name and country under field names it does not recognise, so it ignored them and verified cards without knowing where the buyer was. Card verification is required for European cards, and missing details there are a common cause of declines
+* Change: Square card verification now happens as part of tokenizing the card, which is the method Square currently recommends. The older separate verification step has been deprecated by Square
 * Fix: Square now receives the billing address the customer actually gave. It was read from the checkout form as the payment was taken, which no longer works now the billing address is collected at an earlier step, and the copied address was only being saved to the order rather than passed on. Both the card verification and the payment record now get the right address whether the buyer typed one or reused their shipping address
 * Fix: Orders no longer store a meaningless billing_method value alongside the real billing address
 * Fix: Gallery, product and order names containing an ampersand could show as "&amp;" in admin dropdowns, breadcrumbs, order screens and on the gallery page. The name was being escaped twice on sites where WordPress had already stored the ampersand encoded

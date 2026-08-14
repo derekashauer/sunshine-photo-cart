@@ -8,34 +8,29 @@ async function sunshine_square_init_card( payments ) {
 	return card;
 }
 
-async function sunshine_square_verify_buyer(payments, token) {
-	const verificationDetails = {
-		amount: spc_square_vars.total,
+// Details Square uses to verify the buyer as part of tokenizing the card. Strong Customer
+// Authentication is mandatory for European cards, and Square judges it on what is passed
+// here -- an empty or partial billing contact means more cards get declined.
+function sunshine_square_verification_details() {
+	return {
+		amount: String( spc_square_vars.total ),
 		billingContact: square_billing_contact,
 		currencyCode: spc_square_vars.currency,
-		intent: 'CHARGE'
+		intent: 'CHARGE',
+		customerInitiated: true,
+		sellerKeyedIn: false
 	};
-
-	console.log( 'Square verify buyer', verificationDetails );
-
-	const verificationResults = await payments.verifyBuyer(
-		token,
-		verificationDetails
-	);
-	console.log( 'Square verified buyer', verificationResults );
-	return verificationResults.token;
 }
 
 // Call this function to send a payment token, buyer name, and other details
 // to the project server code so that a payment can be created with
 // Payments API
-async function sunshine_square_create_payment(token, verificationToken) {
+async function sunshine_square_create_payment(token) {
 	return new Promise((resolve, reject) => {
 		sunshine_checkout_updating();
 		const data = {
 			'action': 'sunshine_square_init_order',
 			'source_id': token,
-			'verification_token': verificationToken,
 			'security': spc_square_vars.security,
 		}
 
@@ -70,7 +65,9 @@ async function sunshine_square_create_payment(token, verificationToken) {
 // developer to handle the error and provide the buyer the chance to fix
 // their mistakes.
 async function sunshine_square_tokenize( paymentMethod ) {
-	const tokenResult = await paymentMethod.tokenize();
+	// Buyer verification happens as part of tokenizing now. Square has deprecated the old
+	// verifyBuyer() call and the separate verification token that went with it.
+	const tokenResult = await paymentMethod.tokenize( sunshine_square_verification_details() );
 	if ( tokenResult.status === 'OK' ) {
 		return tokenResult.token;
 	} else {
@@ -164,14 +161,18 @@ jQuery( document ).on( 'sunshine_payment_processing', async function( event, dat
 			square_billing_contact.addressLines = [ sunshineSquareAddress1 ];
 		}
 
+		// Square's own names for these, which are not the ones Sunshine uses: the first and
+		// last name are givenName and familyName, and the country is countryCode. Anything
+		// under a name Square does not know is ignored, and a card verification with no
+		// country behind it is far more likely to be declined.
 		jQuery.each(
 			{
 				city: 'city',
 				state: 'state',
 				postalCode: 'postcode',
-				country: 'country',
-				firstName: 'first_name',
-				lastName: 'last_name'
+				countryCode: 'country',
+				givenName: 'first_name',
+				familyName: 'last_name'
 			},
 			function( contactKey, field ) {
 				var value = sunshineSquareAddressValue( field );
@@ -180,11 +181,14 @@ jQuery( document ).on( 'sunshine_payment_processing', async function( event, dat
 				}
 			}
 		);
+
+		if ( checkout_data.email ) {
+			square_billing_contact.email = checkout_data.email;
+		}
+
 		try {
-			const sunshine_square_token = await sunshine_square_tokenize(sunshine_square_card);
-			const payments = window.Square.payments(spc_square_vars.application_id, spc_square_vars.location_id);
-			const verificationToken = await sunshine_square_verify_buyer(payments, sunshine_square_token);
-			await sunshine_square_create_payment(sunshine_square_token, verificationToken);
+			const sunshine_square_token = await sunshine_square_tokenize( sunshine_square_card );
+			await sunshine_square_create_payment( sunshine_square_token );
 			// Leave the button disabled on success - the form is about to submit
 			// and navigate away to the receipt page.
 			resolve();
