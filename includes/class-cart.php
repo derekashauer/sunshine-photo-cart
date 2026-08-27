@@ -1853,14 +1853,21 @@ class SPC_Cart {
 
 			// When the order is also being shipped, offer to reuse that address. Ticked by
 			// default so the usual buyer does nothing at all, and the fields only appear for
-			// the customer who says the two are different.
+			// the customer who says the two are different. A returning customer whose last
+			// order used its own billing address starts unticked with that address filled in,
+			// so they do not have to type it again -- their profile keeps both the answer and
+			// the address from init_order().
 			$shipping_as_billing_condition = array();
 			if ( $this->needs_shipping() ) {
+				$shipping_as_billing_default = 'yes';
+				if ( 'yes' !== SPC()->customer->get_meta( 'shipping_as_billing' ) && SPC()->customer->get_billing_country() ) {
+					$shipping_as_billing_default = '';
+				}
 				$billing_fields[] = array(
 					'id'      => 'shipping_as_billing',
 					'type'    => 'checkbox',
 					'name'    => __( 'Use shipping address as billing address', 'sunshine-photo-cart' ),
-					'default' => 'yes',
+					'default' => $shipping_as_billing_default,
 				);
 				$shipping_as_billing_condition = array(
 					'field'   => 'shipping_as_billing',
@@ -1870,9 +1877,14 @@ class SPC_Cart {
 				);
 			}
 
+			// This order matters: the address being typed in this checkout wins, then the
+			// billing country saved on the customer's profile from their last order -- a
+			// person's own address is more stable than wherever this order happens to ship.
 			$default_country = SPC()->customer->get_shipping_country();
 			if ( $this->get_checkout_data_item( 'billing_country' ) ) {
 				$default_country = $this->get_checkout_data_item( 'billing_country' );
+			} elseif ( SPC()->customer->get_billing_country() ) {
+				$default_country = SPC()->customer->get_billing_country();
 			} elseif ( $this->get_checkout_data_item( 'shipping_country' ) ) {
 				$default_country = $this->get_checkout_data_item( 'shipping_country' );
 			}
@@ -2521,14 +2533,16 @@ class SPC_Cart {
 		if ( ! empty( $data['shipping_as_billing'] ) && 'yes' == $data['shipping_as_billing'] ) {
 			foreach ( SPC()->countries->get_default_address_fields() as $address_field ) {
 				$shipping_key = 'shipping_' . $address_field['id'];
-				if ( isset( $data[ $shipping_key ] ) ) {
-					$billing_key          = 'billing_' . $address_field['id'];
-					$data[ $billing_key ] = $data[ $shipping_key ];
-					// Also put it back into the checkout session. Payment methods that want a
-					// billing address read it from there when they take the payment, which
-					// happens after this, and the copy above only reaches the saved order.
-					$this->set_checkout_data_item( $billing_key, $data[ $shipping_key ] );
-				}
+				$billing_key  = 'billing_' . $address_field['id'];
+				// Fields the shipping address does not have (a country without states, for
+				// example) are cleared rather than skipped, so a leftover value from an
+				// earlier billing answer cannot end up paired with the copied address.
+				$billing_value        = isset( $data[ $shipping_key ] ) ? $data[ $shipping_key ] : '';
+				$data[ $billing_key ] = $billing_value;
+				// Also put it back into the checkout session. Payment methods that want a
+				// billing address read it from there when they take the payment, which
+				// happens after this, and the copy above only reaches the saved order.
+				$this->set_checkout_data_item( $billing_key, $billing_value );
 			}
 		}
 
