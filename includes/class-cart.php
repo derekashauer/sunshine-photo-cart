@@ -2068,13 +2068,25 @@ class SPC_Cart {
 			$value = $field['default'];
 		}
 
+		$checkout_data       = $this->get_checkout_data();
 		$checkout_data_value = $this->get_checkout_data_item( $id );
 		if ( ! empty( $checkout_data_value ) && $id != 'payment_method' ) {
 			$value = $checkout_data_value;
 		}
 
+		// An unticked checkbox is saved to the session as an empty value, and that is a real
+		// answer from the customer, so it has to beat the field's default and the stored
+		// customer data below. Otherwise reopening the step re-ticks the box on its own --
+		// for shipping_as_billing that would throw away the billing address they typed.
+		$saved_unticked = ! empty( $field['type'] ) && 'checkbox' === $field['type']
+			&& is_array( $checkout_data ) && array_key_exists( $id, $checkout_data )
+			&& empty( $checkout_data[ $id ] );
+		if ( $saved_unticked ) {
+			$value = '';
+		}
+
 		// Fallback to user's stored data
-		if ( empty( $value ) && ( $id != 'payment_method' && $id != 'shipping_method' && $id != 'use_credits' && $id != 'customer_notes' ) ) {
+		if ( empty( $value ) && ! $saved_unticked && ( $id != 'payment_method' && $id != 'shipping_method' && $id != 'use_credits' && $id != 'customer_notes' ) ) {
 			$value = SPC()->customer->get_meta( $id );
 		}
 
@@ -2163,6 +2175,15 @@ class SPC_Cart {
 				// Passwords are deliberately never written to the session, so there is nothing
 				// here to check them against. Account creation handles its own validation.
 				if ( $field['type'] == 'password' ) {
+					continue;
+				}
+
+				// The payment section is the one section whose values are not saved to the
+				// session before this runs -- the submit request only carries the payment
+				// method, which arrives through $extra_data. Any other field there, such as
+				// one an add-on requires, would always read as empty here and wrongly block
+				// the order, so it is left to the form submission that follows.
+				if ( 'payment' === $section_id && 'payment_method' !== $field['id'] ) {
 					continue;
 				}
 
@@ -2526,8 +2547,15 @@ class SPC_Cart {
 
 		if ( $this->needs_shipping() && ! $this->has_valid_shipping_method() ) {
 			// Diagnostic: this has been an unreproducible failure for this site for years.
-			// Log the session state so a real occurrence finally leaves a trace.
-			SPC()->log( 'Blocked order init: cart needs shipping but no valid shipping method selected' );
+			// Log the session's shape so a real occurrence finally leaves a trace, but only
+			// which keys exist and the method selections -- no addresses or emails, since
+			// the debug log is not the place for customer data.
+			SPC()->log(
+				'Blocked order init: cart needs shipping but no valid shipping method selected. delivery_method: '
+				. ( $this->delivery_method ? $this->delivery_method->get_id() : '(none)' )
+				. ' | shipping_method: ' . ( ! empty( $data['shipping_method'] ) ? $data['shipping_method'] : '(none)' )
+				. ' | checkout_data keys: ' . wp_json_encode( array_keys( $this->get_checkout_data() ) )
+			);
 			$this->add_error( __( 'Please select a shipping method before completing your order.', 'sunshine-photo-cart' ) );
 			wp_send_json_error();
 		}
