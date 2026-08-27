@@ -2431,6 +2431,15 @@ class SPC_Cart {
 		}
 		// If user is logged in, let's look for their customer info as a fallback.
 		if ( is_user_logged_in() ) {
+
+			// The profile is only a stand-in until the customer gives an address in this
+			// checkout. Once the session holds a shipping country, the session is the whole
+			// address -- filling single gaps from the profile can pair an old order's state
+			// with a new country that does not even have states.
+			if ( 0 === strpos( $key, 'shipping_' ) && array_key_exists( 'shipping_country', $data ) ) {
+				return false;
+			}
+
 			$value = false;
 			switch ( $key ) {
 				case 'first_name':
@@ -2594,6 +2603,23 @@ class SPC_Cart {
 			$order->update_meta_value( $key, $value );
 			if ( $key !== 'customer_notes' ) {
 				SPC()->customer->update_meta( $key, $value );
+			}
+		}
+
+		// The loop above only overwrites profile fields this order has, so an address field
+		// the new address lacks -- a state, when the new country has none -- would keep its
+		// old value on the profile and stay paired with the new country forever. When this
+		// order collected an address, the whole address is authoritative: clear the profile
+		// fields it does not include. Orders that never collected one (pickup with no billing
+		// step, for example) leave the stored address alone.
+		foreach ( array( 'shipping_', 'billing_' ) as $address_prefix ) {
+			if ( empty( $data[ $address_prefix . 'country' ] ) ) {
+				continue;
+			}
+			foreach ( SPC()->countries->get_default_address_fields() as $address_field ) {
+				if ( ! isset( $data[ $address_prefix . $address_field['id'] ] ) ) {
+					SPC()->customer->update_meta( $address_prefix . $address_field['id'], '' );
+				}
 			}
 		}
 

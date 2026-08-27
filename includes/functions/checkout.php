@@ -1014,6 +1014,11 @@ function sunshine_checkout_update_state() {
 
 		SPC()->cart->set_checkout_data_item( $prefix . 'country', $country );
 
+		// A state belongs to one country, so the old one is wrong the moment the country
+		// changes -- and a country without states has no field to overwrite it, which would
+		// leave the stale state stuck in the session and shown on the address summary.
+		SPC()->cart->set_checkout_data_item( $prefix . 'state', '' );
+
 		$output_safe    = '';
 		$address_fields = SPC()->countries->get_address_fields( $country, $prefix );
 		foreach ( $address_fields as $address_field ) {
