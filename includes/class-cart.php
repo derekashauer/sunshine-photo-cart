@@ -2083,6 +2083,10 @@ class SPC_Cart {
 			&& empty( $checkout_data[ $id ] );
 		if ( $saved_unticked ) {
 			$value = '';
+			// sunshine_form_field() replaces the value it is given with the field's default
+			// whenever one exists, so the default has to be cleared too for the unticked
+			// answer to survive rendering.
+			$field['default'] = '';
 		}
 
 		// Fallback to user's stored data
