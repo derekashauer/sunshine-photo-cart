@@ -8,6 +8,7 @@ class SPC_Delivery_Method {
 	protected $needs_shipping = true;
 	protected $class;
 	protected $can_be_enabled = false;
+	protected $taxed_at_store = false;
 
 	public function __construct() {
 		$this->init();
@@ -65,6 +66,20 @@ class SPC_Delivery_Method {
 
 	public function needs_shipping() {
 		return $this->needs_shipping;
+	}
+
+	/**
+	 * Whether an order received this way is taxed at the store's own address.
+	 *
+	 * Where a sale is taxed depends on where the goods change hands. Something collected in
+	 * person never moves, so the sale happens at the store and the store's rate applies,
+	 * regardless of where the customer lives. Anything sent to the customer is taxed at the
+	 * address it goes to, and a download is taxed where the customer is.
+	 *
+	 * @return bool
+	 */
+	public function is_taxed_at_store() {
+		return apply_filters( 'sunshine_delivery_method_' . $this->id . '_taxed_at_store', $this->taxed_at_store, $this );
 	}
 
 	public function options( $options ) {

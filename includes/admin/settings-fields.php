@@ -917,10 +917,10 @@ function sunshine_get_settings_fields() {
 		'description' => __( 'Allow users to checkout as a guest (do not require a user account)', 'sunshine-photo-cart' ),
 	);
 	$checkout_fields['1150'] = array(
-		'name'        => __( 'Always collect an address', 'sunshine-photo-cart' ),
+		'name'        => __( 'Always collect a billing address', 'sunshine-photo-cart' ),
 		'id'          => 'require_address',
 		'type'        => 'checkbox',
-		'description' => __( 'There could be instances where no address is needed at checkout, this option forces an address field even in those situations', 'sunshine-photo-cart' ),
+		'description' => __( 'Collect the address of the person paying on every order, even when nothing is being shipped. Invoices need the buyer\'s address, and the buyer is not always who the order is delivered to. On orders that are being shipped the customer can tick a box to reuse the shipping address. Some payment methods, such as Square, always collect a billing address regardless of this setting.', 'sunshine-photo-cart' ),
 	);
 
 	$checkout_fields['1200'] = array(

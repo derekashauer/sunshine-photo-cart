@@ -376,47 +376,17 @@ function sunshine_checkout_scripts() {
 					},
 					success: function(output, textStatus, XMLHttpRequest) {
 						if ( output ) {
-							console.log( output );
-							$( '#sunshine--checkout--payment div[id*="billing_"]' ).remove();
-							//$( '#sunshine-checkout-payment .sunshine--form--fields' ).append( output );
-							$( output ).insertAfter( '#sunshine--form--field--shipping_as_billing' );
-							//sunshine_mark_filled();
+							// The billing section can also hold the "use shipping address" checkbox,
+							// so swap out only the address fields rather than the whole section.
+							$( '#sunshine--checkout--billing div[id*="billing_"]' ).remove();
+							var sunshine_same_as_shipping = $( '#sunshine--form--field--shipping_as_billing' );
+							if ( sunshine_same_as_shipping.length ) {
+								$( output ).insertAfter( sunshine_same_as_shipping );
+							} else {
+								$( '#sunshine--checkout--billing .sunshine--form--fields' ).append( output );
+							}
 						}
-						sunshine_checkout_updating_done();
-					},
-					error: function(MLHttpRequest, textStatus, errorThrown) {
-						alert('Sorry, there was an error with your request');
-					}
-				});
-			}, 500);
-			return false;
-		});
-
-		$( document ).on( 'change', 'select[name="customer_country"]', function(){
-			console.log( 'changing customer country' );
-			sunshine_checkout_updating();
-			var sunshine_selected_customer_country = $( this ).val();
-			var sunshine_selected_customer_country_required;
-			if ( $( this ).prop( 'required' ) ) {
-				sunshine_selected_customer_country_required = true;
-			}
-			setTimeout( function () {
-				$.ajax({
-					type: 'POST',
-					url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
-					data: {
-						action: 'sunshine_checkout_update_state',
-						country: sunshine_selected_customer_country,
-						type: 'customer',
-						required: sunshine_selected_customer_country_required,
-						security: sunshine_state_change_security
-					},
-					success: function(output, textStatus, XMLHttpRequest) {
-						if ( output ) {
-							$( '#sunshine--checkout--address .sunshine--form--fields' ).html( '' );
-							$( '#sunshine--checkout--address .sunshine--form--fields' ).html( output );
-						}
-						$( document ).trigger( 'sunshine_address_country_change', [ sunshine_selected_customer_country ] );
+						$( document ).trigger( 'sunshine_billing_country_change', [ sunshine_selected_billing_country ] );
 						sunshine_checkout_updating_done();
 					},
 					error: function(MLHttpRequest, textStatus, errorThrown) {
@@ -725,7 +695,6 @@ function sunshine_checkout_scripts() {
 		function sunshine_load_address_autocomplete() {
 			sunshine_init_address_autocomplete( 'shipping' );
 			sunshine_init_address_autocomplete( 'billing' );
-			sunshine_init_address_autocomplete( 'customer' );
 		}
 
 		function sunshine_init_address_autocomplete( section, default_country = '<?php echo esc_js( $default_country ); ?>' ) {
@@ -753,8 +722,8 @@ function sunshine_checkout_scripts() {
 			sunshine_init_address_autocomplete( 'shipping', country );
 		});
 
-		jQuery( document ).on( 'sunshine_address_country_change', function( event, country ){
-			sunshine_init_address_autocomplete( 'customer', country );
+		jQuery( document ).on( 'sunshine_billing_country_change', function( event, country ){
+			sunshine_init_address_autocomplete( 'billing', country );
 		});
 
 		jQuery( document ).on( 'sunshine_reload_checkout', function( event, data ) {
@@ -763,8 +732,6 @@ function sunshine_checkout_scripts() {
 				sunshine_init_address_autocomplete( 'shipping', jQuery( '#shipping_country' ).val() );
 			} else if ( section == 'billing' ) {
 				sunshine_init_address_autocomplete( 'billing', jQuery( '#billing_country' ).val() );
-			} else if ( section == 'address' ) {
-				sunshine_init_address_autocomplete( 'customer', jQuery( '#customer_country' ).val() );
 			}
 		});
 
@@ -1037,8 +1004,6 @@ function sunshine_checkout_update_state() {
 		$type = sanitize_key( $_POST['type'] );
 		if ( $type == 'shipping' ) {
 			$prefix = 'shipping_';
-		} elseif ( $type == 'customer' ) {
-			$prefix = 'customer_';
 		} else {
 			$prefix = 'billing_';
 		}
@@ -1048,6 +1013,11 @@ function sunshine_checkout_update_state() {
 		SPC()->log( 'Checkout update state' );
 
 		SPC()->cart->set_checkout_data_item( $prefix . 'country', $country );
+
+		// A state belongs to one country, so the old one is wrong the moment the country
+		// changes -- and a country without states has no field to overwrite it, which would
+		// leave the stale state stuck in the session and shown on the address summary.
+		SPC()->cart->set_checkout_data_item( $prefix . 'state', '' );
 
 		$output_safe    = '';
 		$address_fields = SPC()->countries->get_address_fields( $country, $prefix );
@@ -1068,16 +1038,22 @@ function sunshine_checkout_payment_failed() {
 		wp_send_json_error();
 	}
 
-	$order_id       = isset( $_POST['order_id'] ) ? intval( $_POST['order_id'] ) : 0;
-	$payment_method = isset( $_POST['payment_method'] ) ? sanitize_text_field( $_POST['payment_method'] ) : '';
-	$error          = isset( $_POST['error'] ) ? sanitize_text_field( $_POST['error'] ) : '';
+	$order_id         = isset( $_POST['order_id'] ) ? intval( $_POST['order_id'] ) : 0;
+	$payment_method   = isset( $_POST['payment_method'] ) ? sanitize_text_field( $_POST['payment_method'] ) : '';
+	$error            = isset( $_POST['error'] ) ? sanitize_text_field( $_POST['error'] ) : '';
+	$session_order_id = intval( SPC()->session->get( 'checkout_order_id' ) );
 
-	if ( ! $order_id ) {
+	// A checkout nonce proves the request came from the checkout page; it does not authorize
+	// access to an arbitrary order. Bind this mutation to the order in the caller's session.
+	if ( ! $order_id || $order_id !== $session_order_id || empty( $payment_method ) ) {
 		wp_send_json_error();
 	}
 
 	// Update the order status to failed.
 	$order = sunshine_get_order( $order_id );
+	if ( ! $order || ! $order->exists() || $order->is_paid() || 'pending' !== $order->get_status() || $payment_method !== $order->get_payment_method() ) {
+		wp_send_json_error();
+	}
 	$order->set_status( 'failed', __( 'Payment failed', 'sunshine-photo-cart' ) . ': ' . $error );
 
 	wp_send_json_success();

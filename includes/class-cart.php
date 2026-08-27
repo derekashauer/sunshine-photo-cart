@@ -68,7 +68,10 @@ class SPC_Cart {
 
 		$this->discount = 0;
 
-		// Get cart to start.
+		// Remember the tax context used by this item build. If resolving checkout state below
+		// changes it, items need one corrective rebuild; repeated setup() calls in the same
+		// request can otherwise keep the cached items.
+		$item_delivery_method_id = $this->delivery_method ? $this->delivery_method->get_id() : false;
 		$this->get_cart_items( $force );
 
 		// Get any session saved data for the cart
@@ -86,7 +89,20 @@ class SPC_Cart {
 		$delivery_methods = sunshine_get_delivery_methods();
 		if ( empty( $this->delivery_method ) ) {
 			if ( array_key_exists( 'delivery_method', $this->data ) ) {
-				$this->delivery_method = sunshine_get_delivery_method_by_id( $this->data['delivery_method'] );
+
+				$this->delivery_method = $this->resolve_delivery_method( $this->data['delivery_method'] );
+
+				// Every pickup location is offered as its own choice at checkout, so completing
+				// that step saves the pickup instance rather than the delivery method id. Put it
+				// back into the shape the rest of the checkout expects, otherwise the delivery
+				// method cannot be looked up at all and the order is treated as being shipped.
+				if ( $this->delivery_method && $this->delivery_method->get_id() !== $this->data['delivery_method'] ) {
+					$pickup_instance = $this->data['delivery_method'];
+					$this->set_checkout_data_item( 'shipping_method', $pickup_instance );
+					$this->data['shipping_method'] = $pickup_instance;
+					$this->set_checkout_data_item( 'delivery_method', $this->delivery_method->get_id() );
+					$this->data['delivery_method'] = $this->delivery_method->get_id();
+				}
 			} else {
 				// Default to only option when there is 1
 				if ( ! empty( $delivery_methods ) && count( $delivery_methods ) == 1 ) {
@@ -146,6 +162,11 @@ class SPC_Cart {
 			if ( ! empty( $payment_methods ) && count( $payment_methods ) == 1 ) {
 				$this->set_payment_method( array_key_first( $payment_methods ) );
 			}
+		}
+
+		$resolved_delivery_method_id = $this->delivery_method ? $this->delivery_method->get_id() : false;
+		if ( $item_delivery_method_id !== $resolved_delivery_method_id ) {
+			$this->get_cart_items( true );
 		}
 
 		if ( SPC()->get_option( 'discount_after_tax' ) ) {
@@ -780,19 +801,40 @@ class SPC_Cart {
 			$prefix = 'shipping_';
 		}
 		*/
-		// Check if customer address data exists in checkout session (set by require_address).
-		// Use it for tax matching since its presence means it was collected at checkout.
-		$checkout_data = $this->get_checkout_data();
-		if ( ! empty( $checkout_data['customer_country'] ) ) {
-			$prefix = 'customer_';
-		} else {
-			$prefix = 'shipping_';
-		}
+		// Goods are taxed where they end up, so the shipping address wins whenever the order is
+		// actually being shipped. Otherwise use the billing address, which is the only address
+		// a pickup or download order has. Where neither exists the store address may be used
+		// further down, depending on the tax_default_location setting.
+		//
+		// Deliberately reads the delivery method rather than calling needs_shipping(): shipping
+		// methods work out their price by asking for the tax rate, so calling anything here
+		// that loads shipping methods would call straight back into this method.
+		$checkout_data    = $this->get_checkout_data();
+		$is_being_shipped = empty( $this->delivery_method ) || $this->delivery_method->needs_shipping();
 
-		// Match address to tax rate
-		$customer_country  = $this->get_checkout_data_item( $prefix . 'country' );
-		$customer_state    = $this->get_checkout_data_item( $prefix . 'state' );
-		$customer_postcode = $this->get_checkout_data_item( $prefix . 'postcode' );
+		if ( ! empty( $this->delivery_method ) && $this->delivery_method->is_taxed_at_store() ) {
+
+			// Collected in person: the goods never move, so the sale happens at the store and
+			// the store's own rate applies wherever the customer happens to live.
+			$customer_country  = SPC()->get_option( 'country' );
+			$customer_state    = SPC()->get_option( 'state' );
+			$customer_postcode = SPC()->get_option( 'postcode' );
+
+		} else {
+
+			if ( $is_being_shipped && ! empty( $checkout_data['shipping_country'] ) ) {
+				$prefix = 'shipping_';
+			} elseif ( ! empty( $checkout_data['billing_country'] ) ) {
+				$prefix = 'billing_';
+			} else {
+				$prefix = 'shipping_';
+			}
+
+			// Match address to tax rate
+			$customer_country  = $this->get_checkout_data_item( $prefix . 'country' );
+			$customer_state    = $this->get_checkout_data_item( $prefix . 'state' );
+			$customer_postcode = $this->get_checkout_data_item( $prefix . 'postcode' );
+		}
 
 		if ( empty( $customer_country ) && empty( $customer_state ) && empty( $customer_postcode ) && 'store' == SPC()->get_option( 'tax_default_location' ) ) {
 			$customer_country  = SPC()->get_option( 'country' );
@@ -806,6 +848,13 @@ class SPC_Cart {
 			return false;
 		}
 		*/
+
+		// Start from nothing on every look-up. Without this, a rate matched earlier in the same
+		// request survives when the customer's address stops matching any rate -- the check
+		// below cannot catch it because a matched rate is a non-empty array -- so they carry on
+		// being charged a rate that does not apply to where they are. The conversion at the end
+		// then divides that same stored value by 100 again on each call, shrinking it each time.
+		$this->tax_rate = false;
 
 		foreach ( $tax_rates as $tax_rate ) {
 
@@ -996,6 +1045,36 @@ class SPC_Cart {
 
 	public function get_delivery_method() {
 		return $this->delivery_method;
+	}
+
+	/**
+	 * Work out which delivery method a stored value refers to.
+	 *
+	 * Delivery methods that do not need a shipping address, such as pickup, are offered at
+	 * checkout as one option per configured location, keyed by the shipping method instance.
+	 * So the value saved against delivery_method may be an instance rather than a delivery
+	 * method id, and looking it up by id alone finds nothing.
+	 *
+	 * @param string $value Stored delivery method id or shipping method instance id.
+	 * @return object|false The delivery method, or false when it cannot be worked out.
+	 */
+	private function resolve_delivery_method( $value ) {
+
+		if ( empty( $value ) || ! is_string( $value ) ) {
+			return false;
+		}
+
+		$delivery_method = sunshine_get_delivery_method_by_id( $value );
+		if ( $delivery_method ) {
+			return $delivery_method;
+		}
+
+		$shipping_method = sunshine_get_shipping_method_by_instance( $value );
+		if ( $shipping_method && ! $shipping_method->needs_shipping_address() ) {
+			return sunshine_get_delivery_method_by_id( $shipping_method->get_id() );
+		}
+
+		return false;
 	}
 
 	public function set_delivery_method( $method ) {
@@ -1733,45 +1812,10 @@ class SPC_Cart {
 			}
 		}
 
-		if ( ! $this->needs_shipping() && ( SPC()->get_option( 'require_address' ) || sunshine_tax_rates_need_address() ) ) {
-
-			$default_country = SPC()->customer->get_shipping_country();
-			if ( $this->get_checkout_data_item( 'customer_country' ) ) {
-				$default_country = $this->get_checkout_data_item( 'customer_country' );
-			}
-
-			$fields['address'] = array(
-				'active' => false,
-				'name'   => __( 'Address', 'sunshine-photo-cart' ),
-				'fields' => SPC()->countries->get_address_fields( $default_country, 'customer_' ),
-			);
-
-			if ( sunshine_checkout_section_completed( 'address' ) ) {
-				$fields['address']['summary'] = SPC()->countries->get_formatted_address(
-					array(
-						'address1' => $this->get_checkout_data_item( 'customer_address1' ),
-						'address2' => $this->get_checkout_data_item( 'customer_address2' ),
-						'city'     => $this->get_checkout_data_item( 'customer_city' ),
-						'state'    => $this->get_checkout_data_item( 'customer_state' ),
-						'postcode' => $this->get_checkout_data_item( 'customer_postcode' ),
-						'country'  => $this->get_checkout_data_item( 'customer_country' ),
-					),
-					', '
-				);
-			}
-
-			$fields['address'] = apply_filters( 'sunshine_checkout_section_address', $fields['address'] );
-
-		} else {
-			if ( ! empty( $fields['delivery']['fields'][0]['options']['shipping'] ) ) {
-				// unset( $fields['delivery']['fields'][0]['options']['shipping'] );
-			}
-		}
-
 		$order_total = $this->get_total();
 
 		$payment_methods             = sunshine_get_allowed_payment_methods();
-		$payment_methods_options     = $needs_billing = array();
+		$payment_methods_options     = array();
 		$payment_methods_field_extra = '';
 		if ( ! empty( $payment_methods ) && is_array( $payment_methods ) ) {
 			foreach ( $payment_methods as $id => $payment_method_class ) {
@@ -1784,10 +1828,100 @@ class SPC_Cart {
 					// $payment_methods_field_extra .= '<div class="sunshine--checkout--payment-method--extra" id="sunshine--checkout--payment-method--extra--' . esc_attr( $id ) . '">' . $this_payment_method_fields . '</div>';
 					$payment_methods_options[ $id ]['description'] .= '<div class="sunshine--checkout--payment-method--extra" id="sunshine--checkout--payment-method--extra--' . esc_attr( $id ) . '">' . $this_payment_method_fields . '</div>';
 				}
-				if ( $payment_method_class->needs_billing_address() ) {
-					$needs_billing[] = $id;
+			}
+		}
+
+		// The billing address is the address of the person paying, which is not always where
+		// the order is going -- gifts, grandparents, school deliveries. It is collected when
+		// the store always wants one (invoices need the buyer's address on them), or when tax
+		// has to be worked out and there is no shipping address to work it out from.
+		//
+		// Payment methods that need one say so for themselves through this filter, so nothing
+		// here has to know which gateways those are. See
+		// SPC_Payment_Method::checkout_needs_billing_address().
+		$needs_billing_address = false;
+		if ( SPC()->get_option( 'require_address' ) ) {
+			$needs_billing_address = true;
+		} elseif ( ! $this->needs_shipping() && sunshine_tax_rates_need_address() ) {
+			$needs_billing_address = true;
+		}
+		$needs_billing_address = apply_filters( 'sunshine_checkout_needs_billing_address', $needs_billing_address, $this );
+
+		if ( $needs_billing_address ) {
+
+			$billing_fields = array();
+
+			// When the order is also being shipped, offer to reuse that address. Ticked by
+			// default so the usual buyer does nothing at all, and the fields only appear for
+			// the customer who says the two are different. A returning customer whose last
+			// order used its own billing address starts unticked with that address filled in,
+			// so they do not have to type it again -- their profile keeps both the answer and
+			// the address from init_order().
+			$shipping_as_billing_condition = array();
+			if ( $this->needs_shipping() ) {
+				$shipping_as_billing_default = 'yes';
+				if ( 'yes' !== SPC()->customer->get_meta( 'shipping_as_billing' ) && SPC()->customer->get_billing_country() ) {
+					$shipping_as_billing_default = '';
+				}
+				$billing_fields[] = array(
+					'id'      => 'shipping_as_billing',
+					'type'    => 'checkbox',
+					'name'    => __( 'Use shipping address as billing address', 'sunshine-photo-cart' ),
+					'default' => $shipping_as_billing_default,
+				);
+				$shipping_as_billing_condition = array(
+					'field'   => 'shipping_as_billing',
+					'compare' => '!=',
+					'value'   => 'yes',
+					'action'  => 'show',
+				);
+			}
+
+			// This order matters: the address being typed in this checkout wins, then the
+			// billing country saved on the customer's profile from their last order -- a
+			// person's own address is more stable than wherever this order happens to ship.
+			$default_country = SPC()->customer->get_shipping_country();
+			if ( $this->get_checkout_data_item( 'billing_country' ) ) {
+				$default_country = $this->get_checkout_data_item( 'billing_country' );
+			} elseif ( SPC()->customer->get_billing_country() ) {
+				$default_country = SPC()->customer->get_billing_country();
+			} elseif ( $this->get_checkout_data_item( 'shipping_country' ) ) {
+				$default_country = $this->get_checkout_data_item( 'shipping_country' );
+			}
+
+			foreach ( SPC()->countries->get_address_fields( $default_country, 'billing_' ) as $billing_address_field ) {
+				if ( ! empty( $shipping_as_billing_condition ) ) {
+					$billing_address_field['conditions'] = array( $shipping_as_billing_condition );
+				}
+				$billing_fields[] = $billing_address_field;
+			}
+
+			$fields['billing'] = array(
+				'active' => false,
+				'name'   => __( 'Billing Address', 'sunshine-photo-cart' ),
+				'fields' => $billing_fields,
+			);
+
+			if ( sunshine_checkout_section_completed( 'billing' ) ) {
+				if ( $this->needs_shipping() && 'yes' === $this->get_checkout_data_item( 'shipping_as_billing' ) ) {
+					$fields['billing']['summary'] = __( 'Same as shipping address', 'sunshine-photo-cart' );
+				} else {
+					$fields['billing']['summary'] = SPC()->countries->get_formatted_address(
+						array(
+							'address1' => $this->get_checkout_data_item( 'billing_address1' ),
+							'address2' => $this->get_checkout_data_item( 'billing_address2' ),
+							'city'     => $this->get_checkout_data_item( 'billing_city' ),
+							'state'    => $this->get_checkout_data_item( 'billing_state' ),
+							'postcode' => $this->get_checkout_data_item( 'billing_postcode' ),
+							'country'  => $this->get_checkout_data_item( 'billing_country' ),
+						),
+						', '
+					);
 				}
 			}
+
+			$fields['billing'] = apply_filters( 'sunshine_checkout_section_billing', $fields['billing'] );
+
 		}
 
 		$payment_methods_fields = array();
@@ -1825,72 +1959,6 @@ class SPC_Cart {
 			'name'   => __( 'Payment', 'sunshine-photo-cart' ),
 			'fields' => $payment_methods_fields,
 		);
-
-		$billing_fields = array();
-		if ( ! empty( $needs_billing ) && $order_total > 0 ) {
-
-			if ( $this->needs_shipping() ) {
-				$fields['payment']['fields'][] = array(
-					'id'         => 'shipping_as_billing',
-					'type'       => 'checkbox',
-					'name'       => __( 'Use shipping address as billing address', 'sunshine-photo-cart' ),
-					'default'    => 'yes',
-					'conditions' => array(
-						array(
-							'field'         => 'payment_method',
-							'compare'       => '==',
-							'value'         => $needs_billing, // TODO: Figure out how to show these fields based on payment method
-							'action'        => 'show',
-							'action_target' => '#sunshine--form--field--shipping_as_billing',
-						),
-					),
-				);
-			}
-
-			$shipping_as_billing_condition = array();
-			if ( $this->needs_shipping() ) {
-				$shipping_as_billing_condition = array(
-					'field'   => 'shipping_as_billing',
-					'compare' => '!=',
-					'value'   => 'yes',
-					'action'  => 'show',
-				);
-			}
-
-			$fields['payment']['fields'][] = array(
-				'id'         => 'billing_header',
-				'type'       => 'legend',
-				'name'       => __( 'Billing Address', 'sunshine-photo-cart' ),
-				'conditions' => array(
-					array(
-						'field'   => 'payment_method',
-						'compare' => 'IN',
-						'value'   => $needs_billing,
-						'action'  => 'show',
-					),
-					$shipping_as_billing_condition,
-				),
-			);
-
-			$default_country = SPC()->customer->get_shipping_country();
-			if ( $this->get_checkout_data_item( 'shipping_country' ) ) {
-				$default_country = $this->get_checkout_data_item( 'shipping_country' );
-			}
-			$billing_address_fields = SPC()->countries->get_address_fields( $default_country, 'billing_' );
-			foreach ( $billing_address_fields as $billing_address_field ) {
-
-				$billing_address_field['conditions'] = array(
-					array(
-						'field'   => 'payment_method',
-						'compare' => 'IN',
-						'value'   => $needs_billing,
-						'action'  => 'show',
-					),
-					$shipping_as_billing_condition,
-				);
-				$fields['payment']['fields'][]       = $billing_address_field;
-			}
-		}
 
 		$credits = SPC()->customer->get_credits();
 		if ( $credits && $this->get_total( array( 'credits' ) ) ) {
@@ -2012,13 +2080,29 @@ class SPC_Cart {
 			$value = $field['default'];
 		}
 
+		$checkout_data       = $this->get_checkout_data();
 		$checkout_data_value = $this->get_checkout_data_item( $id );
 		if ( ! empty( $checkout_data_value ) && $id != 'payment_method' ) {
 			$value = $checkout_data_value;
 		}
 
+		// An unticked checkbox is saved to the session as an empty value, and that is a real
+		// answer from the customer, so it has to beat the field's default and the stored
+		// customer data below. Otherwise reopening the step re-ticks the box on its own --
+		// for shipping_as_billing that would throw away the billing address they typed.
+		$saved_unticked = ! empty( $field['type'] ) && 'checkbox' === $field['type']
+			&& is_array( $checkout_data ) && array_key_exists( $id, $checkout_data )
+			&& empty( $checkout_data[ $id ] );
+		if ( $saved_unticked ) {
+			$value = '';
+			// sunshine_form_field() replaces the value it is given with the field's default
+			// whenever one exists, so the default has to be cleared too for the unticked
+			// answer to survive rendering.
+			$field['default'] = '';
+		}
+
 		// Fallback to user's stored data
-		if ( empty( $value ) && ( $id != 'payment_method' && $id != 'shipping_method' && $id != 'use_credits' && $id != 'customer_notes' ) ) {
+		if ( empty( $value ) && ! $saved_unticked && ( $id != 'payment_method' && $id != 'shipping_method' && $id != 'use_credits' && $id != 'customer_notes' ) ) {
 			$value = SPC()->customer->get_meta( $id );
 		}
 
@@ -2041,6 +2125,10 @@ class SPC_Cart {
 	 * @return bool
 	 */
 	private function is_checkout_field_visible( $field, $data ) {
+
+		if ( isset( $field['visible'] ) && ! $field['visible'] ) {
+			return false;
+		}
 
 		if ( empty( $field['conditions'] ) ) {
 			return true;
@@ -2103,6 +2191,15 @@ class SPC_Cart {
 				// Passwords are deliberately never written to the session, so there is nothing
 				// here to check them against. Account creation handles its own validation.
 				if ( $field['type'] == 'password' ) {
+					continue;
+				}
+
+				// The payment section is the one section whose values are not saved to the
+				// session before this runs -- the submit request only carries the payment
+				// method, which arrives through $extra_data. Any other field there, such as
+				// one an add-on requires, would always read as empty here and wrongly block
+				// the order, so it is left to the form submission that follows.
+				if ( 'payment' === $section_id && 'payment_method' !== $field['id'] ) {
 					continue;
 				}
 
@@ -2334,6 +2431,15 @@ class SPC_Cart {
 		}
 		// If user is logged in, let's look for their customer info as a fallback.
 		if ( is_user_logged_in() ) {
+
+			// The profile is only a stand-in until the customer gives an address in this
+			// checkout. Once the session holds a shipping country, the session is the whole
+			// address -- filling single gaps from the profile can pair an old order's state
+			// with a new country that does not even have states.
+			if ( 0 === strpos( $key, 'shipping_' ) && array_key_exists( 'shipping_country', $data ) ) {
+				return false;
+			}
+
 			$value = false;
 			switch ( $key ) {
 				case 'first_name':
@@ -2388,7 +2494,7 @@ class SPC_Cart {
 		$this->setup( true );
 		$incomplete_sections = $this->get_incomplete_checkout_sections( array( 'payment_method' => $payment_method ) );
 		if ( ! empty( $incomplete_sections ) ) {
-			SPC()->log( 'Blocked order init: checkout is not complete. Still needed: ' . json_encode( array_keys( $incomplete_sections ) ) . ' | checkout_data: ' . json_encode( $this->get_checkout_data() ) );
+			SPC()->log( 'Blocked order init: checkout is not complete. Still needed: ' . wp_json_encode( array_keys( $incomplete_sections ) ) );
 			/* translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment" */
 			$this->add_error( sprintf( __( 'Please complete the following before submitting your order: %s', 'sunshine-photo-cart' ), join( ', ', $incomplete_sections ) ) );
 			wp_send_json_error();
@@ -2430,21 +2536,22 @@ class SPC_Cart {
 		// Setting all various meta data including delivery method, shipping method, payment method.
 		$data = $this->get_checkout_data();
 
-		// If billing is not different, then assign all shipping data to billing.
+		// The customer said their billing address is the same as where the order is going, so
+		// copy it across. Only the address fields are copied -- matching on the shipping_
+		// prefix alone would also catch shipping_method and write a meaningless billing_method.
 		if ( ! empty( $data['shipping_as_billing'] ) && 'yes' == $data['shipping_as_billing'] ) {
-			foreach ( $data as $key => $value ) {
-				if ( strpos( $key, 'shipping_' ) !== false && $key != 'shipping_as_billing' ) {
-					$billing_key          = str_replace( 'shipping_', 'billing_', $key );
-					$data[ $billing_key ] = $value;
-				}
-			}
-		} elseif ( isset( $data['customer_address1'] ) ) {
-			foreach ( $data as $key => $value ) {
-				if ( strpos( $key, 'customer_' ) !== false ) {
-					$billing_key = str_replace( 'customer_', 'billing_', $key );
-					unset( $data[ 'customer_' . $key ] ); // remove the customer_ stuff from data.
-					$data[ $billing_key ] = $value;
-				}
+			foreach ( SPC()->countries->get_default_address_fields() as $address_field ) {
+				$shipping_key = 'shipping_' . $address_field['id'];
+				$billing_key  = 'billing_' . $address_field['id'];
+				// Fields the shipping address does not have (a country without states, for
+				// example) are cleared rather than skipped, so a leftover value from an
+				// earlier billing answer cannot end up paired with the copied address.
+				$billing_value        = isset( $data[ $shipping_key ] ) ? $data[ $shipping_key ] : '';
+				$data[ $billing_key ] = $billing_value;
+				// Also put it back into the checkout session. Payment methods that want a
+				// billing address read it from there when they take the payment, which
+				// happens after this, and the copy above only reaches the saved order.
+				$this->set_checkout_data_item( $billing_key, $billing_value );
 			}
 		}
 
@@ -2467,8 +2574,15 @@ class SPC_Cart {
 
 		if ( $this->needs_shipping() && ! $this->has_valid_shipping_method() ) {
 			// Diagnostic: this has been an unreproducible failure for this site for years.
-			// Log the session state so a real occurrence finally leaves a trace.
-			SPC()->log( 'Blocked order init: cart needs shipping but no valid shipping method selected. checkout_data: ' . json_encode( $this->get_checkout_data() ) );
+			// Log the session's shape so a real occurrence finally leaves a trace, but only
+			// which keys exist and the method selections -- no addresses or emails, since
+			// the debug log is not the place for customer data.
+			SPC()->log(
+				'Blocked order init: cart needs shipping but no valid shipping method selected. delivery_method: '
+				. ( $this->delivery_method ? $this->delivery_method->get_id() : '(none)' )
+				. ' | shipping_method: ' . ( ! empty( $data['shipping_method'] ) ? $data['shipping_method'] : '(none)' )
+				. ' | checkout_data keys: ' . wp_json_encode( array_keys( $this->get_checkout_data() ) )
+			);
 			$this->add_error( __( 'Please select a shipping method before completing your order.', 'sunshine-photo-cart' ) );
 			wp_send_json_error();
 		}
@@ -2489,6 +2603,23 @@ class SPC_Cart {
 			$order->update_meta_value( $key, $value );
 			if ( $key !== 'customer_notes' ) {
 				SPC()->customer->update_meta( $key, $value );
+			}
+		}
+
+		// The loop above only overwrites profile fields this order has, so an address field
+		// the new address lacks -- a state, when the new country has none -- would keep its
+		// old value on the profile and stay paired with the new country forever. When this
+		// order collected an address, the whole address is authoritative: clear the profile
+		// fields it does not include. Orders that never collected one (pickup with no billing
+		// step, for example) leave the stored address alone.
+		foreach ( array( 'shipping_', 'billing_' ) as $address_prefix ) {
+			if ( empty( $data[ $address_prefix . 'country' ] ) ) {
+				continue;
+			}
+			foreach ( SPC()->countries->get_default_address_fields() as $address_field ) {
+				if ( ! isset( $data[ $address_prefix . $address_field['id'] ] ) ) {
+					SPC()->customer->update_meta( $address_prefix . $address_field['id'], '' );
+				}
 			}
 		}
 
