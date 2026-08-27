@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * Decode HTML entities stored in a name/title so it can be escaped once on output.
+ *
+ * WordPress stores post titles with entities already encoded (&amp;) when the saving
+ * user lacks the unfiltered_html capability. Escaping that value again on output
+ * results in a visible &amp;, so decode it back to plain text first.
+ *
+ * @param string $text Possibly entity encoded text.
+ * @return string Plain text.
+ */
+function sunshine_decode_text( $text ) {
+	if ( ! is_string( $text ) || '' === $text ) {
+		return $text;
+	}
+	return html_entity_decode( $text, ENT_QUOTES, 'UTF-8' );
+}
+
 // TODO: This should return the price but limited to float based on locale settings.
 function sunshine_price( $value, $force_0 = false ) {
 	if ( $value == '' ) {

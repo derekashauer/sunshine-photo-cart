@@ -3554,7 +3554,9 @@ class SPC_Countries {
 			$field['id'] = $type . $field['id'];
 		}
 
+		// $type ends in an underscore, so this legacy filter name has a double underscore (e.g. sunshine_shipping__fields); kept for back-compat.
 		$address_fields = apply_filters( 'sunshine_' . $type . '_fields', $address_fields, $country );
+		$address_fields = apply_filters( 'sunshine_' . rtrim( $type, '_' ) . '_fields', $address_fields, $country );
 
 		return $address_fields;
 	}

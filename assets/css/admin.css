@@ -109,8 +109,10 @@ body.sunshine #wpbody { padding: 0 40px; max-width: 12600px; margin: 0 auto; }
 .sunshine a:hover,
 .sunshine a.button-link:hover { color: #3B4958; }
 
+/*
 .sunshine #wpbody .wp-list-table th,
 .sunshine #wpbody .wp-list-table th a { font-size: 13px; color: #988671; }
+*/
 
 /* Notices */
 body.admin_page_sunshine_install .notice,

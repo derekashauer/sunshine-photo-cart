@@ -287,9 +287,9 @@ class SPC_Product extends Sunshine_Data {
 		$separator    = apply_filters( 'sunshine_product_name_separator', ' &mdash; ' );
 		$display_name = '';
 		if ( $this->get_category() ) {
-			$display_name = '<span class="sunshine--product--category">' . $this->get_category_name() . '</span> <span class="sunshine--product--separator">' . $separator . '</span> ';
+			$display_name = '<span class="sunshine--product--category">' . esc_html( $this->get_category_name() ) . '</span> <span class="sunshine--product--separator">' . $separator . '</span> ';
 		}
-		$display_name .= '<span class="sunshine--product--name">' . $this->get_name() . '</span>';
+		$display_name .= '<span class="sunshine--product--name">' . esc_html( $this->get_name() ) . '</span>';
 		return apply_filters( 'sunshine_product_display_name', $display_name, $this );
 	}
 

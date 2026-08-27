@@ -97,6 +97,24 @@ function sunshine_get_gallery_visibility_meta( $gallery_ids ) {
 		}
 	}
 
+	// The bulk read above talks to the database directly, so anything hooked to
+	// get_post_metadata to change a gallery's visibility would be skipped. Give
+	// those hooks the same short-circuit the metadata API gives them. Nothing is
+	// hooked on most sites, and then this costs nothing.
+	if ( has_filter( 'get_post_metadata' ) ) {
+		foreach ( $meta as $gallery_id => $values ) {
+			foreach ( $meta_keys as $meta_key ) {
+				$check = apply_filters( 'get_post_metadata', null, $gallery_id, $meta_key, true, 'post' );
+				if ( null === $check ) {
+					continue;
+				}
+				// A filter answering a single-value read with an array returns
+				// the list of values, so the first one is the value itself.
+				$meta[ $gallery_id ][ $meta_key ] = is_array( $check ) ? reset( $check ) : $check;
+			}
+		}
+	}
+
 	return $meta;
 }
 
@@ -253,6 +271,9 @@ function sunshine_get_galleries_paginated( $custom_args = array(), $conditional_
 	);
 }
 
+// Kept for themes and add-ons. Core counts galleries through the 'total' that
+// sunshine_get_galleries_paginated() returns, which does not build an object
+// per gallery.
 function sunshine_get_galleries_count( $custom_args = array(), $conditional_method = 'access' ) {
 	$galleries = sunshine_get_galleries( $custom_args, $conditional_method );
 	if ( $galleries ) {
@@ -303,9 +324,20 @@ function sunshine_get_gallery_descendant_ids( $gallery_id, $status = 'publish' )
 		return array();
 	}
 
+	// 'id=>parent' returns an array of parent IDs keyed by gallery ID, never post
+	// objects. WP_Query keys that array by the plain ID when the query runs
+	// against the database, but by 'post_parent:<id>' when the same query is
+	// served from the object cache, so strip the prefix before using the key.
 	$children_by_parent = array();
-	foreach ( $relationships as $relationship ) {
-		$children_by_parent[ (int) $relationship->post_parent ][] = (int) $relationship->ID;
+	foreach ( $relationships as $child_id => $parent_id ) {
+		if ( ! is_numeric( $parent_id ) ) {
+			continue;
+		}
+		$child_id = (int) str_replace( 'post_parent:', '', (string) $child_id );
+		if ( ! $child_id ) {
+			continue;
+		}
+		$children_by_parent[ (int) $parent_id ][] = $child_id;
 	}
 
 	// Breadth-first walk down from the requested gallery. Collecting into keys

@@ -12,6 +12,9 @@ abstract class Sunshine_Data {
 	protected $lazy_meta = false;
 	protected $meta_fully_loaded = false;
 	protected $prefetched_meta_keys = array();
+	// Meta keys given a value at runtime, so stored values do not overwrite them.
+	// Keys merely declared with a default in a subclass are not included.
+	protected $runtime_meta_keys = array();
 
 	public function __get( $key ) {
 		if ( array_key_exists( $key, $this->meta ) ) {
@@ -55,8 +58,9 @@ abstract class Sunshine_Data {
 			if ( ! in_array( $key, $this->prefetched_meta_keys, true ) ) {
 				$this->prefetched_meta_keys[] = $key;
 			}
-			if ( ! empty( $value ) && ! array_key_exists( $key, $this->meta ) ) {
-				$this->meta[ $key ] = $value;
+			if ( ! empty( $value ) && ! in_array( $key, $this->runtime_meta_keys, true ) ) {
+				$this->meta[ $key ]        = $value;
+				$this->runtime_meta_keys[] = $key;
 			}
 		}
 	}
@@ -78,8 +82,8 @@ abstract class Sunshine_Data {
 			return;
 		}
 		foreach ( $meta as $key => $value ) {
-			if ( array_key_exists( $key, $this->meta ) ) {
-				// Values already set at runtime win over stored values.
+			if ( in_array( $key, $this->runtime_meta_keys, true ) ) {
+				// Values set at runtime win over stored values.
 				continue;
 			}
 			if ( ! empty( $value ) ) {
@@ -110,7 +114,7 @@ abstract class Sunshine_Data {
 	}
 
 	public function get_name() {
-		return $this->name;
+		return sunshine_decode_text( $this->name );
 	}
 
 	public function get_meta_value( $key, $check_ancestors = false ) {
@@ -157,6 +161,9 @@ abstract class Sunshine_Data {
 		}
 
 		$this->meta[ $key ] = $value;
+		if ( ! in_array( $key, $this->runtime_meta_keys, true ) ) {
+			$this->runtime_meta_keys[] = $key;
+		}
 
 		if ( $this->get_id() > 0 ) {
 			if ( ! empty( $this->taxonomy ) ) {
@@ -175,6 +182,9 @@ abstract class Sunshine_Data {
 		}
 
 		$this->meta[ $key ] = $value;
+		if ( ! in_array( $key, $this->runtime_meta_keys, true ) ) {
+			$this->runtime_meta_keys[] = $key;
+		}
 
 		if ( $this->get_id() > 0 ) {
 			if ( ! empty( $this->taxonomy ) ) {

@@ -383,10 +383,12 @@ class SPC_Gallery extends Sunshine_Data {
 		if ( $this->get_parent_gallery_id() > 0 ) {
 			$ancestors      = $this->get_ancestors();
 			$url            = ( $context === 'admin' ) ? admin_url( 'post.php?action=edit&post=' . $this->get_id() ) : $this->get_permalink( $this->get_id() );
-			$ancestor_links = array( $link ? '<a href="' . $url . '">' . esc_html( $this->get_name() ) . '</a>' : esc_html( $this->get_name() ) );
+			// When not linking, return plain text so the caller can escape it once for its own context.
+			$ancestor_links = array( $link ? '<a href="' . $url . '">' . esc_html( $this->get_name() ) . '</a>' : $this->get_name() );
 			foreach ( $ancestors as $ancestor_id ) {
 				$ancestor_url     = ( $context === 'admin' ) ? admin_url( 'post.php?action=edit&post=' . $ancestor_id ) : $this->get_permalink( $ancestor_id );
-				$ancestor_links[] = $link ? '<a href="' . $ancestor_url . '">' . esc_html( get_the_title( $ancestor_id ) ) . '</a>' : esc_html( get_the_title( $ancestor_id ) );
+				$ancestor_title   = sunshine_decode_text( get_the_title( $ancestor_id ) );
+				$ancestor_links[] = $link ? '<a href="' . $ancestor_url . '">' . esc_html( $ancestor_title ) . '</a>' : $ancestor_title;
 			}
 			$ancestor_links = array_reverse( $ancestor_links );
 			return join( ' > ', $ancestor_links );

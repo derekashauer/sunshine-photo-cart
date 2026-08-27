@@ -297,7 +297,7 @@ class SPC_Frontend {
 	}
 
 	public function is_search() {
-		if ( isset( $_GET['sunshine_search'] ) && wp_verify_nonce( $_GET['sunshine_search_nonce'], 'sunshine_search' ) ) {
+		if ( isset( $_GET['sunshine_search'], $_GET['sunshine_search_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['sunshine_search_nonce'] ) ), 'sunshine_search' ) ) {
 			return true;
 		}
 		return false;

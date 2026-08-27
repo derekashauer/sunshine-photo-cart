@@ -53,7 +53,7 @@ class SPC_Image extends Sunshine_Data {
 		} elseif ( $show == 'filename' ) {
 			$name = $this->get_file_name();
 		} elseif ( $show == 'title' ) {
-			$name = $this->name;
+			$name = sunshine_decode_text( $this->name );
 		} elseif ( $show == 'caption' ) {
 			$name = $this->get_caption();
 		}
@@ -66,7 +66,7 @@ class SPC_Image extends Sunshine_Data {
 	 * @return string The image caption or empty string.
 	 */
 	public function get_caption() {
-		return $this->get_data_value( 'post_excerpt' ) ?: '';
+		return sunshine_decode_text( $this->get_data_value( 'post_excerpt' ) ) ?: '';
 	}
 
 	public function get_file_name() {
