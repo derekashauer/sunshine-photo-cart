@@ -1,15 +1,15 @@
 # Copyright (C) 2026 WP Sunshine
-# This file is distributed under the same license as the Sunshine Photo Cart - API/MCP/Webhooks plugin.
+# This file is distributed under the same license as the Sunshine Photo Cart - Gift Cards plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Sunshine Photo Cart - API/MCP/Webhooks 3.0-beta1\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-api\n"
+"Project-Id-Version: Sunshine Photo Cart - Gift Cards 3.0.6\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-cards\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-29T21:36:25+00:00\n"
+"POT-Creation-Date: 2026-08-27T23:17:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: sunshine-photo-cart\n"
@@ -50,8 +50,6 @@ msgstr ""
 #: cloud-storage.php
 #: video-sales.php
 #: gift-cards.php
-#: whcc.php
-#: sunshine-api.php
 msgid "https://www.sunshinephotocart.com"
 msgstr ""
 
@@ -89,8 +87,6 @@ msgstr ""
 #: cloud-storage.php
 #: video-sales.php
 #: gift-cards.php
-#: whcc.php
-#: sunshine-api.php
 msgid "WP Sunshine"
 msgstr ""
 
@@ -137,8 +133,20 @@ msgstr ""
 msgid "Upgrade to %s"
 msgstr ""
 
-#: includes/admin/addons.php:377
-msgid "Could not get download file"
+#: includes/admin/addons.php:340
+msgid "Your session has expired. Please reload this page and try again."
+msgstr ""
+
+#: includes/admin/addons.php:373
+msgid "No download is available for this add-on. Your license may not include it, or SunshinePhotoCart.com could not be reached."
+msgstr ""
+
+#: includes/admin/addons.php:396
+msgid "WordPress could not write to your plugins folder, so this add-on could not be installed automatically. You can download it from your account and install it manually."
+msgstr ""
+
+#: includes/admin/addons.php:399
+msgid "This add-on could not be installed."
 msgstr ""
 
 #. translators: the plugin name.
@@ -187,13 +195,11 @@ msgstr ""
 msgid "Documentation"
 msgstr ""
 
-#. translators: %s is the application fee percentage
 #: includes/admin/class-admin-meta-box.php:155
 #: includes/admin/class-admin-meta-box.php:660
 #: includes/admin/class-options.php:557
-#: includes/payment-methods/square.php:86
-#: includes/payment-methods/stripe.php:476
-#: includes/payment-methods/stripe.php:503
+#: includes/class-payment-method.php:352
+#: includes/payment-methods/stripe.php:506
 #: templates/admin/header.php:57
 msgid "Learn more"
 msgstr ""
@@ -276,13 +282,10 @@ msgid "— No change —"
 msgstr ""
 
 #: includes/admin/class-admin-quick-bulk-edit.php:252
-#: admin/order.php:162
-#: webhook.php:551
 msgid "Yes"
 msgstr ""
 
 #: includes/admin/class-admin-quick-bulk-edit.php:253
-#: admin/shipping-settings.php:32
 msgid "No"
 msgstr ""
 
@@ -299,7 +302,7 @@ msgid "Write a Review"
 msgstr ""
 
 #: includes/admin/class-admin.php:262
-#: includes/admin/class-admin.php:898
+#: includes/admin/class-admin.php:900
 msgid "Upgrade"
 msgstr ""
 
@@ -307,92 +310,100 @@ msgstr ""
 msgid "Submit Support Ticket"
 msgstr ""
 
-#: includes/admin/class-admin.php:335
-msgid "Sunshine Main Page"
+#: includes/admin/class-admin.php:307
+msgid "This add-on could not be turned on. Please try again."
 msgstr ""
 
-#: includes/admin/class-admin.php:336
-msgid "Sunshine Account"
+#: includes/admin/class-admin.php:308
+msgid "Could not reach your site to turn on this add-on. Please reload the page and try again."
 msgstr ""
 
 #: includes/admin/class-admin.php:337
-msgid "Sunshine Cart"
+msgid "Sunshine Main Page"
 msgstr ""
 
 #: includes/admin/class-admin.php:338
-msgid "Sunshine Checkout"
+msgid "Sunshine Account"
 msgstr ""
 
 #: includes/admin/class-admin.php:339
+msgid "Sunshine Cart"
+msgstr ""
+
+#: includes/admin/class-admin.php:340
+msgid "Sunshine Checkout"
+msgstr ""
+
+#: includes/admin/class-admin.php:341
 #: includes/functions/favorites.php:269
 msgid "Sunshine Favorites"
 msgstr ""
 
-#: includes/admin/class-admin.php:340
+#: includes/admin/class-admin.php:342
 msgid "Sunshine Terms & Conditions"
 msgstr ""
 
-#: includes/admin/class-admin.php:401
+#: includes/admin/class-admin.php:403
 #: includes/admin/class-options.php:59
 #: class-admin-gift-cards.php:10
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-admin.php:409
+#: includes/admin/class-admin.php:411
 msgid "Go Pro"
 msgstr ""
 
 #. translators: %1$s is the URL to the Sunshine Photo Cart website, %2$s is the URL to the WordPress.org plugin reviews page
-#: includes/admin/class-admin.php:422
+#: includes/admin/class-admin.php:424
 #, php-format
 msgid "Thank you for using <a href=\"%1$s\" target=\"_blank\">Sunshine Photo Cart</a>! Please <a href=\"%2$s\" target=\"_blank\">rate us</a> on <a href=\"%2$s\" target=\"_blank\">WordPress.org</a>"
 msgstr ""
 
-#: includes/admin/class-admin.php:531
+#: includes/admin/class-admin.php:533
 msgid "View Sunshine Galleries"
 msgstr ""
 
-#: includes/admin/class-admin.php:560
+#: includes/admin/class-admin.php:562
 msgid "The slug for core order statuses is not editable as it could break Sunshine functionality"
 msgstr ""
 
-#: includes/admin/class-admin.php:574
-msgid "Order Updated"
-msgstr ""
-
-#. translators: %s is the URL to view the gallery
 #: includes/admin/class-admin.php:576
-#, php-format
-msgid "<strong>Gallery updated</strong>, <a href=\"%s\">view gallery</a>"
+msgid "Order Updated"
 msgstr ""
 
 #. translators: %s is the URL to view the gallery
 #: includes/admin/class-admin.php:578
 #, php-format
+msgid "<strong>Gallery updated</strong>, <a href=\"%s\">view gallery</a>"
+msgstr ""
+
+#. translators: %s is the URL to view the gallery
+#: includes/admin/class-admin.php:580
+#, php-format
 msgid "<strong>Gallery created</strong>, <a href=\"%s\">view gallery</a>"
 msgstr ""
 
 #. translators: %s is the URL to settings page
-#: includes/admin/class-admin.php:585
+#: includes/admin/class-admin.php:587
 #, php-format
 msgid "Sunshine logging is enabled. <a href=\"%s\">Please disable when no longer in use.</a>"
 msgstr ""
 
 #. translators: %s is the URL to installation page
-#: includes/admin/class-admin.php:592
+#: includes/admin/class-admin.php:594
 #, php-format
 msgid "Sunshine installation process was skipped. <a href=\"%s\">Please complete the installation process.</a>"
 msgstr ""
 
 #. translators: %1$d is the number of orders, %2$s is the number of orders in plural
-#: includes/admin/class-admin.php:875
+#: includes/admin/class-admin.php:877
 #, php-format
 msgid "%s order"
 msgid_plural "%s orders"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/class-admin.php:883
+#: includes/admin/class-admin.php:885
 #: includes/admin/customers.php:13
 #: includes/admin/customers.php:34
 #: includes/admin/reports.php:20
@@ -400,38 +411,38 @@ msgstr[1] ""
 msgid "Customers"
 msgstr ""
 
-#: includes/admin/class-admin.php:884
+#: includes/admin/class-admin.php:886
 #: includes/admin/reports.php:88
 msgid "Reports"
 msgstr ""
 
-#: includes/admin/class-admin.php:885
+#: includes/admin/class-admin.php:887
 #: includes/admin/tools.php:36
 #: includes/admin/tools.php:42
 msgid "Tools"
 msgstr ""
 
-#: includes/admin/class-admin.php:886
+#: includes/admin/class-admin.php:888
 msgid "Add-ons"
 msgstr ""
 
-#: includes/admin/class-admin.php:890
+#: includes/admin/class-admin.php:892
 msgid "Setup Guide"
 msgstr ""
 
-#: includes/admin/class-admin.php:895
+#: includes/admin/class-admin.php:897
 msgid "Get Help"
 msgstr ""
 
-#: includes/admin/class-admin.php:926
+#: includes/admin/class-admin.php:928
 msgid "Keywords"
 msgstr ""
 
-#: includes/admin/class-admin.php:938
+#: includes/admin/class-admin.php:940
 msgid "Use gallery price level"
 msgstr ""
 
-#: includes/admin/class-admin.php:946
+#: includes/admin/class-admin.php:948
 #: includes/admin/sunshine-gallery.php:218
 #: includes/class-sunshinephotocart.php:500
 #: includes/class-sunshinephotocart.php:513
@@ -439,54 +450,53 @@ msgstr ""
 msgid "Price Level"
 msgstr ""
 
-#: includes/admin/class-admin.php:957
+#: includes/admin/class-admin.php:959
 msgid "Disable Purchasing"
 msgstr ""
 
-#: includes/admin/class-admin.php:963
+#: includes/admin/class-admin.php:965
 #: includes/admin/settings-fields.php:702
 #: admin/products.php:45
 msgid "Watermark"
 msgstr ""
 
-#: includes/admin/class-admin.php:1008
+#: includes/admin/class-admin.php:1010
 msgid "Metadata"
 msgstr ""
 
-#: includes/admin/class-admin.php:1095
+#: includes/admin/class-admin.php:1097
 msgid "Log file has been cleared"
 msgstr ""
 
-#: includes/admin/class-admin.php:1151
+#: includes/admin/class-admin.php:1153
 msgid "Error log file has been cleared"
 msgstr ""
 
-#: includes/admin/class-admin.php:1157
-#: includes/admin/class-admin.php:1165
+#: includes/admin/class-admin.php:1159
+#: includes/admin/class-admin.php:1167
 msgid "You do not have permission to access this file."
 msgstr ""
 
-#: includes/admin/class-admin.php:1173
+#: includes/admin/class-admin.php:1175
 msgid "Log file not found."
 msgstr ""
 
 #: includes/admin/class-customers-table.php:42
 #: includes/admin/sunshine-product-category.php:166
-#: includes/class-payment-method.php:46
+#: includes/class-payment-method.php:57
 #: includes/class-shipping-method.php:152
 #: templates/admin/order-items.php:102
 #: templates/image/add-comment.php:7
 #: class-reports-images-table.php:35
 #: reports/class-reports-image-downloads.php:37
 #: admin.php:159
-#: admin/class-admin-webhooks.php:243
 msgid "Name"
 msgstr ""
 
 #: includes/admin/class-customers-table.php:43
 #: includes/admin/class-privacy.php:256
 #: includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1426
+#: includes/class-cart.php:1588
 #: includes/functions/account.php:558
 #: includes/payment-methods/paypal-legacy.php:45
 #: includes/payment-methods/paypal-legacy.php:58
@@ -496,7 +506,6 @@ msgstr ""
 #: templates/order/details.php:8
 #: templates/required-data.php:9
 #: class-export-orders.php:474
-#: includes/controllers/v1/class-rest-settings-controller.php:416
 msgid "Email"
 msgstr ""
 
@@ -505,7 +514,7 @@ msgstr ""
 #: includes/admin/install.php:277
 #: includes/admin/settings-fields.php:245
 #: includes/admin/sunshine-gallery.php:170
-#: includes/class-frontend.php:923
+#: includes/class-frontend.php:931
 #: templates/multi-image-select/select-images.php:35
 msgid "Favorites"
 msgstr ""
@@ -710,7 +719,7 @@ msgstr ""
 #: includes/admin/class-privacy.php:257
 #: includes/admin/settings-fields.php:976
 #: includes/admin/settings-fields.php:986
-#: includes/class-cart.php:1453
+#: includes/class-cart.php:1615
 #: templates/invoice/admin.php:164
 #: templates/order/details.php:13
 #: class-export-orders.php:475
@@ -817,10 +826,6 @@ msgstr ""
 #: includes/admin/sunshine-order.php:424
 #: templates/account/orders.php:8
 #: admin.php:226
-#: admin/order.php:94
-#: admin/class-admin-keys.php:319
-#: admin/class-admin-webhooks.php:94
-#: admin/class-admin-webhooks.php:284
 msgid "Status"
 msgstr ""
 
@@ -830,7 +835,7 @@ msgstr ""
 
 #: includes/admin/class-privacy.php:259
 #: includes/admin/customers.php:106
-#: includes/class-cart.php:1749
+#: includes/class-cart.php:1901
 #: templates/invoice/admin.php:194
 msgid "Billing Address"
 msgstr ""
@@ -841,8 +846,8 @@ msgstr ""
 
 #: includes/admin/class-privacy.php:268
 #: includes/admin/customers.php:99
-#: includes/class-cart.php:1574
-#: includes/template-hooks.php:426
+#: includes/class-cart.php:1755
+#: includes/template-hooks.php:431
 #: templates/invoice/admin.php:191
 msgid "Shipping Address"
 msgstr ""
@@ -1047,12 +1052,8 @@ msgstr ""
 
 #: includes/admin/gallery-navigator.php:83
 #: includes/admin/gallery-navigator.php:207
-#: includes/payment-methods/stripe.php:1146
-#: includes/payment-methods/stripe.php:1171
-#: admin/products.php:33
-#: admin/settings.php:129
-#: admin/shipping-settings.php:203
-#: order.php:312
+#: includes/payment-methods/stripe.php:1149
+#: includes/payment-methods/stripe.php:1174
 msgid "Permission denied"
 msgstr ""
 
@@ -1107,7 +1108,7 @@ msgstr[1] ""
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
 #: includes/admin/gallery-navigator.php:344
-#: includes/class-cart.php:1855
+#: includes/class-cart.php:2037
 msgid "Edit"
 msgstr ""
 
@@ -1155,7 +1156,6 @@ msgstr ""
 #: includes/admin/settings-fields.php:235
 #: includes/admin/settings-fields.php:1003
 #: includes/payment-methods/paypal.php:179
-#: includes/controllers/v1/class-rest-settings-controller.php:409
 msgid "Checkout"
 msgstr ""
 
@@ -1216,13 +1216,11 @@ msgid "Your order is ready to be picked up"
 msgstr ""
 
 #: includes/admin/install.php:381
-#: admin/order.php:87
-#: webhook.php:513
 msgid "Failed"
 msgstr ""
 
 #: includes/admin/install.php:385
-#: includes/functions/checkout.php:1071
+#: includes/functions/checkout.php:1057
 msgid "Payment failed"
 msgstr ""
 
@@ -1276,16 +1274,16 @@ msgstr ""
 #: includes/admin/options/emails.php:64
 #: includes/admin/options/payment-methods.php:63
 #: includes/admin/options/shipping-methods.php:85
-#: includes/class-frontend.php:433
+#: includes/class-frontend.php:441
 #: includes/functions/checkout.php:98
 #: includes/functions/checkout.php:168
 #: includes/functions/checkout.php:226
 #: includes/functions/checkout.php:251
 #: includes/functions/checkout.php:276
 #: includes/functions/checkout.php:313
-#: includes/functions/checkout.php:457
-#: includes/functions/checkout.php:485
-#: includes/functions/checkout.php:565
+#: includes/functions/checkout.php:427
+#: includes/functions/checkout.php:455
+#: includes/functions/checkout.php:535
 msgid "Sorry, there was an error with your request"
 msgstr ""
 
@@ -1306,7 +1304,6 @@ msgstr ""
 #: templates/cart/item.php:17
 #: admin/schedule.php:93
 #: admin/schedule.php:100
-#: admin/class-admin-keys.php:214
 msgid "Delete"
 msgstr ""
 
@@ -1317,7 +1314,6 @@ msgstr ""
 #: includes/admin/options/taxes.php:12
 #: includes/admin/settings-fields.php:39
 #: includes/class-countries.php:3442
-#: includes/controllers/v1/class-rest-settings-controller.php:331
 msgid "Country"
 msgstr ""
 
@@ -1395,7 +1391,6 @@ msgstr ""
 #: reports.php:4
 #: price-levels.php:48
 #: admin/products.php:54
-#: admin/order.php:247
 msgid "Products"
 msgstr ""
 
@@ -1406,11 +1401,10 @@ msgstr ""
 #: includes/class-sunshinephotocart.php:369
 #: includes/functions/account.php:404
 #: reports.php:5
-#: hooks.php:509
+#: hooks.php:524
 #: templates/account/downloads.php:30
 #: class-export-galleries.php:10
 #: class-export-orders.php:502
-#: includes/controllers/v1/class-rest-settings-controller.php:381
 msgid "Galleries"
 msgstr ""
 
@@ -1420,7 +1414,7 @@ msgstr ""
 #: includes/admin/sunshine-order.php:730
 #: templates/store/product-details.php:21
 #: reports.php:6
-#: hooks.php:517
+#: hooks.php:532
 #: class-export-galleries.php:16
 #: class-export-orders.php:501
 msgid "Images"
@@ -1433,8 +1427,8 @@ msgstr ""
 
 #: includes/admin/reports.php:22
 #: includes/admin/sunshine-order.php:874
-#: includes/payment-methods/square.php:916
-#: includes/payment-methods/stripe.php:2131
+#: includes/payment-methods/square.php:931
+#: includes/payment-methods/stripe.php:2134
 #: templates/cart/totals.php:43
 #: templates/checkout/summary.php:71
 #: templates/email/admin-receipt.php:85
@@ -1442,8 +1436,6 @@ msgstr ""
 #: templates/email/order-status.php:85
 #: templates/invoice/admin.php:285
 #: templates/order/totals.php:28
-#: templates/email/whcc-order-rejected.php:87
-#: templates/email/whcc-order-status.php:98
 msgid "Tax"
 msgstr ""
 
@@ -1499,7 +1491,6 @@ msgid "Tax Collected"
 msgstr ""
 
 #: includes/admin/settings-fields.php:8
-#: includes/class-cart.php:1631
 #: includes/class-countries.php:3451
 msgid "Address"
 msgstr ""
@@ -1514,7 +1505,6 @@ msgstr ""
 
 #: includes/admin/settings-fields.php:24
 #: includes/class-countries.php:3465
-#: includes/controllers/v1/class-rest-settings-controller.php:328
 msgid "City"
 msgstr ""
 
@@ -1531,7 +1521,6 @@ msgid "Currency Formatting"
 msgstr ""
 
 #: includes/admin/settings-fields.php:58
-#: includes/controllers/v1/class-rest-settings-controller.php:367
 msgid "Currency"
 msgstr ""
 
@@ -1556,12 +1545,10 @@ msgid "Right space"
 msgstr ""
 
 #: includes/admin/settings-fields.php:76
-#: includes/controllers/v1/class-rest-settings-controller.php:371
 msgid "Thousands separator"
 msgstr ""
 
 #: includes/admin/settings-fields.php:82
-#: includes/controllers/v1/class-rest-settings-controller.php:372
 msgid "Decimal separator"
 msgstr ""
 
@@ -1570,7 +1557,6 @@ msgid "Number of decimals"
 msgstr ""
 
 #: includes/admin/settings-fields.php:94
-#: includes/controllers/v1/class-rest-settings-controller.php:374
 msgid "Show currency code"
 msgstr ""
 
@@ -1668,7 +1654,6 @@ msgstr ""
 #: class-admin-discounts.php:204
 #: sell-anything.php:39
 #: class-admin-gift-cards.php:64
-#: includes/controllers/v1/class-rest-settings-controller.php:321
 msgid "General"
 msgstr ""
 
@@ -1707,7 +1692,7 @@ msgid "Order Received"
 msgstr ""
 
 #: includes/admin/settings-fields.php:279
-#: includes/class-frontend.php:575
+#: includes/class-frontend.php:583
 #: templates/image/add-to-cart.php:89
 msgid "Store"
 msgstr ""
@@ -1722,8 +1707,6 @@ msgstr ""
 
 #: includes/admin/settings-fields.php:305
 #: templates/email/admin-receipt.php:12
-#: templates/email/whcc-order-rejected.php:28
-#: templates/email/whcc-order-status.php:39
 msgid "View Order"
 msgstr ""
 
@@ -1738,7 +1721,7 @@ msgid "Account Details"
 msgstr ""
 
 #: includes/admin/settings-fields.php:337
-#: includes/class-frontend.php:518
+#: includes/class-frontend.php:526
 #: templates/account/login.php:9
 #: templates/account/login.php:27
 msgid "Login"
@@ -1752,7 +1735,7 @@ msgid "Reset Password"
 msgstr ""
 
 #: includes/admin/settings-fields.php:353
-#: includes/class-frontend.php:501
+#: includes/class-frontend.php:509
 #: includes/functions/account.php:419
 msgid "Logout"
 msgstr ""
@@ -2219,7 +2202,6 @@ msgid "My business location"
 msgstr ""
 
 #: includes/admin/settings-fields.php:869
-#: includes/controllers/v1/class-rest-settings-controller.php:348
 msgid "Display prices"
 msgstr ""
 
@@ -2236,7 +2218,6 @@ msgid "This shows after a price"
 msgstr ""
 
 #: includes/admin/settings-fields.php:899
-#: includes/controllers/v1/class-rest-settings-controller.php:341
 msgid "Taxes"
 msgstr ""
 
@@ -2257,11 +2238,11 @@ msgid "Allow users to checkout as a guest (do not require a user account)"
 msgstr ""
 
 #: includes/admin/settings-fields.php:920
-msgid "Always collect an address"
+msgid "Always collect a billing address"
 msgstr ""
 
 #: includes/admin/settings-fields.php:923
-msgid "There could be instances where no address is needed at checkout, this option forces an address field even in those situations"
+msgid "Collect the address of the person paying on every order, even when nothing is being shipped. Invoices need the buyer's address, and the buyer is not always who the order is delivered to. On orders that are being shipped the customer can tick a box to reuse the shipping address. Some payment methods, such as Square, always collect a billing address regardless of this setting."
 msgstr ""
 
 #: includes/admin/settings-fields.php:927
@@ -2309,7 +2290,7 @@ msgstr ""
 #: includes/admin/settings-fields.php:977
 #: includes/admin/settings-fields.php:987
 #: includes/admin/sunshine-order.php:732
-#: includes/class-cart.php:1684
+#: includes/class-cart.php:1932
 #: templates/email/admin-receipt.php:146
 #: templates/email/customer-receipt.php:150
 #: templates/email/order-status.php:118
@@ -2633,8 +2614,6 @@ msgid "Animals"
 msgstr ""
 
 #: includes/admin/settings-fields.php:1602
-#: admin/class-admin-webhooks.php:92
-#: admin/class-admin-webhooks.php:245
 msgid "Events"
 msgstr ""
 
@@ -2741,7 +2720,6 @@ msgid "Gallery Sharing"
 msgstr ""
 
 #: includes/admin/sunshine-gallery.php:180
-#: includes/controllers/v1/class-rest-settings-controller.php:391
 msgid "Allow gallery sharing"
 msgstr ""
 
@@ -2941,8 +2919,8 @@ msgstr ""
 #: includes/admin/sunshine-order.php:129
 #: includes/payment-methods/paypal-legacy.php:39
 #: includes/payment-methods/paypal.php:63
-#: includes/payment-methods/square.php:97
-#: includes/payment-methods/stripe.php:539
+#: includes/payment-methods/square.php:100
+#: includes/payment-methods/stripe.php:542
 #: class-authorizenet.php:50
 #: class-mollie.php:48
 #: class-mercadopago-pro.php:41
@@ -2954,7 +2932,7 @@ msgstr ""
 
 #: includes/admin/sunshine-order.php:130
 #: includes/admin/sunshine-order.php:450
-#: includes/payment-methods/stripe.php:540
+#: includes/payment-methods/stripe.php:543
 #: includes/payment-methods/test.php:7
 #: class-authorizenet.php:51
 #: class-mollie.php:49
@@ -2994,7 +2972,7 @@ msgid "Select All"
 msgstr ""
 
 #: includes/admin/sunshine-order.php:421
-#: includes/class-order.php:976
+#: includes/class-order.php:1003
 #: includes/class-sunshinephotocart.php:534
 #: gallery.php:272
 #: admin.php:237
@@ -3023,8 +3001,6 @@ msgstr ""
 #: templates/invoice/admin.php:169
 #: templates/order/details.php:22
 #: class-export-orders.php:471
-#: templates/email/whcc-order-rejected.php:114
-#: templates/email/whcc-order-status.php:125
 msgid "Payment Method"
 msgstr ""
 
@@ -3038,8 +3014,6 @@ msgstr ""
 #: templates/invoice/admin.php:311
 #: templates/order/totals.php:67
 #: class-export-orders.php:469
-#: templates/email/whcc-order-rejected.php:104
-#: templates/email/whcc-order-status.php:115
 msgid "Order Total"
 msgstr ""
 
@@ -3057,7 +3031,7 @@ msgstr ""
 
 #: includes/admin/sunshine-order.php:470
 #: includes/admin/sunshine-order.php:549
-#: includes/class-frontend.php:808
+#: includes/class-frontend.php:816
 #: includes/emails/class-email-customer-receipt.php:54
 #: templates/account/orders.php:22
 #: templates/email/customer-receipt.php:16
@@ -3122,18 +3096,14 @@ msgid "Notify customer of status change"
 msgstr ""
 
 #: includes/admin/sunshine-order.php:695
-#: includes/payment-methods/square.php:886
-#: includes/payment-methods/stripe.php:2069
+#: includes/payment-methods/square.php:901
+#: includes/payment-methods/stripe.php:2072
 #: templates/cart/totals.php:17
 #: templates/checkout/summary.php:46
 #: templates/email/admin-receipt.php:184
 #: templates/email/customer-receipt.php:170
 #: templates/email/order-status.php:138
 #: templates/order/details.php:46
-#: admin/order.php:139
-#: templates/email/whcc-order-rejected.php:137
-#: templates/email/whcc-order-status.php:148
-#: includes/controllers/v1/class-rest-settings-controller.php:352
 msgid "Shipping"
 msgstr ""
 
@@ -3146,8 +3116,6 @@ msgstr ""
 #: templates/email/customer-receipt.php:177
 #: templates/email/order-status.php:145
 #: templates/order/details.php:52
-#: templates/email/whcc-order-rejected.php:144
-#: templates/email/whcc-order-status.php:155
 msgid "Billing"
 msgstr ""
 
@@ -3170,8 +3138,6 @@ msgstr ""
 #: templates/email/customer-receipt.php:123
 #: templates/invoice/admin.php:305
 #: templates/order/totals.php:62
-#: templates/email/whcc-order-rejected.php:99
-#: templates/email/whcc-order-status.php:110
 msgid "Refunds"
 msgstr ""
 
@@ -3273,21 +3239,16 @@ msgstr ""
 #: templates/email/order-status.php:48
 #: templates/invoice/admin.php:256
 #: templates/order/totals.php:5
-#: templates/email/whcc-order-rejected.php:61
-#: templates/email/whcc-order-status.php:72
 msgid "Subtotal"
 msgstr ""
 
 #. translators: %s is the shipping method name
-#. translators: %s: shipping method name
 #: includes/admin/sunshine-order.php:859
 #: templates/email/admin-receipt.php:59
 #: templates/email/customer-receipt.php:63
 #: templates/email/order-status.php:62
 #: templates/invoice/admin.php:270
 #: templates/order/totals.php:19
-#: templates/email/whcc-order-rejected.php:67
-#: templates/email/whcc-order-status.php:78
 #, php-format
 msgid "Shipping via %s"
 msgstr ""
@@ -3308,8 +3269,6 @@ msgstr ""
 #: discounts.php:34
 #: discounts.php:46
 #: class-export-orders.php:467
-#: templates/email/whcc-order-rejected.php:74
-#: templates/email/whcc-order-status.php:85
 msgid "Discounts"
 msgstr ""
 
@@ -3320,8 +3279,6 @@ msgstr ""
 #: templates/email/order-status.php:91
 #: templates/invoice/admin.php:299
 #: templates/order/totals.php:56
-#: templates/email/whcc-order-rejected.php:93
-#: templates/email/whcc-order-status.php:104
 msgid "Credits Applied"
 msgstr ""
 
@@ -3390,11 +3347,9 @@ msgid "Use this image"
 msgstr ""
 
 #: includes/admin/sunshine-product-category.php:167
-#: includes/class-payment-method.php:53
+#: includes/class-payment-method.php:64
 #: includes/class-shipping-method.php:159
 #: admin.php:160
-#: admin/class-admin-keys.php:62
-#: admin/class-admin-keys.php:91
 msgid "Description"
 msgstr ""
 
@@ -3536,7 +3491,7 @@ msgstr ""
 #: includes/admin/tools/regenerate.php:403
 #: includes/admin/tools/square-reconcile.php:191
 #: includes/admin/tools/unused-image-sizes.php:153
-#: hooks.php:525
+#: hooks.php:540
 msgid "Abort"
 msgstr ""
 
@@ -3708,7 +3663,6 @@ msgid "%s: another reconcile already running, skipped"
 msgstr ""
 
 #: includes/admin/tools/square-reconcile.php:224
-#: admin/settings.php:113
 msgid "Request failed"
 msgstr ""
 
@@ -3728,21 +3682,21 @@ msgstr ""
 msgid "Return to tools"
 msgstr ""
 
-#: includes/class-cart.php:242
+#: includes/class-cart.php:320
 msgid "An item has been removed from your cart because it no longer exists"
 msgstr ""
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:517
+#: includes/class-cart.php:595
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr ""
 
-#: includes/class-cart.php:1403
+#: includes/class-cart.php:1565
 msgid "Contact Information"
 msgstr ""
 
-#: includes/class-cart.php:1408
+#: includes/class-cart.php:1570
 #: includes/class-countries.php:3424
 #: includes/functions/account.php:542
 #: templates/account/signup.php:20
@@ -3750,7 +3704,7 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: includes/class-cart.php:1417
+#: includes/class-cart.php:1579
 #: includes/class-countries.php:3433
 #: includes/functions/account.php:550
 #: templates/account/signup.php:27
@@ -3758,134 +3712,148 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: includes/class-cart.php:1443
+#: includes/class-cart.php:1605
 #: templates/account/login.php:18
 #: templates/account/signup.php:9
 #: templates/shortcodes/password.php:4
 msgid "Password"
 msgstr ""
 
-#: includes/class-cart.php:1445
+#: includes/class-cart.php:1607
 msgid "Optionally set a password"
 msgstr ""
 
-#: includes/class-cart.php:1462
+#: includes/class-cart.php:1624
 #: templates/email/admin-receipt.php:199
 #: templates/email/customer-receipt.php:185
 #: templates/email/order-status.php:153
 #: templates/invoice/admin.php:184
 #: templates/order/details.php:39
 #: class-export-orders.php:476
-#: templates/email/whcc-order-rejected.php:152
-#: templates/email/whcc-order-status.php:163
 msgid "EU VAT Number"
 msgstr ""
 
-#: includes/class-cart.php:1545
+#: includes/class-cart.php:1726
 msgid "Delivery Method"
 msgstr ""
 
-#: includes/class-cart.php:1605
+#: includes/class-cart.php:1786
+#: includes/class-cart.php:1803
 #: templates/invoice/admin.php:173
 #: class-export-orders.php:470
 msgid "Shipping Method"
 msgstr ""
 
-#: includes/class-cart.php:1711
-msgid "Payment"
+#: includes/class-cart.php:1808
+#: includes/class-cart.php:2306
+msgid "Sorry, shipping is not available to the address you entered. Please double check the address or try a different shipping address."
 msgstr ""
 
-#: includes/class-cart.php:1722
+#: includes/class-cart.php:1869
 msgid "Use shipping address as billing address"
 msgstr ""
 
+#: includes/class-cart.php:1907
+msgid "Same as shipping address"
+msgstr ""
+
+#: includes/class-cart.php:1959
+msgid "Payment"
+msgstr ""
+
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:1787
+#: includes/class-cart.php:1969
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr ""
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:1795
-#: includes/class-payment-method.php:196
+#: includes/class-cart.php:1977
+#: includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr ""
 
-#: includes/class-cart.php:1797
+#: includes/class-cart.php:1979
 msgid "Submit Order for Free"
 msgstr ""
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:1814
+#: includes/class-cart.php:1996
 #, php-format
 msgid "By submitting this order, you agree to our <a href=\"%1$s\" target=\"_blank\">%2$s</a>"
 msgstr ""
 
 #. translators: %s is the section name
-#: includes/class-cart.php:1855
+#: includes/class-cart.php:2037
 #, php-format
 msgid "Edit %s"
 msgstr ""
 
-#: includes/class-cart.php:1873
+#: includes/class-cart.php:2055
 msgid "Next Step"
 msgstr ""
 
-#: includes/class-cart.php:1930
+#: includes/class-cart.php:2232
 msgid "Invalid checkout section"
 msgstr ""
 
-#: includes/class-cart.php:1946
+#: includes/class-cart.php:2248
 msgid "Field contains invalid data"
 msgstr ""
 
 #. translators: %s is the field name
-#: includes/class-cart.php:1977
+#: includes/class-cart.php:2265
 #, php-format
 msgid "%s is required"
 msgstr ""
 
-#: includes/class-cart.php:1989
+#: includes/class-cart.php:2277
 #: frontend.php:173
 msgid "Invalid email"
 msgstr ""
 
-#: includes/class-cart.php:2076
-#: includes/class-cart.php:2254
+#: includes/class-cart.php:2378
+#: includes/class-cart.php:2586
 msgid "Please select a shipping method before completing your order."
 msgstr ""
 
-#: includes/class-cart.php:2188
+#. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
+#: includes/class-cart.php:2499
+#, php-format
+msgid "Please complete the following before submitting your order: %s"
+msgstr ""
+
+#: includes/class-cart.php:2512
 msgid "Error encountered during checkout process and your order has already been marked as paid."
 msgstr ""
 
-#: includes/class-cart.php:2188
-#: includes/class-cart.php:2496
+#: includes/class-cart.php:2512
+#: includes/class-cart.php:2845
 msgid "View the order"
 msgstr ""
 
-#: includes/class-cart.php:2200
+#: includes/class-cart.php:2524
 msgid "No payment method selected"
 msgstr ""
 
-#: includes/class-cart.php:2299
+#: includes/class-cart.php:2648
 msgid "Failed to initialize order"
 msgstr ""
 
-#: includes/class-cart.php:2310
+#: includes/class-cart.php:2659
 msgid "Something happened while trying to process your order. Please contact the site owner for more details."
 msgstr ""
 
-#: includes/class-cart.php:2339
+#: includes/class-cart.php:2688
 msgid "No payment method"
 msgstr ""
 
-#: includes/class-cart.php:2429
+#: includes/class-cart.php:2778
 msgid "User account already exists with that email address - please login to continue"
 msgstr ""
 
-#: includes/class-cart.php:2496
+#: includes/class-cart.php:2845
 msgid "It appears your previous checkout has already been processed."
 msgstr ""
 
@@ -12513,7 +12481,6 @@ msgstr ""
 #: includes/class-countries.php:3122
 #: includes/class-countries.php:3132
 #: includes/class-countries.php:3338
-#: includes/controllers/v1/class-rest-settings-controller.php:330
 msgid "Postcode"
 msgstr ""
 
@@ -12523,7 +12490,6 @@ msgstr ""
 #: includes/class-countries.php:3328
 #: includes/class-countries.php:3473
 #: includes/class-countries.php:3477
-#: includes/controllers/v1/class-rest-settings-controller.php:329
 msgid "State"
 msgstr ""
 
@@ -12626,19 +12592,19 @@ msgid "Zip / Postal Code"
 msgstr ""
 
 #. translators: %s is the delivery method name
-#: includes/class-delivery-method.php:75
+#: includes/class-delivery-method.php:90
 #, php-format
 msgid "Enable %s"
 msgstr ""
 
 #. translators: %s is the delivery method name
-#: includes/class-delivery-method.php:82
+#: includes/class-delivery-method.php:97
 #, php-format
 msgid "%s Label"
 msgstr ""
 
 #. translators: %s is the delivery method name
-#: includes/class-delivery-method.php:97
+#: includes/class-delivery-method.php:112
 #, php-format
 msgid "%s Description"
 msgstr ""
@@ -12660,7 +12626,6 @@ msgstr ""
 
 #: includes/class-email.php:59
 #: admin.php:15
-#: admin/class-admin-keys.php:323
 msgid "Enabled"
 msgstr ""
 
@@ -12687,52 +12652,52 @@ msgstr ""
 msgid "Search results"
 msgstr ""
 
-#: includes/class-frontend.php:243
+#: includes/class-frontend.php:251
 msgid "Sorry, you do not have permission to view this page"
 msgstr ""
 
-#: includes/class-frontend.php:434
+#: includes/class-frontend.php:442
 msgid "You have already selected the maximum number of photos allowed"
 msgstr ""
 
-#: includes/class-frontend.php:435
+#: includes/class-frontend.php:443
 msgid "View Cart"
 msgstr ""
 
-#: includes/class-frontend.php:436
+#: includes/class-frontend.php:444
 msgid "Create an account to save your favorites permanently"
 msgstr ""
 
-#: includes/class-frontend.php:437
+#: includes/class-frontend.php:445
 msgid "Your selections will only be saved for this browser session. To save them permanently, <a href=\"#\" id=\"sunshine--guest-to-signup\">create an account</a>."
 msgstr ""
 
-#: includes/class-frontend.php:438
+#: includes/class-frontend.php:446
 #: templates/favorites/guest-choice.php:17
 msgid "Continue as guest"
 msgstr ""
 
-#: includes/class-frontend.php:439
+#: includes/class-frontend.php:447
 #: templates/favorites/guest-choice.php:10
 msgid "I already have an account"
 msgstr ""
 
-#: includes/class-frontend.php:440
+#: includes/class-frontend.php:448
 msgid "Back to sign up"
 msgstr ""
 
-#: includes/class-frontend.php:441
+#: includes/class-frontend.php:449
 msgid "I understand, continue"
 msgstr ""
 
-#: includes/class-frontend.php:529
+#: includes/class-frontend.php:537
 #: includes/emails/class-email-signup.php:8
 #: templates/account/signup.php:1
 msgid "Sign Up"
 msgstr ""
 
-#: includes/class-frontend.php:614
-#: includes/class-frontend.php:720
+#: includes/class-frontend.php:622
+#: includes/class-frontend.php:728
 #: templates/image/add-to-cart.php:2
 #: templates/fill.php:20
 #: templates/fill.php:33
@@ -12740,37 +12705,37 @@ msgid "Return to gallery"
 msgstr ""
 
 #. translators: %s: image name
-#: includes/class-frontend.php:624
+#: includes/class-frontend.php:632
 #, php-format
 msgid "Favorite: %s"
 msgstr ""
 
 #. translators: %s: image name
-#: includes/class-frontend.php:637
-#: includes/class-frontend.php:650
+#: includes/class-frontend.php:645
+#: includes/class-frontend.php:658
 #, php-format
 msgid "Purchase options: %s"
 msgstr ""
 
 #. translators: %s: image name
-#: includes/class-frontend.php:670
+#: includes/class-frontend.php:678
 #, php-format
 msgid "Comments: %s"
 msgstr ""
 
-#: includes/class-frontend.php:685
+#: includes/class-frontend.php:693
 #: class-lightbox.php:424
 msgid "Share"
 msgstr ""
 
-#: includes/class-frontend.php:710
+#: includes/class-frontend.php:718
 msgid "Visit store"
 msgstr ""
 
 #. translators: %s is the parent gallery name
 #. translators: %s is the gallery name
-#: includes/class-frontend.php:732
-#: includes/class-frontend.php:742
+#: includes/class-frontend.php:740
+#: includes/class-frontend.php:750
 #: templates/cart/cart.php:21
 #: templates/cart/empty.php:7
 #: themes/cover/functions.php:60
@@ -12779,50 +12744,50 @@ msgstr ""
 msgid "Return to %s"
 msgstr ""
 
-#: includes/class-frontend.php:754
+#: includes/class-frontend.php:762
 msgid "Add all to cart"
 msgstr ""
 
-#: includes/class-frontend.php:766
+#: includes/class-frontend.php:774
 msgid "Share your favorites"
 msgstr ""
 
-#: includes/class-frontend.php:778
+#: includes/class-frontend.php:786
 msgid "Clear all favorites"
 msgstr ""
 
 #. translators: %s is the gallery name
-#: includes/class-frontend.php:798
-#: includes/functions/template.php:887
+#: includes/class-frontend.php:806
+#: includes/functions/template.php:889
 #, php-format
 msgid "Return to gallery \"%s\""
 msgstr ""
 
 #. translators: %1$s is the gallery name, %2$s is the site name
-#: includes/class-frontend.php:836
+#: includes/class-frontend.php:844
 #, php-format
 msgid "A photo from the gallery %1$s by %2$s"
 msgstr ""
 
 #. translators: %1$s is the gallery name, %2$s is the site name
-#: includes/class-frontend.php:866
+#: includes/class-frontend.php:874
 #, php-format
 msgid "Photo gallery %1$s by %2$s"
 msgstr ""
 
-#: includes/class-frontend.php:921
+#: includes/class-frontend.php:929
 msgid "Minimize"
 msgstr ""
 
-#: includes/class-frontend.php:927
+#: includes/class-frontend.php:935
 msgid "Show favorites"
 msgstr ""
 
-#: includes/class-frontend.php:956
+#: includes/class-frontend.php:964
 msgid "Sorry, you are not allowed to view this image"
 msgstr ""
 
-#: includes/class-frontend.php:956
+#: includes/class-frontend.php:964
 #: includes/functions/comments.php:16
 #: includes/functions/image.php:278
 #: includes/functions/store.php:131
@@ -12831,31 +12796,31 @@ msgstr ""
 msgid "Access denied"
 msgstr ""
 
-#: includes/class-frontend.php:1033
+#: includes/class-frontend.php:1041
 msgid "Images in your cart have been removed because they are no longer available"
 msgstr ""
 
-#: includes/class-frontend.php:1102
+#: includes/class-frontend.php:1110
 msgid "No gallery found with that password"
 msgstr ""
 
-#: includes/class-frontend.php:1119
+#: includes/class-frontend.php:1127
 msgid "Invalid submission"
 msgstr ""
 
-#: includes/class-frontend.php:1132
+#: includes/class-frontend.php:1140
 msgid "Invalid gallery"
 msgstr ""
 
-#: includes/class-frontend.php:1139
+#: includes/class-frontend.php:1147
 msgid "Gallery access code is incorrect, please try again"
 msgstr ""
 
-#: includes/class-frontend.php:1176
+#: includes/class-frontend.php:1184
 msgid "Not a valid email address"
 msgstr ""
 
-#: includes/class-frontend.php:1199
+#: includes/class-frontend.php:1207
 msgid "You have been logged out"
 msgstr ""
 
@@ -12873,7 +12838,7 @@ msgstr ""
 
 #. translators: %s is the order number
 #: includes/class-order.php:219
-#: includes/class-order.php:1003
+#: includes/class-order.php:1030
 #, php-format
 msgid "Order #%s"
 msgstr ""
@@ -12883,8 +12848,8 @@ msgstr ""
 #: includes/class-order.php:888
 #: includes/payment-methods/paypal.php:805
 #: includes/payment-methods/paypal.php:807
-#: includes/payment-methods/square.php:1779
-#: includes/payment-methods/stripe.php:3350
+#: includes/payment-methods/square.php:1794
+#: includes/payment-methods/stripe.php:3365
 #: class-authorizenet.php:472
 #: class-mollie.php:410
 #: class-mercadopago-pro.php:447
@@ -12896,52 +12861,85 @@ msgstr ""
 msgid "Refund has been processed for %s"
 msgstr ""
 
-#: includes/class-payment-method.php:49
+#: includes/class-payment-method.php:60
 #: includes/class-shipping-method.php:155
 msgid "Name displayed on the checkout page to the customer"
 msgstr ""
 
-#: includes/class-payment-method.php:56
+#: includes/class-payment-method.php:67
 #: includes/class-shipping-method.php:162
 msgid "Description displayed on the checkout page to the customer"
 msgstr ""
 
-#: includes/class-payment-method.php:60
+#: includes/class-payment-method.php:71
 msgid "Fees"
 msgstr ""
 
-#: includes/class-payment-method.php:63
+#: includes/class-payment-method.php:74
 msgid "Fees added to the order for using this payment method"
 msgstr ""
 
-#: includes/class-payment-method.php:65
+#: includes/class-payment-method.php:76
 msgid "No added fees"
 msgstr ""
 
-#: includes/class-payment-method.php:66
+#: includes/class-payment-method.php:77
 msgid "Percentage of total order"
 msgstr ""
 
-#: includes/class-payment-method.php:67
+#: includes/class-payment-method.php:78
 msgid "Fixed amount"
 msgstr ""
 
-#: includes/class-payment-method.php:72
+#: includes/class-payment-method.php:83
 msgid "Fee Name"
 msgstr ""
 
-#: includes/class-payment-method.php:75
+#: includes/class-payment-method.php:86
 msgid "What description shown to customer at checkout"
 msgstr ""
 
-#: includes/class-payment-method.php:86
+#: includes/class-payment-method.php:97
 msgid "Fee Amount"
 msgstr ""
 
 #. translators: %s is the payment method name
-#: includes/class-payment-method.php:214
+#: includes/class-payment-method.php:260
 #, php-format
 msgid "%s fee"
+msgstr ""
+
+#. translators: %s is the add-on name, such as "Stripe Pro"
+#: includes/class-payment-method.php:347
+#, php-format
+msgid "Your license already includes the %s add-on, which removes this fee. It just needs to be turned on."
+msgstr ""
+
+#: includes/class-payment-method.php:348
+#: includes/class-payment-method.php:418
+msgid "Turn it on"
+msgstr ""
+
+#. translators: %s is the add-on name, such as "Stripe Pro"
+#: includes/class-payment-method.php:351
+#, php-format
+msgid "The %s add-on removes this fee."
+msgstr ""
+
+#: includes/class-payment-method.php:377
+msgid "Sunshine Photo Cart fee"
+msgstr ""
+
+#. translators: 1: fee percentage, 2: payment method name, such as "Stripe"
+#: includes/class-payment-method.php:409
+#, php-format
+msgid "Sunshine Photo Cart is taking a %1$s%% fee on every %2$s order."
+msgstr ""
+
+#. translators: %s is the add-on name, such as "Stripe Pro"
+#: includes/class-payment-method.php:415
+#, php-format
+msgid "Your license already includes the %s add-on, which removes this fee, but it is not turned on yet."
 msgstr ""
 
 #. translators: %s: unique instance ID for this shipping method
@@ -13315,7 +13313,7 @@ msgstr ""
 #: templates/email/customer-receipt.php:14
 #: templates/email/order-comment.php:17
 #: templates/email/order-status.php:15
-#: class-automated-email-send.php:144
+#: class-automated-email-send.php:152
 msgid "View order"
 msgstr ""
 
@@ -13515,47 +13513,47 @@ msgstr ""
 msgid "No favorites found"
 msgstr ""
 
-#: includes/functions/add-to-cart.php:129
+#: includes/functions/add-to-cart.php:135
 msgid "Show product options failed"
 msgstr ""
 
-#: includes/functions/add-to-cart.php:135
+#: includes/functions/add-to-cart.php:141
 msgid "Show product details failed - no image found"
 msgstr ""
 
-#: includes/functions/add-to-cart.php:141
+#: includes/functions/add-to-cart.php:147
 msgid "Show product details failed - no product found"
 msgstr ""
 
-#: includes/functions/add-to-cart.php:190
-#: includes/functions/add-to-cart.php:299
+#: includes/functions/add-to-cart.php:196
+#: includes/functions/add-to-cart.php:307
 msgid "No product provided"
 msgstr ""
 
-#: includes/functions/add-to-cart.php:232
+#: includes/functions/add-to-cart.php:244
 msgid "Invalid image provided"
 msgstr ""
 
-#: includes/functions/add-to-cart.php:245
+#: includes/functions/add-to-cart.php:253
 msgid "Invalid product provided"
 msgstr ""
 
-#: includes/functions/add-to-cart.php:286
+#: includes/functions/add-to-cart.php:294
 msgid "Item not added to cart"
 msgstr ""
 
-#: includes/functions/add-to-cart.php:333
+#: includes/functions/add-to-cart.php:341
 msgid "No images found"
 msgstr ""
 
-#: includes/functions/add-to-cart.php:376
+#: includes/functions/add-to-cart.php:384
 msgid "Items not added to cart"
 msgstr ""
 
 #. translators: %s is the product name
 #. translators: %s: product name (optionally followed by the image name)
 #. translators: %s: product name
-#: includes/functions/add-to-cart.php:423
+#: includes/functions/add-to-cart.php:431
 #: customer-tracking.php:206
 #: hooks.php:117
 #, php-format
@@ -13565,7 +13563,6 @@ msgstr ""
 #: includes/functions/cart.php:38
 #: customer-tracking.php:241
 #: cart.php:114
-#: cart.php:136
 msgid "Cart updated"
 msgstr ""
 
@@ -13605,15 +13602,15 @@ msgstr ""
 msgid "Request timed out. Please check your internet connection and try again."
 msgstr ""
 
-#: includes/functions/checkout.php:513
+#: includes/functions/checkout.php:483
 msgid "Please wait while payment is processing"
 msgstr ""
 
-#: includes/functions/checkout.php:513
+#: includes/functions/checkout.php:483
 msgid "Do not close or refresh your browser window"
 msgstr ""
 
-#: includes/functions/checkout.php:563
+#: includes/functions/checkout.php:533
 msgid "Payment request timed out. Please check your connection and try again."
 msgstr ""
 
@@ -14335,7 +14332,6 @@ msgstr ""
 
 #: includes/functions/modal.php:8
 #: includes/functions/modal.php:21
-#: frontend.php:83
 msgid "Failed security check"
 msgstr ""
 
@@ -14358,13 +14354,13 @@ msgstr ""
 
 #: includes/functions/template.php:333
 #: includes/functions/template.php:423
-#: includes/functions/template.php:769
+#: includes/functions/template.php:771
 msgid "Previous"
 msgstr ""
 
 #: includes/functions/template.php:343
 #: includes/functions/template.php:433
-#: includes/functions/template.php:771
+#: includes/functions/template.php:773
 msgid "Next"
 msgstr ""
 
@@ -14373,33 +14369,33 @@ msgstr ""
 msgid "Load more"
 msgstr ""
 
-#: includes/functions/template.php:500
+#: includes/functions/template.php:502
 msgid "Menu"
 msgstr ""
 
-#: includes/functions/template.php:501
+#: includes/functions/template.php:503
 msgid "Close"
 msgstr ""
 
-#: includes/functions/template.php:502
+#: includes/functions/template.php:504
 msgid "Gallery navigation"
 msgstr ""
 
-#: includes/functions/template.php:704
+#: includes/functions/template.php:706
 msgid "Already have an account?"
 msgstr ""
 
-#: includes/functions/template.php:705
+#: includes/functions/template.php:707
 msgid "Click here to login"
 msgstr ""
 
 #. translators: %s is the gallery expiration date and time
-#: includes/functions/template.php:837
+#: includes/functions/template.php:839
 #, php-format
 msgid "This gallery is set to expire on <strong>%s</strong>"
 msgstr ""
 
-#: includes/functions/template.php:894
+#: includes/functions/template.php:896
 #: admin.php:484
 #: admin.php:532
 msgid "Required"
@@ -14449,8 +14445,8 @@ msgstr ""
 
 #: includes/payment-methods/paypal-legacy.php:35
 #: includes/payment-methods/paypal.php:59
-#: includes/payment-methods/square.php:93
-#: includes/payment-methods/stripe.php:535
+#: includes/payment-methods/square.php:96
+#: includes/payment-methods/stripe.php:538
 #: class-authorizenet.php:46
 #: class-export-orders.php:460
 #: class-mollie.php:44
@@ -14463,11 +14459,7 @@ msgstr ""
 
 #: includes/payment-methods/paypal-legacy.php:40
 #: includes/payment-methods/paypal.php:64
-#: includes/payment-methods/square.php:98
-#: admin/settings.php:86
-#: admin/settings.php:150
-#: admin/settings.php:179
-#: admin/settings.php:201
+#: includes/payment-methods/square.php:101
 msgid "Sandbox"
 msgstr ""
 
@@ -14482,8 +14474,8 @@ msgstr ""
 
 #: includes/payment-methods/paypal-legacy.php:220
 #: includes/payment-methods/paypal.php:722
-#: includes/payment-methods/square.php:1595
-#: includes/payment-methods/stripe.php:3240
+#: includes/payment-methods/square.php:1610
+#: includes/payment-methods/stripe.php:3255
 #: class-authorizenet.php:371
 #: class-mollie.php:323
 #: class-mercadopago-pro.php:384
@@ -14542,7 +14534,6 @@ msgid "The Client ID from your <strong>Sandbox</strong> app under <a href=\"%s\"
 msgstr ""
 
 #: includes/payment-methods/paypal.php:117
-#: admin/settings.php:39
 msgid "Sandbox Secret"
 msgstr ""
 
@@ -14671,8 +14662,8 @@ msgid "By default, all possible funding sources will be shown. This setting can 
 msgstr ""
 
 #: includes/payment-methods/paypal.php:314
-#: includes/payment-methods/square.php:752
-#: includes/payment-methods/stripe.php:3135
+#: includes/payment-methods/square.php:755
+#: includes/payment-methods/stripe.php:3150
 #: class-authorizenet.php:129
 #: class-mercadopago-pro.php:143
 #: class-mercadopago.php:179
@@ -14712,8 +14703,8 @@ msgid "Refund payment in PayPal"
 msgstr ""
 
 #: includes/payment-methods/paypal.php:750
-#: includes/payment-methods/square.php:1661
-#: includes/payment-methods/stripe.php:3265
+#: includes/payment-methods/square.php:1676
+#: includes/payment-methods/stripe.php:3280
 #: class-authorizenet.php:389
 #: class-mollie.php:348
 #: class-mercadopago-pro.php:405
@@ -14725,8 +14716,8 @@ msgid "Notify customer via email"
 msgstr ""
 
 #: includes/payment-methods/paypal.php:751
-#: includes/payment-methods/square.php:1662
-#: includes/payment-methods/stripe.php:3266
+#: includes/payment-methods/square.php:1677
+#: includes/payment-methods/stripe.php:3281
 #: class-authorizenet.php:390
 #: class-mollie.php:349
 #: class-mercadopago-pro.php:406
@@ -14738,8 +14729,8 @@ msgid "Full refund"
 msgstr ""
 
 #: includes/payment-methods/paypal.php:752
-#: includes/payment-methods/square.php:1663
-#: includes/payment-methods/stripe.php:3267
+#: includes/payment-methods/square.php:1678
+#: includes/payment-methods/stripe.php:3282
 #: class-authorizenet.php:391
 #: class-mollie.php:350
 #: class-mercadopago-pro.php:407
@@ -14771,14 +14762,14 @@ msgid "Order %s failed refund in PayPal"
 msgstr ""
 
 #: includes/payment-methods/paypal.php:831
-#: includes/payment-methods/square.php:1840
-#: includes/payment-methods/stripe.php:3374
+#: includes/payment-methods/square.php:1855
+#: includes/payment-methods/stripe.php:3389
 #: class-mercadopago.php:523
 msgid "Invalid payment"
 msgstr ""
 
 #: includes/payment-methods/square.php:16
-#: includes/payment-methods/square.php:1587
+#: includes/payment-methods/square.php:1602
 msgid "Square"
 msgstr ""
 
@@ -14792,221 +14783,220 @@ msgstr ""
 msgid "Pay with credit card"
 msgstr ""
 
-#. translators: %s is the application fee percentage
-#: includes/payment-methods/square.php:86
-#, php-format
-msgid "Note: You are using the free Square payment gateway integration. This includes an additional %s%% fee for payment processing on each order that goes to Sunshine Photo Cart in addition to Square processing fees. This added fee is removed by using the Square Pro add-on."
+#: includes/payment-methods/square.php:23
+msgid "Square Pro"
 msgstr ""
 
-#: includes/payment-methods/square.php:104
+#. translators: %s is the application fee percentage
+#: includes/payment-methods/square.php:89
+#, php-format
+msgid "Note: An additional %s%% fee is added to each Square order and goes to Sunshine Photo Cart, on top of Square's own processing fees."
+msgstr ""
+
+#: includes/payment-methods/square.php:107
 msgid "Connect (Production)"
 msgstr ""
 
-#: includes/payment-methods/square.php:119
+#: includes/payment-methods/square.php:122
 msgid "Sandbox Settings"
 msgstr ""
 
 #. translators: %s is the URL to Square developer apps
-#: includes/payment-methods/square.php:123
+#: includes/payment-methods/square.php:126
 #, php-format
 msgid "Sandbox details can be created at: %s"
 msgstr ""
 
-#: includes/payment-methods/square.php:136
+#: includes/payment-methods/square.php:139
 msgid "Sandbox Application ID"
 msgstr ""
 
-#: includes/payment-methods/square.php:150
+#: includes/payment-methods/square.php:153
 msgid "Sandbox Access Token"
 msgstr ""
 
-#: includes/payment-methods/square.php:165
-#: includes/payment-methods/square.php:189
+#: includes/payment-methods/square.php:168
+#: includes/payment-methods/square.php:192
 msgid "Use default location"
 msgstr ""
 
-#: includes/payment-methods/square.php:171
+#: includes/payment-methods/square.php:174
 msgid "Location (Production)"
 msgstr ""
 
-#: includes/payment-methods/square.php:175
-#: includes/payment-methods/square.php:199
+#: includes/payment-methods/square.php:178
+#: includes/payment-methods/square.php:202
 msgid "Refresh locations"
 msgstr ""
 
-#: includes/payment-methods/square.php:195
+#: includes/payment-methods/square.php:198
 msgid "Sandbox Location"
 msgstr ""
 
-#: includes/payment-methods/square.php:228
+#: includes/payment-methods/square.php:231
 msgid "Disconnect from Square"
 msgstr ""
 
-#: includes/payment-methods/square.php:229
+#: includes/payment-methods/square.php:232
 msgid "Refresh connection"
 msgstr ""
 
-#: includes/payment-methods/square.php:233
+#: includes/payment-methods/square.php:236
 msgid "Connect to Square"
 msgstr ""
 
-#: includes/payment-methods/square.php:247
+#: includes/payment-methods/square.php:250
 msgid "Square could not be connected"
 msgstr ""
 
-#: includes/payment-methods/square.php:287
+#: includes/payment-methods/square.php:290
 msgid "Square has successfully been connected"
 msgstr ""
 
 #. translators: %s is the error message
-#: includes/payment-methods/square.php:324
-#: includes/payment-methods/square.php:326
+#: includes/payment-methods/square.php:327
+#: includes/payment-methods/square.php:329
 #, php-format
 msgid "Failed to remove association from Sunshine Photo Cart: %s"
 msgstr ""
 
-#: includes/payment-methods/square.php:341
+#: includes/payment-methods/square.php:344
 msgid "Square has successfully been disconnected"
 msgstr ""
 
-#: includes/payment-methods/square.php:370
-#: includes/payment-methods/square.php:377
-#: includes/payment-methods/square.php:383
+#: includes/payment-methods/square.php:373
+#: includes/payment-methods/square.php:380
+#: includes/payment-methods/square.php:386
 msgid "Cannot get locations"
 msgstr ""
 
-#: includes/payment-methods/square.php:392
+#: includes/payment-methods/square.php:395
 msgid "Locations refreshed from Square"
 msgstr ""
 
 #. translators: %s: error message from Square
-#: includes/payment-methods/square.php:435
+#: includes/payment-methods/square.php:438
 #, php-format
 msgid "Could not refresh Square processing fee: %s"
 msgstr ""
 
-#: includes/payment-methods/square.php:450
+#: includes/payment-methods/square.php:453
 msgid "Square processing fee refreshed"
 msgstr ""
 
-#: includes/payment-methods/square.php:452
 #: includes/payment-methods/square.php:455
+#: includes/payment-methods/square.php:458
 msgid "Square has not yet calculated the processing fee for this payment. Try again after the payment has settled."
 msgstr ""
 
-#: includes/payment-methods/square.php:557
-#: includes/payment-methods/square.php:1605
+#: includes/payment-methods/square.php:560
+#: includes/payment-methods/square.php:1620
 msgid "Square Processing Fee"
 msgstr ""
 
 #. translators: %s is the error message
-#: includes/payment-methods/square.php:591
-#: includes/payment-methods/square.php:593
+#: includes/payment-methods/square.php:594
+#: includes/payment-methods/square.php:596
 #, php-format
 msgid "Failed to refresh Square token: %s"
 msgstr ""
 
-#: includes/payment-methods/square.php:605
+#: includes/payment-methods/square.php:608
 msgid "Square token successfully refreshed"
 msgstr ""
 
 #. translators: %s is a comma-separated list of discount codes
-#: includes/payment-methods/square.php:930
+#: includes/payment-methods/square.php:945
 #, php-format
 msgid "Discount: %s"
 msgstr ""
 
-#: includes/payment-methods/square.php:931
-#: includes/payment-methods/stripe.php:2266
+#: includes/payment-methods/square.php:946
+#: includes/payment-methods/stripe.php:2269
 #: discounts.php:35
 msgid "Discount"
 msgstr ""
 
-#: includes/payment-methods/square.php:1010
+#: includes/payment-methods/square.php:1025
 #: class-mercadopago.php:215
 #: class-mercadopago.php:307
 msgid "Failed to pass security"
 msgstr ""
 
-#: includes/payment-methods/square.php:1015
+#: includes/payment-methods/square.php:1030
 msgid "No source ID"
 msgstr ""
 
-#: includes/payment-methods/square.php:1206
+#: includes/payment-methods/square.php:1221
 msgid "Your payment was already submitted and is being verified. Please refresh this page in a moment to continue - you do not need to re-enter your card."
 msgstr ""
 
 #. translators: %1$s: Square payment ID, %2$s: payment status
-#: includes/payment-methods/square.php:1240
-#: includes/payment-methods/square.php:1549
+#: includes/payment-methods/square.php:1255
+#: includes/payment-methods/square.php:1564
 #, php-format
 msgid "Square reports payment %1$s as %2$s"
 msgstr ""
 
-#: includes/payment-methods/square.php:1246
+#: includes/payment-methods/square.php:1261
 msgid "Payment could not be completed"
 msgstr ""
 
 #. translators: %1$s: Square payment ID, %2$s: payment status
-#: includes/payment-methods/square.php:1260
+#: includes/payment-methods/square.php:1275
 #, php-format
 msgid "Square payment %1$s returned status %2$s - waiting for completion"
 msgstr ""
 
-#: includes/payment-methods/square.php:1264
+#: includes/payment-methods/square.php:1279
 msgid "Your payment is still being verified by Square. Please wait a moment and refresh the page to continue."
 msgstr ""
 
-#: includes/payment-methods/square.php:1379
+#: includes/payment-methods/square.php:1394
 msgid "Every 15 minutes"
 msgstr ""
 
 #. translators: %s: Square payment ID
-#: includes/payment-methods/square.php:1533
+#: includes/payment-methods/square.php:1548
 #, php-format
 msgid "Square payment %s reconciled as COMPLETED"
 msgstr ""
 
-#: includes/payment-methods/square.php:1600
+#: includes/payment-methods/square.php:1615
 msgid "Square Order ID"
 msgstr ""
 
-#: includes/payment-methods/square.php:1610
+#: includes/payment-methods/square.php:1625
 msgid "Not yet available - Square calculates fees at settlement. "
 msgstr ""
 
-#: includes/payment-methods/square.php:1611
+#: includes/payment-methods/square.php:1626
 msgid "Refresh from Square"
 msgstr ""
 
-#: includes/payment-methods/square.php:1618
+#: includes/payment-methods/square.php:1633
 msgid "Card"
 msgstr ""
 
-#: includes/payment-methods/square.php:1628
+#: includes/payment-methods/square.php:1643
 msgid "exp."
 msgstr ""
 
-#: includes/payment-methods/square.php:1636
-#: includes/payment-methods/stripe.php:3245
+#: includes/payment-methods/square.php:1651
+#: includes/payment-methods/stripe.php:3260
 msgid "Application Fee Amount (To Sunshine)"
 msgstr ""
 
-#: includes/payment-methods/square.php:1637
-#: includes/payment-methods/stripe.php:3246
-msgid "Upgrade to remove this fee on future transactions"
-msgstr ""
-
-#: includes/payment-methods/square.php:1651
+#: includes/payment-methods/square.php:1666
 msgid "Recheck payment status in Square"
 msgstr ""
 
-#: includes/payment-methods/square.php:1653
+#: includes/payment-methods/square.php:1668
 msgid "Refund payment in Square"
 msgstr ""
 
 #. translators: %s is the order's Square mode (live or test)
-#: includes/payment-methods/square.php:1707
+#: includes/payment-methods/square.php:1722
 #, php-format
 msgid "Could not refund payment: no Square credentials are connected for this order's mode (%s). This order may have been placed under a different Square connection."
 msgstr ""
@@ -15015,9 +15005,9 @@ msgstr ""
 #. translators: %s is the error detail message
 #. translators: %s: error message
 #. translators: %s: error response
-#: includes/payment-methods/square.php:1746
-#: includes/payment-methods/square.php:1759
-#: includes/payment-methods/stripe.php:3342
+#: includes/payment-methods/square.php:1761
+#: includes/payment-methods/square.php:1774
+#: includes/payment-methods/stripe.php:3357
 #: class-mercadopago-pro.php:450
 #: class-mercadopago-pro.php:452
 #: class-mercadopago.php:505
@@ -15029,473 +15019,477 @@ msgstr ""
 msgid "Could not refund payment: %s"
 msgstr ""
 
-#: includes/payment-methods/square.php:1756
+#: includes/payment-methods/square.php:1771
 msgid "Unknown error"
 msgstr ""
 
-#: includes/payment-methods/square.php:1765
+#: includes/payment-methods/square.php:1780
 msgid "Could not refund payment: Square did not return a refund"
 msgstr ""
 
 #. translators: %s is the refund amount formatted as price
-#: includes/payment-methods/square.php:1775
+#: includes/payment-methods/square.php:1790
 #, php-format
 msgid "Sunshine contributed %s towards refund from processing fees"
 msgstr ""
 
-#: includes/payment-methods/square.php:1783
-#: includes/payment-methods/stripe.php:3354
+#: includes/payment-methods/square.php:1798
+#: includes/payment-methods/stripe.php:3369
 msgid "Customer sent email about refund"
 msgstr ""
 
-#: includes/payment-methods/square.php:1803
+#: includes/payment-methods/square.php:1818
 msgid "Square confirmed this payment was completed. The order has been finalized."
 msgstr ""
 
-#: includes/payment-methods/square.php:1806
+#: includes/payment-methods/square.php:1821
 msgid "This order is already marked as paid."
 msgstr ""
 
 #. translators: %s is the Square failure reason, if any
-#: includes/payment-methods/square.php:1811
+#: includes/payment-methods/square.php:1826
 #, php-format
 msgid "Square reports this payment failed or was canceled%s. The order has been marked as failed."
 msgstr ""
 
 #. translators: %s is the Square payment status
-#: includes/payment-methods/square.php:1816
+#: includes/payment-methods/square.php:1831
 #, php-format
 msgid "Square still reports this payment as %s. The order remains pending. Try again in a moment."
 msgstr ""
 
-#: includes/payment-methods/square.php:1819
+#: includes/payment-methods/square.php:1834
 msgid "A recheck for this payment is already running. Please wait a moment and try again."
 msgstr ""
 
-#: includes/payment-methods/square.php:1822
+#: includes/payment-methods/square.php:1837
 msgid "Could not reach Square"
 msgstr ""
 
 #. translators: %s is the error message
-#: includes/payment-methods/square.php:1824
+#: includes/payment-methods/square.php:1839
 #, php-format
 msgid "Could not recheck this payment: %s"
 msgstr ""
 
 #: includes/payment-methods/stripe.php:308
-#: includes/payment-methods/stripe.php:3232
+#: includes/payment-methods/stripe.php:3247
 msgid "Stripe"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:374
+#: includes/payment-methods/stripe.php:315
+msgid "Stripe Pro"
+msgstr ""
+
+#: includes/payment-methods/stripe.php:377
 msgid "Stripe Processing Fee"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:431
+#: includes/payment-methods/stripe.php:434
 msgid "Stripe webhook is not setup"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:431
+#: includes/payment-methods/stripe.php:434
 msgid "Configure here"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:458
+#: includes/payment-methods/stripe.php:461
 msgid "Continue to payment"
 msgstr ""
 
 #. translators: %s is the application fee percentage
-#: includes/payment-methods/stripe.php:476
+#: includes/payment-methods/stripe.php:479
 #, php-format
-msgid "Note: You are using the free Stripe payment gateway integration. This includes an additional %s%% fee for payment processing on each order that goes to Sunshine Photo Cart in addition to Stripe processing fees. This added fee is removed by using the Stripe Pro add-on."
+msgid "Note: An additional %s%% fee is added to each Stripe order and goes to Sunshine Photo Cart, on top of Stripe's own processing fees."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:482
+#: includes/payment-methods/stripe.php:485
 msgid "Checkout Mode"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:486
+#: includes/payment-methods/stripe.php:489
 msgid "Inline Payment Form (recommended)"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:487
+#: includes/payment-methods/stripe.php:490
 msgid "Redirect to Stripe Checkout"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:490
+#: includes/payment-methods/stripe.php:493
 msgid "Inline shows the payment form on your checkout page. Redirect sends customers to Stripe's hosted checkout page."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:490
+#: includes/payment-methods/stripe.php:493
 msgid "Learn more about Stripe Checkout"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:495
+#: includes/payment-methods/stripe.php:498
 msgid "Tax Calculation"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:499
+#: includes/payment-methods/stripe.php:502
 msgid "Use Sunshine tax calculations"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:500
+#: includes/payment-methods/stripe.php:503
 msgid "Use Stripe Tax (automatic)"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:503
+#: includes/payment-methods/stripe.php:506
 msgid "When using Stripe Tax, tax is calculated automatically by Stripe based on customer location. Requires Stripe Tax to be enabled in your Stripe Dashboard."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:503
+#: includes/payment-methods/stripe.php:506
 msgid "Enable Stripe Tax"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:515
+#: includes/payment-methods/stripe.php:518
 msgid "Layout"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:519
+#: includes/payment-methods/stripe.php:522
 msgid "Tabs"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:520
+#: includes/payment-methods/stripe.php:523
 msgid "Accordion"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:522
+#: includes/payment-methods/stripe.php:525
 msgid "See differences in layout options"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:546
+#: includes/payment-methods/stripe.php:549
 msgid "Stripe Connection (Live)"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:560
+#: includes/payment-methods/stripe.php:563
 msgid "Stripe Connection (Test)"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:576
+#: includes/payment-methods/stripe.php:579
 msgid "Stripe Webhook"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:582
+#: includes/payment-methods/stripe.php:585
 msgid "Stripe Webhook Secret (Live)"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:596
+#: includes/payment-methods/stripe.php:599
 msgid "Stripe Webhook Secret (Test)"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:612
+#: includes/payment-methods/stripe.php:615
 msgid "Bank Statement Descriptor"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:616
+#: includes/payment-methods/stripe.php:619
 msgid "e.g., WWW.YOURSITE.COM"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:617
+#: includes/payment-methods/stripe.php:620
 msgid "The description that appears on your customer's bank statement. Max 22 characters, letters/numbers/spaces only. Leave blank to use your Stripe account default."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:629
+#: includes/payment-methods/stripe.php:632
 msgid "Add Order Number to Statement"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:633
+#: includes/payment-methods/stripe.php:636
 msgid "Append the order number to the bank statement descriptor (e.g., \"MYSHOP* #12345\"). Helps customers identify charges."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:645
+#: includes/payment-methods/stripe.php:648
 msgid "Shortened Descriptor"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:649
+#: includes/payment-methods/stripe.php:652
 msgid "e.g., MYSHOP"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:650
+#: includes/payment-methods/stripe.php:653
 msgid "A shortened version (max 10 characters) used with the order number suffix. If blank, uses first 10 characters of the full descriptor."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:669
+#: includes/payment-methods/stripe.php:672
 msgid "Optimized Checkout"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:673
+#: includes/payment-methods/stripe.php:676
 msgid "Use Stripe's Optimized Checkout Suite to dynamically display the most relevant payment methods to each customer. When disabled, you can manually select which payment methods to offer."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:686
+#: includes/payment-methods/stripe.php:689
 msgid "Payment Methods"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:722
+#: includes/payment-methods/stripe.php:725
 msgid "Connected"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:726
+#: includes/payment-methods/stripe.php:729
 msgid "Account:"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:733
-#: includes/payment-methods/stripe.php:738
+#: includes/payment-methods/stripe.php:736
+#: includes/payment-methods/stripe.php:741
 msgid "Account ID:"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:743
+#: includes/payment-methods/stripe.php:746
 msgid "Disconnect Stripe account"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:749
+#: includes/payment-methods/stripe.php:752
 msgid "Connect to"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:759
+#: includes/payment-methods/stripe.php:762
 msgid "Learn how to setup Stripe Webhooks"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:788
+#: includes/payment-methods/stripe.php:791
 msgid "Optimized Checkout is enabled"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:789
+#: includes/payment-methods/stripe.php:792
 msgid "Stripe will automatically display the most relevant payment methods to each customer based on their location, device, and purchase amount. Disable Optimized Checkout above to manually select payment methods."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:829
+#: includes/payment-methods/stripe.php:832
 msgid "Greyed-out methods are not active on your Stripe account. Enable them in your Stripe Dashboard, then use Sync Payment Methods."
 msgstr ""
 
 #. translators: %s is a link to the Stripe Dashboard Link settings page
-#: includes/payment-methods/stripe.php:833
+#: includes/payment-methods/stripe.php:836
 #, php-format
 msgid "When Link is enabled, Stripe automatically offers customers Link's own options (bank transfer and Buy Now, Pay Later). Stripe does not allow these to be turned off individually: turn Link off below to remove them, or manage Buy Now, Pay Later in your %s."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:834
+#: includes/payment-methods/stripe.php:837
 msgid "Stripe Dashboard Link settings"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:840
+#: includes/payment-methods/stripe.php:843
 msgid "Sync Payment Methods"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:884
+#: includes/payment-methods/stripe.php:887
 msgid "Syncing..."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:895
+#: includes/payment-methods/stripe.php:898
 msgid "Synced successfully!"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:900
-#: includes/payment-methods/stripe.php:905
+#: includes/payment-methods/stripe.php:903
+#: includes/payment-methods/stripe.php:908
 msgid "Sync failed"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:936
+#: includes/payment-methods/stripe.php:939
 msgid "Credit Card"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:939
+#: includes/payment-methods/stripe.php:942
 msgid "US Bank Account"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:942
+#: includes/payment-methods/stripe.php:945
 msgid "Canadian Debit"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:945
+#: includes/payment-methods/stripe.php:948
 msgid "Affirm"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:948
+#: includes/payment-methods/stripe.php:951
 msgid "Afterpay/Clearpay"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:951
+#: includes/payment-methods/stripe.php:954
 msgid "Alipay"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:954
+#: includes/payment-methods/stripe.php:957
 msgid "Amazon Pay"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:957
+#: includes/payment-methods/stripe.php:960
 msgid "Apple Pay"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:960
+#: includes/payment-methods/stripe.php:963
 msgid "Bacs Debit"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:963
+#: includes/payment-methods/stripe.php:966
 msgid "Bancontact"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:966
+#: includes/payment-methods/stripe.php:969
 msgid "Cash App"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:969
+#: includes/payment-methods/stripe.php:972
 msgid "EPS"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:972
+#: includes/payment-methods/stripe.php:975
 msgid "giropay"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:975
+#: includes/payment-methods/stripe.php:978
 msgid "Google Pay"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:978
+#: includes/payment-methods/stripe.php:981
 msgid "iDEAL"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:981
+#: includes/payment-methods/stripe.php:984
 msgid "Klarna"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:984
+#: includes/payment-methods/stripe.php:987
 msgid "Link"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:987
+#: includes/payment-methods/stripe.php:990
 msgid "Przelewy24"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:990
+#: includes/payment-methods/stripe.php:993
 msgid "SEPA Direct Debit"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:993
+#: includes/payment-methods/stripe.php:996
 msgid "SOFORT"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:996
+#: includes/payment-methods/stripe.php:999
 msgid "WeChat Pay"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1154
+#: includes/payment-methods/stripe.php:1157
 msgid "Could not sync payment methods from Stripe"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1179
+#: includes/payment-methods/stripe.php:1182
 msgid "Invalid payment method"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1183
+#: includes/payment-methods/stripe.php:1186
 msgid "Could not update payment method"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1210
+#: includes/payment-methods/stripe.php:1213
 msgid "Stripe payment domain setup successfully"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1212
+#: includes/payment-methods/stripe.php:1215
 msgid "Stripe payment domain setup failed"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1264
+#: includes/payment-methods/stripe.php:1267
 msgid "Stripe could not be connected"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1285
+#: includes/payment-methods/stripe.php:1288
 msgid "Stripe has successfully been connected"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1301
+#: includes/payment-methods/stripe.php:1304
 msgid "Stripe could not be disconnected"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1318
+#: includes/payment-methods/stripe.php:1321
 msgid "Stripe has successfully been disconnected"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1578
-#: includes/payment-methods/stripe.php:1579
+#: includes/payment-methods/stripe.php:1581
+#: includes/payment-methods/stripe.php:1582
 msgid "Payment form not properly initialized. Please refresh the page and try again."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1580
+#: includes/payment-methods/stripe.php:1583
 msgid "Payment form not properly mounted. Please refresh the page and try again."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1581
+#: includes/payment-methods/stripe.php:1584
 msgid "Payment intent not created. Please refresh the page and try again."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1582
+#: includes/payment-methods/stripe.php:1585
 msgid "Payment was not processed, please try again"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1583
+#: includes/payment-methods/stripe.php:1586
 msgid "Payment did not succeed"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1584
+#: includes/payment-methods/stripe.php:1587
 msgid "Payment processing failed:"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:1962
+#: includes/payment-methods/stripe.php:1965
 msgid "Sales Tax"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:2330
-#: includes/payment-methods/stripe.php:2337
+#: includes/payment-methods/stripe.php:2333
+#: includes/payment-methods/stripe.php:2340
 msgid "Redirecting to Stripe"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:2342
+#: includes/payment-methods/stripe.php:2345
 msgid "Click here to continue to payment"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:2383
-#: includes/payment-methods/stripe.php:2402
-#: includes/payment-methods/stripe.php:2457
+#: includes/payment-methods/stripe.php:2386
+#: includes/payment-methods/stripe.php:2405
+#: includes/payment-methods/stripe.php:2460
 msgid "Could not complete order, contact site owner for more details"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:2393
+#: includes/payment-methods/stripe.php:2396
 msgid "This payment has already been processed for a different order. Please refresh the page and try again."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:2409
+#: includes/payment-methods/stripe.php:2412
 msgid "Payment was not successful, please try again"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:2528
+#: includes/payment-methods/stripe.php:2531
 #: class-mercadopago-pro.php:277
 #: class-payfast.php:323
 msgid "Could not process order, please try another payment method"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:2608
+#: includes/payment-methods/stripe.php:2611
 msgid "Stripe payment has been cancelled"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:2996
+#: includes/payment-methods/stripe.php:2999
 msgid "Your payment was successful! Completing your order..."
 msgstr ""
 
 #. translators: %s is the order name/number
-#: includes/payment-methods/stripe.php:3016
+#: includes/payment-methods/stripe.php:3019
 #, php-format
 msgid "You have a recent pending order (#%s). If you recently made a payment, please wait a moment or contact support."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:3145
+#: includes/payment-methods/stripe.php:3160
 msgid "You will be redirected to Stripe to complete your payment securely."
 msgstr ""
 
-#: includes/payment-methods/stripe.php:3155
+#: includes/payment-methods/stripe.php:3170
 msgid "Loading secure payment form..."
 msgstr ""
 
 #. translators: %s is the payment method name
 #. translators: %s: payment method name
-#: includes/payment-methods/stripe.php:3257
+#: includes/payment-methods/stripe.php:3272
 #: class-mercadopago-pro.php:397
 #: class-mercadopago.php:452
 #: class-payfast.php:460
@@ -15506,17 +15500,17 @@ msgid "Refund payment in %s"
 msgstr ""
 
 #. translators: %s is the error message
-#: includes/payment-methods/stripe.php:3308
+#: includes/payment-methods/stripe.php:3323
 #, php-format
 msgid "Failed to connect: %s"
 msgstr ""
 
-#: includes/payment-methods/stripe.php:3323
+#: includes/payment-methods/stripe.php:3338
 msgid "Refund amount is higher than allowed"
 msgstr ""
 
 #. translators: %1$s is the maximum allowed refund amount, %2$s is the requested refund amount
-#: includes/payment-methods/stripe.php:3325
+#: includes/payment-methods/stripe.php:3340
 #, php-format
 msgid "Refund amount is higher than allowed (Total allowed: %1$s, Refund Requested: %2$s)"
 msgstr ""
@@ -15577,28 +15571,28 @@ msgstr ""
 msgid "Sorry, no gallery with that ID"
 msgstr ""
 
-#: includes/template-hooks.php:109
+#: includes/template-hooks.php:114
 msgid "The gallery you tried to access is private and requires you to login first"
 msgstr ""
 
-#: includes/template-hooks.php:120
+#: includes/template-hooks.php:125
 msgid "You must have proper permissions to view this gallery"
 msgstr ""
 
-#: includes/template-hooks.php:435
-#: includes/template-hooks.php:454
+#: includes/template-hooks.php:440
+#: includes/template-hooks.php:459
 msgid "Save Changes"
 msgstr ""
 
-#: includes/template-hooks.php:465
+#: includes/template-hooks.php:470
 msgid "You are already logged in"
 msgstr ""
 
-#: includes/template-hooks.php:488
+#: includes/template-hooks.php:493
 msgid "Invalid reset password URL"
 msgstr ""
 
-#: includes/template-hooks.php:495
+#: includes/template-hooks.php:500
 msgid "Sorry, invalid search"
 msgstr ""
 
@@ -15870,15 +15864,12 @@ msgid "Edit images"
 msgstr ""
 
 #. translators: %s is the tax amount
-#. translators: %s: tax amount
 #: templates/cart/totals.php:75
 #: templates/checkout/summary.php:111
 #: templates/email/admin-receipt.php:129
 #: templates/email/customer-receipt.php:133
 #: templates/email/order-status.php:101
 #: templates/order/totals.php:72
-#: templates/email/whcc-order-rejected.php:109
-#: templates/email/whcc-order-status.php:120
 #, php-format
 msgid "includes %s tax"
 msgstr ""
@@ -15896,8 +15887,6 @@ msgstr ""
 #: templates/email/admin-receipt.php:17
 #: templates/email/customer-receipt.php:22
 #: templates/email/order-status.php:21
-#: templates/email/whcc-order-rejected.php:33
-#: templates/email/whcc-order-status.php:44
 msgid "Order Summary"
 msgstr ""
 
@@ -15917,8 +15906,6 @@ msgid "Image file names"
 msgstr ""
 
 #: templates/email/admin-receipt.php:13
-#: templates/email/whcc-order-rejected.php:29
-#: templates/email/whcc-order-status.php:40
 msgid "View Invoice"
 msgstr ""
 
@@ -15930,8 +15917,6 @@ msgstr ""
 #: templates/email/admin-receipt.php:172
 #: templates/email/customer-receipt.php:158
 #: templates/email/order-status.php:126
-#: templates/email/whcc-order-rejected.php:125
-#: templates/email/whcc-order-status.php:136
 msgid "Customer Information"
 msgstr ""
 
@@ -16112,8 +16097,6 @@ msgid "Comment awaiting approval"
 msgstr ""
 
 #: templates/image/product-details.php:11
-#: templates/select-designs.php:2
-#: templates/select-occasion.php:2
 msgid "Return to products"
 msgstr ""
 
@@ -16148,7 +16131,6 @@ msgstr ""
 #: templates/gallery-add-to-cart.php:34
 #: templates/product-details.php:44
 #: templates/product-details.php:107
-#: class-whcc-editor.php:298
 msgid "Add to cart"
 msgstr ""
 
@@ -16174,7 +16156,6 @@ msgstr ""
 #: templates/store/product-item.php:12
 #: templates/store/product-item.php:16
 #: templates/product-item.php:8
-#: class-whcc-product.php:75
 msgid "See options"
 msgstr ""
 
@@ -16799,6 +16780,20 @@ msgstr ""
 msgid "Source Email"
 msgstr ""
 
+#: admin.php:259
+msgid "Email Marketing"
+msgstr ""
+
+#. translators: %s: date the customer unsubscribed
+#: admin.php:263
+#, php-format
+msgid "This customer unsubscribed from automated marketing emails on %s."
+msgstr ""
+
+#: admin.php:266
+msgid "Resubscribe"
+msgstr ""
+
 #: class-admin-automated-emails.php:25
 #: class-admin-automated-emails.php:40
 msgid "Template Tags"
@@ -16869,11 +16864,11 @@ msgstr ""
 msgid "How long should the coupon code be valid for after being created? This will override any expiration date settings of the selected discount code"
 msgstr ""
 
-#: class-admin-automated-emails.php:133
+#: class-admin-automated-emails.php:134
 msgid "Gallery tags"
 msgstr ""
 
-#: class-admin-automated-emails.php:142
+#: class-admin-automated-emails.php:143
 msgid "Order tags"
 msgstr ""
 
@@ -16884,6 +16879,10 @@ msgstr ""
 
 #: class-automated-email-send.php:9
 msgid "This is a general template for automated emails"
+msgstr ""
+
+#: class-automated-email-send.php:64
+msgid "Unsubscribe from these emails"
 msgstr ""
 
 #: class-rest-emails-controller.php:145
@@ -16984,6 +16983,38 @@ msgstr ""
 msgid "Creating automated emails in Sunshine Photo Cart"
 msgstr ""
 
+#: unsubscribe.php:125
+msgid "Invalid link"
+msgstr ""
+
+#: unsubscribe.php:126
+msgid "This unsubscribe link is not valid."
+msgstr ""
+
+#: unsubscribe.php:149
+#: unsubscribe.php:157
+msgid "Unsubscribed"
+msgstr ""
+
+#: unsubscribe.php:150
+msgid "You have been unsubscribed and will no longer receive marketing emails from us."
+msgstr ""
+
+#: unsubscribe.php:158
+msgid "You are unsubscribed and will not receive marketing emails from us."
+msgstr ""
+
+#. translators: %s: email address being unsubscribed
+#: unsubscribe.php:163
+#, php-format
+msgid "Unsubscribe %s from future marketing emails from us?"
+msgstr ""
+
+#: unsubscribe.php:166
+#: unsubscribe.php:168
+msgid "Unsubscribe"
+msgstr ""
+
 #. Plugin Name of the plugin
 #: bulk-galleries.php
 msgid "Sunshine Photo Cart - Volume Galleries"
@@ -17000,7 +17031,6 @@ msgstr ""
 #: payfast.php
 #: paystack.php
 #: quickpay.php
-#: includes/mcp/class-sunshine-mcp.php:152
 msgid "Sunshine Photo Cart"
 msgstr ""
 
@@ -17120,31 +17150,31 @@ msgstr ""
 msgid "Create galleries"
 msgstr ""
 
-#: hooks.php:532
+#: hooks.php:547
 msgid "Retry"
 msgstr ""
 
-#: hooks.php:637
-#: hooks.php:669
+#: hooks.php:654
+#: hooks.php:686
 msgid "Completed"
 msgstr ""
 
 #. translators: %1$s: source file path, %2$s: destination directory path
-#: hooks.php:948
-#: hooks.php:950
+#: hooks.php:967
+#: hooks.php:969
 #, php-format
 msgid "The file %1$s could not be copied to %2$s."
 msgstr ""
 
 #. translators: %1$s: image file name, %2$s: error message
-#: hooks.php:986
-#: hooks.php:988
+#: hooks.php:1005
+#: hooks.php:1007
 #, php-format
 msgid "Could not upload image %1$s: %2$s"
 msgstr ""
 
 #. translators: %s: original file path
-#: hooks.php:1330
+#: hooks.php:1349
 #, php-format
 msgid "Could not copy original file: %s"
 msgstr ""
@@ -17349,7 +17379,6 @@ msgid "You do not have permission to download these files"
 msgstr ""
 
 #: admin/orders.php:487
-#: order.php:319
 msgid "Order not found"
 msgstr ""
 
@@ -17509,13 +17538,16 @@ msgstr ""
 msgid "Digital Download"
 msgstr ""
 
-#: class-download.php:892
-msgid "Failed to build download file."
+#: class-download.php:700
+msgid "Unable to process download. The requested file may not be available."
 msgstr ""
 
-#: class-download.php:892
-#: class-download.php:900
-#: class-download.php:911
+#: class-download.php:701
+#: class-download.php:744
+#: class-download.php:820
+#: class-download.php:882
+#: class-download.php:902
+#: class-download.php:1384
 #: frontend.php:292
 #: frontend.php:817
 #: includes/download-handler.php:99
@@ -17527,24 +17559,32 @@ msgstr ""
 msgid "Download Error"
 msgstr ""
 
-#: class-download.php:900
-msgid "Failed to save download file."
-msgstr ""
-
-#: class-download.php:911
-msgid "Unable to process download. The requested file may not be available."
-msgstr ""
-
-#: class-download.php:1174
+#: class-download.php:743
+#: class-download.php:1978
 msgid "Sorry, the requested file could not be found. Please try again or contact support."
 msgstr ""
 
-#: class-download.php:1286
-#: class-download.php:1292
+#: class-download.php:819
+msgid "Sorry, some of the files in this download could not be retrieved. Please try again or contact support."
+msgstr ""
+
+#: class-download.php:881
+msgid "Sorry, this download could not be prepared. Please try again or contact support."
+msgstr ""
+
+#: class-download.php:901
+msgid "Sorry, some of the files in this download could not be read. Please try again or contact support."
+msgstr ""
+
+#: class-download.php:1383
+msgid "Sorry, some of the files in this download could not be found. Please try again or contact support."
+msgstr ""
+
+#: class-download.php:2053
 msgid "Sorry, the file could not be downloaded. Please try again."
 msgstr ""
 
-#: class-download.php:1550
+#: class-download.php:2317
 msgid "original"
 msgstr ""
 
@@ -18098,31 +18138,31 @@ msgstr ""
 msgid "The discount could not be deleted."
 msgstr ""
 
-#: class-rest-discounts-controller.php:314
+#: class-rest-discounts-controller.php:317
 msgid "Code customers enter at checkout. Auto-generated when `auto` is true and `code` is empty."
 msgstr ""
 
-#: class-rest-discounts-controller.php:315
+#: class-rest-discounts-controller.php:318
 msgid "Apply automatically without a code."
 msgstr ""
 
-#: class-rest-discounts-controller.php:323
+#: class-rest-discounts-controller.php:326
 msgid "When applied, no other discounts can stack."
 msgstr ""
 
-#: class-rest-discounts-controller.php:330
+#: class-rest-discounts-controller.php:333
 msgid "Cap on how many of any one product the discount can apply to."
 msgstr ""
 
-#: class-rest-discounts-controller.php:346
+#: class-rest-discounts-controller.php:349
 msgid "Find a discount by exact code."
 msgstr ""
 
-#: class-rest-discounts-controller.php:350
+#: class-rest-discounts-controller.php:353
 msgid "Filter by discount_type."
 msgstr ""
 
-#: class-rest-discounts-controller.php:354
+#: class-rest-discounts-controller.php:357
 msgid "Only return discounts where today is within start_date/end_date."
 msgstr ""
 
@@ -18159,12 +18199,12 @@ msgid "No discounts found in trash"
 msgstr ""
 
 #: hooks.php:26
-#: hooks.php:58
+#: hooks.php:57
 msgid "Discount code is invalid"
 msgstr ""
 
 #: hooks.php:48
-#: hooks.php:120
+#: hooks.php:119
 msgid "Discount code could not be removed"
 msgstr ""
 
@@ -18619,7 +18659,6 @@ msgstr ""
 
 #: admin.php:158
 #: price-levels.php:169
-#: admin/class-admin-webhooks.php:142
 msgid "None"
 msgstr ""
 
@@ -19886,9 +19925,10 @@ msgstr ""
 #: admin/tools.php:993
 #: admin/tools.php:1075
 #: admin/tools.php:1109
-#: admin/tools.php:1473
-#: admin/tools.php:1518
-#: admin/tools.php:1608
+#: admin/tools.php:1579
+#: admin/tools.php:1624
+#: admin/tools.php:1724
+#: admin/tools.php:1766
 #: includes/class-cloud-storage-import.php:378
 #: includes/class-cloud-storage-import.php:688
 #: includes/class-cloud-storage-import.php:747
@@ -19951,13 +19991,10 @@ msgstr ""
 
 #: admin/settings.php:32
 #: admin/settings.php:495
-#: admin/settings.php:58
-#: admin/settings.php:187
 msgid "Test Connection"
 msgstr ""
 
 #: admin/settings.php:33
-#: admin/settings.php:99
 msgid "Testing..."
 msgstr ""
 
@@ -20368,7 +20405,6 @@ msgstr ""
 
 #: admin/settings.php:322
 #: admin/settings.php:331
-#: admin/class-admin-webhooks.php:244
 msgid "Endpoint URL"
 msgstr ""
 
@@ -20599,8 +20635,7 @@ msgstr ""
 #: admin/tools.php:162
 #: admin/tools.php:189
 #: admin/tools.php:1154
-#: admin/tools.php:1225
-#: admin/tools.php:1245
+#: admin/tools.php:1249
 msgid "Start Migration"
 msgstr ""
 
@@ -20679,13 +20714,13 @@ msgid "Starting migration..."
 msgstr ""
 
 #: admin/tools.php:208
-#: admin/tools.php:1259
+#: admin/tools.php:1365
 msgid "Migration in progress"
 msgstr ""
 
 #. translators: %d: number of failed items
 #: admin/tools.php:218
-#: admin/tools.php:1270
+#: admin/tools.php:1376
 #, php-format
 msgid "%d failed"
 msgstr ""
@@ -20696,13 +20731,13 @@ msgstr ""
 
 #: admin/tools.php:231
 #: admin/tools.php:323
-#: admin/tools.php:1277
-#: admin/tools.php:1353
+#: admin/tools.php:1383
+#: admin/tools.php:1459
 msgid "Stop Migration"
 msgstr ""
 
 #: admin/tools.php:284
-#: admin/tools.php:1314
+#: admin/tools.php:1420
 msgid "failed"
 msgstr ""
 
@@ -20712,12 +20747,12 @@ msgstr ""
 
 #: admin/tools.php:313
 #: admin/tools.php:866
-#: admin/tools.php:1343
+#: admin/tools.php:1449
 msgid "Stopping..."
 msgstr ""
 
 #: admin/tools.php:322
-#: admin/tools.php:1352
+#: admin/tools.php:1458
 msgid "Failed to stop migration"
 msgstr ""
 
@@ -20736,7 +20771,7 @@ msgid "Migration was stopped. %d images were successfully migrated before cancel
 msgstr ""
 
 #: admin/tools.php:376
-#: admin/tools.php:1382
+#: admin/tools.php:1488
 msgid "Migration Complete"
 msgstr ""
 
@@ -20759,7 +20794,7 @@ msgstr ""
 #. translators: %d: number of additional items not shown
 #: admin/tools.php:398
 #: admin/tools.php:957
-#: admin/tools.php:1412
+#: admin/tools.php:1518
 #, php-format
 msgid "...and %d more"
 msgstr ""
@@ -20771,7 +20806,7 @@ msgstr ""
 
 #: admin/tools.php:408
 #: admin/tools.php:964
-#: admin/tools.php:1421
+#: admin/tools.php:1527
 msgid "Clear Results"
 msgstr ""
 
@@ -20856,7 +20891,7 @@ msgid "Start cleanup? Local copies of images already in cloud storage will be pe
 msgstr ""
 
 #: admin/tools.php:739
-#: admin/tools.php:1235
+#: admin/tools.php:1268
 msgid "Starting..."
 msgstr ""
 
@@ -20951,88 +20986,133 @@ msgstr ""
 msgid "Convert legacy WP Offload Media data into Sunshine's own storage so frontend pages stop making per-image database lookups"
 msgstr ""
 
-#: admin/tools.php:1188
+#: admin/tools.php:1191
 msgid "Migration is already complete. No further action needed."
 msgstr ""
 
-#: admin/tools.php:1199
+#: admin/tools.php:1202
+msgid "Images not loading? Re-run the migration to rebuild their addresses from your current cloud storage settings. Images already pointing to the right place are left alone."
+msgstr ""
+
+#: admin/tools.php:1205
+msgid "Re-Run Migration"
+msgstr ""
+
+#: admin/tools.php:1223
 msgid "No migration needed. No WP Offload Media data was found on this site."
 msgstr ""
 
-#: admin/tools.php:1209
+#: admin/tools.php:1233
 msgid "This one-time step copies your WP Offload Media data into Sunshine's own storage."
 msgstr ""
 
 #. translators: %s: number of images
-#: admin/tools.php:1215
+#: admin/tools.php:1239
 #, php-format
 msgid "Images to migrate: %s"
 msgstr ""
 
-#: admin/tools.php:1221
+#: admin/tools.php:1245
 msgid "This only updates database metadata. No files are uploaded or moved."
 msgstr ""
 
-#: admin/tools.php:1244
+#: admin/tools.php:1277
 msgid "Failed to start migration"
 msgstr ""
 
-#: admin/tools.php:1275
-msgid "Please keep this page open until the migration finishes."
+#. translators: %d: number of images
+#: admin/tools.php:1303
+#, php-format
+msgid "%d images migrated from WP Offload Media are missing bucket location data. Their full-size download links can expire and stop working. Run the repair below to fix them."
 msgstr ""
 
-#: admin/tools.php:1321
-msgid "Invalid response from server"
-msgstr ""
-
-#: admin/tools.php:1324
-msgid "Error processing migration"
+#: admin/tools.php:1309
+msgid "Repair Metadata"
 msgstr ""
 
 #: admin/tools.php:1329
+msgid "Error running repair."
+msgstr ""
+
+#: admin/tools.php:1338
+#: admin/tools.php:1340
+msgid "items repaired."
+msgstr ""
+
+#: admin/tools.php:1338
+msgid "couldn't be repaired automatically — their original WP Offload Media data is no longer available. Contact support if you need help."
+msgstr ""
+
+#: admin/tools.php:1344
+msgid "repaired so far..."
+msgstr ""
+
+#: admin/tools.php:1348
+msgid "Network error. Please try again."
+msgstr ""
+
+#: admin/tools.php:1381
+msgid "Please keep this page open until the migration finishes."
+msgstr ""
+
+#: admin/tools.php:1427
+msgid "Invalid response from server"
+msgstr ""
+
+#: admin/tools.php:1430
+msgid "Error processing migration"
+msgstr ""
+
+#: admin/tools.php:1435
 msgid "Network error. Please refresh the page."
 msgstr ""
 
-#: admin/tools.php:1337
+#: admin/tools.php:1443
 msgid "Stop the migration? Items that have already been migrated will stay migrated."
 msgstr ""
 
-#: admin/tools.php:1373
+#: admin/tools.php:1479
 msgid "Migration Stopped"
 msgstr ""
 
 #. translators: %d: successful count
-#: admin/tools.php:1377
+#: admin/tools.php:1483
 #, php-format
 msgid "Migration was stopped. %d items were migrated before cancellation. Run the migration again to finish the rest."
 msgstr ""
 
 #. translators: %d: total successful
-#: admin/tools.php:1388
+#: admin/tools.php:1494
 #, php-format
 msgid "Successfully migrated %d items. Your pages should now load faster on image-heavy templates."
 msgstr ""
 
 #. translators: 1: successful, 2: failed
-#: admin/tools.php:1396
+#: admin/tools.php:1502
 #, php-format
 msgid "Migration finished with %1$d successful and %2$d failed."
 msgstr ""
 
-#: admin/tools.php:1403
+#: admin/tools.php:1509
 msgid "Failed Attachment IDs:"
 msgstr ""
 
-#: admin/tools.php:1480
+#: admin/tools.php:1586
 msgid "No WP Offload Media data found."
 msgstr ""
 
-#: admin/tools.php:1486
+#: admin/tools.php:1592
 msgid "No items to migrate."
 msgstr ""
 
-#: admin/tools.php:1529
+#: admin/tools.php:1635
 msgid "WP Offload Media table is no longer available. Migration cannot continue."
+msgstr ""
+
+#. translators: 1: number of images, 2: link opening tag, 3: link closing tag
+#: admin/tools.php:1852
+#, php-format
+msgid "%1$d images migrated from WP Offload Media are missing bucket location data and their downloads may fail. %2$sRun the repair tool%3$s to fix them."
 msgstr ""
 
 #. translators: %s: site name
@@ -21254,15 +21334,15 @@ msgstr ""
 msgid "Error loading folders"
 msgstr ""
 
-#: includes/class-cloud-storage-manager.php:1392
+#: includes/class-cloud-storage-manager.php:1654
 msgid "No objects found in WP Offload Media data"
 msgstr ""
 
-#: includes/class-cloud-storage-manager.php:1458
+#: includes/class-cloud-storage-manager.php:1714
 msgid "Could not build URLs from WP Offload Media data"
 msgstr ""
 
-#: includes/class-cloud-storage-manager.php:1546
+#: includes/class-cloud-storage-manager.php:1802
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr ""
 
@@ -21333,7 +21413,7 @@ msgstr ""
 #: gift-cards.php:79
 #: gift-cards.php:96
 #: gift-cards.php:108
-#: hooks.php:357
+#: hooks.php:356
 msgid "Gift Cards"
 msgstr ""
 
@@ -21436,7 +21516,7 @@ msgstr ""
 #: emails/class-email-gift-card.php:8
 #: gift-cards.php:97
 #: gift-cards.php:226
-#: hooks.php:206
+#: hooks.php:205
 #: order-integration.php:317
 #: product-integration.php:28
 msgid "Gift Card"
@@ -21505,35 +21585,35 @@ msgstr ""
 msgid "No gift cards found in trash"
 msgstr ""
 
-#: hooks.php:51
+#: hooks.php:50
 msgid "Gift card code is invalid or has no remaining balance"
 msgstr ""
 
-#: hooks.php:114
+#: hooks.php:113
 msgid "Gift card could not be removed"
 msgstr ""
 
-#: hooks.php:328
+#: hooks.php:327
 msgid "Recipient:"
 msgstr ""
 
-#: hooks.php:334
+#: hooks.php:333
 msgid "Recipient Email:"
 msgstr ""
 
-#: hooks.php:341
+#: hooks.php:340
 #: templates/product-details.php:80
 #: templates/shortcode/buy-gift-card.php:102
 msgid "Send Date:"
 msgstr ""
 
-#: hooks.php:345
+#: hooks.php:344
 #: templates/product-details.php:68
 #: templates/shortcode/buy-gift-card.php:84
 msgid "Delivery:"
 msgstr ""
 
-#: hooks.php:345
+#: hooks.php:344
 msgid "Immediate"
 msgstr ""
 
@@ -21784,2299 +21864,4 @@ msgstr ""
 
 #: templates/shortcode/buy-gift-card.php:139
 msgid "Add to Cart"
-msgstr ""
-
-#. Plugin Name of the plugin
-#: whcc.php
-msgid "Sunshine Photo Cart - WHCC"
-msgstr ""
-
-#. Description of the plugin
-#: whcc.php
-msgid "WHCC print lab integration"
-msgstr ""
-
-#: admin/order.php:62
-#: admin/settings.php:73
-msgid "WHCC"
-msgstr ""
-
-#: admin/order.php:81
-#: admin/order.php:119
-#: webhook.php:507
-msgid "Submitted"
-msgstr ""
-
-#: admin/order.php:82
-#: admin/order.php:123
-#: webhook.php:508
-msgid "Accepted"
-msgstr ""
-
-#: admin/order.php:83
-#: webhook.php:509
-msgid "In Production"
-msgstr ""
-
-#: admin/order.php:84
-#: webhook.php:510
-msgid "Partially Shipped"
-msgstr ""
-
-#: admin/order.php:85
-#: admin/order.php:127
-#: webhook.php:452
-#: webhook.php:511
-msgid "Shipped"
-msgstr ""
-
-#: admin/order.php:86
-#: webhook.php:512
-msgid "Rejected"
-msgstr ""
-
-#: admin/order.php:99
-#: webhook.php:520
-msgid "WHCC Status"
-msgstr ""
-
-#: admin/order.php:104
-msgid "Confirmation ID"
-msgstr ""
-
-#: admin/order.php:109
-msgid "WHCC Order Number"
-msgstr ""
-
-#: admin/order.php:147
-msgid "Method"
-msgstr ""
-
-#: admin/order.php:156
-#: admin/shipping-settings.php:83
-msgid "WHCC Cost"
-msgstr ""
-
-#: admin/order.php:161
-msgid "Signature Required"
-msgstr ""
-
-#: admin/order.php:171
-#: admin/order.php:178
-#: webhook.php:443
-#: webhook.php:559
-msgid "Tracking"
-msgstr ""
-
-#. translators: %d: package number
-#: admin/order.php:177
-#, php-format
-msgid "Package %d"
-msgstr ""
-
-#: admin/order.php:195
-msgid "Shipped:"
-msgstr ""
-
-#: admin/order.php:208
-#: webhook.php:581
-msgid "Errors"
-msgstr ""
-
-#: admin/order.php:223
-msgid "Order Details"
-msgstr ""
-
-#: admin/order.php:227
-msgid "Received by WHCC"
-msgstr ""
-
-#: admin/order.php:234
-msgid "WHCC Subtotal"
-msgstr ""
-
-#: admin/order.php:238
-msgid "WHCC Tax"
-msgstr ""
-
-#: admin/order.php:242
-msgid "WHCC Total"
-msgstr ""
-
-#: admin/order.php:266
-#: admin/class-admin-webhooks.php:96
-msgid "Actions"
-msgstr ""
-
-#: admin/order.php:271
-msgid "Submit to WHCC"
-msgstr ""
-
-#: admin/order.php:271
-#: webhook.php:598
-msgid "Resubmit to WHCC"
-msgstr ""
-
-#. translators: %s: package number
-#: admin/order.php:295
-#, php-format
-msgid "Track package #%s"
-msgstr ""
-
-#: admin/order.php:297
-#: templates/email/whcc-order-status.php:31
-msgid "Track package"
-msgstr ""
-
-#: admin/products.php:87
-msgid "WHCC Product"
-msgstr ""
-
-#: admin/products.php:103
-msgid "Markup"
-msgstr ""
-
-#: admin/products.php:105
-msgid "WHCC only allows you to set a markup price instead of an explicit price amount"
-msgstr ""
-
-#: admin/settings.php:8
-msgid "Environment"
-msgstr ""
-
-#: admin/settings.php:12
-msgid "Sandbox (Testing)"
-msgstr ""
-
-#: admin/settings.php:13
-msgid "Production (Live)"
-msgstr ""
-
-#: admin/settings.php:16
-msgid "Use Sandbox for testing, switch to Production when ready to process real orders."
-msgstr ""
-
-#: admin/settings.php:19
-msgid "Sandbox API Key"
-msgstr ""
-
-#: admin/settings.php:23
-#: admin/settings.php:30
-msgid "The single API key provided by WHCC. When set, the legacy key/secret below is ignored."
-msgstr ""
-
-#: admin/settings.php:26
-msgid "Production API Key"
-msgstr ""
-
-#: admin/settings.php:33
-msgid "Sandbox Key"
-msgstr ""
-
-#: admin/settings.php:45
-msgid "Production Key"
-msgstr ""
-
-#: admin/settings.php:51
-msgid "Production Secret"
-msgstr ""
-
-#: admin/settings.php:61
-msgid "Verify your API credentials are working."
-msgstr ""
-
-#: admin/settings.php:64
-msgid "Webhook"
-msgstr ""
-
-#: admin/settings.php:67
-msgid "Automatically update orders and notify customers when they have been shipped by WHCC."
-msgstr ""
-
-#: admin/settings.php:86
-#: admin/settings.php:150
-#: admin/settings.php:180
-#: admin/settings.php:201
-msgid "Production"
-msgstr ""
-
-#. translators: %s: environment label (Production or Sandbox)
-#: admin/settings.php:90
-#, php-format
-msgid "Test Connection (%s)"
-msgstr ""
-
-#: admin/settings.php:141
-msgid "Could not connect to WHCC. Check your API credentials."
-msgstr ""
-
-#. translators: %s: environment label (Production or Sandbox)
-#: admin/settings.php:153
-#, php-format
-msgid "Connected to WHCC %s successfully."
-msgstr ""
-
-#: admin/settings.php:161
-msgid "WHCC rejected the request. Check your API credentials."
-msgstr ""
-
-#. translators: %s: environment label (Production or Sandbox)
-#: admin/settings.php:207
-#, php-format
-msgid "Set Webhook (%s)"
-msgstr ""
-
-#: admin/settings.php:213
-msgid "Active"
-msgstr ""
-
-#: admin/settings.php:214
-msgid "Reset Webhook"
-msgstr ""
-
-#: admin/shipping-settings.php:23
-msgid "Shipping Settings"
-msgstr ""
-
-#: admin/shipping-settings.php:28
-msgid "Require Signature"
-msgstr ""
-
-#: admin/shipping-settings.php:33
-msgid "Yes - All Orders"
-msgstr ""
-
-#: admin/shipping-settings.php:36
-msgid "Require signature confirmation for all deliveries."
-msgstr ""
-
-#: admin/shipping-settings.php:40
-msgid "Signature Required Threshold"
-msgstr ""
-
-#: admin/shipping-settings.php:45
-msgid "Automatically require signature for orders above this amount. Leave empty to disable."
-msgstr ""
-
-#: admin/shipping-settings.php:49
-msgid "Mixed Cart Shipping Surcharge"
-msgstr ""
-
-#: admin/shipping-settings.php:54
-msgid "When a cart has both WHCC lab products and your own shippable products, this amount is added to the WHCC shipping to help cover shipping your own items separately. Leave empty for no surcharge."
-msgstr ""
-
-#: admin/shipping-settings.php:82
-msgid "Product Group"
-msgstr ""
-
-#: admin/shipping-settings.php:84
-msgid "Your Price"
-msgstr ""
-
-#: admin/shipping-settings.php:121
-msgid "WHCC Cost is what WHCC charges you. Your Price is what you charge the customer."
-msgstr ""
-
-#: admin/shipping-settings.php:122
-msgid "WHCC ships albums, books, flat cards, and acrylic blocks as separate packages per design, so the price is charged once per package. An order with an album and prints ships as two packages and the customer is charged for both."
-msgstr ""
-
-#: admin/shipping-settings.php:123
-msgid "Surcharges are passed through to the customer automatically at WHCC's cost: Alaska +$5.00, Hawaii +$6.00, Signature Required +$10.00 per package when triggered."
-msgstr ""
-
-#: admin/shipping-settings.php:124
-msgid "Military addresses (APO/FPO), PO Boxes, and US Territories are automatically routed to \"Lowest Cost\" (USPS)."
-msgstr ""
-
-#: cart.php:58
-msgid "Not a valid link"
-msgstr ""
-
-#: cart.php:70
-msgid "Update item"
-msgstr ""
-
-#: cart.php:74
-msgid "Return to cart"
-msgstr ""
-
-#: cart.php:91
-msgid "Could not get edit URL"
-msgstr ""
-
-#: class-whcc-editor.php:302
-#: class-whcc-editor.php:489
-#: admin/class-admin-webhooks.php:258
-msgid "Cancel"
-msgstr ""
-
-#: class-whcc-editor.php:485
-msgid "Done"
-msgstr ""
-
-#: class-whcc-shipping-method.php:55
-msgid "Shipping Costs"
-msgstr ""
-
-#: class-whcc-shipping-method.php:60
-msgid "Shipping Prices"
-msgstr ""
-
-#: class-whcc-shipping-method.php:67
-msgid "Set what you charge customers for shipping. WHCC Cost shows what WHCC charges you."
-msgstr ""
-
-#: class-whcc-shipping-method.php:222
-msgid "WHCC Drop Ship - Lowest Cost"
-msgstr ""
-
-#: class-whcc-shipping-method.php:223
-msgid "Arrives in 2-8 business days"
-msgstr ""
-
-#: class-whcc-shipping-method.php:247
-msgid "WHCC Drop Ship - Expedited"
-msgstr ""
-
-#: class-whcc-shipping-method.php:248
-msgid "Arrives in 2-3 business days"
-msgstr ""
-
-#: class-whcc-shipping-method.php:272
-msgid "WHCC Drop Ship - Standard One-Day"
-msgstr ""
-
-#: class-whcc-shipping-method.php:273
-msgid "Arrives next business day"
-msgstr ""
-
-#: class-whcc-shipping-method.php:297
-msgid "WHCC Drop Ship - Priority One-Day"
-msgstr ""
-
-#: class-whcc-shipping-method.php:298
-msgid "Priority delivery next business day"
-msgstr ""
-
-#: class-whcc-shipping-method.php:421
-msgid "Send WHCC Customer Emails"
-msgstr ""
-
-#: class-whcc-shipping-method.php:425
-msgid "No - Only send emails through Sunshine"
-msgstr ""
-
-#: class-whcc-shipping-method.php:426
-msgid "Yes - Also let WHCC send shipping notifications"
-msgstr ""
-
-#: class-whcc-shipping-method.php:429
-msgid "Allow WHCC to send shipping notification emails directly to customers."
-msgstr ""
-
-#: emails/class-whcc-order-rejected.php:8
-msgid "WHCC Order Rejection"
-msgstr ""
-
-#: emails/class-whcc-order-rejected.php:9
-msgid "WHCC rejected a submitted order"
-msgstr ""
-
-#. translators: %1$s: order name, %2$s: site name
-#: emails/class-whcc-order-rejected.php:11
-#, php-format
-msgid "WHCC rejected %1$s at %2$s"
-msgstr ""
-
-#: emails/class-whcc-order-status-update.php:8
-msgid "WHCC Order Status Update"
-msgstr ""
-
-#: emails/class-whcc-order-status-update.php:9
-msgid "WHCC order status updates"
-msgstr ""
-
-#. translators: %1$s: order name, %2$s: site name
-#: emails/class-whcc-order-status-update.php:11
-#, php-format
-msgid "WHCC update on %1$s at %2$s"
-msgstr ""
-
-#: frontend.php:43
-msgid "No designs found"
-msgstr ""
-
-#: frontend.php:51
-#: frontend.php:96
-#: frontend.php:159
-msgid "Too many requests, please try again in a few minutes"
-msgstr ""
-
-#: frontend.php:143
-msgid "Item updated"
-msgstr ""
-
-#: frontend.php:153
-#: frontend.php:177
-msgid "Could not add item to cart"
-msgstr ""
-
-#: frontend.php:193
-msgid "Product not found, could not add to cart"
-msgstr ""
-
-#: frontend.php:204
-msgid "Invalid image ID, could not add to cart"
-msgstr ""
-
-#: frontend.php:238
-msgid "Item added to cart"
-msgstr ""
-
-#. translators: %s: WHCC confirmation ID
-#: order.php:335
-#, php-format
-msgid "Order submitted to WHCC. Confirmation ID: %s"
-msgstr ""
-
-#: order.php:341
-msgid "Failed to submit order to WHCC"
-msgstr ""
-
-#: order.php:364
-msgid "WHCC Shipping"
-msgstr ""
-
-#: order.php:373
-msgid "WHCC Products"
-msgstr ""
-
-#. translators: %s: order name
-#: templates/email/whcc-order-rejected.php:2
-#, php-format
-msgid "WHCC has rejected %s"
-msgstr ""
-
-#. translators: %s: error code
-#: templates/email/whcc-order-rejected.php:15
-#, php-format
-msgid "Error code %s"
-msgstr ""
-
-#. translators: %s: order name
-#: templates/email/whcc-order-status.php:2
-#, php-format
-msgid "WHCC has updated the status on %s"
-msgstr ""
-
-#. translators: %s: package number
-#: templates/email/whcc-order-status.php:19
-#, php-format
-msgid "Shipping package #%s"
-msgstr ""
-
-#: templates/email/whcc-order-status.php:21
-msgid "Shipping package"
-msgstr ""
-
-#: templates/email/whcc-order-status.php:25
-#: webhook.php:438
-msgid "Carrier"
-msgstr ""
-
-#: templates/email/whcc-order-status.php:28
-#: webhook.php:445
-msgid "Tracking Number"
-msgstr ""
-
-#: templates/select-designs.php:22
-msgid "Customize"
-msgstr ""
-
-#: webhook.php:426
-msgid "Shipping Information"
-msgstr ""
-
-#. translators: %d: package number, %d: total number of packages
-#: webhook.php:434
-#, php-format
-msgid "Package %d of %d"
-msgstr ""
-
-#: webhook.php:527
-msgid "Confirmation ID:"
-msgstr ""
-
-#: webhook.php:530
-msgid "WHCC Order #:"
-msgstr ""
-
-#: webhook.php:543
-msgid "Shipping Method:"
-msgstr ""
-
-#: webhook.php:547
-msgid "WHCC Shipping Cost:"
-msgstr ""
-
-#: webhook.php:551
-msgid "Signature Required:"
-msgstr ""
-
-#. translators: %d: package number
-#: webhook.php:564
-#, php-format
-msgid "Package %d:"
-msgstr ""
-
-#. Plugin Name of the plugin
-#: sunshine-api.php
-msgid "Sunshine Photo Cart - API/MCP/Webhooks"
-msgstr ""
-
-#. Description of the plugin
-#: sunshine-api.php
-msgid "REST API, MCP server, and signed outbound webhooks for Sunshine Photo Cart integrations."
-msgstr ""
-
-#: admin/class-admin-integrations.php:48
-msgid "Integration settings"
-msgstr ""
-
-#: admin/class-admin-integrations.php:103
-msgid "Apps & Services"
-msgstr ""
-
-#: admin/class-admin-integrations.php:106
-#: admin/class-admin-keys.php:31
-msgid "API Keys"
-msgstr ""
-
-#: admin/class-admin-integrations.php:107
-msgid "MCP"
-msgstr ""
-
-#: admin/class-admin-integrations.php:110
-#: admin/class-admin-webhooks.php:82
-#: admin/class-admin-webhooks.php:281
-msgid "Webhooks"
-msgstr ""
-
-#: admin/class-admin-keys.php:32
-msgid "Create credentials for external applications that connect to the Sunshine REST API. Each secret is shown once and stored as a one-way hash."
-msgstr ""
-
-#: admin/class-admin-keys.php:35
-msgid "REST API base URL"
-msgstr ""
-
-#: admin/class-admin-keys.php:39
-#: admin/class-admin-keys.php:343
-msgid "Authentication"
-msgstr ""
-
-#: admin/class-admin-keys.php:40
-msgid "HTTPS Basic authentication using the consumer key as the username and consumer secret as the password."
-msgstr ""
-
-#: admin/class-admin-keys.php:46
-msgid "Key generated. Copy these now — the secret is shown only once."
-msgstr ""
-
-#: admin/class-admin-keys.php:48
-msgid "Consumer key:"
-msgstr ""
-
-#: admin/class-admin-keys.php:50
-msgid "Consumer secret:"
-msgstr ""
-
-#: admin/class-admin-keys.php:56
-msgid "Add new key"
-msgstr ""
-
-#: admin/class-admin-keys.php:63
-msgid "e.g. Lightroom on my MacBook"
-msgstr ""
-
-#: admin/class-admin-keys.php:66
-msgid "Legacy permissions"
-msgstr ""
-
-#: admin/class-admin-keys.php:69
-#: admin/class-admin-keys.php:212
-msgid "Read"
-msgstr ""
-
-#: admin/class-admin-keys.php:70
-#: admin/class-admin-keys.php:213
-msgid "Write"
-msgstr ""
-
-#: admin/class-admin-keys.php:71
-msgid "Read / Write"
-msgstr ""
-
-#: admin/class-admin-keys.php:73
-msgid "Used by the REST API surface (Lightroom plug-in, integrations). MCP access is governed by the scopes you pick below."
-msgstr ""
-
-#: admin/class-admin-keys.php:77
-#: admin/class-admin-keys.php:94
-msgid "MCP scopes"
-msgstr ""
-
-#: admin/class-admin-keys.php:83
-msgid "Generate key"
-msgstr ""
-
-#: admin/class-admin-keys.php:86
-msgid "Existing keys"
-msgstr ""
-
-#: admin/class-admin-keys.php:92
-msgid "User"
-msgstr ""
-
-#: admin/class-admin-keys.php:93
-msgid "Permissions"
-msgstr ""
-
-#: admin/class-admin-keys.php:95
-msgid "Truncated key"
-msgstr ""
-
-#: admin/class-admin-keys.php:96
-msgid "Last access"
-msgstr ""
-
-#: admin/class-admin-keys.php:102
-msgid "No API keys yet."
-msgstr ""
-
-#: admin/class-admin-keys.php:121
-msgid "REST only"
-msgstr ""
-
-#: admin/class-admin-keys.php:127
-msgid "never"
-msgstr ""
-
-#: admin/class-admin-keys.php:128
-msgid "Revoke this key?"
-msgstr ""
-
-#: admin/class-admin-keys.php:128
-msgid "Revoke"
-msgstr ""
-
-#: admin/class-admin-keys.php:141
-#: admin/class-admin-keys.php:261
-#: admin/class-admin-keys.php:273
-msgid "You are not allowed to do that."
-msgstr ""
-
-#: admin/class-admin-keys.php:211
-msgid "Resource"
-msgstr ""
-
-#: admin/class-admin-keys.php:215
-msgid "Run"
-msgstr ""
-
-#: admin/class-admin-keys.php:240
-msgid "Pick the operations Claude (or other MCP clients) can perform with this key. Tick only what the assistant genuinely needs — start with the reads. If you leave every box unchecked, this key cannot be used with MCP clients at all (it still works for the REST API). For unrestricted MCP access, connect with a WordPress Application Password instead, which is governed by the owning user's WordPress capabilities."
-msgstr ""
-
-#: admin/class-admin-keys.php:244
-msgid "Preset: All reads"
-msgstr ""
-
-#: admin/class-admin-keys.php:247
-msgid "Preset: Read + write (no delete)"
-msgstr ""
-
-#: admin/class-admin-keys.php:250
-msgid "Preset: Everything"
-msgstr ""
-
-#: admin/class-admin-keys.php:253
-msgid "Clear"
-msgstr ""
-
-#: admin/class-admin-keys.php:308
-msgid "MCP Server"
-msgstr ""
-
-#: admin/class-admin-keys.php:309
-msgid "Allow compatible AI clients to discover and perform Sunshine actions through the Model Context Protocol. Access is limited by the scopes assigned to each API key."
-msgstr ""
-
-#: admin/class-admin-keys.php:313
-msgid "MCP support requires WordPress 6.9 or newer (the Abilities API was merged into core in 6.9). Update WordPress to enable the MCP server. The REST API continues to work on older versions."
-msgstr ""
-
-#. translators: %d: number of registered Sunshine abilities.
-#: admin/class-admin-keys.php:327
-#, php-format
-msgid "%d ability exposed"
-msgid_plural "%d abilities exposed"
-msgstr[0] ""
-msgstr[1] ""
-
-#: admin/class-admin-keys.php:331
-msgid "Option enabled but server is not running (check requirements above)."
-msgstr ""
-
-#: admin/class-admin-keys.php:334
-msgid "Disabled"
-msgstr ""
-
-#: admin/class-admin-keys.php:339
-#: admin/class-admin-webhooks.php:91
-#: admin/class-admin-webhooks.php:173
-#: admin/class-admin-webhooks.php:291
-msgid "Endpoint"
-msgstr ""
-
-#: admin/class-admin-keys.php:344
-msgid "X-MCP-API-Key header containing consumer_key:consumer_secret. Create and scope credentials from the API Keys tab."
-msgstr ""
-
-#: admin/class-admin-keys.php:353
-msgid "Disable MCP server"
-msgstr ""
-
-#: admin/class-admin-keys.php:356
-msgid "Enable MCP server"
-msgstr ""
-
-#. translators: 1: link to the setup doc, 2: link to the API Keys settings tab.
-#: admin/class-admin-keys.php:366
-#, php-format
-msgid "<a href=\"%1$s\" target=\"_blank\" rel=\"noopener\">Read the setup guide</a> for step-by-step instructions for Claude, ChatGPT, Gemini, Cursor, and other AI clients. Create credentials from the <a href=\"%2$s\">API Keys tab</a>."
-msgstr ""
-
-#. translators: 1: number of disabled webhook endpoints, 2: settings URL.
-#: admin/class-admin-webhooks.php:45
-#, php-format
-msgid "%1$d Sunshine webhook endpoint was disabled after repeated delivery failures. <a href=\"%2$s\">Review webhooks</a>."
-msgid_plural "%1$d Sunshine webhook endpoints were disabled after repeated delivery failures. <a href=\"%2$s\">Review webhooks</a>."
-msgstr[0] ""
-msgstr[1] ""
-
-#: admin/class-admin-webhooks.php:83
-#: admin/class-admin-webhooks.php:257
-msgid "Add endpoint"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:85
-msgid "Send signed order events to external services. Deliveries run in the background and retry automatically when an endpoint is unavailable."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:87
-msgid "Endpoints"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:93
-msgid "Version"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:95
-msgid "Last delivery"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:100
-msgid "No webhook endpoints yet."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:147
-msgid "Send test"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:148
-msgid "Disable"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:150
-msgid "Enable"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:163
-msgid "Endpoint deliveries"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:163
-msgid "Recent deliveries"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:167
-msgid "Show all"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:172
-msgid "Event"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:174
-#: admin/class-admin-webhooks.php:290
-msgid "Attempt"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:175
-msgid "Result"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:176
-msgid "Created"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:180
-msgid "No delivery attempts yet."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:223
-#: admin/class-admin-webhooks.php:338
-#: includes/class-api-webhooks.php:270
-#: includes/class-api-webhooks.php:676
-msgid "Webhook endpoint not found."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:234
-msgid "Edit webhook endpoint"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:234
-msgid "Add webhook endpoint"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:243
-msgid "Order fulfillment service"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:244
-msgid "A public HTTPS URL. Redirects are not followed."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:250
-msgid "Payload version"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:255
-msgid "This endpoint stays pinned to the selected payload shape when newer versions are introduced."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:257
-msgid "Save endpoint"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:263
-msgid "Endpoint actions"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:264
-msgid "Rotating the signing secret immediately invalidates the previous secret. Pending attempts use the new secret."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:265
-msgid "Rotate signing secret"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:265
-msgid "Rotate this signing secret?"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:266
-msgid "Delete endpoint"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:266
-msgid "Delete this endpoint? Delivery history will be retained."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:275
-#: includes/class-api-webhooks.php:747
-msgid "Webhook delivery not found."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:289
-msgid "Event ID"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:292
-msgid "Duration"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:296
-msgid "Redeliver"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:299
-msgid "Request"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:300
-#: admin/class-admin-webhooks.php:310
-msgid "Headers"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:302
-msgid "Payload"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:305
-msgid "Response"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:312
-msgid "Body"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:316
-msgid "Signature verification"
-msgstr ""
-
-#: admin/class-admin-webhooks.php:317
-msgid "Read the timestamp and v1 signature from Sunshine-Signature. Compute HMAC-SHA256 over the timestamp, a period, and the exact raw request body using the endpoint signing secret. Reject old timestamps and compare signatures in constant time."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:330
-msgid "Webhook endpoint created. Copy the signing secret now; it will not be shown again."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:350
-msgid "Webhook endpoint updated."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:359
-msgid "Webhook endpoint enabled."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:359
-msgid "Webhook endpoint disabled."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:366
-msgid "Webhook endpoint deleted. Delivery history was retained."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:376
-msgid "Signing secret rotated. Copy the new secret now; it will not be shown again."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:387
-msgid "Test event sent."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:403
-msgid "Event redelivered."
-msgstr ""
-
-#: admin/class-admin-webhooks.php:414
-msgid "You are not allowed to manage webhooks."
-msgstr ""
-
-#. translators: %s: human-readable time difference.
-#: admin/class-admin-webhooks.php:461
-#, php-format
-msgid "%s ago"
-msgstr ""
-
-#: includes/class-api-auth.php:97
-#: includes/mcp/class-sunshine-mcp-rest-bridge.php:109
-msgid "This API key does not have write permissions."
-msgstr ""
-
-#: includes/class-api-auth.php:106
-msgid "Consumer key and secret are required to access the Sunshine API."
-msgstr ""
-
-#. translators: 1: action, 2: resource
-#: includes/class-api-permissions.php:111
-#, php-format
-msgid "You do not have permission to %1$s %2$s via the API."
-msgstr ""
-
-#: includes/class-api-rate-limiter.php:32
-msgid "Rate limit exceeded. Try again shortly."
-msgstr ""
-
-#: includes/class-api-webhooks.php:43
-msgid "Order created"
-msgstr ""
-
-#: includes/class-api-webhooks.php:44
-msgid "Order updated"
-msgstr ""
-
-#: includes/class-api-webhooks.php:45
-msgid "Order status changed"
-msgstr ""
-
-#: includes/class-api-webhooks.php:46
-msgid "Order paid"
-msgstr ""
-
-#: includes/class-api-webhooks.php:47
-msgid "Order refunded"
-msgstr ""
-
-#: includes/class-api-webhooks.php:48
-msgid "Order deleted"
-msgstr ""
-
-#: includes/class-api-webhooks.php:63
-msgid "Every five minutes (Sunshine webhooks)"
-msgstr ""
-
-#: includes/class-api-webhooks.php:223
-msgid "Unknown webhook event type."
-msgstr ""
-
-#: includes/class-api-webhooks.php:289
-msgid "Could not queue the test delivery."
-msgstr ""
-
-#: includes/class-api-webhooks.php:343
-msgid "Endpoint is not active."
-msgstr ""
-
-#: includes/class-api-webhooks.php:524
-msgid "The webhook endpoint could not be created."
-msgstr ""
-
-#: includes/class-api-webhooks.php:550
-msgid "The webhook endpoint could not be updated."
-msgstr ""
-
-#: includes/class-api-webhooks.php:558
-msgid "Give the endpoint a name."
-msgstr ""
-
-#: includes/class-api-webhooks.php:561
-msgid "Enter a public HTTPS delivery URL."
-msgstr ""
-
-#: includes/class-api-webhooks.php:565
-msgid "Select at least one event."
-msgstr ""
-
-#: includes/class-api-webhooks.php:696
-msgid "OpenSSL is required to store webhook signing secrets securely."
-msgstr ""
-
-#: includes/class-api-webhooks.php:703
-msgid "Could not encrypt the webhook signing secret."
-msgstr ""
-
-#: includes/class-api-webhooks.php:710
-#: includes/class-api-webhooks.php:722
-msgid "The webhook signing secret cannot be decrypted. Rotate the secret and try again."
-msgstr ""
-
-#: includes/class-api-webhooks.php:714
-msgid "The webhook signing secret is invalid. Rotate the secret and try again."
-msgstr ""
-
-#: includes/class-api-webhooks.php:752
-msgid "Could not queue the redelivery."
-msgstr ""
-
-#: includes/class-rest-controller.php:52
-msgid "Unique identifier for the resource."
-msgstr ""
-
-#: includes/class-rest-controller.php:75
-msgid "Whether to bypass the trash and force deletion."
-msgstr ""
-
-#: includes/class-rest-controller.php:179
-msgid "Sort collection by object attribute."
-msgstr ""
-
-#: includes/class-rest-controller.php:186
-msgid "Order sort attribute ascending or descending."
-msgstr ""
-
-#: includes/class-rest-controller.php:287
-msgid "Resource not found."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-customers-controller.php:96
-msgid "Customer not found."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-customers-controller.php:112
-msgid "An email address is required to create a customer."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-customers-controller.php:172
-msgid "The customer could not be deleted."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-galleries-controller.php:143
-msgid "The gallery could not be deleted."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-galleries-controller.php:229
-msgid "Limit results to children of a specific gallery."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-galleries-controller.php:233
-msgid "Limit results to galleries whose title or content matches the search string."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:74
-#: includes/controllers/v1/class-rest-images-controller.php:103
-msgid "Gallery not found."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:137
-msgid "Could not register the uploaded file with the gallery."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:197
-msgid "Downloaded file is not a supported image type."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:223
-msgid "Could not decode base64 image payload."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:226
-msgid "The image payload exceeds the maximum allowed upload size."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:231
-msgid "Filename extension is not a supported image type."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:240
-msgid "No file payload supplied. Send multipart `file`, JSON `src` URL, or JSON `data` + `filename`."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:286
-msgid "The downloaded image exceeds the maximum allowed upload size."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:322
-msgid "Image URL is missing a host or scheme."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:325
-msgid "Image URL must use http or https."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:333
-msgid "Could not resolve image URL host."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:343
-msgid "Image URL resolves to a non-public IP address."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:359
-msgid "Image URL is not allowed."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:405
-#: includes/controllers/v1/class-rest-images-controller.php:409
-msgid "Image not found."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-images-controller.php:633
-msgid "The image could not be deleted."
-msgstr ""
-
-#. translators: %d: current Unix timestamp
-#: includes/controllers/v1/class-rest-orders-controller.php:152
-#, php-format
-msgid "Order %d"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-orders-controller.php:263
-msgid "The order could not be deleted."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-orders-controller.php:286
-msgid "A `status` slug is required."
-msgstr ""
-
-#. translators: %s: database error message
-#: includes/controllers/v1/class-rest-orders-controller.php:516
-#, php-format
-msgid "Could not insert line item: %s"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-orders-controller.php:563
-msgid "Line item payload is required."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-orders-controller.php:621
-msgid "Line item not found on this order."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-orders-controller.php:720
-msgid "Limit to orders for a customer (user id)."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-orders-controller.php:721
-msgid "Filter by order-status slug."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-orders-controller.php:722
-msgid "ISO 8601 date — only orders after this."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-orders-controller.php:723
-msgid "ISO 8601 date — only orders before this."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-orders-controller.php:726
-msgid "Gallery id (or comma-separated list of ids). Returns only orders whose line items reference at least one of these galleries."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-orders-controller.php:731
-msgid "When `gallery` is set, also include orders touching any descendant gallery (sub-galleries at any depth)."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-price-levels-controller.php:138
-#: includes/controllers/v1/class-rest-product-categories-controller.php:83
-msgid "A `name` is required."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-price-levels-controller.php:202
-msgid "The price level could not be deleted."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-price-levels-controller.php:260
-msgid "A `products` array of product ids (or an `items` array of per-product entries) is required."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-price-levels-controller.php:263
-msgid "Provide `price` and/or `shipping` to set."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-price-levels-controller.php:315
-msgid "A numeric `percent` is required (use a negative number to decrease)."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-product-categories-controller.php:143
-msgid "The category could not be deleted."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-products-controller.php:75
-msgid "A non-empty `title` is required to create a product."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-products-controller.php:119
-msgid "The product could not be deleted."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-products-controller.php:258
-msgid "Free-text search."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-products-controller.php:259
-msgid "Limit to products in any of the given category term ids."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-products-controller.php:261
-msgid "Filter by product type meta (e.g. print, download, package)."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:74
-msgid "Unknown report."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:78
-msgid "Report callback is not callable."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:94
-msgid "Comma-separated order status slugs to include. Defaults to paid statuses (processing, completed, shipped, pickup) so refunded, cancelled, and unpaid orders are excluded from revenue. Pass any slug from /order-statuses to override (e.g. \"completed,refunded\" to include refunded gross in revenue)."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:100
-msgid "Gallery id (or comma-separated list of ids). Narrows the report to line items from these galleries only. Use this to answer \"how much did gallery X make me?\" in one call."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:105
-msgid "When `gallery` is set, also include descendant galleries at any depth (sub-galleries)."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:111
-msgid "Sales summary"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:112
-msgid "Order count and revenue across a date range, optionally grouped by day/week/month. Revenue is NET — order-level refunds are subtracted. Only paid statuses are included by default (override via `status`). The response also breaks out `gross_revenue`, `refunds`, `tax`, and `shipping`."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:114
-msgid "ISO 8601 start date."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:115
-msgid "ISO 8601 end date."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:122
-msgid "Orders by status"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:123
-msgid "Count of orders in each `sunshine-order-status` slug. Reports across all statuses — this report is the one place to see the full breakdown."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:131
-msgid "Top-selling products"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:132
-msgid "Products ranked by quantity sold. Revenue is NET — order-level refunds are distributed proportionally across each order's line items so a refunded order does not inflate product totals. Only paid statuses are included by default (override via `status`). Pass `gallery` to scope the report to one or more galleries."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:145
-msgid "Top-selling galleries"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-reports-controller.php:146
-msgid "Galleries ranked by net revenue. Order-level refunds are distributed proportionally across each order's line items so a refunded gallery order does not inflate the total. Only paid statuses are included by default (override via `status`). Pass `gallery` to scope the report to a specific gallery — the response then contains one row per gallery in the input, so \"how much did gallery X make me?\" is a one-call answer."
-msgstr ""
-
-#. translators: 1: list of unknown keys, 2: settings group
-#: includes/controllers/v1/class-rest-settings-controller.php:145
-#, php-format
-msgid "Unknown option key(s) for group \"%2$s\": %1$s"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:178
-msgid "This setting cannot be modified via the API."
-msgstr ""
-
-#. translators: %s: capability name
-#: includes/controllers/v1/class-rest-settings-controller.php:185
-#, php-format
-msgid "This setting requires the `%s` capability to modify."
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:323
-msgid "Business name"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:324
-msgid "Business email"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:325
-msgid "Business phone"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:326
-msgid "Address line 1"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:327
-msgid "Address line 2"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:332
-msgid "Logo (attachment ID)"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:333
-msgid "Add to main menu"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:334
-msgid "Enable the store"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:335
-msgid "Allowed countries"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:336
-msgid "Require billing address"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:337
-msgid "Disable cart"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:343
-msgid "Enable taxes"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:345
-msgid "Tax rates"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:346
-msgid "Default tax location"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:347
-#: includes/controllers/v1/class-rest-settings-controller.php:376
-msgid "Prices include tax"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:356
-msgid "Shipping methods"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:369
-msgid "Currency code"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:370
-msgid "Symbol position"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:373
-msgid "Decimals"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:375
-msgid "Display price"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:377
-msgid "Price suffix"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:383
-msgid "Gallery layout"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:384
-msgid "Image layout"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:385
-msgid "Columns"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:386
-msgid "Per page"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:387
-msgid "Disable right click"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:388
-msgid "Proofing mode"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:389
-msgid "Show image data"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:390
-msgid "Disable favorites"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:392
-msgid "Allow image sharing"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:393
-msgid "Use secure file names"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:397
-msgid "Image processing"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:399
-msgid "Thumbnail size"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:400
-msgid "Thumbnail crop"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:401
-msgid "Large size"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:402
-msgid "Image quality"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:403
-msgid "Delete images on gallery delete"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:404
-msgid "Delete images folder on gallery delete"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:405
-msgid "Show in media library"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:411
-msgid "Standalone checkout"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:412
-msgid "Allow guest checkout"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:418
-msgid "From name"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:419
-msgid "From email"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-settings-controller.php:423
-#: includes/controllers/v1/class-rest-settings-controller.php:425
-msgid "Theme"
-msgstr ""
-
-#: includes/controllers/v1/class-rest-tools-controller.php:116
-msgid "You do not have permission to run this tool via the API."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:21
-msgid "List customers"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:22
-msgid "Returns a paginated list of WordPress users in the sunshine_customer role, with billing and shipping data."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:37
-msgid "Match against email, login, and display name."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:42
-msgid "Limit results to customers whose email matches this address."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:52
-msgid "Get a customer"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:53
-msgid "Returns one customer by user id, including name, email, phone, billing address, shipping address, and credit balance."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:66
-msgid "WordPress user id of the customer."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:76
-msgid "Get a customer's favorited images"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:77
-msgid "Returns the list of image ids the customer has marked as favorites."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:98
-msgid "List orders for a customer"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:99
-msgid "Returns all orders placed by a specific customer."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:123
-msgid "Create a customer"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:124
-msgid "Creates a new WordPress user with the sunshine_customer role. Email is required. Username defaults to the email address if not provided."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:149
-msgid "Update a customer"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:150
-msgid "Updates an existing customer. Send only the fields you want to change."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:176
-msgid "Delete a customer"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:177
-msgid "Deletes a WordPress user and their customer record. If reassign is set, the user's posts and orders are transferred to that user id; otherwise associated content is deleted."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:190
-msgid "User id to transfer this customer's content to."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:200
-msgid "Bulk create/update/delete customers"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-customers.php:201
-msgid "Run multiple customer operations in one call."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:21
-msgid "List galleries"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:22
-msgid "Returns a paginated list of Sunshine Photo Cart galleries. Supports search by title/content and filtering by parent gallery id for hierarchical galleries."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:52
-msgid "Limit results to children of this gallery id."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:56
-msgid "Limit results to galleries whose title or content matches this string."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:66
-msgid "Get a gallery"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:67
-msgid "Returns the full record for one Sunshine Photo Cart gallery by id, including title, status, parent, images list, and meta data."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:80
-msgid "Gallery id."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:90
-msgid "List images in a gallery"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:91
-msgid "Returns a paginated list of images that belong to a specific gallery."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:125
-msgid "Get an image"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:126
-msgid "Returns the full record for one image attachment by id, including title, caption, dimensions, and meta data."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:150
-msgid "Create a gallery"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:151
-msgid "Creates a new Sunshine gallery. Title is required. status (gallery type) defaults to \"default\"; pass \"password\", \"private\", or \"email\" to restrict access. Image ids can be attached via the images array."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:165
-msgid "WordPress post_status (publish, draft, private)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:171
-msgid "Price level term id this gallery references."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:176
-msgid "Attachment ids to associate with this gallery, in display order."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:187
-msgid "Update a gallery"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:188
-msgid "Updates an existing gallery. Send only the fields you want to change."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:219
-msgid "Delete a gallery"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:220
-msgid "Deletes a gallery. By default the gallery is moved to the trash. Pass force=true to permanently delete and skip the trash."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:240
-msgid "Bulk create/update/delete galleries"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:241
-msgid "Run multiple gallery operations in one call. Each list item is processed independently and its individual result returned."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:253
-msgid "Add an image to a gallery"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:254
-msgid "Uploads a new image into a gallery. Provide the image either as a public URL (`src`) or as base64 bytes (`data` plus `filename`). The file is fetched or decoded, run through Sunshine's upload pipeline (watermarking, secure filename, EXIF), and appended to the gallery."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:267
-msgid "Public http(s) URL of the image to fetch and add."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:271
-msgid "Base64-encoded image bytes. Requires `filename`."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:275
-msgid "Filename with extension for a base64 `data` upload, or to override the name derived from `src`."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:279
-msgid "Apply the gallery watermark. Defaults to the site setting."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:291
-msgid "Update an image"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:292
-msgid "Updates an image attachment's title, caption, or meta data."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:314
-msgid "Delete an image"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:315
-msgid "Deletes an image attachment. By default the attachment is moved to the trash; force=true permanently deletes."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-galleries.php:362
-msgid "Custom meta entries. Only keys present in the Sunshine meta allowlist are accepted by the underlying REST endpoint."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:22
-msgid "List orders"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:23
-msgid "Returns a paginated list of Sunshine orders. Filter by customer id, order-status slug, date range, or gallery (a single gallery id or comma-separated list — set include_subgalleries=true to also match descendant galleries)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:38
-msgid "Limit results to orders for this customer id."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:42
-msgid "Limit results to orders in this order-status taxonomy slug."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:46
-msgid "Limit results to orders created on or after this date (ISO 8601)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:50
-msgid "Limit results to orders created on or before this date (ISO 8601)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:54
-msgid "Gallery id (or comma-separated list of ids). Returns only orders containing line items from these galleries."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:59
-msgid "When gallery is set, also match orders containing items from any descendant gallery (sub-galleries, recursively)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:69
-msgid "Get an order"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:70
-msgid "Returns one order by id, including customer info, line items summary, totals, status, and refunds."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:89
-msgid "List items in an order"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:90
-msgid "Returns the line items for one order — product, quantity, price, image, and selected options."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:110
-msgid "List refunds for an order"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:111
-msgid "Returns the recorded refunds against one order."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:131
-msgid "List order statuses"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:132
-msgid "Returns every order status term (taxonomy: sunshine-order-status) with id, slug, name, and count."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:150
-msgid "Update an order"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:151
-msgid "Updates an existing order. Send only the fields you want to change."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:180
-msgid "Delete an order"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:181
-msgid "Deletes an order. force=true skips the trash and permanently deletes."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:201
-msgid "Bulk update/delete orders"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:202
-msgid "Run multiple order operations in one call. Only update and delete are supported — creating orders via the API is not exposed."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:221
-msgid "Add a line item to an order"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:222
-msgid "Adds a product line item to an existing order."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:246
-msgid "Delete a line item from an order"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:247
-msgid "Removes one line item from an existing order. Identified by the order id and the line item id."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:267
-msgid "Update an order status"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:268
-msgid "Transitions an order to a new status. Use list-order-statuses to discover valid slugs."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-orders.php:281
-msgid "Order status taxonomy slug."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:23
-msgid "List products"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:24
-msgid "Returns a paginated list of Sunshine products. Supports filtering by category slug, price level slug, and product type."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:40
-msgid "Limit results to products in this category slug."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:44
-msgid "Limit results to products in this price level slug."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:48
-msgid "Limit results to products of this type (e.g. print, digital)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:58
-msgid "Get a product"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:59
-msgid "Returns one product by id, including title, description, status, type, price, shipping, and meta data."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:78
-msgid "List product categories"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:79
-msgid "Returns all product category terms (taxonomy: sunshine-product-category)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:91
-msgid "Get a product category"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:92
-msgid "Returns one product category term by id."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:111
-msgid "List price levels"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:112
-msgid "Returns all price level terms. Price levels are reusable pricing tiers galleries reference — edit the level and every gallery that uses it inherits the new prices."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:124
-msgid "Get a price level"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:125
-msgid "Returns one price level term by id."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:147
-msgid "Create a product"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:148
-msgid "Creates a new Sunshine product. Title and type are required (e.g. type \"print\" or \"digital\"). Price, shipping, and category/price-level assignments can be set here."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:167
-msgid "Product category term ids."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:179
-msgid "Update a product"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:180
-msgid "Updates an existing product. Send only the fields you want to change."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:209
-msgid "Delete a product"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:210
-msgid "Deletes a product. force=true skips the trash and permanently deletes."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:230
-msgid "Bulk create/update/delete products"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:231
-msgid "Run multiple product operations in one call."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:244
-msgid "Create a product category"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:245
-msgid "Creates a new product category term."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:268
-msgid "Update a product category"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:269
-msgid "Updates a product category term."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:294
-msgid "Delete a product category"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:295
-msgid "Deletes a product category term. Products previously in this category are unassigned."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:315
-msgid "Create a price level"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:316
-msgid "Creates a new price level. Optional: clone pricing from an existing level via source_price_level + optional percent adjustment."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:331
-msgid "Existing price level id to copy prices from."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:335
-msgid "Percentage adjustment applied to copied prices (e.g. 10 = +10%, -5 = -5%)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:345
-msgid "Update a price level"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:346
-msgid "Updates a price level term. To change per-product prices on the level, use apply-price-level."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:369
-msgid "Delete a price level"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:370
-msgid "Deletes a price level term. Galleries that referenced it fall back to no price level (default pricing)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:389
-msgid "Apply per-product pricing to a price level"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:390
-msgid "Bulk-sets price and/or shipping at one price level. Two modes: uniform — pass `products[]` plus a single `price`/`shipping` to set the same value across every product; or per-product — pass `items[]` where each entry carries its own product id, price, and/or shipping. Use the per-product mode when products need different values (e.g. a percentage increase that produces a different new price for each item)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:404
-msgid "Uniform mode — product ids to set to a single `price`/`shipping`. Ignored when `items` is provided."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:408
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:412
-msgid "Uniform mode — applied to every product in `products[]`."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:416
-msgid "Per-product mode — each entry sets its own product's price/shipping at this level. Takes precedence over the uniform fields when present."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:435
-msgid "Scale prices at a price level by a percentage"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:436
-msgid "Multiplies every product's current price (and/or shipping) at this price level by `(1 + percent/100)`. Use a positive percent to increase, a negative one to decrease. Without `products[]`, scales every product currently assigned to the level. Skips products that have no value at the level — use apply-price-level to set the first value. Returns each product's old and new values so the caller can verify the math."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:449
-msgid "Percentage change. Positive increases, negative decreases. e.g. 10 = +10%, -15 = -15%."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:454
-msgid "Optional — limit scaling to these product ids. Omit to scale every product currently assigned to this level."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:459
-msgid "Which fields to scale. Default: [\"price\"]. Pass [\"price\",\"shipping\"] to scale both."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-products.php:464
-msgid "Decimal places to round to after scaling. Default: 2 (currency convention)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-reports.php:22
-msgid "List available reports"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-reports.php:23
-msgid "Returns every report Sunshine can run: slug, name, description, supported parameters. Use this to discover what reports are available before calling run-report."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-reports.php:35
-msgid "Run a report"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-reports.php:36
-msgid "Executes one report and returns the generated data. Built-in reports: sales (revenue over time, refund-aware), orders-by-status, top-products (best-selling), top-galleries (top by net revenue). Revenue reports accept `status` to override which order statuses count toward revenue (default: paid statuses, refunded excluded). `top-galleries` and `top-products` accept `gallery` (single id or comma-separated list) plus `include_subgalleries` to scope the report to specific galleries — use this to answer \"how much did gallery X make me?\" in one call."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-reports.php:48
-msgid "Report slug, from list-reports."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-reports.php:52
-msgid "Start date (ISO 8601) — interpreted per the report's schema."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-reports.php:56
-msgid "End date (ISO 8601) — interpreted per the report's schema."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-reports.php:60
-msgid "How to bucket time-series data (day|week|month) where supported."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-reports.php:65
-msgid "Maximum rows to return where the report supports a row cap."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-reports.php:69
-msgid "Comma-separated order-status slugs. Defaults to paid statuses (processing, completed, shipped, pickup); pass any combo to override (e.g. include \"refunded\" to see gross including refunds)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-reports.php:73
-msgid "For top-galleries / top-products: scope to one or more gallery ids (comma-separated). Returns a row per requested gallery so per-gallery revenue is a one-call answer."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-reports.php:78
-msgid "When `gallery` is set, also include descendant galleries (sub-galleries at any depth)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:21
-msgid "List settings groups"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:22
-msgid "Returns every Sunshine settings group (general, tax, shipping, etc.) with its slug and label. Use this to discover what groups are available before fetching specific options."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:34
-msgid "Get a settings group"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:35
-msgid "Returns every option in a single settings group by slug."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:47
-msgid "Settings group slug (e.g. general, tax, shipping)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:57
-msgid "Get a single setting"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:58
-msgid "Returns the current value of one option inside a settings group."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:78
-msgid "Get system status"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:79
-msgid "Returns Sunshine system diagnostics: API version, PHP/WP versions, plan tier, and the list of active Sunshine add-ons. Useful for support and capability discovery."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:98
-msgid "Update a settings group"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:99
-msgid "Replaces multiple options in a single settings group at once. CAUTION: incorrect values can break checkout (tax rates, payment gateways, etc.). Prefer update-setting for single-field changes."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:112
-msgid "Settings group slug."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:122
-msgid "Update a single setting"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:123
-msgid "Updates one option inside a settings group. The value type depends on the setting (use get-setting first to see the current shape)."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-settings.php:136
-msgid "New value for the option. Type depends on the option."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-tools.php:22
-msgid "List available tools"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-tools.php:23
-msgid "Returns every maintenance tool Sunshine registers: key, name, description, and whether it runs in chunks. Use this to discover what tools exist before calling run-tool."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-tools.php:35
-msgid "Get tool details"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-tools.php:36
-msgid "Returns details for one tool by key, including any remaining work count if it runs in chunks."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-tools.php:48
-#: includes/mcp/abilities/class-sunshine-abilities-tools.php:73
-msgid "Tool key, from list-tools."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-tools.php:60
-msgid "Run a maintenance tool"
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-tools.php:61
-msgid "Executes one Sunshine maintenance tool. CAUTION: some tools mutate large amounts of data (orphan cleanup, image regeneration, etc.). Use get-tool first to inspect what a tool does and whether it runs in chunks. For chunked tools, pass `size` to control batch size; the response includes a remaining count so the caller can decide whether to invoke again."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-tools.php:78
-msgid "Chunk size for tools that process data in batches."
-msgstr ""
-
-#: includes/mcp/abilities/class-sunshine-abilities-tools.php:82
-msgid "Tool-specific parameters — see the tool's `params_schema` field from get-tool."
-msgstr ""
-
-#: includes/mcp/class-sunshine-mcp-rest-bridge.php:168
-msgid "This API key has no MCP scopes assigned, so it cannot be used with MCP clients. Add scopes under Sunshine → Settings → Integrations → API Keys, or connect with a WordPress Application Password for full access."
-msgstr ""
-
-#. translators: %s: required scope, e.g. "galleries:delete"
-#: includes/mcp/class-sunshine-mcp-rest-bridge.php:213
-#, php-format
-msgid "This API key does not have the required MCP scope: %s"
-msgstr ""
-
-#: includes/mcp/class-sunshine-mcp.php:153
-msgid "Galleries, products, orders, customers, and reports from Sunshine Photo Cart."
-msgstr ""
-
-#: includes/mcp/class-sunshine-mcp.php:185
-msgid "Ping Sunshine"
-msgstr ""
-
-#: includes/mcp/class-sunshine-mcp.php:186
-msgid "Returns a pong response. Used to verify the Sunshine MCP layer is wired up correctly."
-msgstr ""
-
-#: includes/mcp/class-sunshine-mcp.php:267
-msgid "Sunshine Photo Cart MCP"
-msgstr ""
-
-#: includes/mcp/class-sunshine-mcp.php:268
-msgid "MCP server exposing Sunshine Photo Cart galleries, products, orders, and customers as abilities for AI clients."
-msgstr ""
-
-#. translators: %d is the number of images
-#: admin/tools.php:1273
-#, php-format
-msgid "%d images migrated from WP Offload Media are missing bucket location data. Their full-size download links can expire and stop working. Run the repair below to fix them."
-msgstr ""
-
-#: admin/tools.php:1279
-msgid "Repair Metadata"
-msgstr ""
-
-#: admin/tools.php:1299
-msgid "Error running repair."
-msgstr ""
-
-#: admin/tools.php:1308
-msgid "items repaired."
-msgstr ""
-
-#: admin/tools.php:1308
-msgid "couldn't be repaired automatically — their original WP Offload Media data is no longer available. Contact support if you need help."
-msgstr ""
-
-#: admin/tools.php:1314
-msgid "repaired so far..."
-msgstr ""
-
-#: admin/tools.php:1319
-msgid "Network error. Please try again."
-msgstr ""
-
-#. translators: 1: number of images, 2: link opening tag, 3: link closing tag
-#: admin/tools.php:1822
-#, php-format
-msgid "%1$d images migrated from WP Offload Media are missing bucket location data and their downloads may fail. %2$sRun the repair tool%3$s to fix them."
 msgstr ""
