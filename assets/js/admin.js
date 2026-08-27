@@ -102,21 +102,24 @@ jQuery( document ).ready(function($) {
 		return false;
 	});
 
-	$( '.sunshine-tooltip' ).tooltip( {
-		position: {
-			my: 'left top+5',
-			at: 'left bottom'
-		},
-		show: {
-			duration: 200
-		},
-		hide: {
-			duration: 200
-		},
-		classes: {
-			'ui-tooltip': 'sunshine-tooltip-ui'
-		}
-	} );
+	// jQuery UI tooltip is only loaded on Sunshine screens, but this file loads on all admin pages.
+	if ( typeof $.fn.tooltip === 'function' ) {
+		$( '.sunshine-tooltip' ).tooltip( {
+			position: {
+				my: 'left top+5',
+				at: 'left bottom'
+			},
+			show: {
+				duration: 200
+			},
+			hide: {
+				duration: 200
+			},
+			classes: {
+				'ui-tooltip': 'sunshine-tooltip-ui'
+			}
+		} );
+	}
 
 
 });
