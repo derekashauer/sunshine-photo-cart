@@ -1033,16 +1033,22 @@ function sunshine_checkout_payment_failed() {
 		wp_send_json_error();
 	}
 
-	$order_id       = isset( $_POST['order_id'] ) ? intval( $_POST['order_id'] ) : 0;
-	$payment_method = isset( $_POST['payment_method'] ) ? sanitize_text_field( $_POST['payment_method'] ) : '';
-	$error          = isset( $_POST['error'] ) ? sanitize_text_field( $_POST['error'] ) : '';
+	$order_id         = isset( $_POST['order_id'] ) ? intval( $_POST['order_id'] ) : 0;
+	$payment_method   = isset( $_POST['payment_method'] ) ? sanitize_text_field( $_POST['payment_method'] ) : '';
+	$error            = isset( $_POST['error'] ) ? sanitize_text_field( $_POST['error'] ) : '';
+	$session_order_id = intval( SPC()->session->get( 'checkout_order_id' ) );
 
-	if ( ! $order_id ) {
+	// A checkout nonce proves the request came from the checkout page; it does not authorize
+	// access to an arbitrary order. Bind this mutation to the order in the caller's session.
+	if ( ! $order_id || $order_id !== $session_order_id || empty( $payment_method ) ) {
 		wp_send_json_error();
 	}
 
 	// Update the order status to failed.
 	$order = sunshine_get_order( $order_id );
+	if ( ! $order || ! $order->exists() || $order->is_paid() || 'pending' !== $order->get_status() || $payment_method !== $order->get_payment_method() ) {
+		wp_send_json_error();
+	}
 	$order->set_status( 'failed', __( 'Payment failed', 'sunshine-photo-cart' ) . ': ' . $error );
 
 	wp_send_json_success();

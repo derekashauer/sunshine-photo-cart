@@ -68,7 +68,10 @@ class SPC_Cart {
 
 		$this->discount = 0;
 
-		// Get cart to start.
+		// Remember the tax context used by this item build. If resolving checkout state below
+		// changes it, items need one corrective rebuild; repeated setup() calls in the same
+		// request can otherwise keep the cached items.
+		$item_delivery_method_id = $this->delivery_method ? $this->delivery_method->get_id() : false;
 		$this->get_cart_items( $force );
 
 		// Get any session saved data for the cart
@@ -161,12 +164,10 @@ class SPC_Cart {
 			}
 		}
 
-		// Cart items work out their own tax as they are built, which happens at the top of this
-		// method -- before the delivery method above has been settled. The delivery method
-		// decides which address the tax comes from, so an item built first can end up taxed on
-		// a different address than the cart itself. Rebuild them now the answer is known, so
-		// the per item tax and the cart tax agree on the first pass rather than the second.
-		$this->get_cart_items( true );
+		$resolved_delivery_method_id = $this->delivery_method ? $this->delivery_method->get_id() : false;
+		if ( $item_delivery_method_id !== $resolved_delivery_method_id ) {
+			$this->get_cart_items( true );
+		}
 
 		if ( SPC()->get_option( 'discount_after_tax' ) ) {
 			$this->set_tax();
@@ -2097,6 +2098,10 @@ class SPC_Cart {
 	 */
 	private function is_checkout_field_visible( $field, $data ) {
 
+		if ( isset( $field['visible'] ) && ! $field['visible'] ) {
+			return false;
+		}
+
 		if ( empty( $field['conditions'] ) ) {
 			return true;
 		}
@@ -2443,7 +2448,7 @@ class SPC_Cart {
 		$this->setup( true );
 		$incomplete_sections = $this->get_incomplete_checkout_sections( array( 'payment_method' => $payment_method ) );
 		if ( ! empty( $incomplete_sections ) ) {
-			SPC()->log( 'Blocked order init: checkout is not complete. Still needed: ' . json_encode( array_keys( $incomplete_sections ) ) . ' | checkout_data: ' . json_encode( $this->get_checkout_data() ) );
+			SPC()->log( 'Blocked order init: checkout is not complete. Still needed: ' . wp_json_encode( array_keys( $incomplete_sections ) ) );
 			/* translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment" */
 			$this->add_error( sprintf( __( 'Please complete the following before submitting your order: %s', 'sunshine-photo-cart' ), join( ', ', $incomplete_sections ) ) );
 			wp_send_json_error();
@@ -2522,7 +2527,7 @@ class SPC_Cart {
 		if ( $this->needs_shipping() && ! $this->has_valid_shipping_method() ) {
 			// Diagnostic: this has been an unreproducible failure for this site for years.
 			// Log the session state so a real occurrence finally leaves a trace.
-			SPC()->log( 'Blocked order init: cart needs shipping but no valid shipping method selected. checkout_data: ' . json_encode( $this->get_checkout_data() ) );
+			SPC()->log( 'Blocked order init: cart needs shipping but no valid shipping method selected' );
 			$this->add_error( __( 'Please select a shipping method before completing your order.', 'sunshine-photo-cart' ) );
 			wp_send_json_error();
 		}

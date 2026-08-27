@@ -46,7 +46,10 @@ async function sunshine_square_create_payment(token) {
 				} else {
 					jQuery('#sunshine-square-payment-errors').html('');
 					console.log( 'square create payment error shown', result.data.reasons );
-					jQuery('#sunshine-square-payment-errors').prepend('<div style="background: red; color: #FFF; padding: 7px 12px;">' + result.data.reasons + '</div>');
+					jQuery( '<div>' )
+						.css( { background: 'red', color: '#FFF', padding: '7px 12px' } )
+						.text( result.data.reasons )
+						.prependTo( '#sunshine-square-payment-errors' );
 					sunshine_checkout_updating_done();
 					reject(new Error(result.data.reasons));
 				}
@@ -207,4 +210,3 @@ jQuery( document ).on( 'sunshine_reload_checkout', function( event, data ) {
 		spc_square_vars.total = data.total;
 	}
 });
-
