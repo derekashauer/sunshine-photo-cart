@@ -310,6 +310,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$this->description           = __( 'Pay with credit card', 'sunshine-photo-cart' );
 		$this->can_be_enabled        = true;
 		$this->needs_billing_address = false;
+		$this->fee_addon_slug        = 'stripe';
+		$this->fee_addon_plan        = 'plus';
+		$this->fee_addon_name        = __( 'Stripe Pro', 'sunshine-photo-cart' );
 
 		add_action( 'sunshine_stripe_connect_display', array( $this, 'stripe_connect_display' ) );
 		add_action( 'sunshine_stripe_webhook_display', array( $this, 'stripe_webhook_display' ) );
@@ -471,9 +474,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		// TODO: Need to show URL the user must use for webhook URL and how to do so
 
 		foreach ( $options as &$option ) {
-			if ( $option['id'] == 'stripe_header' && $this->get_application_fee_percent() > 0 ) {
+			if ( $option['id'] == 'stripe_header' && $this->get_effective_application_fee_percent() > 0 ) {
 				/* translators: %s is the application fee percentage */
-				$option['description'] = sprintf( __( 'Note: You are using the free Stripe payment gateway integration. This includes an additional %s%% fee for payment processing on each order that goes to Sunshine Photo Cart in addition to Stripe processing fees. This added fee is removed by using the Stripe Pro add-on.', 'sunshine-photo-cart' ), $this->get_application_fee_percent() ) . ' <a href="https://www.sunshinephotocart.com/addon/stripe/?utm_source=plugin&utm_medium=link&utm_campaign=stripe" target="_blank">' . __( 'Learn more', 'sunshine-photo-cart' ) . '</a>';
+				$option['description'] = sprintf( __( 'Note: An additional %s%% fee is added to each Stripe order and goes to Sunshine Photo Cart, on top of Stripe\'s own processing fees.', 'sunshine-photo-cart' ), $this->get_effective_application_fee_percent() ) . ' ' . $this->get_fee_addon_message();
 			}
 		}
 
@@ -2199,8 +2202,8 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		}
 
 		// Add application fee if applicable
-		if ( $this->get_application_fee_percent() > 0 ) {
-			$fee_amount = round( $order->get_total() * ( $this->get_application_fee_percent() / 100 ), 2 );
+		if ( $this->get_effective_application_fee_percent() > 0 ) {
+			$fee_amount = round( $order->get_total() * ( $this->get_effective_application_fee_percent() / 100 ), 2 );
 			$args['payment_intent_data']['application_fee_amount'] = $this->convert_amount_to_stripe( $fee_amount );
 		}
 
@@ -3042,11 +3045,11 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		}
 	}
 
-	private function get_application_fee_percent() {
+	public function get_application_fee_percent() {
 		return floatval( apply_filters( 'sunshine_stripe_application_fee_percent', 5 ) );
 	}
 
-	private function get_application_fee_amount() {
+	public function get_effective_application_fee_percent() {
 
 		$percentage = $this->get_application_fee_percent();
 
@@ -3062,6 +3065,18 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		if ( in_array( $country, $countries_to_disable_application_fees ) ) {
 			$percentage = 0;
 		}
+
+		return $percentage;
+
+	}
+
+	public function get_order_application_fee( $order ) {
+		return $order->get_meta_value( 'application_fee_amount' );
+	}
+
+	private function get_application_fee_amount() {
+
+		$percentage = $this->get_effective_application_fee_percent();
 
 		if ( $percentage <= 0 ) {
 			return 0;
@@ -3243,7 +3258,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		if ( $application_fee_amount ) {
 			echo '<tr>';
 			echo '<th>' . esc_html__( 'Application Fee Amount (To Sunshine)', 'sunshine-photo-cart' ) . '</th>';
-			echo '<td>' . wp_kses_post( sunshine_price( $application_fee_amount ) ) . ' (<a href="https://www.sunshinephotocart.com/upgrade/?utm_source=plugin&utm_medium=link&utm_campaign=stripe" target="_blank">' . esc_html__( 'Upgrade to remove this fee on future transactions', 'sunshine-photo-cart' ) . '</a>)' . '</td>';
+			echo '<td>' . wp_kses_post( sunshine_price( $application_fee_amount ) ) . '<br /><span class="description">' . wp_kses_post( $this->get_fee_addon_message() ) . '</span></td>';
 			echo '</tr>';
 		}
 		echo '</table>';

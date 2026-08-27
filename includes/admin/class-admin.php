@@ -303,7 +303,9 @@ class Sunshine_Admin {
 			'sunshine-admin',
 			'sunshine_admin',
 			array(
-				'addon_security' => wp_create_nonce( 'sunshine_addon_toggle' ),
+				'addon_security'       => wp_create_nonce( 'sunshine_addon_toggle' ),
+				'addon_error_generic'  => __( 'This add-on could not be turned on. Please try again.', 'sunshine-photo-cart' ),
+				'addon_error_request'  => __( 'Could not reach your site to turn on this add-on. Please reload the page and try again.', 'sunshine-photo-cart' ),
 			),
 		);
 

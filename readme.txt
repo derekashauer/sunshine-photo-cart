@@ -5,7 +5,7 @@ Contributors: wpsunshine, sccr410
 Tags: client photo gallery, photo proofing, client proofing, sell photos, client galleries
 Requires at least: 5.5
 Requires PHP: 7.4
-Tested up to: 7.0
+Tested up to: 7.1
 Stable tag: 3.7-beta1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -274,7 +274,15 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: A checkout step that fails validation on the server no longer leaves the page sitting on the loading spinner. The step now reloads and shows what needs fixing
 * Fix: Removing the last product that requires shipping from the cart (leaving only digital products) now removes the shipping fee instead of leaving it applied at checkout
 * Fix: Selecting Apple Pay or Google Pay in the Stripe payment method settings no longer causes a checkout error, and payment methods your Stripe account can't process are now greyed out so they can't be enabled by mistake
+* Dev: New filters sunshine_shipping_fields and sunshine_billing_fields for modifying the checkout address fields, such as offering a different country list for shipping than billing. The existing sunshine_shipping__fields and sunshine_billing__fields filters (double underscore) still work
 * Fix: A JavaScript error no longer appears in the browser console on admin pages outside of Sunshine. The admin script sets up tooltips that rely on a library only loaded on Sunshine's own screens, and it now checks for that library first
+* New: Warning in the admin when the added fee is being charged but your license already includes the add-on that removes it
+* Change: The added fee now shows with the order totals, not just in the payment method tab
+* Change: The fee note on an order now links to the Add-ons page instead of telling you to upgrade when you already have
+* Fix: The Add-ons page switch no longer flips back off without saying why
+* Fix: Order profit now has the added fee and any discount codes taken off. Figures for past orders change to match
+* Fix: Stripe's hosted checkout charged the fee in India, Mexico and Malaysia, which are exempt
+* Dev: New sunshine_plan_covers_addon(), get_effective_application_fee_percent(), get_order_application_fee(), get_application_fee()
 
 = 3.6.12 - July 21, 2026 =
 * New: Zip/postal code fields for tax rates and the Local Delivery method now accept wildcard prefixes (902* matches any code starting with 902) and numeric ranges (90210...99000), in addition to exact comma-separated codes

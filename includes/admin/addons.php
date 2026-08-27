@@ -332,83 +332,120 @@ class Sunshine_Installer_Skin extends Plugin_Installer_Skin {
 
 add_action( 'wp_ajax_sunshine_addon_toggle', 'sunshine_addon_toggle' );
 function sunshine_addon_toggle() {
-	$result = false;
-	if ( isset( $_REQUEST['addon_security'] ) && wp_verify_nonce( $_REQUEST['addon_security'], 'sunshine_addon_toggle' ) && current_user_can( 'sunshine_manage_options' ) ) {
-		$addon            = sanitize_text_field( $_REQUEST['addon'] );
-		$currently_active = is_sunshine_addon_active( $addon );
-		$status           = 'inactive';
-		$reason           = '';
-		if ( $currently_active ) {
-			$deactivate = deactivate_plugins( 'sunshine-' . $addon . '/' . $addon . '.php' );
-			if ( ! is_wp_error( $deactivate ) ) {
-				$status = 'inactive';
-			}
-		} else {
 
-			// Does the plugin exist?
-			$valid_plugin = validate_plugin( 'sunshine-' . $addon . '/' . $addon . '.php' );
-			if ( is_wp_error( $valid_plugin ) ) {
-
-				$addons_data = sunshine_get_addon_data( true );
-				foreach ( $addons_data as $addon_item ) {
-					if ( $addon == $addon_item['slug'] ) {
-						break;
-					}
-				}
-
-				$skin_args = array(
-					'type'   => 'web',
-					'title'  => $addon_item['title'],
-					'plugin' => '',
-					'api'    => null,
-					'extra'  => null,
-				);
-
-				$skin = new Sunshine_Installer_Skin( $skin_args );
-
-				$upgrader = new Plugin_Upgrader( $skin );
-
-				$install = $upgrader->install( $addon_item['file'] );
-
-				if ( true === $install ) {
-					$status = 'installed';
-				} else {
-					$status = 'failed';
-					$reason = __( 'Could not get download file', 'sunshine-photo-cart' );
-
-					if ( is_wp_error( $install ) ) {
-						$detail = sprintf(
-							'WP_Error code=%s message=%s',
-							$install->get_error_code(),
-							$install->get_error_message()
-						);
-					} elseif ( false === $install ) {
-						$detail = 'install returned false (likely filesystem not directly writable; FTP credentials would normally be requested)';
-					} else {
-						$detail = 'install returned ' . var_export( $install, true );
-					}
-
-					SPC()->log( sprintf(
-						'Addon install failed: slug=%s, file=%s, %s',
-						$addon,
-						$addon_item['file'],
-						$detail
-					) );
-				}
-			}
-			// echo 'Activating addon...';
-			$activate = activate_plugins( 'sunshine-' . $addon . '/' . $addon . '.php' );
-			if ( ! is_wp_error( $activate ) ) {
-				$status = 'active';
-			}
-		}
-		wp_send_json_success(
+	if ( ! isset( $_REQUEST['addon_security'] ) || ! wp_verify_nonce( $_REQUEST['addon_security'], 'sunshine_addon_toggle' ) || ! current_user_can( 'sunshine_manage_options' ) ) {
+		wp_send_json_error(
 			array(
-				'status' => $status,
-				'reason' => $reason,
+				'status' => 'failed',
+				'reason' => __( 'Your session has expired. Please reload this page and try again.', 'sunshine-photo-cart' ),
 			)
 		);
 	}
+
+	$addon  = sanitize_text_field( $_REQUEST['addon'] );
+	$plugin = 'sunshine-' . $addon . '/' . $addon . '.php';
+
+	// Turning it off.
+	if ( is_sunshine_addon_active( $addon ) ) {
+		deactivate_plugins( $plugin );
+		wp_send_json_success( array( 'status' => 'inactive' ) );
+	}
+
+	// Not on the site yet, so download and install it first.
+	if ( is_wp_error( validate_plugin( $plugin ) ) ) {
+
+		$addon_item  = false;
+		$addons_data = sunshine_get_addon_data( true );
+		if ( ! empty( $addons_data ) ) {
+			foreach ( $addons_data as $addons_data_item ) {
+				if ( $addon === $addons_data_item['slug'] ) {
+					$addon_item = $addons_data_item;
+					break;
+				}
+			}
+		}
+
+		if ( empty( $addon_item ) || empty( $addon_item['file'] ) ) {
+			SPC()->log( 'Addon install failed: no download available for slug=' . $addon );
+			wp_send_json_error(
+				array(
+					'status' => 'failed',
+					'reason' => __( 'No download is available for this add-on. Your license may not include it, or SunshinePhotoCart.com could not be reached.', 'sunshine-photo-cart' ),
+				)
+			);
+		}
+
+		$skin_args = array(
+			'type'   => 'web',
+			'title'  => $addon_item['title'],
+			'plugin' => '',
+			'api'    => null,
+			'extra'  => null,
+		);
+
+		$skin     = new Sunshine_Installer_Skin( $skin_args );
+		$upgrader = new Plugin_Upgrader( $skin );
+		$install  = $upgrader->install( $addon_item['file'] );
+
+		if ( true !== $install ) {
+
+			if ( is_wp_error( $install ) ) {
+				$reason = $install->get_error_message();
+				$detail = sprintf( 'WP_Error code=%s message=%s', $install->get_error_code(), $install->get_error_message() );
+			} elseif ( false === $install ) {
+				$reason = __( 'WordPress could not write to your plugins folder, so this add-on could not be installed automatically. You can download it from your account and install it manually.', 'sunshine-photo-cart' );
+				$detail = 'install returned false (likely filesystem not directly writable; FTP credentials would normally be requested)';
+			} else {
+				$reason = __( 'This add-on could not be installed.', 'sunshine-photo-cart' );
+				$detail = 'install returned ' . var_export( $install, true );
+			}
+
+			SPC()->log( sprintf( 'Addon install failed: slug=%s, file=%s, %s', $addon, $addon_item['file'], $detail ) );
+
+			wp_send_json_error(
+				array(
+					'status' => 'failed',
+					'reason' => $reason,
+				)
+			);
+		}
+	}
+
+	$activate = activate_plugins( $plugin );
+
+	if ( is_wp_error( $activate ) ) {
+		SPC()->log( sprintf( 'Addon activation failed: slug=%s, code=%s, message=%s', $addon, $activate->get_error_code(), $activate->get_error_message() ) );
+		wp_send_json_error(
+			array(
+				'status' => 'failed',
+				'reason' => $activate->get_error_message(),
+			)
+		);
+	}
+
+	wp_send_json_success( array( 'status' => 'active' ) );
+}
+
+/**
+ * Check whether the current license plan includes an add-on of a given plan level.
+ *
+ * Mirrors the plan gating used to lock add-ons on the Add-ons screen.
+ *
+ * @param string $addon_plan The plan an add-on belongs to: basic, plus or pro.
+ * @return bool
+ */
+function sunshine_plan_covers_addon( $addon_plan ) {
+	$ranks   = array(
+		'free'  => 0,
+		'basic' => 1,
+		'plus'  => 2,
+		'pro'   => 3,
+	);
+	$current = ( ! empty( SPC()->plan ) && SPC()->plan->is_valid() ) ? SPC()->plan->get_id() : 'free';
+	if ( ! isset( $ranks[ $current ] ) || ! isset( $ranks[ $addon_plan ] ) ) {
+		return false;
+	}
+	return $ranks[ $current ] >= $ranks[ $addon_plan ];
 }
 
 add_action( 'sunshine_addon_check', 'sunshine_get_addon_data', 20 );

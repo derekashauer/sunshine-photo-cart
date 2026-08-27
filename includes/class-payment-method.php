@@ -9,6 +9,11 @@ class SPC_Payment_Method {
 	protected $can_be_enabled        = true;
 	protected $needs_billing_address = false;
 
+	// Gateways that collect an application fee name the add-on that removes it.
+	protected $fee_addon_slug = '';
+	protected $fee_addon_plan = 'plus';
+	protected $fee_addon_name = '';
+
 	public function __construct() {
 		$this->init();
 		// add_filter( 'sunshine_payment_methods', array( $this, 'register' ) );
@@ -22,6 +27,11 @@ class SPC_Payment_Method {
 		add_filter( 'sunshine_order_transaction_url', array( $this, 'get_transaction_url' ) );
 		add_filter( 'sunshine_checkout_create_order_mode', array( $this, 'mode' ), 10, 2 );
 		add_filter( 'sunshine_checkout_needs_billing_address', array( $this, 'checkout_needs_billing_address' ), 10, 2 );
+
+		if ( is_admin() && $this->fee_addon_slug ) {
+			add_action( 'sunshine_admin_order_totals', array( $this, 'admin_order_application_fee' ), 5 );
+			add_action( 'admin_notices', array( $this, 'admin_application_fee_notice' ) );
+		}
 	}
 
 	public function init() { }
@@ -256,6 +266,158 @@ class SPC_Payment_Method {
 			}
 		}
 		return $fee;
+	}
+
+	/**
+	 * The application fee percentage this gateway is configured to collect.
+	 *
+	 * @return float
+	 */
+	public function get_application_fee_percent() {
+		return 0;
+	}
+
+	/**
+	 * The application fee percentage actually being collected, after any
+	 * country restrictions are applied. Gateways override this.
+	 *
+	 * @return float
+	 */
+	public function get_effective_application_fee_percent() {
+		return $this->get_application_fee_percent();
+	}
+
+	/**
+	 * The application fee recorded against a single order.
+	 *
+	 * @param SPC_Order $order The order.
+	 * @return float
+	 */
+	public function get_order_application_fee( $order ) {
+		return 0;
+	}
+
+	/**
+	 * Whether the customer's license already includes the add-on that removes the fee.
+	 *
+	 * @return bool
+	 */
+	public function fee_addon_included_in_plan() {
+		if ( ! $this->fee_addon_slug || ! function_exists( 'sunshine_plan_covers_addon' ) ) {
+			return false;
+		}
+		return sunshine_plan_covers_addon( $this->fee_addon_plan );
+	}
+
+	/**
+	 * Whether the fee-removing add-on is installed and turned on.
+	 *
+	 * @return bool
+	 */
+	public function fee_addon_is_active() {
+		if ( ! $this->fee_addon_slug || ! function_exists( 'is_sunshine_addon_active' ) ) {
+			return false;
+		}
+		return is_sunshine_addon_active( $this->fee_addon_slug );
+	}
+
+	/**
+	 * Where to send someone to stop the fee. People whose license already covers
+	 * the add-on go to the Add-ons screen; everyone else goes to the sales page.
+	 *
+	 * @return string
+	 */
+	public function get_fee_addon_url() {
+		if ( $this->fee_addon_included_in_plan() ) {
+			return admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-addons' );
+		}
+		return 'https://www.sunshinephotocart.com/addon/' . $this->fee_addon_slug . '/?utm_source=plugin&utm_medium=link&utm_campaign=' . $this->fee_addon_slug;
+	}
+
+	/**
+	 * Short sentence telling someone how to stop the fee, worded for whether
+	 * their license already covers the add-on.
+	 *
+	 * @return string
+	 */
+	public function get_fee_addon_message() {
+		$name = $this->fee_addon_name ? $this->fee_addon_name : $this->get_name();
+		if ( $this->fee_addon_included_in_plan() ) {
+			/* translators: %s is the add-on name, such as "Stripe Pro" */
+			$text = sprintf( __( 'Your license already includes the %s add-on, which removes this fee. It just needs to be turned on.', 'sunshine-photo-cart' ), $name );
+			$link = __( 'Turn it on', 'sunshine-photo-cart' );
+		} else {
+			/* translators: %s is the add-on name, such as "Stripe Pro" */
+			$text = sprintf( __( 'The %s add-on removes this fee.', 'sunshine-photo-cart' ), $name );
+			$link = __( 'Learn more', 'sunshine-photo-cart' );
+		}
+		$target = $this->fee_addon_included_in_plan() ? '' : ' target="_blank"';
+		return $text . ' <a href="' . esc_url( $this->get_fee_addon_url() ) . '"' . $target . '>' . esc_html( $link ) . '</a>';
+	}
+
+	/**
+	 * Show the application fee on the main order screen, not only inside the
+	 * gateway's own tab, so it is visible alongside the other order totals.
+	 *
+	 * @param SPC_Order $order The order.
+	 * @return void
+	 */
+	public function admin_order_application_fee( $order ) {
+
+		if ( $order->get_payment_method() !== $this->id ) {
+			return;
+		}
+
+		$amount = $this->get_order_application_fee( $order );
+		if ( ! $amount ) {
+			return;
+		}
+
+		echo '<tr class="sunshine--order--application-fee">';
+		echo '<th>' . esc_html__( 'Sunshine Photo Cart fee', 'sunshine-photo-cart' ) . '</th>';
+		echo '<td>' . wp_kses_post( sunshine_price( $amount ) ) . '<br /><span class="description">' . wp_kses_post( $this->get_fee_addon_message() ) . '</span></td>';
+		echo '</tr>';
+
+	}
+
+	/**
+	 * Warn when a fee is being collected on every order but the customer's
+	 * license already covers the add-on that removes it. Without this the fee
+	 * is only visible inside an individual order.
+	 *
+	 * @return void
+	 */
+	public function admin_application_fee_notice() {
+
+		if ( ! current_user_can( 'sunshine_manage_options' ) ) {
+			return;
+		}
+
+		if ( ! $this->is_active() || $this->fee_addon_is_active() ) {
+			return;
+		}
+
+		if ( $this->get_effective_application_fee_percent() <= 0 || ! $this->fee_addon_included_in_plan() ) {
+			return;
+		}
+
+		$name = $this->fee_addon_name ? $this->fee_addon_name : $this->get_name();
+
+		echo '<div class="notice notice-warning">';
+		echo '<p><strong>' . sprintf(
+			/* translators: 1: fee percentage, 2: payment method name, such as "Stripe" */
+			esc_html__( 'Sunshine Photo Cart is taking a %1$s%% fee on every %2$s order.', 'sunshine-photo-cart' ),
+			esc_html( $this->get_effective_application_fee_percent() ),
+			esc_html( $this->get_name() )
+		) . '</strong> ';
+		echo sprintf(
+			/* translators: %s is the add-on name, such as "Stripe Pro" */
+			esc_html__( 'Your license already includes the %s add-on, which removes this fee, but it is not turned on yet.', 'sunshine-photo-cart' ),
+			esc_html( $name )
+		);
+		echo ' <a href="' . esc_url( $this->get_fee_addon_url() ) . '">' . esc_html__( 'Turn it on', 'sunshine-photo-cart' ) . '</a></p>';
+		echo '</div>';
+
 	}
 
 }

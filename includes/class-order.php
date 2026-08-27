@@ -894,11 +894,38 @@ class SPC_Order extends Sunshine_Data {
 		}
 	}
 
+	/**
+	 * The fee taken out of this order by Sunshine Photo Cart, if the payment
+	 * method collected one. Money that left the photographer, so it is not
+	 * part of their profit.
+	 *
+	 * @return float
+	 */
+	public function get_application_fee() {
+		$payment_method = $this->get_payment_method();
+		if ( empty( $payment_method ) || empty( SPC()->payment_methods ) ) {
+			return 0;
+		}
+		$payment_methods = SPC()->payment_methods->get_payment_methods();
+		if ( empty( $payment_methods[ $payment_method ] ) ) {
+			return 0;
+		}
+		return floatval( $payment_methods[ $payment_method ]->get_order_application_fee( $this ) );
+	}
+
+	public function get_application_fee_formatted() {
+		return sunshine_price( $this->get_application_fee() );
+	}
+
 	public function get_profit() {
-		$items = $this->get_items();
-		$cost  = 0;
-		$price = 0;
-		$fees  = floatval( $this->get_fees_total() );
+		$items           = $this->get_items();
+		$cost            = 0;
+		$price           = 0;
+		$fees            = floatval( $this->get_fees_total() );
+		$application_fee = $this->get_application_fee();
+		// Item totals already have any line item discounts taken off. Discount
+		// codes are held separately on the order, so they come off here.
+		$discount = floatval( $this->get_discount() );
 		if ( ! empty( $items ) ) {
 			foreach ( $items as $item ) {
 				$cost  += floatval( $item->get_meta_value( 'cost' ) ) * intval( $item->get_qty() );
@@ -908,7 +935,7 @@ class SPC_Order extends Sunshine_Data {
 		if ( $this->get_refunds() ) {
 			$price -= floatval( $this->get_refund_total() );
 		}
-		$profit = $price + $fees - $cost;
+		$profit = $price + $fees - $cost - $discount - $application_fee;
 		return max( $profit, 0 );
 	}
 

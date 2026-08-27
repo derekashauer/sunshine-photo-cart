@@ -58,21 +58,22 @@ jQuery( document ).ready(function($) {
             'addon': $( this ).val(),
             'addon_security': sunshine_admin.addon_security
         };
+        var showAddonError = function( message ) {
+            addon.prop( 'checked', false );
+            addon.closest( '.sunshine--addon--actions' ).append( '<div class="sunshine--addon--error">' + message + '</div>' );
+        };
         $.post( ajaxurl, data, function( response ) {
-            if ( response.data.status == 'active' ) {
+            var result = ( response && response.data ) ? response.data : {};
+            if ( result.status == 'active' ) {
                 addon.prop( 'checked', true );
-            } else {
+            } else if ( result.status == 'inactive' ) {
                 addon.prop( 'checked', false );
-                if ( response.data.reason ) {
-                    addon.closest( '.sunshine--addon--actions' ).append( '<div class="sunshine--addon--error">' + response.data.reason + '</div>' );
-                    setTimeout(function() {
-                      // Fade out and remove the element
-                      $('.sunshine--addon--error').fadeOut(500, function() {
-                        $(this).remove();
-                      });
-                    }, 5000);
-                }
+            } else {
+                showAddonError( result.reason || sunshine_admin.addon_error_generic );
             }
+        }).fail( function() {
+            showAddonError( sunshine_admin.addon_error_request );
+        }).always( function() {
             addon.parent( '.sunshine-switch' ).removeClass( 'sunshine-loading' );
         });
     });
