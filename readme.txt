@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 3.7-beta1
+Stable tag: 3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,7 +243,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.7 =
+= 3.7 - August 27, 2026 =
 * New: Billing address is now its own step at checkout, so you can record the address of the person paying even when the order is being shipped somewhere else. Invoices need the buyer's address, and the buyer is not always who the parcel goes to. On orders that ship, the customer gets a "use shipping address as billing address" box that is already ticked, so nothing extra to fill in unless the two differ
 * Change: The "Always collect an address" setting is now "Always collect a billing address" and applies to every order, not only orders with nothing to ship
 * Change: Payment methods that require a billing address, such as Square, now collect it at its own step rather than partway through the payment step
