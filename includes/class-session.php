@@ -291,16 +291,34 @@ class SPC_Session {
 			return false;
 		}
 
-		$session = array(
-			'session_id' => $this->session_id,
-			'data'       => ( ! empty( $this->data ) ) ? maybe_serialize( $this->data ) : '',
-			'expiration' => $this->expiration,
-		);
-		$result  = $wpdb->replace( "{$wpdb->prefix}sunshine_sessions", $session );
-		if ( false === $result ) {
-			SPC()->log( 'Session write failed for session ' . $this->session_id . ': ' . $wpdb->last_error );
+		// This runs on `shutdown` at priority 0, so it is the first query of the shutdown
+		// phase. If the request already broke the database connection, writing here just
+		// fills the log with errors. Bail quietly instead.
+		if ( method_exists( $wpdb, 'check_connection' ) && ! $wpdb->check_connection( false ) ) {
+			return false;
 		}
 
+		// Deliberately not $wpdb->replace(). That helper calls get_col_charset() for every
+		// string column, which fires a `SHOW FULL COLUMNS FROM ...` before the write. On a
+		// healthy site that is a wasted query on every session write; on an unhealthy one
+		// it fails first and replace() then gives up without ever attempting the write, so
+		// the session is silently lost. A prepared statement skips all of that.
+		$result = $wpdb->query(
+			$wpdb->prepare(
+				"REPLACE INTO {$wpdb->prefix}sunshine_sessions ( session_id, data, expiration ) VALUES ( %s, %s, %d )",
+				$this->session_id,
+				( ! empty( $this->data ) ) ? maybe_serialize( $this->data ) : '',
+				$this->expiration
+			)
+		);
+
+		if ( false === $result ) {
+			// Do not call SPC()->log() here. It reads an option, which means another query
+			// on a connection that just failed, turning one error into several.
+			return false;
+		}
+
+		return true;
 	}
 
 	public function json_out() {
@@ -501,9 +519,24 @@ class SPC_Session {
 
 		SPC()->log( 'Cleaning up sessions' );
 
-		$now    = current_time( 'timestamp' );
-		$result = $wpdb->query( "DELETE FROM {$wpdb->prefix}sunshine_sessions WHERE expiration <= '{$now}'" );
-		SPC()->log( 'Deleted ' . $result . ' sessions' );
+		// set_expiration() stores time(), which is UTC. Comparing against
+		// current_time( 'timestamp' ) added the site's UTC offset, so sessions were
+		// deleted early by that offset — ten hours early in Sydney, taking carts,
+		// gallery passwords and favorites with them.
+		$now = time();
+
+		// Delete in bounded chunks. An unbounded DELETE against this table is a full
+		// scan that holds locks while write_data() is trying to write to it.
+		$deleted = 0;
+		do {
+			$result = $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}sunshine_sessions WHERE expiration <= %d LIMIT 500", $now ) );
+			if ( ! $result ) {
+				break;
+			}
+			$deleted += $result;
+		} while ( $result >= 500 );
+
+		SPC()->log( 'Deleted ' . $deleted . ' sessions' );
 
 		// Allow other plugins to hook in to the garbage collection process.
 		do_action( 'sunshine_session_cleanup' );

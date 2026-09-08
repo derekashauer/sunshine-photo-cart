@@ -567,15 +567,21 @@ class SPC_Customer extends WP_User {
 	public function get_galleries() {
 		global $wpdb;
 
-		$like_value = '%"' . $wpdb->esc_like( $this->ID ) . '"%';
+		// User IDs are stored as strings by the gallery editor but as integers by quick
+		// edit, bulk edit, bulk gallery creation and the API, so match both serialized
+		// forms. can_view() re-checks membership below, which drops the rare case of the
+		// integer pattern matching an array index rather than a value.
+		$like_string = '%"' . $wpdb->esc_like( $this->ID ) . '"%';
+		$like_int    = '%;i:' . $wpdb->esc_like( $this->ID ) . ';%';
 
 		$gallery_ids = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT DISTINCT p.ID FROM {$wpdb->posts} p
 			INNER JOIN {$wpdb->postmeta} pm_status ON p.ID = pm_status.post_id AND pm_status.meta_key = 'status' AND pm_status.meta_value = 'private'
-			INNER JOIN {$wpdb->postmeta} pm_users ON p.ID = pm_users.post_id AND pm_users.meta_key = 'private_users' AND pm_users.meta_value LIKE %s
+			INNER JOIN {$wpdb->postmeta} pm_users ON p.ID = pm_users.post_id AND pm_users.meta_key = 'private_users' AND ( pm_users.meta_value LIKE %s OR pm_users.meta_value LIKE %s )
 			WHERE p.post_type = 'sunshine-gallery' AND p.post_status = 'publish'",
-				$like_value
+				$like_string,
+				$like_int
 			)
 		);
 
@@ -589,8 +595,10 @@ class SPC_Customer extends WP_User {
 			'posts_per_page' => -1,
 			'post__in'       => $gallery_ids,
 		);
-		$args      = apply_filters( 'sunshine_customer_get_galleries_args', $args );
-		$galleries = sunshine_get_galleries( $args );
+		$args = apply_filters( 'sunshine_customer_get_galleries_args', $args );
+		// Use "view" so a gallery assigned to this customer is still listed once it has
+		// expired, rather than the account area going blank with no explanation.
+		$galleries = sunshine_get_galleries( $args, 'view' );
 		return $galleries;
 	}
 

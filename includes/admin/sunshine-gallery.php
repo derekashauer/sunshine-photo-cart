@@ -1296,6 +1296,7 @@ function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json
 						'watermark'     => $apply_watermark,
 					)
 				);
+				sunshine_gallery_processing_add( $gallery_id );
 				$process_images->save();
 				$process_images->dispatch();
 				SPC()->log( 'Delay Processing: Queued attachment ' . $attachment_id . ' for background processing' );
@@ -1317,6 +1318,11 @@ function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json
 		unset( $GLOBALS['sunshine_current_upload_path'] );
 
 		$image_ids = $gallery->add_image_id( $attachment_id );
+
+		// Every route an image can take into a gallery -- admin upload, FTP import,
+		// Bulk Galleries, the API -- comes through here, so this is the one place that
+		// needs to know the gallery has changed.
+		sunshine_gallery_image_added( $gallery_id );
 
 		$return = array(
 			'image_id'   => $attachment_id,

@@ -503,6 +503,12 @@ function sunshine_customize_admin_toolbar() {
 CUSTOM IMAGE UPLOAD LOCATION
  ***********************/
 function sunshine_doing_upload( $gallery_id ) {
+	// A constant can only be set once per request, but the background queue processes
+	// images from several galleries in a single run. Track the current gallery in a
+	// global so each image lands in its own folder; SUNSHINE_UPLOAD is still defined
+	// for anything outside the plugin that reads it.
+	$GLOBALS['sunshine_upload_gallery_id'] = intval( $gallery_id );
+
 	if ( ! defined( 'SUNSHINE_UPLOAD' ) ) {
 		define( 'SUNSHINE_UPLOAD', intval( $gallery_id ) );
 	}
@@ -529,8 +535,13 @@ function sunshine_upload_image_sizes( $sizes ) {
 }
 
 function sunshine_custom_upload_dir( $param ) {
-	if ( ! empty( SUNSHINE_UPLOAD ) && 'sunshine-gallery' == get_post_type( SUNSHINE_UPLOAD ) ) {
-		$custom_directory = '/sunshine/' . SUNSHINE_UPLOAD;
+	$gallery_id = ! empty( $GLOBALS['sunshine_upload_gallery_id'] ) ? intval( $GLOBALS['sunshine_upload_gallery_id'] ) : 0;
+	if ( ! $gallery_id && defined( 'SUNSHINE_UPLOAD' ) ) {
+		$gallery_id = intval( SUNSHINE_UPLOAD );
+	}
+
+	if ( ! empty( $gallery_id ) && 'sunshine-gallery' == get_post_type( $gallery_id ) ) {
+		$custom_directory = '/sunshine/' . $gallery_id;
 		$param['path']    = $param['basedir'] . $custom_directory;
 		$param['url']     = $param['baseurl'] . $custom_directory;
 	}

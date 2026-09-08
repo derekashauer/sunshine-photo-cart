@@ -1212,7 +1212,7 @@ button.sunshine--multi-image-select--open { visibility: hidden; }
 	#sunshine .sunshine--main-menu input[type="checkbox"]:checked ~ .sunshine--main-menu--open { display: none; }
 	#sunshine .sunshine--main-menu input[type="checkbox"]:checked ~ .sunshine--main-menu--close { display: block !important; margin: 0 0 15px 0; }
 	#sunshine .sunshine--main-menu ul { flex-direction: column; text-align: center; }
-	#sunshine .sunshine--main-menu li { display: block !important; text-align: center !important; }
+	#sunshine .sunshine--main-menu li { display: block !important; text-align: center !important; margin-left: 0 !important; margin-right: 0 !important; }
 
 	/* Action Menu */
 	#sunshine .sunshine--action-menu ul { flex-direction: column; gap: 5px; }

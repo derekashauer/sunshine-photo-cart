@@ -50,6 +50,7 @@ class Sunshine_Admin {
 
 		// Check that Sunshine has been installed.
 		add_action( 'admin_notices', array( $this, 'install_notice' ), 5 );
+		add_action( 'admin_notices', array( $this, 'image_queue_notice' ), 5 );
 
 		// In-app promos from sunshinephotocart.com
 		add_action( 'admin_notices', array( $this, 'in_app_promos' ), 4 );
@@ -586,6 +587,50 @@ class Sunshine_Admin {
 			/* translators: %s is the URL to settings page */
 			SPC()->notices->add_admin( 'log', sprintf( __( 'Sunshine logging is enabled. <a href="%s">Please disable when no longer in use.</a>', 'sunshine-photo-cart' ), admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine' ) ), 'notice' );
 		}
+	}
+
+	/**
+	 * Warn when images are queued for background processing but nothing is scheduled
+	 * to process them.
+	 *
+	 * Without this a stalled queue is invisible: galleries sit unfinished and the only
+	 * clue is that thumbnails never appear.
+	 */
+	function image_queue_notice() {
+		if ( ! current_user_can( 'sunshine_manage_options' ) ) {
+			return;
+		}
+
+		$queued = sunshine_get_image_queue_count();
+		if ( ! $queued ) {
+			return;
+		}
+
+		// Currently running, or due to run — nothing to warn about.
+		if ( get_site_transient( 'spc_process_images_process_lock' ) ) {
+			return;
+		}
+
+		$next = wp_next_scheduled( 'spc_process_images_cron' );
+		if ( $next && $next > ( time() - ( 15 * MINUTE_IN_SECONDS ) ) ) {
+			return;
+		}
+
+		SPC()->notices->add_admin(
+			'image_queue_stalled',
+			sprintf(
+				/* translators: 1: number of images waiting, 2: URL to the tools page */
+				_n(
+					'%1$d image is waiting to be processed but nothing is scheduled to process it. This usually means WordPress cron is not running. <a href="%2$s">Check your system information</a>.',
+					'%1$d images are waiting to be processed but nothing is scheduled to process them. This usually means WordPress cron is not running. <a href="%2$s">Check your system information</a>.',
+					$queued,
+					'sunshine-photo-cart'
+				),
+				$queued,
+				admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-system-info' )
+			),
+			'error'
+		);
 	}
 
 	function install_notice() {

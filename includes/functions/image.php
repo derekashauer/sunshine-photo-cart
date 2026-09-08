@@ -418,3 +418,59 @@ function sunshine_handle_lab_file() {
 	readfile( $local_path );
 	exit;
 }
+
+/**
+ * How many images are still waiting in the background processing queue, site-wide.
+ *
+ * @return int
+ */
+function sunshine_get_image_queue_count() {
+	global $wpdb;
+
+	$table  = $wpdb->options;
+	$column = 'option_name';
+	$value  = 'option_value';
+
+	if ( is_multisite() ) {
+		$table  = $wpdb->sitemeta;
+		$column = 'meta_key';
+		$value  = 'meta_value';
+	}
+
+	$rows = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT {$value} FROM {$table} WHERE {$column} LIKE %s",
+			$wpdb->esc_like( 'spc_process_images_batch_' ) . '%'
+		)
+	);
+
+	// Each row holds a batch, so count the items rather than the rows.
+	$count = 0;
+	foreach ( (array) $rows as $row ) {
+		$batch = maybe_unserialize( $row );
+		$count += is_array( $batch ) ? count( $batch ) : 1;
+	}
+
+	return $count;
+}
+
+/**
+ * Human-readable description of when the image queue is next due to run.
+ *
+ * @return string
+ */
+function sunshine_get_image_queue_next_run() {
+	$next = wp_next_scheduled( 'spc_process_images_cron' );
+
+	if ( ! $next ) {
+		return sunshine_get_image_queue_count() ? 'NOT SCHEDULED (queue is stalled)' : 'Not scheduled (queue empty)';
+	}
+
+	$seconds = $next - time();
+
+	if ( $seconds <= 0 ) {
+		return 'Overdue by ' . human_time_diff( $next ) . ' (cron may not be running)';
+	}
+
+	return 'in ' . human_time_diff( time(), $next );
+}

@@ -26,9 +26,17 @@ function maybe_sunshine_create_custom_tables() {
 			session_id char(32) NOT NULL,
 			data LONGTEXT NOT NULL,
 			expiration BIGINT(20) UNSIGNED NOT NULL,
-			PRIMARY KEY  (session_id)
+			PRIMARY KEY  (session_id),
+			KEY expiration (expiration)
 		) $collate;"
 	);
+
+	// Existing installs were created without this index, which made garbage
+	// collection a full table scan.
+	$has_expiration_index = $wpdb->get_var( "SHOW INDEX FROM {$wpdb->prefix}sunshine_sessions WHERE Key_name = 'expiration'" );
+	if ( ! $has_expiration_index ) {
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}sunshine_sessions ADD KEY expiration (expiration)" );
+	}
 
 	$created = maybe_create_table(
 		"{$wpdb->prefix}sunshine_order_items",

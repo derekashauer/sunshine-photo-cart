@@ -27,8 +27,11 @@ class SPC_Background_Processing {
 			$this->delete_gallery_images = new SPC_Background_Delete_Gallery_Images();
 		}
 
-		// Initialize process_images if option is enabled and not already initialized
-		if ( ! $this->process_images && SPC()->get_option( 'delay_image_processing' ) ) {
+		// Always load the image queue, even when delayed processing is switched off.
+		// Constructing it only registers hooks; whether anything gets queued is decided
+		// at upload time. Loading it unconditionally means a queue left behind when the
+		// setting is turned off can still finish draining instead of being stranded.
+		if ( ! $this->process_images ) {
 			require_once SUNSHINE_PHOTO_CART_PATH . 'includes/background/process-images.php';
 			$this->process_images = new SPC_Background_Process_Images();
 		}
@@ -47,7 +50,7 @@ class SPC_Background_Processing {
 	 * @return SPC_Background_Process_Images|null
 	 */
 	public function get_process_images() {
-		if ( ! $this->process_images && SPC()->get_option( 'delay_image_processing' ) ) {
+		if ( ! $this->process_images ) {
 			require_once SUNSHINE_PHOTO_CART_PATH . 'includes/background/process-images.php';
 			$this->process_images = new SPC_Background_Process_Images();
 		}

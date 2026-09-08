@@ -1,7 +1,7 @@
 <?php
 add_action(
 	'admin_notices',
-	function() {
+	function () {
 		if ( isset( $_GET['sunshine_tracking_send'] ) && current_user_can( 'manage_options' ) ) {
 			sunshine_tracking_send();
 		}
@@ -14,7 +14,7 @@ function sunshine_tracking_send() {
 
 	$allow_tracking = get_option( 'sunshine_tracking_allow' );
 	if ( ! $allow_tracking ) {
-		// return;
+		return;
 	}
 
 	include_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -169,5 +169,4 @@ function sunshine_tracking_send() {
 			'body'      => $data,
 		)
 	);
-
 }

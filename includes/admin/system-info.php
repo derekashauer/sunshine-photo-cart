@@ -144,6 +144,11 @@ ImageMagick:
 	echo "\n";
 	?>
 Image Quality:            <?php echo esc_html( apply_filters( 'jpeg_quality', 60 ) ); ?>
+
+Delay Image Processing:   <?php echo SPC()->get_option( 'delay_image_processing' ) ? "Enabled\n" : "Disabled\n"; ?>
+Images Awaiting Processing: <?php echo esc_html( sunshine_get_image_queue_count() ) . "\n"; ?>
+Image Queue Running:      <?php echo get_site_transient( 'spc_process_images_process_lock' ) ? "Yes\n" : "No\n"; ?>
+Image Queue Next Run:     <?php echo esc_html( sunshine_get_image_queue_next_run() ) . "\n"; ?>
 	<?php do_action( 'sunshine_sunshine_info' ); ?>
 
 

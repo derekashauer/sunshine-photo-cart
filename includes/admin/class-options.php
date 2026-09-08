@@ -389,6 +389,11 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 					if ( ! empty( $option_value ) ) {
 						foreach ( $option_value as $gallery_id ) {
 							$gallery = sunshine_get_gallery( $gallery_id );
+							// Skip anything that has since been deleted, otherwise the picker
+							// shows a blank entry and keeps saving the stale ID back.
+							if ( empty( $gallery->get_id() ) ) {
+								continue;
+							}
 							$html   .= '<option value="' . esc_attr( $gallery_id ) . '" selected="selected">' . esc_html( $gallery->get_name() ) . '</option>';
 						}
 					}
@@ -432,6 +437,11 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 					if ( ! empty( $option_value ) ) {
 						foreach ( $option_value as $product_id ) {
 							$product = sunshine_get_product( $product_id );
+							// Skip anything that has since been deleted, otherwise the picker
+							// shows a blank entry and keeps saving the stale ID back.
+							if ( empty( $product->get_id() ) ) {
+								continue;
+							}
 							$html   .= '<option value="' . esc_attr( $product_id ) . '" selected="selected">' . esc_html( $product->get_name() ) . '</option>';
 						}
 					}

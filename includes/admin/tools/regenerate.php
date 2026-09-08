@@ -132,6 +132,11 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			}
 			return array_slice( $all, $offset, $size );
 		}
+		// Order explicitly by ID. The queue is walked one offset at a time over
+		// what can be hours, and the default ordering (post_date, no tiebreaker)
+		// is not stable when a bulk import gives thousands of attachments the
+		// same date, so images were being regenerated twice while others were
+		// never reached.
 		$query = new WP_Query( array(
 			'post_type'      => 'attachment',
 			'post_status'    => 'any',
@@ -139,6 +144,8 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			'posts_per_page' => $size,
 			'fields'         => 'ids',
 			'meta_key'       => 'sunshine_file_name',
+			'orderby'        => 'ID',
+			'order'          => 'ASC',
 		) );
 		return (array) $query->posts;
 	}
@@ -321,9 +328,18 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			}
 		}
 
+		// Save the new metadata BEFORE the hooks below, not after. Both of them
+		// read it back: the watermark reads $metadata['sizes'][ $size ]['file']
+		// to find the file to stamp, and Cloud Storage reads the same array to
+		// decide which sizes to upload. With the save happening afterwards they
+		// both saw the pre-regeneration sizes, so whenever the rebuilt files were
+		// named differently the watermark bailed out with "File does not exist
+		// during watermarking" and the upload silently skipped every size it
+		// could not find on disk.
+		wp_update_attachment_metadata( $image_id, $new_metadata );
+
 		do_action( 'sunshine_regenerate_image', $image_id );
 		do_action( 'sunshine_after_image_process', $image_id, $file_path, $watermark );
-		wp_update_attachment_metadata( $image_id, $new_metadata );
 
 		return array(
 			'ok'       => true,
@@ -509,21 +525,28 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 		$item_number     = intval( $_POST['item_number'] );
 		$apply_watermark = isset( $_POST['apply_watermark'] ) ? sanitize_text_field( wp_unslash( $_POST['apply_watermark'] ) ) : '';
 
-		if ( ! empty( $_POST['gallery'] ) ) {
-			$gallery   = sunshine_get_gallery( intval( $_POST['gallery'] ) );
-			$image_ids = $gallery->get_image_ids();
-			$image_id  = $image_ids[ $item_number ];
-		} else {
-			$args     = array(
-				'post_type'      => 'attachment',
-				'post_status'    => 'inherit',
-				'offset'         => $item_number,
-				'posts_per_page' => 1,
-				'meta_key'       => 'sunshine_file_name',
+		$gallery_id = ( ! empty( $_POST['gallery'] ) ) ? intval( wp_unslash( $_POST['gallery'] ) ) : 0;
+
+		// Resolve through the shared collector rather than a second query of its
+		// own. This path used to ask for post_status 'inherit' while the total
+		// shown on screen counted 'any', so the two could disagree and the tail
+		// of the run read ->ID off an empty result and fataled.
+		$image_ids = $this->collect_image_ids( $gallery_id, $item_number, 1 );
+
+		if ( empty( $image_ids ) ) {
+			SPC()->log( 'Regenerate: no image found at position ' . $item_number );
+			wp_send_json(
+				array(
+					'status'   => 'error',
+					'file'     => '',
+					'image_id' => 0,
+					'error'    => __( 'No image found at this position. It may have been deleted since this run started.', 'sunshine-photo-cart' ),
+				)
 			);
-			$query    = new WP_Query( $args );
-			$image_id = $query->posts[0]->ID;
+			return;
 		}
+
+		$image_id = (int) reset( $image_ids );
 
 		$result = $this->regenerate_one( $image_id, $apply_watermark );
 

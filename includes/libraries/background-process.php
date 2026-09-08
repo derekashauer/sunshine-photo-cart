@@ -288,9 +288,24 @@ abstract class SPC_Background_Process extends SPC_Async_Request {
 			)
 		);
 
-		$batch       = new stdClass();
+		$batch = new stdClass();
+
+		// The row can disappear between is_queue_empty() and this SELECT when more
+		// than one process is draining the queue. Return an empty batch instead of
+		// fataling on a null $query, which would leave the lock set and no reschedule.
+		if ( ! $query ) {
+			$batch->key  = '';
+			$batch->data = array();
+
+			return $batch;
+		}
+
 		$batch->key  = $query->$column;
 		$batch->data = maybe_unserialize( $query->$value_column );
+
+		if ( ! is_array( $batch->data ) ) {
+			$batch->data = array();
+		}
 
 		return $batch;
 	}
@@ -304,8 +319,18 @@ abstract class SPC_Background_Process extends SPC_Async_Request {
 	protected function handle() {
 		$this->lock_process();
 
+		// Give the run room to finish a batch. Without this a default 30s PHP limit
+		// can kill the request part way through an item, leaving the lock set and
+		// the batch unwritten.
+		@set_time_limit( $this->get_time_limit() + 60 );
+
 		do {
 			$batch = $this->get_batch();
+
+			// Nothing left to work on (the row was claimed by another process).
+			if ( empty( $batch->key ) ) {
+				break;
+			}
 
 			foreach ( $batch->data as $key => $value ) {
 				$task = $this->task( $value );
@@ -339,7 +364,8 @@ abstract class SPC_Background_Process extends SPC_Async_Request {
 			$this->complete();
 		}
 
-		wp_die();
+		// No wp_die() here. maybe_handle() already ends the ajax request, and calling
+		// it from a cron run would abort every cron event queued after this one.
 	}
 
 	/**
@@ -384,6 +410,19 @@ abstract class SPC_Background_Process extends SPC_Async_Request {
 	}
 
 	/**
+	 * How long a single run may work for, in seconds.
+	 *
+	 * Subclasses set $run_time_limit to change it; the filter still wins.
+	 *
+	 * @return int
+	 */
+	protected function get_time_limit() {
+		$limit = property_exists( $this, 'run_time_limit' ) ? $this->run_time_limit : 20;
+
+		return (int) apply_filters( $this->identifier . '_default_time_limit', $limit );
+	}
+
+	/**
 	 * Time exceeded.
 	 *
 	 * Ensures the batch never exceeds a sensible time limit.
@@ -392,7 +431,7 @@ abstract class SPC_Background_Process extends SPC_Async_Request {
 	 * @return bool
 	 */
 	protected function time_exceeded() {
-		$finish = $this->start_time + apply_filters( $this->identifier . '_default_time_limit', 20 ); // 20 seconds
+		$finish = $this->start_time + $this->get_time_limit();
 		$return = false;
 
 		if ( time() >= $finish ) {
@@ -446,16 +485,20 @@ abstract class SPC_Background_Process extends SPC_Async_Request {
 	 * and data exists in the queue.
 	 */
 	public function handle_cron_healthcheck() {
-		// Check if we're in an upload context - if so, skip processing to avoid synchronous execution
-		// WordPress cron runs on shutdown, which means it can run during the same request as the upload
-		$post_action    = isset( $_POST['action'] ) ? $_POST['action'] : '';
-		$request_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : '';
-		$is_upload      = ( $post_action === 'sunshine_gallery_upload' || $request_action === 'sunshine_gallery_upload' );
+		// As of WordPress 6.9 _wp_cron() runs on the `shutdown` action, so without this
+		// guard an ordinary page view can have a full batch of image processing bolted
+		// onto its shutdown. That makes the visitor wait, and if PHP's time limit kills
+		// the request mid-query every later query in it fails ("Commands out of sync").
+		//
+		// DOING_CRON is defined for a real wp-cron.php request (including the loopback
+		// WordPress spawns for itself); `doing_wp_cron` covers the query-arg form. If
+		// neither is set we are piggybacking on someone's page load, so hand the work
+		// off to its own request instead of doing it here.
+		if ( ! $this->is_cron_request() ) {
+			if ( ! $this->is_queue_empty() ) {
+				$this->dispatch();
+			}
 
-		// If this is being called during an upload request and NOT from wp-cron.php, skip it
-		// DOING_CRON is only defined when wp-cron.php is called directly, not when cron runs on shutdown
-		// So we check if we're in an upload context AND not in a true cron context
-		if ( $is_upload && ! defined( 'DOING_CRON' ) && ! isset( $_GET['doing_wp_cron'] ) ) {
 			return;
 		}
 
@@ -463,34 +506,74 @@ abstract class SPC_Background_Process extends SPC_Async_Request {
 
 		if ( $this->is_process_running() ) {
 			// Background process already running.
-			exit;
+			return;
 		}
 
 		if ( $this->is_queue_empty() ) {
 			// No data to process.
 			$this->clear_scheduled_event();
-			exit;
+
+			return;
 		}
 
 		$this->handle();
+	}
 
-		exit;
+	/**
+	 * Whether this request is a genuine cron run rather than a page load that
+	 * happens to be firing cron on shutdown.
+	 *
+	 * @return bool
+	 */
+	protected function is_cron_request() {
+		return ( defined( 'DOING_CRON' ) && DOING_CRON ) || isset( $_GET['doing_wp_cron'] );
 	}
 
 	/**
 	 * Schedule event
 	 */
 	protected function schedule_event() {
-		if ( ! wp_next_scheduled( $this->cron_hook_identifier ) ) {
-			// Schedule recurring event starting 1 minute in the future
-			// This prevents it from running immediately on shutdown during the same request
-			// The single events scheduled in dispatch() will handle immediate processing
-			$start_time = time() + 60;
-			$scheduled  = wp_schedule_event( $start_time, $this->cron_interval_identifier, $this->cron_hook_identifier );
-			if ( is_wp_error( $scheduled ) ) {
-				SPC()->log( 'Background process: Failed to schedule cron event - ' . $scheduled->get_error_message() );
+		// Deliberately checks for a *recurring* event rather than any event. A pending
+		// one-off would otherwise satisfy wp_next_scheduled() and the recurring backstop
+		// would never get created — which is how the queue could stall permanently.
+		if ( $this->has_recurring_event() ) {
+			return;
+		}
+
+		// Start 1 minute out so it does not run on this request's shutdown. The one-off
+		// event scheduled in dispatch() handles starting promptly; this only exists to
+		// recover a queue whose one-off event was lost.
+		$start_time = time() + 60;
+		$scheduled  = wp_schedule_event( $start_time, $this->cron_interval_identifier, $this->cron_hook_identifier );
+		if ( is_wp_error( $scheduled ) ) {
+			SPC()->log( 'Background process: Failed to schedule cron event - ' . $scheduled->get_error_message() );
+		}
+	}
+
+	/**
+	 * Whether a recurring healthcheck event is already scheduled for this queue.
+	 *
+	 * @return bool
+	 */
+	protected function has_recurring_event() {
+		$crons = _get_cron_array();
+		if ( empty( $crons ) || ! is_array( $crons ) ) {
+			return false;
+		}
+
+		foreach ( $crons as $events ) {
+			if ( ! isset( $events[ $this->cron_hook_identifier ] ) ) {
+				continue;
+			}
+
+			foreach ( $events[ $this->cron_hook_identifier ] as $event ) {
+				if ( ! empty( $event['schedule'] ) ) {
+					return true;
+				}
 			}
 		}
+
+		return false;
 	}
 
 	/**

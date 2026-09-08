@@ -482,6 +482,11 @@ class Sunshine_Admin_Meta_Boxes {
 				if ( ! empty( $meta_value ) ) {
 					foreach ( $meta_value as $user_id ) {
 						$customer = sunshine_get_customer( $user_id );
+						// Skip anything that has since been deleted, otherwise the picker
+						// shows a blank entry and keeps saving the stale ID back.
+						if ( empty( $customer->get_id() ) ) {
+							continue;
+						}
 						$html    .= '<option value="' . esc_attr( $user_id ) . '" selected="selected">' . esc_html( $customer->get_name() ) . ' (' . esc_html( $customer->get_email() ) . ')</option>';
 					}
 				}
@@ -527,6 +532,11 @@ class Sunshine_Admin_Meta_Boxes {
 				if ( ! empty( $meta_value ) ) {
 					foreach ( $meta_value as $gallery_id ) {
 						$gallery = sunshine_get_gallery( $gallery_id );
+						// Skip anything that has since been deleted, otherwise the picker
+						// shows a blank entry and keeps saving the stale ID back.
+						if ( empty( $gallery->get_id() ) ) {
+							continue;
+						}
 						$html   .= '<option value="' . esc_attr( $gallery_id ) . '" selected="selected">' . esc_html( $gallery->get_name() ) . '</option>';
 					}
 				}
@@ -573,6 +583,11 @@ class Sunshine_Admin_Meta_Boxes {
 				if ( ! empty( $meta_value ) ) {
 					foreach ( $meta_value as $post_id ) {
 						$this_post = sunshine_get_product( $post_id );
+						// Skip anything that has since been deleted, otherwise the picker
+						// shows a blank entry and keeps saving the stale ID back.
+						if ( empty( $this_post->get_id() ) ) {
+							continue;
+						}
 						$html     .= '<option value="' . esc_attr( $post_id ) . '" selected="selected">' . esc_html( $this_post->get_name() ) . '</option>';
 					}
 				}
@@ -958,6 +973,18 @@ class Sunshine_Admin_Meta_Boxes {
 			case 'single_select_page':
 			case 'image':
 				$value = intval( $value );
+				break;
+
+			case 'users':
+				// Store user IDs as integers, matching quick edit, bulk edit and the API,
+				// so every save path writes the same format.
+				$value = array_values( array_filter( array_map( 'absint', (array) $value ) ) );
+				break;
+
+			case 'galleries':
+			case 'products':
+				// Same as users: always store an array of integer post IDs.
+				$value = array_values( array_filter( array_map( 'absint', (array) $value ) ) );
 				break;
 
 			default:

@@ -30,7 +30,7 @@ class SPC_Payment_Method {
 
 		if ( is_admin() && $this->fee_addon_slug ) {
 			add_action( 'sunshine_admin_order_totals', array( $this, 'admin_order_application_fee' ), 5 );
-			add_action( 'admin_notices', array( $this, 'admin_application_fee_notice' ) );
+			add_action( 'admin_init', array( $this, 'maybe_add_application_fee_notice' ) );
 		}
 	}
 
@@ -385,38 +385,44 @@ class SPC_Payment_Method {
 	 * license already covers the add-on that removes it. Without this the fee
 	 * is only visible inside an individual order.
 	 *
+	 * Registered through SPC_Notices so it can be dismissed like any other
+	 * Sunshine admin notice. Stored as permanent so the dismissal sticks.
+	 *
 	 * @return void
 	 */
-	public function admin_application_fee_notice() {
+	public function maybe_add_application_fee_notice() {
 
-		if ( ! current_user_can( 'sunshine_manage_options' ) ) {
+		if ( empty( SPC()->notices ) || ! current_user_can( 'sunshine_manage_options' ) ) {
 			return;
 		}
 
-		if ( ! $this->is_active() || $this->fee_addon_is_active() ) {
-			return;
-		}
+		$key = 'application_fee_' . $this->id;
 
-		if ( $this->get_effective_application_fee_percent() <= 0 || ! $this->fee_addon_included_in_plan() ) {
+		if ( ! $this->is_active() || $this->fee_addon_is_active() || $this->get_effective_application_fee_percent() <= 0 || ! $this->fee_addon_included_in_plan() ) {
+			// No longer applies. Removing it means the warning comes back if the
+			// add-on is ever turned off again, rather than staying dismissed.
+			SPC()->notices->delete_admin( $key );
 			return;
 		}
 
 		$name = $this->fee_addon_name ? $this->fee_addon_name : $this->get_name();
 
-		echo '<div class="notice notice-warning">';
-		echo '<p><strong>' . sprintf(
+		$text = '<strong>' . sprintf(
 			/* translators: 1: fee percentage, 2: payment method name, such as "Stripe" */
 			esc_html__( 'Sunshine Photo Cart is taking a %1$s%% fee on every %2$s order.', 'sunshine-photo-cart' ),
 			esc_html( $this->get_effective_application_fee_percent() ),
 			esc_html( $this->get_name() )
 		) . '</strong> ';
-		echo sprintf(
+
+		$text .= sprintf(
 			/* translators: %s is the add-on name, such as "Stripe Pro" */
 			esc_html__( 'Your license already includes the %s add-on, which removes this fee, but it is not turned on yet.', 'sunshine-photo-cart' ),
 			esc_html( $name )
 		);
-		echo ' <a href="' . esc_url( $this->get_fee_addon_url() ) . '">' . esc_html__( 'Turn it on', 'sunshine-photo-cart' ) . '</a></p>';
-		echo '</div>';
+
+		$text .= ' <a href="' . esc_url( $this->get_fee_addon_url() ) . '">' . esc_html__( 'Turn it on', 'sunshine-photo-cart' ) . '</a>';
+
+		SPC()->notices->add_admin( $key, $text, 'warning', true );
 
 	}
 

@@ -855,13 +855,19 @@ class SPC_Order extends Sunshine_Data {
 		if ( is_user_logged_in() && get_current_user_id() == $this->get_customer_id() ) { // logged in user is for this user
 			return true;
 		}
-		if ( empty( $order_key ) ) {
-			$order_key = $_GET['order_key'];
+		if ( empty( $order_key ) && isset( $_GET['order_key'] ) ) {
+			$order_key = sanitize_text_field( wp_unslash( $_GET['order_key'] ) );
 		}
-		if ( $order_key == $this->get_order_key() ) {
-			return true;
+
+		$stored_key = $this->get_order_key();
+
+		// Both sides must be present. A loose comparison of two empty values passes,
+		// which would let anyone view an order that has no key stored.
+		if ( empty( $order_key ) || empty( $stored_key ) ) {
+			return false;
 		}
-		return false;
+
+		return hash_equals( (string) $stored_key, (string) $order_key );
 	}
 
 	public function has_refunds() {

@@ -19,31 +19,64 @@ class SPC_Background_Process_Images extends SPC_Background_Process {
 	protected $cron_interval = 1;
 
 	/**
-	 * Dispatch the async request
+	 * How long a single run may work for, in seconds.
 	 *
-	 * Override to skip async request and rely on cron only for faster uploads
-	 * The async request was causing synchronous processing, slowing down uploads
+	 * The library default is 20, which on a site with cron firing once a minute
+	 * means the queue works for 20 seconds and idles for 40.
+	 *
+	 * @var int
+	 */
+	protected $run_time_limit = 60;
+
+	/**
+	 * Lock duration. Must be longer than the run budget, or a second run can start
+	 * on top of one that is still going.
+	 *
+	 * @var int
+	 */
+	protected $queue_lock_time = 120;
+
+	/**
+	 * Dispatch the next run.
+	 *
+	 * Two different situations end up here and they need different handling:
+	 *
+	 * - Called from the upload request. Doing the work now would make the upload
+	 *   itself wait, so all we do is make sure cron will pick it up shortly.
+	 * - Called from handle() when a run finishes with items still queued. We are
+	 *   already in a background request, so fire the async loopback and let the
+	 *   next batch start immediately instead of waiting for the next cron tick.
+	 *
+	 * Either way schedule_event() runs, so there is a recurring healthcheck that
+	 * can restart the queue if a one-off event is ever lost. Losing it is not
+	 * hypothetical: when the `cron` option fails to save, the event is silently
+	 * dropped and nothing else would ever pick the queue back up.
 	 *
 	 * @return array|WP_Error
 	 */
 	public function dispatch() {
-		// Only schedule a single event for a few seconds in the future
-		// This ensures it runs AFTER the current request completes, not during it
-		// Scheduling for "now" (time()) causes WordPress to run it on the shutdown hook
-		// during the same request, making it synchronous and defeating the purpose
+		// Order matters. wp_schedule_single_event() refuses to schedule when the same
+		// hook is already due within ten minutes, so the one-off has to be booked before
+		// the recurring backstop or it would be silently dropped and the queue would not
+		// start for up to a minute after an upload.
 		$scheduled_time = time() + 10;
-
-		// Check if a single event is already scheduled - if so, don't schedule another
 		$next_scheduled = wp_next_scheduled( $this->cron_hook_identifier );
 		if ( ! $next_scheduled || $next_scheduled > $scheduled_time ) {
 			wp_schedule_single_event( $scheduled_time, $this->cron_hook_identifier );
 		}
 
-		// Don't call schedule_event() here - it schedules a recurring event that would run immediately
-		// The recurring event should be scheduled separately (e.g., on plugin init) and will handle
-		// any missed items if single events fail. For now, we rely only on single events.
+		$this->schedule_event();
 
-		// Return a mock success response since we're not making the async request
+		// Only chain straight into the next batch when we are already running in the
+		// background. From an upload request this would make the upload synchronous,
+		// which is the whole reason this method was overridden in the first place.
+		$in_background = $this->is_cron_request()
+			|| ( wp_doing_ajax() && ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] === $this->identifier );
+
+		if ( $in_background ) {
+			return parent::dispatch();
+		}
+
 		return array( 'response' => array( 'code' => 200 ) );
 	}
 
@@ -75,6 +108,33 @@ class SPC_Background_Process_Images extends SPC_Background_Process {
 		if ( ! is_array( $item ) || empty( $item['attachment_id'] ) ) {
 			return false;
 		}
+
+		$attachment = get_post( (int) $item['attachment_id'] );
+		$gallery_id = ( $attachment && $attachment->post_parent ) ? (int) $attachment->post_parent : 0;
+
+		// process_item() has a lot of early exits. Wrapping it means the gallery's
+		// pending count comes down however the image finished, including the failure
+		// paths — otherwise one dropped image would leave a gallery permanently
+		// "still processing" and it would never be reported ready.
+		$result = $this->process_item( $item );
+
+		// A non-false return means the item stays queued for another pass, so it is not
+		// finished yet. Only count it down once it actually leaves the queue.
+		if ( $gallery_id && false === $result ) {
+			sunshine_gallery_processing_done( $gallery_id );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Process a single image: generate intermediate sizes and apply watermarks.
+	 *
+	 * @param array $item Queue item containing attachment_id, file_path, and watermark flag.
+	 *
+	 * @return false|array
+	 */
+	protected function process_item( $item ) {
 
 		$attachment_id = absint( $item['attachment_id'] );
 
