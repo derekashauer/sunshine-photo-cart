@@ -420,22 +420,55 @@ function sunshine_handle_lab_file() {
 }
 
 /**
- * How many images are still waiting in the background processing queue, site-wide.
+ * Roughly how many images are waiting in the background processing queue.
+ *
+ * Counts queue rows rather than the items inside them. Uploads push one item per
+ * row, so the two match in practice, and this only has to be good enough to decide
+ * whether to warn someone. Reading every row's value to be exact costs an order of
+ * magnitude more and allocates the whole queue in memory, which is not something to
+ * do on every admin page load.
+ *
+ * Cached briefly because the notice that uses it runs on every admin screen.
+ *
+ * @return int
+ */
+function sunshine_get_image_queue_size() {
+	$cached = get_transient( 'sunshine_image_queue_size' );
+	if ( false !== $cached ) {
+		return (int) $cached;
+	}
+
+	global $wpdb;
+
+	$table  = is_multisite() ? $wpdb->sitemeta : $wpdb->options;
+	$column = is_multisite() ? 'meta_key' : 'option_name';
+
+	$count = (int) $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT COUNT(*) FROM {$table} WHERE {$column} LIKE %s",
+			$wpdb->esc_like( 'spc_process_images_batch_' ) . '%'
+		)
+	);
+
+	set_transient( 'sunshine_image_queue_size', $count, MINUTE_IN_SECONDS );
+
+	return $count;
+}
+
+/**
+ * Exact number of images waiting in the background processing queue.
+ *
+ * Reads every queue row, so only for the system report. Use
+ * sunshine_get_image_queue_size() anywhere that runs regularly.
  *
  * @return int
  */
 function sunshine_get_image_queue_count() {
 	global $wpdb;
 
-	$table  = $wpdb->options;
-	$column = 'option_name';
-	$value  = 'option_value';
-
-	if ( is_multisite() ) {
-		$table  = $wpdb->sitemeta;
-		$column = 'meta_key';
-		$value  = 'meta_value';
-	}
+	$table  = is_multisite() ? $wpdb->sitemeta : $wpdb->options;
+	$column = is_multisite() ? 'meta_key' : 'option_name';
+	$value  = is_multisite() ? 'meta_value' : 'option_value';
 
 	$rows = $wpdb->get_col(
 		$wpdb->prepare(
@@ -444,10 +477,9 @@ function sunshine_get_image_queue_count() {
 		)
 	);
 
-	// Each row holds a batch, so count the items rather than the rows.
 	$count = 0;
 	foreach ( (array) $rows as $row ) {
-		$batch = maybe_unserialize( $row );
+		$batch  = maybe_unserialize( $row );
 		$count += is_array( $batch ) ? count( $batch ) : 1;
 	}
 
@@ -463,7 +495,7 @@ function sunshine_get_image_queue_next_run() {
 	$next = wp_next_scheduled( 'spc_process_images_cron' );
 
 	if ( ! $next ) {
-		return sunshine_get_image_queue_count() ? 'NOT SCHEDULED (queue is stalled)' : 'Not scheduled (queue empty)';
+		return sunshine_get_image_queue_size() ? 'NOT SCHEDULED (queue is stalled)' : 'Not scheduled (queue empty)';
 	}
 
 	$seconds = $next - time();
@@ -473,4 +505,145 @@ function sunshine_get_image_queue_next_run() {
 	}
 
 	return 'in ' . human_time_diff( time(), $next );
+}
+
+/**********************
+UNPROCESSED IMAGE HANDLING
+ ***********************/
+
+/**
+ * Meta key tracking whether an image has been processed yet.
+ *
+ * Two states, and the difference matters:
+ *
+ * - '1'      queued, still expected to be processed
+ * - 'failed' processing ran and did not finish; it will not be retried
+ *
+ * Either way the image stays hidden, but only a queued one holds its gallery
+ * back from being reported ready. Otherwise a single unreadable file would
+ * keep a whole gallery "still uploading" forever.
+ */
+const SUNSHINE_IMAGE_PROCESSING_META = '_sunshine_processing';
+
+/**
+ * Mark an image as awaiting processing.
+ *
+ * Until it clears, the image is never served to anyone. With delayed processing
+ * an image has no intermediate sizes yet, and WordPress's own fallback for a
+ * missing size is the full-resolution original — so without this a customer
+ * loading a gallery mid-upload is handed the untouched, unwatermarked files.
+ *
+ * @param int $attachment_id Attachment ID.
+ */
+function sunshine_image_mark_processing( $attachment_id ) {
+	update_post_meta( (int) $attachment_id, SUNSHINE_IMAGE_PROCESSING_META, '1' );
+}
+
+/**
+ * Record that processing ran but did not finish.
+ *
+ * The image stays hidden, but stops counting as work in progress.
+ *
+ * @param int $attachment_id Attachment ID.
+ */
+function sunshine_image_mark_failed( $attachment_id ) {
+	update_post_meta( (int) $attachment_id, SUNSHINE_IMAGE_PROCESSING_META, 'failed' );
+}
+
+/**
+ * Whether an image is still queued and expected to be processed.
+ *
+ * @param int $attachment_id Attachment ID.
+ * @return bool
+ */
+function sunshine_image_is_queued_for_processing( $attachment_id ) {
+	return '1' === (string) get_post_meta( (int) $attachment_id, SUNSHINE_IMAGE_PROCESSING_META, true );
+}
+
+/**
+ * Whether an image is still waiting to be processed.
+ *
+ * Deliberately keyed off an explicit marker rather than "has no intermediate
+ * sizes". Plenty of legitimate attachments have no intermediates — an image
+ * smaller than every registered size, for one — and those must keep working.
+ *
+ * @param int $attachment_id Attachment ID.
+ * @return bool
+ */
+function sunshine_image_is_awaiting_processing( $attachment_id ) {
+	return (bool) get_post_meta( (int) $attachment_id, SUNSHINE_IMAGE_PROCESSING_META, true );
+}
+
+/**
+ * Clear the marker once processing has finished.
+ *
+ * Runs late so watermarking (priority 10) and cloud offloading (priority 20) are
+ * done before the image becomes visible.
+ */
+add_action( 'sunshine_after_image_process', 'sunshine_image_mark_processed', 999 );
+function sunshine_image_mark_processed( $attachment_id ) {
+	delete_post_meta( (int) $attachment_id, SUNSHINE_IMAGE_PROCESSING_META );
+}
+
+/**
+ * Dimensions a placeholder should claim, so the layout does not jump when the
+ * real image appears.
+ *
+ * @param int          $attachment_id Attachment ID.
+ * @param string|array $size          Requested size.
+ * @return array{0:int,1:int}
+ */
+function sunshine_unprocessed_image_dimensions( $attachment_id, $size ) {
+	$metadata = wp_get_attachment_metadata( $attachment_id );
+	$width    = ! empty( $metadata['width'] ) ? (int) $metadata['width'] : 0;
+	$height   = ! empty( $metadata['height'] ) ? (int) $metadata['height'] : 0;
+
+	if ( ! $width || ! $height || 'full' === $size ) {
+		return array( $width, $height );
+	}
+
+	if ( is_array( $size ) ) {
+		$max_width  = (int) $size[0];
+		$max_height = (int) $size[1];
+		$crop       = false;
+	} else {
+		$registered = wp_get_registered_image_subsizes();
+		if ( ! isset( $registered[ $size ] ) ) {
+			return array( $width, $height );
+		}
+		$max_width  = (int) $registered[ $size ]['width'];
+		$max_height = (int) $registered[ $size ]['height'];
+		$crop       = ! empty( $registered[ $size ]['crop'] );
+	}
+
+	if ( $crop ) {
+		return array( $max_width, $max_height );
+	}
+
+	return wp_constrain_dimensions( $width, $height, $max_width, $max_height );
+}
+
+/**
+ * Serve a placeholder for an image that has not finished processing.
+ *
+ * Hooked to image_downsize, which every size request funnels through --
+ * wp_get_attachment_image_url(), wp_get_attachment_image_src() and
+ * wp_get_attachment_image() all call it, and it runs for `full` as well as the
+ * named sizes. That makes it the one place that can guarantee an unprocessed
+ * original is never handed out.
+ */
+add_filter( 'image_downsize', 'sunshine_downsize_unprocessed_image', 5, 3 );
+function sunshine_downsize_unprocessed_image( $out, $attachment_id, $size ) {
+	// Someone else already resolved this.
+	if ( false !== $out ) {
+		return $out;
+	}
+
+	if ( ! sunshine_image_is_awaiting_processing( $attachment_id ) ) {
+		return $out;
+	}
+
+	list( $width, $height ) = sunshine_unprocessed_image_dimensions( $attachment_id, $size );
+
+	return array( sunshine_image_placeholder_url(), $width, $height, true );
 }

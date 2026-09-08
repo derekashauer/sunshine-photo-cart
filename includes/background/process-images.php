@@ -112,16 +112,23 @@ class SPC_Background_Process_Images extends SPC_Background_Process {
 		$attachment = get_post( (int) $item['attachment_id'] );
 		$gallery_id = ( $attachment && $attachment->post_parent ) ? (int) $attachment->post_parent : 0;
 
-		// process_item() has a lot of early exits. Wrapping it means the gallery's
-		// pending count comes down however the image finished, including the failure
-		// paths — otherwise one dropped image would leave a gallery permanently
-		// "still processing" and it would never be reported ready.
 		$result = $this->process_item( $item );
 
-		// A non-false return means the item stays queued for another pass, so it is not
-		// finished yet. Only count it down once it actually leaves the queue.
-		if ( $gallery_id && false === $result ) {
-			sunshine_gallery_processing_done( $gallery_id );
+		// A non-false return means the item stays queued for another pass.
+		if ( false !== $result ) {
+			return $result;
+		}
+
+		// Success clears the marker via sunshine_after_image_process. If it is still set,
+		// process_item() bailed at one of its early exits — a missing file, say. Record
+		// that so the image stays hidden but stops holding its gallery back.
+		if ( sunshine_image_is_awaiting_processing( $item['attachment_id'] ) ) {
+			sunshine_image_mark_failed( $item['attachment_id'] );
+			SPC()->log( 'Background Process: Giving up on attachment ' . (int) $item['attachment_id'] );
+		}
+
+		if ( $gallery_id ) {
+			sunshine_maybe_gallery_ready( $gallery_id );
 		}
 
 		return $result;

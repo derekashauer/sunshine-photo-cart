@@ -601,18 +601,22 @@ class Sunshine_Admin {
 			return;
 		}
 
-		$queued = sunshine_get_image_queue_count();
-		if ( ! $queued ) {
-			return;
-		}
+		// Cheapest checks first: this runs on every admin screen, so it must cost
+		// nothing at all in the normal case where the queue is healthy or empty.
 
-		// Currently running, or due to run — nothing to warn about.
+		// Currently running — nothing to warn about.
 		if ( get_site_transient( 'spc_process_images_process_lock' ) ) {
 			return;
 		}
 
+		// Due to run soon. Reads the already-loaded cron option, no query.
 		$next = wp_next_scheduled( 'spc_process_images_cron' );
 		if ( $next && $next > ( time() - ( 15 * MINUTE_IN_SECONDS ) ) ) {
+			return;
+		}
+
+		$queued = sunshine_get_image_queue_size();
+		if ( ! $queued ) {
 			return;
 		}
 

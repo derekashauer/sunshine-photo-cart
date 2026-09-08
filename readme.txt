@@ -262,6 +262,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * New: Automated Emails can now be sent when a gallery is published. The email waits until the gallery actually has photos, they have all finished processing, and the upload has stopped, so it does not go out while people would still be looking at a half-built gallery. Also available to developers as the `sunshine_gallery_ready` action
 * New: Warning in the admin when images are waiting to be processed but nothing is scheduled to process them, which usually means WordPress cron has stopped running
 * New: System Information now reports how many images are waiting to be processed, whether the queue is running, and when it next runs
+* Change: Images are no longer shown until they have finished processing. Previously an image with no thumbnails yet fell back to the full-resolution original, so a customer opening a gallery mid-upload was served the untouched, unwatermarked files. A placeholder is shown instead, at the size the real image will be, and the gallery admin marks those images as processing
 
 = 3.7 - August 27, 2026 =
 * New: Billing address is now its own step at checkout, so you can record the address of the person paying even when the order is being shipped somewhere else. Invoices need the buyer's address, and the buyer is not always who the parcel goes to. On orders that ship, the customer gets a "use shipping address as billing address" box that is already ticked, so nothing extra to fill in unless the two differ

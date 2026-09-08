@@ -396,11 +396,6 @@ GALLERY READY STATE
  ***********************/
 
 /**
- * Meta key holding how many of a gallery's images are still waiting to be processed.
- */
-const SUNSHINE_GALLERY_PROCESSING_META = '_sunshine_images_processing';
-
-/**
  * Meta key holding when an image was last added to a gallery.
  */
 const SUNSHINE_GALLERY_LAST_IMAGE_META = '_sunshine_last_image_added';
@@ -424,13 +419,36 @@ function sunshine_gallery_ready_quiet_period() {
 }
 
 /**
- * How many of a gallery's images are still queued for background processing.
+ * Whether any of a gallery's images are still queued for processing.
+ *
+ * Derived from the images themselves rather than a counter kept on the gallery.
+ * A counter has to be incremented and decremented in matching pairs, and drifts
+ * permanently the moment one decrement is missed; this cannot get out of step
+ * with reality.
  *
  * @param int $gallery_id Gallery ID.
- * @return int
+ * @return bool
  */
-function sunshine_gallery_processing_count( $gallery_id ) {
-	return max( 0, (int) get_post_meta( (int) $gallery_id, SUNSHINE_GALLERY_PROCESSING_META, true ) );
+function sunshine_gallery_has_images_processing( $gallery_id ) {
+	$pending = get_posts(
+		array(
+			'post_type'        => 'attachment',
+			'post_parent'      => (int) $gallery_id,
+			'post_status'      => 'inherit',
+			'fields'           => 'ids',
+			'posts_per_page'   => 1,
+			'no_found_rows'    => true,
+			'suppress_filters' => true,
+			'meta_query'       => array(
+				array(
+					'key'   => SUNSHINE_IMAGE_PROCESSING_META,
+					'value' => '1',
+				),
+			),
+		)
+	);
+
+	return ! empty( $pending );
 }
 
 /**
@@ -473,45 +491,6 @@ function sunshine_gallery_ready_cron_schedule( $schedules ) {
 }
 
 /**
- * Record that another image has been queued for background processing.
- *
- * @param int $gallery_id Gallery ID.
- */
-function sunshine_gallery_processing_add( $gallery_id ) {
-	$gallery_id = (int) $gallery_id;
-	if ( ! $gallery_id ) {
-		return;
-	}
-
-	update_post_meta( $gallery_id, SUNSHINE_GALLERY_PROCESSING_META, sunshine_gallery_processing_count( $gallery_id ) + 1 );
-}
-
-/**
- * Record that a queued image has finished, however it finished.
- *
- * Must be called on failure as well as success, or a gallery whose image was dropped
- * would never reach zero and would never be reported ready.
- *
- * @param int $gallery_id Gallery ID.
- */
-function sunshine_gallery_processing_done( $gallery_id ) {
-	$gallery_id = (int) $gallery_id;
-	if ( ! $gallery_id ) {
-		return;
-	}
-
-	$remaining = sunshine_gallery_processing_count( $gallery_id ) - 1;
-
-	if ( $remaining > 0 ) {
-		update_post_meta( $gallery_id, SUNSHINE_GALLERY_PROCESSING_META, $remaining );
-		return;
-	}
-
-	delete_post_meta( $gallery_id, SUNSHINE_GALLERY_PROCESSING_META );
-	sunshine_maybe_gallery_ready( $gallery_id );
-}
-
-/**
  * Whether a gallery is finished and safe to send people to.
  *
  * All four have to hold:
@@ -540,7 +519,7 @@ function sunshine_gallery_is_ready( $gallery_id ) {
 		return false;
 	}
 
-	if ( sunshine_gallery_processing_count( $gallery_id ) > 0 ) {
+	if ( sunshine_gallery_has_images_processing( $gallery_id ) ) {
 		return false;
 	}
 
