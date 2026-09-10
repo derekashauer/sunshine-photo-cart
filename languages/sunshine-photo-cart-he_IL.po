@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-10T20:30:54+00:00\n"
+"POT-Creation-Date: 2026-09-10T21:25:56+00:00\n"
 "PO-Revision-Date: 2026-03-02 20:27-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -379,8 +379,12 @@ msgid_plural ""
 "%1$d images are waiting to be processed but nothing is scheduled to process "
 "them. This usually means WordPress cron is not running. <a "
 "href=\"%2$s\">Check your system information</a>."
-msgstr[0] "%1$d תמונה ממתינה לעיבוד, אבל שום דבר לא מתוזמן לעבד אותה. בדרך כלל זה אומר ש-cron של וורדפרס לא רץ. <a href=\"%2$s\">בדוק את פרטי המערכת</a>."
-msgstr[1] "%1$d תמונות ממתינות לעיבוד, אבל שום דבר לא מתוזמן לעבד אותן. בדרך כלל זה אומר ש-cron של וורדפרס לא רץ. <a href=\"%2$s\">בדוק את פרטי המערכת</a>."
+msgstr[0] ""
+"%1$d תמונה ממתינה לעיבוד, אבל שום דבר לא מתוזמן לעבד אותה. בדרך כלל זה אומר "
+"ש-cron של וורדפרס לא רץ. <a href=\"%2$s\">בדוק את פרטי המערכת</a>."
+msgstr[1] ""
+"%1$d תמונות ממתינות לעיבוד, אבל שום דבר לא מתוזמן לעבד אותן. בדרך כלל זה "
+"אומר ש-cron של וורדפרס לא רץ. <a href=\"%2$s\">בדוק את פרטי המערכת</a>."
 
 #. translators: %s is the URL to installation page
 #: includes/admin/class-admin.php:643
@@ -479,7 +483,7 @@ msgstr "שם"
 
 #: includes/admin/class-customers-table.php:43
 #: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1588 includes/functions/account.php:558
+#: includes/class-cart.php:1589 includes/functions/account.php:558
 #: includes/payment-methods/paypal-legacy.php:45
 #: includes/payment-methods/paypal-legacy.php:58
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
@@ -713,7 +717,7 @@ msgstr "נתוני ההזמנה של Sunshine Photo Cart נשמרו בשל הג�
 
 #: includes/admin/class-privacy.php:190 includes/admin/class-privacy.php:257
 #: includes/admin/settings-fields.php:976
-#: includes/admin/settings-fields.php:986 includes/class-cart.php:1615
+#: includes/admin/settings-fields.php:986 includes/class-cart.php:1616
 #: templates/invoice/admin.php:164 templates/order/details.php:13
 #: class-export-orders.php:475
 msgid "Phone"
@@ -798,7 +802,7 @@ msgid "Date"
 msgstr "תאריך"
 
 #: includes/admin/class-privacy.php:255 includes/admin/sunshine-order.php:424
-#: templates/account/orders.php:8 admin.php:226 hooks.php:578
+#: templates/account/orders.php:8 admin.php:103 admin.php:226 hooks.php:578
 msgid "Status"
 msgstr "סטטוס"
 
@@ -807,7 +811,7 @@ msgid "Billing Name"
 msgstr "שם לחיוב"
 
 #: includes/admin/class-privacy.php:259 includes/admin/customers.php:106
-#: includes/class-cart.php:1901 templates/invoice/admin.php:194
+#: includes/class-cart.php:1902 templates/invoice/admin.php:194
 msgid "Billing Address"
 msgstr "כתובת חיוב"
 
@@ -816,7 +820,7 @@ msgid "Shipping Name"
 msgstr "שם משלוח"
 
 #: includes/admin/class-privacy.php:268 includes/admin/customers.php:99
-#: includes/class-cart.php:1755 includes/template-hooks.php:431
+#: includes/class-cart.php:1756 includes/template-hooks.php:432
 #: templates/invoice/admin.php:191
 msgid "Shipping Address"
 msgstr "כתובת משלוח"
@@ -1050,7 +1054,7 @@ msgstr[1] "תת-גלריות"
 
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
-#: includes/admin/gallery-navigator.php:344 includes/class-cart.php:2037
+#: includes/admin/gallery-navigator.php:344 includes/class-cart.php:2038
 msgid "Edit"
 msgstr "ערוך"
 
@@ -2302,7 +2306,7 @@ msgstr "שדות אחרים"
 
 #: includes/admin/settings-fields.php:977
 #: includes/admin/settings-fields.php:987 includes/admin/sunshine-order.php:732
-#: includes/class-cart.php:1932 templates/email/admin-receipt.php:146
+#: includes/class-cart.php:1933 templates/email/admin-receipt.php:146
 #: templates/email/customer-receipt.php:150
 #: templates/email/order-status.php:118 templates/order/details.php:59
 msgid "Notes"
@@ -3710,53 +3714,53 @@ msgid "An item has been removed from your cart because it no longer exists"
 msgstr "פריט הוסר מהסל שלך מכיוון שהוא לא קיים יותר"
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:595
+#: includes/class-cart.php:596
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr "ההנחה \"%s\" הוסרה כי היא כבר לא תקפה"
 
-#: includes/class-cart.php:1565
+#: includes/class-cart.php:1566
 msgid "Contact Information"
 msgstr "פרטי יצירת קשר"
 
-#: includes/class-cart.php:1570 includes/class-countries.php:3424
+#: includes/class-cart.php:1571 includes/class-countries.php:3424
 #: includes/functions/account.php:542 templates/account/signup.php:20
 #: class-export-orders.php:472
 msgid "First Name"
 msgstr "שם פרטי"
 
-#: includes/class-cart.php:1579 includes/class-countries.php:3433
+#: includes/class-cart.php:1580 includes/class-countries.php:3433
 #: includes/functions/account.php:550 templates/account/signup.php:27
 #: class-export-orders.php:473
 msgid "Last Name"
 msgstr "שם משפחה"
 
-#: includes/class-cart.php:1605 templates/account/login.php:18
+#: includes/class-cart.php:1606 templates/account/login.php:18
 #: templates/account/signup.php:9 templates/shortcodes/password.php:4
 msgid "Password"
 msgstr "סיסמה"
 
-#: includes/class-cart.php:1607
+#: includes/class-cart.php:1608
 msgid "Optionally set a password"
 msgstr "אפשר להגדיר סיסמה"
 
-#: includes/class-cart.php:1624 templates/email/admin-receipt.php:199
+#: includes/class-cart.php:1625 templates/email/admin-receipt.php:199
 #: templates/email/customer-receipt.php:185
 #: templates/email/order-status.php:153 templates/invoice/admin.php:184
 #: templates/order/details.php:39 class-export-orders.php:476
 msgid "EU VAT Number"
 msgstr "מספר מע\"מ של האיחוד האירופי"
 
-#: includes/class-cart.php:1726
+#: includes/class-cart.php:1727
 msgid "Delivery Method"
 msgstr "אופן שליחת המתנה:"
 
-#: includes/class-cart.php:1786 includes/class-cart.php:1803
+#: includes/class-cart.php:1787 includes/class-cart.php:1804
 #: templates/invoice/admin.php:173 class-export-orders.php:470
 msgid "Shipping Method"
 msgstr "שיטת משלוח"
 
-#: includes/class-cart.php:1808 includes/class-cart.php:2306
+#: includes/class-cart.php:1809 includes/class-cart.php:2307
 msgid ""
 "Sorry, shipping is not available to the address you entered. Please double "
 "check the address or try a different shipping address."
@@ -3764,36 +3768,36 @@ msgstr ""
 "מצטערים, משלוח לא זמין לכתובת שהזנת. בדוק את הכתובת שוב או נסה כתובת משלוח "
 "אחרת."
 
-#: includes/class-cart.php:1869
+#: includes/class-cart.php:1870
 msgid "Use shipping address as billing address"
 msgstr "השתמש בכתובת המשלוח ככתובת החיוב"
 
-#: includes/class-cart.php:1907
+#: includes/class-cart.php:1908
 msgid "Same as shipping address"
 msgstr "זהה לכתובת המשלוח"
 
-#: includes/class-cart.php:1959
+#: includes/class-cart.php:1960
 msgid "Payment"
 msgstr "תשלום"
 
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:1969
+#: includes/class-cart.php:1970
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr "השתמש בקרדיט שלי (%s זמין)"
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:1977 includes/class-payment-method.php:242
+#: includes/class-cart.php:1978 includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr "שלח הזמנה ושלם %s"
 
-#: includes/class-cart.php:1979
+#: includes/class-cart.php:1980
 msgid "Submit Order for Free"
 msgstr "שלח הזמנה בחינם"
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:1996
+#: includes/class-cart.php:1997
 #, php-format
 msgid ""
 "By submitting this order, you agree to our <a href=\"%1$s\" "
@@ -3803,79 +3807,79 @@ msgstr ""
 "a> שלנו"
 
 #. translators: %s is the section name
-#: includes/class-cart.php:2037
+#: includes/class-cart.php:2038
 #, php-format
 msgid "Edit %s"
 msgstr "עריכת ה%s"
 
-#: includes/class-cart.php:2055
+#: includes/class-cart.php:2056
 msgid "Next Step"
 msgstr "לשלב הבא"
 
-#: includes/class-cart.php:2232
+#: includes/class-cart.php:2233
 msgid "Invalid checkout section"
 msgstr "סעיף קופה לא חוקי"
 
-#: includes/class-cart.php:2248
+#: includes/class-cart.php:2249
 msgid "Field contains invalid data"
 msgstr "השדה מכיל נתונים לא חוקיים"
 
 #. translators: %s is the field name
-#: includes/class-cart.php:2265
+#: includes/class-cart.php:2266
 #, php-format
 msgid "%s is required"
 msgstr "%s  נדרש"
 
-#: includes/class-cart.php:2277 frontend.php:173
+#: includes/class-cart.php:2278 frontend.php:173
 msgid "Invalid email"
 msgstr "דוא\"ל לא חוקי"
 
-#: includes/class-cart.php:2378 includes/class-cart.php:2586
+#: includes/class-cart.php:2379 includes/class-cart.php:2587
 msgid "Please select a shipping method before completing your order."
 msgstr "בחר שיטת משלוח לפני השלמת ההזמנה."
 
 #. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
-#: includes/class-cart.php:2499
+#: includes/class-cart.php:2500
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
 msgstr "השלם את הפרטים הבאים לפני שליחת ההזמנה: %s"
 
-#: includes/class-cart.php:2512
+#: includes/class-cart.php:2513
 msgid ""
 "Error encountered during checkout process and your order has already been "
 "marked as paid."
 msgstr "אירעה שגיאה בתהליך התשלום וההזמנה שלך כבר סומנה כמשולמת."
 
-#: includes/class-cart.php:2512 includes/class-cart.php:2845
+#: includes/class-cart.php:2513 includes/class-cart.php:2846
 msgid "View the order"
 msgstr "הצג את ההזמנה"
 
-#: includes/class-cart.php:2524
+#: includes/class-cart.php:2525
 msgid "No payment method selected"
 msgstr "לא נבחרה שיטת תשלום"
 
-#: includes/class-cart.php:2648
+#: includes/class-cart.php:2649
 msgid "Failed to initialize order"
 msgstr "נכשל באינציאליזציה של ההזמנה"
 
-#: includes/class-cart.php:2659
+#: includes/class-cart.php:2660
 msgid ""
 "Something happened while trying to process your order. Please contact the "
 "site owner for more details."
 msgstr ""
 "משהו קרה בעת ניסיון לעבד את הזמנתך. אנא פנה לבעל האתר לקבלת פרטים נוספים."
 
-#: includes/class-cart.php:2688
+#: includes/class-cart.php:2689
 msgid "No payment method"
 msgstr "אין אמצעי תשלום"
 
-#: includes/class-cart.php:2778
+#: includes/class-cart.php:2779
 msgid ""
 "User account already exists with that email address - please login to "
 "continue"
 msgstr "חשבון המשתמש כבר קיים עם כתובת דוא\"ל זו - אנא התחבר כדי להמשיך"
 
-#: includes/class-cart.php:2845
+#: includes/class-cart.php:2846
 msgid "It appears your previous checkout has already been processed."
 msgstr "נראה שההזמנה הקודמת שלך כבר עובדה."
 
@@ -15605,19 +15609,19 @@ msgstr "הגלריה שניסית לגשת אליה היא פרטית ומחיי
 msgid "You must have proper permissions to view this gallery"
 msgstr "אתה חייב להיות בעל הרשאות מתאימות כדי לצפות בגלריה זו"
 
-#: includes/template-hooks.php:440 includes/template-hooks.php:459
+#: includes/template-hooks.php:441 includes/template-hooks.php:460
 msgid "Save Changes"
 msgstr "שמור שינויים"
 
-#: includes/template-hooks.php:470
+#: includes/template-hooks.php:471
 msgid "You are already logged in"
 msgstr "אתה כבר מחובר למערכת"
 
-#: includes/template-hooks.php:493
+#: includes/template-hooks.php:494
 msgid "Invalid reset password URL"
 msgstr "כתובת אתר לא חוקית של סיסמה לאיפוס"
 
-#: includes/template-hooks.php:500
+#: includes/template-hooks.php:501
 msgid "Sorry, invalid search"
 msgstr "סליחה, חיפוש לא חוקי"
 
@@ -16785,6 +16789,18 @@ msgstr ""
 msgid "Enable email processing"
 msgstr "הפעל עיבוד אימיילים"
 
+#: admin.php:104
+msgid "Send Date"
+msgstr "תאריך שליחה"
+
+#: admin.php:138
+msgid "See email log"
+msgstr "ראה יומן דוא\"ל"
+
+#: admin.php:148
+msgid "Process Queue"
+msgstr "תור תהליכים"
+
 #: admin.php:172
 msgid "Email Content"
 msgstr "תוכן האימייל"
@@ -16836,7 +16852,9 @@ msgstr "חפש גלריה"
 msgid ""
 "Only send this email for the selected galleries. Child galleries are "
 "included automatically. Leave empty to send for all galleries."
-msgstr "שלח את המייל הזה רק עבור הגלריות שנבחרו. גלריות בנות נכללות אוטומטית. השאר ריק כדי לשלוח עבור כל הגלריות."
+msgstr ""
+"שלח את המייל הזה רק עבור הגלריות שנבחרו. גלריות בנות נכללות אוטומטית. השאר "
+"ריק כדי לשלוח עבור כל הגלריות."
 
 #: class-admin-automated-emails.php:84 admin/schedule.php:28
 msgid "Time"
@@ -17056,6 +17074,10 @@ msgstr "אחרי פרסום הגלריה"
 msgid "%1$s for %2$s"
 msgstr "%1$s עבור %2$s"
 
+#: common.php:329
+msgid "Queue processed!"
+msgstr "התור עובד!"
+
 #: templates/admin/no-emails.php:2
 msgid "You have not set up any automated emails"
 msgstr "לא הגדרת אימיילים אוטומטיים"
@@ -17259,7 +17281,8 @@ msgid_plural ""
 "All %d of these folders are already in Sunshine, and none of them are "
 "missing any photos."
 msgstr[0] "התיקייה הזאת כבר נמצאת ב-Sunshine, ולא חסרות בה תמונות."
-msgstr[1] "כל %d התיקיות האלה כבר נמצאות ב-Sunshine, ולא חסרות באף אחת מהן תמונות."
+msgstr[1] ""
+"כל %d התיקיות האלה כבר נמצאות ב-Sunshine, ולא חסרות באף אחת מהן תמונות."
 
 #. translators: 1: number already imported, 2: number of folders picked
 #: hooks.php:503
@@ -17273,7 +17296,8 @@ msgstr "%1$d מתוך %2$d התיקיות האלה כבר נמצאות ב-Sunshi
 msgid ""
 "Bring in the %1$d new folders, plus %2$d photos missing from folders you "
 "already have"
-msgstr "ייבא את %1$d התיקיות החדשות, בתוספת %2$d תמונות שחסרות בתיקיות שכבר יש לך"
+msgstr ""
+"ייבא את %1$d התיקיות החדשות, בתוספת %2$d תמונות שחסרות בתיקיות שכבר יש לך"
 
 #. translators: %d: number of new folders
 #: hooks.php:524
@@ -17308,7 +17332,9 @@ msgid ""
 "%d galleries here were created before Sunshine started recording which "
 "folder a gallery came from, so it cannot tell which of these folders you "
 "already have."
-msgstr "%d גלריות כאן נוצרו לפני ש-Sunshine התחיל לתעד מאיזו תיקייה הגיעה כל גלריה, ולכן הוא לא יכול לדעת אילו מהתיקיות האלה כבר יש לך."
+msgstr ""
+"%d גלריות כאן נוצרו לפני ש-Sunshine התחיל לתעד מאיזו תיקייה הגיעה כל גלריה, "
+"ולכן הוא לא יכול לדעת אילו מהתיקיות האלה כבר יש לך."
 
 #. translators: 1: link opening tag, 2: link closing tag
 #: hooks.php:565
@@ -17318,7 +17344,10 @@ msgid ""
 "will be able to bring in only the folders that are missing. Importing now "
 "creates a gallery for every folder listed below, including any you already "
 "have."
-msgstr "הרץ קודם את %1$sכלים > תיעוד מיקומי התמונות%2$s וחזור לכאן, ואז Sunshine יוכל לייבא רק את התיקיות החסרות. ייבוא עכשיו ייצור גלריה לכל תיקייה שמופיעה למטה, כולל כאלה שכבר יש לך."
+msgstr ""
+"הרץ קודם את %1$sכלים > תיעוד מיקומי התמונות%2$s וחזור לכאן, ואז Sunshine "
+"יוכל לייבא רק את התיקיות החסרות. ייבוא עכשיו ייצור גלריה לכל תיקייה שמופיעה "
+"למטה, כולל כאלה שכבר יש לך."
 
 #. translators: %d: number of photos in this folder that are not in the gallery yet
 #: hooks.php:596
@@ -20295,7 +20324,12 @@ msgid ""
 "region over the network on first use. For Google Cloud Storage, use 'gcs-"
 "json' instead of access keys. For Bunny.net, use bunny-specific keys (see "
 "documentation)."
-msgstr "החלף את 'aws' בספק שלך (aws, google-cloud, bunny, digitalocean, wasabi, backblaze, cloudflare-r2, linode או custom). הגדר את 'region' בהתאם למקום שבו נוצר ה-bucket שלך; אם תשמיט אותו, Sunshine יזהה את האזור דרך הרשת בשימוש הראשון. עבור Google Cloud Storage השתמש ב-'gcs-json' במקום במפתחות גישה. עבור Bunny.net השתמש במפתחות ייעודיים של bunny (ראה בתיעוד)."
+msgstr ""
+"החלף את 'aws' בספק שלך (aws, google-cloud, bunny, digitalocean, wasabi, "
+"backblaze, cloudflare-r2, linode או custom). הגדר את 'region' בהתאם למקום "
+"שבו נוצר ה-bucket שלך; אם תשמיט אותו, Sunshine יזהה את האזור דרך הרשת בשימוש "
+"הראשון. עבור Google Cloud Storage השתמש ב-'gcs-json' במקום במפתחות גישה. "
+"עבור Bunny.net השתמש במפתחות ייעודיים של bunny (ראה בתיעוד)."
 
 #: admin/settings.php:162
 msgid "Access Key ID"
@@ -21460,7 +21494,9 @@ msgid ""
 "Work out which bucket and file each already-uploaded image lives at, so "
 "their addresses are rebuilt from your current settings instead of the ones "
 "they were uploaded with"
-msgstr "מזהה באיזה bucket ובאיזה קובץ נמצאת כל תמונה שכבר הועלתה, כך שהכתובות שלהן ייבנו מחדש לפי ההגדרות הנוכחיות שלך במקום לפי אלה שאיתן הן הועלו"
+msgstr ""
+"מזהה באיזה bucket ובאיזה קובץ נמצאת כל תמונה שכבר הועלתה, כך שהכתובות שלהן "
+"ייבנו מחדש לפי ההגדרות הנוכחיות שלך במקום לפי אלה שאיתן הן הועלו"
 
 #: admin/tools.php:1892
 msgid "Record Locations"
@@ -21482,7 +21518,9 @@ msgstr "מתעד את מיקומי התמונות"
 msgid ""
 "Nothing is uploaded, downloaded or changed in your bucket. This only fills "
 "in a missing note about where each image already is."
-msgstr "שום דבר לא מועלה, לא יורד ולא משתנה ב-bucket שלך. הפעולה הזו רק משלימה רישום חסר על המקום שבו כל תמונה כבר נמצאת."
+msgstr ""
+"שום דבר לא מועלה, לא יורד ולא משתנה ב-bucket שלך. הפעולה הזו רק משלימה רישום "
+"חסר על המקום שבו כל תמונה כבר נמצאת."
 
 #: admin/tools.php:1989
 msgid "images recorded"
@@ -21500,7 +21538,8 @@ msgstr "הסתיים."
 msgid ""
 "could not be worked out and were left as they are, so they keep loading "
 "exactly as before."
-msgstr "לא ניתן היה לזהות והן נשארו כפי שהן, כך שהן ימשיכו להיטען בדיוק כמו קודם."
+msgstr ""
+"לא ניתן היה לזהות והן נשארו כפי שהן, כך שהן ימשיכו להיטען בדיוק כמו קודם."
 
 #: admin/tools.php:2026 admin/tools.php:2145
 msgid "Network error. Reload the page to carry on where this stopped."
@@ -21512,14 +21551,19 @@ msgstr "שגיאת רשת. רענן את הדף כדי להמשיך מהמקום
 msgid ""
 "Your images are recorded as living in the bucket \"%1$s\", but Sunshine is "
 "now set up for \"%2$s\"."
-msgstr "התמונות שלך מתועדות כנמצאות ב-bucket \"%1$s\", אבל Sunshine מוגדר עכשיו ל-\"%2$s\"."
+msgstr ""
+"התמונות שלך מתועדות כנמצאות ב-bucket \"%1$s\", אבל Sunshine מוגדר עכשיו "
+"ל-\"%2$s\"."
 
 #: admin/tools.php:2104
 msgid ""
 "If you renamed that bucket, point Sunshine at the new name and your "
 "galleries will load again. If those images really are in a separate bucket, "
 "leave them alone and they will keep loading from there."
-msgstr "אם שינית את שם ה-bucket הזה, הפנה את Sunshine לשם החדש והגלריות שלך ייטענו שוב. אם התמונות האלה באמת נמצאות ב-bucket נפרד, השאר אותן כפי שהן והן ימשיכו להיטען משם."
+msgstr ""
+"אם שינית את שם ה-bucket הזה, הפנה את Sunshine לשם החדש והגלריות שלך ייטענו "
+"שוב. אם התמונות האלה באמת נמצאות ב-bucket נפרד, השאר אותן כפי שהן והן ימשיכו "
+"להיטען משם."
 
 #: admin/tools.php:2106
 msgid "I renamed it, update my images"
@@ -21809,7 +21853,9 @@ msgid ""
 "Could not read the folder \"%s\" from your cloud storage, so the scan was "
 "stopped before anything was imported. This is usually temporary, so please "
 "try again."
-msgstr "לא ניתן היה לקרוא את התיקייה \"%s\" מהאחסון בענן שלך, ולכן הסריקה נעצרה לפני שיובא משהו. זה בדרך כלל זמני, אז נסה שוב."
+msgstr ""
+"לא ניתן היה לקרוא את התיקייה \"%s\" מהאחסון בענן שלך, ולכן הסריקה נעצרה לפני "
+"שיובא משהו. זה בדרך כלל זמני, אז נסה שוב."
 
 #: includes/class-cloud-storage-import.php:775
 #: includes/class-cloud-storage-import.php:830
@@ -23440,15 +23486,6 @@ msgstr "הוסף לסל"
 #, fuzzy
 #~ msgid "Sunshine Photo Cart MCP"
 #~ msgstr "הזמנת עגלת צילום של Sunshine"
-
-#~ msgid "See email log"
-#~ msgstr "ראה יומן דוא\"ל"
-
-#~ msgid "Process Queue"
-#~ msgstr "תור תהליכים"
-
-#~ msgid "Queue processed!"
-#~ msgstr "התור עובד!"
 
 #~ msgid "Subscribe Method"
 #~ msgstr "שיטת הרשמה"

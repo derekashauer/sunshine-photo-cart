@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-10T20:30:54+00:00\n"
+"POT-Creation-Date: 2026-09-10T21:25:56+00:00\n"
 "PO-Revision-Date: 2026-03-02 21:16-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -385,9 +385,18 @@ msgid_plural ""
 "%1$d images are waiting to be processed but nothing is scheduled to process "
 "them. This usually means WordPress cron is not running. <a "
 "href=\"%2$s\">Check your system information</a>."
-msgstr[0] "%1$d obraz czeka na przetworzenie, ale nic nie jest zaplanowane, aby go przetworzyć. Zwykle oznacza to, że cron WordPressa nie działa. <a href=\"%2$s\">Sprawdź informacje o systemie</a>."
-msgstr[1] "%1$d obrazy czekają na przetworzenie, ale nic nie jest zaplanowane, aby je przetworzyć. Zwykle oznacza to, że cron WordPressa nie działa. <a href=\"%2$s\">Sprawdź informacje o systemie</a>."
-msgstr[2] "%1$d obrazów czeka na przetworzenie, ale nic nie jest zaplanowane, aby je przetworzyć. Zwykle oznacza to, że cron WordPressa nie działa. <a href=\"%2$s\">Sprawdź informacje o systemie</a>."
+msgstr[0] ""
+"%1$d obraz czeka na przetworzenie, ale nic nie jest zaplanowane, aby go "
+"przetworzyć. Zwykle oznacza to, że cron WordPressa nie działa. <a "
+"href=\"%2$s\">Sprawdź informacje o systemie</a>."
+msgstr[1] ""
+"%1$d obrazy czekają na przetworzenie, ale nic nie jest zaplanowane, aby je "
+"przetworzyć. Zwykle oznacza to, że cron WordPressa nie działa. <a "
+"href=\"%2$s\">Sprawdź informacje o systemie</a>."
+msgstr[2] ""
+"%1$d obrazów czeka na przetworzenie, ale nic nie jest zaplanowane, aby je "
+"przetworzyć. Zwykle oznacza to, że cron WordPressa nie działa. <a "
+"href=\"%2$s\">Sprawdź informacje o systemie</a>."
 
 #. translators: %s is the URL to installation page
 #: includes/admin/class-admin.php:643
@@ -488,7 +497,7 @@ msgstr "Nazwa"
 
 #: includes/admin/class-customers-table.php:43
 #: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1588 includes/functions/account.php:558
+#: includes/class-cart.php:1589 includes/functions/account.php:558
 #: includes/payment-methods/paypal-legacy.php:45
 #: includes/payment-methods/paypal-legacy.php:58
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
@@ -725,7 +734,7 @@ msgstr ""
 
 #: includes/admin/class-privacy.php:190 includes/admin/class-privacy.php:257
 #: includes/admin/settings-fields.php:976
-#: includes/admin/settings-fields.php:986 includes/class-cart.php:1615
+#: includes/admin/settings-fields.php:986 includes/class-cart.php:1616
 #: templates/invoice/admin.php:164 templates/order/details.php:13
 #: class-export-orders.php:475
 msgid "Phone"
@@ -810,7 +819,7 @@ msgid "Date"
 msgstr "Data"
 
 #: includes/admin/class-privacy.php:255 includes/admin/sunshine-order.php:424
-#: templates/account/orders.php:8 admin.php:226 hooks.php:578
+#: templates/account/orders.php:8 admin.php:103 admin.php:226 hooks.php:578
 msgid "Status"
 msgstr "Status"
 
@@ -819,7 +828,7 @@ msgid "Billing Name"
 msgstr "Imię i nazwisko"
 
 #: includes/admin/class-privacy.php:259 includes/admin/customers.php:106
-#: includes/class-cart.php:1901 templates/invoice/admin.php:194
+#: includes/class-cart.php:1902 templates/invoice/admin.php:194
 msgid "Billing Address"
 msgstr "Adres rozliczeniowy"
 
@@ -828,7 +837,7 @@ msgid "Shipping Name"
 msgstr "Nazwa wysyłki"
 
 #: includes/admin/class-privacy.php:268 includes/admin/customers.php:99
-#: includes/class-cart.php:1755 includes/template-hooks.php:431
+#: includes/class-cart.php:1756 includes/template-hooks.php:432
 #: templates/invoice/admin.php:191
 msgid "Shipping Address"
 msgstr "Adres wysyłki"
@@ -1063,7 +1072,7 @@ msgstr[2] "podgalerii"
 
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
-#: includes/admin/gallery-navigator.php:344 includes/class-cart.php:2037
+#: includes/admin/gallery-navigator.php:344 includes/class-cart.php:2038
 msgid "Edit"
 msgstr "Edytuj"
 
@@ -2352,7 +2361,7 @@ msgstr "Inne pola"
 
 #: includes/admin/settings-fields.php:977
 #: includes/admin/settings-fields.php:987 includes/admin/sunshine-order.php:732
-#: includes/class-cart.php:1932 templates/email/admin-receipt.php:146
+#: includes/class-cart.php:1933 templates/email/admin-receipt.php:146
 #: templates/email/customer-receipt.php:150
 #: templates/email/order-status.php:118 templates/order/details.php:59
 msgid "Notes"
@@ -3648,7 +3657,9 @@ msgstr "Zachowaj bieżące ustawienia znaku wodnego obrazu"
 msgid ""
 "No image found at this position. It may have been deleted since this run "
 "started."
-msgstr "Nie znaleziono zdjęcia w tym miejscu. Mogło zostać usunięte od czasu rozpoczęcia tego przebiegu."
+msgstr ""
+"Nie znaleziono zdjęcia w tym miejscu. Mogło zostać usunięte od czasu "
+"rozpoczęcia tego przebiegu."
 
 #: includes/admin/tools/reinstall.php:6
 msgid "Install process"
@@ -3799,53 +3810,53 @@ msgid "An item has been removed from your cart because it no longer exists"
 msgstr "Artykuł został usunięty z koszyka, ponieważ już nie istnieje"
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:595
+#: includes/class-cart.php:596
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr "Rabat \"%s\" został usunięty, ponieważ nie jest już ważny"
 
-#: includes/class-cart.php:1565
+#: includes/class-cart.php:1566
 msgid "Contact Information"
 msgstr "Dane kontaktowe"
 
-#: includes/class-cart.php:1570 includes/class-countries.php:3424
+#: includes/class-cart.php:1571 includes/class-countries.php:3424
 #: includes/functions/account.php:542 templates/account/signup.php:20
 #: class-export-orders.php:472
 msgid "First Name"
 msgstr "Imię"
 
-#: includes/class-cart.php:1579 includes/class-countries.php:3433
+#: includes/class-cart.php:1580 includes/class-countries.php:3433
 #: includes/functions/account.php:550 templates/account/signup.php:27
 #: class-export-orders.php:473
 msgid "Last Name"
 msgstr "Nazwisko"
 
-#: includes/class-cart.php:1605 templates/account/login.php:18
+#: includes/class-cart.php:1606 templates/account/login.php:18
 #: templates/account/signup.php:9 templates/shortcodes/password.php:4
 msgid "Password"
 msgstr "Hasło"
 
-#: includes/class-cart.php:1607
+#: includes/class-cart.php:1608
 msgid "Optionally set a password"
 msgstr "Opcjonalnie można ustawić hasło"
 
-#: includes/class-cart.php:1624 templates/email/admin-receipt.php:199
+#: includes/class-cart.php:1625 templates/email/admin-receipt.php:199
 #: templates/email/customer-receipt.php:185
 #: templates/email/order-status.php:153 templates/invoice/admin.php:184
 #: templates/order/details.php:39 class-export-orders.php:476
 msgid "EU VAT Number"
 msgstr "Unijny numer podatku VAT"
 
-#: includes/class-cart.php:1726
+#: includes/class-cart.php:1727
 msgid "Delivery Method"
 msgstr "Metoda dostawy"
 
-#: includes/class-cart.php:1786 includes/class-cart.php:1803
+#: includes/class-cart.php:1787 includes/class-cart.php:1804
 #: templates/invoice/admin.php:173 class-export-orders.php:470
 msgid "Shipping Method"
 msgstr "Metoda wysyłki"
 
-#: includes/class-cart.php:1808 includes/class-cart.php:2306
+#: includes/class-cart.php:1809 includes/class-cart.php:2307
 msgid ""
 "Sorry, shipping is not available to the address you entered. Please double "
 "check the address or try a different shipping address."
@@ -3853,36 +3864,36 @@ msgstr ""
 "Niestety wysyłka pod podany adres nie jest dostępna. Sprawdź adres jeszcze "
 "raz albo podaj inny adres wysyłki."
 
-#: includes/class-cart.php:1869
+#: includes/class-cart.php:1870
 msgid "Use shipping address as billing address"
 msgstr "Użyj adresu wysyłki jako adresu rozliczeniowego"
 
-#: includes/class-cart.php:1907
+#: includes/class-cart.php:1908
 msgid "Same as shipping address"
 msgstr "Taki sam jak adres wysyłki"
 
-#: includes/class-cart.php:1959
+#: includes/class-cart.php:1960
 msgid "Payment"
 msgstr "Płatność"
 
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:1969
+#: includes/class-cart.php:1970
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr "Wykorzystaj moje kredyty (%s dostępne)"
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:1977 includes/class-payment-method.php:242
+#: includes/class-cart.php:1978 includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr "Złóż zamówienie i zapłać %s"
 
-#: includes/class-cart.php:1979
+#: includes/class-cart.php:1980
 msgid "Submit Order for Free"
 msgstr "Prześlij zamówienie za darmo"
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:1996
+#: includes/class-cart.php:1997
 #, php-format
 msgid ""
 "By submitting this order, you agree to our <a href=\"%1$s\" "
@@ -3892,44 +3903,44 @@ msgstr ""
 "target=\"_blank\">%2$s</a>"
 
 #. translators: %s is the section name
-#: includes/class-cart.php:2037
+#: includes/class-cart.php:2038
 #, php-format
 msgid "Edit %s"
 msgstr "Edytuj %s"
 
-#: includes/class-cart.php:2055
+#: includes/class-cart.php:2056
 msgid "Next Step"
 msgstr "Następny krok"
 
-#: includes/class-cart.php:2232
+#: includes/class-cart.php:2233
 msgid "Invalid checkout section"
 msgstr "Nieprawidłowa sekcja kasy"
 
-#: includes/class-cart.php:2248
+#: includes/class-cart.php:2249
 msgid "Field contains invalid data"
 msgstr "Pole zawiera nieprawidłowe dane"
 
 #. translators: %s is the field name
-#: includes/class-cart.php:2265
+#: includes/class-cart.php:2266
 #, php-format
 msgid "%s is required"
 msgstr "%s jest wymagane"
 
-#: includes/class-cart.php:2277 frontend.php:173
+#: includes/class-cart.php:2278 frontend.php:173
 msgid "Invalid email"
 msgstr "Błędny email"
 
-#: includes/class-cart.php:2378 includes/class-cart.php:2586
+#: includes/class-cart.php:2379 includes/class-cart.php:2587
 msgid "Please select a shipping method before completing your order."
 msgstr "Wybierz metodę wysyłki przed dokończeniem zamówienia."
 
 #. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
-#: includes/class-cart.php:2499
+#: includes/class-cart.php:2500
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
 msgstr "Uzupełnij poniższe przed złożeniem zamówienia: %s"
 
-#: includes/class-cart.php:2512
+#: includes/class-cart.php:2513
 msgid ""
 "Error encountered during checkout process and your order has already been "
 "marked as paid."
@@ -3937,19 +3948,19 @@ msgstr ""
 "Podczas realizacji zamówienia wystąpił błąd, a zamówienie zostało już "
 "oznaczone jako opłacone."
 
-#: includes/class-cart.php:2512 includes/class-cart.php:2845
+#: includes/class-cart.php:2513 includes/class-cart.php:2846
 msgid "View the order"
 msgstr "Wyświetl zamówienie"
 
-#: includes/class-cart.php:2524
+#: includes/class-cart.php:2525
 msgid "No payment method selected"
 msgstr "Nie wybrano metody płatności"
 
-#: includes/class-cart.php:2648
+#: includes/class-cart.php:2649
 msgid "Failed to initialize order"
 msgstr "Nie udało się zainicjować zamówienia"
 
-#: includes/class-cart.php:2659
+#: includes/class-cart.php:2660
 msgid ""
 "Something happened while trying to process your order. Please contact the "
 "site owner for more details."
@@ -3957,11 +3968,11 @@ msgstr ""
 "Coś się stało podczas próby przetworzenia zamówienia. Prosimy o kontakt z "
 "właścicielem strony w celu uzyskania szczegółowych informacji."
 
-#: includes/class-cart.php:2688
+#: includes/class-cart.php:2689
 msgid "No payment method"
 msgstr "Brak metody płatności"
 
-#: includes/class-cart.php:2778
+#: includes/class-cart.php:2779
 msgid ""
 "User account already exists with that email address - please login to "
 "continue"
@@ -3969,7 +3980,7 @@ msgstr ""
 "Konto użytkownika z tym adresem e-mail już istnieje - zaloguj się, aby "
 "kontynuować"
 
-#: includes/class-cart.php:2845
+#: includes/class-cart.php:2846
 msgid "It appears your previous checkout has already been processed."
 msgstr "Wygląda na to, że poprzednia płatność została już zrealizowana."
 
@@ -15767,19 +15778,19 @@ msgstr ""
 msgid "You must have proper permissions to view this gallery"
 msgstr "Musisz mieć odpowiednie uprawnienia, aby wyświetlić tę galerię"
 
-#: includes/template-hooks.php:440 includes/template-hooks.php:459
+#: includes/template-hooks.php:441 includes/template-hooks.php:460
 msgid "Save Changes"
 msgstr "Zapisz zmiany"
 
-#: includes/template-hooks.php:470
+#: includes/template-hooks.php:471
 msgid "You are already logged in"
 msgstr "Już jesteś zalogowany(a)"
 
-#: includes/template-hooks.php:493
+#: includes/template-hooks.php:494
 msgid "Invalid reset password URL"
 msgstr "Nieprawidłowy adres URL resetowania hasła"
 
-#: includes/template-hooks.php:500
+#: includes/template-hooks.php:501
 msgid "Sorry, invalid search"
 msgstr "Przepraszamy, nieprawidłowe wyszukiwanie"
 
@@ -16979,6 +16990,18 @@ msgstr ""
 msgid "Enable email processing"
 msgstr "Włącz przetwarzanie e-maili"
 
+#: admin.php:104
+msgid "Send Date"
+msgstr "Data wysłania"
+
+#: admin.php:138
+msgid "See email log"
+msgstr "Zobacz dziennik wiadomości e-mail"
+
+#: admin.php:148
+msgid "Process Queue"
+msgstr "Kolejka procesów"
+
 #: admin.php:172
 msgid "Email Content"
 msgstr "Zawartość emaila"
@@ -17030,7 +17053,9 @@ msgstr "Wyszukiwanie galerii"
 msgid ""
 "Only send this email for the selected galleries. Child galleries are "
 "included automatically. Leave empty to send for all galleries."
-msgstr "Wysyłaj tę wiadomość tylko dla wybranych galerii. Galerie podrzędne są uwzględniane automatycznie. Zostaw puste, aby wysyłać dla wszystkich galerii."
+msgstr ""
+"Wysyłaj tę wiadomość tylko dla wybranych galerii. Galerie podrzędne są "
+"uwzględniane automatycznie. Zostaw puste, aby wysyłać dla wszystkich galerii."
 
 #: class-admin-automated-emails.php:84 admin/schedule.php:28
 msgid "Time"
@@ -17256,6 +17281,10 @@ msgstr "Po opublikowaniu galerii"
 msgid "%1$s for %2$s"
 msgstr "%1$s dla %2$s"
 
+#: common.php:329
+msgid "Queue processed!"
+msgstr "Kolejka przetworzona!"
+
 #: templates/admin/no-emails.php:2
 msgid "You have not set up any automated emails"
 msgstr "Nie skonfigurowałeś żadnych automatycznych wiadomości e-mail"
@@ -17470,8 +17499,11 @@ msgid_plural ""
 "All %d of these folders are already in Sunshine, and none of them are "
 "missing any photos."
 msgstr[0] "Ten folder jest już w Sunshine i nie brakuje w nim żadnych zdjęć."
-msgstr[1] "Wszystkie %d foldery są już w Sunshine i w żadnym z nich nie brakuje zdjęć."
-msgstr[2] "Wszystkie %d folderów jest już w Sunshine i w żadnym z nich nie brakuje zdjęć."
+msgstr[1] ""
+"Wszystkie %d foldery są już w Sunshine i w żadnym z nich nie brakuje zdjęć."
+msgstr[2] ""
+"Wszystkie %d folderów jest już w Sunshine i w żadnym z nich nie brakuje "
+"zdjęć."
 
 #. translators: 1: number already imported, 2: number of folders picked
 #: hooks.php:503
@@ -17485,7 +17517,9 @@ msgstr "%1$d z tych %2$d folderów jest już w Sunshine."
 msgid ""
 "Bring in the %1$d new folders, plus %2$d photos missing from folders you "
 "already have"
-msgstr "Pobierz %1$d nowych folderów oraz %2$d zdjęć brakujących w folderach, które już masz"
+msgstr ""
+"Pobierz %1$d nowych folderów oraz %2$d zdjęć brakujących w folderach, które "
+"już masz"
 
 #. translators: %d: number of new folders
 #: hooks.php:524
@@ -17513,8 +17547,10 @@ msgid "Bring in the folder again, making a second copy of it"
 msgid_plural ""
 "Bring in all %d again, making a second copy of the ones already here"
 msgstr[0] "Pobierz ten folder ponownie i utwórz jego drugą kopię"
-msgstr[1] "Pobierz ponownie wszystkie %d i utwórz drugą kopię tych, które już tu są"
-msgstr[2] "Pobierz ponownie wszystkie %d i utwórz drugą kopię tych, które już tu są"
+msgstr[1] ""
+"Pobierz ponownie wszystkie %d i utwórz drugą kopię tych, które już tu są"
+msgstr[2] ""
+"Pobierz ponownie wszystkie %d i utwórz drugą kopię tych, które już tu są"
 
 #. translators: %d: number of galleries with no record of their source folder
 #: hooks.php:556
@@ -17523,7 +17559,10 @@ msgid ""
 "%d galleries here were created before Sunshine started recording which "
 "folder a gallery came from, so it cannot tell which of these folders you "
 "already have."
-msgstr "%d galerii tutaj powstało, zanim Sunshine zaczął zapisywać, z jakiego folderu pochodzi galeria, więc nie może rozpoznać, które z tych folderów już masz."
+msgstr ""
+"%d galerii tutaj powstało, zanim Sunshine zaczął zapisywać, z jakiego "
+"folderu pochodzi galeria, więc nie może rozpoznać, które z tych folderów już "
+"masz."
 
 #. translators: 1: link opening tag, 2: link closing tag
 #: hooks.php:565
@@ -17533,7 +17572,10 @@ msgid ""
 "will be able to bring in only the folders that are missing. Importing now "
 "creates a gallery for every folder listed below, including any you already "
 "have."
-msgstr "Uruchom najpierw %1$sNarzędzia > Zapisz lokalizacje zdjęć%2$s i wróć tutaj, a Sunshine pobierze tylko brakujące foldery. Import teraz utworzy galerię dla każdego folderu z poniższej listy, także dla tych, które już masz."
+msgstr ""
+"Uruchom najpierw %1$sNarzędzia > Zapisz lokalizacje zdjęć%2$s i wróć tutaj, "
+"a Sunshine pobierze tylko brakujące foldery. Import teraz utworzy galerię "
+"dla każdego folderu z poniższej listy, także dla tych, które już masz."
 
 #. translators: %d: number of photos in this folder that are not in the gallery yet
 #: hooks.php:596
@@ -20602,7 +20644,13 @@ msgid ""
 "region over the network on first use. For Google Cloud Storage, use 'gcs-"
 "json' instead of access keys. For Bunny.net, use bunny-specific keys (see "
 "documentation)."
-msgstr "Zastąp 'aws' swoim dostawcą (aws, google-cloud, bunny, digitalocean, wasabi, backblaze, cloudflare-r2, linode lub custom). Ustaw 'region' zgodnie z miejscem utworzenia bucketa; jeśli go pominiesz, Sunshine wykryje region przez sieć przy pierwszym użyciu. W przypadku Google Cloud Storage użyj 'gcs-json' zamiast kluczy dostępu. W przypadku Bunny.net użyj kluczy specyficznych dla bunny (zobacz dokumentację)."
+msgstr ""
+"Zastąp 'aws' swoim dostawcą (aws, google-cloud, bunny, digitalocean, wasabi, "
+"backblaze, cloudflare-r2, linode lub custom). Ustaw 'region' zgodnie z "
+"miejscem utworzenia bucketa; jeśli go pominiesz, Sunshine wykryje region "
+"przez sieć przy pierwszym użyciu. W przypadku Google Cloud Storage użyj 'gcs-"
+"json' zamiast kluczy dostępu. W przypadku Bunny.net użyj kluczy "
+"specyficznych dla bunny (zobacz dokumentację)."
 
 #: admin/settings.php:162
 msgid "Access Key ID"
@@ -21818,7 +21866,10 @@ msgid ""
 "Work out which bucket and file each already-uploaded image lives at, so "
 "their addresses are rebuilt from your current settings instead of the ones "
 "they were uploaded with"
-msgstr "Ustal, w którym buckecie i pliku znajduje się każde już przesłane zdjęcie, aby ich adresy były budowane na podstawie bieżących ustawień, a nie tych, z którymi zostały przesłane"
+msgstr ""
+"Ustal, w którym buckecie i pliku znajduje się każde już przesłane zdjęcie, "
+"aby ich adresy były budowane na podstawie bieżących ustawień, a nie tych, z "
+"którymi zostały przesłane"
 
 #: admin/tools.php:1892
 msgid "Record Locations"
@@ -21826,11 +21877,14 @@ msgstr "Zapisz lokalizacje"
 
 #: admin/tools.php:1974
 msgid "Cloud storage is not set up, so there is nothing to record."
-msgstr "Przechowywanie w chmurze nie jest skonfigurowane, więc nie ma czego zapisywać."
+msgstr ""
+"Przechowywanie w chmurze nie jest skonfigurowane, więc nie ma czego "
+"zapisywać."
 
 #: admin/tools.php:1981
 msgid "Every uploaded image already has its location recorded. Nothing to do."
-msgstr "Każde przesłane zdjęcie ma już zapisaną lokalizację. Nie ma nic do zrobienia."
+msgstr ""
+"Każde przesłane zdjęcie ma już zapisaną lokalizację. Nie ma nic do zrobienia."
 
 #: admin/tools.php:1985
 msgid "Recording image locations"
@@ -21840,7 +21894,9 @@ msgstr "Zapisywanie lokalizacji zdjęć"
 msgid ""
 "Nothing is uploaded, downloaded or changed in your bucket. This only fills "
 "in a missing note about where each image already is."
-msgstr "Nic nie jest przesyłane, pobierane ani zmieniane w Twoim buckecie. To tylko uzupełnia brakującą informację o tym, gdzie każde zdjęcie już się znajduje."
+msgstr ""
+"Nic nie jest przesyłane, pobierane ani zmieniane w Twoim buckecie. To tylko "
+"uzupełnia brakującą informację o tym, gdzie każde zdjęcie już się znajduje."
 
 #: admin/tools.php:1989
 msgid "images recorded"
@@ -21858,11 +21914,15 @@ msgstr "Gotowe."
 msgid ""
 "could not be worked out and were left as they are, so they keep loading "
 "exactly as before."
-msgstr "nie udało się ustalić i pozostały bez zmian, więc wczytują się dokładnie tak jak wcześniej."
+msgstr ""
+"nie udało się ustalić i pozostały bez zmian, więc wczytują się dokładnie tak "
+"jak wcześniej."
 
 #: admin/tools.php:2026 admin/tools.php:2145
 msgid "Network error. Reload the page to carry on where this stopped."
-msgstr "Błąd sieci. Odśwież stronę, aby kontynuować od miejsca, w którym to się zatrzymało."
+msgstr ""
+"Błąd sieci. Odśwież stronę, aby kontynuować od miejsca, w którym to się "
+"zatrzymało."
 
 #. translators: 1: bucket images are recorded in, 2: bucket the site is set up for
 #: admin/tools.php:2098
@@ -21870,14 +21930,19 @@ msgstr "Błąd sieci. Odśwież stronę, aby kontynuować od miejsca, w którym 
 msgid ""
 "Your images are recorded as living in the bucket \"%1$s\", but Sunshine is "
 "now set up for \"%2$s\"."
-msgstr "Twoje zdjęcia są zapisane jako znajdujące się w buckecie \"%1$s\", ale Sunshine jest teraz skonfigurowany dla \"%2$s\"."
+msgstr ""
+"Twoje zdjęcia są zapisane jako znajdujące się w buckecie \"%1$s\", ale "
+"Sunshine jest teraz skonfigurowany dla \"%2$s\"."
 
 #: admin/tools.php:2104
 msgid ""
 "If you renamed that bucket, point Sunshine at the new name and your "
 "galleries will load again. If those images really are in a separate bucket, "
 "leave them alone and they will keep loading from there."
-msgstr "Jeśli zmieniłeś nazwę tego bucketa, wskaż Sunshine nową nazwę, a Twoje galerie znów się wczytają. Jeśli te zdjęcia naprawdę są w osobnym buckecie, zostaw je, a będą się nadal wczytywać stamtąd."
+msgstr ""
+"Jeśli zmieniłeś nazwę tego bucketa, wskaż Sunshine nową nazwę, a Twoje "
+"galerie znów się wczytają. Jeśli te zdjęcia naprawdę są w osobnym buckecie, "
+"zostaw je, a będą się nadal wczytywać stamtąd."
 
 #: admin/tools.php:2106
 msgid "I renamed it, update my images"
@@ -22188,7 +22253,10 @@ msgid ""
 "Could not read the folder \"%s\" from your cloud storage, so the scan was "
 "stopped before anything was imported. This is usually temporary, so please "
 "try again."
-msgstr "Nie udało się odczytać folderu \"%s\" z Twojego magazynu w chmurze, więc skanowanie zostało zatrzymane, zanim cokolwiek zaimportowano. Zwykle jest to tymczasowe, więc spróbuj ponownie."
+msgstr ""
+"Nie udało się odczytać folderu \"%s\" z Twojego magazynu w chmurze, więc "
+"skanowanie zostało zatrzymane, zanim cokolwiek zaimportowano. Zwykle jest to "
+"tymczasowe, więc spróbuj ponownie."
 
 #: includes/class-cloud-storage-import.php:775
 #: includes/class-cloud-storage-import.php:830
@@ -23842,15 +23910,6 @@ msgstr "Dodaj do koszyka"
 #, fuzzy
 #~ msgid "Sunshine Photo Cart MCP"
 #~ msgstr "Sunshine Photo Cart Order"
-
-#~ msgid "See email log"
-#~ msgstr "Zobacz dziennik wiadomości e-mail"
-
-#~ msgid "Process Queue"
-#~ msgstr "Kolejka procesów"
-
-#~ msgid "Queue processed!"
-#~ msgstr "Kolejka przetworzona!"
 
 #~ msgid "Subscribe Method"
 #~ msgstr "Metoda subskrypcji"

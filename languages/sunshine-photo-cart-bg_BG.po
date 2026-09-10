@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-10T20:30:54+00:00\n"
+"POT-Creation-Date: 2026-09-10T21:25:56+00:00\n"
 "PO-Revision-Date: 2026-02-27 15:47-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -384,8 +384,14 @@ msgid_plural ""
 "%1$d images are waiting to be processed but nothing is scheduled to process "
 "them. This usually means WordPress cron is not running. <a "
 "href=\"%2$s\">Check your system information</a>."
-msgstr[0] "%1$d изображение чака да бъде обработено, но нищо не е планирано да го обработи. Това обикновено означава, че WordPress cron не работи. <a href=\"%2$s\">Провери системната си информация</a>."
-msgstr[1] "%1$d изображения чакат да бъдат обработени, но нищо не е планирано да ги обработи. Това обикновено означава, че WordPress cron не работи. <a href=\"%2$s\">Провери системната си информация</a>."
+msgstr[0] ""
+"%1$d изображение чака да бъде обработено, но нищо не е планирано да го "
+"обработи. Това обикновено означава, че WordPress cron не работи. <a "
+"href=\"%2$s\">Провери системната си информация</a>."
+msgstr[1] ""
+"%1$d изображения чакат да бъдат обработени, но нищо не е планирано да ги "
+"обработи. Това обикновено означава, че WordPress cron не работи. <a "
+"href=\"%2$s\">Провери системната си информация</a>."
 
 #. translators: %s is the URL to installation page
 #: includes/admin/class-admin.php:643
@@ -485,7 +491,7 @@ msgstr "Име"
 
 #: includes/admin/class-customers-table.php:43
 #: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1588 includes/functions/account.php:558
+#: includes/class-cart.php:1589 includes/functions/account.php:558
 #: includes/payment-methods/paypal-legacy.php:45
 #: includes/payment-methods/paypal-legacy.php:58
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
@@ -722,7 +728,7 @@ msgstr ""
 
 #: includes/admin/class-privacy.php:190 includes/admin/class-privacy.php:257
 #: includes/admin/settings-fields.php:976
-#: includes/admin/settings-fields.php:986 includes/class-cart.php:1615
+#: includes/admin/settings-fields.php:986 includes/class-cart.php:1616
 #: templates/invoice/admin.php:164 templates/order/details.php:13
 #: class-export-orders.php:475
 msgid "Phone"
@@ -807,7 +813,7 @@ msgid "Date"
 msgstr "Дата"
 
 #: includes/admin/class-privacy.php:255 includes/admin/sunshine-order.php:424
-#: templates/account/orders.php:8 admin.php:226 hooks.php:578
+#: templates/account/orders.php:8 admin.php:103 admin.php:226 hooks.php:578
 msgid "Status"
 msgstr "Статус"
 
@@ -816,7 +822,7 @@ msgid "Billing Name"
 msgstr "Име за фактуриране"
 
 #: includes/admin/class-privacy.php:259 includes/admin/customers.php:106
-#: includes/class-cart.php:1901 templates/invoice/admin.php:194
+#: includes/class-cart.php:1902 templates/invoice/admin.php:194
 msgid "Billing Address"
 msgstr "Адрес на плащане"
 
@@ -825,7 +831,7 @@ msgid "Shipping Name"
 msgstr "Име на доставчика"
 
 #: includes/admin/class-privacy.php:268 includes/admin/customers.php:99
-#: includes/class-cart.php:1755 includes/template-hooks.php:431
+#: includes/class-cart.php:1756 includes/template-hooks.php:432
 #: templates/invoice/admin.php:191
 msgid "Shipping Address"
 msgstr "Адрес за доставка"
@@ -1059,7 +1065,7 @@ msgstr[1] "подгалерии"
 
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
-#: includes/admin/gallery-navigator.php:344 includes/class-cart.php:2037
+#: includes/admin/gallery-navigator.php:344 includes/class-cart.php:2038
 msgid "Edit"
 msgstr "Редактирай"
 
@@ -2351,7 +2357,7 @@ msgstr "Други полета"
 
 #: includes/admin/settings-fields.php:977
 #: includes/admin/settings-fields.php:987 includes/admin/sunshine-order.php:732
-#: includes/class-cart.php:1932 templates/email/admin-receipt.php:146
+#: includes/class-cart.php:1933 templates/email/admin-receipt.php:146
 #: templates/email/customer-receipt.php:150
 #: templates/email/order-status.php:118 templates/order/details.php:59
 msgid "Notes"
@@ -3647,7 +3653,9 @@ msgstr "Запази текущите настройки за воден зна�
 msgid ""
 "No image found at this position. It may have been deleted since this run "
 "started."
-msgstr "Не е намерено изображение на тази позиция. Възможно е да е изтрито, откакто това изпълнение започна."
+msgstr ""
+"Не е намерено изображение на тази позиция. Възможно е да е изтрито, откакто "
+"това изпълнение започна."
 
 #: includes/admin/tools/reinstall.php:6
 msgid "Install process"
@@ -3798,53 +3806,53 @@ msgid "An item has been removed from your cart because it no longer exists"
 msgstr "Един артикул е премахнат от количката ви, защото вече не съществува"
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:595
+#: includes/class-cart.php:596
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr "Отстъпката \"%s\" е премахната, защото вече не е валидна"
 
-#: includes/class-cart.php:1565
+#: includes/class-cart.php:1566
 msgid "Contact Information"
 msgstr "Информация за връзка"
 
-#: includes/class-cart.php:1570 includes/class-countries.php:3424
+#: includes/class-cart.php:1571 includes/class-countries.php:3424
 #: includes/functions/account.php:542 templates/account/signup.php:20
 #: class-export-orders.php:472
 msgid "First Name"
 msgstr "Име"
 
-#: includes/class-cart.php:1579 includes/class-countries.php:3433
+#: includes/class-cart.php:1580 includes/class-countries.php:3433
 #: includes/functions/account.php:550 templates/account/signup.php:27
 #: class-export-orders.php:473
 msgid "Last Name"
 msgstr "Фамилия"
 
-#: includes/class-cart.php:1605 templates/account/login.php:18
+#: includes/class-cart.php:1606 templates/account/login.php:18
 #: templates/account/signup.php:9 templates/shortcodes/password.php:4
 msgid "Password"
 msgstr "Парола"
 
-#: includes/class-cart.php:1607
+#: includes/class-cart.php:1608
 msgid "Optionally set a password"
 msgstr "По желание задайте парола"
 
-#: includes/class-cart.php:1624 templates/email/admin-receipt.php:199
+#: includes/class-cart.php:1625 templates/email/admin-receipt.php:199
 #: templates/email/customer-receipt.php:185
 #: templates/email/order-status.php:153 templates/invoice/admin.php:184
 #: templates/order/details.php:39 class-export-orders.php:476
 msgid "EU VAT Number"
 msgstr "Номер по ДДС на ЕС"
 
-#: includes/class-cart.php:1726
+#: includes/class-cart.php:1727
 msgid "Delivery Method"
 msgstr "Метод за доставка"
 
-#: includes/class-cart.php:1786 includes/class-cart.php:1803
+#: includes/class-cart.php:1787 includes/class-cart.php:1804
 #: templates/invoice/admin.php:173 class-export-orders.php:470
 msgid "Shipping Method"
 msgstr "Метод на доставка"
 
-#: includes/class-cart.php:1808 includes/class-cart.php:2306
+#: includes/class-cart.php:1809 includes/class-cart.php:2307
 msgid ""
 "Sorry, shipping is not available to the address you entered. Please double "
 "check the address or try a different shipping address."
@@ -3852,36 +3860,36 @@ msgstr ""
 "За съжаление доставка до адреса, който въведе, не е възможна. Провери адреса "
 "още веднъж или опитай с друг адрес за доставка."
 
-#: includes/class-cart.php:1869
+#: includes/class-cart.php:1870
 msgid "Use shipping address as billing address"
 msgstr "Използване на адреса за доставка като адрес за фактуриране"
 
-#: includes/class-cart.php:1907
+#: includes/class-cart.php:1908
 msgid "Same as shipping address"
 msgstr "Същият като адреса за доставка"
 
-#: includes/class-cart.php:1959
+#: includes/class-cart.php:1960
 msgid "Payment"
 msgstr "Плащане"
 
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:1969
+#: includes/class-cart.php:1970
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr "Използвайте моите кредити (%s налични)"
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:1977 includes/class-payment-method.php:242
+#: includes/class-cart.php:1978 includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr "Подаване на поръчка и плащане %s"
 
-#: includes/class-cart.php:1979
+#: includes/class-cart.php:1980
 msgid "Submit Order for Free"
 msgstr "Подайте поръчка безплатно"
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:1996
+#: includes/class-cart.php:1997
 #, php-format
 msgid ""
 "By submitting this order, you agree to our <a href=\"%1$s\" "
@@ -3891,44 +3899,44 @@ msgstr ""
 "target=\"_blank\">%2$s</a>"
 
 #. translators: %s is the section name
-#: includes/class-cart.php:2037
+#: includes/class-cart.php:2038
 #, php-format
 msgid "Edit %s"
 msgstr "Редактирай %s"
 
-#: includes/class-cart.php:2055
+#: includes/class-cart.php:2056
 msgid "Next Step"
 msgstr "Следваща Стъпка"
 
-#: includes/class-cart.php:2232
+#: includes/class-cart.php:2233
 msgid "Invalid checkout section"
 msgstr "Невалиден раздел за касиране"
 
-#: includes/class-cart.php:2248
+#: includes/class-cart.php:2249
 msgid "Field contains invalid data"
 msgstr "Полето съдържа невалидни данни"
 
 #. translators: %s is the field name
-#: includes/class-cart.php:2265
+#: includes/class-cart.php:2266
 #, php-format
 msgid "%s is required"
 msgstr "Задължително поле %s"
 
-#: includes/class-cart.php:2277 frontend.php:173
+#: includes/class-cart.php:2278 frontend.php:173
 msgid "Invalid email"
 msgstr "Невалиден e-mail адрес"
 
-#: includes/class-cart.php:2378 includes/class-cart.php:2586
+#: includes/class-cart.php:2379 includes/class-cart.php:2587
 msgid "Please select a shipping method before completing your order."
 msgstr "Избери метод за доставка, преди да завършиш поръчката си."
 
 #. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
-#: includes/class-cart.php:2499
+#: includes/class-cart.php:2500
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
 msgstr "Попълни следното, преди да изпратиш поръчката си: %s"
 
-#: includes/class-cart.php:2512
+#: includes/class-cart.php:2513
 msgid ""
 "Error encountered during checkout process and your order has already been "
 "marked as paid."
@@ -3936,19 +3944,19 @@ msgstr ""
 "По време на процеса на поръчка е възникнала грешка и поръчката ви вече е "
 "отбелязана като платена."
 
-#: includes/class-cart.php:2512 includes/class-cart.php:2845
+#: includes/class-cart.php:2513 includes/class-cart.php:2846
 msgid "View the order"
 msgstr "Преглед на поръчката"
 
-#: includes/class-cart.php:2524
+#: includes/class-cart.php:2525
 msgid "No payment method selected"
 msgstr "Не е избран метод на плащане"
 
-#: includes/class-cart.php:2648
+#: includes/class-cart.php:2649
 msgid "Failed to initialize order"
 msgstr "Неуспешна инициализация на поръчката"
 
-#: includes/class-cart.php:2659
+#: includes/class-cart.php:2660
 msgid ""
 "Something happened while trying to process your order. Please contact the "
 "site owner for more details."
@@ -3956,11 +3964,11 @@ msgstr ""
 "Нещо се е случило, докато се опитвахме да обработим поръчката ви. Моля, "
 "свържете се със собственика на сайта за повече информация."
 
-#: includes/class-cart.php:2688
+#: includes/class-cart.php:2689
 msgid "No payment method"
 msgstr "Няма метод на плащане"
 
-#: includes/class-cart.php:2778
+#: includes/class-cart.php:2779
 msgid ""
 "User account already exists with that email address - please login to "
 "continue"
@@ -3968,7 +3976,7 @@ msgstr ""
 "Потребителският акаунт вече съществува с този имейл адрес - моля, влезте, за "
 "да продължите"
 
-#: includes/class-cart.php:2845
+#: includes/class-cart.php:2846
 msgid "It appears your previous checkout has already been processed."
 msgstr "Изглежда, че предишната ви поръчка вече е била обработена."
 
@@ -15760,19 +15768,19 @@ msgstr ""
 msgid "You must have proper permissions to view this gallery"
 msgstr "Трябва да имате съответните разрешения, за да видите тази галерия"
 
-#: includes/template-hooks.php:440 includes/template-hooks.php:459
+#: includes/template-hooks.php:441 includes/template-hooks.php:460
 msgid "Save Changes"
 msgstr "Запази промените"
 
-#: includes/template-hooks.php:470
+#: includes/template-hooks.php:471
 msgid "You are already logged in"
 msgstr "Вече сте вписани"
 
-#: includes/template-hooks.php:493
+#: includes/template-hooks.php:494
 msgid "Invalid reset password URL"
 msgstr "Невалиден URL адрес за нулиране на паролата"
 
-#: includes/template-hooks.php:500
+#: includes/template-hooks.php:501
 msgid "Sorry, invalid search"
 msgstr "Съжалявам, невалидно търсене"
 
@@ -16965,6 +16973,18 @@ msgstr ""
 msgid "Enable email processing"
 msgstr "Включи обработката на имейли"
 
+#: admin.php:104
+msgid "Send Date"
+msgstr "Дата на изпращане"
+
+#: admin.php:138
+msgid "See email log"
+msgstr "Вижте дневника за имейли"
+
+#: admin.php:148
+msgid "Process Queue"
+msgstr "Опашка за процеси"
+
 #: admin.php:172
 msgid "Email Content"
 msgstr "Имейл съдържание"
@@ -17016,7 +17036,9 @@ msgstr "Търсене на галерия"
 msgid ""
 "Only send this email for the selected galleries. Child galleries are "
 "included automatically. Leave empty to send for all galleries."
-msgstr "Изпращай този имейл само за избраните галерии. Подгалериите се включват автоматично. Остави празно, за да се изпраща за всички галерии."
+msgstr ""
+"Изпращай този имейл само за избраните галерии. Подгалериите се включват "
+"автоматично. Остави празно, за да се изпраща за всички галерии."
 
 #: class-admin-automated-emails.php:84 admin/schedule.php:28
 msgid "Time"
@@ -17239,6 +17261,10 @@ msgstr "След публикуване на галерията"
 msgid "%1$s for %2$s"
 msgstr "%1$s за %2$s"
 
+#: common.php:329
+msgid "Queue processed!"
+msgstr "Обработване на опашката!"
+
 #: templates/admin/no-emails.php:2
 msgid "You have not set up any automated emails"
 msgstr "Не сте настроили автоматични имейли"
@@ -17450,7 +17476,8 @@ msgid_plural ""
 "All %d of these folders are already in Sunshine, and none of them are "
 "missing any photos."
 msgstr[0] "Тази папка вече е в Sunshine и от нея не липсват снимки."
-msgstr[1] "Всички %d папки вече са в Sunshine и от нито една не липсват снимки."
+msgstr[1] ""
+"Всички %d папки вече са в Sunshine и от нито една не липсват снимки."
 
 #. translators: 1: number already imported, 2: number of folders picked
 #: hooks.php:503
@@ -17464,7 +17491,9 @@ msgstr "%1$d от тези %2$d папки вече са в Sunshine."
 msgid ""
 "Bring in the %1$d new folders, plus %2$d photos missing from folders you "
 "already have"
-msgstr "Внеси %1$d нови папки, плюс %2$d снимки, които липсват от папки, които вече имаш"
+msgstr ""
+"Внеси %1$d нови папки, плюс %2$d снимки, които липсват от папки, които вече "
+"имаш"
 
 #. translators: %d: number of new folders
 #: hooks.php:524
@@ -17490,7 +17519,8 @@ msgid "Bring in the folder again, making a second copy of it"
 msgid_plural ""
 "Bring in all %d again, making a second copy of the ones already here"
 msgstr[0] "Внеси папката отново и направи второ копие от нея"
-msgstr[1] "Внеси всички %d отново и направи второ копие на тези, които вече са тук"
+msgstr[1] ""
+"Внеси всички %d отново и направи второ копие на тези, които вече са тук"
 
 #. translators: %d: number of galleries with no record of their source folder
 #: hooks.php:556
@@ -17499,7 +17529,10 @@ msgid ""
 "%d galleries here were created before Sunshine started recording which "
 "folder a gallery came from, so it cannot tell which of these folders you "
 "already have."
-msgstr "%d галерии тук са създадени, преди Sunshine да започне да записва от коя папка идва дадена галерия, затова не може да разбере кои от тези папки вече имаш."
+msgstr ""
+"%d галерии тук са създадени, преди Sunshine да започне да записва от коя "
+"папка идва дадена галерия, затова не може да разбере кои от тези папки вече "
+"имаш."
 
 #. translators: 1: link opening tag, 2: link closing tag
 #: hooks.php:565
@@ -17509,7 +17542,11 @@ msgid ""
 "will be able to bring in only the folders that are missing. Importing now "
 "creates a gallery for every folder listed below, including any you already "
 "have."
-msgstr "Първо изпълни %1$sИнструменти > Записване на местоположенията на изображенията%2$s и се върни тук, тогава Sunshine ще може да внесе само липсващите папки. Ако импортираш сега, ще се създаде галерия за всяка папка от списъка по-долу, включително и за тези, които вече имаш."
+msgstr ""
+"Първо изпълни %1$sИнструменти > Записване на местоположенията на "
+"изображенията%2$s и се върни тук, тогава Sunshine ще може да внесе само "
+"липсващите папки. Ако импортираш сега, ще се създаде галерия за всяка папка "
+"от списъка по-долу, включително и за тези, които вече имаш."
 
 #. translators: %d: number of photos in this folder that are not in the gallery yet
 #: hooks.php:596
@@ -20575,7 +20612,13 @@ msgid ""
 "region over the network on first use. For Google Cloud Storage, use 'gcs-"
 "json' instead of access keys. For Bunny.net, use bunny-specific keys (see "
 "documentation)."
-msgstr "Замени 'aws' с твоя доставчик (aws, google-cloud, bunny, digitalocean, wasabi, backblaze, cloudflare-r2, linode или custom). Задай 'region' според мястото, където е създаден твоят bucket; ако го пропуснеш, Sunshine ще открие региона по мрежата при първото използване. За Google Cloud Storage използвай 'gcs-json' вместо ключове за достъп. За Bunny.net използвай специфичните за bunny ключове (виж документацията)."
+msgstr ""
+"Замени 'aws' с твоя доставчик (aws, google-cloud, bunny, digitalocean, "
+"wasabi, backblaze, cloudflare-r2, linode или custom). Задай 'region' според "
+"мястото, където е създаден твоят bucket; ако го пропуснеш, Sunshine ще "
+"открие региона по мрежата при първото използване. За Google Cloud Storage "
+"използвай 'gcs-json' вместо ключове за достъп. За Bunny.net използвай "
+"специфичните за bunny ключове (виж документацията)."
 
 #: admin/settings.php:162
 msgid "Access Key ID"
@@ -21791,7 +21834,10 @@ msgid ""
 "Work out which bucket and file each already-uploaded image lives at, so "
 "their addresses are rebuilt from your current settings instead of the ones "
 "they were uploaded with"
-msgstr "Установява в кой bucket и файл се намира всяко вече качено изображение, така че адресите им да се изграждат от текущите ти настройки, а не от тези, с които са били качени"
+msgstr ""
+"Установява в кой bucket и файл се намира всяко вече качено изображение, така "
+"че адресите им да се изграждат от текущите ти настройки, а не от тези, с "
+"които са били качени"
 
 #: admin/tools.php:1892
 msgid "Record Locations"
@@ -21803,7 +21849,9 @@ msgstr "Съхранението в облак не е настроено, та�
 
 #: admin/tools.php:1981
 msgid "Every uploaded image already has its location recorded. Nothing to do."
-msgstr "За всяко качено изображение местоположението вече е записано. Няма какво да се прави."
+msgstr ""
+"За всяко качено изображение местоположението вече е записано. Няма какво да "
+"се прави."
 
 #: admin/tools.php:1985
 msgid "Recording image locations"
@@ -21813,7 +21861,9 @@ msgstr "Записват се местоположенията на изобра
 msgid ""
 "Nothing is uploaded, downloaded or changed in your bucket. This only fills "
 "in a missing note about where each image already is."
-msgstr "В твоя bucket нищо не се качва, изтегля или променя. Това само попълва липсваща бележка за това къде вече се намира всяко изображение."
+msgstr ""
+"В твоя bucket нищо не се качва, изтегля или променя. Това само попълва "
+"липсваща бележка за това къде вече се намира всяко изображение."
 
 #: admin/tools.php:1989
 msgid "images recorded"
@@ -21831,11 +21881,15 @@ msgstr "Готово."
 msgid ""
 "could not be worked out and were left as they are, so they keep loading "
 "exactly as before."
-msgstr "не можаха да бъдат определени и останаха както са, така че се зареждат точно както преди."
+msgstr ""
+"не можаха да бъдат определени и останаха както са, така че се зареждат точно "
+"както преди."
 
 #: admin/tools.php:2026 admin/tools.php:2145
 msgid "Network error. Reload the page to carry on where this stopped."
-msgstr "Мрежова грешка. Презареди страницата, за да продължиш оттам, докъдето е стигнало."
+msgstr ""
+"Мрежова грешка. Презареди страницата, за да продължиш оттам, докъдето е "
+"стигнало."
 
 #. translators: 1: bucket images are recorded in, 2: bucket the site is set up for
 #: admin/tools.php:2098
@@ -21843,14 +21897,19 @@ msgstr "Мрежова грешка. Презареди страницата, з
 msgid ""
 "Your images are recorded as living in the bucket \"%1$s\", but Sunshine is "
 "now set up for \"%2$s\"."
-msgstr "Твоите изображения са записани като намиращи се в bucket \"%1$s\", но Sunshine вече е настроен за \"%2$s\"."
+msgstr ""
+"Твоите изображения са записани като намиращи се в bucket \"%1$s\", но "
+"Sunshine вече е настроен за \"%2$s\"."
 
 #: admin/tools.php:2104
 msgid ""
 "If you renamed that bucket, point Sunshine at the new name and your "
 "galleries will load again. If those images really are in a separate bucket, "
 "leave them alone and they will keep loading from there."
-msgstr "Ако си преименувал този bucket, насочи Sunshine към новото име и галериите ти отново ще се зареждат. Ако тези изображения наистина са в отделен bucket, остави ги и те ще продължат да се зареждат оттам."
+msgstr ""
+"Ако си преименувал този bucket, насочи Sunshine към новото име и галериите "
+"ти отново ще се зареждат. Ако тези изображения наистина са в отделен bucket, "
+"остави ги и те ще продължат да се зареждат оттам."
 
 #: admin/tools.php:2106
 msgid "I renamed it, update my images"
@@ -22162,7 +22221,10 @@ msgid ""
 "Could not read the folder \"%s\" from your cloud storage, so the scan was "
 "stopped before anything was imported. This is usually temporary, so please "
 "try again."
-msgstr "Папката \"%s\" не можа да бъде прочетена от твоето съхранение в облак, затова сканирането беше спряно, преди да бъде импортирано каквото и да е. Това обикновено е временно, така че моля, опитай отново."
+msgstr ""
+"Папката \"%s\" не можа да бъде прочетена от твоето съхранение в облак, "
+"затова сканирането беше спряно, преди да бъде импортирано каквото и да е. "
+"Това обикновено е временно, така че моля, опитай отново."
 
 #: includes/class-cloud-storage-import.php:775
 #: includes/class-cloud-storage-import.php:830
@@ -23813,15 +23875,6 @@ msgstr "Добави в Количката"
 #, fuzzy
 #~ msgid "Sunshine Photo Cart MCP"
 #~ msgstr "Поръчка на количка за снимки Sunshine"
-
-#~ msgid "See email log"
-#~ msgstr "Вижте дневника за имейли"
-
-#~ msgid "Process Queue"
-#~ msgstr "Опашка за процеси"
-
-#~ msgid "Queue processed!"
-#~ msgstr "Обработване на опашката!"
 
 #~ msgid "Subscribe Method"
 #~ msgstr "Метод за абониране"

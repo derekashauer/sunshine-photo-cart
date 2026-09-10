@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-10T20:30:54+00:00\n"
+"POT-Creation-Date: 2026-09-10T21:25:56+00:00\n"
 "PO-Revision-Date: 2026-03-02 20:27-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -385,8 +385,14 @@ msgid_plural ""
 "%1$d images are waiting to be processed but nothing is scheduled to process "
 "them. This usually means WordPress cron is not running. <a "
 "href=\"%2$s\">Check your system information</a>."
-msgstr[0] "%1$d kép vár feldolgozásra, de semmi nincs beütemezve, ami feldolgozná. Ez általában azt jelenti, hogy a WordPress cron nem fut. <a href=\"%2$s\">Nézd meg a rendszerinformációt</a>."
-msgstr[1] "%1$d kép vár feldolgozásra, de semmi nincs beütemezve, ami feldolgozná. Ez általában azt jelenti, hogy a WordPress cron nem fut. <a href=\"%2$s\">Nézd meg a rendszerinformációt</a>."
+msgstr[0] ""
+"%1$d kép vár feldolgozásra, de semmi nincs beütemezve, ami feldolgozná. Ez "
+"általában azt jelenti, hogy a WordPress cron nem fut. <a href=\"%2$s\">Nézd "
+"meg a rendszerinformációt</a>."
+msgstr[1] ""
+"%1$d kép vár feldolgozásra, de semmi nincs beütemezve, ami feldolgozná. Ez "
+"általában azt jelenti, hogy a WordPress cron nem fut. <a href=\"%2$s\">Nézd "
+"meg a rendszerinformációt</a>."
 
 #. translators: %s is the URL to installation page
 #: includes/admin/class-admin.php:643
@@ -486,7 +492,7 @@ msgstr "Név"
 
 #: includes/admin/class-customers-table.php:43
 #: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1588 includes/functions/account.php:558
+#: includes/class-cart.php:1589 includes/functions/account.php:558
 #: includes/payment-methods/paypal-legacy.php:45
 #: includes/payment-methods/paypal-legacy.php:58
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
@@ -727,7 +733,7 @@ msgstr ""
 
 #: includes/admin/class-privacy.php:190 includes/admin/class-privacy.php:257
 #: includes/admin/settings-fields.php:976
-#: includes/admin/settings-fields.php:986 includes/class-cart.php:1615
+#: includes/admin/settings-fields.php:986 includes/class-cart.php:1616
 #: templates/invoice/admin.php:164 templates/order/details.php:13
 #: class-export-orders.php:475
 msgid "Phone"
@@ -812,7 +818,7 @@ msgid "Date"
 msgstr "Dátum"
 
 #: includes/admin/class-privacy.php:255 includes/admin/sunshine-order.php:424
-#: templates/account/orders.php:8 admin.php:226 hooks.php:578
+#: templates/account/orders.php:8 admin.php:103 admin.php:226 hooks.php:578
 msgid "Status"
 msgstr "Állapot"
 
@@ -821,7 +827,7 @@ msgid "Billing Name"
 msgstr "Számlázási név"
 
 #: includes/admin/class-privacy.php:259 includes/admin/customers.php:106
-#: includes/class-cart.php:1901 templates/invoice/admin.php:194
+#: includes/class-cart.php:1902 templates/invoice/admin.php:194
 msgid "Billing Address"
 msgstr "Számlázási cím"
 
@@ -830,7 +836,7 @@ msgid "Shipping Name"
 msgstr "Szállítási név"
 
 #: includes/admin/class-privacy.php:268 includes/admin/customers.php:99
-#: includes/class-cart.php:1755 includes/template-hooks.php:431
+#: includes/class-cart.php:1756 includes/template-hooks.php:432
 #: templates/invoice/admin.php:191
 msgid "Shipping Address"
 msgstr "Szállítási cím"
@@ -1064,7 +1070,7 @@ msgstr[1] "algalériák"
 
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
-#: includes/admin/gallery-navigator.php:344 includes/class-cart.php:2037
+#: includes/admin/gallery-navigator.php:344 includes/class-cart.php:2038
 msgid "Edit"
 msgstr "Szerkesztés"
 
@@ -2359,7 +2365,7 @@ msgstr "Egyéb mezők"
 
 #: includes/admin/settings-fields.php:977
 #: includes/admin/settings-fields.php:987 includes/admin/sunshine-order.php:732
-#: includes/class-cart.php:1932 templates/email/admin-receipt.php:146
+#: includes/class-cart.php:1933 templates/email/admin-receipt.php:146
 #: templates/email/customer-receipt.php:150
 #: templates/email/order-status.php:118 templates/order/details.php:59
 msgid "Notes"
@@ -3648,7 +3654,8 @@ msgstr "A jelenlegi kép vízjel beállításainak megtartása"
 msgid ""
 "No image found at this position. It may have been deleted since this run "
 "started."
-msgstr "Ezen a helyen nem található kép. Lehet, hogy törölték a futás kezdete óta."
+msgstr ""
+"Ezen a helyen nem található kép. Lehet, hogy törölték a futás kezdete óta."
 
 #: includes/admin/tools/reinstall.php:6
 msgid "Install process"
@@ -3798,53 +3805,53 @@ msgid "An item has been removed from your cart because it no longer exists"
 msgstr "Egy terméket eltávolítottunk a kosarából, mert már nem létezik"
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:595
+#: includes/class-cart.php:596
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr "Kedvezmény \"%s\" eltávolítva, mert már nem érvényes"
 
-#: includes/class-cart.php:1565
+#: includes/class-cart.php:1566
 msgid "Contact Information"
 msgstr "Kapcsolati információk"
 
-#: includes/class-cart.php:1570 includes/class-countries.php:3424
+#: includes/class-cart.php:1571 includes/class-countries.php:3424
 #: includes/functions/account.php:542 templates/account/signup.php:20
 #: class-export-orders.php:472
 msgid "First Name"
 msgstr "Keresztnév"
 
-#: includes/class-cart.php:1579 includes/class-countries.php:3433
+#: includes/class-cart.php:1580 includes/class-countries.php:3433
 #: includes/functions/account.php:550 templates/account/signup.php:27
 #: class-export-orders.php:473
 msgid "Last Name"
 msgstr "Vezetéknév"
 
-#: includes/class-cart.php:1605 templates/account/login.php:18
+#: includes/class-cart.php:1606 templates/account/login.php:18
 #: templates/account/signup.php:9 templates/shortcodes/password.php:4
 msgid "Password"
 msgstr "Jelszó"
 
-#: includes/class-cart.php:1607
+#: includes/class-cart.php:1608
 msgid "Optionally set a password"
 msgstr "Jelszó beállítása opcionálisan"
 
-#: includes/class-cart.php:1624 templates/email/admin-receipt.php:199
+#: includes/class-cart.php:1625 templates/email/admin-receipt.php:199
 #: templates/email/customer-receipt.php:185
 #: templates/email/order-status.php:153 templates/invoice/admin.php:184
 #: templates/order/details.php:39 class-export-orders.php:476
 msgid "EU VAT Number"
 msgstr "EU adószám"
 
-#: includes/class-cart.php:1726
+#: includes/class-cart.php:1727
 msgid "Delivery Method"
 msgstr "Átadási mód"
 
-#: includes/class-cart.php:1786 includes/class-cart.php:1803
+#: includes/class-cart.php:1787 includes/class-cart.php:1804
 #: templates/invoice/admin.php:173 class-export-orders.php:470
 msgid "Shipping Method"
 msgstr "Szállítási mód"
 
-#: includes/class-cart.php:1808 includes/class-cart.php:2306
+#: includes/class-cart.php:1809 includes/class-cart.php:2307
 msgid ""
 "Sorry, shipping is not available to the address you entered. Please double "
 "check the address or try a different shipping address."
@@ -3852,36 +3859,36 @@ msgstr ""
 "Sajnos a megadott címre nem elérhető a szállítás. Ellenőrizd még egyszer a "
 "címet, vagy próbálj meg egy másik szállítási címet."
 
-#: includes/class-cart.php:1869
+#: includes/class-cart.php:1870
 msgid "Use shipping address as billing address"
 msgstr "Szállítási cím használata számlázási címként"
 
-#: includes/class-cart.php:1907
+#: includes/class-cart.php:1908
 msgid "Same as shipping address"
 msgstr "Megegyezik a szállítási címmel"
 
-#: includes/class-cart.php:1959
+#: includes/class-cart.php:1960
 msgid "Payment"
 msgstr "Fizetés"
 
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:1969
+#: includes/class-cart.php:1970
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr "Használja a kreditjeimet (%s elérhető)"
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:1977 includes/class-payment-method.php:242
+#: includes/class-cart.php:1978 includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr "Megrendelés leadása és fizetés %s"
 
-#: includes/class-cart.php:1979
+#: includes/class-cart.php:1980
 msgid "Submit Order for Free"
 msgstr "Rendelés beküldése ingyenesen"
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:1996
+#: includes/class-cart.php:1997
 #, php-format
 msgid ""
 "By submitting this order, you agree to our <a href=\"%1$s\" "
@@ -3891,44 +3898,44 @@ msgstr ""
 "target=\"_blank\">%2$s</a>"
 
 #. translators: %s is the section name
-#: includes/class-cart.php:2037
+#: includes/class-cart.php:2038
 #, php-format
 msgid "Edit %s"
 msgstr "%s szerkesztése"
 
-#: includes/class-cart.php:2055
+#: includes/class-cart.php:2056
 msgid "Next Step"
 msgstr "Következő lépés"
 
-#: includes/class-cart.php:2232
+#: includes/class-cart.php:2233
 msgid "Invalid checkout section"
 msgstr "Érvénytelen pénztárszakasz"
 
-#: includes/class-cart.php:2248
+#: includes/class-cart.php:2249
 msgid "Field contains invalid data"
 msgstr "A mező érvénytelen adatot tartalmaz"
 
 #. translators: %s is the field name
-#: includes/class-cart.php:2265
+#: includes/class-cart.php:2266
 #, php-format
 msgid "%s is required"
 msgstr "%s kötelező"
 
-#: includes/class-cart.php:2277 frontend.php:173
+#: includes/class-cart.php:2278 frontend.php:173
 msgid "Invalid email"
 msgstr "Érvénytelen e-mail cím"
 
-#: includes/class-cart.php:2378 includes/class-cart.php:2586
+#: includes/class-cart.php:2379 includes/class-cart.php:2587
 msgid "Please select a shipping method before completing your order."
 msgstr "Válassz szállítási módot, mielőtt befejezed a rendelést."
 
 #. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
-#: includes/class-cart.php:2499
+#: includes/class-cart.php:2500
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
 msgstr "Töltsd ki az alábbiakat a rendelés elküldése előtt: %s"
 
-#: includes/class-cart.php:2512
+#: includes/class-cart.php:2513
 msgid ""
 "Error encountered during checkout process and your order has already been "
 "marked as paid."
@@ -3936,19 +3943,19 @@ msgstr ""
 "Hiba lépett fel a pénztárfolyamat során, és a megrendelését már "
 "kifizetettnek jelölték."
 
-#: includes/class-cart.php:2512 includes/class-cart.php:2845
+#: includes/class-cart.php:2513 includes/class-cart.php:2846
 msgid "View the order"
 msgstr "A rendelés megtekintése"
 
-#: includes/class-cart.php:2524
+#: includes/class-cart.php:2525
 msgid "No payment method selected"
 msgstr "Nincs kiválasztott fizetési mód"
 
-#: includes/class-cart.php:2648
+#: includes/class-cart.php:2649
 msgid "Failed to initialize order"
 msgstr "A megrendelés inicializálása sikertelen"
 
-#: includes/class-cart.php:2659
+#: includes/class-cart.php:2660
 msgid ""
 "Something happened while trying to process your order. Please contact the "
 "site owner for more details."
@@ -3956,11 +3963,11 @@ msgstr ""
 "Valami történt, miközben megpróbáltuk feldolgozni a megrendelését. Kérjük, "
 "további részletekért lépjen kapcsolatba az oldal tulajdonosával."
 
-#: includes/class-cart.php:2688
+#: includes/class-cart.php:2689
 msgid "No payment method"
 msgstr "Nincs fizetési mód"
 
-#: includes/class-cart.php:2778
+#: includes/class-cart.php:2779
 msgid ""
 "User account already exists with that email address - please login to "
 "continue"
@@ -3968,7 +3975,7 @@ msgstr ""
 "A felhasználói fiók már létezik ezzel az e-mail címmel - kérjük, "
 "jelentkezzen be a folytatáshoz"
 
-#: includes/class-cart.php:2845
+#: includes/class-cart.php:2846
 msgid "It appears your previous checkout has already been processed."
 msgstr "Úgy tűnik, hogy az előző fizetés már feldolgozásra került."
 
@@ -15764,19 +15771,19 @@ msgstr ""
 msgid "You must have proper permissions to view this gallery"
 msgstr "A galéria megtekintéséhez megfelelő engedélyekkel kell rendelkeznie"
 
-#: includes/template-hooks.php:440 includes/template-hooks.php:459
+#: includes/template-hooks.php:441 includes/template-hooks.php:460
 msgid "Save Changes"
 msgstr "Módosítások mentése"
 
-#: includes/template-hooks.php:470
+#: includes/template-hooks.php:471
 msgid "You are already logged in"
 msgstr "Ön már be van jelentkezve"
 
-#: includes/template-hooks.php:493
+#: includes/template-hooks.php:494
 msgid "Invalid reset password URL"
 msgstr "Érvénytelen jelszó-visszaállítási URL"
 
-#: includes/template-hooks.php:500
+#: includes/template-hooks.php:501
 msgid "Sorry, invalid search"
 msgstr "Bocsánat, érvénytelen keresés"
 
@@ -16970,6 +16977,18 @@ msgstr ""
 msgid "Enable email processing"
 msgstr "E-mail feldolgozás bekapcsolása"
 
+#: admin.php:104
+msgid "Send Date"
+msgstr "Küldés dátuma"
+
+#: admin.php:138
+msgid "See email log"
+msgstr "Lásd az e-mail naplót"
+
+#: admin.php:148
+msgid "Process Queue"
+msgstr "Folyamat várólista"
+
 #: admin.php:172
 msgid "Email Content"
 msgstr "E-mail tartalom"
@@ -17022,7 +17041,10 @@ msgstr "Galéria keresése"
 msgid ""
 "Only send this email for the selected galleries. Child galleries are "
 "included automatically. Leave empty to send for all galleries."
-msgstr "Ezt az e-mailt csak a kiválasztott galériákhoz küldd el. Az algalériák automatikusan bekerülnek. Hagyd üresen, ha minden galériához el szeretnéd küldeni."
+msgstr ""
+"Ezt az e-mailt csak a kiválasztott galériákhoz küldd el. Az algalériák "
+"automatikusan bekerülnek. Hagyd üresen, ha minden galériához el szeretnéd "
+"küldeni."
 
 #: class-admin-automated-emails.php:84 admin/schedule.php:28
 msgid "Time"
@@ -17246,6 +17268,10 @@ msgstr "A galéria közzététele után"
 msgid "%1$s for %2$s"
 msgstr "%1$s - %2$s"
 
+#: common.php:329
+msgid "Queue processed!"
+msgstr "Sorban állás feldolgozva!"
+
 #: templates/admin/no-emails.php:2
 msgid "You have not set up any automated emails"
 msgstr "Nem állított be semmilyen automatikus e-mailt"
@@ -17454,8 +17480,11 @@ msgid "That folder is already in Sunshine, and no photos are missing from it."
 msgid_plural ""
 "All %d of these folders are already in Sunshine, and none of them are "
 "missing any photos."
-msgstr[0] "Ez a mappa már megvan a Sunshine-ban, és nem hiányzik belőle egyetlen fotó sem."
-msgstr[1] "Mind a(z) %d mappa már megvan a Sunshine-ban, és egyikből sem hiányzik fotó."
+msgstr[0] ""
+"Ez a mappa már megvan a Sunshine-ban, és nem hiányzik belőle egyetlen fotó "
+"sem."
+msgstr[1] ""
+"Mind a(z) %d mappa már megvan a Sunshine-ban, és egyikből sem hiányzik fotó."
 
 #. translators: 1: number already imported, 2: number of folders picked
 #: hooks.php:503
@@ -17469,7 +17498,9 @@ msgstr "Ebből a(z) %2$d mappából %1$d már megvan a Sunshine-ban."
 msgid ""
 "Bring in the %1$d new folders, plus %2$d photos missing from folders you "
 "already have"
-msgstr "Hozd be a(z) %1$d új mappát, valamint %2$d fotót, amely hiányzik a már meglévő mappákból"
+msgstr ""
+"Hozd be a(z) %1$d új mappát, valamint %2$d fotót, amely hiányzik a már "
+"meglévő mappákból"
 
 #. translators: %d: number of new folders
 #: hooks.php:524
@@ -17495,7 +17526,9 @@ msgid "Bring in the folder again, making a second copy of it"
 msgid_plural ""
 "Bring in all %d again, making a second copy of the ones already here"
 msgstr[0] "Hozd be újra a mappát, második másolatot készítve róla"
-msgstr[1] "Hozd be újra mind a(z) %d mappát, második másolatot készítve a már meglévőkről"
+msgstr[1] ""
+"Hozd be újra mind a(z) %d mappát, második másolatot készítve a már "
+"meglévőkről"
 
 #. translators: %d: number of galleries with no record of their source folder
 #: hooks.php:556
@@ -17504,7 +17537,10 @@ msgid ""
 "%d galleries here were created before Sunshine started recording which "
 "folder a gallery came from, so it cannot tell which of these folders you "
 "already have."
-msgstr "Itt %d galéria még azelőtt jött létre, hogy a Sunshine elkezdte volna rögzíteni, melyik mappából származik egy galéria, ezért nem tudja megállapítani, hogy ezek közül a mappák közül melyik van már meg."
+msgstr ""
+"Itt %d galéria még azelőtt jött létre, hogy a Sunshine elkezdte volna "
+"rögzíteni, melyik mappából származik egy galéria, ezért nem tudja "
+"megállapítani, hogy ezek közül a mappák közül melyik van már meg."
 
 #. translators: 1: link opening tag, 2: link closing tag
 #: hooks.php:565
@@ -17514,7 +17550,11 @@ msgid ""
 "will be able to bring in only the folders that are missing. Importing now "
 "creates a gallery for every folder listed below, including any you already "
 "have."
-msgstr "Előbb futtasd az %1$sEszközök > Képek helyének rögzítése%2$s műveletet, majd gyere vissza, és a Sunshine csak a hiányzó mappákat fogja behozni. Ha most importálsz, minden alább felsorolt mappához létrejön egy galéria, azokhoz is, amelyek már megvannak."
+msgstr ""
+"Előbb futtasd az %1$sEszközök > Képek helyének rögzítése%2$s műveletet, majd "
+"gyere vissza, és a Sunshine csak a hiányzó mappákat fogja behozni. Ha most "
+"importálsz, minden alább felsorolt mappához létrejön egy galéria, azokhoz "
+"is, amelyek már megvannak."
 
 #. translators: %d: number of photos in this folder that are not in the gallery yet
 #: hooks.php:596
@@ -20577,7 +20617,14 @@ msgid ""
 "region over the network on first use. For Google Cloud Storage, use 'gcs-"
 "json' instead of access keys. For Bunny.net, use bunny-specific keys (see "
 "documentation)."
-msgstr "Cseréld le az 'aws' értéket a saját szolgáltatódra (aws, google-cloud, bunny, digitalocean, wasabi, backblaze, cloudflare-r2, linode vagy custom). A 'region' értéket állítsd arra, ahol a bucketed létrejött; ha kihagyod, a Sunshine az első használatkor hálózaton keresztül állapítja meg a régiót. Google Cloud Storage esetén hozzáférési kulcsok helyett a 'gcs-json' értéket használd. Bunny.net esetén bunny-specifikus kulcsokat használj (lásd a dokumentációt)."
+msgstr ""
+"Cseréld le az 'aws' értéket a saját szolgáltatódra (aws, google-cloud, "
+"bunny, digitalocean, wasabi, backblaze, cloudflare-r2, linode vagy custom). "
+"A 'region' értéket állítsd arra, ahol a bucketed létrejött; ha kihagyod, a "
+"Sunshine az első használatkor hálózaton keresztül állapítja meg a régiót. "
+"Google Cloud Storage esetén hozzáférési kulcsok helyett a 'gcs-json' értéket "
+"használd. Bunny.net esetén bunny-specifikus kulcsokat használj (lásd a "
+"dokumentációt)."
 
 #: admin/settings.php:162
 msgid "Access Key ID"
@@ -21787,7 +21834,10 @@ msgid ""
 "Work out which bucket and file each already-uploaded image lives at, so "
 "their addresses are rebuilt from your current settings instead of the ones "
 "they were uploaded with"
-msgstr "Megállapítja, melyik bucketben és melyik fájlban található minden már feltöltött kép, így a címeik a jelenlegi beállításaidból épülnek fel újra, nem pedig azokból, amelyekkel feltöltötted őket"
+msgstr ""
+"Megállapítja, melyik bucketben és melyik fájlban található minden már "
+"feltöltött kép, így a címeik a jelenlegi beállításaidból épülnek fel újra, "
+"nem pedig azokból, amelyekkel feltöltötted őket"
 
 #: admin/tools.php:1892
 msgid "Record Locations"
@@ -21809,7 +21859,10 @@ msgstr "Képek helyének rögzítése folyamatban"
 msgid ""
 "Nothing is uploaded, downloaded or changed in your bucket. This only fills "
 "in a missing note about where each image already is."
-msgstr "A bucketedbe semmi nem töltődik fel, nem töltődik le és nem változik meg. Ez csak azt a hiányzó feljegyzést pótolja, hogy az egyes képek hol vannak már most is."
+msgstr ""
+"A bucketedbe semmi nem töltődik fel, nem töltődik le és nem változik meg. Ez "
+"csak azt a hiányzó feljegyzést pótolja, hogy az egyes képek hol vannak már "
+"most is."
 
 #: admin/tools.php:1989
 msgid "images recorded"
@@ -21827,11 +21880,14 @@ msgstr "Kész."
 msgid ""
 "could not be worked out and were left as they are, so they keep loading "
 "exactly as before."
-msgstr "esetében nem sikerült megállapítani, ezért változatlanul maradtak, így pontosan ugyanúgy töltődnek be, mint eddig."
+msgstr ""
+"esetében nem sikerült megállapítani, ezért változatlanul maradtak, így "
+"pontosan ugyanúgy töltődnek be, mint eddig."
 
 #: admin/tools.php:2026 admin/tools.php:2145
 msgid "Network error. Reload the page to carry on where this stopped."
-msgstr "Hálózati hiba. Töltsd újra az oldalt, hogy onnan folytasd, ahol megállt."
+msgstr ""
+"Hálózati hiba. Töltsd újra az oldalt, hogy onnan folytasd, ahol megállt."
 
 #. translators: 1: bucket images are recorded in, 2: bucket the site is set up for
 #: admin/tools.php:2098
@@ -21839,14 +21895,19 @@ msgstr "Hálózati hiba. Töltsd újra az oldalt, hogy onnan folytasd, ahol meg�
 msgid ""
 "Your images are recorded as living in the bucket \"%1$s\", but Sunshine is "
 "now set up for \"%2$s\"."
-msgstr "A képeid a(z) „%1$s” bucketben vannak rögzítve, de a Sunshine most a(z) „%2$s” bucketre van beállítva."
+msgstr ""
+"A képeid a(z) „%1$s” bucketben vannak rögzítve, de a Sunshine most a(z) "
+"„%2$s” bucketre van beállítva."
 
 #: admin/tools.php:2104
 msgid ""
 "If you renamed that bucket, point Sunshine at the new name and your "
 "galleries will load again. If those images really are in a separate bucket, "
 "leave them alone and they will keep loading from there."
-msgstr "Ha átnevezted azt a bucketet, add meg a Sunshine-nak az új nevet, és a galériáid újra betöltődnek. Ha azok a képek valóban külön bucketben vannak, hagyd őket békén, és továbbra is onnan fognak betöltődni."
+msgstr ""
+"Ha átnevezted azt a bucketet, add meg a Sunshine-nak az új nevet, és a "
+"galériáid újra betöltődnek. Ha azok a képek valóban külön bucketben vannak, "
+"hagyd őket békén, és továbbra is onnan fognak betöltődni."
 
 #: admin/tools.php:2106
 msgid "I renamed it, update my images"
@@ -22155,7 +22216,10 @@ msgid ""
 "Could not read the folder \"%s\" from your cloud storage, so the scan was "
 "stopped before anything was imported. This is usually temporary, so please "
 "try again."
-msgstr "Nem sikerült beolvasni a(z) „%s” mappát a felhőtáradból, ezért a vizsgálat leállt, mielőtt bármi importálódott volna. Ez általában átmeneti, ezért kérlek, próbáld újra."
+msgstr ""
+"Nem sikerült beolvasni a(z) „%s” mappát a felhőtáradból, ezért a vizsgálat "
+"leállt, mielőtt bármi importálódott volna. Ez általában átmeneti, ezért "
+"kérlek, próbáld újra."
 
 #: includes/class-cloud-storage-import.php:775
 #: includes/class-cloud-storage-import.php:830
@@ -23811,15 +23875,6 @@ msgstr "Kosárba rakom"
 #, fuzzy
 #~ msgid "Sunshine Photo Cart MCP"
 #~ msgstr "Sunshine Photo Cart rendelés"
-
-#~ msgid "See email log"
-#~ msgstr "Lásd az e-mail naplót"
-
-#~ msgid "Process Queue"
-#~ msgstr "Folyamat várólista"
-
-#~ msgid "Queue processed!"
-#~ msgstr "Sorban állás feldolgozva!"
 
 #~ msgid "Subscribe Method"
 #~ msgstr "Feliratkozási módszer"

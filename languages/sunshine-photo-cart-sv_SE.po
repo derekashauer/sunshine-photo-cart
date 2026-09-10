@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-10T20:30:54+00:00\n"
+"POT-Creation-Date: 2026-09-10T21:25:56+00:00\n"
 "PO-Revision-Date: 2026-03-02 21:19-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -383,8 +383,14 @@ msgid_plural ""
 "%1$d images are waiting to be processed but nothing is scheduled to process "
 "them. This usually means WordPress cron is not running. <a "
 "href=\"%2$s\">Check your system information</a>."
-msgstr[0] "%1$d bild väntar på att behandlas, men ingenting är schemalagt för att behandla den. Det betyder oftast att WordPress cron inte körs. <a href=\"%2$s\">Kolla din systeminformation</a>."
-msgstr[1] "%1$d bilder väntar på att behandlas, men ingenting är schemalagt för att behandla dem. Det betyder oftast att WordPress cron inte körs. <a href=\"%2$s\">Kolla din systeminformation</a>."
+msgstr[0] ""
+"%1$d bild väntar på att behandlas, men ingenting är schemalagt för att "
+"behandla den. Det betyder oftast att WordPress cron inte körs. <a "
+"href=\"%2$s\">Kolla din systeminformation</a>."
+msgstr[1] ""
+"%1$d bilder väntar på att behandlas, men ingenting är schemalagt för att "
+"behandla dem. Det betyder oftast att WordPress cron inte körs. <a "
+"href=\"%2$s\">Kolla din systeminformation</a>."
 
 #. translators: %s is the URL to installation page
 #: includes/admin/class-admin.php:643
@@ -484,7 +490,7 @@ msgstr "Namn"
 
 #: includes/admin/class-customers-table.php:43
 #: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1588 includes/functions/account.php:558
+#: includes/class-cart.php:1589 includes/functions/account.php:558
 #: includes/payment-methods/paypal-legacy.php:45
 #: includes/payment-methods/paypal-legacy.php:58
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
@@ -722,7 +728,7 @@ msgstr ""
 
 #: includes/admin/class-privacy.php:190 includes/admin/class-privacy.php:257
 #: includes/admin/settings-fields.php:976
-#: includes/admin/settings-fields.php:986 includes/class-cart.php:1615
+#: includes/admin/settings-fields.php:986 includes/class-cart.php:1616
 #: templates/invoice/admin.php:164 templates/order/details.php:13
 #: class-export-orders.php:475
 msgid "Phone"
@@ -807,7 +813,7 @@ msgid "Date"
 msgstr "Datum"
 
 #: includes/admin/class-privacy.php:255 includes/admin/sunshine-order.php:424
-#: templates/account/orders.php:8 admin.php:226 hooks.php:578
+#: templates/account/orders.php:8 admin.php:103 admin.php:226 hooks.php:578
 msgid "Status"
 msgstr "Status"
 
@@ -816,7 +822,7 @@ msgid "Billing Name"
 msgstr "Faktureringsnamn"
 
 #: includes/admin/class-privacy.php:259 includes/admin/customers.php:106
-#: includes/class-cart.php:1901 templates/invoice/admin.php:194
+#: includes/class-cart.php:1902 templates/invoice/admin.php:194
 msgid "Billing Address"
 msgstr "Fakturaadress"
 
@@ -825,7 +831,7 @@ msgid "Shipping Name"
 msgstr "Fraktnamn"
 
 #: includes/admin/class-privacy.php:268 includes/admin/customers.php:99
-#: includes/class-cart.php:1755 includes/template-hooks.php:431
+#: includes/class-cart.php:1756 includes/template-hooks.php:432
 #: templates/invoice/admin.php:191
 msgid "Shipping Address"
 msgstr "Leveransadress"
@@ -1059,7 +1065,7 @@ msgstr[1] "undergallerier"
 
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
-#: includes/admin/gallery-navigator.php:344 includes/class-cart.php:2037
+#: includes/admin/gallery-navigator.php:344 includes/class-cart.php:2038
 msgid "Edit"
 msgstr "Redigera"
 
@@ -2339,7 +2345,7 @@ msgstr "Andra områden"
 
 #: includes/admin/settings-fields.php:977
 #: includes/admin/settings-fields.php:987 includes/admin/sunshine-order.php:732
-#: includes/class-cart.php:1932 templates/email/admin-receipt.php:146
+#: includes/class-cart.php:1933 templates/email/admin-receipt.php:146
 #: templates/email/customer-receipt.php:150
 #: templates/email/order-status.php:118 templates/order/details.php:59
 msgid "Notes"
@@ -3623,7 +3629,9 @@ msgstr "Behåll aktuella inställningar för bildvattenstämpel"
 msgid ""
 "No image found at this position. It may have been deleted since this run "
 "started."
-msgstr "Ingen bild hittades på den här positionen. Den kan ha raderats sedan den här körningen startade."
+msgstr ""
+"Ingen bild hittades på den här positionen. Den kan ha raderats sedan den här "
+"körningen startade."
 
 #: includes/admin/tools/reinstall.php:6
 msgid "Install process"
@@ -3774,53 +3782,53 @@ msgstr ""
 "existerar"
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:595
+#: includes/class-cart.php:596
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr "Rabatt \"%s\" borttagen eftersom den inte längre är giltig"
 
-#: includes/class-cart.php:1565
+#: includes/class-cart.php:1566
 msgid "Contact Information"
 msgstr "Kontaktinformation"
 
-#: includes/class-cart.php:1570 includes/class-countries.php:3424
+#: includes/class-cart.php:1571 includes/class-countries.php:3424
 #: includes/functions/account.php:542 templates/account/signup.php:20
 #: class-export-orders.php:472
 msgid "First Name"
 msgstr "Förnamn"
 
-#: includes/class-cart.php:1579 includes/class-countries.php:3433
+#: includes/class-cart.php:1580 includes/class-countries.php:3433
 #: includes/functions/account.php:550 templates/account/signup.php:27
 #: class-export-orders.php:473
 msgid "Last Name"
 msgstr "Efternamn"
 
-#: includes/class-cart.php:1605 templates/account/login.php:18
+#: includes/class-cart.php:1606 templates/account/login.php:18
 #: templates/account/signup.php:9 templates/shortcodes/password.php:4
 msgid "Password"
 msgstr "Lösenord"
 
-#: includes/class-cart.php:1607
+#: includes/class-cart.php:1608
 msgid "Optionally set a password"
 msgstr "Ange ett lösenord som tillval"
 
-#: includes/class-cart.php:1624 templates/email/admin-receipt.php:199
+#: includes/class-cart.php:1625 templates/email/admin-receipt.php:199
 #: templates/email/customer-receipt.php:185
 #: templates/email/order-status.php:153 templates/invoice/admin.php:184
 #: templates/order/details.php:39 class-export-orders.php:476
 msgid "EU VAT Number"
 msgstr "EU-MOMSNUMMER"
 
-#: includes/class-cart.php:1726
+#: includes/class-cart.php:1727
 msgid "Delivery Method"
 msgstr "Leverans metod"
 
-#: includes/class-cart.php:1786 includes/class-cart.php:1803
+#: includes/class-cart.php:1787 includes/class-cart.php:1804
 #: templates/invoice/admin.php:173 class-export-orders.php:470
 msgid "Shipping Method"
 msgstr "Leveranssätt"
 
-#: includes/class-cart.php:1808 includes/class-cart.php:2306
+#: includes/class-cart.php:1809 includes/class-cart.php:2307
 msgid ""
 "Sorry, shipping is not available to the address you entered. Please double "
 "check the address or try a different shipping address."
@@ -3828,36 +3836,36 @@ msgstr ""
 "Tyvärr, frakt är inte möjlig till adressen du angav. Dubbelkolla adressen "
 "eller prova en annan leveransadress."
 
-#: includes/class-cart.php:1869
+#: includes/class-cart.php:1870
 msgid "Use shipping address as billing address"
 msgstr "Använd leveransadress som faktureringsadress"
 
-#: includes/class-cart.php:1907
+#: includes/class-cart.php:1908
 msgid "Same as shipping address"
 msgstr "Samma som leveransadress"
 
-#: includes/class-cart.php:1959
+#: includes/class-cart.php:1960
 msgid "Payment"
 msgstr "Betalning"
 
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:1969
+#: includes/class-cart.php:1970
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr "Använd mina krediter (%s tillgängliga)"
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:1977 includes/class-payment-method.php:242
+#: includes/class-cart.php:1978 includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr "Skicka order och betala %s"
 
-#: includes/class-cart.php:1979
+#: includes/class-cart.php:1980
 msgid "Submit Order for Free"
 msgstr "Skicka order kostnadsfritt"
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:1996
+#: includes/class-cart.php:1997
 #, php-format
 msgid ""
 "By submitting this order, you agree to our <a href=\"%1$s\" "
@@ -3867,44 +3875,44 @@ msgstr ""
 "target=\"_blank\">%2$s</a>"
 
 #. translators: %s is the section name
-#: includes/class-cart.php:2037
+#: includes/class-cart.php:2038
 #, php-format
 msgid "Edit %s"
 msgstr "Redigera %s"
 
-#: includes/class-cart.php:2055
+#: includes/class-cart.php:2056
 msgid "Next Step"
 msgstr "Nästa Steg"
 
-#: includes/class-cart.php:2232
+#: includes/class-cart.php:2233
 msgid "Invalid checkout section"
 msgstr "Ogiltigt utcheckningsavsnitt"
 
-#: includes/class-cart.php:2248
+#: includes/class-cart.php:2249
 msgid "Field contains invalid data"
 msgstr "Fältet innehåller ogiltiga data"
 
 #. translators: %s is the field name
-#: includes/class-cart.php:2265
+#: includes/class-cart.php:2266
 #, php-format
 msgid "%s is required"
 msgstr "%s krävs"
 
-#: includes/class-cart.php:2277 frontend.php:173
+#: includes/class-cart.php:2278 frontend.php:173
 msgid "Invalid email"
 msgstr "Ogiltig e-postadress"
 
-#: includes/class-cart.php:2378 includes/class-cart.php:2586
+#: includes/class-cart.php:2379 includes/class-cart.php:2587
 msgid "Please select a shipping method before completing your order."
 msgstr "Välj en fraktmetod innan du slutför din beställning."
 
 #. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
-#: includes/class-cart.php:2499
+#: includes/class-cart.php:2500
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
 msgstr "Fyll i följande innan du skickar din beställning: %s"
 
-#: includes/class-cart.php:2512
+#: includes/class-cart.php:2513
 msgid ""
 "Error encountered during checkout process and your order has already been "
 "marked as paid."
@@ -3912,19 +3920,19 @@ msgstr ""
 "Fel uppstod under utcheckningsprocessen och din order har redan markerats "
 "som betald."
 
-#: includes/class-cart.php:2512 includes/class-cart.php:2845
+#: includes/class-cart.php:2513 includes/class-cart.php:2846
 msgid "View the order"
 msgstr "Se ordern"
 
-#: includes/class-cart.php:2524
+#: includes/class-cart.php:2525
 msgid "No payment method selected"
 msgstr "Ingen betalningsmetod vald"
 
-#: includes/class-cart.php:2648
+#: includes/class-cart.php:2649
 msgid "Failed to initialize order"
 msgstr "Det gick inte att initiera beställningen"
 
-#: includes/class-cart.php:2659
+#: includes/class-cart.php:2660
 msgid ""
 "Something happened while trying to process your order. Please contact the "
 "site owner for more details."
@@ -3932,11 +3940,11 @@ msgstr ""
 "Något hände när vi försökte behandla din beställning. Vänligen kontakta "
 "webbplatsens ägare för mer information."
 
-#: includes/class-cart.php:2688
+#: includes/class-cart.php:2689
 msgid "No payment method"
 msgstr "Ingen betalningsmetod"
 
-#: includes/class-cart.php:2778
+#: includes/class-cart.php:2779
 msgid ""
 "User account already exists with that email address - please login to "
 "continue"
@@ -3944,7 +3952,7 @@ msgstr ""
 "Det finns redan ett användarkonto med den e-postadressen - logga in för att "
 "fortsätta"
 
-#: includes/class-cart.php:2845
+#: includes/class-cart.php:2846
 msgid "It appears your previous checkout has already been processed."
 msgstr "Det verkar som om din tidigare utcheckning redan har behandlats."
 
@@ -15725,19 +15733,19 @@ msgstr ""
 msgid "You must have proper permissions to view this gallery"
 msgstr "Du måste ha rätt behörighet för att se detta galleri"
 
-#: includes/template-hooks.php:440 includes/template-hooks.php:459
+#: includes/template-hooks.php:441 includes/template-hooks.php:460
 msgid "Save Changes"
 msgstr "Spara ändringar"
 
-#: includes/template-hooks.php:470
+#: includes/template-hooks.php:471
 msgid "You are already logged in"
 msgstr "Du är redan inloggad"
 
-#: includes/template-hooks.php:493
+#: includes/template-hooks.php:494
 msgid "Invalid reset password URL"
 msgstr "Ogiltig URL för återställning av lösenord"
 
-#: includes/template-hooks.php:500
+#: includes/template-hooks.php:501
 msgid "Sorry, invalid search"
 msgstr "Tyvärr, ogiltig sökning"
 
@@ -16928,6 +16936,18 @@ msgstr ""
 msgid "Enable email processing"
 msgstr "Aktivera e-postbehandling"
 
+#: admin.php:104
+msgid "Send Date"
+msgstr "Sändningsdatum"
+
+#: admin.php:138
+msgid "See email log"
+msgstr "Se e-postlogg"
+
+#: admin.php:148
+msgid "Process Queue"
+msgstr "Process kö"
+
 #: admin.php:172
 msgid "Email Content"
 msgstr "E-postinnehåll"
@@ -16981,7 +17001,9 @@ msgstr "Sök efter ett galleri"
 msgid ""
 "Only send this email for the selected galleries. Child galleries are "
 "included automatically. Leave empty to send for all galleries."
-msgstr "Skicka bara det här mejlet för de valda gallerierna. Undergallerier inkluderas automatiskt. Lämna tomt för att skicka för alla gallerier."
+msgstr ""
+"Skicka bara det här mejlet för de valda gallerierna. Undergallerier "
+"inkluderas automatiskt. Lämna tomt för att skicka för alla gallerier."
 
 #: class-admin-automated-emails.php:84 admin/schedule.php:28
 msgid "Time"
@@ -17204,6 +17226,10 @@ msgstr "Efter att galleriet publicerats"
 msgid "%1$s for %2$s"
 msgstr "%1$s för %2$s"
 
+#: common.php:329
+msgid "Queue processed!"
+msgstr "Kö bearbetad!"
+
 #: templates/admin/no-emails.php:2
 msgid "You have not set up any automated emails"
 msgstr "Du har inte ställt in några automatiska e-postmeddelanden"
@@ -17413,7 +17439,8 @@ msgid_plural ""
 "All %d of these folders are already in Sunshine, and none of them are "
 "missing any photos."
 msgstr[0] "Den mappen finns redan i Sunshine, och inga bilder saknas i den."
-msgstr[1] "Alla %d mappar finns redan i Sunshine, och inga bilder saknas i någon av dem."
+msgstr[1] ""
+"Alla %d mappar finns redan i Sunshine, och inga bilder saknas i någon av dem."
 
 #. translators: 1: number already imported, 2: number of folders picked
 #: hooks.php:503
@@ -17427,7 +17454,9 @@ msgstr "%1$d av dessa %2$d mappar finns redan i Sunshine."
 msgid ""
 "Bring in the %1$d new folders, plus %2$d photos missing from folders you "
 "already have"
-msgstr "Hämta in de %1$d nya mapparna, plus %2$d bilder som saknas i mappar du redan har"
+msgstr ""
+"Hämta in de %1$d nya mapparna, plus %2$d bilder som saknas i mappar du redan "
+"har"
 
 #. translators: %d: number of new folders
 #: hooks.php:524
@@ -17453,7 +17482,8 @@ msgid "Bring in the folder again, making a second copy of it"
 msgid_plural ""
 "Bring in all %d again, making a second copy of the ones already here"
 msgstr[0] "Hämta in mappen igen och skapa en andra kopia av den"
-msgstr[1] "Hämta in alla %d igen och skapa en andra kopia av dem som redan finns här"
+msgstr[1] ""
+"Hämta in alla %d igen och skapa en andra kopia av dem som redan finns här"
 
 #. translators: %d: number of galleries with no record of their source folder
 #: hooks.php:556
@@ -17462,7 +17492,10 @@ msgid ""
 "%d galleries here were created before Sunshine started recording which "
 "folder a gallery came from, so it cannot tell which of these folders you "
 "already have."
-msgstr "%d gallerier här skapades innan Sunshine började registrera vilken mapp ett galleri kom från, så det går inte att avgöra vilka av dessa mappar du redan har."
+msgstr ""
+"%d gallerier här skapades innan Sunshine började registrera vilken mapp ett "
+"galleri kom från, så det går inte att avgöra vilka av dessa mappar du redan "
+"har."
 
 #. translators: 1: link opening tag, 2: link closing tag
 #: hooks.php:565
@@ -17472,7 +17505,10 @@ msgid ""
 "will be able to bring in only the folders that are missing. Importing now "
 "creates a gallery for every folder listed below, including any you already "
 "have."
-msgstr "Kör %1$sVerktyg > Registrera bildplatser%2$s först och kom tillbaka, så kan Sunshine hämta in bara de mappar som saknas. Om du importerar nu skapas ett galleri för varje mapp i listan nedan, även de du redan har."
+msgstr ""
+"Kör %1$sVerktyg > Registrera bildplatser%2$s först och kom tillbaka, så kan "
+"Sunshine hämta in bara de mappar som saknas. Om du importerar nu skapas ett "
+"galleri för varje mapp i listan nedan, även de du redan har."
 
 #. translators: %d: number of photos in this folder that are not in the gallery yet
 #: hooks.php:596
@@ -20514,7 +20550,13 @@ msgid ""
 "region over the network on first use. For Google Cloud Storage, use 'gcs-"
 "json' instead of access keys. For Bunny.net, use bunny-specific keys (see "
 "documentation)."
-msgstr "Ersätt 'aws' med din leverantör (aws, google-cloud, bunny, digitalocean, wasabi, backblaze, cloudflare-r2, linode eller custom). Ställ in 'region' så att den matchar där din bucket skapades; om du utelämnar den identifierar Sunshine regionen över nätverket vid första användningen. För Google Cloud Storage, använd 'gcs-json' i stället för åtkomstnycklar. För Bunny.net, använd bunny-specifika nycklar (se dokumentationen)."
+msgstr ""
+"Ersätt 'aws' med din leverantör (aws, google-cloud, bunny, digitalocean, "
+"wasabi, backblaze, cloudflare-r2, linode eller custom). Ställ in 'region' så "
+"att den matchar där din bucket skapades; om du utelämnar den identifierar "
+"Sunshine regionen över nätverket vid första användningen. För Google Cloud "
+"Storage, använd 'gcs-json' i stället för åtkomstnycklar. För Bunny.net, "
+"använd bunny-specifika nycklar (se dokumentationen)."
 
 #: admin/settings.php:162
 msgid "Access Key ID"
@@ -21718,7 +21760,10 @@ msgid ""
 "Work out which bucket and file each already-uploaded image lives at, so "
 "their addresses are rebuilt from your current settings instead of the ones "
 "they were uploaded with"
-msgstr "Ta reda på vilken bucket och fil varje redan uppladdad bild ligger i, så att deras adresser byggs upp från dina nuvarande inställningar i stället för de som gällde när de laddades upp"
+msgstr ""
+"Ta reda på vilken bucket och fil varje redan uppladdad bild ligger i, så att "
+"deras adresser byggs upp från dina nuvarande inställningar i stället för de "
+"som gällde när de laddades upp"
 
 #: admin/tools.php:1892
 msgid "Record Locations"
@@ -21730,7 +21775,8 @@ msgstr "Molnlagring är inte konfigurerad, så det finns inget att registrera."
 
 #: admin/tools.php:1981
 msgid "Every uploaded image already has its location recorded. Nothing to do."
-msgstr "Alla uppladdade bilder har redan sin plats registrerad. Inget att göra."
+msgstr ""
+"Alla uppladdade bilder har redan sin plats registrerad. Inget att göra."
 
 #: admin/tools.php:1985
 msgid "Recording image locations"
@@ -21740,7 +21786,9 @@ msgstr "Registrerar bildplatser"
 msgid ""
 "Nothing is uploaded, downloaded or changed in your bucket. This only fills "
 "in a missing note about where each image already is."
-msgstr "Ingenting laddas upp, laddas ner eller ändras i din bucket. Det här fyller bara i en saknad notering om var varje bild redan finns."
+msgstr ""
+"Ingenting laddas upp, laddas ner eller ändras i din bucket. Det här fyller "
+"bara i en saknad notering om var varje bild redan finns."
 
 #: admin/tools.php:1989
 msgid "images recorded"
@@ -21758,7 +21806,9 @@ msgstr "Klart."
 msgid ""
 "could not be worked out and were left as they are, so they keep loading "
 "exactly as before."
-msgstr "kunde inte fastställas och lämnades som de är, så de fortsätter att laddas precis som förut."
+msgstr ""
+"kunde inte fastställas och lämnades som de är, så de fortsätter att laddas "
+"precis som förut."
 
 #: admin/tools.php:2026 admin/tools.php:2145
 msgid "Network error. Reload the page to carry on where this stopped."
@@ -21770,14 +21820,19 @@ msgstr "Nätverksfel. Ladda om sidan för att fortsätta där det stannade."
 msgid ""
 "Your images are recorded as living in the bucket \"%1$s\", but Sunshine is "
 "now set up for \"%2$s\"."
-msgstr "Dina bilder är registrerade som att de ligger i bucketen \"%1$s\", men Sunshine är nu konfigurerad för \"%2$s\"."
+msgstr ""
+"Dina bilder är registrerade som att de ligger i bucketen \"%1$s\", men "
+"Sunshine är nu konfigurerad för \"%2$s\"."
 
 #: admin/tools.php:2104
 msgid ""
 "If you renamed that bucket, point Sunshine at the new name and your "
 "galleries will load again. If those images really are in a separate bucket, "
 "leave them alone and they will keep loading from there."
-msgstr "Om du bytte namn på den bucketen, peka Sunshine mot det nya namnet så laddas dina gallerier igen. Om bilderna verkligen ligger i en separat bucket, låt dem vara så fortsätter de att laddas därifrån."
+msgstr ""
+"Om du bytte namn på den bucketen, peka Sunshine mot det nya namnet så laddas "
+"dina gallerier igen. Om bilderna verkligen ligger i en separat bucket, låt "
+"dem vara så fortsätter de att laddas därifrån."
 
 #: admin/tools.php:2106
 msgid "I renamed it, update my images"
@@ -22079,7 +22134,10 @@ msgid ""
 "Could not read the folder \"%s\" from your cloud storage, so the scan was "
 "stopped before anything was imported. This is usually temporary, so please "
 "try again."
-msgstr "Kunde inte läsa mappen \"%s\" från din molnlagring, så genomsökningen stoppades innan något importerades. Det här är oftast tillfälligt, så försök igen."
+msgstr ""
+"Kunde inte läsa mappen \"%s\" från din molnlagring, så genomsökningen "
+"stoppades innan något importerades. Det här är oftast tillfälligt, så försök "
+"igen."
 
 #: includes/class-cloud-storage-import.php:775
 #: includes/class-cloud-storage-import.php:830
@@ -23717,15 +23775,6 @@ msgstr "Lägg i varukorgen"
 #, fuzzy
 #~ msgid "Sunshine Photo Cart MCP"
 #~ msgstr "Beställning av Sunshine Photo-korg"
-
-#~ msgid "See email log"
-#~ msgstr "Se e-postlogg"
-
-#~ msgid "Process Queue"
-#~ msgstr "Process kö"
-
-#~ msgid "Queue processed!"
-#~ msgstr "Kö bearbetad!"
 
 #~ msgid "Subscribe Method"
 #~ msgstr "Metod för prenumeration"
