@@ -954,11 +954,13 @@ function sunshine_admin_gallery_image_thumbnail( $image, $echo = true ) {
 	}
 
 	$processing = sunshine_image_is_awaiting_processing( $image->get_id() );
+	$failed     = $processing && sunshine_image_processing_failed( $image->get_id() );
 
 	$html  = '<li id="image-' . esc_attr( $image->get_id() ) . '" data-image-id="' . esc_attr( $image->get_id() ) . '"' . ( $processing ? ' class="sunshine-image-processing"' : '' ) . '>';
 	$html .= '<div class="sunshine-image-container"><img src="' . $image->get_image_url() . '" data-image-id="' . esc_attr( $image->get_id() ) . '" alt="" />';
 	if ( $processing ) {
-		$html .= '<span class="sunshine-image-processing-label">' . esc_html__( 'Processing', 'sunshine-photo-cart' ) . '</span>';
+		$label = $failed ? __( 'Processing failed', 'sunshine-photo-cart' ) : __( 'Processing', 'sunshine-photo-cart' );
+		$html .= '<span class="sunshine-image-processing-label">' . esc_html( $label ) . '</span>';
 	}
 	$html .= '</div>';
 	$html .= '<span class="sunshine-image-actions">';

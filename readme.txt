@@ -244,25 +244,29 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.7.1 =
-* Fix: Regenerating images did not apply a new watermark, and did not send the rebuilt sizes back to cloud storage, whenever the rebuilt files ended up named differently from the originals. The new image details were being saved after the watermark and upload steps had already read the old ones
-* Fix: Regenerating every image now works through them in a fixed order. It went by position with no set order before, so on a large library an image could be done twice while another was never reached
-* Fix: Regenerating images no longer ends in a server error when the number of images has changed since the run started. The position that no longer exists is reported and the run continues
-* Fix: The fee warning in the admin can now be dismissed
-* Fix: Private galleries assigned to a customer through quick edit, bulk edit, bulk gallery creation or the API now appear in that customer's account area. The gallery always opened from a direct link, it just never showed up in their list of galleries
-* Change: Every screen now records allowed customers on a gallery the same way. Galleries saved before this update keep working
-* Change: Expired galleries are now listed in the customer's account area instead of quietly disappearing. Opening one explains that the gallery expired and when
-* Fix: Gallery, product and customer selection boxes no longer show a blank entry when something that was selected has since been deleted
-* Fix: Background image processing could stop partway through and never start again on its own. A gallery would sit unfinished for hours, and the only thing that restarted it was uploading another gallery. There is now a recurring check that picks the queue back up
-* Performance: Background image processing now works continuously instead of running for 20 seconds out of every minute. Large uploads finish in roughly a third of the time
-* Fix: When background processing handled images from more than one gallery in a single run, the second gallery's thumbnails were written into the first gallery's folder
-* Fix: Image processing no longer runs during a visitor's page load. A large upload could add up to 20 seconds of work to an unrelated page view, and if the page timed out partway through it took the rest of that request's database writes down with it, including scheduled tasks
-* Fix: Saving a visitor's session no longer runs an extra database query on every request
-* Fix: Sessions were being deleted early on sites not set to UTC, by however many hours the site's timezone is offset. On a site set to Sydney time, carts, favorites and entered gallery passwords were cleared ten hours before they should have been
-* Fix: Order pages no longer log a warning when opened without an order key in the address, and an order that has no key stored can no longer be opened by anyone
-* New: Automated Emails can now be sent when a gallery is published. The email waits until the gallery actually has photos, they have all finished processing, and the upload has stopped, so it does not go out while people would still be looking at a half-built gallery. Also available to developers as the `sunshine_gallery_ready` action
+* New: Automated Emails can now be sent when a gallery is published. The email waits until the gallery has photos and they have all finished processing, so it never goes out on a half-built gallery. Also available to developers as the `sunshine_gallery_ready` action
 * New: Warning in the admin when images are waiting to be processed but nothing is scheduled to process them, which usually means WordPress cron has stopped running
 * New: System Information now reports how many images are waiting to be processed, whether the queue is running, and when it next runs
-* Change: Images are no longer shown until they have finished processing. Previously an image with no thumbnails yet fell back to the full-resolution original, so a customer opening a gallery mid-upload was served the untouched, unwatermarked files. A placeholder is shown instead, at the size the real image will be, and the gallery admin marks those images as processing
+* Performance: Background image processing now runs continuously instead of 20 seconds out of every minute. Large uploads finish in roughly a third of the time
+* Performance: Saving a visitor's session no longer runs an extra database query on every request
+* Performance: Working out which galleries a discount or product source covers no longer refetches every gallery on the site once per selected gallery
+* Change: Images are no longer shown until they have finished processing. An image with no thumbnails yet used to fall back to the full-resolution original, so a customer opening a gallery mid-upload was served untouched, unwatermarked files. A placeholder is shown instead, and the gallery admin marks those images as processing
+* Change: Expired galleries are now listed in the customer's account area instead of quietly disappearing, and opening one explains that the gallery expired and when
+* Change: Every screen now records allowed customers on a gallery the same way. Galleries saved before this update keep working
+* Fix: Image processing no longer runs during a visitor's page load, where it could add up to 20 seconds to an unrelated page view and, on a timeout, lose the rest of that request's database writes including scheduled tasks
+* Fix: Background image processing could stop partway through and never restart on its own. A recurring check now picks the queue back up
+* Fix: Thumbnails no longer land in the wrong gallery's folder when one background run handles images from more than one gallery
+* Fix: A gallery that has had every one of its images deleted no longer leaves a check running every minute for good
+* Fix: An image whose processing failed now says so in the gallery admin instead of sitting there marked as still processing
+* Fix: Regenerating images now applies the new watermark and sends the rebuilt sizes to cloud storage when the rebuilt files end up named differently from the originals
+* Fix: Regenerating every image now works through them in a fixed order, so an image can no longer be done twice while another is never reached
+* Fix: Regenerating images no longer ends in a server error when the number of images changes mid-run. The missing position is reported and the run continues
+* Fix: Private galleries assigned to a customer through quick edit, bulk edit, bulk gallery creation or the API now appear in that customer's account area
+* Fix: Sessions were being deleted early on sites not set to UTC, by the site's timezone offset, clearing carts, favorites and gallery passwords too soon
+* Fix: Order pages no longer log a warning when opened without an order key, and an order with no key stored can no longer be opened by anyone
+* Fix: Gallery, product and customer selection boxes no longer show a blank entry when something that was selected has since been deleted
+* Fix: Payment methods your Stripe account cannot process can no longer be switched on, and card can no longer be switched off. Those toggles were meant to be locked and were not
+* Fix: The fee warning in the admin can now be dismissed
 
 = 3.7 - August 27, 2026 =
 * New: Billing address is now its own step at checkout, so you can record the address of the person paying even when the order is being shipped somewhere else. Invoices need the buyer's address, and the buyer is not always who the parcel goes to. On orders that ship, the customer gets a "use shipping address as billing address" box that is already ticked, so nothing extra to fill in unless the two differ

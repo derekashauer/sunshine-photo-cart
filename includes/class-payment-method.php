@@ -344,11 +344,11 @@ class SPC_Payment_Method {
 		$name = $this->fee_addon_name ? $this->fee_addon_name : $this->get_name();
 		if ( $this->fee_addon_included_in_plan() ) {
 			/* translators: %s is the add-on name, such as "Stripe Pro" */
-			$text = sprintf( __( 'Your license already includes the %s add-on, which removes this fee. It just needs to be turned on.', 'sunshine-photo-cart' ), $name );
+			$text = sprintf( __( 'Your license already includes the %s add-on, which removes this fee. It just needs to be turned on.', 'sunshine-photo-cart' ), esc_html( $name ) );
 			$link = __( 'Turn it on', 'sunshine-photo-cart' );
 		} else {
 			/* translators: %s is the add-on name, such as "Stripe Pro" */
-			$text = sprintf( __( 'The %s add-on removes this fee.', 'sunshine-photo-cart' ), $name );
+			$text = sprintf( __( 'The %s add-on removes this fee.', 'sunshine-photo-cart' ), esc_html( $name ) );
 			$link = __( 'Learn more', 'sunshine-photo-cart' );
 		}
 		$target = $this->fee_addon_included_in_plan() ? '' : ' target="_blank"';
@@ -405,8 +405,6 @@ class SPC_Payment_Method {
 			return;
 		}
 
-		$name = $this->fee_addon_name ? $this->fee_addon_name : $this->get_name();
-
 		$text = '<strong>' . sprintf(
 			/* translators: 1: fee percentage, 2: payment method name, such as "Stripe" */
 			esc_html__( 'Sunshine Photo Cart is taking a %1$s%% fee on every %2$s order.', 'sunshine-photo-cart' ),
@@ -414,13 +412,9 @@ class SPC_Payment_Method {
 			esc_html( $this->get_name() )
 		) . '</strong> ';
 
-		$text .= sprintf(
-			/* translators: %s is the add-on name, such as "Stripe Pro" */
-			esc_html__( 'Your license already includes the %s add-on, which removes this fee, but it is not turned on yet.', 'sunshine-photo-cart' ),
-			esc_html( $name )
-		);
-
-		$text .= ' <a href="' . esc_url( $this->get_fee_addon_url() ) . '">' . esc_html__( 'Turn it on', 'sunshine-photo-cart' ) . '</a>';
+		// The rest of the notice is the same sentence and link shown wherever else
+		// the fee appears, so it is worded and translated in one place.
+		$text .= $this->get_fee_addon_message();
 
 		SPC()->notices->add_admin( $key, $text, 'warning', true );
 

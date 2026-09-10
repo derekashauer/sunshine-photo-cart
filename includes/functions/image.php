@@ -575,6 +575,19 @@ function sunshine_image_is_awaiting_processing( $attachment_id ) {
 }
 
 /**
+ * Whether processing ran on an image and gave up.
+ *
+ * The image stays hidden either way, but the gallery admin can say so instead of
+ * showing it as still working on something that will never finish.
+ *
+ * @param int $attachment_id Attachment ID.
+ * @return bool
+ */
+function sunshine_image_processing_failed( $attachment_id ) {
+	return 'failed' === (string) get_post_meta( (int) $attachment_id, SUNSHINE_IMAGE_PROCESSING_META, true );
+}
+
+/**
  * Clear the marker once processing has finished.
  *
  * Runs late so watermarking (priority 10) and cloud offloading (priority 20) are

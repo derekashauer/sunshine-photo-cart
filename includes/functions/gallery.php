@@ -305,12 +305,36 @@ function sunshine_get_gallery_descendants( $gallery_id, $status = 'publish' ) {
 	return $children;
 }
 
-function sunshine_get_gallery_descendant_ids( $gallery_id, $status = 'publish' ) {
-	// Optimized to fetch only IDs instead of full post objects. One query
-	// fetches every gallery's ID and parent, then the tree is walked in PHP —
-	// the same strategy core's get_page_children() uses — instead of running
-	// one query per gallery node, which does not scale on sites with
-	// thousands of sub-galleries.
+/**
+ * Every gallery's child IDs, keyed by parent gallery ID.
+ *
+ * One query fetches every gallery's ID and parent, then the tree is walked in
+ * PHP — the same strategy core's get_page_children() uses — instead of running
+ * one query per gallery node, which does not scale on sites with thousands of
+ * sub-galleries.
+ *
+ * The map covers the whole site, so it is built once per request and reused.
+ * Discounts and product sources ask for the descendants of several galleries in
+ * a row, and each of those would otherwise refetch every gallery on the site.
+ *
+ * @param string|array $status Post status to include.
+ * @param bool         $flush  Throw the cached map away instead of returning it.
+ * @return array Arrays of child gallery IDs, keyed by parent gallery ID.
+ */
+function sunshine_get_gallery_parent_map( $status = 'publish', $flush = false ) {
+	static $maps = array();
+
+	if ( $flush ) {
+		$maps = array();
+		return array();
+	}
+
+	$key = is_array( $status ) ? implode( ',', $status ) : (string) $status;
+
+	if ( isset( $maps[ $key ] ) ) {
+		return $maps[ $key ];
+	}
+
 	$relationships = get_posts(
 		array(
 			'post_type'      => 'sunshine-gallery',
@@ -320,10 +344,6 @@ function sunshine_get_gallery_descendant_ids( $gallery_id, $status = 'publish' )
 			'no_found_rows'  => true,
 		)
 	);
-
-	if ( empty( $relationships ) ) {
-		return array();
-	}
 
 	// 'id=>parent' returns an array of parent IDs keyed by gallery ID, never post
 	// objects. WP_Query keys that array by the plain ID when the query runs
@@ -339,6 +359,30 @@ function sunshine_get_gallery_descendant_ids( $gallery_id, $status = 'publish' )
 			continue;
 		}
 		$children_by_parent[ (int) $parent_id ][] = $child_id;
+	}
+
+	$maps[ $key ] = $children_by_parent;
+
+	return $maps[ $key ];
+}
+
+/**
+ * Adding, changing or removing a gallery makes the cached parent map stale.
+ */
+add_action( 'save_post_sunshine-gallery', 'sunshine_flush_gallery_parent_map' );
+add_action( 'deleted_post', 'sunshine_flush_gallery_parent_map', 10, 2 );
+function sunshine_flush_gallery_parent_map( $post_id = 0, $post = null ) {
+	if ( $post && 'sunshine-gallery' !== $post->post_type ) {
+		return;
+	}
+	sunshine_get_gallery_parent_map( 'publish', true );
+}
+
+function sunshine_get_gallery_descendant_ids( $gallery_id, $status = 'publish' ) {
+	$children_by_parent = sunshine_get_gallery_parent_map( $status );
+
+	if ( empty( $children_by_parent ) ) {
+		return array();
 	}
 
 	// Breadth-first walk down from the requested gallery. Collecting into keys
@@ -625,6 +669,16 @@ function sunshine_check_galleries_ready() {
 	}
 
 	foreach ( $gallery_ids as $gallery_id ) {
-		sunshine_maybe_gallery_ready( $gallery_id );
+		if ( sunshine_maybe_gallery_ready( $gallery_id ) ) {
+			continue;
+		}
+
+		// A gallery with no images left can never be reported ready, so nothing
+		// would ever remove its marker and this check would keep running every
+		// minute for good. Drop the marker and let the gallery go.
+		$gallery = sunshine_get_gallery( $gallery_id );
+		if ( ! $gallery || ! $gallery->get_image_count() ) {
+			delete_post_meta( $gallery_id, SUNSHINE_GALLERY_LAST_IMAGE_META );
+		}
 	}
 }

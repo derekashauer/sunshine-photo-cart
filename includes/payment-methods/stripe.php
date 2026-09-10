@@ -818,7 +818,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 									class="sunshine-stripe-payment-method-toggle"
 									data-method="<?php echo esc_attr( $method_id ); ?>"
 									<?php checked( $is_enabled ); ?>
-									<?php disabled( $is_locked ); ?>
+									<?php disabled( $is_disabled ); ?>
 									style="opacity: 0; width: 0; height: 0;">
 								<span class="sunshine-toggle-slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: <?php echo $is_enabled ? '#635bff' : '#ccc'; ?>; border-radius: 24px; transition: 0.3s;">
 									<span style="position: absolute; content: ''; height: 18px; width: 18px; left: <?php echo $is_enabled ? '23px' : '3px'; ?>; bottom: 3px; background-color: white; border-radius: 50%; transition: 0.3s;"></span>
