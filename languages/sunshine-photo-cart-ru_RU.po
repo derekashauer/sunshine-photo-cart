@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-08-27T23:17:39+00:00\n"
+"POT-Creation-Date: 2026-09-10T20:30:54+00:00\n"
 "PO-Revision-Date: 2026-03-02 21:18-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -40,7 +40,9 @@ msgstr "https://www.sunshinephotocart.com"
 msgid ""
 "Client Gallery Photo Cart & Photo Proofing Plugin for Professional "
 "Photographers using WordPress"
-msgstr "Плагин клиентских галерей, корзины и согласования фотографий для профессиональных фотографов на WordPress"
+msgstr ""
+"Плагин клиентских галерей, корзины и согласования фотографий для "
+"профессиональных фотографов на WordPress"
 
 #. Author of the plugin
 #: sunshine-photo-cart.php advanced-shipping.php analytics.php authorizenet.php
@@ -104,14 +106,19 @@ msgstr "Твоя сессия истекла. Обнови страницу и �
 msgid ""
 "No download is available for this add-on. Your license may not include it, "
 "or SunshinePhotoCart.com could not be reached."
-msgstr "Для этого дополнения нет файла для скачивания. Возможно, твоя лицензия его не включает или не удалось связаться с SunshinePhotoCart.com."
+msgstr ""
+"Для этого дополнения нет файла для скачивания. Возможно, твоя лицензия его "
+"не включает или не удалось связаться с SunshinePhotoCart.com."
 
 #: includes/admin/addons.php:396
 msgid ""
 "WordPress could not write to your plugins folder, so this add-on could not "
 "be installed automatically. You can download it from your account and "
 "install it manually."
-msgstr "WordPress не смог записать данные в папку плагинов, поэтому дополнение не удалось установить автоматически. Ты можешь скачать его из своего аккаунта и установить вручную."
+msgstr ""
+"WordPress не смог записать данные в папку плагинов, поэтому дополнение не "
+"удалось установить автоматически. Ты можешь скачать его из своего аккаунта и "
+"установить вручную."
 
 #: includes/admin/addons.php:399
 msgid "This add-on could not be installed."
@@ -157,14 +164,14 @@ msgid "Meta Box"
 msgstr "Мета-бокс"
 
 #: includes/admin/class-admin-meta-box.php:137
-#: includes/admin/class-admin.php:254 includes/admin/class-options.php:160
-#: includes/admin/class-options.php:515
+#: includes/admin/class-admin.php:255 includes/admin/class-options.php:160
+#: includes/admin/class-options.php:525
 msgid "Documentation"
 msgstr "Документация"
 
 #: includes/admin/class-admin-meta-box.php:155
-#: includes/admin/class-admin-meta-box.php:660
-#: includes/admin/class-options.php:557 includes/class-payment-method.php:352
+#: includes/admin/class-admin-meta-box.php:675
+#: includes/admin/class-options.php:567 includes/class-payment-method.php:352
 #: includes/payment-methods/stripe.php:506 templates/admin/header.php:57
 msgid "Learn more"
 msgstr "Узнать больше"
@@ -179,48 +186,48 @@ msgstr "Просмотр страницы"
 msgid "Please select a page"
 msgstr "Пожалуйста, выберите страницу"
 
-#: includes/admin/class-admin-meta-box.php:615
-#: includes/admin/class-options.php:498
+#: includes/admin/class-admin-meta-box.php:630
+#: includes/admin/class-options.php:508
 msgid "Upload an image"
 msgstr "Загрузить изображение"
 
-#: includes/admin/class-admin-meta-box.php:615
-#: includes/admin/class-options.php:498
+#: includes/admin/class-admin-meta-box.php:630
+#: includes/admin/class-options.php:508
 msgid "Use image"
 msgstr "Использовать изображение"
 
-#: includes/admin/class-admin-meta-box.php:615
-#: includes/admin/class-options.php:498
+#: includes/admin/class-admin-meta-box.php:630
+#: includes/admin/class-options.php:508
 msgid "Upload new image"
 msgstr "Загрузить новое изображение"
 
-#: includes/admin/class-admin-meta-box.php:616
-#: includes/admin/class-options.php:499
+#: includes/admin/class-admin-meta-box.php:631
+#: includes/admin/class-options.php:509
 #: includes/admin/sunshine-product-category.php:12
 #: includes/admin/sunshine-product-category.php:104 admin.php:29 admin.php:149
 #: admin.php:192 admin.php:215
 msgid "Remove image"
 msgstr "Удалить изображение"
 
-#: includes/admin/class-admin-meta-box.php:654
-#: includes/admin/class-options.php:551
+#: includes/admin/class-admin-meta-box.php:669
+#: includes/admin/class-options.php:561
 msgid "See upgrade options"
 msgstr "См. варианты модернизации"
 
-#: includes/admin/class-admin-meta-box.php:657
-#: includes/admin/class-options.php:554
+#: includes/admin/class-admin-meta-box.php:672
+#: includes/admin/class-options.php:564
 msgid "Activate this add-on"
 msgstr "Активировать это приложение"
 
-#: includes/admin/class-admin-meta-box.php:677
+#: includes/admin/class-admin-meta-box.php:692
 msgid "Month(s)"
 msgstr "Месяц(ев)"
 
-#: includes/admin/class-admin-meta-box.php:678
+#: includes/admin/class-admin-meta-box.php:693
 msgid "Day(s)"
 msgstr "Дней"
 
-#: includes/admin/class-admin-meta-box.php:679
+#: includes/admin/class-admin-meta-box.php:694
 msgid "Hour(s)"
 msgstr "Час(ов)"
 
@@ -259,63 +266,65 @@ msgstr "Поиск клиентов"
 msgid "Edit on the full screen."
 msgstr "Редактировать на весь экран."
 
-#: includes/admin/class-admin.php:258
+#: includes/admin/class-admin.php:259
 msgid "Write a Review"
 msgstr "Написать отзыв"
 
-#: includes/admin/class-admin.php:262 includes/admin/class-admin.php:900
+#: includes/admin/class-admin.php:263 includes/admin/class-admin.php:949
 msgid "Upgrade"
 msgstr "Обновить"
 
-#: includes/admin/class-admin.php:269
+#: includes/admin/class-admin.php:270
 msgid "Submit Support Ticket"
 msgstr "Отправить запрос на поддержку"
 
-#: includes/admin/class-admin.php:307
+#: includes/admin/class-admin.php:308
 msgid "This add-on could not be turned on. Please try again."
 msgstr "Не удалось включить это дополнение. Попробуй ещё раз."
 
-#: includes/admin/class-admin.php:308
+#: includes/admin/class-admin.php:309
 msgid ""
 "Could not reach your site to turn on this add-on. Please reload the page and "
 "try again."
-msgstr "Не удалось связаться с твоим сайтом, чтобы включить это дополнение. Обнови страницу и попробуй ещё раз."
+msgstr ""
+"Не удалось связаться с твоим сайтом, чтобы включить это дополнение. Обнови "
+"страницу и попробуй ещё раз."
 
-#: includes/admin/class-admin.php:337
+#: includes/admin/class-admin.php:338
 msgid "Sunshine Main Page"
 msgstr "Главная страница"
 
-#: includes/admin/class-admin.php:338
+#: includes/admin/class-admin.php:339
 msgid "Sunshine Account"
 msgstr "Счет \"Солнечный свет"
 
-#: includes/admin/class-admin.php:339
+#: includes/admin/class-admin.php:340
 msgid "Sunshine Cart"
 msgstr "Тележка \"Солнышко"
 
-#: includes/admin/class-admin.php:340
+#: includes/admin/class-admin.php:341
 msgid "Sunshine Checkout"
 msgstr "Солнечная касса"
 
-#: includes/admin/class-admin.php:341 includes/functions/favorites.php:269
+#: includes/admin/class-admin.php:342 includes/functions/favorites.php:269
 msgid "Sunshine Favorites"
 msgstr "Избранное"
 
-#: includes/admin/class-admin.php:342
+#: includes/admin/class-admin.php:343
 msgid "Sunshine Terms & Conditions"
 msgstr "Условия и положения компании Sunshine"
 
-#: includes/admin/class-admin.php:403 includes/admin/class-options.php:59
+#: includes/admin/class-admin.php:404 includes/admin/class-options.php:59
 #: class-admin-gift-cards.php:10
 msgid "Settings"
 msgstr "Настройки"
 
-#: includes/admin/class-admin.php:411
+#: includes/admin/class-admin.php:412
 msgid "Go Pro"
 msgstr "Перейти на Pro"
 
 #. translators: %1$s is the URL to the Sunshine Photo Cart website, %2$s is the URL to the WordPress.org plugin reviews page
-#: includes/admin/class-admin.php:424
+#: includes/admin/class-admin.php:425
 #, php-format
 msgid ""
 "Thank you for using <a href=\"%1$s\" target=\"_blank\">Sunshine Photo Cart</"
@@ -327,11 +336,11 @@ msgstr ""
 "target=\"_blank\">оцените нас</a> на <a href=\"%2$s\" "
 "target=\"_blank\">WordPress.org</a>"
 
-#: includes/admin/class-admin.php:533
+#: includes/admin/class-admin.php:534
 msgid "View Sunshine Galleries"
 msgstr "Смотреть галереи Саншайн"
 
-#: includes/admin/class-admin.php:562
+#: includes/admin/class-admin.php:563
 msgid ""
 "The slug for core order statuses is not editable as it could break Sunshine "
 "functionality"
@@ -339,25 +348,25 @@ msgstr ""
 "Заглушка для основных статусов заказов не редактируется, так как это может "
 "нарушить функциональность Sunshine"
 
-#: includes/admin/class-admin.php:576
+#: includes/admin/class-admin.php:577
 msgid "Order Updated"
 msgstr "Заказ обновлен"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:578
+#: includes/admin/class-admin.php:579
 #, php-format
 msgid "<strong>Gallery updated</strong>, <a href=\"%s\">view gallery</a>"
 msgstr ""
 "<strong>Галерея обновлена</strong>, <a href=\"%s\">просмотр галереи</a>"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:580
+#: includes/admin/class-admin.php:581
 #, php-format
 msgid "<strong>Gallery created</strong>, <a href=\"%s\">view gallery</a>"
 msgstr "<strong>Создана галерея</strong>, <a href=\"%s\">просмотр галереи</a>"
 
 #. translators: %s is the URL to settings page
-#: includes/admin/class-admin.php:587
+#: includes/admin/class-admin.php:588
 #, php-format
 msgid ""
 "Sunshine logging is enabled. <a href=\"%s\">Please disable when no longer in "
@@ -366,8 +375,23 @@ msgstr ""
 "Запись в журнал включена. <a href=\"%s\">Пожалуйста, отключите его, если он "
 "больше не используется.</a>"
 
+#. translators: 1: number of images waiting, 2: URL to the tools page
+#: includes/admin/class-admin.php:627
+#, php-format
+msgid ""
+"%1$d image is waiting to be processed but nothing is scheduled to process "
+"it. This usually means WordPress cron is not running. <a href=\"%2$s\">Check "
+"your system information</a>."
+msgid_plural ""
+"%1$d images are waiting to be processed but nothing is scheduled to process "
+"them. This usually means WordPress cron is not running. <a "
+"href=\"%2$s\">Check your system information</a>."
+msgstr[0] "%1$d изображение ждёт обработки, но ничего не запланировано для его обработки. Обычно это значит, что cron WordPress не работает. <a href=\"%2$s\">Проверь информацию о системе</a>."
+msgstr[1] "%1$d изображения ждут обработки, но ничего не запланировано для их обработки. Обычно это значит, что cron WordPress не работает. <a href=\"%2$s\">Проверь информацию о системе</a>."
+msgstr[2] "%1$d изображений ждут обработки, но ничего не запланировано для их обработки. Обычно это значит, что cron WordPress не работает. <a href=\"%2$s\">Проверь информацию о системе</a>."
+
 #. translators: %s is the URL to installation page
-#: includes/admin/class-admin.php:594
+#: includes/admin/class-admin.php:643
 #, php-format
 msgid ""
 "Sunshine installation process was skipped. <a href=\"%s\">Please complete "
@@ -377,7 +401,7 @@ msgstr ""
 "завершите процесс установки.</a>"
 
 #. translators: %1$d is the number of orders, %2$s is the number of orders in plural
-#: includes/admin/class-admin.php:877
+#: includes/admin/class-admin.php:926
 #, php-format
 msgid "%s order"
 msgid_plural "%s orders"
@@ -385,72 +409,72 @@ msgstr[0] "%s заказ"
 msgstr[1] "%s заказа"
 msgstr[2] "%s заказов"
 
-#: includes/admin/class-admin.php:885 includes/admin/customers.php:13
+#: includes/admin/class-admin.php:934 includes/admin/customers.php:13
 #: includes/admin/customers.php:34 includes/admin/reports.php:20 reports.php:7
 msgid "Customers"
 msgstr "Клиенты"
 
-#: includes/admin/class-admin.php:886 includes/admin/reports.php:88
+#: includes/admin/class-admin.php:935 includes/admin/reports.php:88
 msgid "Reports"
 msgstr "Отчеты"
 
-#: includes/admin/class-admin.php:887 includes/admin/tools.php:36
+#: includes/admin/class-admin.php:936 includes/admin/tools.php:36
 #: includes/admin/tools.php:42
 msgid "Tools"
 msgstr "Инструменты"
 
-#: includes/admin/class-admin.php:888
+#: includes/admin/class-admin.php:937
 msgid "Add-ons"
 msgstr "Дополнения"
 
-#: includes/admin/class-admin.php:892
+#: includes/admin/class-admin.php:941
 msgid "Setup Guide"
 msgstr "Руководство по настройке"
 
-#: includes/admin/class-admin.php:897
+#: includes/admin/class-admin.php:946
 msgid "Get Help"
 msgstr "Получить помощь"
 
-#: includes/admin/class-admin.php:928
+#: includes/admin/class-admin.php:977
 msgid "Keywords"
 msgstr "Ключевые слова"
 
-#: includes/admin/class-admin.php:940
+#: includes/admin/class-admin.php:989
 msgid "Use gallery price level"
 msgstr "Используйте уровень цен в галерее"
 
-#: includes/admin/class-admin.php:948 includes/admin/sunshine-gallery.php:218
+#: includes/admin/class-admin.php:997 includes/admin/sunshine-gallery.php:218
 #: includes/class-sunshinephotocart.php:500
 #: includes/class-sunshinephotocart.php:513 class-export-galleries.php:22
 msgid "Price Level"
 msgstr "Уровень цен"
 
-#: includes/admin/class-admin.php:959
+#: includes/admin/class-admin.php:1008
 msgid "Disable Purchasing"
 msgstr "Отключить покупку (Purchasing)"
 
-#: includes/admin/class-admin.php:965 includes/admin/settings-fields.php:702
+#: includes/admin/class-admin.php:1014 includes/admin/settings-fields.php:702
 #: admin/products.php:45
 msgid "Watermark"
 msgstr "Водяной знак"
 
-#: includes/admin/class-admin.php:1010
+#: includes/admin/class-admin.php:1059
 msgid "Metadata"
 msgstr "Метаданные"
 
-#: includes/admin/class-admin.php:1097
+#: includes/admin/class-admin.php:1146
 msgid "Log file has been cleared"
 msgstr "Файл журнала был очищен"
 
-#: includes/admin/class-admin.php:1153
+#: includes/admin/class-admin.php:1202
 msgid "Error log file has been cleared"
 msgstr "Файл журнала ошибок был очищен"
 
-#: includes/admin/class-admin.php:1159 includes/admin/class-admin.php:1167
+#: includes/admin/class-admin.php:1208 includes/admin/class-admin.php:1216
 msgid "You do not have permission to access this file."
 msgstr "У вас нет разрешения на доступ к этому файлу."
 
-#: includes/admin/class-admin.php:1175
+#: includes/admin/class-admin.php:1224
 msgid "Log file not found."
 msgstr "Файл журнала не найден."
 
@@ -475,7 +499,7 @@ msgid "Email"
 msgstr "Email"
 
 #: includes/admin/class-customers-table.php:44 includes/admin/customers.php:187
-#: includes/admin/install.php:277 includes/admin/settings-fields.php:245
+#: includes/admin/install.php:285 includes/admin/settings-fields.php:245
 #: includes/admin/sunshine-gallery.php:170 includes/class-frontend.php:931
 #: templates/multi-image-select/select-images.php:35
 msgid "Favorites"
@@ -543,7 +567,11 @@ msgid ""
 "license here, <a href=\"%3$s\" target=\"_blank\">log in to your account</a>, "
 "click <strong>Manage Sites</strong> next to this license, deactivate the old "
 "URL, then return here and click Activate again."
-msgstr "Твоя лицензия была активирована на %1$s, но сейчас этот сайт — %2$s. Чтобы использовать лицензию здесь, <a href=\"%3$s\" target=\"_blank\">войди в свой аккаунт</a>, нажми <strong>Manage Sites</strong> рядом с этой лицензией, деактивируй старый адрес, затем вернись сюда и снова нажми «Активировать»."
+msgstr ""
+"Твоя лицензия была активирована на %1$s, но сейчас этот сайт — %2$s. Чтобы "
+"использовать лицензию здесь, <a href=\"%3$s\" target=\"_blank\">войди в свой "
+"аккаунт</a>, нажми <strong>Manage Sites</strong> рядом с этой лицензией, "
+"деактивируй старый адрес, затем вернись сюда и снова нажми «Активировать»."
 
 #. translators: %s is the URL to the sunshinephotocart.com account licenses page
 #: includes/admin/class-license.php:130
@@ -553,7 +581,11 @@ msgid ""
 "target=\"_blank\">Log in to your account</a>, click <strong>Manage Sites</"
 "strong> next to this license, deactivate the old URL, then return here and "
 "click Activate again."
-msgstr "Похоже, эта лицензия активирована на другом сайте. <a href=\"%s\" target=\"_blank\">Войди в свой аккаунт</a>, нажми <strong>Manage Sites</strong> рядом с этой лицензией, деактивируй старый адрес, затем вернись сюда и снова нажми «Активировать»."
+msgstr ""
+"Похоже, эта лицензия активирована на другом сайте. <a href=\"%s\" "
+"target=\"_blank\">Войди в свой аккаунт</a>, нажми <strong>Manage Sites</"
+"strong> рядом с этой лицензией, деактивируй старый адрес, затем вернись сюда "
+"и снова нажми «Активировать»."
 
 #: includes/admin/class-license.php:137
 msgid "This appears to be an invalid license key"
@@ -628,55 +660,55 @@ msgstr "Лицензию для %1$s не удалось обновить: %2$s"
 msgid "License for %s has been updated"
 msgstr "Лицензия для %s обновлена"
 
-#: includes/admin/class-options.php:483
+#: includes/admin/class-options.php:493
 msgid "Upload a file"
 msgstr "Загрузить файл"
 
-#: includes/admin/class-options.php:483
+#: includes/admin/class-options.php:493
 msgid "Select file"
 msgstr "Выбрать файл"
 
-#: includes/admin/class-options.php:483
+#: includes/admin/class-options.php:493
 msgid "Upload new file"
 msgstr "Загрузить новый файл"
 
-#: includes/admin/class-options.php:484
+#: includes/admin/class-options.php:494
 msgid "Remove file"
 msgstr "Удалить файл"
 
-#: includes/admin/class-options.php:531
+#: includes/admin/class-options.php:541
 msgid "day(s)"
 msgstr "дней"
 
-#: includes/admin/class-options.php:532
+#: includes/admin/class-options.php:542
 msgid "week(s)"
 msgstr "неделя(недель)"
 
-#: includes/admin/class-options.php:533
+#: includes/admin/class-options.php:543
 msgid "month(s)"
 msgstr "месяц(месяцев)"
 
-#: includes/admin/class-options.php:534
+#: includes/admin/class-options.php:544
 msgid "year(s)"
 msgstr "год(лет)"
 
-#: includes/admin/class-options.php:569
+#: includes/admin/class-options.php:579
 msgid "Deactivate"
 msgstr "Деактивировать"
 
-#: includes/admin/class-options.php:571
+#: includes/admin/class-options.php:581
 msgid "Refresh license"
 msgstr "Обновить лицензию"
 
-#: includes/admin/class-options.php:573
+#: includes/admin/class-options.php:583
 msgid "Activate"
 msgstr "Активировать"
 
-#: includes/admin/class-options.php:671
+#: includes/admin/class-options.php:681
 msgid "Save Settings"
 msgstr "Сохранить настройки"
 
-#: includes/admin/class-options.php:988
+#: includes/admin/class-options.php:998
 msgid "Validation failed"
 msgstr "Проверка не удалась"
 
@@ -782,7 +814,7 @@ msgid "Date"
 msgstr "Дата"
 
 #: includes/admin/class-privacy.php:255 includes/admin/sunshine-order.php:424
-#: templates/account/orders.php:8 admin.php:226
+#: templates/account/orders.php:8 admin.php:226 hooks.php:578
 msgid "Status"
 msgstr "Статус"
 
@@ -866,7 +898,7 @@ msgstr "Корабль"
 msgid "Insufficient permissions."
 msgstr "Недостаточные права доступа."
 
-#: includes/admin/class-update.php:630 includes/admin/install.php:264
+#: includes/admin/class-update.php:630 includes/admin/install.php:272
 #: includes/admin/settings-fields.php:250
 msgid "Terms & Conditions"
 msgstr "Правила и условия"
@@ -997,13 +1029,13 @@ msgstr "Перетащите, чтобы изменить порядок"
 #: includes/admin/gallery-navigator.php:159
 #: includes/admin/gallery-navigator.php:319
 #: includes/admin/sunshine-gallery.php:55
-#: includes/admin/sunshine-gallery.php:1831
+#: includes/admin/sunshine-gallery.php:1848
 msgid "Password Protected"
 msgstr "Защищено паролем"
 
 #: includes/admin/gallery-navigator.php:161
 #: includes/admin/gallery-navigator.php:321
-#: includes/admin/sunshine-gallery.php:1833
+#: includes/admin/sunshine-gallery.php:1850
 msgid "Private"
 msgstr "Частный"
 
@@ -1020,8 +1052,8 @@ msgstr "Истекший"
 
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:336
-#: includes/admin/sunshine-gallery.php:1572
-#: includes/class-cloud-storage-import.php:828
+#: includes/admin/sunshine-gallery.php:1589
+#: includes/class-cloud-storage-import.php:904
 msgid "images"
 msgstr "изображения"
 
@@ -1060,120 +1092,120 @@ msgstr[0] "Найдена %1$d галерея по запросу «%2$s»"
 msgstr[1] "Найдено %1$d галереи по запросу «%2$s»"
 msgstr[2] "Найдено %1$d галерей по запросу «%2$s»"
 
-#: includes/admin/install.php:85 class-admin-gift-cards.php:124
+#: includes/admin/install.php:93 class-admin-gift-cards.php:124
 msgid "You do not have permission to perform this action."
 msgstr "У вас недостаточно прав для выполнения этого действия."
 
-#: includes/admin/install.php:213
+#: includes/admin/install.php:221
 msgid "Client Galleries"
 msgstr "Галереи клиентов"
 
-#: includes/admin/install.php:225 includes/admin/settings-fields.php:240
+#: includes/admin/install.php:233 includes/admin/settings-fields.php:240
 msgid "Account"
 msgstr "Аккаунт"
 
-#: includes/admin/install.php:238 includes/admin/settings-fields.php:230
+#: includes/admin/install.php:246 includes/admin/settings-fields.php:230
 #: templates/cart/mini-cart.php:6
 msgid "Cart"
 msgstr "Тележка"
 
-#: includes/admin/install.php:251 includes/admin/settings-fields.php:235
+#: includes/admin/install.php:259 includes/admin/settings-fields.php:235
 #: includes/admin/settings-fields.php:1003
 #: includes/payment-methods/paypal.php:179
 msgid "Checkout"
 msgstr "Оформить заказ"
 
-#: includes/admin/install.php:290
+#: includes/admin/install.php:298
 msgid "Pending Payment"
 msgstr "Ожидающий платеж"
 
-#: includes/admin/install.php:294
+#: includes/admin/install.php:302
 msgid "We have received your order but payment is still pending"
 msgstr "Мы получили ваш заказ, но оплата еще не произведена"
 
-#: includes/admin/install.php:303
+#: includes/admin/install.php:311 hooks.php:602
 msgid "New"
 msgstr "Новый"
 
-#: includes/admin/install.php:307
+#: includes/admin/install.php:315
 msgid "We have received your order and payment"
 msgstr "Мы получили ваш заказ и оплату"
 
-#: includes/admin/install.php:316
+#: includes/admin/install.php:324 includes/admin/sunshine-gallery.php:962
 msgid "Processing"
 msgstr "Обработка"
 
-#: includes/admin/install.php:320
+#: includes/admin/install.php:328
 msgid "The images in your order are being processed and/or printed"
 msgstr ""
 "Изображения из вашего заказа в настоящее время обрабатываются и/или уже "
 "отправлены в печать"
 
-#: includes/admin/install.php:329
+#: includes/admin/install.php:337
 msgid "Shipped/Completed"
 msgstr "Заказ готов"
 
-#: includes/admin/install.php:333
+#: includes/admin/install.php:341
 msgid "Your items have shipped (or are available for download)!"
 msgstr "Ваши заказ готов к получению (или доступнен для загрузки)!"
 
-#: includes/admin/install.php:342
+#: includes/admin/install.php:350
 msgid "Cancelled"
 msgstr "Отменен"
 
-#: includes/admin/install.php:346
+#: includes/admin/install.php:354
 msgid "Your order was cancelled"
 msgstr "Ваш заказ был отменен"
 
-#: includes/admin/install.php:355
+#: includes/admin/install.php:363
 msgid "Refunded"
 msgstr "Возвращено"
 
-#: includes/admin/install.php:359
+#: includes/admin/install.php:367
 msgid "Your order was refunded"
 msgstr "Ваш заказ был возвращен"
 
-#: includes/admin/install.php:368
+#: includes/admin/install.php:376
 msgid "Ready for pickup"
 msgstr "Готов к получению"
 
-#: includes/admin/install.php:372
+#: includes/admin/install.php:380
 msgid "Your order is ready to be picked up"
 msgstr "Ваш заказ готов к получению/"
 
-#: includes/admin/install.php:381
+#: includes/admin/install.php:389
 msgid "Failed"
 msgstr "Ошибка"
 
-#: includes/admin/install.php:385 includes/functions/checkout.php:1057
+#: includes/admin/install.php:393 includes/functions/checkout.php:1057
 msgid "Payment failed"
 msgstr "Платеж не прошел"
 
-#: includes/admin/install.php:395 includes/admin/sunshine-gallery.php:54
+#: includes/admin/install.php:403 includes/admin/sunshine-gallery.php:54
 #: includes/admin/sunshine-gallery.php:114
 msgid "Default"
 msgstr "По умолчанию"
 
-#: includes/admin/install.php:404
+#: includes/admin/install.php:412
 msgid "Prints"
 msgstr "Печать"
 
-#: includes/admin/install.php:644
+#: includes/admin/install.php:652
 msgid "Could not activate license key"
 msgstr "Не удалось активировать лицензионный ключ"
 
-#: includes/admin/install.php:675
+#: includes/admin/install.php:683
 msgid "Could not subscribe to email list"
 msgstr "Не удалось подписаться на список адресов электронной почты"
 
 #. translators: %s is the plugin version number
-#: includes/admin/install.php:685
+#: includes/admin/install.php:693
 #, php-format
 msgid "Welcome to Sunshine Photo Cart %s"
 msgstr "Добро пожаловать в фотокорзину Sunshine %s"
 
 #. translators: %1$s is the plugin version number
-#: includes/admin/install.php:689
+#: includes/admin/install.php:697
 #, php-format
 msgid ""
 "<strong>Thank you for updating to the latest version!</strong> Sunshine %1$s "
@@ -1184,11 +1216,11 @@ msgstr ""
 "является наиболее полным плагином для WordPress для проверки клиентов и "
 "фотокорзины. Мы надеемся, что вы добьетесь больших успехов в продажах!"
 
-#: includes/admin/install.php:709 templates/admin/updates/update.php:35
+#: includes/admin/install.php:717 templates/admin/updates/update.php:35
 msgid "Recent Improvements"
 msgstr "Последние усовершенствования"
 
-#: includes/admin/install.php:711 templates/admin/updates/update.php:37
+#: includes/admin/install.php:719 templates/admin/updates/update.php:37
 msgid "See the full Changelog"
 msgstr "Посмотреть полный список изменений"
 
@@ -1262,7 +1294,11 @@ msgid ""
 "Zip/Postal Code(s): separate multiple codes with commas. Use * as a wildcard "
 "(902* matches anything starting with 902) or ... for a numeric range "
 "(90210...99000). Leave empty to match the whole state or country."
-msgstr "Почтовые индексы: перечисли несколько кодов через запятую. Используй * как подстановочный знак (902* подходит ко всему, что начинается с 902) или ... для числового диапазона (90210...99000). Оставь поле пустым, чтобы охватить весь регион или страну."
+msgstr ""
+"Почтовые индексы: перечисли несколько кодов через запятую. Используй * как "
+"подстановочный знак (902* подходит ко всему, что начинается с 902) или ... "
+"для числового диапазона (90210...99000). Оставь поле пустым, чтобы охватить "
+"весь регион или страну."
 
 #: includes/admin/promos.php:12 admin.php:154 admin.php:401 admin.php:439
 msgid "Options"
@@ -1287,8 +1323,8 @@ msgstr "Пакет"
 msgid "Quantity Discounts"
 msgstr "Скидки на количество"
 
-#: includes/admin/promos.php:248 admin/settings.php:641
-#: includes/class-cloud-storage-import.php:126
+#: includes/admin/promos.php:248 admin/settings.php:642
+#: includes/class-cloud-storage-import.php:170
 msgid "Cloud Storage"
 msgstr "Облачное хранилище"
 
@@ -1303,15 +1339,16 @@ msgstr "Товары"
 #: includes/admin/reports.php:18 includes/admin/settings-fields.php:321
 #: includes/admin/settings-fields.php:804 includes/admin/sunshine-order.php:427
 #: includes/class-sunshinephotocart.php:369 includes/functions/account.php:404
-#: reports.php:5 hooks.php:524 templates/account/downloads.php:30
-#: class-export-galleries.php:10 class-export-orders.php:502
+#: reports.php:5 class-admin-automated-emails.php:64 hooks.php:673
+#: templates/account/downloads.php:30 class-export-galleries.php:10
+#: class-export-orders.php:502
 msgid "Galleries"
 msgstr "Галереи"
 
 #: includes/admin/reports.php:19 includes/admin/sunshine-gallery.php:34
 #: includes/admin/sunshine-gallery.php:281
 #: includes/admin/sunshine-order.php:730 templates/store/product-details.php:21
-#: reports.php:6 hooks.php:532 class-export-galleries.php:16
+#: reports.php:6 hooks.php:681 class-export-galleries.php:16
 #: class-export-orders.php:501
 msgid "Images"
 msgstr "Изображения"
@@ -1557,7 +1594,7 @@ msgid "Disable promos throughout Sunshine Photo Cart"
 msgstr "Отключение промо-акций в фототележке Sunshine"
 
 #: includes/admin/settings-fields.php:200
-#: includes/admin/sunshine-product.php:103 class-admin-automated-emails.php:112
+#: includes/admin/sunshine-product.php:103 class-admin-automated-emails.php:132
 #: class-admin-discounts.php:204 sell-anything.php:39
 #: class-admin-gift-cards.php:64
 msgid "General"
@@ -2142,7 +2179,9 @@ msgstr "Включить избранное для гостей"
 msgid ""
 "Allow visitors who are not logged in to save favorites for their browser "
 "session"
-msgstr "Разрешить не вошедшим в аккаунт посетителям сохранять избранное на время сессии браузера"
+msgstr ""
+"Разрешить не вошедшим в аккаунт посетителям сохранять избранное на время "
+"сессии браузера"
 
 #: includes/admin/settings-fields.php:773
 msgid "Enable Selection Tray"
@@ -2256,7 +2295,13 @@ msgid ""
 "always who the order is delivered to. On orders that are being shipped the "
 "customer can tick a box to reuse the shipping address. Some payment methods, "
 "such as Square, always collect a billing address regardless of this setting."
-msgstr "Собирать адрес плательщика в каждом заказе, даже если ничего не отправляется. Для счетов нужен адрес покупателя, а покупатель не всегда является получателем заказа. В заказах с доставкой клиент может поставить галочку, чтобы использовать адрес доставки. Некоторые способы оплаты, например Square, всегда запрашивают платёжный адрес независимо от этой настройки."
+msgstr ""
+"Собирать адрес плательщика в каждом заказе, даже если ничего не "
+"отправляется. Для счетов нужен адрес покупателя, а покупатель не всегда "
+"является получателем заказа. В заказах с доставкой клиент может поставить "
+"галочку, чтобы использовать адрес доставки. Некоторые способы оплаты, "
+"например Square, всегда запрашивают платёжный адрес независимо от этой "
+"настройки."
 
 #: includes/admin/settings-fields.php:927
 msgid "Allowed Countries"
@@ -2633,7 +2678,10 @@ msgstr "Удалять просроченные галереи через"
 msgid ""
 "days — Galleries will be permanently deleted this many days after their "
 "expiration date. Leave blank to keep expired galleries indefinitely."
-msgstr "дней — Галереи будут безвозвратно удалены через столько дней после даты истечения срока. Оставь поле пустым, чтобы хранить просроченные галереи бессрочно."
+msgstr ""
+"дней — Галереи будут безвозвратно удалены через столько дней после даты "
+"истечения срока. Оставь поле пустым, чтобы хранить просроченные галереи "
+"бессрочно."
 
 #: includes/admin/settings-fields.php:1578
 msgid "Privacy"
@@ -2928,51 +2976,55 @@ msgid ""
 msgstr ""
 "Невозможно проверить выбранный каталог перед импортом. Повторите попытку."
 
-#: includes/admin/sunshine-gallery.php:1028
+#: includes/admin/sunshine-gallery.php:962
+msgid "Processing failed"
+msgstr "Обработка не удалась"
+
+#: includes/admin/sunshine-gallery.php:1036
 msgid "No file was uploaded"
 msgstr "Файл не был загружен"
 
-#: includes/admin/sunshine-gallery.php:1061
+#: includes/admin/sunshine-gallery.php:1069
 msgid "Invalid file type"
 msgstr "Неверный тип файла"
 
-#: includes/admin/sunshine-gallery.php:1076
+#: includes/admin/sunshine-gallery.php:1084
 msgid "Upload directory is not writable"
 msgstr "Каталог загрузки недоступен для записи"
 
-#: includes/admin/sunshine-gallery.php:1593
-#: includes/admin/sunshine-gallery.php:1642
+#: includes/admin/sunshine-gallery.php:1610
+#: includes/admin/sunshine-gallery.php:1659
 msgid "You do not have permission to import images."
 msgstr "У вас нет разрешения на импорт изображений."
 
-#: includes/admin/sunshine-gallery.php:1602
+#: includes/admin/sunshine-gallery.php:1619
 msgid "A directory must be selected before importing."
 msgstr "Перед импортом необходимо выбрать каталог."
 
-#: includes/admin/sunshine-gallery.php:1611
-#: includes/admin/sunshine-gallery.php:1657
+#: includes/admin/sunshine-gallery.php:1628
+#: includes/admin/sunshine-gallery.php:1674
 msgid "The selected directory is not available."
 msgstr "Выбранный каталог недоступен."
 
-#: includes/admin/sunshine-gallery.php:1682
+#: includes/admin/sunshine-gallery.php:1699
 msgid "Already uploaded to gallery"
 msgstr "Уже загружено в галерею"
 
 #. translators: %s is the upload directory
-#: includes/admin/sunshine-gallery.php:1702
+#: includes/admin/sunshine-gallery.php:1719
 #, php-format
 msgid "The selected file could not be copied to %s."
 msgstr "Выбранный файл не может быть скопирован в %s."
 
-#: includes/admin/sunshine-gallery.php:1741
+#: includes/admin/sunshine-gallery.php:1758
 msgid "No emails collected yet"
 msgstr "Электронные письма пока не собраны"
 
-#: includes/admin/sunshine-gallery.php:1815
+#: includes/admin/sunshine-gallery.php:1832
 msgid "Add gallery name"
 msgstr "Добавить название галереи"
 
-#: includes/admin/sunshine-order.php:106 class-admin-automated-emails.php:73
+#: includes/admin/sunshine-order.php:106 class-admin-automated-emails.php:93
 msgid "All"
 msgstr "Все"
 
@@ -3027,7 +3079,7 @@ msgstr "Удалить персональные данные"
 msgid "Select All"
 msgstr "Выбрать все"
 
-#: includes/admin/sunshine-order.php:421 includes/class-order.php:1003
+#: includes/admin/sunshine-order.php:421 includes/class-order.php:1009
 #: includes/class-sunshinephotocart.php:534 gallery.php:272 admin.php:237
 #: admin/customers.php:20 admin/customers.php:42 class-admin-gift-cards.php:189
 msgid "Order"
@@ -3461,7 +3513,7 @@ msgstr ""
 "хостера, можно ли увеличить доступную память. Рекомендуется не менее 256 М, "
 "но лучше всего - как можно больше."
 
-#: includes/admin/system-info.php:217
+#: includes/admin/system-info.php:222
 msgid "Copy system info to clipboard"
 msgstr "Копирование системной информации в буфер обмена"
 
@@ -3505,9 +3557,9 @@ msgstr ""
 msgid "No orphans found!"
 msgstr "Сироты не найдены!"
 
-#: includes/admin/tools/orphans.php:162 includes/admin/tools/regenerate.php:403
+#: includes/admin/tools/orphans.php:162 includes/admin/tools/regenerate.php:419
 #: includes/admin/tools/square-reconcile.php:191
-#: includes/admin/tools/unused-image-sizes.php:153 hooks.php:540
+#: includes/admin/tools/unused-image-sizes.php:153 hooks.php:689
 msgid "Abort"
 msgstr "Отменить"
 
@@ -3530,35 +3582,36 @@ msgstr ""
 "Если размер миниатюры, размер цифрового загружаемого файла или настройки "
 "водяного знака были изменены, необходимо регенерировать изображения."
 
-#: includes/admin/tools/regenerate.php:186
+#: includes/admin/tools/regenerate.php:193
 msgid "Could not find original file to regenerate from"
 msgstr "Не удалось найти исходный файл для регенерации"
 
-#: includes/admin/tools/regenerate.php:224
+#: includes/admin/tools/regenerate.php:231
 msgid "Could not download file from cloud storage for regeneration"
 msgstr "Не удалось загрузить файл из облачного хранилища для восстановления"
 
-#: includes/admin/tools/regenerate.php:233
+#: includes/admin/tools/regenerate.php:240
 msgid "Cloud Storage addon is required to regenerate this offloaded image"
 msgstr ""
 "Для повторного создания этого выгруженного образа требуется дополнение Cloud "
 "Storage."
 
-#: includes/admin/tools/regenerate.php:262
+#: includes/admin/tools/regenerate.php:269
 msgid "Original file is missing locally and no cloud-storage key is set."
-msgstr "Оригинал файла отсутствует локально, и ключ облачного хранилища не задан."
+msgstr ""
+"Оригинал файла отсутствует локально, и ключ облачного хранилища не задан."
 
 #. translators: %s is the gallery title
-#: includes/admin/tools/regenerate.php:388
+#: includes/admin/tools/regenerate.php:404
 #, php-format
 msgid "Regenerating images for \"%s\""
 msgstr "Регенерация изображений для \"%s\""
 
-#: includes/admin/tools/regenerate.php:391
+#: includes/admin/tools/regenerate.php:407
 msgid "Regenerating images"
 msgstr "Регенерация изображений"
 
-#: includes/admin/tools/regenerate.php:426
+#: includes/admin/tools/regenerate.php:442
 msgid ""
 "Image did not fully upload because it is too large for your server to "
 "handle. Thumbnails and watermarks may not have been applied. Recommend "
@@ -3568,36 +3621,50 @@ msgstr ""
 "вашего сервера. Возможно, не были применены миниатюры и водяные знаки. "
 "Рекомендуется увеличить объем доступной памяти."
 
-#: includes/admin/tools/regenerate.php:433
+#: includes/admin/tools/regenerate.php:449
 msgid "Done!"
 msgstr "Готово!"
 
-#: includes/admin/tools/regenerate.php:467
+#: includes/admin/tools/regenerate.php:483
 msgid "Watermark Settings Detected"
 msgstr "Обнаружены настройки водяных знаков"
 
 #. translators: %d is the number of images without watermark
-#: includes/admin/tools/regenerate.php:473
+#: includes/admin/tools/regenerate.php:489
 #, php-format
 msgid ""
 "You have %d image that does not have watermark enabled, but you have a "
 "watermark set in your general settings."
-msgid_plural "You have %d images that do not have watermark enabled, but you have a watermark set in your general settings."
-msgstr[0] "У тебя %d изображение без включённого водяного знака, хотя в общих настройках водяной знак задан."
-msgstr[1] "У тебя %d изображения без включённого водяного знака, хотя в общих настройках водяной знак задан."
-msgstr[2] "У тебя %d изображений без включённого водяного знака, хотя в общих настройках водяной знак задан."
+msgid_plural ""
+"You have %d images that do not have watermark enabled, but you have a "
+"watermark set in your general settings."
+msgstr[0] ""
+"У тебя %d изображение без включённого водяного знака, хотя в общих "
+"настройках водяной знак задан."
+msgstr[1] ""
+"У тебя %d изображения без включённого водяного знака, хотя в общих "
+"настройках водяной знак задан."
+msgstr[2] ""
+"У тебя %d изображений без включённого водяного знака, хотя в общих "
+"настройках водяной знак задан."
 
-#: includes/admin/tools/regenerate.php:484
+#: includes/admin/tools/regenerate.php:500
 msgid "How would you like to proceed?"
 msgstr "Как вы хотите поступить?"
 
-#: includes/admin/tools/regenerate.php:487
+#: includes/admin/tools/regenerate.php:503
 msgid "Apply watermark to all images"
 msgstr "Применить водяной знак ко всем изображениям"
 
-#: includes/admin/tools/regenerate.php:490
+#: includes/admin/tools/regenerate.php:506
 msgid "Keep current image watermark settings"
 msgstr "Сохранить текущие настройки водяных знаков изображения"
+
+#: includes/admin/tools/regenerate.php:543
+msgid ""
+"No image found at this position. It may have been deleted since this run "
+"started."
+msgstr "Изображение в этой позиции не найдено. Возможно, оно было удалено после начала обработки."
 
 #: includes/admin/tools/reinstall.php:6
 msgid "Install process"
@@ -3664,7 +3731,11 @@ msgid ""
 "(network drop, closed tab, etc.), the order can get stuck in pending while "
 "the charge succeeds at Square. This tool finds pending Square orders, asks "
 "Square if the payment completed, and finalizes any that did."
-msgstr "Когда Square списывает деньги с клиента, но его браузер не завершает заказ (обрыв связи, закрытая вкладка и т. п.), заказ может зависнуть в статусе «в ожидании», хотя платёж в Square прошёл. Этот инструмент находит такие заказы Square, спрашивает у Square, прошёл ли платёж, и завершает те, где он прошёл."
+msgstr ""
+"Когда Square списывает деньги с клиента, но его браузер не завершает заказ "
+"(обрыв связи, закрытая вкладка и т. п.), заказ может зависнуть в статусе «в "
+"ожидании», хотя платёж в Square прошёл. Этот инструмент находит такие заказы "
+"Square, спрашивает у Square, прошёл ли платёж, и завершает те, где он прошёл."
 
 #: includes/admin/tools/square-reconcile.php:21
 msgid "Reconcile pending Square orders"
@@ -3674,7 +3745,9 @@ msgstr "Сверить ожидающие заказы Square"
 #: includes/admin/tools/square-reconcile.php:32
 #, php-format
 msgid "Sunshine found %s pending order(s) with a Square payment id to check."
-msgstr "Sunshine нашёл %s ожидающих заказов с идентификатором платежа Square для проверки."
+msgstr ""
+"Sunshine нашёл %s ожидающих заказов с идентификатором платежа Square для "
+"проверки."
 
 #: includes/admin/tools/square-reconcile.php:35
 msgid "No pending Square orders to reconcile."
@@ -3791,7 +3864,9 @@ msgstr "Способ доставки"
 msgid ""
 "Sorry, shipping is not available to the address you entered. Please double "
 "check the address or try a different shipping address."
-msgstr "К сожалению, доставка по указанному адресу недоступна. Проверь адрес ещё раз или укажи другой адрес доставки."
+msgstr ""
+"К сожалению, доставка по указанному адресу недоступна. Проверь адрес ещё раз "
+"или укажи другой адрес доставки."
 
 #: includes/class-cart.php:1869
 msgid "Use shipping address as billing address"
@@ -12527,8 +12602,8 @@ msgstr "Почтовый индекс"
 
 #: includes/class-countries.php:2766 includes/class-countries.php:2874
 #: includes/class-countries.php:2910 includes/class-countries.php:3136
-#: admin/settings.php:180 admin/settings.php:212 admin/settings.php:239
-#: admin/settings.php:257 admin/settings.php:283
+#: admin/settings.php:181 admin/settings.php:213 admin/settings.php:240
+#: admin/settings.php:258 admin/settings.php:284
 msgid "Region"
 msgstr "Регион"
 
@@ -12825,14 +12900,14 @@ msgid "Status set to %s"
 msgstr "Состояние установлено на %s"
 
 #. translators: %s is the order number
-#: includes/class-order.php:219 includes/class-order.php:1030
+#: includes/class-order.php:219 includes/class-order.php:1036
 #, php-format
 msgid "Order #%s"
 msgstr "Заказ #%s"
 
 #. translators: %s is the refund amount formatted as price
 #. translators: %s: refund amount
-#: includes/class-order.php:888 includes/payment-methods/paypal.php:805
+#: includes/class-order.php:894 includes/payment-methods/paypal.php:805
 #: includes/payment-methods/paypal.php:807
 #: includes/payment-methods/square.php:1794
 #: includes/payment-methods/stripe.php:3365 class-authorizenet.php:472
@@ -12894,9 +12969,11 @@ msgstr "%s  Добавить сбор"
 msgid ""
 "Your license already includes the %s add-on, which removes this fee. It just "
 "needs to be turned on."
-msgstr "Твоя лицензия уже включает дополнение %s, которое убирает эту комиссию. Его нужно только включить."
+msgstr ""
+"Твоя лицензия уже включает дополнение %s, которое убирает эту комиссию. Его "
+"нужно только включить."
 
-#: includes/class-payment-method.php:348 includes/class-payment-method.php:418
+#: includes/class-payment-method.php:348
 msgid "Turn it on"
 msgstr "Включить"
 
@@ -12911,18 +12988,10 @@ msgid "Sunshine Photo Cart fee"
 msgstr "Комиссия Sunshine Photo Cart"
 
 #. translators: 1: fee percentage, 2: payment method name, such as "Stripe"
-#: includes/class-payment-method.php:409
+#: includes/class-payment-method.php:410
 #, php-format
 msgid "Sunshine Photo Cart is taking a %1$s%% fee on every %2$s order."
 msgstr "Sunshine Photo Cart берёт комиссию %1$s%% с каждого заказа %2$s."
-
-#. translators: %s is the add-on name, such as "Stripe Pro"
-#: includes/class-payment-method.php:415
-#, php-format
-msgid ""
-"Your license already includes the %s add-on, which removes this fee, but it "
-"is not turned on yet."
-msgstr "Твоя лицензия уже включает дополнение %s, которое убирает эту комиссию, но оно ещё не включено."
 
 #. translators: %s: unique instance ID for this shipping method
 #: includes/class-shipping-method.php:147
@@ -13675,6 +13744,10 @@ msgid ""
 "available"
 msgstr "Изображения в избранном были удалены, поскольку они больше не доступны"
 
+#: includes/functions/gallery.php:531
+msgid "Every minute"
+msgstr "Каждую минуту"
+
 #: includes/functions/misc.php:266
 msgid "United Arab Emirates dirham"
 msgstr "Дирхам Объединенных Арабских Эмиратов"
@@ -14393,7 +14466,7 @@ msgstr "Обязательно"
 
 #. translators: %d is the interval in minutes
 #. translators: %d: number of minutes between download queue runs
-#: includes/libraries/background-process.php:436 digital-downloads.php:124
+#: includes/libraries/background-process.php:475 digital-downloads.php:124
 #, php-format
 msgid "Every %d minute(s)"
 msgstr "Каждую %d минуту"
@@ -14494,7 +14567,14 @@ msgid ""
 "long codes, not your PayPal login email, account username, or website "
 "address. Need help? Follow the <a href=\"%2$s\" target=\"_blank\">step-by-"
 "step setup guide</a>."
-msgstr "Sunshine подключается к PayPal с помощью данных <strong>REST API</strong>: <strong>Client ID</strong> и <strong>Secret</strong>. Создай приложение в <a href=\"%1$s\" target=\"_blank\">PayPal Developer Dashboard</a> в разделе <strong>Apps &amp; Credentials</strong> (нужен бизнес-аккаунт PayPal) и скопируй его Client ID и Secret в поля ниже. Это длинные коды, а не твой email для входа в PayPal, имя пользователя или адрес сайта. Нужна помощь? Загляни в <a href=\"%2$s\" target=\"_blank\">пошаговое руководство</a>."
+msgstr ""
+"Sunshine подключается к PayPal с помощью данных <strong>REST API</strong>: "
+"<strong>Client ID</strong> и <strong>Secret</strong>. Создай приложение в <a "
+"href=\"%1$s\" target=\"_blank\">PayPal Developer Dashboard</a> в разделе "
+"<strong>Apps &amp; Credentials</strong> (нужен бизнес-аккаунт PayPal) и "
+"скопируй его Client ID и Secret в поля ниже. Это длинные коды, а не твой "
+"email для входа в PayPal, имя пользователя или адрес сайта. Нужна помощь? "
+"Загляни в <a href=\"%2$s\" target=\"_blank\">пошаговое руководство</a>."
 
 #: includes/payment-methods/paypal.php:69
 msgid "Live Client ID"
@@ -14507,7 +14587,10 @@ msgid ""
 "The Client ID from your <strong>Live</strong> app under <a href=\"%s\" "
 "target=\"_blank\">Apps &amp; Credentials</a>. It is a long code, not your "
 "PayPal email or website address."
-msgstr "Client ID из твоего приложения <strong>Live</strong> в разделе <a href=\"%s\" target=\"_blank\">Apps &amp; Credentials</a>. Это длинный код, а не твой email PayPal или адрес сайта."
+msgstr ""
+"Client ID из твоего приложения <strong>Live</strong> в разделе <a "
+"href=\"%s\" target=\"_blank\">Apps &amp; Credentials</a>. Это длинный код, а "
+"не твой email PayPal или адрес сайта."
 
 #: includes/payment-methods/paypal.php:85
 msgid "Live Secret"
@@ -14517,7 +14600,9 @@ msgstr "Live Secret"
 msgid ""
 "The Secret from the same <strong>Live</strong> app. In the PayPal dashboard, "
 "click <strong>Show</strong> under Secret Key, then copy it here."
-msgstr "Secret из того же приложения <strong>Live</strong>. В панели PayPal нажми <strong>Show</strong> под Secret Key и скопируй его сюда."
+msgstr ""
+"Secret из того же приложения <strong>Live</strong>. В панели PayPal нажми "
+"<strong>Show</strong> под Secret Key и скопируй его сюда."
 
 #: includes/payment-methods/paypal.php:100
 msgid "Sandbox Client ID"
@@ -14529,7 +14614,10 @@ msgstr "Sandbox Client ID"
 msgid ""
 "The Client ID from your <strong>Sandbox</strong> app under <a href=\"%s\" "
 "target=\"_blank\">Apps &amp; Credentials</a>. Used only for test payments."
-msgstr "Client ID из твоего приложения <strong>Sandbox</strong> в разделе <a href=\"%s\" target=\"_blank\">Apps &amp; Credentials</a>. Используется только для тестовых платежей."
+msgstr ""
+"Client ID из твоего приложения <strong>Sandbox</strong> в разделе <a "
+"href=\"%s\" target=\"_blank\">Apps &amp; Credentials</a>. Используется "
+"только для тестовых платежей."
 
 #: includes/payment-methods/paypal.php:117
 msgid "Sandbox Secret"
@@ -14539,7 +14627,9 @@ msgstr "Секрет песочницы"
 msgid ""
 "The Secret from the same <strong>Sandbox</strong> app. Used only for test "
 "payments."
-msgstr "Secret из того же приложения <strong>Sandbox</strong>. Используется только для тестовых платежей."
+msgstr ""
+"Secret из того же приложения <strong>Sandbox</strong>. Используется только "
+"для тестовых платежей."
 
 #: includes/payment-methods/paypal.php:132
 msgid "Allow Venmo"
@@ -14785,7 +14875,10 @@ msgstr "Square Pro"
 msgid ""
 "Note: An additional %s%% fee is added to each Square order and goes to "
 "Sunshine Photo Cart, on top of Square's own processing fees."
-msgstr "Обрати внимание: к каждому заказу через Square добавляется дополнительная комиссия %s%%, которая идёт Sunshine Photo Cart, сверх собственных комиссий Square."
+msgstr ""
+"Обрати внимание: к каждому заказу через Square добавляется дополнительная "
+"комиссия %s%%, которая идёт Sunshine Photo Cart, сверх собственных комиссий "
+"Square."
 
 #: includes/payment-methods/square.php:107
 msgid "Connect (Production)"
@@ -14883,7 +14976,9 @@ msgstr "Комиссия Square за обработку обновлена"
 msgid ""
 "Square has not yet calculated the processing fee for this payment. Try again "
 "after the payment has settled."
-msgstr "Square ещё не рассчитал комиссию за обработку этого платежа. Попробуй ещё раз после того, как платёж будет проведён."
+msgstr ""
+"Square ещё не рассчитал комиссию за обработку этого платежа. Попробуй ещё "
+"раз после того, как платёж будет проведён."
 
 #: includes/payment-methods/square.php:560
 #: includes/payment-methods/square.php:1620
@@ -14925,7 +15020,9 @@ msgstr "Идентификатор источника отсутствует"
 msgid ""
 "Your payment was already submitted and is being verified. Please refresh "
 "this page in a moment to continue - you do not need to re-enter your card."
-msgstr "Твой платёж уже отправлен и проверяется. Обнови эту страницу через минуту, чтобы продолжить - повторно вводить данные карты не нужно."
+msgstr ""
+"Твой платёж уже отправлен и проверяется. Обнови эту страницу через минуту, "
+"чтобы продолжить - повторно вводить данные карты не нужно."
 
 #. translators: %1$s: Square payment ID, %2$s: payment status
 #: includes/payment-methods/square.php:1255
@@ -14948,7 +15045,9 @@ msgstr "Платёж Square %1$s вернул статус %2$s - ждём за�
 msgid ""
 "Your payment is still being verified by Square. Please wait a moment and "
 "refresh the page to continue."
-msgstr "Square всё ещё проверяет твой платёж. Подожди немного и обнови страницу, чтобы продолжить."
+msgstr ""
+"Square всё ещё проверяет твой платёж. Подожди немного и обнови страницу, "
+"чтобы продолжить."
 
 #: includes/payment-methods/square.php:1394
 msgid "Every 15 minutes"
@@ -15000,7 +15099,9 @@ msgid ""
 "Could not refund payment: no Square credentials are connected for this "
 "order's mode (%s). This order may have been placed under a different Square "
 "connection."
-msgstr "Не удалось вернуть платёж: для режима этого заказа (%s) не подключены данные Square. Возможно, заказ был оформлен через другое подключение Square."
+msgstr ""
+"Не удалось вернуть платёж: для режима этого заказа (%s) не подключены данные "
+"Square. Возможно, заказ был оформлен через другое подключение Square."
 
 #. translators: %s is the error message
 #. translators: %s is the error detail message
@@ -15050,7 +15151,9 @@ msgstr "Этот заказ уже отмечен как оплаченный."
 msgid ""
 "Square reports this payment failed or was canceled%s. The order has been "
 "marked as failed."
-msgstr "Square сообщает, что платёж не прошёл или был отменён%s. Заказ отмечен как неудачный."
+msgstr ""
+"Square сообщает, что платёж не прошёл или был отменён%s. Заказ отмечен как "
+"неудачный."
 
 #. translators: %s is the Square payment status
 #: includes/payment-methods/square.php:1831
@@ -15058,13 +15161,17 @@ msgstr "Square сообщает, что платёж не прошёл или б
 msgid ""
 "Square still reports this payment as %s. The order remains pending. Try "
 "again in a moment."
-msgstr "Square всё ещё сообщает о статусе платежа: %s. Заказ остаётся в ожидании. Попробуй ещё раз через минуту."
+msgstr ""
+"Square всё ещё сообщает о статусе платежа: %s. Заказ остаётся в ожидании. "
+"Попробуй ещё раз через минуту."
 
 #: includes/payment-methods/square.php:1834
 msgid ""
 "A recheck for this payment is already running. Please wait a moment and try "
 "again."
-msgstr "Повторная проверка этого платежа уже выполняется. Подожди немного и попробуй ещё раз."
+msgstr ""
+"Повторная проверка этого платежа уже выполняется. Подожди немного и попробуй "
+"ещё раз."
 
 #: includes/payment-methods/square.php:1837
 msgid "Could not reach Square"
@@ -15107,7 +15214,10 @@ msgstr "Перейти к оплате"
 msgid ""
 "Note: An additional %s%% fee is added to each Stripe order and goes to "
 "Sunshine Photo Cart, on top of Stripe's own processing fees."
-msgstr "Обрати внимание: к каждому заказу через Stripe добавляется дополнительная комиссия %s%%, которая идёт Sunshine Photo Cart, сверх собственных комиссий Stripe."
+msgstr ""
+"Обрати внимание: к каждому заказу через Stripe добавляется дополнительная "
+"комиссия %s%%, которая идёт Sunshine Photo Cart, сверх собственных комиссий "
+"Stripe."
 
 #: includes/payment-methods/stripe.php:485
 msgid "Checkout Mode"
@@ -15304,7 +15414,9 @@ msgstr ""
 msgid ""
 "Greyed-out methods are not active on your Stripe account. Enable them in "
 "your Stripe Dashboard, then use Sync Payment Methods."
-msgstr "Способы, показанные серым, не активны в твоём аккаунте Stripe. Включи их в панели Stripe, а затем воспользуйся синхронизацией способов оплаты."
+msgstr ""
+"Способы, показанные серым, не активны в твоём аккаунте Stripe. Включи их в "
+"панели Stripe, а затем воспользуйся синхронизацией способов оплаты."
 
 #. translators: %s is a link to the Stripe Dashboard Link settings page
 #: includes/payment-methods/stripe.php:836
@@ -15314,7 +15426,11 @@ msgid ""
 "options (bank transfer and Buy Now, Pay Later). Stripe does not allow these "
 "to be turned off individually: turn Link off below to remove them, or manage "
 "Buy Now, Pay Later in your %s."
-msgstr "Когда Link включён, Stripe автоматически предлагает клиентам свои варианты Link (банковский перевод и оплату частями). Stripe не позволяет отключать их по отдельности: отключи Link ниже, чтобы убрать их, или настрой оплату частями в %s."
+msgstr ""
+"Когда Link включён, Stripe автоматически предлагает клиентам свои варианты "
+"Link (банковский перевод и оплату частями). Stripe не позволяет отключать их "
+"по отдельности: отключи Link ниже, чтобы убрать их, или настрой оплату "
+"частями в %s."
 
 #: includes/payment-methods/stripe.php:837
 msgid "Stripe Dashboard Link settings"
@@ -15629,7 +15745,11 @@ msgid ""
 "Ex: 80525,80526,80527. Use * as a wildcard (805* matches anything starting "
 "with 805) or ... for a numeric range (80525...80527). Leave empty to allow "
 "all."
-msgstr "Разрешённые почтовые индексы для этого способа доставки, через запятую. Например: 80525,80526,80527. Используй * как подстановочный знак (805* подходит ко всему, что начинается с 805) или ... для числового диапазона (80525...80527). Оставь пустым, чтобы разрешить все."
+msgstr ""
+"Разрешённые почтовые индексы для этого способа доставки, через запятую. "
+"Например: 80525,80526,80527. Используй * как подстановочный знак (805* "
+"подходит ко всему, что начинается с 805) или ... для числового диапазона "
+"(80525...80527). Оставь пустым, чтобы разрешить все."
 
 #: includes/shipping-methods/pickup.php:15
 msgid "Pickup Location Details"
@@ -15639,7 +15759,9 @@ msgstr "Детали места самовывоза"
 msgid ""
 "Address, hours, or other instructions for this pickup location. Shown to the "
 "customer on the order confirmation."
-msgstr "Адрес, часы работы или другие указания для этого пункта самовывоза. Показываются клиенту в подтверждении заказа."
+msgstr ""
+"Адрес, часы работы или другие указания для этого пункта самовывоза. "
+"Показываются клиенту в подтверждении заказа."
 
 #: includes/shortcodes.php:52
 msgid "Sorry, no gallery ID provided"
@@ -16087,7 +16209,7 @@ msgstr "Твоё имя"
 msgid "Your Email"
 msgstr "Твой email"
 
-#: templates/favorites/share.php:15 class-admin-automated-emails.php:70
+#: templates/favorites/share.php:15 class-admin-automated-emails.php:90
 msgid "Recipients"
 msgstr "Получатели"
 
@@ -16361,7 +16483,9 @@ msgstr "Sunshine Photo Cart - Расширенная доставка"
 msgid ""
 "Advanced shipping options to help you determine when they can be used by "
 "customers"
-msgstr "Расширенные настройки доставки, которые помогают определить, когда клиенты могут ими воспользоваться"
+msgstr ""
+"Расширенные настройки доставки, которые помогают определить, когда клиенты "
+"могут ими воспользоваться"
 
 #: hooks.php:18
 msgid "Price Type"
@@ -16404,7 +16528,10 @@ msgid ""
 "Only show this shipping option when the cart contains items from the "
 "selected galleries. Child galleries are included automatically. Leave empty "
 "for all galleries."
-msgstr "Показывать этот способ доставки, только если в корзине есть товары из выбранных галерей. Подгалереи учитываются автоматически. Оставь пустым, чтобы охватить все галереи."
+msgstr ""
+"Показывать этот способ доставки, только если в корзине есть товары из "
+"выбранных галерей. Подгалереи учитываются автоматически. Оставь пустым, "
+"чтобы охватить все галереи."
 
 #: hooks.php:60
 msgid "Exclude Galleries"
@@ -16414,7 +16541,9 @@ msgstr "Исключить галереи"
 msgid ""
 "Hide this shipping option when the cart contains items from the selected "
 "galleries. Child galleries are included automatically."
-msgstr "Скрывать этот способ доставки, если в корзине есть товары из выбранных галерей. Подгалереи учитываются автоматически."
+msgstr ""
+"Скрывать этот способ доставки, если в корзине есть товары из выбранных "
+"галерей. Подгалереи учитываются автоматически."
 
 #: hooks.php:67
 msgid "Allowed Countries, States/Provinces"
@@ -16442,7 +16571,8 @@ msgstr ""
 #. Plugin Name of the plugin
 #: analytics.php
 msgid "Sunshine Photo Cart - Advanced Sales Reports & Customer Activity"
-msgstr "Sunshine Photo Cart - Расширенные отчёты о продажах и активность клиентов"
+msgstr ""
+"Sunshine Photo Cart - Расширенные отчёты о продажах и активность клиентов"
 
 #. Description of the plugin
 #: analytics.php
@@ -16472,7 +16602,9 @@ msgstr "Вовлечённость по галереям"
 #: class-rest-reports-extension.php:18
 msgid ""
 "Galleries ranked by views + favorites + image views from the activity log."
-msgstr "Галереи в порядке рейтинга по просмотрам, избранному и просмотрам изображений из журнала активности."
+msgstr ""
+"Галереи в порядке рейтинга по просмотрам, избранному и просмотрам "
+"изображений из журнала активности."
 
 #: class-rest-reports-extension.php:27
 msgid "Image engagement"
@@ -16480,7 +16612,9 @@ msgstr "Вовлечённость по изображениям"
 
 #: class-rest-reports-extension.php:28
 msgid "Images ranked by views + favorites from the activity log."
-msgstr "Изображения по количеству просмотров и добавлений в избранное из журнала активности."
+msgstr ""
+"Изображения по количеству просмотров и добавлений в избранное из журнала "
+"активности."
 
 #: class-rest-reports-extension.php:37
 msgid "Customer activity"
@@ -16822,7 +16956,9 @@ msgstr "Sunshine Photo Cart - Автоматические письма"
 msgid ""
 "Empower your outreach with automated emails, tailored to your clients’ "
 "gallery interactions for a personalized touch"
-msgstr "Усиль работу с клиентами автоматическими письмами, подстроенными под то, как они взаимодействуют с твоими галереями"
+msgstr ""
+"Усиль работу с клиентами автоматическими письмами, подстроенными под то, как "
+"они взаимодействуют с твоими галереями"
 
 #: admin.php:5 class-admin-automated-emails.php:17 common.php:5 common.php:17
 msgid "Automated Emails"
@@ -16844,7 +16980,9 @@ msgstr "Обработка писем включена."
 msgid ""
 "Sunshine Automated Emails: the hourly email processing task isn't scheduled, "
 "so queued emails won't send."
-msgstr "Sunshine Automated Emails: ежечасная задача обработки писем не запланирована, поэтому письма из очереди не отправятся."
+msgstr ""
+"Sunshine Automated Emails: ежечасная задача обработки писем не "
+"запланирована, поэтому письма из очереди не отправятся."
 
 #: admin.php:94
 msgid "Enable email processing"
@@ -16892,59 +17030,70 @@ msgstr "Теги шаблона"
 msgid "Trigger"
 msgstr "Триггер"
 
-#: class-admin-automated-emails.php:64 admin/schedule.php:28
+#: class-admin-automated-emails.php:67 hooks.php:154
+#: class-export-orders.php:594
+msgid "Search for a gallery"
+msgstr "Поиск галереи"
+
+#: class-admin-automated-emails.php:68
+msgid ""
+"Only send this email for the selected galleries. Child galleries are "
+"included automatically. Leave empty to send for all galleries."
+msgstr "Отправлять это письмо только для выбранных галерей. Дочерние галереи включаются автоматически. Оставь пустым, чтобы отправлять для всех галерей."
+
+#: class-admin-automated-emails.php:84 admin/schedule.php:28
 msgid "Time"
 msgstr "Время"
 
-#: class-admin-automated-emails.php:66
+#: class-admin-automated-emails.php:86
 msgid "How long after/before the trigger should the email be sent?"
 msgstr ""
 "Через какое время после/до срабатывания триггера должно быть отправлено "
 "письмо?"
 
-#: class-admin-automated-emails.php:74
+#: class-admin-automated-emails.php:94
 msgid "User has favorites"
 msgstr "У пользователя есть избранное"
 
-#: class-admin-automated-emails.php:75
+#: class-admin-automated-emails.php:95
 msgid "User has no favorites"
 msgstr "У пользователя нет избранных"
 
-#: class-admin-automated-emails.php:76
+#: class-admin-automated-emails.php:96
 msgid "User has items in cart"
 msgstr "Пользователь имеет элементы в корзине"
 
-#: class-admin-automated-emails.php:77
+#: class-admin-automated-emails.php:97
 msgid "User has no items in cart"
 msgstr "У пользователя нет товаров в корзине"
 
-#: class-admin-automated-emails.php:78
+#: class-admin-automated-emails.php:98
 msgid "User has ordered"
 msgstr "Пользователь заказал"
 
-#: class-admin-automated-emails.php:79
+#: class-admin-automated-emails.php:99
 msgid "User has no orders"
 msgstr "Пользователь не имеет заказов"
 
-#: class-admin-automated-emails.php:80
+#: class-admin-automated-emails.php:100
 msgid "User has not ordered item from gallery"
 msgstr "Пользователь не заказывал товар из галереи"
 
-#: class-admin-automated-emails.php:82
+#: class-admin-automated-emails.php:102
 msgid "Select user attributes to determine who should receive this email"
 msgstr ""
 "Выберите атрибуты пользователя, чтобы определить, кто должен получить это "
 "письмо"
 
-#: class-admin-automated-emails.php:82
+#: class-admin-automated-emails.php:102
 msgid "See examples"
 msgstr "Смотри примеры"
 
-#: class-admin-automated-emails.php:88
+#: class-admin-automated-emails.php:108
 msgid "Discount (optional)"
 msgstr "Скидка (необязательно)"
 
-#: class-admin-automated-emails.php:90
+#: class-admin-automated-emails.php:110
 msgid ""
 "A unique coupon code will be generated based on the settings of the selected "
 "coupon and assigned to the specific user being emailed"
@@ -16952,11 +17101,11 @@ msgstr ""
 "Уникальный купон код будет создаваться на основании параметров выбранного "
 "купона и назначенные для конкретного пользователя и будет отправлен по e-mail"
 
-#: class-admin-automated-emails.php:94
+#: class-admin-automated-emails.php:114
 msgid "Discount Expiration (Optional)"
 msgstr "Срок действия купона (не обязательно)"
 
-#: class-admin-automated-emails.php:96
+#: class-admin-automated-emails.php:116
 msgid ""
 "How long should the coupon code be valid for after being created? This will "
 "override any expiration date settings of the selected discount code"
@@ -16964,11 +17113,11 @@ msgstr ""
 "В течение какого времени код купона должен действовать после создания? Это "
 "отменяет все настройки срока действия выбранного кода скидки"
 
-#: class-admin-automated-emails.php:134
+#: class-admin-automated-emails.php:154
 msgid "Gallery tags"
 msgstr "Метки галерей"
 
-#: class-admin-automated-emails.php:143
+#: class-admin-automated-emails.php:163
 msgid "Order tags"
 msgstr "Метки заказов"
 
@@ -16990,7 +17139,9 @@ msgstr "Требуется непустое поле `title`."
 
 #: class-rest-emails-controller.php:151
 msgid "A `trigger` is required. See GET /emails/triggers for valid keys."
-msgstr "Требуется `trigger`. Смотри GET /emails/triggers для списка допустимых ключей."
+msgstr ""
+"Требуется `trigger`. Смотри GET /emails/triggers для списка допустимых "
+"ключей."
 
 #: class-rest-emails-controller.php:210
 msgid "The email template could not be deleted."
@@ -17068,6 +17219,52 @@ msgstr "Журнал электронной почты не найден"
 msgid "No Email Log found in trash"
 msgstr "Журнал электронной почты не найден в корзине"
 
+#: common.php:125
+msgid "After user registers"
+msgstr "После того как пользователь зарегистрируется"
+
+#: common.php:126
+msgid "After user adds item to cart"
+msgstr "После того как пользователь добавляет товар в корзину"
+
+#: common.php:127
+msgid "After user adds image to favorites"
+msgstr "После того как пользователь добавляет изображение в избранное"
+
+#: common.php:128
+msgid "After user submits order"
+msgstr "После того как пользователь отправил заказ"
+
+#: common.php:129
+msgid "After user views gallery for first time"
+msgstr "После первого просмотра галереи пользователем"
+
+#: common.php:130
+msgid "Before gallery expires"
+msgstr "До истечения срока действия галереи"
+
+#: common.php:131
+msgid "After gallery expires"
+msgstr "После окончания срока действия галереи"
+
+#: common.php:132
+msgid "After providing email to access gallery"
+msgstr "После ввода email для доступа к галерее"
+
+#: common.php:133
+msgid "Assigned user has not yet visited gallery"
+msgstr "Назначенный пользователь еще не посещал галерею"
+
+#: common.php:134
+msgid "After gallery is published"
+msgstr "После публикации галереи"
+
+#. translators: %1$s: email name, %2$s: recipient email address
+#: common.php:256
+#, php-format
+msgid "%1$s for %2$s"
+msgstr "%1$s за %2$s"
+
 #: templates/admin/no-emails.php:2
 msgid "You have not set up any automated emails"
 msgstr "Вы не настроили никаких автоматических писем"
@@ -17139,7 +17336,7 @@ msgstr "Массовое добавление нового"
 msgid "Bulk Add Galleries"
 msgstr "Массовое добавление галерей"
 
-#: hooks.php:56 hooks.php:459
+#: hooks.php:56 hooks.php:483
 msgid "Source Gallery"
 msgstr "Галерея источников"
 
@@ -17159,7 +17356,7 @@ msgstr ""
 "Примечание: Если исходная галерея защищена паролем, то для каждой галереи, "
 "создаваемой в этом процессе, генерируется уникальный пароль."
 
-#: hooks.php:68 hooks.php:461
+#: hooks.php:68 hooks.php:485
 msgid "Parent Gallery"
 msgstr "Родительская Галерея"
 
@@ -17247,10 +17444,6 @@ msgstr ""
 msgid "Review galleries to be created"
 msgstr "Обзор создаваемых галерей"
 
-#: hooks.php:154 class-export-orders.php:594
-msgid "Search for a gallery"
-msgstr "Поиск галереи"
-
 #: hooks.php:202
 msgid "Invalid source configuration"
 msgstr "Недопустимая конфигурация источника"
@@ -17259,40 +17452,139 @@ msgstr "Недопустимая конфигурация источника"
 msgid "Invalid file upload"
 msgstr "Недопустимая загрузка файла"
 
-#: hooks.php:460
+#. translators: %d: number of folders picked
+#: hooks.php:471
+#, php-format
+msgid "%d folder picked"
+msgid_plural "%d folders picked"
+msgstr[0] "Выбрана %d папка"
+msgstr[1] "Выбрано %d папки"
+msgstr[2] "Выбрано %d папок"
+
+#: hooks.php:484
 msgid "Source Folder"
 msgstr "Папка-источник"
 
-#: hooks.php:461
+#: hooks.php:485
 msgid "No parent gallery"
 msgstr "Отсутствие родительской галереи"
 
-#: hooks.php:492
+#. translators: %d: number of folders picked, all of which are already imported
+#: hooks.php:497
+msgid "That folder is already in Sunshine, and no photos are missing from it."
+msgid_plural ""
+"All %d of these folders are already in Sunshine, and none of them are "
+"missing any photos."
+msgstr[0] "%d папка уже есть в Sunshine, и в ней не пропущено ни одной фотографии."
+msgstr[1] "Все %d папки уже есть в Sunshine, и ни в одной из них нет пропущенных фотографий."
+msgstr[2] "Все %d папок уже есть в Sunshine, и ни в одной из них нет пропущенных фотографий."
+
+#. translators: 1: number already imported, 2: number of folders picked
+#: hooks.php:503
+#, php-format
+msgid "%1$d of these %2$d folders are already in Sunshine."
+msgstr "%1$d из этих %2$d папок уже есть в Sunshine."
+
+#. translators: 1: number of new folders, 2: number of photos missing from folders already imported
+#: hooks.php:517
+#, php-format
+msgid ""
+"Bring in the %1$d new folders, plus %2$d photos missing from folders you "
+"already have"
+msgstr "Импортировать %1$d новых папок и ещё %2$d фотографий, которых не хватает в уже импортированных папках"
+
+#. translators: %d: number of new folders
+#: hooks.php:524
+msgid "Bring in the 1 new folder"
+msgid_plural "Bring in the %d new folders"
+msgstr[0] "Импортировать %d новую папку"
+msgstr[1] "Импортировать %d новые папки"
+msgstr[2] "Импортировать %d новых папок"
+
+#. translators: %d: number of photos missing from folders already imported
+#: hooks.php:530
+msgid "Bring in the 1 photo missing from a folder you already have"
+msgid_plural "Bring in the %d photos missing from folders you already have"
+msgstr[0] "Импортировать %d фотографию, которой не хватает в папке, которая у тебя уже есть"
+msgstr[1] "Импортировать %d фотографии, которых не хватает в папках, которые у тебя уже есть"
+msgstr[2] "Импортировать %d фотографий, которых не хватает в папках, которые у тебя уже есть"
+
+#: hooks.php:534
+msgid "Do not bring anything in"
+msgstr "Ничего не импортировать"
+
+#. translators: %d: total number of folders picked
+#: hooks.php:543
+msgid "Bring in the folder again, making a second copy of it"
+msgid_plural ""
+"Bring in all %d again, making a second copy of the ones already here"
+msgstr[0] "Импортировать %d папку ещё раз и создать её вторую копию"
+msgstr[1] "Импортировать все %d ещё раз и создать вторые копии тех, что уже здесь"
+msgstr[2] "Импортировать все %d ещё раз и создать вторые копии тех, что уже здесь"
+
+#. translators: %d: number of galleries with no record of their source folder
+#: hooks.php:556
+#, php-format
+msgid ""
+"%d galleries here were created before Sunshine started recording which "
+"folder a gallery came from, so it cannot tell which of these folders you "
+"already have."
+msgstr "%d галерей здесь были созданы до того, как Sunshine начал записывать, из какой папки взята галерея, поэтому он не может определить, какие из этих папок у тебя уже есть."
+
+#. translators: 1: link opening tag, 2: link closing tag
+#: hooks.php:565
+#, php-format
+msgid ""
+"Run %1$sTools > Record Image Locations%2$s first and come back, and Sunshine "
+"will be able to bring in only the folders that are missing. Importing now "
+"creates a gallery for every folder listed below, including any you already "
+"have."
+msgstr "Сначала запусти %1$sИнструменты > Записать расположение изображений%2$s и вернись сюда — тогда Sunshine сможет импортировать только недостающие папки. Если импортировать сейчас, будет создана галерея для каждой папки из списка ниже, включая те, которые у тебя уже есть."
+
+#. translators: %d: number of photos in this folder that are not in the gallery yet
+#: hooks.php:596
+#, php-format
+msgid "Already imported, %d photos missing"
+msgstr "Уже импортировано, не хватает %d фотографий"
+
+#: hooks.php:597
+msgid "Already imported"
+msgstr "Уже импортировано"
+
+#: hooks.php:600
+msgid "Cannot tell"
+msgstr "Невозможно определить"
+
+#: hooks.php:627
+msgid "Continue"
+msgstr "Продолжить"
+
+#: hooks.php:627
 msgid "Create galleries"
 msgstr "Создание галерей"
 
-#: hooks.php:547
+#: hooks.php:696
 msgid "Retry"
 msgstr "Повторить"
 
-#: hooks.php:654 hooks.php:686
+#: hooks.php:803 hooks.php:835
 msgid "Completed"
 msgstr "Завершено"
 
 #. translators: %1$s: source file path, %2$s: destination directory path
-#: hooks.php:967 hooks.php:969
+#: hooks.php:1124 hooks.php:1126
 #, php-format
 msgid "The file %1$s could not be copied to %2$s."
 msgstr "Файл %1$s не удалось скопировать в %2$s."
 
 #. translators: %1$s: image file name, %2$s: error message
-#: hooks.php:1005 hooks.php:1007
+#: hooks.php:1162 hooks.php:1164
 #, php-format
 msgid "Could not upload image %1$s: %2$s"
 msgstr "Не удалось загрузить изображение %1$s: %2$s"
 
 #. translators: %s: original file path
-#: hooks.php:1349
+#: hooks.php:1506
 #, php-format
 msgid "Could not copy original file: %s"
 msgstr "Не удалось скопировать исходный файл: %s"
@@ -17675,7 +17967,12 @@ msgid ""
 "target=\"_blank\">reliable server cron</a> is not required, but it makes "
 "background downloads process faster and more dependably, especially on lower-"
 "traffic sites."
-msgstr "Фоновые загрузки обрабатываются через cron WordPress, который запускается только когда кто-то заходит на сайт. Настраивать <a href=\"%s\" target=\"_blank\">надёжный серверный cron</a> необязательно, но с ним фоновые загрузки обрабатываются быстрее и стабильнее, особенно на сайтах с небольшим трафиком."
+msgstr ""
+"Фоновые загрузки обрабатываются через cron WordPress, который запускается "
+"только когда кто-то заходит на сайт. Настраивать <a href=\"%s\" "
+"target=\"_blank\">надёжный серверный cron</a> необязательно, но с ним "
+"фоновые загрузки обрабатываются быстрее и стабильнее, особенно на сайтах с "
+"небольшим трафиком."
 
 #: class-download-delivery-method.php:9
 msgid "Download your order items"
@@ -17685,13 +17982,13 @@ msgstr "Загрузить пункты заказа"
 msgid "Digital Download"
 msgstr "Цифровая загрузка"
 
-#: class-download.php:700
+#: class-download.php:752
 msgid "Unable to process download. The requested file may not be available."
 msgstr ""
 "Невозможно обработать загрузку. Запрашиваемый файл может быть недоступен."
 
-#: class-download.php:701 class-download.php:744 class-download.php:820
-#: class-download.php:882 class-download.php:902 class-download.php:1384
+#: class-download.php:753 class-download.php:799 class-download.php:875
+#: class-download.php:937 class-download.php:957 class-download.php:1439
 #: frontend.php:292 frontend.php:817 includes/download-handler.php:99
 #: includes/download-handler.php:107 includes/download-handler.php:161
 #: includes/download-handler.php:201 includes/download-handler.php:208
@@ -17699,7 +17996,7 @@ msgstr ""
 msgid "Download Error"
 msgstr "Ошибка загрузки"
 
-#: class-download.php:743 class-download.php:1978
+#: class-download.php:798 class-download.php:2033
 msgid ""
 "Sorry, the requested file could not be found. Please try again or contact "
 "support."
@@ -17707,35 +18004,43 @@ msgstr ""
 "Извините, запрошенный файл не найден. Повторите попытку или обратитесь в "
 "службу поддержки."
 
-#: class-download.php:819
+#: class-download.php:874
 msgid ""
 "Sorry, some of the files in this download could not be retrieved. Please try "
 "again or contact support."
-msgstr "К сожалению, некоторые файлы из этой загрузки не удалось получить. Попробуй ещё раз или обратись в поддержку."
+msgstr ""
+"К сожалению, некоторые файлы из этой загрузки не удалось получить. Попробуй "
+"ещё раз или обратись в поддержку."
 
-#: class-download.php:881
+#: class-download.php:936
 msgid ""
 "Sorry, this download could not be prepared. Please try again or contact "
 "support."
-msgstr "К сожалению, эту загрузку не удалось подготовить. Попробуй ещё раз или обратись в поддержку."
+msgstr ""
+"К сожалению, эту загрузку не удалось подготовить. Попробуй ещё раз или "
+"обратись в поддержку."
 
-#: class-download.php:901
+#: class-download.php:956
 msgid ""
 "Sorry, some of the files in this download could not be read. Please try "
 "again or contact support."
-msgstr "К сожалению, некоторые файлы из этой загрузки не удалось прочитать. Попробуй ещё раз или обратись в поддержку."
+msgstr ""
+"К сожалению, некоторые файлы из этой загрузки не удалось прочитать. Попробуй "
+"ещё раз или обратись в поддержку."
 
-#: class-download.php:1383
+#: class-download.php:1438
 msgid ""
 "Sorry, some of the files in this download could not be found. Please try "
 "again or contact support."
-msgstr "К сожалению, некоторые файлы из этой загрузки не удалось найти. Попробуй ещё раз или обратись в поддержку."
+msgstr ""
+"К сожалению, некоторые файлы из этой загрузки не удалось найти. Попробуй ещё "
+"раз или обратись в поддержку."
 
-#: class-download.php:2053
+#: class-download.php:2108
 msgid "Sorry, the file could not be downloaded. Please try again."
 msgstr "Извините, файл не удалось загрузить. Повторите попытку."
 
-#: class-download.php:2317
+#: class-download.php:2372
 msgid "original"
 msgstr "оригинал"
 
@@ -17837,7 +18142,9 @@ msgstr "Должен подтвердить разрешение на печат
 
 #: frontend.php:292 frontend.php:817
 msgid "Sorry, your download link has expired. Please go back and try again."
-msgstr "Извини, срок действия ссылки на скачивание истёк. Вернись назад и попробуй ещё раз."
+msgstr ""
+"Извини, срок действия ссылки на скачивание истёк. Вернись назад и попробуй "
+"ещё раз."
 
 #: frontend.php:600
 msgid "Download Gallery"
@@ -18130,7 +18437,7 @@ msgstr "Предлагай клиентам коды скидок"
 msgid "Apply discounts after taxes applied"
 msgstr "Применяйте скидки после уплаты налогов"
 
-#: admin.php:149
+#: admin.php:153
 msgid "Usage"
 msgstr "Применение"
 
@@ -18309,7 +18616,9 @@ msgstr "Не удалось удалить скидку."
 msgid ""
 "Code customers enter at checkout. Auto-generated when `auto` is true and "
 "`code` is empty."
-msgstr "Код, который клиенты вводят при оформлении заказа. Создаётся автоматически, если `auto` равно true, а `code` пусто."
+msgstr ""
+"Код, который клиенты вводят при оформлении заказа. Создаётся автоматически, "
+"если `auto` равно true, а `code` пусто."
 
 #: class-rest-discounts-controller.php:318
 msgid "Apply automatically without a code."
@@ -18321,7 +18630,8 @@ msgstr "При применении другие скидки не суммир�
 
 #: class-rest-discounts-controller.php:333
 msgid "Cap on how many of any one product the discount can apply to."
-msgstr "Ограничение на количество единиц одного товара, к которым применяется скидка."
+msgstr ""
+"Ограничение на количество единиц одного товара, к которым применяется скидка."
 
 #: class-rest-discounts-controller.php:349
 msgid "Find a discount by exact code."
@@ -18333,7 +18643,9 @@ msgstr "Фильтр по discount_type."
 
 #: class-rest-discounts-controller.php:357
 msgid "Only return discounts where today is within start_date/end_date."
-msgstr "Возвращать только скидки, у которых сегодняшняя дата попадает в start_date/end_date."
+msgstr ""
+"Возвращать только скидки, у которых сегодняшняя дата попадает в start_date/"
+"end_date."
 
 #: discounts.php:37
 msgid "Add New Discount"
@@ -18658,7 +18970,9 @@ msgstr "Sunshine Photo Cart - Lightbox"
 msgid ""
 "Lightbox interaction with gallery images allows slideshow, full screen, and "
 "other added display options"
-msgstr "Просмотр изображений галереи в лайтбоксе даёт слайд-шоу, полноэкранный режим и другие дополнительные варианты показа"
+msgstr ""
+"Просмотр изображений галереи в лайтбоксе даёт слайд-шоу, полноэкранный режим "
+"и другие дополнительные варианты показа"
 
 #: admin.php:10
 msgid "Lightbox"
@@ -18898,7 +19212,9 @@ msgstr "Sunshine Photo Cart - Сообщения"
 msgid ""
 "Create and manage custom email templates to send to customers when galleries "
 "are ready"
-msgstr "Создавай собственные шаблоны писем и управляй ими, чтобы отправлять их клиентам, когда галереи готовы"
+msgstr ""
+"Создавай собственные шаблоны писем и управляй ими, чтобы отправлять их "
+"клиентам, когда галереи готовы"
 
 #: class-message-custom.php:25 class-message-custom.php:96
 msgid "Custom Message"
@@ -19105,7 +19421,9 @@ msgstr "Sunshine Photo Cart - Товары из нескольких изобр�
 msgid ""
 "Sell multi-image products such as albums, photo boxes, or anything that "
 "allows the customer to select more than 1 image"
-msgstr "Продавай товары из нескольких изображений — альбомы, фотобоксы или что угодно, где клиент выбирает больше одного изображения"
+msgstr ""
+"Продавай товары из нескольких изображений — альбомы, фотобоксы или что "
+"угодно, где клиент выбирает больше одного изображения"
 
 #: admin.php:11
 msgid "Number of images"
@@ -19238,7 +19556,9 @@ msgstr "Sunshine Photo Cart - Уровни цен"
 msgid ""
 "Set different prices levels for your products which can be used in different "
 "galleries"
-msgstr "Задай разные уровни цен для своих товаров, которые можно использовать в разных галереях"
+msgstr ""
+"Задай разные уровни цен для своих товаров, которые можно использовать в "
+"разных галереях"
 
 #: price-levels.php:94
 msgid "All price levels"
@@ -19312,7 +19632,9 @@ msgstr "Sunshine Photo Cart - Опции товаров"
 msgid ""
 "Let customers choose options for your products, ideal for things like adding "
 "a frame, paper type, or image touch up"
-msgstr "Позволь клиентам выбирать параметры товаров — отлично подходит для рамки, типа бумаги или ретуши изображения"
+msgstr ""
+"Позволь клиентам выбирать параметры товаров — отлично подходит для рамки, "
+"типа бумаги или ретуши изображения"
 
 #: admin.php:19 admin.php:130
 msgid "Character Limit"
@@ -19439,7 +19761,9 @@ msgstr "Sunshine Photo Cart - Скидки за количество"
 #. Description of the plugin
 #: quantity-discounts.php
 msgid "Offer automatic discounts for customers the more they purchase"
-msgstr "Предлагай клиентам автоматические скидки: чем больше покупают, тем больше скидка"
+msgstr ""
+"Предлагай клиентам автоматические скидки: чем больше покупают, тем больше "
+"скидка"
 
 #: admin.php:8 templates/prices.php:13
 msgid "Quantity Discount"
@@ -19737,7 +20061,9 @@ msgstr "Sunshine Photo Cart - Продавай что угодно"
 msgid ""
 "Sell any type of non-image based product, accessible from the store view for "
 "galleries and with it's own shortcode"
-msgstr "Продавай любые товары, не связанные с изображениями: они доступны в витрине галерей и через собственный шорткод"
+msgstr ""
+"Продавай любые товары, не связанные с изображениями: они доступны в витрине "
+"галерей и через собственный шорткод"
 
 #: sell-anything.php:52
 msgid "Stock"
@@ -20056,7 +20382,8 @@ msgstr "Sunshine Photo Cart - Облачное хранилище"
 #. Description of the plugin
 #: cloud-storage.php
 msgid "Managed cloud storage service for Sunshine Photo Cart gallery images"
-msgstr "Управляемое облачное хранилище для изображений галерей Sunshine Photo Cart"
+msgstr ""
+"Управляемое облачное хранилище для изображений галерей Sunshine Photo Cart"
 
 #: admin/media-library.php:72 admin/media-library.php:287
 msgid "In Cloud Storage"
@@ -20101,19 +20428,19 @@ msgstr[2] "%d изображений не удалось перенести в �
 msgid "Invalid attachment ID"
 msgstr "Недопустимый идентификатор вложения"
 
-#: admin/media-library.php:221 admin/settings.php:654 admin/settings.php:828
+#: admin/media-library.php:221 admin/settings.php:655 admin/settings.php:830
 #: admin/tools.php:457 admin/tools.php:526 admin/tools.php:558
 #: admin/tools.php:596 admin/tools.php:993 admin/tools.php:1075
 #: admin/tools.php:1109 admin/tools.php:1579 admin/tools.php:1624
-#: admin/tools.php:1724 admin/tools.php:1766
-#: includes/class-cloud-storage-import.php:378
-#: includes/class-cloud-storage-import.php:688
-#: includes/class-cloud-storage-import.php:747
+#: admin/tools.php:1724 admin/tools.php:1766 admin/tools.php:2043
+#: admin/tools.php:2161 includes/class-cloud-storage-import.php:422
+#: includes/class-cloud-storage-import.php:764
+#: includes/class-cloud-storage-import.php:823
 msgid "Insufficient permissions"
 msgstr "Недостаточно разрешений"
 
-#: admin/media-library.php:227 includes/class-cloud-storage-import.php:381
-#: includes/class-cloud-storage-import.php:692
+#: admin/media-library.php:227 includes/class-cloud-storage-import.php:425
+#: includes/class-cloud-storage-import.php:768
 msgid "Cloud storage is not configured"
 msgstr "Облачное хранилище не настроено"
 
@@ -20165,7 +20492,7 @@ msgstr "Перенесено в облачное хранилище"
 msgid "Not offloaded"
 msgstr "Не разгружен"
 
-#: admin/settings.php:32 admin/settings.php:495
+#: admin/settings.php:32 admin/settings.php:496
 msgid "Test Connection"
 msgstr "Тест подключения"
 
@@ -20273,377 +20600,382 @@ msgstr ""
 msgid "More info"
 msgstr "Больше информации"
 
-#: admin/settings.php:120
+#: admin/settings.php:121
 msgid "Note:"
 msgstr "Заметка:"
 
-#: admin/settings.php:120
+#: admin/settings.php:121
 msgid ""
 "Replace 'aws' with your provider (aws, google-cloud, bunny, digitalocean, "
-"wasabi, backblaze, cloudflare-r2, linode, or custom). For Google Cloud "
-"Storage, use 'gcs-json' instead of access keys. For Bunny.net, use bunny-"
-"specific keys (see documentation)."
-msgstr ""
-"Замените «aws» на своего провайдера (aws, google-cloud, bunny, digitalocean, "
-"wasabi, backblaze, cloudflare-r2, linode или пользовательский). Для Google "
-"Cloud Storage используйте «gcs-json» вместо ключей доступа. Для Bunny.net "
-"используйте ключи, специфичные для Bunny (см. документацию)."
+"wasabi, backblaze, cloudflare-r2, linode, or custom). Set 'region' to match "
+"where your bucket was created; leaving it out makes Sunshine detect the "
+"region over the network on first use. For Google Cloud Storage, use 'gcs-"
+"json' instead of access keys. For Bunny.net, use bunny-specific keys (see "
+"documentation)."
+msgstr "Замени 'aws' на своего провайдера (aws, google-cloud, bunny, digitalocean, wasabi, backblaze, cloudflare-r2, linode или custom). Укажи в 'region' регион, в котором был создан твой бакет; если оставить его пустым, Sunshine определит регион по сети при первом использовании. Для Google Cloud Storage используй 'gcs-json' вместо ключей доступа. Для Bunny.net используй ключи bunny (см. документацию)."
 
-#: admin/settings.php:161
+#: admin/settings.php:162
 msgid "Access Key ID"
 msgstr "ID ключа доступа"
 
-#: admin/settings.php:164
+#: admin/settings.php:165
 msgid "Your storage provider access key ID"
 msgstr "Идентификатор ключа доступа вашего поставщика хранилища"
 
-#: admin/settings.php:170
+#: admin/settings.php:171
 msgid "Secret Access Key"
 msgstr "Секретный Ключ Доступа"
 
-#: admin/settings.php:173
+#: admin/settings.php:174
 msgid "Your storage provider secret access key"
 msgstr "Секретный ключ доступа вашего поставщика хранилища"
 
-#: admin/settings.php:184
+#: admin/settings.php:185
 msgid "Auto-detect"
 msgstr "Определить автоматически"
 
-#: admin/settings.php:185
+#: admin/settings.php:186
 msgid "US East (N. Virginia)"
 msgstr "Восток США (Сев. Вирджиния)"
 
-#: admin/settings.php:186
+#: admin/settings.php:187
 msgid "US East (Ohio)"
 msgstr "Восток США (Огайо)"
 
-#: admin/settings.php:187
+#: admin/settings.php:188
 msgid "US West (N. California)"
 msgstr "Запад США (Сев. Калифорния)"
 
-#: admin/settings.php:188
+#: admin/settings.php:189
 msgid "US West (Oregon)"
 msgstr "Запад США (Орегон)"
 
-#: admin/settings.php:189
+#: admin/settings.php:190
 msgid "Canada (Central)"
 msgstr "Канада (Центр)"
 
-#: admin/settings.php:190
+#: admin/settings.php:191
 msgid "Europe (Ireland)"
 msgstr "Европа (Ирландия)"
 
-#: admin/settings.php:191
+#: admin/settings.php:192
 msgid "Europe (London)"
 msgstr "Европа (Лондон)"
 
-#: admin/settings.php:192
+#: admin/settings.php:193
 msgid "Europe (Paris)"
 msgstr "Европа (Париж)"
 
-#: admin/settings.php:193
+#: admin/settings.php:194
 msgid "Europe (Frankfurt)"
 msgstr "Европа (Франкфурт)"
 
-#: admin/settings.php:194
+#: admin/settings.php:195
 msgid "Europe (Stockholm)"
 msgstr "Европа (Стокгольм)"
 
-#: admin/settings.php:195
+#: admin/settings.php:196
 msgid "Europe (Milan)"
 msgstr "Европа (Милан)"
 
-#: admin/settings.php:196
+#: admin/settings.php:197
 msgid "Asia Pacific (Singapore)"
 msgstr "Азиатско-Тихоокеанский регион (Сингапур)"
 
-#: admin/settings.php:197
+#: admin/settings.php:198
 msgid "Asia Pacific (Sydney)"
 msgstr "Азиатско-Тихоокеанский регион (Сидней)"
 
-#: admin/settings.php:198
+#: admin/settings.php:199
 msgid "Asia Pacific (Tokyo)"
 msgstr "Азиатско-Тихоокеанский регион (Токио)"
 
-#: admin/settings.php:199
+#: admin/settings.php:200
 msgid "Asia Pacific (Seoul)"
 msgstr "Азиатско-Тихоокеанский регион (Сеул)"
 
-#: admin/settings.php:200
+#: admin/settings.php:201
 msgid "Asia Pacific (Osaka)"
 msgstr "Азиатско-Тихоокеанский регион (Осака)"
 
-#: admin/settings.php:201
+#: admin/settings.php:202
 msgid "Asia Pacific (Mumbai)"
 msgstr "Азиатско-Тихоокеанский регион (Мумбаи)"
 
-#: admin/settings.php:202
+#: admin/settings.php:203
 msgid "South America (São Paulo)"
 msgstr "Южная Америка (Сан-Паулу)"
 
-#: admin/settings.php:203
+#: admin/settings.php:204
 msgid "Africa (Cape Town)"
 msgstr "Африка (Кейптаун)"
 
-#: admin/settings.php:204
+#: admin/settings.php:205
 msgid "Middle East (Bahrain)"
 msgstr "Ближний Восток (Бахрейн)"
 
-#: admin/settings.php:207
+#: admin/settings.php:208
 msgid "Select the region where your S3 bucket is located, or use Auto-detect."
-msgstr "Выбери регион, где находится твой бакет S3, или используй автоопределение."
+msgstr ""
+"Выбери регион, где находится твой бакет S3, или используй автоопределение."
 
-#: admin/settings.php:216
+#: admin/settings.php:217
 msgid "US East 1 (N. Virginia)"
 msgstr "Восток США 1 (Сев. Вирджиния)"
 
-#: admin/settings.php:217
+#: admin/settings.php:218
 msgid "US East 2 (N. Virginia)"
 msgstr "Восток США 2 (Сев. Вирджиния)"
 
-#: admin/settings.php:218
+#: admin/settings.php:219
 msgid "US West 1 (Oregon)"
 msgstr "Запад США 1 (Орегон)"
 
-#: admin/settings.php:219
+#: admin/settings.php:220
 msgid "US Central 1 (Texas)"
 msgstr "Центр США 1 (Техас)"
 
-#: admin/settings.php:220
+#: admin/settings.php:221
 msgid "EU Central 1 (Amsterdam)"
 msgstr "ЕС Центр 1 (Амстердам)"
 
-#: admin/settings.php:221
+#: admin/settings.php:222
 msgid "EU Central 2 (Frankfurt)"
 msgstr "ЕС Центр 2 (Франкфурт)"
 
-#: admin/settings.php:222
+#: admin/settings.php:223
 msgid "EU South 1 (Milan)"
 msgstr "ЕС Юг 1 (Милан)"
 
-#: admin/settings.php:223
+#: admin/settings.php:224
 msgid "EU West 1 (London)"
 msgstr "ЕС Запад 1 (Лондон)"
 
-#: admin/settings.php:224
+#: admin/settings.php:225
 msgid "EU West 2 (Paris)"
 msgstr "ЕС Запад 2 (Париж)"
 
-#: admin/settings.php:225
+#: admin/settings.php:226
 msgid "EU West 3 (United Kingdom)"
 msgstr "ЕС Запад 3 (Великобритания)"
 
-#: admin/settings.php:226
+#: admin/settings.php:227
 msgid "AP Northeast 1 (Tokyo)"
 msgstr "AP Северо-Восток 1 (Токио)"
 
-#: admin/settings.php:227
+#: admin/settings.php:228
 msgid "AP Northeast 2 (Osaka)"
 msgstr "AP Северо-Восток 2 (Осака)"
 
-#: admin/settings.php:228
+#: admin/settings.php:229
 msgid "AP Southeast 1 (Singapore)"
 msgstr "AP Юго-Восток 1 (Сингапур)"
 
-#: admin/settings.php:229
+#: admin/settings.php:230
 msgid "AP Southeast 2 (Sydney)"
 msgstr "AP Юго-Восток 2 (Сидней)"
 
-#: admin/settings.php:230
+#: admin/settings.php:231
 msgid "Canada (Toronto)"
 msgstr "Канада (Торонто)"
 
-#: admin/settings.php:231
+#: admin/settings.php:232
 msgid "US West 2 (San Jose)"
 msgstr "Запад США 2 (Сан-Хосе)"
 
-#: admin/settings.php:234
+#: admin/settings.php:235
 msgid "Select the region where your Wasabi bucket is located."
 msgstr "Выбери регион, где находится твой бакет Wasabi."
 
-#: admin/settings.php:243
+#: admin/settings.php:244
 msgid "New York 3 (NYC3)"
 msgstr "Нью-Йорк 3 (NYC3)"
 
-#: admin/settings.php:244
+#: admin/settings.php:245
 msgid "San Francisco 3 (SFO3)"
 msgstr "Сан-Франциско 3 (SFO3)"
 
-#: admin/settings.php:245
+#: admin/settings.php:246
 msgid "Amsterdam 3 (AMS3)"
 msgstr "Амстердам 3 (AMS3)"
 
-#: admin/settings.php:246
+#: admin/settings.php:247
 msgid "Singapore 1 (SGP1)"
 msgstr "Сингапур 1 (SGP1)"
 
-#: admin/settings.php:247
+#: admin/settings.php:248
 msgid "Frankfurt 1 (FRA1)"
 msgstr "Франкфурт 1 (FRA1)"
 
-#: admin/settings.php:248
+#: admin/settings.php:249
 msgid "Sydney 1 (SYD1)"
 msgstr "Сидней 1 (SYD1)"
 
-#: admin/settings.php:249
+#: admin/settings.php:250
 msgid "Bangalore 1 (BLR1)"
 msgstr "Бангалор 1 (BLR1)"
 
-#: admin/settings.php:252
+#: admin/settings.php:253
 msgid "Select the region where your DigitalOcean Space is located."
 msgstr "Выбери регион, где находится твой DigitalOcean Space."
 
-#: admin/settings.php:261
+#: admin/settings.php:262
 msgid "Newark, NJ (US East)"
 msgstr "Ньюарк, Нью-Джерси (Восток США)"
 
-#: admin/settings.php:262
+#: admin/settings.php:263
 msgid "Atlanta, GA (US Southeast)"
 msgstr "Атланта, Джорджия (Юго-восток США)"
 
-#: admin/settings.php:263
+#: admin/settings.php:264
 msgid "Chicago, IL (US Central)"
 msgstr "Чикаго, Иллинойс (Центр США)"
 
-#: admin/settings.php:264
+#: admin/settings.php:265
 msgid "Washington, DC"
 msgstr "Вашингтон, округ Колумбия"
 
-#: admin/settings.php:265
+#: admin/settings.php:266
 msgid "Frankfurt, DE (EU Central)"
 msgstr "Франкфурт, Германия (Центр ЕС)"
 
-#: admin/settings.php:266
+#: admin/settings.php:267
 msgid "Singapore (AP South)"
 msgstr "Сингапур (Юг AP)"
 
-#: admin/settings.php:267
+#: admin/settings.php:268
 msgid "Los Angeles, CA (US West)"
 msgstr "Лос-Анджелес, Калифорния (Запад США)"
 
-#: admin/settings.php:268
+#: admin/settings.php:269
 msgid "Miami, FL"
 msgstr "Майами, Флорида"
 
-#: admin/settings.php:269
+#: admin/settings.php:270
 msgid "Stockholm, SE"
 msgstr "Стокгольм, Швеция"
 
-#: admin/settings.php:270
+#: admin/settings.php:271
 msgid "Chennai, IN"
 msgstr "Ченнаи, Индия"
 
-#: admin/settings.php:271
+#: admin/settings.php:272
 msgid "Jakarta, ID"
 msgstr "Джакарта, Индонезия"
 
-#: admin/settings.php:272
+#: admin/settings.php:273
 msgid "Paris, FR"
 msgstr "Париж, Франция"
 
-#: admin/settings.php:273
+#: admin/settings.php:274
 msgid "São Paulo, BR"
 msgstr "Сан-Паулу, Бразилия"
 
-#: admin/settings.php:274
+#: admin/settings.php:275
 msgid "Osaka, JP"
 msgstr "Осака, Япония"
 
-#: admin/settings.php:275
+#: admin/settings.php:276
 msgid "Milan, IT"
 msgstr "Милан, Италия"
 
-#: admin/settings.php:278
+#: admin/settings.php:279
 msgid "Select the region where your Linode Object Storage bucket is located."
 msgstr "Выбери регион, где находится твой бакет Linode Object Storage."
 
-#: admin/settings.php:287
+#: admin/settings.php:288
 msgid "US West (000)"
 msgstr "Запад США (000)"
 
-#: admin/settings.php:288
+#: admin/settings.php:289
 msgid "US West (001)"
 msgstr "Запад США (001)"
 
-#: admin/settings.php:289
+#: admin/settings.php:290
 msgid "US West (002)"
 msgstr "Запад США (002)"
 
-#: admin/settings.php:290
+#: admin/settings.php:291
 msgid "US West (004)"
 msgstr "Запад США (004)"
 
-#: admin/settings.php:291
+#: admin/settings.php:292
 msgid "US East (005)"
 msgstr "Восток США (005)"
 
-#: admin/settings.php:292
+#: admin/settings.php:293
 msgid "EU Central (Amsterdam) (003)"
 msgstr "ЕС Центр (Амстердам) (003)"
 
-#: admin/settings.php:293
+#: admin/settings.php:294
 msgid "Canada East (Montreal) (006)"
 msgstr "Восток Канады (Монреаль) (006)"
 
-#: admin/settings.php:294
+#: admin/settings.php:295
 msgid "Other (enter custom region below)"
 msgstr "Другой (укажи свой регион ниже)"
 
-#: admin/settings.php:297
+#: admin/settings.php:298
 msgid ""
 "Select the region where your Backblaze B2 bucket is located. You can find "
 "this in your Backblaze B2 bucket details (S3 endpoint)."
-msgstr "Выбери регион, в котором находится твой бакет Backblaze B2. Его можно найти в сведениях о бакете Backblaze B2 (S3 endpoint)."
+msgstr ""
+"Выбери регион, в котором находится твой бакет Backblaze B2. Его можно найти "
+"в сведениях о бакете Backblaze B2 (S3 endpoint)."
 
-#: admin/settings.php:301 admin/settings.php:343
+#: admin/settings.php:302 admin/settings.php:344
 msgid "Custom Region"
 msgstr "Пользовательский регион"
 
-#: admin/settings.php:304
+#: admin/settings.php:305
 msgid ""
 "Enter your Backblaze B2 region code exactly as shown in your bucket details "
 "— the part between <code>s3.</code> and <code>.backblazeb2.com</code> in "
 "your S3 endpoint URL (for example, <code>us-west-007</code>)."
-msgstr "Введи код региона Backblaze B2 ровно так, как он указан в сведениях о бакете — часть между <code>s3.</code> и <code>.backblazeb2.com</code> в адресе S3 endpoint (например, <code>us-west-007</code>)."
+msgstr ""
+"Введи код региона Backblaze B2 ровно так, как он указан в сведениях о бакете "
+"— часть между <code>s3.</code> и <code>.backblazeb2.com</code> в адресе S3 "
+"endpoint (например, <code>us-west-007</code>)."
 
-#: admin/settings.php:322 admin/settings.php:331
+#: admin/settings.php:323 admin/settings.php:332
 msgid "Endpoint URL"
 msgstr "URL эндпоинта"
 
-#: admin/settings.php:325
+#: admin/settings.php:326
 msgid "Find this in your Cloudflare dashboard under R2 > Overview."
 msgstr "Найдёшь это в панели Cloudflare в разделе R2 > Overview."
 
-#: admin/settings.php:334
+#: admin/settings.php:335
 msgid "The endpoint URL for your S3-compatible storage provider"
 msgstr "URL эндпоинта твоего S3-совместимого хранилища"
 
-#: admin/settings.php:346
+#: admin/settings.php:347
 msgid "The region for your custom S3-compatible provider (e.g., us-east-1)"
 msgstr "Регион твоего S3-совместимого провайдера (например, us-east-1)"
 
-#: admin/settings.php:354 admin/settings.php:398
+#: admin/settings.php:355 admin/settings.php:399
 msgid "Bucket Name"
 msgstr "Имя временной папки"
 
-#: admin/settings.php:357 admin/settings.php:401
+#: admin/settings.php:358 admin/settings.php:402
 msgid "Load Buckets"
 msgstr "Загрузочные ковши"
 
-#: admin/settings.php:364 admin/settings.php:407 admin/settings.php:483
+#: admin/settings.php:365 admin/settings.php:408 admin/settings.php:484
 msgid "Custom Domain (Optional)"
 msgstr "Пользовательский домен (необязательно)"
 
-#: admin/settings.php:367 admin/settings.php:410 admin/settings.php:486
+#: admin/settings.php:368 admin/settings.php:411 admin/settings.php:487
 msgid ""
 "Enter a custom domain if you have one configured for serving images publicly."
-msgstr "Введи свой домен, если ты настроил его для публичной отдачи изображений."
+msgstr ""
+"Введи свой домен, если ты настроил его для публичной отдачи изображений."
 
-#: admin/settings.php:390
+#: admin/settings.php:391
 msgid "Service Account JSON File"
 msgstr "JSON-файл учетной записи службы"
 
-#: admin/settings.php:393
+#: admin/settings.php:394
 msgid ""
 "Paste the contents of your Google Cloud Storage service account JSON key "
 "file. You can download this from the Google Cloud Console."
@@ -20651,65 +20983,65 @@ msgstr ""
 "Вставьте содержимое файла JSON-ключа вашей учетной записи службы Google "
 "Cloud Storage. Вы можете загрузить его из консоли Google Cloud."
 
-#: admin/settings.php:432
+#: admin/settings.php:433
 msgid "Storage Zone Password"
 msgstr "Пароль зоны хранения"
 
-#: admin/settings.php:435
+#: admin/settings.php:436
 msgid "Found in your Bunny.net Storage Zone settings under FTP & API Access."
 msgstr ""
 "Находится в настройках зоны хранения Bunny.net в разделе «Доступ по FTP и "
 "API»."
 
-#: admin/settings.php:440
+#: admin/settings.php:441
 msgid "Storage Zone Name"
 msgstr "Название зоны хранения"
 
-#: admin/settings.php:443
+#: admin/settings.php:444
 msgid "The name of your Bunny.net Storage Zone."
 msgstr "Название вашей зоны хранения Bunny.net."
 
-#: admin/settings.php:448
+#: admin/settings.php:449
 msgid "Storage Region"
 msgstr "Регион хранения"
 
-#: admin/settings.php:452
+#: admin/settings.php:453
 msgid "Europe / Falkenstein (de)"
 msgstr "Европа / Фалькенштайн (de)"
 
-#: admin/settings.php:453
+#: admin/settings.php:454
 msgid "US East / New York (ny)"
 msgstr "Восточное побережье США / Нью-Йорк (NY)"
 
-#: admin/settings.php:454
+#: admin/settings.php:455
 msgid "US West / Los Angeles (la)"
 msgstr "Запад США / Лос-Анджелес (LA)"
 
-#: admin/settings.php:455
+#: admin/settings.php:456
 msgid "Asia / Singapore (sg)"
 msgstr "Азия / Сингапур (sg)"
 
-#: admin/settings.php:456
+#: admin/settings.php:457
 msgid "Oceania / Sydney (syd)"
 msgstr "Океания / Сидней (SYD)"
 
-#: admin/settings.php:457
+#: admin/settings.php:458
 msgid "South America / Sao Paulo (br)"
 msgstr "Южная Америка / Сан-Паулу (Бразилия)"
 
-#: admin/settings.php:458
+#: admin/settings.php:459
 msgid "Africa / Johannesburg (jh)"
 msgstr "Африка / Йоханнесбург (jh)"
 
-#: admin/settings.php:461
+#: admin/settings.php:462
 msgid "The primary storage region for your Storage Zone."
 msgstr "Основная область хранения для вашей зоны хранения."
 
-#: admin/settings.php:466
+#: admin/settings.php:467
 msgid "CDN Pull Zone URL"
 msgstr "URL зоны CDN Pull"
 
-#: admin/settings.php:470
+#: admin/settings.php:471
 msgid ""
 "The URL of your CDN Pull Zone connected to this Storage Zone. Required for "
 "public image serving and signed URLs."
@@ -20717,11 +21049,11 @@ msgstr ""
 "URL-адрес зоны CDN Pull Zone, подключенной к этой зоне хранения. Требуется "
 "для общедоступного предоставления образов и подписанных URL-адресов."
 
-#: admin/settings.php:475
+#: admin/settings.php:476
 msgid "Token Authentication Key"
 msgstr "Ключ аутентификации токена"
 
-#: admin/settings.php:478
+#: admin/settings.php:479
 msgid ""
 "Found in Pull Zone &gt; Security &gt; Token Authentication. Required for "
 "signed/expiring URLs for full-resolution images."
@@ -20730,31 +21062,31 @@ msgstr ""
 "токену». Требуется для подписанных/истекающих URL-адресов изображений в "
 "полном разрешении."
 
-#: admin/settings.php:509
+#: admin/settings.php:510
 msgid "File Management"
 msgstr "Управление файлами"
 
-#: admin/settings.php:523
+#: admin/settings.php:524
 msgid "Scope"
 msgstr "Сфера"
 
-#: admin/settings.php:527
+#: admin/settings.php:528
 msgid "Sunshine galleries only (recommended)"
 msgstr "Только галереи Sunshine (рекомендуется)"
 
-#: admin/settings.php:528 admin/tools.php:107
+#: admin/settings.php:529 admin/tools.php:107
 msgid "Entire WordPress site"
 msgstr "Весь сайт WordPress"
 
-#: admin/settings.php:531
+#: admin/settings.php:532
 msgid "Choose which images to offload to cloud storage"
 msgstr "Выберите, какие изображения загрузить в облачное хранилище"
 
-#: admin/settings.php:543
+#: admin/settings.php:544
 msgid "Remove local files after upload"
 msgstr "Удалять локальные файлы после загрузки"
 
-#: admin/settings.php:546
+#: admin/settings.php:547
 msgid ""
 "<strong>Warning:</strong> This will permanently delete local copies after "
 "successful upload to cloud storage. Make sure your cloud storage is working "
@@ -20765,15 +21097,15 @@ msgstr ""
 "включением этой функции убедитесь, что ваше облачное хранилище работает "
 "правильно."
 
-#: admin/settings.php:559
+#: admin/settings.php:560
 msgid "Bucket Path Options"
 msgstr "Параметры пути корзины"
 
-#: admin/settings.php:573
+#: admin/settings.php:574
 msgid "Add Prefix to Bucket Path"
 msgstr "Добавить префикс к пути корзины"
 
-#: admin/settings.php:576
+#: admin/settings.php:577
 msgid ""
 "Groups media from this site together by using a common prefix in the bucket "
 "path of offloaded media files."
@@ -20781,21 +21113,21 @@ msgstr ""
 "Группируйте медиафайлы с этого сайта, используя общий префикс в пути к "
 "корзине для выгруженных медиафайлов."
 
-#: admin/settings.php:588
+#: admin/settings.php:589
 msgid "Bucket Path Prefix"
 msgstr "Префикс пути корзины"
 
-#: admin/settings.php:591
+#: admin/settings.php:592
 msgid "The prefix to add to all uploaded file paths (e.g., sunshine/)"
 msgstr ""
 "Префикс, который будет добавлен ко всем путям к загруженным файлам "
 "(например, sunshine/)"
 
-#: admin/settings.php:610
+#: admin/settings.php:611
 msgid "Add Year & Month to Bucket Path"
 msgstr "Добавить год и месяц в путь к корзине"
 
-#: admin/settings.php:613
+#: admin/settings.php:614
 msgid ""
 "Provides another level of organization within the bucket by including the "
 "year & month in which the file was uploaded to the site."
@@ -20803,11 +21135,11 @@ msgstr ""
 "Обеспечивает дополнительный уровень организации внутри корзины, включая год "
 "и месяц, в котором файл был загружен на сайт."
 
-#: admin/settings.php:625
+#: admin/settings.php:626
 msgid "Add Object Version to Bucket Path"
 msgstr "Добавить версию объекта в путь корзины"
 
-#: admin/settings.php:628
+#: admin/settings.php:629
 msgid ""
 "Ensures the latest version of a media item gets delivered by adding a unique "
 "timestamp to the bucket path."
@@ -20815,7 +21147,7 @@ msgstr ""
 "Обеспечивает доставку последней версии медиафайла путем добавления "
 "уникальной метки времени к пути к корзине."
 
-#: admin/settings.php:722
+#: admin/settings.php:724
 msgid ""
 "Please fill in all required fields (Storage Zone Password and Storage Zone "
 "Name)"
@@ -20823,24 +21155,24 @@ msgstr ""
 "Пожалуйста, заполните все обязательные поля (пароль зоны хранения и название "
 "зоны хранения)."
 
-#: admin/settings.php:726
+#: admin/settings.php:728
 msgid ""
 "Please fill in all required fields (Service Account JSON and Bucket Name)"
 msgstr ""
 "Заполните все обязательные поля (JSON учетной записи службы и имя хранилища)."
 
-#: admin/settings.php:730
+#: admin/settings.php:732
 msgid ""
 "Please fill in all required fields (Access Key, Secret Key, and Bucket Name)"
 msgstr ""
 "Пожалуйста, заполните все обязательные поля (ключ доступа, секретный ключ и "
 "имя хранилища)."
 
-#: admin/settings.php:866
+#: admin/settings.php:869
 msgid "Please select a storage provider first"
 msgstr "Сначала выберите поставщика услуг хранения данных"
 
-#: admin/settings.php:871
+#: admin/settings.php:874
 msgid ""
 "Bunny.net storage zones cannot be listed automatically. Please enter your "
 "Storage Zone name directly in the field above."
@@ -20848,19 +21180,19 @@ msgstr ""
 "Зоны хранения Bunny.net не могут быть перечислены автоматически. Пожалуйста, "
 "введите название зоны хранения непосредственно в поле выше."
 
-#: admin/settings.php:876
+#: admin/settings.php:879
 msgid "Please enter your Service Account JSON key first"
 msgstr "Сначала введите ключ JSON вашей учетной записи службы."
 
-#: admin/settings.php:880
+#: admin/settings.php:883
 msgid "Please enter your Access Key and Secret Key first"
 msgstr "Сначала введите свой ключ доступа и секретный ключ."
 
-#: admin/settings.php:894
+#: admin/settings.php:897
 msgid "Failed to connect. Please check your credentials."
 msgstr "Не удалось подключиться. Проверьте свои учетные данные."
 
-#: admin/settings.php:901
+#: admin/settings.php:904
 msgid ""
 "Failed to retrieve bucket list. Please check your credentials and "
 "permissions."
@@ -20868,7 +21200,7 @@ msgstr ""
 "Не удалось получить список желаний. Проверьте свои учетные данные и "
 "разрешения."
 
-#: admin/settings.php:905
+#: admin/settings.php:908
 msgid ""
 "No buckets found. Please create a bucket in your cloud storage provider "
 "first."
@@ -20911,7 +21243,11 @@ msgid ""
 "Media migration%3$s to convert this data into Sunshine's own storage. This "
 "is a one-time step that significantly improves frontend page load "
 "performance."
-msgstr "Найдено %1$s элементов, выгруженных через WP Offload Media. Запусти %2$sмиграцию WP Offload Media%3$s, чтобы перенести эти данные в собственное хранилище Sunshine. Это разовый шаг, который заметно ускоряет загрузку страниц сайта."
+msgstr ""
+"Найдено %1$s элементов, выгруженных через WP Offload Media. Запусти "
+"%2$sмиграцию WP Offload Media%3$s, чтобы перенести эти данные в собственное "
+"хранилище Sunshine. Это разовый шаг, который заметно ускоряет загрузку "
+"страниц сайта."
 
 #: admin/tools.php:107
 msgid "Sunshine galleries only"
@@ -21000,7 +21336,9 @@ msgstr "%d failed"
 msgid ""
 "Images are uploaded in the background. You can safely leave this page — the "
 "migration keeps running and you'll get an email when it finishes."
-msgstr "Изображения загружаются в фоне. Ты можешь спокойно уйти с этой страницы — миграция продолжится, а по её завершении придёт письмо."
+msgstr ""
+"Изображения загружаются в фоне. Ты можешь спокойно уйти с этой страницы — "
+"миграция продолжится, а по её завершении придёт письмо."
 
 #: admin/tools.php:231 admin/tools.php:323 admin/tools.php:1383
 #: admin/tools.php:1459
@@ -21090,7 +21428,9 @@ msgstr "Повторяю попытку..."
 msgid ""
 "Reclaim Local Storage is currently running. Let it finish before starting a "
 "migration."
-msgstr "Освобождение локального места сейчас выполняется. Дождись его завершения, прежде чем запускать миграцию."
+msgstr ""
+"Освобождение локального места сейчас выполняется. Дождись его завершения, "
+"прежде чем запускать миграцию."
 
 #: admin/tools.php:492
 msgid "No images to migrate"
@@ -21130,13 +21470,19 @@ msgid ""
 "local copies on this server, then deletes the local files to free up disk "
 "space. Cloud copies are not touched — galleries continue serving from cloud "
 "storage."
-msgstr "Этот инструмент находит изображения, которые уже есть в облачном хранилище, но по-прежнему имеют локальные копии на этом сервере, и удаляет локальные файлы, чтобы освободить место на диске. Копии в облаке не трогаются — галереи продолжают отдавать изображения из облака."
+msgstr ""
+"Этот инструмент находит изображения, которые уже есть в облачном хранилище, "
+"но по-прежнему имеют локальные копии на этом сервере, и удаляет локальные "
+"файлы, чтобы освободить место на диске. Копии в облаке не трогаются — "
+"галереи продолжают отдавать изображения из облака."
 
 #: admin/tools.php:701
 msgid ""
 "No reclaimable files found. Every image in cloud storage has already had its "
 "local copy removed."
-msgstr "Файлов для освобождения места не найдено. У каждого изображения в облачном хранилище локальная копия уже удалена."
+msgstr ""
+"Файлов для освобождения места не найдено. У каждого изображения в облачном "
+"хранилище локальная копия уже удалена."
 
 #. translators: %s: number of redundant local files
 #: admin/tools.php:710
@@ -21148,7 +21494,10 @@ msgstr "Найдено: %s лишних локальных файлов"
 msgid ""
 "Each local file is deleted only after its cloud copy is confirmed present "
 "and the correct size. Files that can't be verified are skipped."
-msgstr "Каждый локальный файл удаляется только после подтверждения, что копия в облаке существует и имеет правильный размер. Файлы, которые не удалось проверить, пропускаются."
+msgstr ""
+"Каждый локальный файл удаляется только после подтверждения, что копия в "
+"облаке существует и имеет правильный размер. Файлы, которые не удалось "
+"проверить, пропускаются."
 
 #: admin/tools.php:720
 msgid "This action cannot be undone."
@@ -21158,7 +21507,9 @@ msgstr "Это действие нельзя отменить."
 msgid ""
 "Local files will be permanently deleted. Cloud copies remain in your bucket "
 "and galleries continue to serve from cloud storage."
-msgstr "Локальные файлы будут удалены безвозвратно. Копии в облаке остаются в твоём бакете, и галереи продолжают отдавать изображения из облачного хранилища."
+msgstr ""
+"Локальные файлы будут удалены безвозвратно. Копии в облаке остаются в твоём "
+"бакете, и галереи продолжают отдавать изображения из облачного хранилища."
 
 #: admin/tools.php:725 admin/tools.php:749
 msgid "Start Cleanup"
@@ -21168,7 +21519,9 @@ msgstr "Начать очистку"
 msgid ""
 "Start cleanup? Local copies of images already in cloud storage will be "
 "permanently deleted."
-msgstr "Начать очистку? Локальные копии изображений, которые уже есть в облачном хранилище, будут удалены безвозвратно."
+msgstr ""
+"Начать очистку? Локальные копии изображений, которые уже есть в облачном "
+"хранилище, будут удалены безвозвратно."
 
 #: admin/tools.php:739 admin/tools.php:1268
 msgid "Starting..."
@@ -21188,7 +21541,9 @@ msgstr "%d пропущено (копия в облаке недоступна)"
 msgid ""
 "Local files are deleted in the background. You can safely leave this page — "
 "the cleanup keeps running and you'll get an email when it finishes."
-msgstr "Локальные файлы удаляются в фоне. Ты можешь спокойно уйти с этой страницы — очистка продолжится, а по её завершении придёт письмо."
+msgstr ""
+"Локальные файлы удаляются в фоне. Ты можешь спокойно уйти с этой страницы — "
+"очистка продолжится, а по её завершении придёт письмо."
 
 #: admin/tools.php:787 admin/tools.php:875
 msgid "Stop Cleanup"
@@ -21216,7 +21571,9 @@ msgstr "Очистка отменена"
 msgid ""
 "Cleanup was stopped. %1$d local files were deleted (%2$s freed) before "
 "cancellation."
-msgstr "Очистка остановлена. До отмены было удалено %1$d локальных файлов (освобождено %2$s)."
+msgstr ""
+"Очистка остановлена. До отмены было удалено %1$d локальных файлов "
+"(освобождено %2$s)."
 
 #: admin/tools.php:925
 msgid "Cleanup Complete"
@@ -21234,7 +21591,9 @@ msgstr "Удалено %1$d локальных файлов и освобожд�
 msgid ""
 "Deleted %1$d local files (%2$s freed). Skipped %3$d files where the cloud "
 "copy could not be verified."
-msgstr "Удалено %1$d локальных файлов (освобождено %2$s). Пропущено %3$d файлов, для которых не удалось проверить копию в облаке."
+msgstr ""
+"Удалено %1$d локальных файлов (освобождено %2$s). Пропущено %3$d файлов, для "
+"которых не удалось проверить копию в облаке."
 
 #: admin/tools.php:948
 msgid "Skipped Images:"
@@ -21245,7 +21604,10 @@ msgid ""
 "These images had cloud storage metadata but the cloud copy could not be "
 "verified. Local files were preserved. Try re-running the migration tool to "
 "re-upload them."
-msgstr "У этих изображений были данные облачного хранилища, но копию в облаке не удалось проверить. Локальные файлы сохранены. Попробуй запустить инструмент миграции ещё раз, чтобы выгрузить их заново."
+msgstr ""
+"У этих изображений были данные облачного хранилища, но копию в облаке не "
+"удалось проверить. Локальные файлы сохранены. Попробуй запустить инструмент "
+"миграции ещё раз, чтобы выгрузить их заново."
 
 #: admin/tools.php:970
 msgid "Clear cleanup results?"
@@ -21255,7 +21617,9 @@ msgstr "Очистить результаты очистки?"
 msgid ""
 "A migration is currently running. Let it finish before reclaiming local "
 "storage."
-msgstr "Сейчас выполняется миграция. Дождись её завершения, прежде чем освобождать локальное место."
+msgstr ""
+"Сейчас выполняется миграция. Дождись её завершения, прежде чем освобождать "
+"локальное место."
 
 #: admin/tools.php:1041
 msgid "No local files to clean up"
@@ -21273,7 +21637,10 @@ msgstr "Миграция WP Offload Media"
 msgid ""
 "Convert legacy WP Offload Media data into Sunshine's own storage so frontend "
 "pages stop making per-image database lookups"
-msgstr "Перенеси старые данные WP Offload Media в собственное хранилище Sunshine, чтобы страницы сайта перестали обращаться к базе данных из-за каждого изображения"
+msgstr ""
+"Перенеси старые данные WP Offload Media в собственное хранилище Sunshine, "
+"чтобы страницы сайта перестали обращаться к базе данных из-за каждого "
+"изображения"
 
 #: admin/tools.php:1191
 msgid "Migration is already complete. No further action needed."
@@ -21284,7 +21651,10 @@ msgid ""
 "Images not loading? Re-run the migration to rebuild their addresses from "
 "your current cloud storage settings. Images already pointing to the right "
 "place are left alone."
-msgstr "Изображения не загружаются? Запусти миграцию ещё раз, чтобы пересобрать их адреса по текущим настройкам облачного хранилища. Изображения, которые уже ведут куда надо, останутся без изменений."
+msgstr ""
+"Изображения не загружаются? Запусти миграцию ещё раз, чтобы пересобрать их "
+"адреса по текущим настройкам облачного хранилища. Изображения, которые уже "
+"ведут куда надо, останутся без изменений."
 
 #: admin/tools.php:1205
 msgid "Re-Run Migration"
@@ -21298,7 +21668,9 @@ msgstr "Миграция не нужна. Данные WP Offload Media на э�
 msgid ""
 "This one-time step copies your WP Offload Media data into Sunshine's own "
 "storage."
-msgstr "Этот разовый шаг копирует твои данные WP Offload Media в собственное хранилище Sunshine."
+msgstr ""
+"Этот разовый шаг копирует твои данные WP Offload Media в собственное "
+"хранилище Sunshine."
 
 #. translators: %s: number of images
 #: admin/tools.php:1239
@@ -21308,7 +21680,9 @@ msgstr "Изображений для миграции: %s"
 
 #: admin/tools.php:1245
 msgid "This only updates database metadata. No files are uploaded or moved."
-msgstr "Это только обновляет метаданные в базе. Файлы не загружаются и не перемещаются."
+msgstr ""
+"Это только обновляет метаданные в базе. Файлы не загружаются и не "
+"перемещаются."
 
 #: admin/tools.php:1277
 msgid "Failed to start migration"
@@ -21373,7 +21747,9 @@ msgstr "Ошибка сети. Обновите страницу."
 #: admin/tools.php:1443
 msgid ""
 "Stop the migration? Items that have already been migrated will stay migrated."
-msgstr "Остановить миграцию? Элементы, которые уже перенесены, останутся перенесёнными."
+msgstr ""
+"Остановить миграцию? Элементы, которые уже перенесены, останутся "
+"перенесёнными."
 
 #: admin/tools.php:1479
 msgid "Migration Stopped"
@@ -21385,7 +21761,9 @@ msgstr "Миграция остановлена"
 msgid ""
 "Migration was stopped. %d items were migrated before cancellation. Run the "
 "migration again to finish the rest."
-msgstr "Миграция остановлена. До отмены было перенесено %d элементов. Запусти миграцию снова, чтобы завершить остальное."
+msgstr ""
+"Миграция остановлена. До отмены было перенесено %d элементов. Запусти "
+"миграцию снова, чтобы завершить остальное."
 
 #. translators: %d: total successful
 #: admin/tools.php:1494
@@ -21393,7 +21771,9 @@ msgstr "Миграция остановлена. До отмены было пе
 msgid ""
 "Successfully migrated %d items. Your pages should now load faster on image-"
 "heavy templates."
-msgstr "Успешно перенесено %d элементов. Твои страницы должны загружаться быстрее на шаблонах с большим количеством изображений."
+msgstr ""
+"Успешно перенесено %d элементов. Твои страницы должны загружаться быстрее на "
+"шаблонах с большим количеством изображений."
 
 #. translators: 1: successful, 2: failed
 #: admin/tools.php:1502
@@ -21416,7 +21796,8 @@ msgstr "Нет элементов для миграции."
 #: admin/tools.php:1635
 msgid ""
 "WP Offload Media table is no longer available. Migration cannot continue."
-msgstr "Таблица WP Offload Media больше недоступна. Продолжить миграцию нельзя."
+msgstr ""
+"Таблица WP Offload Media больше недоступна. Продолжить миграцию нельзя."
 
 #. translators: 1: number of images, 2: link opening tag, 3: link closing tag
 #: admin/tools.php:1852
@@ -21428,6 +21809,100 @@ msgstr ""
 "%1$d изображений, перенесённых из WP Offload Media, не содержат данные о "
 "расположении в бакете, и их скачивание может не сработать. %2$sЗапусти "
 "инструмент восстановления%3$s, чтобы это исправить."
+
+#: admin/tools.php:1889
+msgid "Record Image Locations"
+msgstr "Записать расположение изображений"
+
+#: admin/tools.php:1891
+msgid ""
+"Work out which bucket and file each already-uploaded image lives at, so "
+"their addresses are rebuilt from your current settings instead of the ones "
+"they were uploaded with"
+msgstr "Определяет, в каком бакете и файле находится каждое уже загруженное изображение, чтобы их адреса собирались из твоих текущих настроек, а не из тех, что были при загрузке"
+
+#: admin/tools.php:1892
+msgid "Record Locations"
+msgstr "Записать расположение"
+
+#: admin/tools.php:1974
+msgid "Cloud storage is not set up, so there is nothing to record."
+msgstr "Облачное хранилище не настроено, поэтому записывать нечего."
+
+#: admin/tools.php:1981
+msgid "Every uploaded image already has its location recorded. Nothing to do."
+msgstr "У всех загруженных изображений расположение уже записано. Делать нечего."
+
+#: admin/tools.php:1985
+msgid "Recording image locations"
+msgstr "Записываем расположение изображений"
+
+#: admin/tools.php:1986
+msgid ""
+"Nothing is uploaded, downloaded or changed in your bucket. This only fills "
+"in a missing note about where each image already is."
+msgstr "В твоём бакете ничего не загружается, не скачивается и не изменяется. Это только заполняет недостающую запись о том, где уже находится каждое изображение."
+
+#: admin/tools.php:1989
+msgid "images recorded"
+msgstr "изображений записано"
+
+#: admin/tools.php:2006 admin/tools.php:2133
+msgid "Something went wrong. Please try again."
+msgstr "Что-то пошло не так. Попробуй ещё раз."
+
+#: admin/tools.php:2016
+msgid "Done."
+msgstr "Готово."
+
+#: admin/tools.php:2018
+msgid ""
+"could not be worked out and were left as they are, so they keep loading "
+"exactly as before."
+msgstr "не удалось определить, и они остались как были, поэтому загружаются точно так же, как раньше."
+
+#: admin/tools.php:2026 admin/tools.php:2145
+msgid "Network error. Reload the page to carry on where this stopped."
+msgstr "Ошибка сети. Перезагрузи страницу, чтобы продолжить с того места, где всё остановилось."
+
+#. translators: 1: bucket images are recorded in, 2: bucket the site is set up for
+#: admin/tools.php:2098
+#, php-format
+msgid ""
+"Your images are recorded as living in the bucket \"%1$s\", but Sunshine is "
+"now set up for \"%2$s\"."
+msgstr "Твои изображения записаны как находящиеся в бакете «%1$s», но сейчас Sunshine настроен на «%2$s»."
+
+#: admin/tools.php:2104
+msgid ""
+"If you renamed that bucket, point Sunshine at the new name and your "
+"galleries will load again. If those images really are in a separate bucket, "
+"leave them alone and they will keep loading from there."
+msgstr "Если ты переименовал этот бакет, укажи Sunshine новое имя, и твои галереи снова будут загружаться. Если эти изображения действительно лежат в отдельном бакете, оставь их как есть — они продолжат загружаться оттуда."
+
+#: admin/tools.php:2106
+msgid "I renamed it, update my images"
+msgstr "Я его переименовал, обнови мои изображения"
+
+#: admin/tools.php:2107
+msgid "They are in a separate bucket, leave them"
+msgstr "Они в отдельном бакете, оставь их"
+
+#: admin/tools.php:2139
+msgid "images updated. Reload a gallery to check."
+msgstr "изображений обновлено. Перезагрузи галерею, чтобы проверить."
+
+#: admin/tools.php:2142
+msgid "updated so far..."
+msgstr "обновлено на данный момент..."
+
+#: admin/tools.php:2181
+msgid "Unknown choice"
+msgstr "Неизвестный выбор"
+
+#: cloud-storage.php:109
+msgid "Every 5 minutes"
+msgstr "Каждые 5 минут"
 
 #. translators: %s: site name
 #: includes/class-background-cleanup.php:187
@@ -21449,7 +21924,17 @@ msgid ""
 "You can view the full details in your WordPress admin at: %4$s\n"
 "\n"
 "Thank you for using Sunshine Cloud Storage!"
-msgstr "Очистка локального хранилища завершена.\n\nИтоги:\n- Удалено локальных файлов: %1$d\n- Освобождено на диске: %2$s\n- Пропущено (копия в облаке не проверена): %3$d\n\nПодробности смотри в панели WordPress: %4$s\n\nСпасибо, что пользуешься Sunshine Cloud Storage!"
+msgstr ""
+"Очистка локального хранилища завершена.\n"
+"\n"
+"Итоги:\n"
+"- Удалено локальных файлов: %1$d\n"
+"- Освобождено на диске: %2$s\n"
+"- Пропущено (копия в облаке не проверена): %3$d\n"
+"\n"
+"Подробности смотри в панели WordPress: %4$s\n"
+"\n"
+"Спасибо, что пользуешься Sunshine Cloud Storage!"
 
 #. translators: %s: site name
 #: includes/class-background-migration.php:208
@@ -21499,7 +21984,7 @@ msgstr "Ошибка: %s"
 #. translators: %s: error message
 #: includes/class-cloud-storage-client-bunny.php:76
 #: includes/class-cloud-storage-client-gcs.php:134
-#: includes/class-cloud-storage-client-s3.php:300
+#: includes/class-cloud-storage-client-s3.php:299
 #, php-format
 msgid "Connection failed: %s"
 msgstr "Сбой подключения: %s"
@@ -21549,12 +22034,12 @@ msgid "Connection successful! All tests passed."
 msgstr "Подключение успешно! Все тесты пройдены."
 
 #: includes/class-cloud-storage-client-gcs.php:31
-#: includes/class-cloud-storage-client-gcs.php:446
+#: includes/class-cloud-storage-client-gcs.php:469
 msgid "Google Cloud Storage JSON key is required"
 msgstr "Требуется ключ JSON Google Cloud Storage"
 
 #: includes/class-cloud-storage-client-gcs.php:39
-#: includes/class-cloud-storage-client-gcs.php:453
+#: includes/class-cloud-storage-client-gcs.php:476
 msgid "Invalid JSON key file. Please check your service account JSON."
 msgstr ""
 "Недопустимый файл ключей JSON. Проверьте файл JSON своей учетной записи "
@@ -21614,117 +22099,135 @@ msgstr ""
 msgid ""
 "Your bucket is private, so images are served securely through signed URLs. "
 "This is the recommended setup for Backblaze B2 — no changes needed."
-msgstr "Твой бакет закрытый, поэтому изображения отдаются безопасно через подписанные ссылки. Это рекомендуемая настройка для Backblaze B2 — ничего менять не нужно."
+msgstr ""
+"Твой бакет закрытый, поэтому изображения отдаются безопасно через "
+"подписанные ссылки. Это рекомендуемая настройка для Backblaze B2 — ничего "
+"менять не нужно."
 
 #: includes/class-cloud-storage-client-s3.php:247
 msgid ""
 "Warning: Public URL access is blocked by your storage provider. All images "
 "will be served through signed URLs. Check your provider account settings to "
 "enable public object access for better performance."
-msgstr "Внимание: твой провайдер хранилища блокирует публичный доступ по ссылкам. Все изображения будут отдаваться через подписанные ссылки. Загляни в настройки аккаунта у провайдера и включи публичный доступ к объектам, чтобы работало быстрее."
+msgstr ""
+"Внимание: твой провайдер хранилища блокирует публичный доступ по ссылкам. "
+"Все изображения будут отдаваться через подписанные ссылки. Загляни в "
+"настройки аккаунта у провайдера и включи публичный доступ к объектам, чтобы "
+"работало быстрее."
 
 #. translators: %s: error message
-#: includes/class-cloud-storage-client-s3.php:306
+#: includes/class-cloud-storage-client-s3.php:305
 #, php-format
 msgid "Unexpected error: %s"
 msgstr "Неожиданная ошибка: %s"
 
-#: includes/class-cloud-storage-import.php:117
+#: includes/class-cloud-storage-import.php:161
 msgid "Image Source"
 msgstr "Источник изображения"
 
-#: includes/class-cloud-storage-import.php:122
+#: includes/class-cloud-storage-import.php:166
 msgid "FTP Folder"
 msgstr "Папка FTP"
 
-#: includes/class-cloud-storage-import.php:132
+#: includes/class-cloud-storage-import.php:176
 msgid "Cloud Storage Folder"
 msgstr "Папка облачного хранилища"
 
-#: includes/class-cloud-storage-import.php:139
+#: includes/class-cloud-storage-import.php:183
 msgid "Loading folders..."
 msgstr "Загрузка папок..."
 
-#: includes/class-cloud-storage-import.php:147
+#: includes/class-cloud-storage-import.php:191
 msgid "Selected:"
 msgstr "Выбрано:"
 
-#: includes/class-cloud-storage-import.php:152
+#: includes/class-cloud-storage-import.php:196
 msgid ""
 "Click the arrow to expand folders. Select a folder using the radio button."
 msgstr ""
 "Нажмите на стрелку, чтобы развернуть папки. Выберите папку с помощью "
 "переключателя."
 
-#: includes/class-cloud-storage-import.php:174
+#: includes/class-cloud-storage-import.php:218
 msgid ""
 "Cloud storage is not configured. Please configure it in Sunshine settings."
 msgstr ""
 "Облачное хранилище не настроено. Пожалуйста, настройте его в настройках "
 "Sunshine."
 
-#: includes/class-cloud-storage-import.php:179
+#: includes/class-cloud-storage-import.php:223
 msgid "Please select a cloud storage folder."
 msgstr "Выберите папку облачного хранилища."
 
-#: includes/class-cloud-storage-import.php:318
+#: includes/class-cloud-storage-import.php:362
 msgid "Scanning your cloud storage…"
 msgstr "Сканируем твоё облачное хранилище…"
 
-#: includes/class-cloud-storage-import.php:319
+#: includes/class-cloud-storage-import.php:363
 msgid ""
 "Large buckets are scanned in small batches so the import never times out. "
 "This can take a moment."
-msgstr "Большие бакеты сканируются небольшими партиями, чтобы импорт никогда не превышал лимит времени. Это может занять немного времени."
+msgstr ""
+"Большие бакеты сканируются небольшими партиями, чтобы импорт никогда не "
+"превышал лимит времени. Это может занять немного времени."
 
-#: includes/class-cloud-storage-import.php:320
+#: includes/class-cloud-storage-import.php:364
 msgid "galleries found so far"
 msgstr "галерей найдено"
 
-#: includes/class-cloud-storage-import.php:401
+#: includes/class-cloud-storage-import.php:446
 msgid "Scan session expired, please start over."
 msgstr "Сессия сканирования истекла, начни заново."
 
-#: includes/class-cloud-storage-import.php:699
-#: includes/class-cloud-storage-import.php:754
-#: includes/class-cloud-storage-import.php:857
+#. translators: %s is the folder path in the cloud storage bucket that could not be read
+#: includes/class-cloud-storage-import.php:509
+#, php-format
+msgid ""
+"Could not read the folder \"%s\" from your cloud storage, so the scan was "
+"stopped before anything was imported. This is usually temporary, so please "
+"try again."
+msgstr "Не удалось прочитать папку «%s» из твоего облачного хранилища, поэтому сканирование было остановлено до того, как что-либо импортировалось. Обычно это временно, попробуй ещё раз."
+
+#: includes/class-cloud-storage-import.php:775
+#: includes/class-cloud-storage-import.php:830
+#: includes/class-cloud-storage-import.php:933
 msgid "Could not initialize cloud storage client"
 msgstr "Не удалось инициализировать клиент облачного хранилища"
 
-#: includes/class-cloud-storage-import.php:704
-#: includes/class-cloud-storage-import.php:759
+#: includes/class-cloud-storage-import.php:780
+#: includes/class-cloud-storage-import.php:835
 msgid "Failed to list cloud storage contents"
 msgstr "Не удалось отобразить содержимое облачного хранилища"
 
-#: includes/class-cloud-storage-import.php:826
+#: includes/class-cloud-storage-import.php:902
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: includes/class-cloud-storage-import.php:827
+#: includes/class-cloud-storage-import.php:903
 msgid "No subfolders"
 msgstr "Без подпапок"
 
-#: includes/class-cloud-storage-import.php:829
+#: includes/class-cloud-storage-import.php:905
 msgid "Error loading folders"
 msgstr "Ошибка при загрузке папок"
 
-#: includes/class-cloud-storage-manager.php:1654
+#: includes/class-cloud-storage-manager.php:2259
 msgid "No objects found in WP Offload Media data"
 msgstr "В данных WP Offload Media не найдено никаких объектов"
 
-#: includes/class-cloud-storage-manager.php:1714
+#: includes/class-cloud-storage-manager.php:2319
 msgid "Could not build URLs from WP Offload Media data"
 msgstr "Не удалось создать URL-адреса из данных WP Offload Media"
 
-#: includes/class-cloud-storage-manager.php:1802
+#: includes/class-cloud-storage-manager.php:2407
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr "Не удалось получить URL-адреса из WP Offload Media"
 
-#: includes/hooks.php:357 includes/hooks.php:386
+#: includes/hooks.php:430 includes/hooks.php:459
 msgid "Sunshine Cloud Storage:"
 msgstr "Облачное хранилище Sunshine:"
 
-#: includes/hooks.php:358
+#: includes/hooks.php:431
 msgid ""
 "WP Offload Media plugin is currently active. These two plugins should not be "
 "active at the same time as they will conflict. Please deactivate WP Offload "
@@ -21734,14 +22237,18 @@ msgstr ""
 "быть активны одновременно, так как они будут конфликтовать. Пожалуйста, "
 "деактивируйте WP Offload Media перед использованием Sunshine Cloud Storage."
 
-#: includes/hooks.php:360
+#: includes/hooks.php:433
 msgid ""
 "<strong>Good news:</strong> Sunshine can take over your previously offloaded "
 "items. After deactivating WP Offload Media, run the WP Offload Media "
 "Migration tool to move that data into Sunshine's own storage."
-msgstr "<strong>Хорошая новость:</strong> Sunshine может взять на себя элементы, выгруженные ранее. После отключения WP Offload Media запусти инструмент миграции WP Offload Media, чтобы перенести эти данные в собственное хранилище Sunshine."
+msgstr ""
+"<strong>Хорошая новость:</strong> Sunshine может взять на себя элементы, "
+"выгруженные ранее. После отключения WP Offload Media запусти инструмент "
+"миграции WP Offload Media, чтобы перенести эти данные в собственное "
+"хранилище Sunshine."
 
-#: includes/hooks.php:365
+#: includes/hooks.php:438
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media plugin is active. "
 "You have Cloud Storage set to \"Entire WordPress site\" which may conflict. "
@@ -21753,7 +22260,7 @@ msgstr ""
 "привести к конфликту. Подумайте о том, чтобы установить настройку «Только "
 "галереи Sunshine» или отключить один из плагинов."
 
-#: includes/hooks.php:387
+#: includes/hooks.php:460
 msgid ""
 "Your cloud storage bucket does not support per-object ACLs (Access Control "
 "Lists). This means Sunshine cannot set individual files as public or "
@@ -21766,7 +22273,7 @@ msgstr ""
 "тому, что миниатюры не будут отображаться, а изображения в полном разрешении "
 "будут общедоступными."
 
-#: includes/hooks.php:391
+#: includes/hooks.php:464
 msgid ""
 "<strong>How to fix:</strong> Go to Google Cloud Console &rarr; Cloud Storage "
 "&rarr; Your Bucket &rarr; Permissions &rarr; Access Control &rarr; Switch "
@@ -21776,7 +22283,7 @@ msgstr ""
 "Storage → Ваш букет → Разрешения → Контроль доступа → Переключитесь с "
 "«Единый» на «Детальный»."
 
-#: includes/hooks.php:393
+#: includes/hooks.php:466
 msgid ""
 "<strong>How to fix:</strong> Go to S3 Console &rarr; Your Bucket &rarr; "
 "Permissions &rarr; Object Ownership &rarr; Edit &rarr; Select \"ACLs "
@@ -21786,7 +22293,7 @@ msgstr ""
 "Разрешения → Владение объектом → Редактировать → Выберите «ACLs enabled» "
 "(ACL включены) с «Bucket owner preferred» (Предпочтение владельцу букета)."
 
-#: includes/hooks.php:395
+#: includes/hooks.php:468
 msgid ""
 "<strong>How to fix:</strong> Check your storage provider's documentation for "
 "enabling per-object ACLs on your bucket."
@@ -21794,7 +22301,7 @@ msgstr ""
 "<strong>Как исправить:</strong> Проверьте документацию вашего поставщика "
 "хранилища, чтобы включить ACL для каждого объекта в вашем хранилище."
 
-#: includes/hooks.php:399
+#: includes/hooks.php:472
 msgid ""
 "After making changes, go to Sunshine Settings &rarr; Cloud Storage and click "
 "\"Test Connection\" to verify."
@@ -21803,13 +22310,16 @@ msgstr ""
 "хранилище» и нажмите «Проверить подключение», чтобы подтвердить."
 
 #. translators: 1: link opening tag, 2: link closing tag
-#: includes/hooks.php:455
+#: includes/hooks.php:528
 #, php-format
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media data was found on "
 "this site. %1$sRun the one-time migration%2$s to move it into Sunshine's own "
 "storage."
-msgstr "<strong>Sunshine Cloud Storage:</strong> На этом сайте найдены данные WP Offload Media. %1$sЗапусти разовую миграцию%2$s, чтобы перенести их в собственное хранилище Sunshine."
+msgstr ""
+"<strong>Sunshine Cloud Storage:</strong> На этом сайте найдены данные WP "
+"Offload Media. %1$sЗапусти разовую миграцию%2$s, чтобы перенести их в "
+"собственное хранилище Sunshine."
 
 #. Plugin Name of the plugin
 #: video-sales.php
@@ -21829,7 +22339,9 @@ msgstr "Sunshine Photo Cart - Подарочные карты"
 #. Description of the plugin
 #: gift-cards.php
 msgid "Sell and manage gift cards with balance tracking and scheduled delivery"
-msgstr "Продавай подарочные карты и управляй ими: отслеживание баланса и доставка по расписанию"
+msgstr ""
+"Продавай подарочные карты и управляй ими: отслеживание баланса и доставка по "
+"расписанию"
 
 #: admin.php:4 gift-cards.php:79 gift-cards.php:96 gift-cards.php:108
 #: hooks.php:356
@@ -22269,6 +22781,14 @@ msgstr "Первоначальная сумма:"
 msgid "Add to Cart"
 msgstr "Добавить в корзину"
 
+#, php-format
+#~ msgid ""
+#~ "Your license already includes the %s add-on, which removes this fee, but "
+#~ "it is not turned on yet."
+#~ msgstr ""
+#~ "Твоя лицензия уже включает дополнение %s, которое убирает эту комиссию, "
+#~ "но оно ещё не включено."
+
 #~ msgid "Could not get download file"
 #~ msgstr "Не удалось получить файл загрузки"
 
@@ -22515,10 +23035,6 @@ msgstr "Добавить в корзину"
 #, fuzzy
 #~ msgid "Cancel"
 #~ msgstr "Отменен"
-
-#, fuzzy
-#~ msgid "Done"
-#~ msgstr "Готово!"
 
 #, fuzzy
 #~ msgid "Shipping Costs"
@@ -23329,34 +23845,6 @@ msgstr "Добавить в корзину"
 
 #~ msgid "Process Queue"
 #~ msgstr "Очередь процессов"
-
-#~ msgid "After user registers"
-#~ msgstr "После того как пользователь зарегистрируется"
-
-#~ msgid "After user adds item to cart"
-#~ msgstr "После того как пользователь добавляет товар в корзину"
-
-#~ msgid "After user adds image to favorites"
-#~ msgstr "После того как пользователь добавляет изображение в избранное"
-
-#~ msgid "After user submits order"
-#~ msgstr "После того как пользователь отправил заказ"
-
-#~ msgid "After user views gallery for first time"
-#~ msgstr "После первого просмотра галереи пользователем"
-
-#~ msgid "Before gallery expires"
-#~ msgstr "До истечения срока действия галереи"
-
-#~ msgid "After gallery expires"
-#~ msgstr "После окончания срока действия галереи"
-
-#~ msgid "Assigned user has not yet visited gallery"
-#~ msgstr "Назначенный пользователь еще не посещал галерею"
-
-#, php-format
-#~ msgid "%1$s for %2$s"
-#~ msgstr "%1$s за %2$s"
 
 #~ msgid "Queue processed!"
 #~ msgstr "Очередь обработана!"
