@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 3.7
+Stable tag: 3.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,7 +243,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.7.1 =
+= 3.7.1 - September 10, 2026 =
 * New: Automated Emails can now be sent when a gallery is published. The email waits until the gallery has photos and they have all finished processing, so it never goes out on a half-built gallery. Also available to developers as the `sunshine_gallery_ready` action
 * New: Warning in the admin when images are waiting to be processed but nothing is scheduled to process them, which usually means WordPress cron has stopped running
 * New: System Information now reports how many images are waiting to be processed, whether the queue is running, and when it next runs
