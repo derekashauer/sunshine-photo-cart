@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-10T21:25:56+00:00\n"
+"POT-Creation-Date: 2026-09-12T16:13:50+00:00\n"
 "PO-Revision-Date: 2026-03-02 21:19-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -269,7 +269,7 @@ msgstr "Redigera i helskärm."
 msgid "Write a Review"
 msgstr "Skriv en recension"
 
-#: includes/admin/class-admin.php:263 includes/admin/class-admin.php:949
+#: includes/admin/class-admin.php:263 includes/admin/class-admin.php:996
 msgid "Upgrade"
 msgstr "Uppgradera"
 
@@ -372,28 +372,40 @@ msgstr ""
 "Sunshine-loggning är aktiverad. <a href=\"%s\">Avaktivera när den inte "
 "längre används.</a>"
 
-#. translators: 1: number of images waiting, 2: URL to the tools page
-#: includes/admin/class-admin.php:627
+#. translators: 1: number of images waiting, 2: URL to the Site Health info page
+#: includes/admin/class-admin.php:652
 #, php-format
 msgid ""
-"%1$d image is waiting to be processed but nothing is scheduled to process "
-"it. This usually means WordPress cron is not running. <a href=\"%2$s\">Check "
-"your system information</a>."
+"%1$d image is waiting to be processed, but WordPress could not save the "
+"background task that processes it. <a href=\"%2$s\">Check Site Health</a>."
 msgid_plural ""
-"%1$d images are waiting to be processed but nothing is scheduled to process "
-"them. This usually means WordPress cron is not running. <a "
-"href=\"%2$s\">Check your system information</a>."
-msgstr[0] ""
-"%1$d bild väntar på att behandlas, men ingenting är schemalagt för att "
-"behandla den. Det betyder oftast att WordPress cron inte körs. <a "
-"href=\"%2$s\">Kolla din systeminformation</a>."
-msgstr[1] ""
-"%1$d bilder väntar på att behandlas, men ingenting är schemalagt för att "
-"behandla dem. Det betyder oftast att WordPress cron inte körs. <a "
-"href=\"%2$s\">Kolla din systeminformation</a>."
+"%1$d images are waiting to be processed, but WordPress could not save the "
+"background task that processes them. <a href=\"%2$s\">Check Site Health</a>."
+msgstr[0] "%1$d bild väntar på att bearbetas, men WordPress kunde inte spara bakgrundsjobbet som bearbetar den. <a href=\"%2$s\">Kolla webbplatshälsan</a>."
+msgstr[1] "%1$d bilder väntar på att bearbetas, men WordPress kunde inte spara bakgrundsjobbet som bearbetar dem. <a href=\"%2$s\">Kolla webbplatshälsan</a>."
+
+#. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
+#: includes/admin/class-admin.php:669
+#, php-format
+msgid ""
+"%1$d image is waiting to be processed, but WordPress cron has not run for "
+"%2$s. <a href=\"%3$s\">Check Site Health</a> or see <a href=\"%4$s\" "
+"target=\"_blank\">how to set up a reliable server cron</a>."
+msgid_plural ""
+"%1$d images are waiting to be processed, but WordPress cron has not run for "
+"%2$s. <a href=\"%3$s\">Check Site Health</a> or see <a href=\"%4$s\" "
+"target=\"_blank\">how to set up a reliable server cron</a>."
+msgstr[0] "%1$d bild väntar på att bearbetas, men WordPress-cron har inte körts på %2$s. <a href=\"%3$s\">Kolla webbplatshälsan</a> eller se <a href=\"%4$s\" target=\"_blank\">hur du sätter upp ett pålitligt server-cron</a>."
+msgstr[1] "%1$d bilder väntar på att bearbetas, men WordPress-cron har inte körts på %2$s. <a href=\"%3$s\">Kolla webbplatshälsan</a> eller se <a href=\"%4$s\" target=\"_blank\">hur du sätter upp ett pålitligt server-cron</a>."
+
+#: includes/admin/class-admin.php:682
+msgid ""
+"This site has WP-Cron turned off, so a server cron job has to call wp-"
+"cron.php for anything to run."
+msgstr "WP-Cron är avstängt på den här webbplatsen, så ett cronjobb på servern måste anropa wp-cron.php för att något ska köras."
 
 #. translators: %s is the URL to installation page
-#: includes/admin/class-admin.php:643
+#: includes/admin/class-admin.php:691
 #, php-format
 msgid ""
 "Sunshine installation process was skipped. <a href=\"%s\">Please complete "
@@ -403,79 +415,79 @@ msgstr ""
 "slutför installationsprocessen.</a>"
 
 #. translators: %1$d is the number of orders, %2$s is the number of orders in plural
-#: includes/admin/class-admin.php:926
+#: includes/admin/class-admin.php:974
 #, php-format
 msgid "%s order"
 msgid_plural "%s orders"
 msgstr[0] "%s beställning"
 msgstr[1] "%s beställningar"
 
-#: includes/admin/class-admin.php:934 includes/admin/customers.php:13
+#: includes/admin/class-admin.php:982 includes/admin/customers.php:13
 #: includes/admin/customers.php:34 includes/admin/reports.php:20 reports.php:7
 msgid "Customers"
 msgstr "Kunder"
 
-#: includes/admin/class-admin.php:935 includes/admin/reports.php:88
+#: includes/admin/class-admin.php:983 includes/admin/reports.php:88
 msgid "Reports"
 msgstr "Rapporter"
 
-#: includes/admin/class-admin.php:936 includes/admin/tools.php:36
+#: includes/admin/class-admin.php:984 includes/admin/tools.php:36
 #: includes/admin/tools.php:42
 msgid "Tools"
 msgstr "Verktyg"
 
-#: includes/admin/class-admin.php:937
+#: includes/admin/class-admin.php:985
 msgid "Add-ons"
 msgstr "Tillägg"
 
-#: includes/admin/class-admin.php:941
+#: includes/admin/class-admin.php:988
 msgid "Setup Guide"
 msgstr "Installationsguide"
 
-#: includes/admin/class-admin.php:946
+#: includes/admin/class-admin.php:993
 msgid "Get Help"
 msgstr "Skaffa hjälp"
 
-#: includes/admin/class-admin.php:977
+#: includes/admin/class-admin.php:1024
 msgid "Keywords"
 msgstr "Nyckelord"
 
-#: includes/admin/class-admin.php:989
+#: includes/admin/class-admin.php:1036
 msgid "Use gallery price level"
 msgstr "Använd galleri prisnivå"
 
-#: includes/admin/class-admin.php:997 includes/admin/sunshine-gallery.php:218
+#: includes/admin/class-admin.php:1044 includes/admin/sunshine-gallery.php:218
 #: includes/class-sunshinephotocart.php:500
 #: includes/class-sunshinephotocart.php:513 class-export-galleries.php:22
 msgid "Price Level"
 msgstr "Prisnivå"
 
-#: includes/admin/class-admin.php:1008
+#: includes/admin/class-admin.php:1055
 msgid "Disable Purchasing"
 msgstr "Inaktivera inköp"
 
-#: includes/admin/class-admin.php:1014 includes/admin/settings-fields.php:702
+#: includes/admin/class-admin.php:1061 includes/admin/settings-fields.php:702
 #: admin/products.php:45
 msgid "Watermark"
 msgstr "Vattenstämpel"
 
-#: includes/admin/class-admin.php:1059
+#: includes/admin/class-admin.php:1106
 msgid "Metadata"
 msgstr "Metadata"
 
-#: includes/admin/class-admin.php:1146
+#: includes/admin/class-admin.php:1193
 msgid "Log file has been cleared"
 msgstr "Loggfilen har rensats"
 
-#: includes/admin/class-admin.php:1202
+#: includes/admin/class-admin.php:1249
 msgid "Error log file has been cleared"
 msgstr "Fel loggfilen har rensats"
 
-#: includes/admin/class-admin.php:1208 includes/admin/class-admin.php:1216
+#: includes/admin/class-admin.php:1255 includes/admin/class-admin.php:1263
 msgid "You do not have permission to access this file."
 msgstr "Du har inte behörighet till att komma åt den här filen."
 
-#: includes/admin/class-admin.php:1224
+#: includes/admin/class-admin.php:1271
 msgid "Log file not found."
 msgstr "Loggfilen hittades inte."
 
@@ -3440,20 +3452,20 @@ msgstr "Alla typer"
 msgid "Add product name"
 msgstr "Lägg till produktnamn"
 
-#: includes/admin/system-info.php:63
+#: includes/admin/system-info.php:75
 msgid "Sunshine Photo Cart Memory Availability"
 msgstr "Sunshine Photo Cart tillgängligt minne"
 
-#: includes/admin/system-info.php:84 includes/admin/system-info.php:101
+#: includes/admin/system-info.php:96 includes/admin/system-info.php:113
 msgid "Sunshine Photo Cart Recommended Memory Limit"
 msgstr "Sunshine Photo Cart rekommenderad minnesgräns"
 
-#: includes/admin/system-info.php:87 includes/admin/system-info.php:104
+#: includes/admin/system-info.php:99 includes/admin/system-info.php:116
 msgid "Performance"
 msgstr "Prestanda"
 
 #. translators: %1$s is the WordPress memory limit, %2$s is the PHP memory limit
-#: includes/admin/system-info.php:91
+#: includes/admin/system-info.php:103
 #, php-format
 msgid ""
 "Your current WordPress memory limit is set to %1$sM, but your web server "
@@ -3467,12 +3479,12 @@ msgstr ""
 "optimal prestanda och hastighet, så att dina uppladdningar och tillämpningar "
 "av vattenstämplar går så snabbt som möjligt."
 
-#: includes/admin/system-info.php:95 includes/admin/system-info.php:112
+#: includes/admin/system-info.php:107 includes/admin/system-info.php:124
 msgid "Learn how to increase the WordPress memory limit"
 msgstr "Lär dig hur du ökar minnesgränsen för WordPress"
 
 #. translators: %s is the PHP memory limit
-#: includes/admin/system-info.php:108
+#: includes/admin/system-info.php:120
 #, php-format
 msgid ""
 "Your current PHP memory limit is %sM. If you are seeing issues with slow "
@@ -3484,10 +3496,6 @@ msgstr ""
 "uppladdning av bilder eller fel, rekommenderas att du frågar din webbhotell "
 "om ditt tillgängliga minne kan ökas. Minst 256 M rekommenderas, men så högt "
 "som möjligt är bäst."
-
-#: includes/admin/system-info.php:222
-msgid "Copy system info to clipboard"
-msgstr "Kopiera systeminformation till Urklipp"
 
 #: includes/admin/tools.php:39
 msgid "Invalid tool"
@@ -22716,6 +22724,9 @@ msgstr "Ursprungligt belopp:"
 #: templates/shortcode/buy-gift-card.php:139
 msgid "Add to Cart"
 msgstr "Lägg i varukorgen"
+
+#~ msgid "Copy system info to clipboard"
+#~ msgstr "Kopiera systeminformation till Urklipp"
 
 #, php-format
 #~ msgid ""

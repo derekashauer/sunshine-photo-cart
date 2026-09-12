@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-10T21:25:56+00:00\n"
+"POT-Creation-Date: 2026-09-12T16:13:50+00:00\n"
 "PO-Revision-Date: 2026-03-02 21:18-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -270,7 +270,7 @@ msgstr "Редактировать на весь экран."
 msgid "Write a Review"
 msgstr "Написать отзыв"
 
-#: includes/admin/class-admin.php:263 includes/admin/class-admin.php:949
+#: includes/admin/class-admin.php:263 includes/admin/class-admin.php:996
 msgid "Upgrade"
 msgstr "Обновить"
 
@@ -375,32 +375,42 @@ msgstr ""
 "Запись в журнал включена. <a href=\"%s\">Пожалуйста, отключите его, если он "
 "больше не используется.</a>"
 
-#. translators: 1: number of images waiting, 2: URL to the tools page
-#: includes/admin/class-admin.php:627
+#. translators: 1: number of images waiting, 2: URL to the Site Health info page
+#: includes/admin/class-admin.php:652
 #, php-format
 msgid ""
-"%1$d image is waiting to be processed but nothing is scheduled to process "
-"it. This usually means WordPress cron is not running. <a href=\"%2$s\">Check "
-"your system information</a>."
+"%1$d image is waiting to be processed, but WordPress could not save the "
+"background task that processes it. <a href=\"%2$s\">Check Site Health</a>."
 msgid_plural ""
-"%1$d images are waiting to be processed but nothing is scheduled to process "
-"them. This usually means WordPress cron is not running. <a "
-"href=\"%2$s\">Check your system information</a>."
-msgstr[0] ""
-"%1$d изображение ждёт обработки, но ничего не запланировано для его "
-"обработки. Обычно это значит, что cron WordPress не работает. <a "
-"href=\"%2$s\">Проверь информацию о системе</a>."
-msgstr[1] ""
-"%1$d изображения ждут обработки, но ничего не запланировано для их "
-"обработки. Обычно это значит, что cron WordPress не работает. <a "
-"href=\"%2$s\">Проверь информацию о системе</a>."
-msgstr[2] ""
-"%1$d изображений ждут обработки, но ничего не запланировано для их "
-"обработки. Обычно это значит, что cron WordPress не работает. <a "
-"href=\"%2$s\">Проверь информацию о системе</a>."
+"%1$d images are waiting to be processed, but WordPress could not save the "
+"background task that processes them. <a href=\"%2$s\">Check Site Health</a>."
+msgstr[0] "%1$d изображение ждёт обработки, но WordPress не смог сохранить фоновую задачу, которая его обрабатывает. <a href=\"%2$s\">Проверь здоровье сайта</a>."
+msgstr[1] "%1$d изображения ждут обработки, но WordPress не смог сохранить фоновую задачу, которая их обрабатывает. <a href=\"%2$s\">Проверь здоровье сайта</a>."
+msgstr[2] "%1$d изображений ждут обработки, но WordPress не смог сохранить фоновую задачу, которая их обрабатывает. <a href=\"%2$s\">Проверь здоровье сайта</a>."
+
+#. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
+#: includes/admin/class-admin.php:669
+#, php-format
+msgid ""
+"%1$d image is waiting to be processed, but WordPress cron has not run for "
+"%2$s. <a href=\"%3$s\">Check Site Health</a> or see <a href=\"%4$s\" "
+"target=\"_blank\">how to set up a reliable server cron</a>."
+msgid_plural ""
+"%1$d images are waiting to be processed, but WordPress cron has not run for "
+"%2$s. <a href=\"%3$s\">Check Site Health</a> or see <a href=\"%4$s\" "
+"target=\"_blank\">how to set up a reliable server cron</a>."
+msgstr[0] "%1$d изображение ждёт обработки, но cron WordPress не запускался уже %2$s. <a href=\"%3$s\">Проверь здоровье сайта</a> или посмотри, <a href=\"%4$s\" target=\"_blank\">как настроить надёжный серверный cron</a>."
+msgstr[1] "%1$d изображения ждут обработки, но cron WordPress не запускался уже %2$s. <a href=\"%3$s\">Проверь здоровье сайта</a> или посмотри, <a href=\"%4$s\" target=\"_blank\">как настроить надёжный серверный cron</a>."
+msgstr[2] "%1$d изображений ждут обработки, но cron WordPress не запускался уже %2$s. <a href=\"%3$s\">Проверь здоровье сайта</a> или посмотри, <a href=\"%4$s\" target=\"_blank\">как настроить надёжный серверный cron</a>."
+
+#: includes/admin/class-admin.php:682
+msgid ""
+"This site has WP-Cron turned off, so a server cron job has to call wp-"
+"cron.php for anything to run."
+msgstr "На этом сайте WP-Cron выключен, поэтому серверная задача cron должна вызывать wp-cron.php, иначе ничего не запустится."
 
 #. translators: %s is the URL to installation page
-#: includes/admin/class-admin.php:643
+#: includes/admin/class-admin.php:691
 #, php-format
 msgid ""
 "Sunshine installation process was skipped. <a href=\"%s\">Please complete "
@@ -410,7 +420,7 @@ msgstr ""
 "завершите процесс установки.</a>"
 
 #. translators: %1$d is the number of orders, %2$s is the number of orders in plural
-#: includes/admin/class-admin.php:926
+#: includes/admin/class-admin.php:974
 #, php-format
 msgid "%s order"
 msgid_plural "%s orders"
@@ -418,72 +428,72 @@ msgstr[0] "%s заказ"
 msgstr[1] "%s заказа"
 msgstr[2] "%s заказов"
 
-#: includes/admin/class-admin.php:934 includes/admin/customers.php:13
+#: includes/admin/class-admin.php:982 includes/admin/customers.php:13
 #: includes/admin/customers.php:34 includes/admin/reports.php:20 reports.php:7
 msgid "Customers"
 msgstr "Клиенты"
 
-#: includes/admin/class-admin.php:935 includes/admin/reports.php:88
+#: includes/admin/class-admin.php:983 includes/admin/reports.php:88
 msgid "Reports"
 msgstr "Отчеты"
 
-#: includes/admin/class-admin.php:936 includes/admin/tools.php:36
+#: includes/admin/class-admin.php:984 includes/admin/tools.php:36
 #: includes/admin/tools.php:42
 msgid "Tools"
 msgstr "Инструменты"
 
-#: includes/admin/class-admin.php:937
+#: includes/admin/class-admin.php:985
 msgid "Add-ons"
 msgstr "Дополнения"
 
-#: includes/admin/class-admin.php:941
+#: includes/admin/class-admin.php:988
 msgid "Setup Guide"
 msgstr "Руководство по настройке"
 
-#: includes/admin/class-admin.php:946
+#: includes/admin/class-admin.php:993
 msgid "Get Help"
 msgstr "Получить помощь"
 
-#: includes/admin/class-admin.php:977
+#: includes/admin/class-admin.php:1024
 msgid "Keywords"
 msgstr "Ключевые слова"
 
-#: includes/admin/class-admin.php:989
+#: includes/admin/class-admin.php:1036
 msgid "Use gallery price level"
 msgstr "Используйте уровень цен в галерее"
 
-#: includes/admin/class-admin.php:997 includes/admin/sunshine-gallery.php:218
+#: includes/admin/class-admin.php:1044 includes/admin/sunshine-gallery.php:218
 #: includes/class-sunshinephotocart.php:500
 #: includes/class-sunshinephotocart.php:513 class-export-galleries.php:22
 msgid "Price Level"
 msgstr "Уровень цен"
 
-#: includes/admin/class-admin.php:1008
+#: includes/admin/class-admin.php:1055
 msgid "Disable Purchasing"
 msgstr "Отключить покупку (Purchasing)"
 
-#: includes/admin/class-admin.php:1014 includes/admin/settings-fields.php:702
+#: includes/admin/class-admin.php:1061 includes/admin/settings-fields.php:702
 #: admin/products.php:45
 msgid "Watermark"
 msgstr "Водяной знак"
 
-#: includes/admin/class-admin.php:1059
+#: includes/admin/class-admin.php:1106
 msgid "Metadata"
 msgstr "Метаданные"
 
-#: includes/admin/class-admin.php:1146
+#: includes/admin/class-admin.php:1193
 msgid "Log file has been cleared"
 msgstr "Файл журнала был очищен"
 
-#: includes/admin/class-admin.php:1202
+#: includes/admin/class-admin.php:1249
 msgid "Error log file has been cleared"
 msgstr "Файл журнала ошибок был очищен"
 
-#: includes/admin/class-admin.php:1208 includes/admin/class-admin.php:1216
+#: includes/admin/class-admin.php:1255 includes/admin/class-admin.php:1263
 msgid "You do not have permission to access this file."
 msgstr "У вас нет разрешения на доступ к этому файлу."
 
-#: includes/admin/class-admin.php:1224
+#: includes/admin/class-admin.php:1271
 msgid "Log file not found."
 msgstr "Файл журнала не найден."
 
@@ -3477,20 +3487,20 @@ msgstr "Все типы"
 msgid "Add product name"
 msgstr "Добавить название продукта"
 
-#: includes/admin/system-info.php:63
+#: includes/admin/system-info.php:75
 msgid "Sunshine Photo Cart Memory Availability"
 msgstr "Sunshine Photo Cart Доступность памяти"
 
-#: includes/admin/system-info.php:84 includes/admin/system-info.php:101
+#: includes/admin/system-info.php:96 includes/admin/system-info.php:113
 msgid "Sunshine Photo Cart Recommended Memory Limit"
 msgstr "Sunshine Photo Cart Рекомендуемый лимит памяти"
 
-#: includes/admin/system-info.php:87 includes/admin/system-info.php:104
+#: includes/admin/system-info.php:99 includes/admin/system-info.php:116
 msgid "Performance"
 msgstr "Производительность"
 
 #. translators: %1$s is the WordPress memory limit, %2$s is the PHP memory limit
-#: includes/admin/system-info.php:91
+#: includes/admin/system-info.php:103
 #, php-format
 msgid ""
 "Your current WordPress memory limit is set to %1$sM, but your web server "
@@ -3504,12 +3514,12 @@ msgstr ""
 "водяных знаков рекомендуется увеличить лимит памяти WordPress до значения, "
 "равного или превышающего лимит памяти PHP."
 
-#: includes/admin/system-info.php:95 includes/admin/system-info.php:112
+#: includes/admin/system-info.php:107 includes/admin/system-info.php:124
 msgid "Learn how to increase the WordPress memory limit"
 msgstr "Узнайте, как увеличить лимит памяти WordPress"
 
 #. translators: %s is the PHP memory limit
-#: includes/admin/system-info.php:108
+#: includes/admin/system-info.php:120
 #, php-format
 msgid ""
 "Your current PHP memory limit is %sM. If you are seeing issues with slow "
@@ -3521,10 +3531,6 @@ msgstr ""
 "медленной загрузкой изображений или ошибки, рекомендуется спросить у вашего "
 "хостера, можно ли увеличить доступную память. Рекомендуется не менее 256 М, "
 "но лучше всего - как можно больше."
-
-#: includes/admin/system-info.php:222
-msgid "Copy system info to clipboard"
-msgstr "Копирование системной информации в буфер обмена"
 
 #: includes/admin/tools.php:39
 msgid "Invalid tool"
@@ -22856,6 +22862,9 @@ msgstr "Первоначальная сумма:"
 #: templates/shortcode/buy-gift-card.php:139
 msgid "Add to Cart"
 msgstr "Добавить в корзину"
+
+#~ msgid "Copy system info to clipboard"
+#~ msgstr "Копирование системной информации в буфер обмена"
 
 #, php-format
 #~ msgid ""

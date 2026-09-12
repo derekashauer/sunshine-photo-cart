@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-10T21:25:56+00:00\n"
+"POT-Creation-Date: 2026-09-12T16:13:50+00:00\n"
 "PO-Revision-Date: 2026-03-02 20:27-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -268,7 +268,7 @@ msgstr "ערוך במסך מלא."
 msgid "Write a Review"
 msgstr "כתיבת חוות דעת"
 
-#: includes/admin/class-admin.php:263 includes/admin/class-admin.php:949
+#: includes/admin/class-admin.php:263 includes/admin/class-admin.php:996
 msgid "Upgrade"
 msgstr "עדכון"
 
@@ -368,26 +368,40 @@ msgid ""
 "use.</a>"
 msgstr "רישום שמש מופעלת. <a href=\"%s\">נא להשבית כאשר אינו בשימוש עוד.</a>"
 
-#. translators: 1: number of images waiting, 2: URL to the tools page
-#: includes/admin/class-admin.php:627
+#. translators: 1: number of images waiting, 2: URL to the Site Health info page
+#: includes/admin/class-admin.php:652
 #, php-format
 msgid ""
-"%1$d image is waiting to be processed but nothing is scheduled to process "
-"it. This usually means WordPress cron is not running. <a href=\"%2$s\">Check "
-"your system information</a>."
+"%1$d image is waiting to be processed, but WordPress could not save the "
+"background task that processes it. <a href=\"%2$s\">Check Site Health</a>."
 msgid_plural ""
-"%1$d images are waiting to be processed but nothing is scheduled to process "
-"them. This usually means WordPress cron is not running. <a "
-"href=\"%2$s\">Check your system information</a>."
-msgstr[0] ""
-"%1$d תמונה ממתינה לעיבוד, אבל שום דבר לא מתוזמן לעבד אותה. בדרך כלל זה אומר "
-"ש-cron של וורדפרס לא רץ. <a href=\"%2$s\">בדוק את פרטי המערכת</a>."
-msgstr[1] ""
-"%1$d תמונות ממתינות לעיבוד, אבל שום דבר לא מתוזמן לעבד אותן. בדרך כלל זה "
-"אומר ש-cron של וורדפרס לא רץ. <a href=\"%2$s\">בדוק את פרטי המערכת</a>."
+"%1$d images are waiting to be processed, but WordPress could not save the "
+"background task that processes them. <a href=\"%2$s\">Check Site Health</a>."
+msgstr[0] "%1$d תמונה ממתינה לעיבוד, אבל וורדפרס לא הצליח לשמור את משימת הרקע שמעבדת אותה. <a href=\"%2$s\">בדוק את בריאות האתר</a>."
+msgstr[1] "%1$d תמונות ממתינות לעיבוד, אבל וורדפרס לא הצליח לשמור את משימת הרקע שמעבדת אותן. <a href=\"%2$s\">בדוק את בריאות האתר</a>."
+
+#. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
+#: includes/admin/class-admin.php:669
+#, php-format
+msgid ""
+"%1$d image is waiting to be processed, but WordPress cron has not run for "
+"%2$s. <a href=\"%3$s\">Check Site Health</a> or see <a href=\"%4$s\" "
+"target=\"_blank\">how to set up a reliable server cron</a>."
+msgid_plural ""
+"%1$d images are waiting to be processed, but WordPress cron has not run for "
+"%2$s. <a href=\"%3$s\">Check Site Health</a> or see <a href=\"%4$s\" "
+"target=\"_blank\">how to set up a reliable server cron</a>."
+msgstr[0] "%1$d תמונה ממתינה לעיבוד, אבל ה-cron של וורדפרס לא רץ כבר %2$s. <a href=\"%3$s\">בדוק את בריאות האתר</a> או ראה <a href=\"%4$s\" target=\"_blank\">איך להגדיר cron אמין בשרת</a>."
+msgstr[1] "%1$d תמונות ממתינות לעיבוד, אבל ה-cron של וורדפרס לא רץ כבר %2$s. <a href=\"%3$s\">בדוק את בריאות האתר</a> או ראה <a href=\"%4$s\" target=\"_blank\">איך להגדיר cron אמין בשרת</a>."
+
+#: includes/admin/class-admin.php:682
+msgid ""
+"This site has WP-Cron turned off, so a server cron job has to call wp-"
+"cron.php for anything to run."
+msgstr "באתר הזה WP-Cron כבוי, אז משימת cron בשרת צריכה לקרוא ל-wp-cron.php כדי שמשהו ירוץ."
 
 #. translators: %s is the URL to installation page
-#: includes/admin/class-admin.php:643
+#: includes/admin/class-admin.php:691
 #, php-format
 msgid ""
 "Sunshine installation process was skipped. <a href=\"%s\">Please complete "
@@ -396,79 +410,79 @@ msgstr ""
 "תהליך התקנת Sunshine דילג. <a href=\"%s\">נא להשלים את תהליך ההתקנה.</a>"
 
 #. translators: %1$d is the number of orders, %2$s is the number of orders in plural
-#: includes/admin/class-admin.php:926
+#: includes/admin/class-admin.php:974
 #, php-format
 msgid "%s order"
 msgid_plural "%s orders"
 msgstr[0] "%s הזמנה"
 msgstr[1] "%s הזמנות"
 
-#: includes/admin/class-admin.php:934 includes/admin/customers.php:13
+#: includes/admin/class-admin.php:982 includes/admin/customers.php:13
 #: includes/admin/customers.php:34 includes/admin/reports.php:20 reports.php:7
 msgid "Customers"
 msgstr "לקוחות"
 
-#: includes/admin/class-admin.php:935 includes/admin/reports.php:88
+#: includes/admin/class-admin.php:983 includes/admin/reports.php:88
 msgid "Reports"
 msgstr "דוחות"
 
-#: includes/admin/class-admin.php:936 includes/admin/tools.php:36
+#: includes/admin/class-admin.php:984 includes/admin/tools.php:36
 #: includes/admin/tools.php:42
 msgid "Tools"
 msgstr "כלים"
 
-#: includes/admin/class-admin.php:937
+#: includes/admin/class-admin.php:985
 msgid "Add-ons"
 msgstr "תוספים"
 
-#: includes/admin/class-admin.php:941
+#: includes/admin/class-admin.php:988
 msgid "Setup Guide"
 msgstr "מדריך התקנה"
 
-#: includes/admin/class-admin.php:946
+#: includes/admin/class-admin.php:993
 msgid "Get Help"
 msgstr "קבל עזרה"
 
-#: includes/admin/class-admin.php:977
+#: includes/admin/class-admin.php:1024
 msgid "Keywords"
 msgstr "מילות מפתח"
 
-#: includes/admin/class-admin.php:989
+#: includes/admin/class-admin.php:1036
 msgid "Use gallery price level"
 msgstr "השתמש ברמת המחירים של הגלריה"
 
-#: includes/admin/class-admin.php:997 includes/admin/sunshine-gallery.php:218
+#: includes/admin/class-admin.php:1044 includes/admin/sunshine-gallery.php:218
 #: includes/class-sunshinephotocart.php:500
 #: includes/class-sunshinephotocart.php:513 class-export-galleries.php:22
 msgid "Price Level"
 msgstr "רמת מחיר"
 
-#: includes/admin/class-admin.php:1008
+#: includes/admin/class-admin.php:1055
 msgid "Disable Purchasing"
 msgstr "השבת רכישה"
 
-#: includes/admin/class-admin.php:1014 includes/admin/settings-fields.php:702
+#: includes/admin/class-admin.php:1061 includes/admin/settings-fields.php:702
 #: admin/products.php:45
 msgid "Watermark"
 msgstr "סימן מים"
 
-#: includes/admin/class-admin.php:1059
+#: includes/admin/class-admin.php:1106
 msgid "Metadata"
 msgstr "מטא-דאטה"
 
-#: includes/admin/class-admin.php:1146
+#: includes/admin/class-admin.php:1193
 msgid "Log file has been cleared"
 msgstr "קובץ היומן נמחק"
 
-#: includes/admin/class-admin.php:1202
+#: includes/admin/class-admin.php:1249
 msgid "Error log file has been cleared"
 msgstr "קובץ יומן השגיאות נמחק"
 
-#: includes/admin/class-admin.php:1208 includes/admin/class-admin.php:1216
+#: includes/admin/class-admin.php:1255 includes/admin/class-admin.php:1263
 msgid "You do not have permission to access this file."
 msgstr "אין לך הרשאה לגשת לקובץ זה."
 
-#: includes/admin/class-admin.php:1224
+#: includes/admin/class-admin.php:1271
 msgid "Log file not found."
 msgstr "קובץ היומן לא נמצא."
 
@@ -3385,20 +3399,20 @@ msgstr "כל הסוגים"
 msgid "Add product name"
 msgstr "הוסף שם מוצר"
 
-#: includes/admin/system-info.php:63
+#: includes/admin/system-info.php:75
 msgid "Sunshine Photo Cart Memory Availability"
 msgstr "זמינות זיכרון עגלת צילום Sunshine"
 
-#: includes/admin/system-info.php:84 includes/admin/system-info.php:101
+#: includes/admin/system-info.php:96 includes/admin/system-info.php:113
 msgid "Sunshine Photo Cart Recommended Memory Limit"
 msgstr "עגלת צילום של Sunshine מגבלת זיכרון מומלצת"
 
-#: includes/admin/system-info.php:87 includes/admin/system-info.php:104
+#: includes/admin/system-info.php:99 includes/admin/system-info.php:116
 msgid "Performance"
 msgstr "ביצועים"
 
 #. translators: %1$s is the WordPress memory limit, %2$s is the PHP memory limit
-#: includes/admin/system-info.php:91
+#: includes/admin/system-info.php:103
 #, php-format
 msgid ""
 "Your current WordPress memory limit is set to %1$sM, but your web server "
@@ -3411,12 +3425,12 @@ msgstr ""
 "מגבלת הזיכרון של PHP, כדי להשיג ביצועים ומהירות מיטביים ולהבטיח שההעלאות "
 "והחלת סימני המים יתבצעו במהירות המרבית."
 
-#: includes/admin/system-info.php:95 includes/admin/system-info.php:112
+#: includes/admin/system-info.php:107 includes/admin/system-info.php:124
 msgid "Learn how to increase the WordPress memory limit"
 msgstr "למד כיצד להגדיל את מגבלת הזיכרון של וורדפרס"
 
 #. translators: %s is the PHP memory limit
-#: includes/admin/system-info.php:108
+#: includes/admin/system-info.php:120
 #, php-format
 msgid ""
 "Your current PHP memory limit is %sM. If you are seeing issues with slow "
@@ -3427,10 +3441,6 @@ msgstr ""
 "מגבלת הזיכרון הנוכחית שלך ב-PHP היא %sM. אם אתה רואה בעיות בהעלאה איטית של "
 "תמונות או שגיאות, מומלץ לשאול את מארח האינטרנט שלך אם ניתן להגדיל את הזיכרון "
 "הפנוי שלך. מומלץ לפחות 256M, אבל הכי גבוה שאפשר הוא הטוב ביותר."
-
-#: includes/admin/system-info.php:222
-msgid "Copy system info to clipboard"
-msgstr "העתק את פרטי המערכת ללוח"
 
 #: includes/admin/tools.php:39
 msgid "Invalid tool"
@@ -22431,6 +22441,9 @@ msgstr "סכום מקורי:"
 #: templates/shortcode/buy-gift-card.php:139
 msgid "Add to Cart"
 msgstr "הוסף לסל"
+
+#~ msgid "Copy system info to clipboard"
+#~ msgstr "העתק את פרטי המערכת ללוח"
 
 #, php-format
 #~ msgid ""
