@@ -243,6 +243,12 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.7.2 =
+* Fix: The "Check your system information" link in the images-waiting warning opened a page that no longer exists. It now opens Tools > Site Health > Info, where the image queue details (images waiting, queue running, next run) have been added to the Sunshine section
+* Fix: A background image queue that lost its scheduled task is now rescheduled automatically on the next admin page load, instead of waiting for another upload. The warning now only shows when WordPress cron genuinely has not run, and says how long it has been
+* Change: The old Sunshine System Info page, unreachable since its menu entry was removed, is now deleted. Site Health is the one place for system information
+* Fix: Photos saved to favorites from a gallery that asks for an email address showed no add to cart option when the visitor came back in a new browser session
+
 = 3.7.1 - September 10, 2026 =
 * New: Automated Emails can now be sent when a gallery is published. The email waits until the gallery has photos and they have all finished processing, so it never goes out on a half-built gallery. Also available to developers as the `sunshine_gallery_ready` action
 * New: Warning in the admin when images are waiting to be processed but nothing is scheduled to process them, which usually means WordPress cron has stopped running

@@ -590,8 +590,16 @@ class Sunshine_Admin {
 	}
 
 	/**
-	 * Warn when images are queued for background processing but nothing is scheduled
-	 * to process them.
+	 * Keep the background image queue alive, and warn when it genuinely cannot run.
+	 *
+	 * Two different things can leave images waiting with nothing due to process them,
+	 * and they have different owners:
+	 *
+	 * - Nothing is scheduled at all. Sunshine's own cron event was lost (a queue
+	 *   stranded by a pre-3.7.1 stall, or the cron option failed to save). Cron itself
+	 *   may be perfectly healthy, so this is ours to fix: reschedule and say nothing.
+	 * - An event is scheduled but is long overdue. WordPress cron is not firing on this
+	 *   site. Nothing we do here will change that, so tell the site owner.
 	 *
 	 * Without this a stalled queue is invisible: galleries sit unfinished and the only
 	 * clue is that thumbnails never appear.
@@ -620,21 +628,61 @@ class Sunshine_Admin {
 			return;
 		}
 
-		SPC()->notices->add_admin(
-			'image_queue_stalled',
-			sprintf(
-				/* translators: 1: number of images waiting, 2: URL to the tools page */
-				_n(
-					'%1$d image is waiting to be processed but nothing is scheduled to process it. This usually means WordPress cron is not running. <a href="%2$s">Check your system information</a>.',
-					'%1$d images are waiting to be processed but nothing is scheduled to process them. This usually means WordPress cron is not running. <a href="%2$s">Check your system information</a>.',
+		$site_health_url = admin_url( 'site-health.php?tab=debug' );
+
+		if ( ! $next ) {
+			// From an admin request dispatch() only books the cron events, it never
+			// processes anything here.
+			if ( isset( $GLOBALS['sunshine_background_processing'] ) ) {
+				$GLOBALS['sunshine_background_processing']->get_process_images()->dispatch();
+			}
+
+			if ( wp_next_scheduled( 'spc_process_images_cron' ) ) {
+				SPC()->log( 'Image queue: ' . $queued . ' image(s) queued with no scheduled event, rescheduled' );
+				return;
+			}
+
+			// Still nothing after trying. WordPress could not save the scheduled task,
+			// which is a database problem rather than a cron problem.
+			SPC()->log( 'Image queue: ' . $queued . ' image(s) queued and the cron event could not be scheduled' );
+			SPC()->notices->add_admin(
+				'image_queue_stalled',
+				sprintf(
+					/* translators: 1: number of images waiting, 2: URL to the Site Health info page */
+					_n(
+						'%1$d image is waiting to be processed, but WordPress could not save the background task that processes it. <a href="%2$s">Check Site Health</a>.',
+						'%1$d images are waiting to be processed, but WordPress could not save the background task that processes them. <a href="%2$s">Check Site Health</a>.',
+						$queued,
+						'sunshine-photo-cart'
+					),
 					$queued,
-					'sunshine-photo-cart'
+					$site_health_url
 				),
+				'error'
+			);
+			return;
+		}
+
+		// Scheduled but overdue by 15+ minutes: WordPress cron is not firing.
+		$message = sprintf(
+			/* translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation */
+			_n(
+				'%1$d image is waiting to be processed, but WordPress cron has not run for %2$s. <a href="%3$s">Check Site Health</a> or see <a href="%4$s" target="_blank">how to set up a reliable server cron</a>.',
+				'%1$d images are waiting to be processed, but WordPress cron has not run for %2$s. <a href="%3$s">Check Site Health</a> or see <a href="%4$s" target="_blank">how to set up a reliable server cron</a>.',
 				$queued,
-				admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-system-info' )
+				'sunshine-photo-cart'
 			),
-			'error'
+			$queued,
+			human_time_diff( $next ),
+			$site_health_url,
+			'https://www.sunshinephotocart.com/docs/reliable-server-cron/'
 		);
+
+		if ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) {
+			$message .= ' ' . __( 'This site has WP-Cron turned off, so a server cron job has to call wp-cron.php for anything to run.', 'sunshine-photo-cart' );
+		}
+
+		SPC()->notices->add_admin( 'image_queue_stalled', $message, 'error' );
 	}
 
 	function install_notice() {
@@ -935,7 +983,6 @@ class Sunshine_Admin {
 		$sunshine_admin_submenu[120] = array( __( 'Reports', 'sunshine-photo-cart' ), __( 'Reports', 'sunshine-photo-cart' ), 'sunshine_reports', 'sunshine-reports', 'sunshine_reports_page' );
 		$sunshine_admin_submenu[130] = array( __( 'Tools', 'sunshine-photo-cart' ), __( 'Tools', 'sunshine-photo-cart' ), 'sunshine_tools', 'sunshine-tools', 'sunshine_tools_page' );
 		$sunshine_admin_submenu[996] = array( __( 'Add-ons', 'sunshine-photo-cart' ), __( 'Add-ons', 'sunshine-photo-cart' ), 'sunshine_addons', 'sunshine-addons', 'sunshine_addons_page' );
-		// $sunshine_admin_submenu[997] = array( __( 'System Info', 'sunshine-photo-cart' ), __( 'System Info', 'sunshine-photo-cart' ), 'sunshine_manage_options', 'sunshine-system-info', 'sunshine_system_info_page' );
 
 		if ( $this->needs_setup || ( isset( $_GET['page'] ) && $_GET['page'] == 'sunshine-install' ) ) {
 			$sunshine_admin_submenu[998] = array( __( 'Setup Guide', 'sunshine-photo-cart' ), '<span class="sunshine-menu-highlight-link">' . __( 'Setup Guide', 'sunshine-photo-cart' ) . '</span>', 'sunshine_manage_options', 'sunshine-install', 'sunshine_install_page' );

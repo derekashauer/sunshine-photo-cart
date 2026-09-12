@@ -3,13 +3,25 @@ function sunshine_site_health_info( $debug_info ) {
 	$debug_info['sunshine-photo-cart'] = array(
 		'label'  => 'Sunshine Photo Cart',
 		'fields' => array(
-			'gallery_url' => array(
+			'gallery_url'          => array(
 				'label' => 'Gallery URL',
 				'value' => get_permalink( SPC()->get_option( 'page' ) ),
 			),
-			'admin_url'   => array(
+			'admin_url'            => array(
 				'label' => 'Admin URL',
 				'value' => admin_url(),
+			),
+			'image_queue_count'    => array(
+				'label' => 'Images awaiting processing',
+				'value' => sunshine_get_image_queue_count(),
+			),
+			'image_queue_running'  => array(
+				'label' => 'Image queue running',
+				'value' => get_site_transient( 'spc_process_images_process_lock' ) ? 'Yes' : 'No',
+			),
+			'image_queue_next_run' => array(
+				'label' => 'Image queue next run',
+				'value' => sunshine_get_image_queue_next_run(),
 			),
 		),
 	);
@@ -115,120 +127,5 @@ function sunshine_memory_test() {
 			);
 	}
 	return $result;
-
-}
-
-function sunshine_system_info_page() {
-	global $sunshine;
-	?>
-<div class="wrap">
-		<h2>System Information</h2>
-		<p>Use the information below when submitting tickets or questions via <a href="http://www.sunshinephotocart.com/support" target="_blank">Sunshine Support</a>.</p>
-
-<textarea id="sunshine-system-info" readonly="readonly" style="font-family: 'courier new', monospace; margin: 10px 0 0 0; width: 900px; height: 400px;" title="To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).">
-
-### Begin System Info ###
-
-Home Page:                <?php echo esc_url( site_url() ) . "\n"; ?>
-Gallery URL:              <?php echo esc_url( get_permalink( SPC()->get_option( 'page' ) ) ) . "\n"; ?>
-Admin:                 	  <?php echo esc_url( admin_url() ) . "\n"; ?>
-
-WordPress Version:        <?php echo esc_html( get_bloginfo( 'version' ) ) . "\n"; ?>
-
-PHP Version:              <?php echo esc_html( PHP_VERSION ) . "\n"; ?>
-PHP Memory Limit:         <?php echo esc_html( ini_get( 'memory_limit' ) ) . "\n"; ?>
-WordPress Memory Limit:   <?php echo esc_html( ( sunshine_let_to_num( WP_MEMORY_LIMIT ) / ( 1024 * 1024 ) ) . 'M' ); ?><?php echo "\n"; ?>
-ImageMagick:
-	<?php
-	echo ( extension_loaded( 'imagick' ) ) ? 'Yes' : 'No';
-	echo "\n";
-	?>
-Image Quality:            <?php echo esc_html( apply_filters( 'jpeg_quality', 60 ) ); ?>
-
-Delay Image Processing:   <?php echo SPC()->get_option( 'delay_image_processing' ) ? "Enabled\n" : "Disabled\n"; ?>
-Images Awaiting Processing: <?php echo esc_html( sunshine_get_image_queue_count() ) . "\n"; ?>
-Image Queue Running:      <?php echo get_site_transient( 'spc_process_images_process_lock' ) ? "Yes\n" : "No\n"; ?>
-Image Queue Next Run:     <?php echo esc_html( sunshine_get_image_queue_next_run() ) . "\n"; ?>
-	<?php do_action( 'sunshine_sunshine_info' ); ?>
-
-
-ACTIVE PLUGINS:
-
-	<?php
-	$plugins        = get_plugins();
-	$active_plugins = get_option( 'active_plugins', array() );
-
-	foreach ( $plugins as $plugin_path => $plugin ) :
-
-		// If the plugin isn't active, don't show it.
-		if ( ! in_array( $plugin_path, $active_plugins ) ) {
-			continue;
-		}
-		?>
-		<?php echo esc_html( $plugin['Name'] ); ?>: <?php echo esc_html( $plugin['Version'] ); ?>
-
-<?php endforeach; ?>
-
-CURRENT THEME:
-
-	<?php
-	if ( get_bloginfo( 'version' ) < '3.4' ) {
-		$theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
-		echo esc_html( $theme_data['Name'] ) . ': ' . esc_html( $theme_data['Version'] );
-	} else {
-		$theme_data = wp_get_theme();
-		echo esc_html( $theme_data->Name ) . ': ' . esc_html( $theme_data->Version );
-	}
-	?>
-
-
-SUNSHINE SETTINGS:
-
-	<?php
-	$fields = sunshine_get_settings_fields();
-	foreach ( $fields as $section ) :
-		foreach ( $section['fields'] as $field ) {
-			if ( $field['type'] == 'header' || strpos( 'token', $field['id'] ) !== false || strpos( 'key', $field['id'] ) !== false ) {
-				continue; // Exclude some more sensitive items
-			}
-			$value = SPC()->get_option( $field['id'] );
-			if ( is_array( $value ) ) {
-				$values = $value;
-				$value  = '';
-				foreach ( $values as $k => $v ) {
-					$value .= $k . ': ' . maybe_serialize( $v ) . '|';
-				}
-			}
-			echo esc_html( $field['name'] ) . ': ' . esc_html( $value ) . "\r\n";
-		}
-endforeach;
-	?>
-
-IMAGE SIZES:
-
-	<?php
-	global $_wp_additional_image_sizes;
-	foreach ( $_wp_additional_image_sizes as $name => $image_size ) {
-		$crop = ( $image_size['crop'] ) ? 'cropped' : 'not cropped';
-		?>
-		<?php echo esc_html( $name ) . ': ' . esc_html( $image_size['width'] ) . 'x' . esc_html( $image_size['height'] ) . ' (' . esc_html( $crop ) . ')'; ?>
-
-<?php } ?>
-
-### End System Info ###
-</textarea>
-
-	</div>
-	<p><button class="button button-primary" onclick="sunshine_copy_system_info()"><?php esc_html_e( 'Copy system info to clipboard', 'sunshine-photo-cart' ); ?></button></p>
-	<script>
-	function sunshine_copy_system_info() {
-		var copyText = document.getElementById( "sunshine-system-info" );
-		copyText.select();
-		document.execCommand( "copy" );
-		jQuery( '.button-primary' ).after( '<span class="copied" style="display: inline-block; margin-left: 20px; font-size: 16px; color: green; font-weight: bold;">Copied!</div>' );
-		jQuery( '.copied' ).delay( 3000 ).fadeOut();
-	}
-	</script>
-	<?php
 
 }
