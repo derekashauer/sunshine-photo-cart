@@ -118,6 +118,45 @@ function sunshine_memory_test() {
 
 }
 
+/**
+ * Rough check of whether WordPress cron is firing at all.
+ *
+ * Counts events that are already past due. One or two is normal on a quiet site,
+ * but a pile of events overdue by hours means nothing is running cron, which is the
+ * usual reason the image queue stops moving.
+ *
+ * @return string
+ */
+function sunshine_get_cron_status() {
+	$crons = _get_cron_array();
+
+	if ( empty( $crons ) || ! is_array( $crons ) ) {
+		return 'No cron events scheduled';
+	}
+
+	$now     = time();
+	$overdue = 0;
+	$oldest  = 0;
+
+	foreach ( $crons as $timestamp => $events ) {
+		if ( $timestamp > $now ) {
+			continue;
+		}
+
+		$overdue += count( $events );
+
+		if ( ! $oldest || $timestamp < $oldest ) {
+			$oldest = $timestamp;
+		}
+	}
+
+	if ( ! $overdue ) {
+		return 'OK, nothing overdue';
+	}
+
+	return sprintf( '%1$d event(s) overdue, oldest by %2$s (cron may not be running)', $overdue, human_time_diff( $oldest, $now ) );
+}
+
 function sunshine_system_info_page() {
 	global $sunshine;
 	?>
@@ -149,6 +188,10 @@ Delay Image Processing:   <?php echo SPC()->get_option( 'delay_image_processing'
 Images Awaiting Processing: <?php echo esc_html( sunshine_get_image_queue_count() ) . "\n"; ?>
 Image Queue Running:      <?php echo get_site_transient( 'spc_process_images_process_lock' ) ? "Yes\n" : "No\n"; ?>
 Image Queue Next Run:     <?php echo esc_html( sunshine_get_image_queue_next_run() ) . "\n"; ?>
+
+WP Cron:                  <?php echo ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ) ? "Disabled by DISABLE_WP_CRON (a real server cron should be running wp-cron.php)\n" : "Enabled\n"; ?>
+Alternate WP Cron:        <?php echo ( defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON ) ? "Yes\n" : "No\n"; ?>
+Cron Status:              <?php echo esc_html( sunshine_get_cron_status() ) . "\n"; ?>
 	<?php do_action( 'sunshine_sunshine_info' ); ?>
 
 

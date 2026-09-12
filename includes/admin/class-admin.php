@@ -935,7 +935,6 @@ class Sunshine_Admin {
 		$sunshine_admin_submenu[120] = array( __( 'Reports', 'sunshine-photo-cart' ), __( 'Reports', 'sunshine-photo-cart' ), 'sunshine_reports', 'sunshine-reports', 'sunshine_reports_page' );
 		$sunshine_admin_submenu[130] = array( __( 'Tools', 'sunshine-photo-cart' ), __( 'Tools', 'sunshine-photo-cart' ), 'sunshine_tools', 'sunshine-tools', 'sunshine_tools_page' );
 		$sunshine_admin_submenu[996] = array( __( 'Add-ons', 'sunshine-photo-cart' ), __( 'Add-ons', 'sunshine-photo-cart' ), 'sunshine_addons', 'sunshine-addons', 'sunshine_addons_page' );
-		// $sunshine_admin_submenu[997] = array( __( 'System Info', 'sunshine-photo-cart' ), __( 'System Info', 'sunshine-photo-cart' ), 'sunshine_manage_options', 'sunshine-system-info', 'sunshine_system_info_page' );
 
 		if ( $this->needs_setup || ( isset( $_GET['page'] ) && $_GET['page'] == 'sunshine-install' ) ) {
 			$sunshine_admin_submenu[998] = array( __( 'Setup Guide', 'sunshine-photo-cart' ), '<span class="sunshine-menu-highlight-link">' . __( 'Setup Guide', 'sunshine-photo-cart' ) . '</span>', 'sunshine_manage_options', 'sunshine-install', 'sunshine_install_page' );
@@ -953,6 +952,20 @@ class Sunshine_Admin {
 		foreach ( $sunshine_admin_submenu as $key => $item ) {
 			$page = add_submenu_page( 'edit.php?post_type=sunshine-gallery', $item[0], $item[1], $item[2], $item[3], ( ! empty( $item[4] ) ) ? $item[4] : '', $key );
 		}
+
+		// System Info is linked from admin notices and support requests but is kept out
+		// of the menu on purpose. It still has to be registered: without this WordPress
+		// rejects the page with "Sorry, you are not allowed to access this page", which
+		// looks like a permissions problem rather than a missing page.
+		add_submenu_page(
+			'edit.php?post_type=sunshine-gallery',
+			__( 'System Info', 'sunshine-photo-cart' ),
+			__( 'System Info', 'sunshine-photo-cart' ),
+			'sunshine_manage_options',
+			'sunshine-system-info',
+			'sunshine_system_info_page'
+		);
+		remove_submenu_page( 'edit.php?post_type=sunshine-gallery', 'sunshine-system-info' );
 
 	}
 
