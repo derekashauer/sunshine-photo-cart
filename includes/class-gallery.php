@@ -44,8 +44,8 @@ class SPC_Gallery extends Sunshine_Data {
 		return $this->get_meta_value( 'images_directory' );
 	}
 
-	public function can_purchase() {
-		if ( $this->products_disabled() || $this->is_expired() || SPC()->get_option( 'proofing' ) || ! $this->has_images() || ! $this->can_access() ) {
+	public function can_purchase( $ignore_email_gate = false ) {
+		if ( $this->products_disabled() || $this->is_expired() || SPC()->get_option( 'proofing' ) || ! $this->has_images() || ! $this->can_access( false, $ignore_email_gate ) ) {
 			return false;
 		}
 		return true;
@@ -73,7 +73,7 @@ class SPC_Gallery extends Sunshine_Data {
 	}
 
 	// Just because they can view it does not mean they can access or see the images in it.
-	public function can_access( $parent = false ) {
+	public function can_access( $parent = false, $ignore_email_gate = false ) {
 
 		if ( $this->get_data_value( 'post_status' ) != 'publish' ) {
 			return false;
@@ -87,7 +87,7 @@ class SPC_Gallery extends Sunshine_Data {
 			return false;
 		}
 
-		if ( $this->email_required() ) {
+		if ( ! $ignore_email_gate && $this->email_required() ) {
 			return false;
 		}
 

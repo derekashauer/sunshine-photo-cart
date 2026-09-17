@@ -188,7 +188,8 @@ class SPC_Image extends Sunshine_Data {
 			$this->get_gallery();
 		}
 		if ( $this->gallery ) {
-			return $this->gallery->can_access();
+			// A favorited image was already reached once, so the gallery's email prompt does not apply to it again.
+			return $this->gallery->can_access( false, $this->is_favorite() );
 		}
 		return false;
 	}
@@ -199,7 +200,7 @@ class SPC_Image extends Sunshine_Data {
 			$this->get_gallery();
 		}
 		if ( $this->gallery ) {
-			$can_purchase = $this->gallery->can_purchase();
+			$can_purchase = $this->gallery->can_purchase( $this->is_favorite() );
 			if ( $can_purchase ) {
 				$can_purchase = ! ( ! empty( $this->meta['sunshine_disable_purchase'] ) );
 			}
@@ -209,11 +210,10 @@ class SPC_Image extends Sunshine_Data {
 	}
 
 	public function is_favorite() {
-		if ( is_user_logged_in() ) {
-			$favorites = SPC()->customer->get_favorite_ids();
-			if ( ! empty( $favorites ) && in_array( $this->get_id(), $favorites ) ) {
-				return true;
-			}
+		// Covers both logged in customers and guests, whose favorites live in the session.
+		$favorites = SPC()->customer->get_favorite_ids();
+		if ( ! empty( $favorites ) && in_array( $this->get_id(), $favorites ) ) {
+			return true;
 		}
 		return false;
 	}

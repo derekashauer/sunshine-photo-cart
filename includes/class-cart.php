@@ -361,7 +361,8 @@ class SPC_Cart {
 		}
 
 		// Sanity check: Make sure we can purchase this product and access this gallery it is tied to
-		if ( ! $product->can_purchase() || ( $gallery && ! $gallery->can_purchase() ) ) {
+		// A favorited image stays purchasable even if the gallery's email prompt has not been answered this session
+		if ( ! $product->can_purchase() || ( $gallery && ! $gallery->can_purchase( $image && $image->is_favorite() ) ) ) {
 			SPC()->log( 'Item not added to cart because invalid purchase permissions for product or gallery' );
 			return false;
 		}

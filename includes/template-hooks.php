@@ -217,7 +217,8 @@ function sunshine_single_image_display() {
 			return;
 		}
 		$password_required = $gallery->password_required();
-		$email_required    = $gallery->email_required();
+		// A favorited image was already reached once, so do not ask for the email again just for that image.
+		$email_required    = $gallery->email_required() && ! $image->is_favorite();
 		if ( $password_required || $email_required ) {
 			sunshine_get_template(
 				'gallery/access',
