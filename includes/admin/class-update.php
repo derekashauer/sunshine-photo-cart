@@ -1110,7 +1110,7 @@ class SPC_Update {
 			SPC()->log( 'Updating order ID: ' . $object->ID );
 
 			// General data changes.
-			$orderdata = maybe_unserialize( get_post_meta( $object->ID, '_sunshine_order_data', true ) );
+			$orderdata = get_post_meta( $object->ID, '_sunshine_order_data', true );
 
 			if ( empty( $orderdata ) || ! is_array( $orderdata ) ) {
 				$orderdata = array();
@@ -1277,7 +1277,7 @@ class SPC_Update {
 			}
 
 			// Line item changes.
-			$orderitems = maybe_unserialize( get_post_meta( $object->ID, '_sunshine_order_items', true ) );
+			$orderitems = get_post_meta( $object->ID, '_sunshine_order_items', true );
 			if ( ! empty( $orderitems ) ) {
 
 				// If there is order items, delete current order items as we will be redoing them.

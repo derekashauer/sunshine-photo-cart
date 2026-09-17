@@ -199,7 +199,7 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 			$html = '';
 
 			$option_name  = $this->prefix . $field['id'];
-			$option_value = maybe_unserialize( get_option( $option_name ) );
+			$option_value = get_option( $option_name );
 
 			if ( empty( $option_value ) && ! empty( $field['default'] ) ) {
 				$option_value = $field['default'];

@@ -772,7 +772,7 @@ class SPC_Admin_Order {
 			return;
 		}
 
-		$meta_items = maybe_unserialize( get_post_meta( $order->get_id(), 'cart', true ) );
+		$meta_items = get_post_meta( $order->get_id(), 'cart', true );
 		if ( is_array( $meta_items ) && count( $meta_items ) !== count( $items ) ) {
 			echo wp_kses_post(
 				'<div class="error"><p>' . sprintf(
@@ -914,7 +914,7 @@ class SPC_Admin_Order {
 
 		$order      = new SPC_Order( intval( $_GET['post'] ) );
 		$items      = $order->get_items();
-		$meta_items = maybe_unserialize( get_post_meta( $order->get_id(), 'cart', true ) );
+		$meta_items = get_post_meta( $order->get_id(), 'cart', true );
 		if ( is_array( $meta_items ) && count( $meta_items ) !== count( $items ) ) {
 			$wpdb->delete(
 				$wpdb->prefix . 'sunshine_order_items',

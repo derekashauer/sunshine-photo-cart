@@ -648,7 +648,7 @@ final class Sunshine_Photo_Cart {
 		if ( empty( $value ) && $default ) {
 			$value = $default;
 		}
-		return ( $value !== '' ) ? maybe_unserialize( $value ) : '';
+		return ( $value !== '' ) ? $value : '';
 	}
 
 	public function update_option( $key, $value, $autoload = false ) {

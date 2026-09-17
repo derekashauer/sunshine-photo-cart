@@ -18,7 +18,7 @@ abstract class Sunshine_Data {
 
 	public function __get( $key ) {
 		if ( array_key_exists( $key, $this->meta ) ) {
-			return maybe_unserialize( $this->meta[ $key ] );
+			return $this->meta[ $key ];
 		} else {
 			return get_post_meta( $this->id, $key, true );
 		}
@@ -49,7 +49,7 @@ abstract class Sunshine_Data {
 		return $this->meta;
 	}
 
-	// Seed specific meta values (raw, as stored) fetched in bulk elsewhere, so
+	// Seed specific meta values (raw rows fetched in bulk elsewhere, unserialized here) so
 	// permission checks on large sets of galleries do not trigger a database
 	// lookup per object. Keys registered here that have no value are remembered
 	// as empty so reads of them can skip the database entirely.
@@ -59,7 +59,7 @@ abstract class Sunshine_Data {
 				$this->prefetched_meta_keys[] = $key;
 			}
 			if ( ! empty( $value ) && ! in_array( $key, $this->runtime_meta_keys, true ) ) {
-				$this->meta[ $key ]        = $value;
+				$this->meta[ $key ]        = maybe_unserialize( $value );
 				$this->runtime_meta_keys[] = $key;
 			}
 		}
@@ -122,7 +122,7 @@ abstract class Sunshine_Data {
 			$this->set_meta_data();
 		}
 		if ( array_key_exists( $key, $this->meta ) && ! empty( $this->meta[ $key ] ) ) {
-			return maybe_unserialize( $this->meta[ $key ] );
+			return $this->meta[ $key ];
 		}
 		if ( ! $check_ancestors && in_array( $key, $this->prefetched_meta_keys, true ) ) {
 			// Key was prefetched in bulk and has no value; skip the per-object lookup.
@@ -149,7 +149,7 @@ abstract class Sunshine_Data {
 				// Cache for future reads; an ancestor's value must not be cached as our own.
 				$this->meta[ $key ] = $value;
 			}
-			return maybe_unserialize( $value );
+			return $value;
 		}
 		return false;
 	}

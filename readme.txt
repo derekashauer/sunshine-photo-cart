@@ -248,6 +248,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: A background image queue that lost its scheduled task is now rescheduled automatically on the next admin page load, instead of waiting for another upload. The warning now only shows when WordPress cron genuinely has not run, and says how long it has been
 * Change: The old Sunshine System Info page, unreachable since its menu entry was removed, is now deleted. Site Health is the one place for system information
 * Fix: Photos saved to favorites from a gallery that asks for an email address showed no add to cart option when the visitor came back in a new browser session
+* Security: Stored meta and option values were unserialized a second time after WordPress had already done so. A user with permission to edit orders or galleries could store a specially crafted value that would then be turned into a PHP object when the order or gallery was viewed. Values are now read only once, so a stored string stays a string
 
 = 3.7.1 - September 10, 2026 =
 * New: Automated Emails can now be sent when a gallery is published. The email waits until the gallery has photos and they have all finished processing, so it never goes out on a half-built gallery. Also available to developers as the `sunshine_gallery_ready` action

@@ -90,7 +90,7 @@ class SPC_Order_Item extends SPC_Cart_Item {
 
 	public function get_meta_value( $key ) {
 		if ( isset( $this->meta[ $key ] ) ) {
-			return maybe_unserialize( $this->meta[ $key ] );
+			return $this->meta[ $key ];
 		}
 		return false;
 	}

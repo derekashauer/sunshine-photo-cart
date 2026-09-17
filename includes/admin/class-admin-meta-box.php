@@ -289,7 +289,7 @@ class Sunshine_Admin_Meta_Boxes {
 		$html = '';
 
 		$meta_key   = $field['id'];
-		$meta_value = maybe_unserialize( get_post_meta( $post->ID, $meta_key, true ) );
+		$meta_value = get_post_meta( $post->ID, $meta_key, true );
 
 		if ( empty( $meta_value ) && isset( $field['default'] ) ) {
 			$meta_value = $field['default'];

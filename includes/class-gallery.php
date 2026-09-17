@@ -501,7 +501,7 @@ class SPC_Gallery extends Sunshine_Data {
 	}
 
 	public function get_emails() {
-		return maybe_unserialize( $this->get_meta_value( 'emails' ) );
+		return $this->get_meta_value( 'emails' );
 	}
 
 	public function add_email( $email ) {
