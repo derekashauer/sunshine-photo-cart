@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-12T16:13:50+00:00\n"
+"POT-Creation-Date: 2026-09-17T18:47:54+00:00\n"
 "PO-Revision-Date: 2026-03-02 21:18-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -384,9 +384,16 @@ msgid ""
 msgid_plural ""
 "%1$d images are waiting to be processed, but WordPress could not save the "
 "background task that processes them. <a href=\"%2$s\">Check Site Health</a>."
-msgstr[0] "%1$d изображение ждёт обработки, но WordPress не смог сохранить фоновую задачу, которая его обрабатывает. <a href=\"%2$s\">Проверь здоровье сайта</a>."
-msgstr[1] "%1$d изображения ждут обработки, но WordPress не смог сохранить фоновую задачу, которая их обрабатывает. <a href=\"%2$s\">Проверь здоровье сайта</a>."
-msgstr[2] "%1$d изображений ждут обработки, но WordPress не смог сохранить фоновую задачу, которая их обрабатывает. <a href=\"%2$s\">Проверь здоровье сайта</a>."
+msgstr[0] ""
+"%1$d изображение ждёт обработки, но WordPress не смог сохранить фоновую "
+"задачу, которая его обрабатывает. <a href=\"%2$s\">Проверь здоровье сайта</"
+"a>."
+msgstr[1] ""
+"%1$d изображения ждут обработки, но WordPress не смог сохранить фоновую "
+"задачу, которая их обрабатывает. <a href=\"%2$s\">Проверь здоровье сайта</a>."
+msgstr[2] ""
+"%1$d изображений ждут обработки, но WordPress не смог сохранить фоновую "
+"задачу, которая их обрабатывает. <a href=\"%2$s\">Проверь здоровье сайта</a>."
 
 #. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
 #: includes/admin/class-admin.php:669
@@ -399,15 +406,26 @@ msgid_plural ""
 "%1$d images are waiting to be processed, but WordPress cron has not run for "
 "%2$s. <a href=\"%3$s\">Check Site Health</a> or see <a href=\"%4$s\" "
 "target=\"_blank\">how to set up a reliable server cron</a>."
-msgstr[0] "%1$d изображение ждёт обработки, но cron WordPress не запускался уже %2$s. <a href=\"%3$s\">Проверь здоровье сайта</a> или посмотри, <a href=\"%4$s\" target=\"_blank\">как настроить надёжный серверный cron</a>."
-msgstr[1] "%1$d изображения ждут обработки, но cron WordPress не запускался уже %2$s. <a href=\"%3$s\">Проверь здоровье сайта</a> или посмотри, <a href=\"%4$s\" target=\"_blank\">как настроить надёжный серверный cron</a>."
-msgstr[2] "%1$d изображений ждут обработки, но cron WordPress не запускался уже %2$s. <a href=\"%3$s\">Проверь здоровье сайта</a> или посмотри, <a href=\"%4$s\" target=\"_blank\">как настроить надёжный серверный cron</a>."
+msgstr[0] ""
+"%1$d изображение ждёт обработки, но cron WordPress не запускался уже %2$s. "
+"<a href=\"%3$s\">Проверь здоровье сайта</a> или посмотри, <a href=\"%4$s\" "
+"target=\"_blank\">как настроить надёжный серверный cron</a>."
+msgstr[1] ""
+"%1$d изображения ждут обработки, но cron WordPress не запускался уже %2$s. "
+"<a href=\"%3$s\">Проверь здоровье сайта</a> или посмотри, <a href=\"%4$s\" "
+"target=\"_blank\">как настроить надёжный серверный cron</a>."
+msgstr[2] ""
+"%1$d изображений ждут обработки, но cron WordPress не запускался уже %2$s. "
+"<a href=\"%3$s\">Проверь здоровье сайта</a> или посмотри, <a href=\"%4$s\" "
+"target=\"_blank\">как настроить надёжный серверный cron</a>."
 
 #: includes/admin/class-admin.php:682
 msgid ""
 "This site has WP-Cron turned off, so a server cron job has to call wp-"
 "cron.php for anything to run."
-msgstr "На этом сайте WP-Cron выключен, поэтому серверная задача cron должна вызывать wp-cron.php, иначе ничего не запустится."
+msgstr ""
+"На этом сайте WP-Cron выключен, поэтому серверная задача cron должна "
+"вызывать wp-cron.php, иначе ничего не запустится."
 
 #. translators: %s is the URL to installation page
 #: includes/admin/class-admin.php:691
@@ -1072,7 +1090,7 @@ msgstr "Истекший"
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:336
 #: includes/admin/sunshine-gallery.php:1589
-#: includes/class-cloud-storage-import.php:904
+#: includes/class-cloud-storage-import.php:928
 msgid "images"
 msgstr "изображения"
 
@@ -1343,7 +1361,7 @@ msgid "Quantity Discounts"
 msgstr "Скидки на количество"
 
 #: includes/admin/promos.php:248 admin/settings.php:642
-#: includes/class-cloud-storage-import.php:170
+#: includes/class-cloud-storage-import.php:190
 msgid "Cloud Storage"
 msgstr "Облачное хранилище"
 
@@ -1613,7 +1631,7 @@ msgid "Disable promos throughout Sunshine Photo Cart"
 msgstr "Отключение промо-акций в фототележке Sunshine"
 
 #: includes/admin/settings-fields.php:200
-#: includes/admin/sunshine-product.php:103 class-admin-automated-emails.php:132
+#: includes/admin/sunshine-product.php:103 class-admin-automated-emails.php:138
 #: class-admin-discounts.php:204 sell-anything.php:39
 #: class-admin-gift-cards.php:64
 msgid "General"
@@ -13381,7 +13399,7 @@ msgstr "Квитанция за %1$s от %2$s"
 
 #: includes/emails/class-email-customer-receipt.php:52
 #: templates/email/customer-receipt.php:14 templates/email/order-comment.php:17
-#: templates/email/order-status.php:15 class-automated-email-send.php:152
+#: templates/email/order-status.php:15 class-automated-email-send.php:161
 msgid "View order"
 msgstr "Посмотреть заказ"
 
@@ -17120,11 +17138,25 @@ msgstr ""
 msgid "See examples"
 msgstr "Смотри примеры"
 
+#: class-admin-automated-emails.php:106
+msgid "Notice, not marketing"
+msgstr "Уведомление, не маркетинг"
+
 #: class-admin-automated-emails.php:108
+msgid ""
+"Check this only if the email is a reminder or notice that does not try to "
+"sell anything, like a gallery expiring or a gallery being ready. The "
+"unsubscribe link and headers are left out, and the email is still sent to "
+"customers who unsubscribed. Adding a discount code makes it a marketing "
+"email, so leave this unchecked if you use one. You are responsible for "
+"following the email laws where you and your customers live."
+msgstr "Отмечай это только если письмо — напоминание или уведомление, которое ничего не продаёт, например что галерея скоро истечёт или готова. Ссылка и заголовки для отписки не добавляются, а письмо отправляется и клиентам, которые отписались. Если добавить код скидки, письмо станет маркетинговым, так что оставь галочку снятой, если используешь его. Ты сам отвечаешь за соблюдение законов о рассылках там, где живёте ты и твои клиенты."
+
+#: class-admin-automated-emails.php:114
 msgid "Discount (optional)"
 msgstr "Скидка (необязательно)"
 
-#: class-admin-automated-emails.php:110
+#: class-admin-automated-emails.php:116
 msgid ""
 "A unique coupon code will be generated based on the settings of the selected "
 "coupon and assigned to the specific user being emailed"
@@ -17132,11 +17164,11 @@ msgstr ""
 "Уникальный купон код будет создаваться на основании параметров выбранного "
 "купона и назначенные для конкретного пользователя и будет отправлен по e-mail"
 
-#: class-admin-automated-emails.php:114
+#: class-admin-automated-emails.php:120
 msgid "Discount Expiration (Optional)"
 msgstr "Срок действия купона (не обязательно)"
 
-#: class-admin-automated-emails.php:116
+#: class-admin-automated-emails.php:122
 msgid ""
 "How long should the coupon code be valid for after being created? This will "
 "override any expiration date settings of the selected discount code"
@@ -17144,23 +17176,23 @@ msgstr ""
 "В течение какого времени код купона должен действовать после создания? Это "
 "отменяет все настройки срока действия выбранного кода скидки"
 
-#: class-admin-automated-emails.php:154
+#: class-admin-automated-emails.php:160
 msgid "Gallery tags"
 msgstr "Метки галерей"
 
-#: class-admin-automated-emails.php:163
+#: class-admin-automated-emails.php:169
 msgid "Order tags"
 msgstr "Метки заказов"
 
-#: class-automated-email-send.php:8 common.php:6
+#: class-automated-email-send.php:10 common.php:6
 msgid "Automated Email"
 msgstr "Автоматизированная Email"
 
-#: class-automated-email-send.php:9
+#: class-automated-email-send.php:11
 msgid "This is a general template for automated emails"
 msgstr "Это общий шаблон для автоматических писем"
 
-#: class-automated-email-send.php:64
+#: class-automated-email-send.php:73
 msgid "Unsubscribe from these emails"
 msgstr "Отписаться от этих писем"
 
@@ -17312,35 +17344,35 @@ msgstr "Создайте свое первое автоматическое пи
 msgid "Creating automated emails in Sunshine Photo Cart"
 msgstr "Создание автоматических электронных писем в Sunshine Photo Cart"
 
-#: unsubscribe.php:125
+#: unsubscribe.php:131
 msgid "Invalid link"
 msgstr "Неверная ссылка"
 
-#: unsubscribe.php:126
+#: unsubscribe.php:132
 msgid "This unsubscribe link is not valid."
 msgstr "Эта ссылка для отписки недействительна."
 
-#: unsubscribe.php:149 unsubscribe.php:157
+#: unsubscribe.php:155 unsubscribe.php:163
 msgid "Unsubscribed"
 msgstr "Отписан"
 
-#: unsubscribe.php:150
+#: unsubscribe.php:156
 msgid ""
 "You have been unsubscribed and will no longer receive marketing emails from "
 "us."
 msgstr "Ты отписан(а) и больше не будешь получать от нас маркетинговые письма."
 
-#: unsubscribe.php:158
+#: unsubscribe.php:164
 msgid "You are unsubscribed and will not receive marketing emails from us."
 msgstr "Ты отписан и больше не будешь получать от нас маркетинговые письма."
 
 #. translators: %s: email address being unsubscribed
-#: unsubscribe.php:163
+#: unsubscribe.php:169
 #, php-format
 msgid "Unsubscribe %s from future marketing emails from us?"
 msgstr "Отписать %s от будущих маркетинговых писем от нас?"
 
-#: unsubscribe.php:166 unsubscribe.php:168
+#: unsubscribe.php:172 unsubscribe.php:174
 msgid "Unsubscribe"
 msgstr "Отписаться"
 
@@ -18047,9 +18079,9 @@ msgstr ""
 #: class-download.php:753 class-download.php:799 class-download.php:875
 #: class-download.php:937 class-download.php:957 class-download.php:1439
 #: frontend.php:292 frontend.php:817 includes/download-handler.php:99
-#: includes/download-handler.php:107 includes/download-handler.php:161
-#: includes/download-handler.php:201 includes/download-handler.php:208
-#: includes/download-handler.php:234
+#: includes/download-handler.php:107 includes/download-handler.php:162
+#: includes/download-handler.php:177 includes/download-handler.php:184
+#: includes/download-handler.php:210
 msgid "Download Error"
 msgstr "Ошибка загрузки"
 
@@ -18253,12 +18285,12 @@ msgstr ""
 msgid "Download Expired"
 msgstr "Скачать Просрочено"
 
-#: includes/download-handler.php:161 includes/download-handler.php:201
-#: includes/download-handler.php:208
+#: includes/download-handler.php:162 includes/download-handler.php:177
+#: includes/download-handler.php:184
 msgid "Download file not found"
 msgstr "Файл для скачивания не найден"
 
-#: includes/download-handler.php:234
+#: includes/download-handler.php:210
 msgid "You do not have permission to download this file"
 msgstr "У вас нет разрешения на скачивание этого файла"
 
@@ -20487,17 +20519,18 @@ msgstr "Недопустимый идентификатор вложения"
 
 #: admin/media-library.php:221 admin/settings.php:655 admin/settings.php:830
 #: admin/tools.php:457 admin/tools.php:526 admin/tools.php:558
-#: admin/tools.php:596 admin/tools.php:993 admin/tools.php:1075
-#: admin/tools.php:1109 admin/tools.php:1579 admin/tools.php:1624
-#: admin/tools.php:1724 admin/tools.php:1766 admin/tools.php:2043
-#: admin/tools.php:2161 includes/class-cloud-storage-import.php:422
-#: includes/class-cloud-storage-import.php:764
-#: includes/class-cloud-storage-import.php:823
+#: admin/tools.php:596 admin/tools.php:1020 admin/tools.php:1048
+#: admin/tools.php:1085 admin/tools.php:1125 admin/tools.php:1159
+#: admin/tools.php:1631 admin/tools.php:1676 admin/tools.php:1776
+#: admin/tools.php:1818 admin/tools.php:2083 admin/tools.php:2204
+#: includes/class-cloud-storage-import.php:442
+#: includes/class-cloud-storage-import.php:787
+#: includes/class-cloud-storage-import.php:847
 msgid "Insufficient permissions"
 msgstr "Недостаточно разрешений"
 
-#: admin/media-library.php:227 includes/class-cloud-storage-import.php:425
-#: includes/class-cloud-storage-import.php:768
+#: admin/media-library.php:227 includes/class-cloud-storage-import.php:445
+#: includes/class-cloud-storage-import.php:791
 msgid "Cloud storage is not configured"
 msgstr "Облачное хранилище не настроено"
 
@@ -21278,7 +21311,7 @@ msgid "Migrate existing gallery images to cloud storage"
 msgstr "Перенести существующие изображения галереи в облачное хранилище"
 
 #: admin/tools.php:15 admin/tools.php:162 admin/tools.php:189
-#: admin/tools.php:1154 admin/tools.php:1249
+#: admin/tools.php:1204 admin/tools.php:1299
 msgid "Start Migration"
 msgstr "Начало миграции"
 
@@ -21385,12 +21418,12 @@ msgstr ""
 msgid "Starting migration..."
 msgstr "Начало миграции..."
 
-#: admin/tools.php:208 admin/tools.php:1365
+#: admin/tools.php:208 admin/tools.php:1417
 msgid "Migration in progress"
 msgstr "Миграция выполняется"
 
 #. translators: %d: number of failed items
-#: admin/tools.php:218 admin/tools.php:1376
+#: admin/tools.php:218 admin/tools.php:1428
 #, php-format
 msgid "%d failed"
 msgstr "%d failed"
@@ -21403,12 +21436,12 @@ msgstr ""
 "Изображения загружаются в фоне. Ты можешь спокойно уйти с этой страницы — "
 "миграция продолжится, а по её завершении придёт письмо."
 
-#: admin/tools.php:231 admin/tools.php:323 admin/tools.php:1383
-#: admin/tools.php:1459
+#: admin/tools.php:231 admin/tools.php:323 admin/tools.php:1435
+#: admin/tools.php:1511
 msgid "Stop Migration"
 msgstr "Остановить миграцию"
 
-#: admin/tools.php:284 admin/tools.php:1420
+#: admin/tools.php:284 admin/tools.php:1472
 msgid "failed"
 msgstr "не удалось"
 
@@ -21420,11 +21453,11 @@ msgstr ""
 "Вы уверены, что хотите остановить миграцию? Уже загруженные изображения "
 "останутся в облачном хранилище, но процесс будет отменен."
 
-#: admin/tools.php:313 admin/tools.php:866 admin/tools.php:1449
+#: admin/tools.php:313 admin/tools.php:893 admin/tools.php:1501
 msgid "Stopping..."
 msgstr "Остановка ..."
 
-#: admin/tools.php:322 admin/tools.php:1458
+#: admin/tools.php:322 admin/tools.php:1510
 msgid "Failed to stop migration"
 msgstr "Не удалось остановить миграцию"
 
@@ -21445,7 +21478,7 @@ msgid ""
 msgstr ""
 "Миграция была остановлена. До отмены было успешно перенесено %d изображений."
 
-#: admin/tools.php:376 admin/tools.php:1488
+#: admin/tools.php:376 admin/tools.php:1540
 msgid "Migration Complete"
 msgstr "Миграция завершена"
 
@@ -21466,7 +21499,7 @@ msgid "Failed Images:"
 msgstr "Неудачные изображения:"
 
 #. translators: %d: number of additional items not shown
-#: admin/tools.php:398 admin/tools.php:957 admin/tools.php:1518
+#: admin/tools.php:398 admin/tools.php:984 admin/tools.php:1570
 #, php-format
 msgid "...and %d more"
 msgstr "...и %d больше"
@@ -21475,7 +21508,7 @@ msgstr "...и %d больше"
 msgid "Retry Failed Uploads"
 msgstr "Повторить неудавшиеся загрузки"
 
-#: admin/tools.php:408 admin/tools.php:964 admin/tools.php:1527
+#: admin/tools.php:408 admin/tools.php:991 admin/tools.php:1579
 msgid "Clear Results"
 msgstr "Очистить результаты"
 
@@ -21511,7 +21544,7 @@ msgstr "Миграция успешно завершена"
 msgid "No failed images to retry"
 msgstr "Нет неудачных изображений для повторной попытки"
 
-#: admin/tools.php:640 admin/tools.php:693
+#: admin/tools.php:640 admin/tools.php:690
 msgid "Reclaim Local Storage"
 msgstr "Освободить локальное место"
 
@@ -21527,7 +21560,7 @@ msgstr "Найти файлы для освобождения"
 msgid "View Cleanup Progress"
 msgstr "Посмотреть ход очистки"
 
-#: admin/tools.php:696
+#: admin/tools.php:693
 msgid ""
 "This tool finds images that are already in cloud storage but still have "
 "local copies on this server, then deletes the local files to free up disk "
@@ -21539,21 +21572,7 @@ msgstr ""
 "файлы, чтобы освободить место на диске. Копии в облаке не трогаются — "
 "галереи продолжают отдавать изображения из облака."
 
-#: admin/tools.php:701
-msgid ""
-"No reclaimable files found. Every image in cloud storage has already had its "
-"local copy removed."
-msgstr ""
-"Файлов для освобождения места не найдено. У каждого изображения в облачном "
-"хранилище локальная копия уже удалена."
-
-#. translators: %s: number of redundant local files
-#: admin/tools.php:710
-#, php-format
-msgid "Found: %s redundant local files"
-msgstr "Найдено: %s лишних локальных файлов"
-
-#: admin/tools.php:716
+#: admin/tools.php:697
 msgid ""
 "Each local file is deleted only after its cloud copy is confirmed present "
 "and the correct size. Files that can't be verified are skipped."
@@ -21562,11 +21581,11 @@ msgstr ""
 "облаке существует и имеет правильный размер. Файлы, которые не удалось "
 "проверить, пропускаются."
 
-#: admin/tools.php:720
+#: admin/tools.php:701
 msgid "This action cannot be undone."
 msgstr "Это действие нельзя отменить."
 
-#: admin/tools.php:721
+#: admin/tools.php:702
 msgid ""
 "Local files will be permanently deleted. Cloud copies remain in your bucket "
 "and galleries continue to serve from cloud storage."
@@ -21574,11 +21593,25 @@ msgstr ""
 "Локальные файлы будут удалены безвозвратно. Копии в облаке остаются в твоём "
 "бакете, и галереи продолжают отдавать изображения из облачного хранилища."
 
-#: admin/tools.php:725 admin/tools.php:749
+#: admin/tools.php:706 admin/tools.php:728 admin/tools.php:742
+#: admin/tools.php:756 admin/tools.php:776
 msgid "Start Cleanup"
 msgstr "Начать очистку"
 
+#: admin/tools.php:727 admin/tools.php:741
+msgid "Scan failed"
+msgstr "Сканирование не удалось"
+
 #: admin/tools.php:733
+#, php-format
+msgid "Checked %1$s images, %2$s local copies to remove"
+msgstr "Проверено изображений: %1$s, локальных копий к удалению: %2$s"
+
+#: admin/tools.php:755 admin/tools.php:775
+msgid "Failed to start cleanup"
+msgstr "Не удалось запустить очистку"
+
+#: admin/tools.php:762
 msgid ""
 "Start cleanup? Local copies of images already in cloud storage will be "
 "permanently deleted."
@@ -21586,21 +21619,21 @@ msgstr ""
 "Начать очистку? Локальные копии изображений, которые уже есть в облачном "
 "хранилище, будут удалены безвозвратно."
 
-#: admin/tools.php:739 admin/tools.php:1268
-msgid "Starting..."
-msgstr "Запуск..."
+#: admin/tools.php:766
+msgid "Checking images..."
+msgstr "Проверка изображений..."
 
-#: admin/tools.php:765
+#: admin/tools.php:792
 msgid "Reclaiming local storage"
 msgstr "Освобождаем локальное место"
 
 #. translators: %d: number of skipped files
-#: admin/tools.php:775
+#: admin/tools.php:802
 #, php-format
 msgid "%d skipped (cloud copy not reachable)"
 msgstr "%d пропущено (копия в облаке недоступна)"
 
-#: admin/tools.php:778
+#: admin/tools.php:805
 msgid ""
 "Local files are deleted in the background. You can safely leave this page — "
 "the cleanup keeps running and you'll get an email when it finishes."
@@ -21608,28 +21641,28 @@ msgstr ""
 "Локальные файлы удаляются в фоне. Ты можешь спокойно уйти с этой страницы — "
 "очистка продолжится, а по её завершении придёт письмо."
 
-#: admin/tools.php:787 admin/tools.php:875
+#: admin/tools.php:814 admin/tools.php:902
 msgid "Stop Cleanup"
 msgstr "Остановить очистку"
 
-#: admin/tools.php:806 admin/tools.php:899
+#: admin/tools.php:833 admin/tools.php:926
 msgid "skipped"
 msgstr "пропущено"
 
-#: admin/tools.php:838
+#: admin/tools.php:865
 msgid "skipped (cloud copy not reachable)"
 msgstr "пропущено (копия в облаке недоступна)"
 
-#: admin/tools.php:861
+#: admin/tools.php:888
 msgid "Stop the cleanup? Files already deleted will not be restored."
 msgstr "Остановить очистку? Уже удалённые файлы не будут восстановлены."
 
-#: admin/tools.php:915
+#: admin/tools.php:942
 msgid "Cleanup Cancelled"
 msgstr "Очистка отменена"
 
 #. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed
-#: admin/tools.php:919
+#: admin/tools.php:946
 #, php-format
 msgid ""
 "Cleanup was stopped. %1$d local files were deleted (%2$s freed) before "
@@ -21638,18 +21671,18 @@ msgstr ""
 "Очистка остановлена. До отмены было удалено %1$d локальных файлов "
 "(освобождено %2$s)."
 
-#: admin/tools.php:925
+#: admin/tools.php:952
 msgid "Cleanup Complete"
 msgstr "Очистка завершена"
 
 #. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed
-#: admin/tools.php:931
+#: admin/tools.php:958
 #, php-format
 msgid "Deleted %1$d local files and freed %2$s of disk space."
 msgstr "Удалено %1$d локальных файлов и освобождено %2$s на диске."
 
 #. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed, %3$d: number of files skipped
-#: admin/tools.php:940
+#: admin/tools.php:967
 #, php-format
 msgid ""
 "Deleted %1$d local files (%2$s freed). Skipped %3$d files where the cloud "
@@ -21658,11 +21691,11 @@ msgstr ""
 "Удалено %1$d локальных файлов (освобождено %2$s). Пропущено %3$d файлов, для "
 "которых не удалось проверить копию в облаке."
 
-#: admin/tools.php:948
+#: admin/tools.php:975
 msgid "Skipped Images:"
 msgstr "Пропущенные изображения:"
 
-#: admin/tools.php:949
+#: admin/tools.php:976
 msgid ""
 "These images had cloud storage metadata but the cloud copy could not be "
 "verified. Local files were preserved. Try re-running the migration tool to "
@@ -21672,11 +21705,11 @@ msgstr ""
 "удалось проверить. Локальные файлы сохранены. Попробуй запустить инструмент "
 "миграции ещё раз, чтобы выгрузить их заново."
 
-#: admin/tools.php:970
+#: admin/tools.php:997
 msgid "Clear cleanup results?"
 msgstr "Очистить результаты очистки?"
 
-#: admin/tools.php:1000
+#: admin/tools.php:1027
 msgid ""
 "A migration is currently running. Let it finish before reclaiming local "
 "storage."
@@ -21684,19 +21717,19 @@ msgstr ""
 "Сейчас выполняется миграция. Дождись её завершения, прежде чем освобождать "
 "локальное место."
 
-#: admin/tools.php:1041
+#: admin/tools.php:1091
 msgid "No local files to clean up"
 msgstr "Нет локальных файлов для очистки"
 
-#: admin/tools.php:1064
+#: admin/tools.php:1114
 msgid "Cleanup started"
 msgstr "Очистка начата"
 
-#: admin/tools.php:1151 admin/tools.php:1183
+#: admin/tools.php:1201 admin/tools.php:1233
 msgid "WP Offload Media Migration"
 msgstr "Миграция WP Offload Media"
 
-#: admin/tools.php:1153
+#: admin/tools.php:1203
 msgid ""
 "Convert legacy WP Offload Media data into Sunshine's own storage so frontend "
 "pages stop making per-image database lookups"
@@ -21705,11 +21738,11 @@ msgstr ""
 "чтобы страницы сайта перестали обращаться к базе данных из-за каждого "
 "изображения"
 
-#: admin/tools.php:1191
+#: admin/tools.php:1241
 msgid "Migration is already complete. No further action needed."
 msgstr "Миграция уже завершена. Больше ничего делать не нужно."
 
-#: admin/tools.php:1202
+#: admin/tools.php:1252
 msgid ""
 "Images not loading? Re-run the migration to rebuild their addresses from "
 "your current cloud storage settings. Images already pointing to the right "
@@ -21719,15 +21752,15 @@ msgstr ""
 "адреса по текущим настройкам облачного хранилища. Изображения, которые уже "
 "ведут куда надо, останутся без изменений."
 
-#: admin/tools.php:1205
+#: admin/tools.php:1255
 msgid "Re-Run Migration"
 msgstr "Запустить миграцию заново"
 
-#: admin/tools.php:1223
+#: admin/tools.php:1273
 msgid "No migration needed. No WP Offload Media data was found on this site."
 msgstr "Миграция не нужна. Данные WP Offload Media на этом сайте не найдены."
 
-#: admin/tools.php:1233
+#: admin/tools.php:1283
 msgid ""
 "This one-time step copies your WP Offload Media data into Sunshine's own "
 "storage."
@@ -21736,23 +21769,27 @@ msgstr ""
 "хранилище Sunshine."
 
 #. translators: %s: number of images
-#: admin/tools.php:1239
+#: admin/tools.php:1289
 #, php-format
 msgid "Images to migrate: %s"
 msgstr "Изображений для миграции: %s"
 
-#: admin/tools.php:1245
+#: admin/tools.php:1295
 msgid "This only updates database metadata. No files are uploaded or moved."
 msgstr ""
 "Это только обновляет метаданные в базе. Файлы не загружаются и не "
 "перемещаются."
 
-#: admin/tools.php:1277
+#: admin/tools.php:1318
+msgid "Starting..."
+msgstr "Запуск..."
+
+#: admin/tools.php:1327
 msgid "Failed to start migration"
 msgstr "Не удалось запустить миграцию"
 
 #. translators: %d: number of images
-#: admin/tools.php:1303
+#: admin/tools.php:1355
 #, php-format
 msgid ""
 "%d images migrated from WP Offload Media are missing bucket location data. "
@@ -21763,19 +21800,19 @@ msgstr ""
 "расположении в бакете. Ссылки для скачивания в полном размере могут истечь и "
 "перестать работать. Запусти восстановление ниже, чтобы это исправить."
 
-#: admin/tools.php:1309
+#: admin/tools.php:1361
 msgid "Repair Metadata"
 msgstr "Восстановить метаданные"
 
-#: admin/tools.php:1329
+#: admin/tools.php:1381
 msgid "Error running repair."
 msgstr "Ошибка при восстановлении."
 
-#: admin/tools.php:1338 admin/tools.php:1340
+#: admin/tools.php:1390 admin/tools.php:1392
 msgid "items repaired."
 msgstr "элементов восстановлено."
 
-#: admin/tools.php:1338
+#: admin/tools.php:1390
 msgid ""
 "couldn't be repaired automatically — their original WP Offload Media data is "
 "no longer available. Contact support if you need help."
@@ -21783,43 +21820,43 @@ msgstr ""
 "не удалось восстановить автоматически — исходные данные WP Offload Media "
 "больше недоступны. Обратись в поддержку, если нужна помощь."
 
-#: admin/tools.php:1344
+#: admin/tools.php:1396
 msgid "repaired so far..."
 msgstr "восстановлено на данный момент..."
 
-#: admin/tools.php:1348
+#: admin/tools.php:1400
 msgid "Network error. Please try again."
 msgstr "Ошибка сети. Попробуй ещё раз."
 
-#: admin/tools.php:1381
+#: admin/tools.php:1433
 msgid "Please keep this page open until the migration finishes."
 msgstr "Не закрывай эту страницу, пока миграция не завершится."
 
-#: admin/tools.php:1427
+#: admin/tools.php:1479
 msgid "Invalid response from server"
 msgstr "Неверный ответ от сервера"
 
-#: admin/tools.php:1430
+#: admin/tools.php:1482
 msgid "Error processing migration"
 msgstr "Ошибка при обработке миграции"
 
-#: admin/tools.php:1435
+#: admin/tools.php:1487
 msgid "Network error. Please refresh the page."
 msgstr "Ошибка сети. Обновите страницу."
 
-#: admin/tools.php:1443
+#: admin/tools.php:1495
 msgid ""
 "Stop the migration? Items that have already been migrated will stay migrated."
 msgstr ""
 "Остановить миграцию? Элементы, которые уже перенесены, останутся "
 "перенесёнными."
 
-#: admin/tools.php:1479
+#: admin/tools.php:1531
 msgid "Migration Stopped"
 msgstr "Миграция остановлена"
 
 #. translators: %d: successful count
-#: admin/tools.php:1483
+#: admin/tools.php:1535
 #, php-format
 msgid ""
 "Migration was stopped. %d items were migrated before cancellation. Run the "
@@ -21829,7 +21866,7 @@ msgstr ""
 "миграцию снова, чтобы завершить остальное."
 
 #. translators: %d: total successful
-#: admin/tools.php:1494
+#: admin/tools.php:1546
 #, php-format
 msgid ""
 "Successfully migrated %d items. Your pages should now load faster on image-"
@@ -21839,31 +21876,31 @@ msgstr ""
 "шаблонах с большим количеством изображений."
 
 #. translators: 1: successful, 2: failed
-#: admin/tools.php:1502
+#: admin/tools.php:1554
 #, php-format
 msgid "Migration finished with %1$d successful and %2$d failed."
 msgstr "Миграция завершена: %1$d успешно и %2$d с ошибкой."
 
-#: admin/tools.php:1509
+#: admin/tools.php:1561
 msgid "Failed Attachment IDs:"
 msgstr "ID вложений с ошибкой:"
 
-#: admin/tools.php:1586
+#: admin/tools.php:1638
 msgid "No WP Offload Media data found."
 msgstr "Данные WP Offload Media не найдены."
 
-#: admin/tools.php:1592
+#: admin/tools.php:1644
 msgid "No items to migrate."
 msgstr "Нет элементов для миграции."
 
-#: admin/tools.php:1635
+#: admin/tools.php:1687
 msgid ""
 "WP Offload Media table is no longer available. Migration cannot continue."
 msgstr ""
 "Таблица WP Offload Media больше недоступна. Продолжить миграцию нельзя."
 
 #. translators: 1: number of images, 2: link opening tag, 3: link closing tag
-#: admin/tools.php:1852
+#: admin/tools.php:1892
 #, php-format
 msgid ""
 "%1$d images migrated from WP Offload Media are missing bucket location data "
@@ -21873,11 +21910,11 @@ msgstr ""
 "расположении в бакете, и их скачивание может не сработать. %2$sЗапусти "
 "инструмент восстановления%3$s, чтобы это исправить."
 
-#: admin/tools.php:1889
+#: admin/tools.php:1929
 msgid "Record Image Locations"
 msgstr "Записать расположение изображений"
 
-#: admin/tools.php:1891
+#: admin/tools.php:1931
 msgid ""
 "Work out which bucket and file each already-uploaded image lives at, so "
 "their addresses are rebuilt from your current settings instead of the ones "
@@ -21887,24 +21924,24 @@ msgstr ""
 "изображение, чтобы их адреса собирались из твоих текущих настроек, а не из "
 "тех, что были при загрузке"
 
-#: admin/tools.php:1892
+#: admin/tools.php:1932
 msgid "Record Locations"
 msgstr "Записать расположение"
 
-#: admin/tools.php:1974
+#: admin/tools.php:2014
 msgid "Cloud storage is not set up, so there is nothing to record."
 msgstr "Облачное хранилище не настроено, поэтому записывать нечего."
 
-#: admin/tools.php:1981
+#: admin/tools.php:2021
 msgid "Every uploaded image already has its location recorded. Nothing to do."
 msgstr ""
 "У всех загруженных изображений расположение уже записано. Делать нечего."
 
-#: admin/tools.php:1985
+#: admin/tools.php:2025
 msgid "Recording image locations"
 msgstr "Записываем расположение изображений"
 
-#: admin/tools.php:1986
+#: admin/tools.php:2026
 msgid ""
 "Nothing is uploaded, downloaded or changed in your bucket. This only fills "
 "in a missing note about where each image already is."
@@ -21913,19 +21950,19 @@ msgstr ""
 "только заполняет недостающую запись о том, где уже находится каждое "
 "изображение."
 
-#: admin/tools.php:1989
+#: admin/tools.php:2029
 msgid "images recorded"
 msgstr "изображений записано"
 
-#: admin/tools.php:2006 admin/tools.php:2133
+#: admin/tools.php:2046 admin/tools.php:2176
 msgid "Something went wrong. Please try again."
 msgstr "Что-то пошло не так. Попробуй ещё раз."
 
-#: admin/tools.php:2016
+#: admin/tools.php:2056
 msgid "Done."
 msgstr "Готово."
 
-#: admin/tools.php:2018
+#: admin/tools.php:2058
 msgid ""
 "could not be worked out and were left as they are, so they keep loading "
 "exactly as before."
@@ -21933,14 +21970,14 @@ msgstr ""
 "не удалось определить, и они остались как были, поэтому загружаются точно "
 "так же, как раньше."
 
-#: admin/tools.php:2026 admin/tools.php:2145
+#: admin/tools.php:2066 admin/tools.php:2188
 msgid "Network error. Reload the page to carry on where this stopped."
 msgstr ""
 "Ошибка сети. Перезагрузи страницу, чтобы продолжить с того места, где всё "
 "остановилось."
 
 #. translators: 1: bucket images are recorded in, 2: bucket the site is set up for
-#: admin/tools.php:2098
+#: admin/tools.php:2141
 #, php-format
 msgid ""
 "Your images are recorded as living in the bucket \"%1$s\", but Sunshine is "
@@ -21949,7 +21986,7 @@ msgstr ""
 "Твои изображения записаны как находящиеся в бакете «%1$s», но сейчас "
 "Sunshine настроен на «%2$s»."
 
-#: admin/tools.php:2104
+#: admin/tools.php:2147
 msgid ""
 "If you renamed that bucket, point Sunshine at the new name and your "
 "galleries will load again. If those images really are in a separate bucket, "
@@ -21959,23 +21996,23 @@ msgstr ""
 "снова будут загружаться. Если эти изображения действительно лежат в "
 "отдельном бакете, оставь их как есть — они продолжат загружаться оттуда."
 
-#: admin/tools.php:2106
+#: admin/tools.php:2149
 msgid "I renamed it, update my images"
 msgstr "Я его переименовал, обнови мои изображения"
 
-#: admin/tools.php:2107
+#: admin/tools.php:2150
 msgid "They are in a separate bucket, leave them"
 msgstr "Они в отдельном бакете, оставь их"
 
-#: admin/tools.php:2139
+#: admin/tools.php:2182
 msgid "images updated. Reload a gallery to check."
 msgstr "изображений обновлено. Перезагрузи галерею, чтобы проверить."
 
-#: admin/tools.php:2142
+#: admin/tools.php:2185
 msgid "updated so far..."
 msgstr "обновлено на данный момент..."
 
-#: admin/tools.php:2181
+#: admin/tools.php:2224
 msgid "Unknown choice"
 msgstr "Неизвестный выбор"
 
@@ -22062,7 +22099,7 @@ msgstr "Ошибка: %s"
 
 #. translators: %s: error message
 #: includes/class-cloud-storage-client-bunny.php:76
-#: includes/class-cloud-storage-client-gcs.php:134
+#: includes/class-cloud-storage-client-gcs.php:174
 #: includes/class-cloud-storage-client-s3.php:299
 #, php-format
 msgid "Connection failed: %s"
@@ -22085,7 +22122,7 @@ msgstr ""
 "Подключение установлено, но тестовая загрузка не удалась. Проверьте права "
 "доступа к зоне хранения."
 
-#: includes/class-cloud-storage-client-bunny.php:120
+#: includes/class-cloud-storage-client-bunny.php:117
 msgid ""
 "Warning: No CDN Pull Zone URL configured. Public image serving will use "
 "storage URLs which are slower. Configure a Pull Zone URL for optimal "
@@ -22096,7 +22133,7 @@ msgstr ""
 "работают медленнее. Настройте URL-адрес зоны Pull Zone для обеспечения "
 "оптимальной производительности."
 
-#: includes/class-cloud-storage-client-bunny.php:123
+#: includes/class-cloud-storage-client-bunny.php:120
 msgid ""
 "Warning: No Token Authentication Key configured. Full-resolution images will "
 "not be protected with expiring URLs. Enable Token Authentication in your "
@@ -22106,19 +22143,19 @@ msgstr ""
 "разрешении не будут защищены URL-адресами с ограниченным сроком действия. "
 "Включите аутентификацию токена в настройках безопасности зоны Pull Zone."
 
-#: includes/class-cloud-storage-client-bunny.php:128
-#: includes/class-cloud-storage-client-gcs.php:127
+#: includes/class-cloud-storage-client-bunny.php:125
+#: includes/class-cloud-storage-client-gcs.php:167
 #: includes/class-cloud-storage-client-s3.php:255
 msgid "Connection successful! All tests passed."
 msgstr "Подключение успешно! Все тесты пройдены."
 
 #: includes/class-cloud-storage-client-gcs.php:31
-#: includes/class-cloud-storage-client-gcs.php:469
+#: includes/class-cloud-storage-client-gcs.php:551
 msgid "Google Cloud Storage JSON key is required"
 msgstr "Требуется ключ JSON Google Cloud Storage"
 
 #: includes/class-cloud-storage-client-gcs.php:39
-#: includes/class-cloud-storage-client-gcs.php:476
+#: includes/class-cloud-storage-client-gcs.php:558
 msgid "Invalid JSON key file. Please check your service account JSON."
 msgstr ""
 "Недопустимый файл ключей JSON. Проверьте файл JSON своей учетной записи "
@@ -22141,6 +22178,15 @@ msgstr ""
 "контейнера, который не поддерживает ACL для отдельных объектов. Перейдите в "
 "Cloud Console → Cloud Storage → Ваш контейнер → Разрешения → Контроль "
 "доступа → Переключитесь с «Единый» на «Детальный». Затем повторите этот тест."
+
+#: includes/class-cloud-storage-client-gcs.php:159
+msgid ""
+"Warning: Your bucket blocks public files (Public access prevention is on). "
+"Every image will be served through signed links instead. That works, but "
+"public thumbnails load faster. To allow them, open your bucket in Google "
+"Cloud Console → Permissions → Public access prevention → set it to \"Not "
+"enforced\", then run this test again."
+msgstr "Внимание: твой bucket блокирует публичные файлы (включено Public access prevention). Каждое изображение будет отдаваться через подписанные ссылки. Это работает, но публичные миниатюры загружаются быстрее. Чтобы разрешить их, открой свой bucket в Google Cloud Console → Permissions → Public access prevention → выбери \"Not enforced\" и запусти этот тест снова."
 
 #: includes/class-cloud-storage-client-s3.php:168
 msgid " Note: ACLs were automatically enabled on your bucket."
@@ -22200,49 +22246,49 @@ msgstr ""
 msgid "Unexpected error: %s"
 msgstr "Неожиданная ошибка: %s"
 
-#: includes/class-cloud-storage-import.php:161
+#: includes/class-cloud-storage-import.php:181
 msgid "Image Source"
 msgstr "Источник изображения"
 
-#: includes/class-cloud-storage-import.php:166
+#: includes/class-cloud-storage-import.php:186
 msgid "FTP Folder"
 msgstr "Папка FTP"
 
-#: includes/class-cloud-storage-import.php:176
+#: includes/class-cloud-storage-import.php:196
 msgid "Cloud Storage Folder"
 msgstr "Папка облачного хранилища"
 
-#: includes/class-cloud-storage-import.php:183
+#: includes/class-cloud-storage-import.php:203
 msgid "Loading folders..."
 msgstr "Загрузка папок..."
 
-#: includes/class-cloud-storage-import.php:191
+#: includes/class-cloud-storage-import.php:211
 msgid "Selected:"
 msgstr "Выбрано:"
 
-#: includes/class-cloud-storage-import.php:196
+#: includes/class-cloud-storage-import.php:216
 msgid ""
 "Click the arrow to expand folders. Select a folder using the radio button."
 msgstr ""
 "Нажмите на стрелку, чтобы развернуть папки. Выберите папку с помощью "
 "переключателя."
 
-#: includes/class-cloud-storage-import.php:218
+#: includes/class-cloud-storage-import.php:238
 msgid ""
 "Cloud storage is not configured. Please configure it in Sunshine settings."
 msgstr ""
 "Облачное хранилище не настроено. Пожалуйста, настройте его в настройках "
 "Sunshine."
 
-#: includes/class-cloud-storage-import.php:223
+#: includes/class-cloud-storage-import.php:243
 msgid "Please select a cloud storage folder."
 msgstr "Выберите папку облачного хранилища."
 
-#: includes/class-cloud-storage-import.php:362
+#: includes/class-cloud-storage-import.php:382
 msgid "Scanning your cloud storage…"
 msgstr "Сканируем твоё облачное хранилище…"
 
-#: includes/class-cloud-storage-import.php:363
+#: includes/class-cloud-storage-import.php:383
 msgid ""
 "Large buckets are scanned in small batches so the import never times out. "
 "This can take a moment."
@@ -22250,16 +22296,16 @@ msgstr ""
 "Большие бакеты сканируются небольшими партиями, чтобы импорт никогда не "
 "превышал лимит времени. Это может занять немного времени."
 
-#: includes/class-cloud-storage-import.php:364
+#: includes/class-cloud-storage-import.php:384
 msgid "galleries found so far"
 msgstr "галерей найдено"
 
-#: includes/class-cloud-storage-import.php:446
+#: includes/class-cloud-storage-import.php:466
 msgid "Scan session expired, please start over."
 msgstr "Сессия сканирования истекла, начни заново."
 
 #. translators: %s is the folder path in the cloud storage bucket that could not be read
-#: includes/class-cloud-storage-import.php:509
+#: includes/class-cloud-storage-import.php:529
 #, php-format
 msgid ""
 "Could not read the folder \"%s\" from your cloud storage, so the scan was "
@@ -22270,42 +22316,42 @@ msgstr ""
 "сканирование было остановлено до того, как что-либо импортировалось. Обычно "
 "это временно, попробуй ещё раз."
 
-#: includes/class-cloud-storage-import.php:775
-#: includes/class-cloud-storage-import.php:830
-#: includes/class-cloud-storage-import.php:933
+#: includes/class-cloud-storage-import.php:798
+#: includes/class-cloud-storage-import.php:854
+#: includes/class-cloud-storage-import.php:957
 msgid "Could not initialize cloud storage client"
 msgstr "Не удалось инициализировать клиент облачного хранилища"
 
-#: includes/class-cloud-storage-import.php:780
-#: includes/class-cloud-storage-import.php:835
+#: includes/class-cloud-storage-import.php:803
+#: includes/class-cloud-storage-import.php:859
 msgid "Failed to list cloud storage contents"
 msgstr "Не удалось отобразить содержимое облачного хранилища"
 
-#: includes/class-cloud-storage-import.php:902
+#: includes/class-cloud-storage-import.php:926
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: includes/class-cloud-storage-import.php:903
+#: includes/class-cloud-storage-import.php:927
 msgid "No subfolders"
 msgstr "Без подпапок"
 
-#: includes/class-cloud-storage-import.php:905
+#: includes/class-cloud-storage-import.php:929
 msgid "Error loading folders"
 msgstr "Ошибка при загрузке папок"
 
-#: includes/class-cloud-storage-manager.php:2259
+#: includes/class-cloud-storage-manager.php:2313
 msgid "No objects found in WP Offload Media data"
 msgstr "В данных WP Offload Media не найдено никаких объектов"
 
-#: includes/class-cloud-storage-manager.php:2319
+#: includes/class-cloud-storage-manager.php:2373
 msgid "Could not build URLs from WP Offload Media data"
 msgstr "Не удалось создать URL-адреса из данных WP Offload Media"
 
-#: includes/class-cloud-storage-manager.php:2407
+#: includes/class-cloud-storage-manager.php:2461
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr "Не удалось получить URL-адреса из WP Offload Media"
 
-#: includes/hooks.php:430 includes/hooks.php:459
+#: includes/hooks.php:430 includes/hooks.php:464
 msgid "Sunshine Cloud Storage:"
 msgstr "Облачное хранилище Sunshine:"
 
@@ -22342,7 +22388,7 @@ msgstr ""
 "привести к конфликту. Подумайте о том, чтобы установить настройку «Только "
 "галереи Sunshine» или отключить один из плагинов."
 
-#: includes/hooks.php:460
+#: includes/hooks.php:465
 msgid ""
 "Your cloud storage bucket does not support per-object ACLs (Access Control "
 "Lists). This means Sunshine cannot set individual files as public or "
@@ -22355,7 +22401,7 @@ msgstr ""
 "тому, что миниатюры не будут отображаться, а изображения в полном разрешении "
 "будут общедоступными."
 
-#: includes/hooks.php:464
+#: includes/hooks.php:469
 msgid ""
 "<strong>How to fix:</strong> Go to Google Cloud Console &rarr; Cloud Storage "
 "&rarr; Your Bucket &rarr; Permissions &rarr; Access Control &rarr; Switch "
@@ -22365,7 +22411,7 @@ msgstr ""
 "Storage → Ваш букет → Разрешения → Контроль доступа → Переключитесь с "
 "«Единый» на «Детальный»."
 
-#: includes/hooks.php:466
+#: includes/hooks.php:471
 msgid ""
 "<strong>How to fix:</strong> Go to S3 Console &rarr; Your Bucket &rarr; "
 "Permissions &rarr; Object Ownership &rarr; Edit &rarr; Select \"ACLs "
@@ -22375,7 +22421,7 @@ msgstr ""
 "Разрешения → Владение объектом → Редактировать → Выберите «ACLs enabled» "
 "(ACL включены) с «Bucket owner preferred» (Предпочтение владельцу букета)."
 
-#: includes/hooks.php:468
+#: includes/hooks.php:473
 msgid ""
 "<strong>How to fix:</strong> Check your storage provider's documentation for "
 "enabling per-object ACLs on your bucket."
@@ -22383,7 +22429,7 @@ msgstr ""
 "<strong>Как исправить:</strong> Проверьте документацию вашего поставщика "
 "хранилища, чтобы включить ACL для каждого объекта в вашем хранилище."
 
-#: includes/hooks.php:472
+#: includes/hooks.php:477
 msgid ""
 "After making changes, go to Sunshine Settings &rarr; Cloud Storage and click "
 "\"Test Connection\" to verify."
@@ -22392,7 +22438,7 @@ msgstr ""
 "хранилище» и нажмите «Проверить подключение», чтобы подтвердить."
 
 #. translators: 1: link opening tag, 2: link closing tag
-#: includes/hooks.php:528
+#: includes/hooks.php:533
 #, php-format
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media data was found on "
@@ -22862,6 +22908,17 @@ msgstr "Первоначальная сумма:"
 #: templates/shortcode/buy-gift-card.php:139
 msgid "Add to Cart"
 msgstr "Добавить в корзину"
+
+#~ msgid ""
+#~ "No reclaimable files found. Every image in cloud storage has already had "
+#~ "its local copy removed."
+#~ msgstr ""
+#~ "Файлов для освобождения места не найдено. У каждого изображения в "
+#~ "облачном хранилище локальная копия уже удалена."
+
+#, php-format
+#~ msgid "Found: %s redundant local files"
+#~ msgstr "Найдено: %s лишних локальных файлов"
 
 #~ msgid "Copy system info to clipboard"
 #~ msgstr "Копирование системной информации в буфер обмена"

@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-12T16:13:50+00:00\n"
+"POT-Creation-Date: 2026-09-17T18:47:54+00:00\n"
 "PO-Revision-Date: 2026-03-02 20:33-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -383,8 +383,13 @@ msgid ""
 msgid_plural ""
 "%1$d images are waiting to be processed, but WordPress could not save the "
 "background task that processes them. <a href=\"%2$s\">Check Site Health</a>."
-msgstr[0] "%1$d afbeelding wacht op verwerking, maar WordPress kon de achtergrondtaak die dit doet niet opslaan. <a href=\"%2$s\">Bekijk de sitediagnose</a>."
-msgstr[1] "%1$d afbeeldingen wachten op verwerking, maar WordPress kon de achtergrondtaak die dit doet niet opslaan. <a href=\"%2$s\">Bekijk de sitediagnose</a>."
+msgstr[0] ""
+"%1$d afbeelding wacht op verwerking, maar WordPress kon de achtergrondtaak "
+"die dit doet niet opslaan. <a href=\"%2$s\">Bekijk de sitediagnose</a>."
+msgstr[1] ""
+"%1$d afbeeldingen wachten op verwerking, maar WordPress kon de "
+"achtergrondtaak die dit doet niet opslaan. <a href=\"%2$s\">Bekijk de "
+"sitediagnose</a>."
 
 #. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
 #: includes/admin/class-admin.php:669
@@ -397,14 +402,24 @@ msgid_plural ""
 "%1$d images are waiting to be processed, but WordPress cron has not run for "
 "%2$s. <a href=\"%3$s\">Check Site Health</a> or see <a href=\"%4$s\" "
 "target=\"_blank\">how to set up a reliable server cron</a>."
-msgstr[0] "%1$d afbeelding wacht op verwerking, maar de WordPress-cron heeft al %2$s niet gedraaid. <a href=\"%3$s\">Bekijk de sitediagnose</a> of lees <a href=\"%4$s\" target=\"_blank\">hoe je een betrouwbare server-cron instelt</a>."
-msgstr[1] "%1$d afbeeldingen wachten op verwerking, maar de WordPress-cron heeft al %2$s niet gedraaid. <a href=\"%3$s\">Bekijk de sitediagnose</a> of lees <a href=\"%4$s\" target=\"_blank\">hoe je een betrouwbare server-cron instelt</a>."
+msgstr[0] ""
+"%1$d afbeelding wacht op verwerking, maar de WordPress-cron heeft al %2$s "
+"niet gedraaid. <a href=\"%3$s\">Bekijk de sitediagnose</a> of lees <a "
+"href=\"%4$s\" target=\"_blank\">hoe je een betrouwbare server-cron instelt</"
+"a>."
+msgstr[1] ""
+"%1$d afbeeldingen wachten op verwerking, maar de WordPress-cron heeft al "
+"%2$s niet gedraaid. <a href=\"%3$s\">Bekijk de sitediagnose</a> of lees <a "
+"href=\"%4$s\" target=\"_blank\">hoe je een betrouwbare server-cron instelt</"
+"a>."
 
 #: includes/admin/class-admin.php:682
 msgid ""
 "This site has WP-Cron turned off, so a server cron job has to call wp-"
 "cron.php for anything to run."
-msgstr "Op deze site staat WP-Cron uit, dus een server-cronjob moet wp-cron.php aanroepen om iets te laten draaien."
+msgstr ""
+"Op deze site staat WP-Cron uit, dus een server-cronjob moet wp-cron.php "
+"aanroepen om iets te laten draaien."
 
 #. translators: %s is the URL to installation page
 #: includes/admin/class-admin.php:691
@@ -1065,7 +1080,7 @@ msgstr "Verlopen"
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:336
 #: includes/admin/sunshine-gallery.php:1589
-#: includes/class-cloud-storage-import.php:904
+#: includes/class-cloud-storage-import.php:928
 msgid "images"
 msgstr "afbeeldingen"
 
@@ -1336,7 +1351,7 @@ msgid "Quantity Discounts"
 msgstr "Hoeveelheid kortingen"
 
 #: includes/admin/promos.php:248 admin/settings.php:642
-#: includes/class-cloud-storage-import.php:170
+#: includes/class-cloud-storage-import.php:190
 msgid "Cloud Storage"
 msgstr "Cloud Storage"
 
@@ -1606,7 +1621,7 @@ msgid "Disable promos throughout Sunshine Photo Cart"
 msgstr "Schakel promoties uit in Sunshine Photo Cart"
 
 #: includes/admin/settings-fields.php:200
-#: includes/admin/sunshine-product.php:103 class-admin-automated-emails.php:132
+#: includes/admin/sunshine-product.php:103 class-admin-automated-emails.php:138
 #: class-admin-discounts.php:204 sell-anything.php:39
 #: class-admin-gift-cards.php:64
 msgid "General"
@@ -13369,7 +13384,7 @@ msgstr "Ontvangstbewijs voor %1$s van %2$s"
 
 #: includes/emails/class-email-customer-receipt.php:52
 #: templates/email/customer-receipt.php:14 templates/email/order-comment.php:17
-#: templates/email/order-status.php:15 class-automated-email-send.php:152
+#: templates/email/order-status.php:15 class-automated-email-send.php:161
 msgid "View order"
 msgstr "Bestelling bekijken"
 
@@ -17099,11 +17114,25 @@ msgstr ""
 msgid "See examples"
 msgstr "Voorbeelden bekijken"
 
+#: class-admin-automated-emails.php:106
+msgid "Notice, not marketing"
+msgstr "Melding, geen marketing"
+
 #: class-admin-automated-emails.php:108
+msgid ""
+"Check this only if the email is a reminder or notice that does not try to "
+"sell anything, like a gallery expiring or a gallery being ready. The "
+"unsubscribe link and headers are left out, and the email is still sent to "
+"customers who unsubscribed. Adding a discount code makes it a marketing "
+"email, so leave this unchecked if you use one. You are responsible for "
+"following the email laws where you and your customers live."
+msgstr "Vink dit alleen aan als de e-mail een herinnering of melding is die niets probeert te verkopen, zoals een galerij die verloopt of een galerij die klaar is. De afmeldlink en afmeld-headers worden weggelaten, en de e-mail wordt ook verstuurd naar klanten die zich hebben afgemeld. Een kortingscode toevoegen maakt er een marketingmail van, dus laat dit uit als je er een gebruikt. Jij bent verantwoordelijk voor het naleven van de e-mailwetten waar jij en je klanten wonen."
+
+#: class-admin-automated-emails.php:114
 msgid "Discount (optional)"
 msgstr "Korting (optioneel):"
 
-#: class-admin-automated-emails.php:110
+#: class-admin-automated-emails.php:116
 msgid ""
 "A unique coupon code will be generated based on the settings of the selected "
 "coupon and assigned to the specific user being emailed"
@@ -17112,11 +17141,11 @@ msgstr ""
 "de geselecteerde coupon en toegewezen aan de specifieke gebruiker die wordt "
 "gemaild"
 
-#: class-admin-automated-emails.php:114
+#: class-admin-automated-emails.php:120
 msgid "Discount Expiration (Optional)"
 msgstr "Korting verloopt op (optioneel)"
 
-#: class-admin-automated-emails.php:116
+#: class-admin-automated-emails.php:122
 msgid ""
 "How long should the coupon code be valid for after being created? This will "
 "override any expiration date settings of the selected discount code"
@@ -17125,23 +17154,23 @@ msgstr ""
 "heeft voorrang op de vervaldatuminstellingen van de geselecteerde "
 "kortingscode"
 
-#: class-admin-automated-emails.php:154
+#: class-admin-automated-emails.php:160
 msgid "Gallery tags"
 msgstr "Galerijtags"
 
-#: class-admin-automated-emails.php:163
+#: class-admin-automated-emails.php:169
 msgid "Order tags"
 msgstr "Besteltags"
 
-#: class-automated-email-send.php:8 common.php:6
+#: class-automated-email-send.php:10 common.php:6
 msgid "Automated Email"
 msgstr "Geautomatiseerde e-mail"
 
-#: class-automated-email-send.php:9
+#: class-automated-email-send.php:11
 msgid "This is a general template for automated emails"
 msgstr "Dit is een algemene sjabloon voor geautomatiseerde e-mails"
 
-#: class-automated-email-send.php:64
+#: class-automated-email-send.php:73
 msgid "Unsubscribe from these emails"
 msgstr "Afmelden voor deze e-mails"
 
@@ -17293,35 +17322,35 @@ msgstr "Maak uw eerste automatische email"
 msgid "Creating automated emails in Sunshine Photo Cart"
 msgstr "Maak automatisch emails aan in Sunshine Photo Cart"
 
-#: unsubscribe.php:125
+#: unsubscribe.php:131
 msgid "Invalid link"
 msgstr "Ongeldige link"
 
-#: unsubscribe.php:126
+#: unsubscribe.php:132
 msgid "This unsubscribe link is not valid."
 msgstr "Deze afmeldlink is niet geldig."
 
-#: unsubscribe.php:149 unsubscribe.php:157
+#: unsubscribe.php:155 unsubscribe.php:163
 msgid "Unsubscribed"
 msgstr "Afgemeld"
 
-#: unsubscribe.php:150
+#: unsubscribe.php:156
 msgid ""
 "You have been unsubscribed and will no longer receive marketing emails from "
 "us."
 msgstr "Je bent uitgeschreven en ontvangt geen marketingmails meer van ons."
 
-#: unsubscribe.php:158
+#: unsubscribe.php:164
 msgid "You are unsubscribed and will not receive marketing emails from us."
 msgstr "Je bent afgemeld en ontvangt geen marketingmails meer van ons."
 
 #. translators: %s: email address being unsubscribed
-#: unsubscribe.php:163
+#: unsubscribe.php:169
 #, php-format
 msgid "Unsubscribe %s from future marketing emails from us?"
 msgstr "%s afmelden voor toekomstige marketingmails van ons?"
 
-#: unsubscribe.php:166 unsubscribe.php:168
+#: unsubscribe.php:172 unsubscribe.php:174
 msgid "Unsubscribe"
 msgstr "Afmelden"
 
@@ -18012,9 +18041,9 @@ msgstr ""
 #: class-download.php:753 class-download.php:799 class-download.php:875
 #: class-download.php:937 class-download.php:957 class-download.php:1439
 #: frontend.php:292 frontend.php:817 includes/download-handler.php:99
-#: includes/download-handler.php:107 includes/download-handler.php:161
-#: includes/download-handler.php:201 includes/download-handler.php:208
-#: includes/download-handler.php:234
+#: includes/download-handler.php:107 includes/download-handler.php:162
+#: includes/download-handler.php:177 includes/download-handler.php:184
+#: includes/download-handler.php:210
 msgid "Download Error"
 msgstr "Downloadfout"
 
@@ -18214,12 +18243,12 @@ msgstr "De downloadlink is verlopen. Vraag een nieuwe download aan."
 msgid "Download Expired"
 msgstr "Download verlopen"
 
-#: includes/download-handler.php:161 includes/download-handler.php:201
-#: includes/download-handler.php:208
+#: includes/download-handler.php:162 includes/download-handler.php:177
+#: includes/download-handler.php:184
 msgid "Download file not found"
 msgstr "Bestand niet gevonden"
 
-#: includes/download-handler.php:234
+#: includes/download-handler.php:210
 msgid "You do not have permission to download this file"
 msgstr "Je hebt geen toestemming om dit bestand te downloaden."
 
@@ -20447,17 +20476,18 @@ msgstr "Ongeldige bijlage-ID"
 
 #: admin/media-library.php:221 admin/settings.php:655 admin/settings.php:830
 #: admin/tools.php:457 admin/tools.php:526 admin/tools.php:558
-#: admin/tools.php:596 admin/tools.php:993 admin/tools.php:1075
-#: admin/tools.php:1109 admin/tools.php:1579 admin/tools.php:1624
-#: admin/tools.php:1724 admin/tools.php:1766 admin/tools.php:2043
-#: admin/tools.php:2161 includes/class-cloud-storage-import.php:422
-#: includes/class-cloud-storage-import.php:764
-#: includes/class-cloud-storage-import.php:823
+#: admin/tools.php:596 admin/tools.php:1020 admin/tools.php:1048
+#: admin/tools.php:1085 admin/tools.php:1125 admin/tools.php:1159
+#: admin/tools.php:1631 admin/tools.php:1676 admin/tools.php:1776
+#: admin/tools.php:1818 admin/tools.php:2083 admin/tools.php:2204
+#: includes/class-cloud-storage-import.php:442
+#: includes/class-cloud-storage-import.php:787
+#: includes/class-cloud-storage-import.php:847
 msgid "Insufficient permissions"
 msgstr "Onvoldoende machtigingen"
 
-#: admin/media-library.php:227 includes/class-cloud-storage-import.php:425
-#: includes/class-cloud-storage-import.php:768
+#: admin/media-library.php:227 includes/class-cloud-storage-import.php:445
+#: includes/class-cloud-storage-import.php:791
 msgid "Cloud storage is not configured"
 msgstr "Cloudopslag is niet geconfigureerd"
 
@@ -21238,7 +21268,7 @@ msgid "Migrate existing gallery images to cloud storage"
 msgstr "Bestaande galerijafbeeldingen migreren naar cloudopslag"
 
 #: admin/tools.php:15 admin/tools.php:162 admin/tools.php:189
-#: admin/tools.php:1154 admin/tools.php:1249
+#: admin/tools.php:1204 admin/tools.php:1299
 msgid "Start Migration"
 msgstr "Migratie starten"
 
@@ -21346,12 +21376,12 @@ msgstr ""
 msgid "Starting migration..."
 msgstr "Migratie starten..."
 
-#: admin/tools.php:208 admin/tools.php:1365
+#: admin/tools.php:208 admin/tools.php:1417
 msgid "Migration in progress"
 msgstr "Migratie bezig"
 
 #. translators: %d: number of failed items
-#: admin/tools.php:218 admin/tools.php:1376
+#: admin/tools.php:218 admin/tools.php:1428
 #, php-format
 msgid "%d failed"
 msgstr "%d mislukt"
@@ -21364,12 +21394,12 @@ msgstr ""
 "Afbeeldingen worden op de achtergrond geüpload. Je kunt deze pagina gerust "
 "verlaten — de migratie loopt door en je krijgt een e-mail zodra hij klaar is."
 
-#: admin/tools.php:231 admin/tools.php:323 admin/tools.php:1383
-#: admin/tools.php:1459
+#: admin/tools.php:231 admin/tools.php:323 admin/tools.php:1435
+#: admin/tools.php:1511
 msgid "Stop Migration"
 msgstr "Stop migratie"
 
-#: admin/tools.php:284 admin/tools.php:1420
+#: admin/tools.php:284 admin/tools.php:1472
 msgid "failed"
 msgstr "mislukt"
 
@@ -21381,11 +21411,11 @@ msgstr ""
 "Weet u zeker dat u de migratie wilt stoppen? Afbeeldingen die al zijn "
 "geüpload, blijven in de cloudopslag staan, maar het proces wordt geannuleerd."
 
-#: admin/tools.php:313 admin/tools.php:866 admin/tools.php:1449
+#: admin/tools.php:313 admin/tools.php:893 admin/tools.php:1501
 msgid "Stopping..."
 msgstr "Stoppen..."
 
-#: admin/tools.php:322 admin/tools.php:1458
+#: admin/tools.php:322 admin/tools.php:1510
 msgid "Failed to stop migration"
 msgstr "Migratie niet gestopt"
 
@@ -21407,7 +21437,7 @@ msgstr ""
 "De migratie is gestopt. %d afbeeldingen zijn succesvol gemigreerd voordat de "
 "migratie werd geannuleerd."
 
-#: admin/tools.php:376 admin/tools.php:1488
+#: admin/tools.php:376 admin/tools.php:1540
 msgid "Migration Complete"
 msgstr "Migratie voltooid"
 
@@ -21428,7 +21458,7 @@ msgid "Failed Images:"
 msgstr "Mislukte afbeeldingen:"
 
 #. translators: %d: number of additional items not shown
-#: admin/tools.php:398 admin/tools.php:957 admin/tools.php:1518
+#: admin/tools.php:398 admin/tools.php:984 admin/tools.php:1570
 #, php-format
 msgid "...and %d more"
 msgstr "...en %d meer"
@@ -21437,7 +21467,7 @@ msgstr "...en %d meer"
 msgid "Retry Failed Uploads"
 msgstr "Mislukte uploads opnieuw proberen"
 
-#: admin/tools.php:408 admin/tools.php:964 admin/tools.php:1527
+#: admin/tools.php:408 admin/tools.php:991 admin/tools.php:1579
 msgid "Clear Results"
 msgstr "Duidelijke resultaten"
 
@@ -21473,7 +21503,7 @@ msgstr "Migratie succesvol gestopt"
 msgid "No failed images to retry"
 msgstr "Geen mislukte afbeeldingen om opnieuw te proberen"
 
-#: admin/tools.php:640 admin/tools.php:693
+#: admin/tools.php:640 admin/tools.php:690
 msgid "Reclaim Local Storage"
 msgstr "Lokale opslag vrijmaken"
 
@@ -21490,7 +21520,7 @@ msgstr "Vrij te maken bestanden zoeken"
 msgid "View Cleanup Progress"
 msgstr "Voortgang van het opschonen bekijken"
 
-#: admin/tools.php:696
+#: admin/tools.php:693
 msgid ""
 "This tool finds images that are already in cloud storage but still have "
 "local copies on this server, then deletes the local files to free up disk "
@@ -21502,21 +21532,7 @@ msgstr ""
 "schijfruimte vrij te maken. De cloudkopieën blijven ongemoeid — galerijen "
 "worden nog steeds vanuit de cloudopslag geserveerd."
 
-#: admin/tools.php:701
-msgid ""
-"No reclaimable files found. Every image in cloud storage has already had its "
-"local copy removed."
-msgstr ""
-"Geen vrij te maken bestanden gevonden. Bij elke afbeelding in de cloudopslag "
-"is de lokale kopie al verwijderd."
-
-#. translators: %s: number of redundant local files
-#: admin/tools.php:710
-#, php-format
-msgid "Found: %s redundant local files"
-msgstr "Gevonden: %s overbodige lokale bestanden"
-
-#: admin/tools.php:716
+#: admin/tools.php:697
 msgid ""
 "Each local file is deleted only after its cloud copy is confirmed present "
 "and the correct size. Files that can't be verified are skipped."
@@ -21525,11 +21541,11 @@ msgstr ""
 "aanwezig is en de juiste grootte heeft. Bestanden die niet kunnen worden "
 "gecontroleerd worden overgeslagen."
 
-#: admin/tools.php:720
+#: admin/tools.php:701
 msgid "This action cannot be undone."
 msgstr "Deze actie kan niet ongedaan worden gemaakt."
 
-#: admin/tools.php:721
+#: admin/tools.php:702
 msgid ""
 "Local files will be permanently deleted. Cloud copies remain in your bucket "
 "and galleries continue to serve from cloud storage."
@@ -21537,11 +21553,25 @@ msgstr ""
 "Lokale bestanden worden definitief verwijderd. De cloudkopieën blijven in je "
 "bucket staan en galerijen worden nog steeds vanuit de cloudopslag geserveerd."
 
-#: admin/tools.php:725 admin/tools.php:749
+#: admin/tools.php:706 admin/tools.php:728 admin/tools.php:742
+#: admin/tools.php:756 admin/tools.php:776
 msgid "Start Cleanup"
 msgstr "Opschonen starten"
 
+#: admin/tools.php:727 admin/tools.php:741
+msgid "Scan failed"
+msgstr "Scan mislukt"
+
 #: admin/tools.php:733
+#, php-format
+msgid "Checked %1$s images, %2$s local copies to remove"
+msgstr "%1$s afbeeldingen gecontroleerd, %2$s lokale kopieën te verwijderen"
+
+#: admin/tools.php:755 admin/tools.php:775
+msgid "Failed to start cleanup"
+msgstr "Opruimen kon niet worden gestart"
+
+#: admin/tools.php:762
 msgid ""
 "Start cleanup? Local copies of images already in cloud storage will be "
 "permanently deleted."
@@ -21549,21 +21579,21 @@ msgstr ""
 "Opschonen starten? Lokale kopieën van afbeeldingen die al in de cloudopslag "
 "staan worden definitief verwijderd."
 
-#: admin/tools.php:739 admin/tools.php:1268
-msgid "Starting..."
-msgstr "Starten..."
+#: admin/tools.php:766
+msgid "Checking images..."
+msgstr "Afbeeldingen controleren..."
 
-#: admin/tools.php:765
+#: admin/tools.php:792
 msgid "Reclaiming local storage"
 msgstr "Lokale opslag wordt vrijgemaakt"
 
 #. translators: %d: number of skipped files
-#: admin/tools.php:775
+#: admin/tools.php:802
 #, php-format
 msgid "%d skipped (cloud copy not reachable)"
 msgstr "%d overgeslagen (cloudkopie niet bereikbaar)"
 
-#: admin/tools.php:778
+#: admin/tools.php:805
 msgid ""
 "Local files are deleted in the background. You can safely leave this page — "
 "the cleanup keeps running and you'll get an email when it finishes."
@@ -21572,29 +21602,29 @@ msgstr ""
 "gerust verlaten — het opschonen loopt door en je krijgt een e-mail zodra het "
 "klaar is."
 
-#: admin/tools.php:787 admin/tools.php:875
+#: admin/tools.php:814 admin/tools.php:902
 msgid "Stop Cleanup"
 msgstr "Opschonen stoppen"
 
-#: admin/tools.php:806 admin/tools.php:899
+#: admin/tools.php:833 admin/tools.php:926
 msgid "skipped"
 msgstr "overgeslagen"
 
-#: admin/tools.php:838
+#: admin/tools.php:865
 msgid "skipped (cloud copy not reachable)"
 msgstr "overgeslagen (cloudkopie niet bereikbaar)"
 
-#: admin/tools.php:861
+#: admin/tools.php:888
 msgid "Stop the cleanup? Files already deleted will not be restored."
 msgstr ""
 "Het opschonen stoppen? Al verwijderde bestanden worden niet teruggezet."
 
-#: admin/tools.php:915
+#: admin/tools.php:942
 msgid "Cleanup Cancelled"
 msgstr "Opschonen geannuleerd"
 
 #. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed
-#: admin/tools.php:919
+#: admin/tools.php:946
 #, php-format
 msgid ""
 "Cleanup was stopped. %1$d local files were deleted (%2$s freed) before "
@@ -21603,18 +21633,18 @@ msgstr ""
 "Het opschonen is gestopt. %1$d lokale bestanden zijn verwijderd (%2$s "
 "vrijgemaakt) voordat het werd afgebroken."
 
-#: admin/tools.php:925
+#: admin/tools.php:952
 msgid "Cleanup Complete"
 msgstr "Opschonen voltooid"
 
 #. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed
-#: admin/tools.php:931
+#: admin/tools.php:958
 #, php-format
 msgid "Deleted %1$d local files and freed %2$s of disk space."
 msgstr "%1$d lokale bestanden verwijderd en %2$s schijfruimte vrijgemaakt."
 
 #. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed, %3$d: number of files skipped
-#: admin/tools.php:940
+#: admin/tools.php:967
 #, php-format
 msgid ""
 "Deleted %1$d local files (%2$s freed). Skipped %3$d files where the cloud "
@@ -21623,11 +21653,11 @@ msgstr ""
 "%1$d lokale bestanden verwijderd (%2$s vrijgemaakt). %3$d bestanden "
 "overgeslagen waarbij de cloudkopie niet kon worden gecontroleerd."
 
-#: admin/tools.php:948
+#: admin/tools.php:975
 msgid "Skipped Images:"
 msgstr "Overgeslagen afbeeldingen:"
 
-#: admin/tools.php:949
+#: admin/tools.php:976
 msgid ""
 "These images had cloud storage metadata but the cloud copy could not be "
 "verified. Local files were preserved. Try re-running the migration tool to "
@@ -21637,11 +21667,11 @@ msgstr ""
 "niet worden gecontroleerd. De lokale bestanden zijn bewaard. Voer de "
 "migratietool opnieuw uit om ze opnieuw te uploaden."
 
-#: admin/tools.php:970
+#: admin/tools.php:997
 msgid "Clear cleanup results?"
 msgstr "Resultaten van het opschonen wissen?"
 
-#: admin/tools.php:1000
+#: admin/tools.php:1027
 msgid ""
 "A migration is currently running. Let it finish before reclaiming local "
 "storage."
@@ -21649,19 +21679,19 @@ msgstr ""
 "Er loopt op dit moment een migratie. Laat die eerst afronden voordat je "
 "lokale opslag vrijmaakt."
 
-#: admin/tools.php:1041
+#: admin/tools.php:1091
 msgid "No local files to clean up"
 msgstr "Geen lokale bestanden om op te schonen"
 
-#: admin/tools.php:1064
+#: admin/tools.php:1114
 msgid "Cleanup started"
 msgstr "Opschonen gestart"
 
-#: admin/tools.php:1151 admin/tools.php:1183
+#: admin/tools.php:1201 admin/tools.php:1233
 msgid "WP Offload Media Migration"
 msgstr "WP Offload Media-migratie"
 
-#: admin/tools.php:1153
+#: admin/tools.php:1203
 msgid ""
 "Convert legacy WP Offload Media data into Sunshine's own storage so frontend "
 "pages stop making per-image database lookups"
@@ -21669,11 +21699,11 @@ msgstr ""
 "Zet oude WP Offload Media gegevens om naar Sunshine's eigen opslag, zodat "
 "pagina's niet meer per afbeelding de database hoeven te raadplegen"
 
-#: admin/tools.php:1191
+#: admin/tools.php:1241
 msgid "Migration is already complete. No further action needed."
 msgstr "De migratie is al voltooid. Je hoeft niets meer te doen."
 
-#: admin/tools.php:1202
+#: admin/tools.php:1252
 msgid ""
 "Images not loading? Re-run the migration to rebuild their addresses from "
 "your current cloud storage settings. Images already pointing to the right "
@@ -21683,17 +21713,17 @@ msgstr ""
 "opnieuw op te bouwen op basis van je huidige cloudopslaginstellingen. "
 "Afbeeldingen die al naar de juiste plek verwijzen blijven ongemoeid."
 
-#: admin/tools.php:1205
+#: admin/tools.php:1255
 msgid "Re-Run Migration"
 msgstr "Migratie opnieuw uitvoeren"
 
-#: admin/tools.php:1223
+#: admin/tools.php:1273
 msgid "No migration needed. No WP Offload Media data was found on this site."
 msgstr ""
 "Geen migratie nodig. Er zijn geen WP Offload Media-gegevens op deze site "
 "gevonden."
 
-#: admin/tools.php:1233
+#: admin/tools.php:1283
 msgid ""
 "This one-time step copies your WP Offload Media data into Sunshine's own "
 "storage."
@@ -21702,23 +21732,27 @@ msgstr ""
 "eigen opslag."
 
 #. translators: %s: number of images
-#: admin/tools.php:1239
+#: admin/tools.php:1289
 #, php-format
 msgid "Images to migrate: %s"
 msgstr "Te migreren afbeeldingen: %s"
 
-#: admin/tools.php:1245
+#: admin/tools.php:1295
 msgid "This only updates database metadata. No files are uploaded or moved."
 msgstr ""
 "Hiermee worden alleen metagegevens in de database bijgewerkt. Er worden geen "
 "bestanden geüpload of verplaatst."
 
-#: admin/tools.php:1277
+#: admin/tools.php:1318
+msgid "Starting..."
+msgstr "Starten..."
+
+#: admin/tools.php:1327
 msgid "Failed to start migration"
 msgstr "Kon de migratie niet starten"
 
 #. translators: %d: number of images
-#: admin/tools.php:1303
+#: admin/tools.php:1355
 #, php-format
 msgid ""
 "%d images migrated from WP Offload Media are missing bucket location data. "
@@ -21729,19 +21763,19 @@ msgstr ""
 "bucketlocatiegegevens. De downloadlinks op volledige grootte kunnen verlopen "
 "en niet meer werken. Voer de reparatie hieronder uit om ze te herstellen."
 
-#: admin/tools.php:1309
+#: admin/tools.php:1361
 msgid "Repair Metadata"
 msgstr "Metadata repareren"
 
-#: admin/tools.php:1329
+#: admin/tools.php:1381
 msgid "Error running repair."
 msgstr "Fout bij uitvoeren van reparatie."
 
-#: admin/tools.php:1338 admin/tools.php:1340
+#: admin/tools.php:1390 admin/tools.php:1392
 msgid "items repaired."
 msgstr "items gerepareerd."
 
-#: admin/tools.php:1338
+#: admin/tools.php:1390
 msgid ""
 "couldn't be repaired automatically — their original WP Offload Media data is "
 "no longer available. Contact support if you need help."
@@ -21750,41 +21784,41 @@ msgstr ""
 "gegevens zijn niet meer beschikbaar. Neem contact op met support als je hulp "
 "nodig hebt."
 
-#: admin/tools.php:1344
+#: admin/tools.php:1396
 msgid "repaired so far..."
 msgstr "tot nu toe gerepareerd..."
 
-#: admin/tools.php:1348
+#: admin/tools.php:1400
 msgid "Network error. Please try again."
 msgstr "Netwerkfout. Probeer het opnieuw."
 
-#: admin/tools.php:1381
+#: admin/tools.php:1433
 msgid "Please keep this page open until the migration finishes."
 msgstr "Houd deze pagina open tot de migratie klaar is."
 
-#: admin/tools.php:1427
+#: admin/tools.php:1479
 msgid "Invalid response from server"
 msgstr "Ongeldig antwoord van de server"
 
-#: admin/tools.php:1430
+#: admin/tools.php:1482
 msgid "Error processing migration"
 msgstr "Fout bij het verwerken van de migratie"
 
-#: admin/tools.php:1435
+#: admin/tools.php:1487
 msgid "Network error. Please refresh the page."
 msgstr "Netwerkfout. Vernieuw de pagina."
 
-#: admin/tools.php:1443
+#: admin/tools.php:1495
 msgid ""
 "Stop the migration? Items that have already been migrated will stay migrated."
 msgstr "Migratie stoppen? Items die al gemigreerd zijn blijven gemigreerd."
 
-#: admin/tools.php:1479
+#: admin/tools.php:1531
 msgid "Migration Stopped"
 msgstr "Migratie gestopt"
 
 #. translators: %d: successful count
-#: admin/tools.php:1483
+#: admin/tools.php:1535
 #, php-format
 msgid ""
 "Migration was stopped. %d items were migrated before cancellation. Run the "
@@ -21794,7 +21828,7 @@ msgstr ""
 "afgebroken. Voer de migratie opnieuw uit om de rest af te maken."
 
 #. translators: %d: total successful
-#: admin/tools.php:1494
+#: admin/tools.php:1546
 #, php-format
 msgid ""
 "Successfully migrated %d items. Your pages should now load faster on image-"
@@ -21804,24 +21838,24 @@ msgstr ""
 "bij sjablonen met veel afbeeldingen."
 
 #. translators: 1: successful, 2: failed
-#: admin/tools.php:1502
+#: admin/tools.php:1554
 #, php-format
 msgid "Migration finished with %1$d successful and %2$d failed."
 msgstr "Migratie afgerond: %1$d geslaagd en %2$d mislukt."
 
-#: admin/tools.php:1509
+#: admin/tools.php:1561
 msgid "Failed Attachment IDs:"
 msgstr "Mislukte bijlage-ID's:"
 
-#: admin/tools.php:1586
+#: admin/tools.php:1638
 msgid "No WP Offload Media data found."
 msgstr "Geen WP Offload Media-gegevens gevonden."
 
-#: admin/tools.php:1592
+#: admin/tools.php:1644
 msgid "No items to migrate."
 msgstr "Geen items om te migreren."
 
-#: admin/tools.php:1635
+#: admin/tools.php:1687
 msgid ""
 "WP Offload Media table is no longer available. Migration cannot continue."
 msgstr ""
@@ -21829,7 +21863,7 @@ msgstr ""
 "doorgaan."
 
 #. translators: 1: number of images, 2: link opening tag, 3: link closing tag
-#: admin/tools.php:1852
+#: admin/tools.php:1892
 #, php-format
 msgid ""
 "%1$d images migrated from WP Offload Media are missing bucket location data "
@@ -21839,11 +21873,11 @@ msgstr ""
 "bucketlocatiegegevens en de downloads kunnen mislukken. %2$sVoer de "
 "reparatietool uit%3$s om ze te herstellen."
 
-#: admin/tools.php:1889
+#: admin/tools.php:1929
 msgid "Record Image Locations"
 msgstr "Afbeeldingslocaties vastleggen"
 
-#: admin/tools.php:1891
+#: admin/tools.php:1931
 msgid ""
 "Work out which bucket and file each already-uploaded image lives at, so "
 "their addresses are rebuilt from your current settings instead of the ones "
@@ -21853,24 +21887,24 @@ msgstr ""
 "zodat hun adressen opnieuw worden opgebouwd vanuit je huidige instellingen "
 "in plaats van de instellingen waarmee ze zijn geüpload"
 
-#: admin/tools.php:1892
+#: admin/tools.php:1932
 msgid "Record Locations"
 msgstr "Locaties vastleggen"
 
-#: admin/tools.php:1974
+#: admin/tools.php:2014
 msgid "Cloud storage is not set up, so there is nothing to record."
 msgstr "Cloud Storage is niet ingesteld, dus er is niets vast te leggen."
 
-#: admin/tools.php:1981
+#: admin/tools.php:2021
 msgid "Every uploaded image already has its location recorded. Nothing to do."
 msgstr ""
 "Van elke geüploade afbeelding is de locatie al vastgelegd. Niets te doen."
 
-#: admin/tools.php:1985
+#: admin/tools.php:2025
 msgid "Recording image locations"
 msgstr "Bezig met vastleggen van afbeeldingslocaties"
 
-#: admin/tools.php:1986
+#: admin/tools.php:2026
 msgid ""
 "Nothing is uploaded, downloaded or changed in your bucket. This only fills "
 "in a missing note about where each image already is."
@@ -21878,19 +21912,19 @@ msgstr ""
 "Er wordt niets geüpload, gedownload of gewijzigd in je bucket. Dit vult "
 "alleen een ontbrekende notitie in over waar elke afbeelding al staat."
 
-#: admin/tools.php:1989
+#: admin/tools.php:2029
 msgid "images recorded"
 msgstr "afbeeldingen vastgelegd"
 
-#: admin/tools.php:2006 admin/tools.php:2133
+#: admin/tools.php:2046 admin/tools.php:2176
 msgid "Something went wrong. Please try again."
 msgstr "Er ging iets mis. Probeer het opnieuw."
 
-#: admin/tools.php:2016
+#: admin/tools.php:2056
 msgid "Done."
 msgstr "Klaar."
 
-#: admin/tools.php:2018
+#: admin/tools.php:2058
 msgid ""
 "could not be worked out and were left as they are, so they keep loading "
 "exactly as before."
@@ -21898,12 +21932,12 @@ msgstr ""
 "konden niet worden bepaald en zijn ongewijzigd gelaten, dus die laden "
 "precies zoals eerst."
 
-#: admin/tools.php:2026 admin/tools.php:2145
+#: admin/tools.php:2066 admin/tools.php:2188
 msgid "Network error. Reload the page to carry on where this stopped."
 msgstr "Netwerkfout. Herlaad de pagina om verder te gaan waar dit is gestopt."
 
 #. translators: 1: bucket images are recorded in, 2: bucket the site is set up for
-#: admin/tools.php:2098
+#: admin/tools.php:2141
 #, php-format
 msgid ""
 "Your images are recorded as living in the bucket \"%1$s\", but Sunshine is "
@@ -21912,7 +21946,7 @@ msgstr ""
 "Je afbeeldingen staan geregistreerd in de bucket \"%1$s\", maar Sunshine is "
 "nu ingesteld op \"%2$s\"."
 
-#: admin/tools.php:2104
+#: admin/tools.php:2147
 msgid ""
 "If you renamed that bucket, point Sunshine at the new name and your "
 "galleries will load again. If those images really are in a separate bucket, "
@@ -21922,23 +21956,23 @@ msgstr ""
 "galerijen laden weer. Staan die afbeeldingen echt in een aparte bucket, laat "
 "ze dan met rust; ze blijven daarvandaan laden."
 
-#: admin/tools.php:2106
+#: admin/tools.php:2149
 msgid "I renamed it, update my images"
 msgstr "Ik heb hem hernoemd, werk mijn afbeeldingen bij"
 
-#: admin/tools.php:2107
+#: admin/tools.php:2150
 msgid "They are in a separate bucket, leave them"
 msgstr "Ze staan in een aparte bucket, laat ze staan"
 
-#: admin/tools.php:2139
+#: admin/tools.php:2182
 msgid "images updated. Reload a gallery to check."
 msgstr "afbeeldingen bijgewerkt. Herlaad een galerij om het te controleren."
 
-#: admin/tools.php:2142
+#: admin/tools.php:2185
 msgid "updated so far..."
 msgstr "tot nu toe bijgewerkt..."
 
-#: admin/tools.php:2181
+#: admin/tools.php:2224
 msgid "Unknown choice"
 msgstr "Onbekende keuze"
 
@@ -22025,7 +22059,7 @@ msgstr "Fout: %s"
 
 #. translators: %s: error message
 #: includes/class-cloud-storage-client-bunny.php:76
-#: includes/class-cloud-storage-client-gcs.php:134
+#: includes/class-cloud-storage-client-gcs.php:174
 #: includes/class-cloud-storage-client-s3.php:299
 #, php-format
 msgid "Connection failed: %s"
@@ -22048,7 +22082,7 @@ msgstr ""
 "Verbinding gelukt, maar testupload mislukt. Controleer de machtigingen voor "
 "de opslagzone."
 
-#: includes/class-cloud-storage-client-bunny.php:120
+#: includes/class-cloud-storage-client-bunny.php:117
 msgid ""
 "Warning: No CDN Pull Zone URL configured. Public image serving will use "
 "storage URLs which are slower. Configure a Pull Zone URL for optimal "
@@ -22058,7 +22092,7 @@ msgstr ""
 "aanbieden van openbare afbeeldingen worden opslag-URL's gebruikt, die "
 "langzamer zijn. Configureer een Pull Zone-URL voor optimale prestaties."
 
-#: includes/class-cloud-storage-client-bunny.php:123
+#: includes/class-cloud-storage-client-bunny.php:120
 msgid ""
 "Warning: No Token Authentication Key configured. Full-resolution images will "
 "not be protected with expiring URLs. Enable Token Authentication in your "
@@ -22069,19 +22103,19 @@ msgstr ""
 "URL's. Schakel tokenverificatie in uw beveiligingsinstellingen voor Pull "
 "Zone in."
 
-#: includes/class-cloud-storage-client-bunny.php:128
-#: includes/class-cloud-storage-client-gcs.php:127
+#: includes/class-cloud-storage-client-bunny.php:125
+#: includes/class-cloud-storage-client-gcs.php:167
 #: includes/class-cloud-storage-client-s3.php:255
 msgid "Connection successful! All tests passed."
 msgstr "Verbinding gelukt! Alle tests geslaagd."
 
 #: includes/class-cloud-storage-client-gcs.php:31
-#: includes/class-cloud-storage-client-gcs.php:469
+#: includes/class-cloud-storage-client-gcs.php:551
 msgid "Google Cloud Storage JSON key is required"
 msgstr "Google Cloud Storage JSON-sleutel is vereist"
 
 #: includes/class-cloud-storage-client-gcs.php:39
-#: includes/class-cloud-storage-client-gcs.php:476
+#: includes/class-cloud-storage-client-gcs.php:558
 msgid "Invalid JSON key file. Please check your service account JSON."
 msgstr "Ongeldig JSON-sleutelbestand. Controleer uw serviceaccount JSON."
 
@@ -22102,6 +22136,15 @@ msgstr ""
 "bucketniveau, die geen ACL's per object ondersteunt. Ga naar Cloud Console → "
 "Cloud Storage → Uw bucket → Machtigingen → Toegangscontrole → Schakel over "
 "van 'Uniform' naar 'Fijnmazig'. Voer deze test vervolgens opnieuw uit."
+
+#: includes/class-cloud-storage-client-gcs.php:159
+msgid ""
+"Warning: Your bucket blocks public files (Public access prevention is on). "
+"Every image will be served through signed links instead. That works, but "
+"public thumbnails load faster. To allow them, open your bucket in Google "
+"Cloud Console → Permissions → Public access prevention → set it to \"Not "
+"enforced\", then run this test again."
+msgstr "Waarschuwing: je bucket blokkeert openbare bestanden (Public access prevention staat aan). Elke afbeelding wordt dan via ondertekende links geserveerd. Dat werkt, maar openbare thumbnails laden sneller. Om ze toe te staan, open je bucket in Google Cloud Console → Permissions → Public access prevention → zet het op \"Not enforced\" en voer deze test opnieuw uit."
 
 #: includes/class-cloud-storage-client-s3.php:168
 msgid " Note: ACLs were automatically enabled on your bucket."
@@ -22162,49 +22205,49 @@ msgstr ""
 msgid "Unexpected error: %s"
 msgstr "Onverwachte fout: %s"
 
-#: includes/class-cloud-storage-import.php:161
+#: includes/class-cloud-storage-import.php:181
 msgid "Image Source"
 msgstr "Afbeelding Bron"
 
-#: includes/class-cloud-storage-import.php:166
+#: includes/class-cloud-storage-import.php:186
 msgid "FTP Folder"
 msgstr "FTP-map"
 
-#: includes/class-cloud-storage-import.php:176
+#: includes/class-cloud-storage-import.php:196
 msgid "Cloud Storage Folder"
 msgstr "Cloudopslagmap"
 
-#: includes/class-cloud-storage-import.php:183
+#: includes/class-cloud-storage-import.php:203
 msgid "Loading folders..."
 msgstr "Mappen laden bezig..."
 
-#: includes/class-cloud-storage-import.php:191
+#: includes/class-cloud-storage-import.php:211
 msgid "Selected:"
 msgstr "Geselecteerd:"
 
-#: includes/class-cloud-storage-import.php:196
+#: includes/class-cloud-storage-import.php:216
 msgid ""
 "Click the arrow to expand folders. Select a folder using the radio button."
 msgstr ""
 "Klik op de pijl om mappen uit te vouwen. Selecteer een map met behulp van "
 "het keuzerondje."
 
-#: includes/class-cloud-storage-import.php:218
+#: includes/class-cloud-storage-import.php:238
 msgid ""
 "Cloud storage is not configured. Please configure it in Sunshine settings."
 msgstr ""
 "Cloudopslag is niet geconfigureerd. Configureer dit in de Sunshine-"
 "instellingen."
 
-#: includes/class-cloud-storage-import.php:223
+#: includes/class-cloud-storage-import.php:243
 msgid "Please select a cloud storage folder."
 msgstr "Selecteer een map voor cloudopslag."
 
-#: includes/class-cloud-storage-import.php:362
+#: includes/class-cloud-storage-import.php:382
 msgid "Scanning your cloud storage…"
 msgstr "Je cloudopslag wordt doorzocht…"
 
-#: includes/class-cloud-storage-import.php:363
+#: includes/class-cloud-storage-import.php:383
 msgid ""
 "Large buckets are scanned in small batches so the import never times out. "
 "This can take a moment."
@@ -22212,16 +22255,16 @@ msgstr ""
 "Grote buckets worden in kleine stukjes doorzocht zodat de import nooit een "
 "time-out krijgt. Dit kan even duren."
 
-#: includes/class-cloud-storage-import.php:364
+#: includes/class-cloud-storage-import.php:384
 msgid "galleries found so far"
 msgstr "galerijen tot nu toe gevonden"
 
-#: includes/class-cloud-storage-import.php:446
+#: includes/class-cloud-storage-import.php:466
 msgid "Scan session expired, please start over."
 msgstr "De scansessie is verlopen, begin opnieuw."
 
 #. translators: %s is the folder path in the cloud storage bucket that could not be read
-#: includes/class-cloud-storage-import.php:509
+#: includes/class-cloud-storage-import.php:529
 #, php-format
 msgid ""
 "Could not read the folder \"%s\" from your cloud storage, so the scan was "
@@ -22232,42 +22275,42 @@ msgstr ""
 "gestopt voordat er iets is geïmporteerd. Dit is meestal tijdelijk, dus "
 "probeer het opnieuw."
 
-#: includes/class-cloud-storage-import.php:775
-#: includes/class-cloud-storage-import.php:830
-#: includes/class-cloud-storage-import.php:933
+#: includes/class-cloud-storage-import.php:798
+#: includes/class-cloud-storage-import.php:854
+#: includes/class-cloud-storage-import.php:957
 msgid "Could not initialize cloud storage client"
 msgstr "Kan cloudopslagclient niet initialiseren"
 
-#: includes/class-cloud-storage-import.php:780
-#: includes/class-cloud-storage-import.php:835
+#: includes/class-cloud-storage-import.php:803
+#: includes/class-cloud-storage-import.php:859
 msgid "Failed to list cloud storage contents"
 msgstr "Kan de inhoud van de cloudopslag niet weergeven"
 
-#: includes/class-cloud-storage-import.php:902
+#: includes/class-cloud-storage-import.php:926
 msgid "Loading..."
 msgstr "Laden…"
 
-#: includes/class-cloud-storage-import.php:903
+#: includes/class-cloud-storage-import.php:927
 msgid "No subfolders"
 msgstr "Geen submappen"
 
-#: includes/class-cloud-storage-import.php:905
+#: includes/class-cloud-storage-import.php:929
 msgid "Error loading folders"
 msgstr "Fout bij het laden van mappen"
 
-#: includes/class-cloud-storage-manager.php:2259
+#: includes/class-cloud-storage-manager.php:2313
 msgid "No objects found in WP Offload Media data"
 msgstr "Geen objecten gevonden in WP Offload Media-gegevens"
 
-#: includes/class-cloud-storage-manager.php:2319
+#: includes/class-cloud-storage-manager.php:2373
 msgid "Could not build URLs from WP Offload Media data"
 msgstr "Kan geen URL's maken op basis van WP Offload Media-gegevens"
 
-#: includes/class-cloud-storage-manager.php:2407
+#: includes/class-cloud-storage-manager.php:2461
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr "Kan geen URL's ophalen van WP Offload Media"
 
-#: includes/hooks.php:430 includes/hooks.php:459
+#: includes/hooks.php:430 includes/hooks.php:464
 msgid "Sunshine Cloud Storage:"
 msgstr "Sunshine Cloudopslag:"
 
@@ -22303,7 +22346,7 @@ msgstr ""
 "conflicten kan veroorzaken. Overweeg om dit in te stellen op \"Alleen "
 "Sunshine-galerijen\" of een van de plug-ins uit te schakelen."
 
-#: includes/hooks.php:460
+#: includes/hooks.php:465
 msgid ""
 "Your cloud storage bucket does not support per-object ACLs (Access Control "
 "Lists). This means Sunshine cannot set individual files as public or "
@@ -22315,7 +22358,7 @@ msgstr ""
 "privé kan instellen, waardoor miniaturen mogelijk niet worden weergegeven of "
 "afbeeldingen met volledige resolutie openbaar toegankelijk zijn."
 
-#: includes/hooks.php:464
+#: includes/hooks.php:469
 msgid ""
 "<strong>How to fix:</strong> Go to Google Cloud Console &rarr; Cloud Storage "
 "&rarr; Your Bucket &rarr; Permissions &rarr; Access Control &rarr; Switch "
@@ -22325,7 +22368,7 @@ msgstr ""
 "Uw bucket → Machtigingen → Toegangscontrole → Schakel over van 'Uniform' "
 "naar 'Fijnmazig'."
 
-#: includes/hooks.php:466
+#: includes/hooks.php:471
 msgid ""
 "<strong>How to fix:</strong> Go to S3 Console &rarr; Your Bucket &rarr; "
 "Permissions &rarr; Object Ownership &rarr; Edit &rarr; Select \"ACLs "
@@ -22335,7 +22378,7 @@ msgstr ""
 "Objectbezit → Bewerken → Selecteer \"ACL's ingeschakeld\" met "
 "\"Bucketeigenaar voorkeur\"."
 
-#: includes/hooks.php:468
+#: includes/hooks.php:473
 msgid ""
 "<strong>How to fix:</strong> Check your storage provider's documentation for "
 "enabling per-object ACLs on your bucket."
@@ -22343,7 +22386,7 @@ msgstr ""
 "<strong>Oplossing:</strong> raadpleeg de documentatie van uw opslagprovider "
 "voor het inschakelen van ACL's per object op uw bucket."
 
-#: includes/hooks.php:472
+#: includes/hooks.php:477
 msgid ""
 "After making changes, go to Sunshine Settings &rarr; Cloud Storage and click "
 "\"Test Connection\" to verify."
@@ -22352,7 +22395,7 @@ msgstr ""
 "Cloudopslag en klik op 'Verbinding testen' om te controleren."
 
 #. translators: 1: link opening tag, 2: link closing tag
-#: includes/hooks.php:528
+#: includes/hooks.php:533
 #, php-format
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media data was found on "
@@ -22818,6 +22861,17 @@ msgstr "Oorspronkelijk bedrag:"
 #: templates/shortcode/buy-gift-card.php:139
 msgid "Add to Cart"
 msgstr "Toevoegen aan winkelwagen"
+
+#~ msgid ""
+#~ "No reclaimable files found. Every image in cloud storage has already had "
+#~ "its local copy removed."
+#~ msgstr ""
+#~ "Geen vrij te maken bestanden gevonden. Bij elke afbeelding in de "
+#~ "cloudopslag is de lokale kopie al verwijderd."
+
+#, php-format
+#~ msgid "Found: %s redundant local files"
+#~ msgstr "Gevonden: %s overbodige lokale bestanden"
 
 #~ msgid "Copy system info to clipboard"
 #~ msgstr "Kopieer systeem info naar klembord"
