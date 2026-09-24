@@ -123,7 +123,8 @@ function sunshine_add_to_favorites() {
 	}
 
 	$image = sunshine_get_image( $image_id );
-	if ( ! $image->exists() || ! $image->can_view() ) {
+	// can_access() rather than can_view() so a favorite can't be used to skip the gallery's email prompt.
+	if ( ! $image->exists() || ! $image->can_access() ) {
 		wp_send_json_error( __( 'Could not add image to favorites', 'sunshine-photo-cart' ) );
 	}
 
