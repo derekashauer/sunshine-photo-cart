@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-17T18:47:54+00:00\n"
+"POT-Creation-Date: 2026-09-24T18:22:53+00:00\n"
 "PO-Revision-Date: 2026-03-02 21:18-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -306,7 +306,7 @@ msgstr "Тележка \"Солнышко"
 msgid "Sunshine Checkout"
 msgstr "Солнечная касса"
 
-#: includes/admin/class-admin.php:342 includes/functions/favorites.php:269
+#: includes/admin/class-admin.php:342 includes/functions/favorites.php:270
 msgid "Sunshine Favorites"
 msgstr "Избранное"
 
@@ -531,7 +531,7 @@ msgstr "Имя"
 #: includes/payment-methods/paypal-legacy.php:58
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
 #: templates/invoice/admin.php:159 templates/order/details.php:8
-#: templates/required-data.php:9 class-export-orders.php:474
+#: templates/required-data.php:9 class-export-orders.php:499
 msgid "Email"
 msgstr "Email"
 
@@ -550,7 +550,7 @@ msgstr "Избранное"
 #: templates/email/summary.php:30 class-reports-customers-table.php:35
 #: class-reports-galleries-table.php:37 class-reports-products-table.php:35
 #: gallery.php:271 gallery.php:298 templates/account/downloads.php:19
-#: class-export-orders.php:17
+#: class-export-orders.php:19
 msgid "Orders"
 msgstr "Заказы"
 
@@ -768,7 +768,7 @@ msgstr ""
 #: includes/admin/settings-fields.php:976
 #: includes/admin/settings-fields.php:986 includes/class-cart.php:1616
 #: templates/invoice/admin.php:164 templates/order/details.php:13
-#: class-export-orders.php:475
+#: class-export-orders.php:500
 msgid "Phone"
 msgstr "Телефон"
 
@@ -777,19 +777,19 @@ msgstr "Телефон"
 msgid "VAT Number"
 msgstr "Номер НДС"
 
-#: includes/admin/class-privacy.php:192 class-export-orders.php:516
+#: includes/admin/class-privacy.php:192 class-export-orders.php:541
 msgid "Billing Address 1"
 msgstr "Платёжный адрес 1"
 
-#: includes/admin/class-privacy.php:193 class-export-orders.php:517
+#: includes/admin/class-privacy.php:193 class-export-orders.php:542
 msgid "Billing Address 2"
 msgstr "Платежный адрес 2"
 
-#: includes/admin/class-privacy.php:194 class-export-orders.php:518
+#: includes/admin/class-privacy.php:194 class-export-orders.php:543
 msgid "Billing City"
 msgstr "Город"
 
-#: includes/admin/class-privacy.php:195 class-export-orders.php:519
+#: includes/admin/class-privacy.php:195 class-export-orders.php:544
 msgid "Billing State"
 msgstr "Область/штат для выставления счета"
 
@@ -797,23 +797,23 @@ msgstr "Область/штат для выставления счета"
 msgid "Billing Postcode"
 msgstr "Выставление счетов на Почтовый Индекс"
 
-#: includes/admin/class-privacy.php:197 class-export-orders.php:521
+#: includes/admin/class-privacy.php:197 class-export-orders.php:546
 msgid "Billing Country"
 msgstr "Страна"
 
-#: includes/admin/class-privacy.php:198 class-export-orders.php:508
+#: includes/admin/class-privacy.php:198 class-export-orders.php:533
 msgid "Shipping Address 1"
 msgstr "Адрес доставки 1"
 
-#: includes/admin/class-privacy.php:199 class-export-orders.php:509
+#: includes/admin/class-privacy.php:199 class-export-orders.php:534
 msgid "Shipping Address 2"
 msgstr "Адрес доставки 2"
 
-#: includes/admin/class-privacy.php:200 class-export-orders.php:510
+#: includes/admin/class-privacy.php:200 class-export-orders.php:535
 msgid "Shipping City"
 msgstr "Город доставки"
 
-#: includes/admin/class-privacy.php:201 class-export-orders.php:511
+#: includes/admin/class-privacy.php:201 class-export-orders.php:536
 msgid "Shipping State"
 msgstr "Область"
 
@@ -821,7 +821,7 @@ msgstr "Область"
 msgid "Shipping Postcode"
 msgstr "Почтовый индекс доставки"
 
-#: includes/admin/class-privacy.php:203 class-export-orders.php:513
+#: includes/admin/class-privacy.php:203 class-export-orders.php:538
 msgid "Shipping Country"
 msgstr "Страна доставки"
 
@@ -837,7 +837,7 @@ msgstr "Кредиты на счете"
 msgid "Last Login"
 msgstr "Последний вход"
 
-#: includes/admin/class-privacy.php:253 class-export-orders.php:462
+#: includes/admin/class-privacy.php:253 class-export-orders.php:487
 msgid "Order Number"
 msgstr "Номер заказа"
 
@@ -875,7 +875,7 @@ msgid "Shipping Address"
 msgstr "Адрес доставки"
 
 #: includes/admin/class-privacy.php:276 includes/admin/sunshine-order.php:720
-#: templates/invoice/admin.php:201 class-export-orders.php:522
+#: templates/invoice/admin.php:201 class-export-orders.php:547
 msgid "Customer Notes"
 msgstr "Примечания к клиенту"
 
@@ -1378,7 +1378,7 @@ msgstr "Товары"
 #: includes/class-sunshinephotocart.php:369 includes/functions/account.php:404
 #: reports.php:5 class-admin-automated-emails.php:64 hooks.php:673
 #: templates/account/downloads.php:30 class-export-galleries.php:10
-#: class-export-orders.php:502
+#: class-export-orders.php:527
 msgid "Galleries"
 msgstr "Галереи"
 
@@ -1386,7 +1386,7 @@ msgstr "Галереи"
 #: includes/admin/sunshine-gallery.php:281
 #: includes/admin/sunshine-order.php:730 templates/store/product-details.php:21
 #: reports.php:6 hooks.php:681 class-export-galleries.php:16
-#: class-export-orders.php:501
+#: class-export-orders.php:526
 msgid "Images"
 msgstr "Изображения"
 
@@ -1631,7 +1631,7 @@ msgid "Disable promos throughout Sunshine Photo Cart"
 msgstr "Отключение промо-акций в фототележке Sunshine"
 
 #: includes/admin/settings-fields.php:200
-#: includes/admin/sunshine-product.php:103 class-admin-automated-emails.php:138
+#: includes/admin/sunshine-product.php:103 class-admin-automated-emails.php:164
 #: class-admin-discounts.php:204 sell-anything.php:39
 #: class-admin-gift-cards.php:64
 msgid "General"
@@ -1667,7 +1667,7 @@ msgstr "Ссылки"
 #: includes/class-sunshinephotocart.php:370
 #: includes/class-sunshinephotocart.php:372
 #: class-reports-galleries-table.php:36 gallery.php:277
-#: class-export-orders.php:578 messaging.php:148
+#: class-export-orders.php:603 messaging.php:148
 msgid "Gallery"
 msgstr "Галерея"
 
@@ -3061,7 +3061,7 @@ msgstr "Электронные письма пока не собраны"
 msgid "Add gallery name"
 msgstr "Добавить название галереи"
 
-#: includes/admin/sunshine-order.php:106 class-admin-automated-emails.php:93
+#: includes/admin/sunshine-order.php:106 class-admin-automated-emails.php:119
 msgid "All"
 msgstr "Все"
 
@@ -3116,7 +3116,7 @@ msgstr "Удалить персональные данные"
 msgid "Select All"
 msgstr "Выбрать все"
 
-#: includes/admin/sunshine-order.php:421 includes/class-order.php:1009
+#: includes/admin/sunshine-order.php:421 includes/class-order.php:1013
 #: includes/class-sunshinephotocart.php:534 gallery.php:272 admin.php:237
 #: admin/customers.php:20 admin/customers.php:42 class-admin-gift-cards.php:189
 msgid "Order"
@@ -3133,7 +3133,7 @@ msgstr "Клиент"
 #: templates/email/admin-receipt.php:134
 #: templates/email/customer-receipt.php:138
 #: templates/email/order-status.php:106 templates/invoice/admin.php:169
-#: templates/order/details.php:22 class-export-orders.php:471
+#: templates/order/details.php:22 class-export-orders.php:496
 msgid "Payment Method"
 msgstr "Способ оплаты"
 
@@ -3142,7 +3142,7 @@ msgstr "Способ оплаты"
 #: templates/email/admin-receipt.php:124
 #: templates/email/customer-receipt.php:128 templates/email/order-status.php:96
 #: templates/invoice/admin.php:311 templates/order/totals.php:67
-#: class-export-orders.php:469
+#: class-export-orders.php:494
 msgid "Order Total"
 msgstr "Весь заказ"
 
@@ -3207,8 +3207,8 @@ msgstr "Способ доставки/отгрузки"
 
 #: includes/admin/sunshine-order.php:670
 #: includes/class-sunshinephotocart.php:583
-#: includes/class-sunshinephotocart.php:594 class-export-orders.php:464
-#: class-export-orders.php:556
+#: includes/class-sunshinephotocart.php:594 class-export-orders.php:489
+#: class-export-orders.php:581
 msgid "Order Status"
 msgstr "Статус заказа"
 
@@ -3339,7 +3339,7 @@ msgstr "Доставка через %s"
 #: templates/email/admin-receipt.php:92 templates/email/customer-receipt.php:76
 #: templates/email/customer-receipt.php:96 templates/email/order-status.php:72
 #: templates/invoice/admin.php:279 templates/order/totals.php:43 admin.php:4
-#: discounts.php:34 discounts.php:46 class-export-orders.php:467
+#: discounts.php:34 discounts.php:46 class-export-orders.php:492
 msgid "Discounts"
 msgstr "Скидки"
 
@@ -3860,13 +3860,13 @@ msgstr "Контактная информация"
 
 #: includes/class-cart.php:1571 includes/class-countries.php:3424
 #: includes/functions/account.php:542 templates/account/signup.php:20
-#: class-export-orders.php:472
+#: class-export-orders.php:497
 msgid "First Name"
 msgstr "Имя"
 
 #: includes/class-cart.php:1580 includes/class-countries.php:3433
 #: includes/functions/account.php:550 templates/account/signup.php:27
-#: class-export-orders.php:473
+#: class-export-orders.php:498
 msgid "Last Name"
 msgstr "Фамилия"
 
@@ -3882,7 +3882,7 @@ msgstr "По желанию можно установить пароль"
 #: includes/class-cart.php:1625 templates/email/admin-receipt.php:199
 #: templates/email/customer-receipt.php:185
 #: templates/email/order-status.php:153 templates/invoice/admin.php:184
-#: templates/order/details.php:39 class-export-orders.php:476
+#: templates/order/details.php:39 class-export-orders.php:501
 msgid "EU VAT Number"
 msgstr "Номер НДС ЕС"
 
@@ -3891,7 +3891,7 @@ msgid "Delivery Method"
 msgstr "Метод доставки"
 
 #: includes/class-cart.php:1787 includes/class-cart.php:1804
-#: templates/invoice/admin.php:173 class-export-orders.php:470
+#: templates/invoice/admin.php:173 class-export-orders.php:495
 msgid "Shipping Method"
 msgstr "Способ доставки"
 
@@ -12887,8 +12887,8 @@ msgid "Sorry, you are not allowed to view this image"
 msgstr "Извините, вам не разрешено просматривать это изображение"
 
 #: includes/class-frontend.php:964 includes/functions/comments.php:16
-#: includes/functions/image.php:278 includes/functions/store.php:131
-#: includes/functions/store.php:184 includes/functions/template.php:373
+#: includes/functions/image.php:278 includes/functions/store.php:133
+#: includes/functions/store.php:186 includes/functions/template.php:373
 msgid "Access denied"
 msgstr "Доступ запрещен"
 
@@ -12923,26 +12923,26 @@ msgid "You have been logged out"
 msgstr "Вы вышли из системы"
 
 #. translators: %1$s is the previous order status, %2$s is the new order status
-#: includes/class-order.php:128
+#: includes/class-order.php:129
 #, php-format
 msgid "Status change from %1$s to %2$s"
 msgstr "Изменение состояния с %1$s на %2$s"
 
 #. translators: %s is the order status name
-#: includes/class-order.php:132
+#: includes/class-order.php:133
 #, php-format
 msgid "Status set to %s"
 msgstr "Состояние установлено на %s"
 
 #. translators: %s is the order number
-#: includes/class-order.php:219 includes/class-order.php:1036
+#: includes/class-order.php:220 includes/class-order.php:1040
 #, php-format
 msgid "Order #%s"
 msgstr "Заказ #%s"
 
 #. translators: %s is the refund amount formatted as price
 #. translators: %s: refund amount
-#: includes/class-order.php:894 includes/payment-methods/paypal.php:805
+#: includes/class-order.php:898 includes/payment-methods/paypal.php:805
 #: includes/payment-methods/paypal.php:807
 #: includes/payment-methods/square.php:1794
 #: includes/payment-methods/stripe.php:3365 class-authorizenet.php:472
@@ -13201,7 +13201,7 @@ msgstr "Разделите категории запятыми"
 msgid "Choose from the most used categories"
 msgstr "Выбрать из часто используемых рубрик"
 
-#: includes/class-sunshinephotocart.php:499
+#: includes/class-sunshinephotocart.php:499 class-admin-automated-emails.php:93
 msgid "Price Levels"
 msgstr "Уровни цен"
 
@@ -13741,27 +13741,27 @@ msgstr "Ваши настройки были сохранены в вашем а
 msgid "Invalid image"
 msgstr "Недопустимое изображение"
 
-#: includes/functions/favorites.php:127
+#: includes/functions/favorites.php:128
 msgid "Could not add image to favorites"
 msgstr "Не удалось добавить изображение в избранное"
 
-#: includes/functions/favorites.php:186
+#: includes/functions/favorites.php:187
 msgid "Guest favorites are not enabled"
 msgstr "Избранное для гостей не включено"
 
-#: includes/functions/favorites.php:248
+#: includes/functions/favorites.php:249
 msgid "Favorites cleared"
 msgstr "Избранное очищено"
 
-#: includes/functions/favorites.php:258
+#: includes/functions/favorites.php:259
 msgid "Customer Profile"
 msgstr "Профиль клиента"
 
-#: includes/functions/favorites.php:271
+#: includes/functions/favorites.php:272
 msgid "Image File List"
 msgstr "Список файлов изображений"
 
-#: includes/functions/favorites.php:282
+#: includes/functions/favorites.php:283
 msgid ""
 "Copy and paste the file names above into Lightroom's search feature (Library "
 "filter) to quickly find and create a new collection to make processing this "
@@ -13773,7 +13773,7 @@ msgstr ""
 "упрощения обработки этого заказа. Убедитесь, что вы используете параметр "
 "поиска \"Contains\" (а не \"Contains All\")."
 
-#: includes/functions/favorites.php:327
+#: includes/functions/favorites.php:328
 msgid ""
 "Images in your favorites have been removed because they are no longer "
 "available"
@@ -14548,7 +14548,7 @@ msgstr "Оплатить кредитной картой или со своег�
 #: includes/payment-methods/paypal.php:59
 #: includes/payment-methods/square.php:96
 #: includes/payment-methods/stripe.php:538 class-authorizenet.php:46
-#: class-export-orders.php:460 class-mollie.php:44 class-mercadopago-pro.php:37
+#: class-export-orders.php:485 class-mollie.php:44 class-mercadopago-pro.php:37
 #: class-mercadopago.php:42 class-payfast.php:35 class-paystack.php:39
 msgid "Mode"
 msgstr "Режим"
@@ -16244,7 +16244,7 @@ msgstr "Твоё имя"
 msgid "Your Email"
 msgstr "Твой email"
 
-#: templates/favorites/share.php:15 class-admin-automated-emails.php:90
+#: templates/favorites/share.php:15 class-admin-automated-emails.php:116
 msgid "Recipients"
 msgstr "Получатели"
 
@@ -17078,7 +17078,7 @@ msgid "Trigger"
 msgstr "Триггер"
 
 #: class-admin-automated-emails.php:67 hooks.php:154
-#: class-export-orders.php:594
+#: class-export-orders.php:619
 msgid "Search for a gallery"
 msgstr "Поиск галереи"
 
@@ -17090,59 +17090,65 @@ msgstr ""
 "Отправлять это письмо только для выбранных галерей. Дочерние галереи "
 "включаются автоматически. Оставь пустым, чтобы отправлять для всех галерей."
 
-#: class-admin-automated-emails.php:84 admin/schedule.php:28
+#: class-admin-automated-emails.php:96
+msgid ""
+"Only send this email for galleries using the selected price levels. Leave "
+"empty to send for all price levels."
+msgstr "Отправляй это письмо только для галерей с выбранными уровнями цен. Оставь пустым, чтобы отправлять для всех уровней цен."
+
+#: class-admin-automated-emails.php:110 admin/schedule.php:28
 msgid "Time"
 msgstr "Время"
 
-#: class-admin-automated-emails.php:86
+#: class-admin-automated-emails.php:112
 msgid "How long after/before the trigger should the email be sent?"
 msgstr ""
 "Через какое время после/до срабатывания триггера должно быть отправлено "
 "письмо?"
 
-#: class-admin-automated-emails.php:94
+#: class-admin-automated-emails.php:120
 msgid "User has favorites"
 msgstr "У пользователя есть избранное"
 
-#: class-admin-automated-emails.php:95
+#: class-admin-automated-emails.php:121
 msgid "User has no favorites"
 msgstr "У пользователя нет избранных"
 
-#: class-admin-automated-emails.php:96
+#: class-admin-automated-emails.php:122
 msgid "User has items in cart"
 msgstr "Пользователь имеет элементы в корзине"
 
-#: class-admin-automated-emails.php:97
+#: class-admin-automated-emails.php:123
 msgid "User has no items in cart"
 msgstr "У пользователя нет товаров в корзине"
 
-#: class-admin-automated-emails.php:98
+#: class-admin-automated-emails.php:124
 msgid "User has ordered"
 msgstr "Пользователь заказал"
 
-#: class-admin-automated-emails.php:99
+#: class-admin-automated-emails.php:125
 msgid "User has no orders"
 msgstr "Пользователь не имеет заказов"
 
-#: class-admin-automated-emails.php:100
+#: class-admin-automated-emails.php:126
 msgid "User has not ordered item from gallery"
 msgstr "Пользователь не заказывал товар из галереи"
 
-#: class-admin-automated-emails.php:102
+#: class-admin-automated-emails.php:128
 msgid "Select user attributes to determine who should receive this email"
 msgstr ""
 "Выберите атрибуты пользователя, чтобы определить, кто должен получить это "
 "письмо"
 
-#: class-admin-automated-emails.php:102
+#: class-admin-automated-emails.php:128
 msgid "See examples"
 msgstr "Смотри примеры"
 
-#: class-admin-automated-emails.php:106
+#: class-admin-automated-emails.php:132
 msgid "Notice, not marketing"
 msgstr "Уведомление, не маркетинг"
 
-#: class-admin-automated-emails.php:108
+#: class-admin-automated-emails.php:134
 msgid ""
 "Check this only if the email is a reminder or notice that does not try to "
 "sell anything, like a gallery expiring or a gallery being ready. The "
@@ -17150,13 +17156,19 @@ msgid ""
 "customers who unsubscribed. Adding a discount code makes it a marketing "
 "email, so leave this unchecked if you use one. You are responsible for "
 "following the email laws where you and your customers live."
-msgstr "Отмечай это только если письмо — напоминание или уведомление, которое ничего не продаёт, например что галерея скоро истечёт или готова. Ссылка и заголовки для отписки не добавляются, а письмо отправляется и клиентам, которые отписались. Если добавить код скидки, письмо станет маркетинговым, так что оставь галочку снятой, если используешь его. Ты сам отвечаешь за соблюдение законов о рассылках там, где живёте ты и твои клиенты."
+msgstr ""
+"Отмечай это только если письмо — напоминание или уведомление, которое ничего "
+"не продаёт, например что галерея скоро истечёт или готова. Ссылка и "
+"заголовки для отписки не добавляются, а письмо отправляется и клиентам, "
+"которые отписались. Если добавить код скидки, письмо станет маркетинговым, "
+"так что оставь галочку снятой, если используешь его. Ты сам отвечаешь за "
+"соблюдение законов о рассылках там, где живёте ты и твои клиенты."
 
-#: class-admin-automated-emails.php:114
+#: class-admin-automated-emails.php:140
 msgid "Discount (optional)"
 msgstr "Скидка (необязательно)"
 
-#: class-admin-automated-emails.php:116
+#: class-admin-automated-emails.php:142
 msgid ""
 "A unique coupon code will be generated based on the settings of the selected "
 "coupon and assigned to the specific user being emailed"
@@ -17164,11 +17176,11 @@ msgstr ""
 "Уникальный купон код будет создаваться на основании параметров выбранного "
 "купона и назначенные для конкретного пользователя и будет отправлен по e-mail"
 
-#: class-admin-automated-emails.php:120
+#: class-admin-automated-emails.php:146
 msgid "Discount Expiration (Optional)"
 msgstr "Срок действия купона (не обязательно)"
 
-#: class-admin-automated-emails.php:122
+#: class-admin-automated-emails.php:148
 msgid ""
 "How long should the coupon code be valid for after being created? This will "
 "override any expiration date settings of the selected discount code"
@@ -17176,11 +17188,11 @@ msgstr ""
 "В течение какого времени код купона должен действовать после создания? Это "
 "отменяет все настройки срока действия выбранного кода скидки"
 
-#: class-admin-automated-emails.php:160
+#: class-admin-automated-emails.php:186
 msgid "Gallery tags"
 msgstr "Метки галерей"
 
-#: class-admin-automated-emails.php:169
+#: class-admin-automated-emails.php:195
 msgid "Order tags"
 msgstr "Метки заказов"
 
@@ -17323,12 +17335,12 @@ msgid "After gallery is published"
 msgstr "После публикации галереи"
 
 #. translators: %1$s: email name, %2$s: recipient email address
-#: common.php:256
+#: common.php:287
 #, php-format
 msgid "%1$s for %2$s"
 msgstr "%1$s за %2$s"
 
-#: common.php:329
+#: common.php:360
 msgid "Queue processed!"
 msgstr "Очередь обработана!"
 
@@ -18831,7 +18843,7 @@ msgstr "Экспортируй данные в CSV"
 msgid "Gallery ID"
 msgstr "Id галереи"
 
-#: class-export-galleries.php:13 class-export-orders.php:486
+#: class-export-galleries.php:13 class-export-orders.php:511
 msgid "Gallery Name"
 msgstr "Название галереи"
 
@@ -18855,11 +18867,11 @@ msgstr "Подсказка по коду доступа"
 msgid "Expiration Date"
 msgstr "Дата окончания"
 
-#: class-export-galleries.php:156 class-export-orders.php:572
+#: class-export-galleries.php:156 class-export-orders.php:597
 msgid "Dates"
 msgstr "Даты"
 
-#: class-export-galleries.php:158 class-export-orders.php:574
+#: class-export-galleries.php:158 class-export-orders.php:599
 msgid "to"
 msgstr "в"
 
@@ -18867,97 +18879,97 @@ msgstr "в"
 msgid "Export"
 msgstr "Экспорт"
 
-#: class-export-orders.php:461
+#: class-export-orders.php:486
 msgid "Order ID"
 msgstr "ID заказа"
 
-#: class-export-orders.php:463
+#: class-export-orders.php:488
 msgid "Order Date"
 msgstr "Дата заказа"
 
-#: class-export-orders.php:465
+#: class-export-orders.php:490
 msgid "Order Subtotal"
 msgstr "Промежуточный итог заказа"
 
-#: class-export-orders.php:466
+#: class-export-orders.php:491
 msgid "Order Tax"
 msgstr "Налог за заказ"
 
-#: class-export-orders.php:468
+#: class-export-orders.php:493
 msgid "Shipping Cost"
 msgstr "Стоимость доставки"
 
-#: class-export-orders.php:482
+#: class-export-orders.php:507
 msgid "Product Name"
 msgstr "Название товара"
 
-#: class-export-orders.php:483
+#: class-export-orders.php:508
 msgid "Product Qty"
 msgstr "Кол-во товаров"
 
-#: class-export-orders.php:484 product-options.php:43
+#: class-export-orders.php:509 product-options.php:43
 msgid "Product Options"
 msgstr "Опции товара"
 
-#: class-export-orders.php:485
+#: class-export-orders.php:510
 msgid "Image File Name"
 msgstr "Имя файла изображения"
 
 #. translators: %d: product number
-#: class-export-orders.php:492
+#: class-export-orders.php:517
 #, php-format
 msgid "Product %d Name"
 msgstr "Название продукта %d"
 
 #. translators: %d: product number
-#: class-export-orders.php:494
+#: class-export-orders.php:519
 #, php-format
 msgid "Product %d Qty"
 msgstr "Продукт %d Количество"
 
 #. translators: %d: product number
-#: class-export-orders.php:496
+#: class-export-orders.php:521
 #, php-format
 msgid "Product %d Options"
 msgstr "Продукт %d Варианты"
 
-#: class-export-orders.php:500
+#: class-export-orders.php:525
 msgid "Product(s)"
 msgstr "Товар(ы)"
 
-#: class-export-orders.php:506
+#: class-export-orders.php:531
 msgid "Shipping First Name"
 msgstr "Имя доставки"
 
-#: class-export-orders.php:507
+#: class-export-orders.php:532
 msgid "Shipping Last Name"
 msgstr "Фамилия получателя"
 
-#: class-export-orders.php:512
+#: class-export-orders.php:537
 msgid "Shipping Zip"
 msgstr "Почтовый индекс"
 
-#: class-export-orders.php:514
+#: class-export-orders.php:539
 msgid "Billing First Name"
 msgstr "Имя плательщика"
 
-#: class-export-orders.php:515
+#: class-export-orders.php:540
 msgid "Billing Last Name"
 msgstr "Фамилия плательщика"
 
-#: class-export-orders.php:520
+#: class-export-orders.php:545
 msgid "Billing Zip"
 msgstr "Почтовый индекс"
 
-#: class-export-orders.php:534
+#: class-export-orders.php:559
 msgid "Line Item Format"
 msgstr "Формат позиции"
 
-#: class-export-orders.php:538
+#: class-export-orders.php:563
 msgid "Combined"
 msgstr "Комбинация"
 
-#: class-export-orders.php:540
+#: class-export-orders.php:565
 msgid ""
 "One row per order. All products listed in a single \"Products\" column, "
 "separated by commas."
@@ -18965,11 +18977,11 @@ msgstr ""
 "Один строка на каждый заказ. Все продукты перечислены в одной колонке "
 "«Продукты», разделены запятыми."
 
-#: class-export-orders.php:544
+#: class-export-orders.php:569
 msgid "Separate Rows"
 msgstr "Отдельные строки"
 
-#: class-export-orders.php:546
+#: class-export-orders.php:571
 msgid ""
 "One row per line item. Order information is repeated for each product. Best "
 "for analyzing individual items."
@@ -18977,11 +18989,11 @@ msgstr ""
 "Один строка на каждую позицию заказа. Информация о заказе повторяется для "
 "каждого продукта. Оптимально подходит для анализа отдельных позиций."
 
-#: class-export-orders.php:550
+#: class-export-orders.php:575
 msgid "Separate Columns"
 msgstr "Отдельные столбцы"
 
-#: class-export-orders.php:552
+#: class-export-orders.php:577
 msgid ""
 "One row per order. Each product gets its own columns (Product 1 Name, "
 "Product 1 Qty, Product 2 Name, etc.). Column count varies based on the order "
@@ -18991,11 +19003,11 @@ msgstr ""
 "(Название продукта 1, Количество продукта 1, Название продукта 2 и т. д.). "
 "Количество столбцов зависит от заказа с наибольшим количеством товаров."
 
-#: class-export-orders.php:581
+#: class-export-orders.php:606
 msgid "Any gallery"
 msgstr "Любая галерея"
 
-#: class-export-orders.php:584
+#: class-export-orders.php:609
 msgid "Will include all child galleries as well"
 msgstr "Также будут включены все детские галереи"
 
@@ -22186,7 +22198,12 @@ msgid ""
 "public thumbnails load faster. To allow them, open your bucket in Google "
 "Cloud Console → Permissions → Public access prevention → set it to \"Not "
 "enforced\", then run this test again."
-msgstr "Внимание: твой bucket блокирует публичные файлы (включено Public access prevention). Каждое изображение будет отдаваться через подписанные ссылки. Это работает, но публичные миниатюры загружаются быстрее. Чтобы разрешить их, открой свой bucket в Google Cloud Console → Permissions → Public access prevention → выбери \"Not enforced\" и запусти этот тест снова."
+msgstr ""
+"Внимание: твой bucket блокирует публичные файлы (включено Public access "
+"prevention). Каждое изображение будет отдаваться через подписанные ссылки. "
+"Это работает, но публичные миниатюры загружаются быстрее. Чтобы разрешить "
+"их, открой свой bucket в Google Cloud Console → Permissions → Public access "
+"prevention → выбери \"Not enforced\" и запусти этот тест снова."
 
 #: includes/class-cloud-storage-client-s3.php:168
 msgid " Note: ACLs were automatically enabled on your bucket."

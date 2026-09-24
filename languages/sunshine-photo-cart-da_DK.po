@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-17T18:47:54+00:00\n"
+"POT-Creation-Date: 2026-09-24T18:22:53+00:00\n"
 "PO-Revision-Date: 2026-02-27 15:48-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -305,7 +305,7 @@ msgstr "Solskinsvogn"
 msgid "Sunshine Checkout"
 msgstr "Sunshine Checkout"
 
-#: includes/admin/class-admin.php:342 includes/functions/favorites.php:269
+#: includes/admin/class-admin.php:342 includes/functions/favorites.php:270
 msgid "Sunshine Favorites"
 msgstr "Solskinsfavoritter"
 
@@ -523,7 +523,7 @@ msgstr "Navn"
 #: includes/payment-methods/paypal-legacy.php:58
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
 #: templates/invoice/admin.php:159 templates/order/details.php:8
-#: templates/required-data.php:9 class-export-orders.php:474
+#: templates/required-data.php:9 class-export-orders.php:499
 msgid "Email"
 msgstr "E-mail"
 
@@ -542,7 +542,7 @@ msgstr "Favoritter"
 #: templates/email/summary.php:30 class-reports-customers-table.php:35
 #: class-reports-galleries-table.php:37 class-reports-products-table.php:35
 #: gallery.php:271 gallery.php:298 templates/account/downloads.php:19
-#: class-export-orders.php:17
+#: class-export-orders.php:19
 msgid "Orders"
 msgstr "Ordrer"
 
@@ -758,7 +758,7 @@ msgstr ""
 #: includes/admin/settings-fields.php:976
 #: includes/admin/settings-fields.php:986 includes/class-cart.php:1616
 #: templates/invoice/admin.php:164 templates/order/details.php:13
-#: class-export-orders.php:475
+#: class-export-orders.php:500
 msgid "Phone"
 msgstr "Telefon"
 
@@ -767,19 +767,19 @@ msgstr "Telefon"
 msgid "VAT Number"
 msgstr "CVR-nummer"
 
-#: includes/admin/class-privacy.php:192 class-export-orders.php:516
+#: includes/admin/class-privacy.php:192 class-export-orders.php:541
 msgid "Billing Address 1"
 msgstr "Faktureringsadresse"
 
-#: includes/admin/class-privacy.php:193 class-export-orders.php:517
+#: includes/admin/class-privacy.php:193 class-export-orders.php:542
 msgid "Billing Address 2"
 msgstr "Faktureringsadresse"
 
-#: includes/admin/class-privacy.php:194 class-export-orders.php:518
+#: includes/admin/class-privacy.php:194 class-export-orders.php:543
 msgid "Billing City"
 msgstr "Faktureringsby"
 
-#: includes/admin/class-privacy.php:195 class-export-orders.php:519
+#: includes/admin/class-privacy.php:195 class-export-orders.php:544
 msgid "Billing State"
 msgstr "Stat"
 
@@ -787,23 +787,23 @@ msgstr "Stat"
 msgid "Billing Postcode"
 msgstr "Betalers Postnummer"
 
-#: includes/admin/class-privacy.php:197 class-export-orders.php:521
+#: includes/admin/class-privacy.php:197 class-export-orders.php:546
 msgid "Billing Country"
 msgstr "Faktureringsland"
 
-#: includes/admin/class-privacy.php:198 class-export-orders.php:508
+#: includes/admin/class-privacy.php:198 class-export-orders.php:533
 msgid "Shipping Address 1"
 msgstr "Leveringsadresselinje 1"
 
-#: includes/admin/class-privacy.php:199 class-export-orders.php:509
+#: includes/admin/class-privacy.php:199 class-export-orders.php:534
 msgid "Shipping Address 2"
 msgstr "Leveringsadresselinje 2"
 
-#: includes/admin/class-privacy.php:200 class-export-orders.php:510
+#: includes/admin/class-privacy.php:200 class-export-orders.php:535
 msgid "Shipping City"
 msgstr "Forsendelses By"
 
-#: includes/admin/class-privacy.php:201 class-export-orders.php:511
+#: includes/admin/class-privacy.php:201 class-export-orders.php:536
 msgid "Shipping State"
 msgstr "Forsendelse Område"
 
@@ -811,7 +811,7 @@ msgstr "Forsendelse Område"
 msgid "Shipping Postcode"
 msgstr "Forsendelses Postnummer"
 
-#: includes/admin/class-privacy.php:203 class-export-orders.php:513
+#: includes/admin/class-privacy.php:203 class-export-orders.php:538
 msgid "Shipping Country"
 msgstr "Forsendelsesland"
 
@@ -827,7 +827,7 @@ msgstr "Konto kredit"
 msgid "Last Login"
 msgstr "Sidst logget ind"
 
-#: includes/admin/class-privacy.php:253 class-export-orders.php:462
+#: includes/admin/class-privacy.php:253 class-export-orders.php:487
 msgid "Order Number"
 msgstr "Ordrenummer"
 
@@ -865,7 +865,7 @@ msgid "Shipping Address"
 msgstr "Forsendelsesadresse"
 
 #: includes/admin/class-privacy.php:276 includes/admin/sunshine-order.php:720
-#: templates/invoice/admin.php:201 class-export-orders.php:522
+#: templates/invoice/admin.php:201 class-export-orders.php:547
 msgid "Customer Notes"
 msgstr "Kundebemærkninger"
 
@@ -1364,7 +1364,7 @@ msgstr "Produkter"
 #: includes/class-sunshinephotocart.php:369 includes/functions/account.php:404
 #: reports.php:5 class-admin-automated-emails.php:64 hooks.php:673
 #: templates/account/downloads.php:30 class-export-galleries.php:10
-#: class-export-orders.php:502
+#: class-export-orders.php:527
 msgid "Galleries"
 msgstr "Gallerier"
 
@@ -1372,7 +1372,7 @@ msgstr "Gallerier"
 #: includes/admin/sunshine-gallery.php:281
 #: includes/admin/sunshine-order.php:730 templates/store/product-details.php:21
 #: reports.php:6 hooks.php:681 class-export-galleries.php:16
-#: class-export-orders.php:501
+#: class-export-orders.php:526
 msgid "Images"
 msgstr "Billeder"
 
@@ -1617,7 +1617,7 @@ msgid "Disable promos throughout Sunshine Photo Cart"
 msgstr "Deaktiver kampagner i hele Sunshine Photo Cart"
 
 #: includes/admin/settings-fields.php:200
-#: includes/admin/sunshine-product.php:103 class-admin-automated-emails.php:138
+#: includes/admin/sunshine-product.php:103 class-admin-automated-emails.php:164
 #: class-admin-discounts.php:204 sell-anything.php:39
 #: class-admin-gift-cards.php:64
 msgid "General"
@@ -1652,7 +1652,7 @@ msgstr "URL'er"
 #: includes/class-sunshinephotocart.php:370
 #: includes/class-sunshinephotocart.php:372
 #: class-reports-galleries-table.php:36 gallery.php:277
-#: class-export-orders.php:578 messaging.php:148
+#: class-export-orders.php:603 messaging.php:148
 msgid "Gallery"
 msgstr "Galleri"
 
@@ -3025,7 +3025,7 @@ msgstr "Ingen e-mails indsamlet endnu"
 msgid "Add gallery name"
 msgstr "Tilføj galleriets navn"
 
-#: includes/admin/sunshine-order.php:106 class-admin-automated-emails.php:93
+#: includes/admin/sunshine-order.php:106 class-admin-automated-emails.php:119
 msgid "All"
 msgstr "Alle"
 
@@ -3080,7 +3080,7 @@ msgstr "Fjern personlige data"
 msgid "Select All"
 msgstr "Vælg alle"
 
-#: includes/admin/sunshine-order.php:421 includes/class-order.php:1009
+#: includes/admin/sunshine-order.php:421 includes/class-order.php:1013
 #: includes/class-sunshinephotocart.php:534 gallery.php:272 admin.php:237
 #: admin/customers.php:20 admin/customers.php:42 class-admin-gift-cards.php:189
 msgid "Order"
@@ -3097,7 +3097,7 @@ msgstr "Kunde"
 #: templates/email/admin-receipt.php:134
 #: templates/email/customer-receipt.php:138
 #: templates/email/order-status.php:106 templates/invoice/admin.php:169
-#: templates/order/details.php:22 class-export-orders.php:471
+#: templates/order/details.php:22 class-export-orders.php:496
 msgid "Payment Method"
 msgstr "Betalingsmetode"
 
@@ -3106,7 +3106,7 @@ msgstr "Betalingsmetode"
 #: templates/email/admin-receipt.php:124
 #: templates/email/customer-receipt.php:128 templates/email/order-status.php:96
 #: templates/invoice/admin.php:311 templates/order/totals.php:67
-#: class-export-orders.php:469
+#: class-export-orders.php:494
 msgid "Order Total"
 msgstr "Ordre total"
 
@@ -3171,8 +3171,8 @@ msgstr "Levering/forsendelsesmetode"
 
 #: includes/admin/sunshine-order.php:670
 #: includes/class-sunshinephotocart.php:583
-#: includes/class-sunshinephotocart.php:594 class-export-orders.php:464
-#: class-export-orders.php:556
+#: includes/class-sunshinephotocart.php:594 class-export-orders.php:489
+#: class-export-orders.php:581
 msgid "Order Status"
 msgstr "Ordrestatus"
 
@@ -3303,7 +3303,7 @@ msgstr "Forsendelse til %s"
 #: templates/email/admin-receipt.php:92 templates/email/customer-receipt.php:76
 #: templates/email/customer-receipt.php:96 templates/email/order-status.php:72
 #: templates/invoice/admin.php:279 templates/order/totals.php:43 admin.php:4
-#: discounts.php:34 discounts.php:46 class-export-orders.php:467
+#: discounts.php:34 discounts.php:46 class-export-orders.php:492
 msgid "Discounts"
 msgstr "Rabatter"
 
@@ -3818,13 +3818,13 @@ msgstr "Kontaktoplysninger"
 
 #: includes/class-cart.php:1571 includes/class-countries.php:3424
 #: includes/functions/account.php:542 templates/account/signup.php:20
-#: class-export-orders.php:472
+#: class-export-orders.php:497
 msgid "First Name"
 msgstr "Fornavn"
 
 #: includes/class-cart.php:1580 includes/class-countries.php:3433
 #: includes/functions/account.php:550 templates/account/signup.php:27
-#: class-export-orders.php:473
+#: class-export-orders.php:498
 msgid "Last Name"
 msgstr "Efternavn"
 
@@ -3840,7 +3840,7 @@ msgstr "Indstil eventuelt en adgangskode"
 #: includes/class-cart.php:1625 templates/email/admin-receipt.php:199
 #: templates/email/customer-receipt.php:185
 #: templates/email/order-status.php:153 templates/invoice/admin.php:184
-#: templates/order/details.php:39 class-export-orders.php:476
+#: templates/order/details.php:39 class-export-orders.php:501
 msgid "EU VAT Number"
 msgstr "EU-Moms nummer"
 
@@ -3849,7 +3849,7 @@ msgid "Delivery Method"
 msgstr "Leveringsmetode"
 
 #: includes/class-cart.php:1787 includes/class-cart.php:1804
-#: templates/invoice/admin.php:173 class-export-orders.php:470
+#: templates/invoice/admin.php:173 class-export-orders.php:495
 msgid "Shipping Method"
 msgstr "Leveringsmetode"
 
@@ -12844,8 +12844,8 @@ msgid "Sorry, you are not allowed to view this image"
 msgstr "Beklager, du har ikke tilladelse til at se dette billede"
 
 #: includes/class-frontend.php:964 includes/functions/comments.php:16
-#: includes/functions/image.php:278 includes/functions/store.php:131
-#: includes/functions/store.php:184 includes/functions/template.php:373
+#: includes/functions/image.php:278 includes/functions/store.php:133
+#: includes/functions/store.php:186 includes/functions/template.php:373
 msgid "Access denied"
 msgstr "Adgang nægtet"
 
@@ -12881,26 +12881,26 @@ msgid "You have been logged out"
 msgstr "Du er blevet logget ud"
 
 #. translators: %1$s is the previous order status, %2$s is the new order status
-#: includes/class-order.php:128
+#: includes/class-order.php:129
 #, php-format
 msgid "Status change from %1$s to %2$s"
 msgstr "Statusændring fra %1$s til %2$s"
 
 #. translators: %s is the order status name
-#: includes/class-order.php:132
+#: includes/class-order.php:133
 #, php-format
 msgid "Status set to %s"
 msgstr "Status indstillet til %s"
 
 #. translators: %s is the order number
-#: includes/class-order.php:219 includes/class-order.php:1036
+#: includes/class-order.php:220 includes/class-order.php:1040
 #, php-format
 msgid "Order #%s"
 msgstr "Ordre #%s"
 
 #. translators: %s is the refund amount formatted as price
 #. translators: %s: refund amount
-#: includes/class-order.php:894 includes/payment-methods/paypal.php:805
+#: includes/class-order.php:898 includes/payment-methods/paypal.php:805
 #: includes/payment-methods/paypal.php:807
 #: includes/payment-methods/square.php:1794
 #: includes/payment-methods/stripe.php:3365 class-authorizenet.php:472
@@ -13159,7 +13159,7 @@ msgstr "Adskil kategorier med komma"
 msgid "Choose from the most used categories"
 msgstr "Vælg blandt de mest benyttede kategorier"
 
-#: includes/class-sunshinephotocart.php:499
+#: includes/class-sunshinephotocart.php:499 class-admin-automated-emails.php:93
 msgid "Price Levels"
 msgstr "Prisniveauer"
 
@@ -13685,27 +13685,27 @@ msgstr "Dine valg er blevet gemt på din konto."
 msgid "Invalid image"
 msgstr "Ugyldigt billede"
 
-#: includes/functions/favorites.php:127
+#: includes/functions/favorites.php:128
 msgid "Could not add image to favorites"
 msgstr "Kunne ikke tilføje billede til favoritter"
 
-#: includes/functions/favorites.php:186
+#: includes/functions/favorites.php:187
 msgid "Guest favorites are not enabled"
 msgstr "Gæstefavoritter er ikke aktiveret"
 
-#: includes/functions/favorites.php:248
+#: includes/functions/favorites.php:249
 msgid "Favorites cleared"
 msgstr "Favoritter ryddet"
 
-#: includes/functions/favorites.php:258
+#: includes/functions/favorites.php:259
 msgid "Customer Profile"
 msgstr "Kundeprofil"
 
-#: includes/functions/favorites.php:271
+#: includes/functions/favorites.php:272
 msgid "Image File List"
 msgstr "Liste over billedfiler"
 
-#: includes/functions/favorites.php:282
+#: includes/functions/favorites.php:283
 msgid ""
 "Copy and paste the file names above into Lightroom's search feature (Library "
 "filter) to quickly find and create a new collection to make processing this "
@@ -13717,7 +13717,7 @@ msgstr ""
 "det lettere at behandle denne ordre. Sørg for, at du bruger søgeparameteren "
 "\"Indeholder\" (og ikke \"Indeholder alle\")."
 
-#: includes/functions/favorites.php:327
+#: includes/functions/favorites.php:328
 msgid ""
 "Images in your favorites have been removed because they are no longer "
 "available"
@@ -14493,7 +14493,7 @@ msgstr "Betal med kreditkort eller din PayPal-konto"
 #: includes/payment-methods/paypal.php:59
 #: includes/payment-methods/square.php:96
 #: includes/payment-methods/stripe.php:538 class-authorizenet.php:46
-#: class-export-orders.php:460 class-mollie.php:44 class-mercadopago-pro.php:37
+#: class-export-orders.php:485 class-mollie.php:44 class-mercadopago-pro.php:37
 #: class-mercadopago.php:42 class-payfast.php:35 class-paystack.php:39
 msgid "Mode"
 msgstr "Tilstand"
@@ -16177,7 +16177,7 @@ msgstr "Dit navn"
 msgid "Your Email"
 msgstr "Din e-mail"
 
-#: templates/favorites/share.php:15 class-admin-automated-emails.php:90
+#: templates/favorites/share.php:15 class-admin-automated-emails.php:116
 msgid "Recipients"
 msgstr "Modtagere"
 
@@ -17009,7 +17009,7 @@ msgid "Trigger"
 msgstr "Udløser"
 
 #: class-admin-automated-emails.php:67 hooks.php:154
-#: class-export-orders.php:594
+#: class-export-orders.php:619
 msgid "Search for a gallery"
 msgstr "Søg efter et galleri"
 
@@ -17021,56 +17021,62 @@ msgstr ""
 "Send kun denne e-mail for de valgte gallerier. Undergallerier er automatisk "
 "med. Lad feltet være tomt for at sende for alle gallerier."
 
-#: class-admin-automated-emails.php:84 admin/schedule.php:28
+#: class-admin-automated-emails.php:96
+msgid ""
+"Only send this email for galleries using the selected price levels. Leave "
+"empty to send for all price levels."
+msgstr "Send kun denne e-mail for gallerier, der bruger de valgte prisniveauer. Lad feltet være tomt for at sende for alle prisniveauer."
+
+#: class-admin-automated-emails.php:110 admin/schedule.php:28
 msgid "Time"
 msgstr "Tid"
 
-#: class-admin-automated-emails.php:86
+#: class-admin-automated-emails.php:112
 msgid "How long after/before the trigger should the email be sent?"
 msgstr "Hvor lang tid efter/før udløsningen skal e-mailen sendes?"
 
-#: class-admin-automated-emails.php:94
+#: class-admin-automated-emails.php:120
 msgid "User has favorites"
 msgstr "Brugeren har favoritter"
 
-#: class-admin-automated-emails.php:95
+#: class-admin-automated-emails.php:121
 msgid "User has no favorites"
 msgstr "Brugeren har ingen favoritter"
 
-#: class-admin-automated-emails.php:96
+#: class-admin-automated-emails.php:122
 msgid "User has items in cart"
 msgstr "Brugeren har varer i indkøbskurven"
 
-#: class-admin-automated-emails.php:97
+#: class-admin-automated-emails.php:123
 msgid "User has no items in cart"
 msgstr "Brugeren har ingen varer i kurven"
 
-#: class-admin-automated-emails.php:98
+#: class-admin-automated-emails.php:124
 msgid "User has ordered"
 msgstr "Brugeren har bestilt"
 
-#: class-admin-automated-emails.php:99
+#: class-admin-automated-emails.php:125
 msgid "User has no orders"
 msgstr "Brugeren har ingen ordrer"
 
-#: class-admin-automated-emails.php:100
+#: class-admin-automated-emails.php:126
 msgid "User has not ordered item from gallery"
 msgstr "Brugeren har ikke bestilt en vare fra galleriet"
 
-#: class-admin-automated-emails.php:102
+#: class-admin-automated-emails.php:128
 msgid "Select user attributes to determine who should receive this email"
 msgstr ""
 "Vælg brugerattributter for at bestemme, hvem der skal modtage denne e-mail"
 
-#: class-admin-automated-emails.php:102
+#: class-admin-automated-emails.php:128
 msgid "See examples"
 msgstr "Se eksempler"
 
-#: class-admin-automated-emails.php:106
+#: class-admin-automated-emails.php:132
 msgid "Notice, not marketing"
 msgstr "Besked, ikke markedsføring"
 
-#: class-admin-automated-emails.php:108
+#: class-admin-automated-emails.php:134
 msgid ""
 "Check this only if the email is a reminder or notice that does not try to "
 "sell anything, like a gallery expiring or a gallery being ready. The "
@@ -17078,13 +17084,19 @@ msgid ""
 "customers who unsubscribed. Adding a discount code makes it a marketing "
 "email, so leave this unchecked if you use one. You are responsible for "
 "following the email laws where you and your customers live."
-msgstr "Sæt kun flueben her, hvis e-mailen er en påmindelse eller besked, der ikke forsøger at sælge noget, fx at et galleri udløber, eller at et galleri er klar. Afmeldingslinket og afmeldings-headerne udelades, og e-mailen sendes stadig til kunder, der har afmeldt sig. Tilføjer du en rabatkode, bliver det en markedsførings-e-mail, så lad feltet være tomt, hvis du bruger en. Du er selv ansvarlig for at følge e-mail-lovene der, hvor du og dine kunder bor."
+msgstr ""
+"Sæt kun flueben her, hvis e-mailen er en påmindelse eller besked, der ikke "
+"forsøger at sælge noget, fx at et galleri udløber, eller at et galleri er "
+"klar. Afmeldingslinket og afmeldings-headerne udelades, og e-mailen sendes "
+"stadig til kunder, der har afmeldt sig. Tilføjer du en rabatkode, bliver det "
+"en markedsførings-e-mail, så lad feltet være tomt, hvis du bruger en. Du er "
+"selv ansvarlig for at følge e-mail-lovene der, hvor du og dine kunder bor."
 
-#: class-admin-automated-emails.php:114
+#: class-admin-automated-emails.php:140
 msgid "Discount (optional)"
 msgstr "Rabat (valgfri)"
 
-#: class-admin-automated-emails.php:116
+#: class-admin-automated-emails.php:142
 msgid ""
 "A unique coupon code will be generated based on the settings of the selected "
 "coupon and assigned to the specific user being emailed"
@@ -17092,11 +17104,11 @@ msgstr ""
 "En unik kuponkode vil blive genereret baseret på indstillingerne for den "
 "valgte kupon og tildelt den specifikke bruger, der modtager e-mailen"
 
-#: class-admin-automated-emails.php:120
+#: class-admin-automated-emails.php:146
 msgid "Discount Expiration (Optional)"
 msgstr "Udløb af rabat (valgfrit)"
 
-#: class-admin-automated-emails.php:122
+#: class-admin-automated-emails.php:148
 msgid ""
 "How long should the coupon code be valid for after being created? This will "
 "override any expiration date settings of the selected discount code"
@@ -17104,11 +17116,11 @@ msgstr ""
 "Hvor længe skal rabatkoden være gyldig, efter at den er oprettet? Dette vil "
 "tilsidesætte eventuelle udløbsdatoindstillinger for den valgte rabatkode"
 
-#: class-admin-automated-emails.php:160
+#: class-admin-automated-emails.php:186
 msgid "Gallery tags"
 msgstr "Galleritags"
 
-#: class-admin-automated-emails.php:169
+#: class-admin-automated-emails.php:195
 msgid "Order tags"
 msgstr "Ordretags"
 
@@ -17249,12 +17261,12 @@ msgid "After gallery is published"
 msgstr "Efter galleriet er udgivet"
 
 #. translators: %1$s: email name, %2$s: recipient email address
-#: common.php:256
+#: common.php:287
 #, php-format
 msgid "%1$s for %2$s"
 msgstr "%1$s i %2$s"
 
-#: common.php:329
+#: common.php:360
 msgid "Queue processed!"
 msgstr "Køen er behandlet!"
 
@@ -18712,7 +18724,7 @@ msgstr "Eksportér data til CSV"
 msgid "Gallery ID"
 msgstr "Galleri ID"
 
-#: class-export-galleries.php:13 class-export-orders.php:486
+#: class-export-galleries.php:13 class-export-orders.php:511
 msgid "Gallery Name"
 msgstr "Gallerinavn"
 
@@ -18736,11 +18748,11 @@ msgstr "Hint til adgangskoden"
 msgid "Expiration Date"
 msgstr "Udløbsdato"
 
-#: class-export-galleries.php:156 class-export-orders.php:572
+#: class-export-galleries.php:156 class-export-orders.php:597
 msgid "Dates"
 msgstr "Datoer"
 
-#: class-export-galleries.php:158 class-export-orders.php:574
+#: class-export-galleries.php:158 class-export-orders.php:599
 msgid "to"
 msgstr "til"
 
@@ -18748,97 +18760,97 @@ msgstr "til"
 msgid "Export"
 msgstr "Eksporter"
 
-#: class-export-orders.php:461
+#: class-export-orders.php:486
 msgid "Order ID"
 msgstr "Ordre ID"
 
-#: class-export-orders.php:463
+#: class-export-orders.php:488
 msgid "Order Date"
 msgstr "Ordredato"
 
-#: class-export-orders.php:465
+#: class-export-orders.php:490
 msgid "Order Subtotal"
 msgstr "Ordre subtotal"
 
-#: class-export-orders.php:466
+#: class-export-orders.php:491
 msgid "Order Tax"
 msgstr "Ordre moms"
 
-#: class-export-orders.php:468
+#: class-export-orders.php:493
 msgid "Shipping Cost"
 msgstr "Leveringsomkostninger"
 
-#: class-export-orders.php:482
+#: class-export-orders.php:507
 msgid "Product Name"
 msgstr "Produktnavn"
 
-#: class-export-orders.php:483
+#: class-export-orders.php:508
 msgid "Product Qty"
 msgstr "Produktantal"
 
-#: class-export-orders.php:484 product-options.php:43
+#: class-export-orders.php:509 product-options.php:43
 msgid "Product Options"
 msgstr "Produkt indstillinger"
 
-#: class-export-orders.php:485
+#: class-export-orders.php:510
 msgid "Image File Name"
 msgstr "Billedfilnavn"
 
 #. translators: %d: product number
-#: class-export-orders.php:492
+#: class-export-orders.php:517
 #, php-format
 msgid "Product %d Name"
 msgstr "Produkt %d Navn"
 
 #. translators: %d: product number
-#: class-export-orders.php:494
+#: class-export-orders.php:519
 #, php-format
 msgid "Product %d Qty"
 msgstr "Produkt %d Antal"
 
 #. translators: %d: product number
-#: class-export-orders.php:496
+#: class-export-orders.php:521
 #, php-format
 msgid "Product %d Options"
 msgstr "Produkt %d Valgmuligheder"
 
-#: class-export-orders.php:500
+#: class-export-orders.php:525
 msgid "Product(s)"
 msgstr "Produkt(er)"
 
-#: class-export-orders.php:506
+#: class-export-orders.php:531
 msgid "Shipping First Name"
 msgstr "Forsendelses Fornavn"
 
-#: class-export-orders.php:507
+#: class-export-orders.php:532
 msgid "Shipping Last Name"
 msgstr "Forsendelses Efternavn"
 
-#: class-export-orders.php:512
+#: class-export-orders.php:537
 msgid "Shipping Zip"
 msgstr "Forsendelsespostnummer"
 
-#: class-export-orders.php:514
+#: class-export-orders.php:539
 msgid "Billing First Name"
 msgstr "Fornavn"
 
-#: class-export-orders.php:515
+#: class-export-orders.php:540
 msgid "Billing Last Name"
 msgstr "Efternavn"
 
-#: class-export-orders.php:520
+#: class-export-orders.php:545
 msgid "Billing Zip"
 msgstr "Betalingspostnr"
 
-#: class-export-orders.php:534
+#: class-export-orders.php:559
 msgid "Line Item Format"
 msgstr "Linjeformat"
 
-#: class-export-orders.php:538
+#: class-export-orders.php:563
 msgid "Combined"
 msgstr "Kombineret"
 
-#: class-export-orders.php:540
+#: class-export-orders.php:565
 msgid ""
 "One row per order. All products listed in a single \"Products\" column, "
 "separated by commas."
@@ -18846,11 +18858,11 @@ msgstr ""
 "Én række pr. ordre. Alle produkter angives i en enkelt kolonne med titlen "
 "\"Produkter\" og adskilles med kommaer."
 
-#: class-export-orders.php:544
+#: class-export-orders.php:569
 msgid "Separate Rows"
 msgstr "Separate rækker"
 
-#: class-export-orders.php:546
+#: class-export-orders.php:571
 msgid ""
 "One row per line item. Order information is repeated for each product. Best "
 "for analyzing individual items."
@@ -18858,11 +18870,11 @@ msgstr ""
 "Én række pr. linjepost. Ordreoplysningerne gentages for hvert produkt. Bedst "
 "til analyse af individuelle varer."
 
-#: class-export-orders.php:550
+#: class-export-orders.php:575
 msgid "Separate Columns"
 msgstr "Separate kolonner"
 
-#: class-export-orders.php:552
+#: class-export-orders.php:577
 msgid ""
 "One row per order. Each product gets its own columns (Product 1 Name, "
 "Product 1 Qty, Product 2 Name, etc.). Column count varies based on the order "
@@ -18872,11 +18884,11 @@ msgstr ""
 "Produkt 1 Antal, Produkt 2 Navn osv.). Antallet af kolonner varierer "
 "afhængigt af den ordre, der indeholder flest varer."
 
-#: class-export-orders.php:581
+#: class-export-orders.php:606
 msgid "Any gallery"
 msgstr "Ethvert galleri"
 
-#: class-export-orders.php:584
+#: class-export-orders.php:609
 msgid "Will include all child galleries as well"
 msgstr "Vil også omfatte alle børnegallerier"
 
@@ -22061,7 +22073,12 @@ msgid ""
 "public thumbnails load faster. To allow them, open your bucket in Google "
 "Cloud Console → Permissions → Public access prevention → set it to \"Not "
 "enforced\", then run this test again."
-msgstr "Advarsel: Din bucket blokerer offentlige filer (Public access prevention er slået til). Alle billeder leveres i stedet via signerede links. Det virker, men offentlige miniaturer indlæses hurtigere. For at tillade dem skal du åbne din bucket i Google Cloud Console → Permissions → Public access prevention → sætte den til \"Not enforced\" og køre testen igen."
+msgstr ""
+"Advarsel: Din bucket blokerer offentlige filer (Public access prevention er "
+"slået til). Alle billeder leveres i stedet via signerede links. Det virker, "
+"men offentlige miniaturer indlæses hurtigere. For at tillade dem skal du "
+"åbne din bucket i Google Cloud Console → Permissions → Public access "
+"prevention → sætte den til \"Not enforced\" og køre testen igen."
 
 #: includes/class-cloud-storage-client-s3.php:168
 msgid " Note: ACLs were automatically enabled on your bucket."
