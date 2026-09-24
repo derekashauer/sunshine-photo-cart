@@ -1,6 +1,32 @@
 <?php
 function sunshine_get_orders( $args = array(), $mode = 'live' ) {
 
+	$orders = get_posts( sunshine_get_order_query_args( $args, $mode ) );
+	return array_map( 'sunshine_get_order', $orders );
+
+}
+
+/**
+ * Order IDs only, without building an SPC_Order for each one.
+ *
+ * Every SPC_Order loads and unserializes all of its post meta on construction,
+ * so anything that only needs to count orders or drive a secondary query should
+ * use this instead of sunshine_get_orders(). Takes the same arguments.
+ */
+function sunshine_get_order_ids( $args = array(), $mode = 'live' ) {
+
+	$args           = sunshine_get_order_query_args( $args, $mode );
+	$args['fields'] = 'ids';
+
+	return array_map( 'intval', get_posts( $args ) );
+
+}
+
+/**
+ * Translate the friendly sunshine_get_orders() arguments into WP_Query arguments.
+ */
+function sunshine_get_order_query_args( $args = array(), $mode = 'live' ) {
+
 	$defaults = array(
 		'nopaging'   => ( empty( $args['posts_per_page'] ) ) ? true : false,
 		'date_query' => array( 'inclusive' => true ),
@@ -68,8 +94,7 @@ function sunshine_get_orders( $args = array(), $mode = 'live' ) {
 
 	$args = apply_filters( 'sunshine_get_order_args', $args );
 
-	$orders = get_posts( $args );
-	return array_map( 'sunshine_get_order', $orders );
+	return $args;
 
 }
 

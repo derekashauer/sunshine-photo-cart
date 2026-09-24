@@ -69,8 +69,10 @@ function sunshine_get_sources( $product, $gallery ) {
 			$source_galleries = array_merge( $source_galleries, $galleries );
 		}
 	} else {
-		// Fallback to all accessible galleries if nothing is selected.
-		$source_galleries = sunshine_get_galleries( array( 'meta_query' => array() ) );
+		// Fallback to all accessible galleries if nothing is selected. Look up
+		// visible IDs first so a site with many galleries doesn't load them all.
+		$result           = sunshine_get_galleries_paginated( array( 'meta_query' => array() ) );
+		$source_galleries = $result['galleries'];
 	}
 
 	if ( ! array_key_exists( $gallery->get_id(), $source_galleries ) ) {

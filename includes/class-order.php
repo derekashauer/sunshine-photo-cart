@@ -3,6 +3,7 @@ class SPC_Order extends Sunshine_Data {
 
 	protected $post_type = 'sunshine-order';
 	protected $status;
+	protected $customer;
 	protected $cart = array();
 	protected $meta = array(
 		'cart'                 => array(),
@@ -237,11 +238,14 @@ class SPC_Order extends Sunshine_Data {
 
 	// Return a SPC_Customer for user tied to this order
 	function get_customer() {
-		$customer_id = $this->get_customer_id();
-		if ( $customer_id ) {
-			return new SPC_Customer( $customer_id );
+		if ( isset( $this->customer ) ) {
+			return $this->customer;
 		}
-		return false;
+		$customer_id = $this->get_customer_id();
+		// Each SPC_Customer loads all of the user's meta, and several getters on this
+		// class call get_customer(), so build it once per order.
+		$this->customer = ( $customer_id ) ? new SPC_Customer( $customer_id ) : false;
+		return $this->customer;
 	}
 
 	// Return a WP_User for the user tied to this order
