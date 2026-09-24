@@ -14,6 +14,10 @@ class SPC_Session {
 	protected $started = false;
 	protected $dirty   = false;
 
+	// Navigation hints saved on every gallery view. Useful once a visitor has a session,
+	// but never a reason to create one or keep one alive, or galleries could not be cached.
+	protected $passive_keys = array( 'last_gallery', 'current_gallery_page' );
+
 	public function __construct() {
 
 		add_action( 'sunshine_session_garbage_collection', array( $this, 'cleanup' ) );
@@ -175,7 +179,10 @@ class SPC_Session {
 	 */
 	protected function has_data() {
 
-		foreach ( $this->data as $value ) {
+		foreach ( $this->data as $key => $value ) {
+			if ( in_array( $key, $this->passive_keys, true ) ) {
+				continue;
+			}
 			if ( ! empty( $value ) && '[]' !== $value && '{}' !== $value ) {
 				return true;
 			}
@@ -407,7 +414,9 @@ class SPC_Session {
 
 		$key = sanitize_key( $key );
 
-		if ( $this->is_meaningful( $value ) ) {
+		// Logged in visitors already skip page caches, so any value may start their session
+		$passive = ! is_user_logged_in() && in_array( $key, $this->passive_keys, true );
+		if ( ! $passive && $this->is_meaningful( $value ) ) {
 			$this->start();
 		}
 

@@ -455,6 +455,12 @@ class SPC_Cart {
 		$this->update_cart();
 		$this->update();
 
+		// A guest's gallery views are not remembered until they have a session, so make
+		// sure the cart can link back to the gallery this item came from.
+		if ( $gallery && ! SPC()->session->get( 'last_gallery' ) ) {
+			SPC()->session->set( 'last_gallery', $gallery->get_id() );
+		}
+
 		do_action( 'sunshine_add_cart_item', $item );
 
 		SPC()->log( 'Item added to cart: ' . json_encode( $item ) );
