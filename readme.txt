@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 3.7.1
+Stable tag: 3.7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,7 +243,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.7.2 =
+= 3.7.2 - September 24, 2026 =
 * Fix: The "Check your system information" link in the images-waiting warning opened a page that no longer exists. It now opens Tools > Site Health > Info, where the image queue details (images waiting, queue running, next run) have been added to the Sunshine section
 * Fix: A background image queue that lost its scheduled task is now rescheduled automatically on the next admin page load, instead of waiting for another upload. The warning now only shows when WordPress cron genuinely has not run, and says how long it has been
 * Change: The old Sunshine System Info page, unreachable since its menu entry was removed, is now deleted. Site Health is the one place for system information
