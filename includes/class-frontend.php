@@ -1213,9 +1213,49 @@ class SPC_Frontend {
 	}
 
 	public function no_cache() {
-		if ( is_sunshine() && ! defined( 'DONOTCACHEPAGE' ) ) {
+		if ( ! is_sunshine() ) {
+			return;
+		}
+
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 			define( 'DONOTCACHEPAGE', true );
 		}
+
+		// DONOTCACHEPAGE is only visible to caching plugins running inside PHP. Server
+		// level caches sit in front of PHP and need response headers to skip a page.
+		if ( $this->is_personal_page() ) {
+			nocache_headers();
+		}
+	}
+
+	/**
+	 * Whether the current page shows content that belongs to one visitor only and must
+	 * never be handed to the next visitor from a cache.
+	 *
+	 * @return bool
+	 */
+	public function is_personal_page() {
+		global $post;
+
+		// Any Sunshine page becomes personal once this visitor has something to remember,
+		// such as a cart item, a favorite, or a gallery password they entered.
+		if ( defined( 'SUNSHINE_SESSION_COOKIE' ) && isset( $_COOKIE[ SUNSHINE_SESSION_COOKIE ] ) ) {
+			return true;
+		}
+
+		$personal_pages = apply_filters( 'sunshine_personal_pages', array( 'account', 'cart', 'checkout', 'favorites' ) );
+
+		if ( ! empty( $post ) ) {
+			foreach ( $personal_pages as $page ) {
+				// Compared against the page ID rather than is_sunshine_page() so the order
+				// received view of the checkout page is covered too.
+				if ( SPC()->get_page( $page ) == $post->ID ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	public function post_thumbnail_size( $size, $post_id ) {
