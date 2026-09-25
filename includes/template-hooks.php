@@ -365,9 +365,9 @@ function sunshine_display_account() {
 	}
 	if ( is_user_logged_in() ) {
 		sunshine_get_template( 'account/account', array( 'endpoint' => $this_endpoint ) );
-	} elseif ( SPC()->get_option( 'account_login_endpoint' ) === $this_endpoint ) {
+	} elseif ( $items['login'] === $this_endpoint ) {
 		sunshine_get_template( 'account/login' );
-	} elseif ( SPC()->get_option( 'account_reset_password_endpoint' ) === $this_endpoint && isset( $_GET['key'] ) && isset( $_GET['login'] ) ) {
+	} elseif ( $items['reset-password'] === $this_endpoint && isset( $_GET['key'] ) && isset( $_GET['login'] ) ) {
 		$key     = sanitize_text_field( $_GET['key'] );
 		$login   = sanitize_text_field( $_GET['login'] );
 		$allowed = check_password_reset_key( $key, $login );
