@@ -245,6 +245,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 = 3.7.3 =
 * Fix: Viewing a gallery no longer gives a guest a session cookie, so galleries can be served from a page cache until the visitor adds to their cart, saves a favorite, or enters a gallery password. The cart's "Return to gallery" link still points to the gallery the item came from
+* Fix: The "Set your password" link in new account emails, including accounts created during bulk gallery creation, and password reset links showed the login/register screen instead of the new password form on sites where the account URL settings had never been saved
 
 = 3.7.2 - September 24, 2026 =
 * Fix: The "Check your system information" link in the images-waiting warning opened a page that no longer exists. It now opens Tools > Site Health > Info, where the image queue details (images waiting, queue running, next run) have been added to the Sunshine section
