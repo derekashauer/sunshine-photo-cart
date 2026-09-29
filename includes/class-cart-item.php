@@ -144,6 +144,8 @@ class SPC_Cart_Item {
 			$this->tax = $item['tax'];
 		} else {
 			$tax_rate = SPC()->cart->get_tax_rate();
+			// Lets custom code charge a different rate on some items, e.g. a reduced VAT rate on prints.
+			$tax_rate = apply_filters( 'sunshine_cart_item_tax_rate', $tax_rate, $this );
 			// Only do if we have a price, product is taxable and we have a matched tax rate.
 			if ( $this->price && $this->taxable && ! empty( $tax_rate ) ) {
 				$price_has_tax = SPC()->get_option( 'price_has_tax' );
