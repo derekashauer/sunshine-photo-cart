@@ -140,6 +140,60 @@ function sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $file_pa
 	return $metadata;
 }
 
+/**
+ * Save the parts of a photo's embedded metadata that Sunshine uses.
+ *
+ * The title and caption become the attachment title and excerpt, the capture
+ * date drives "shoot order" sorting, and the keywords are what gallery search
+ * matches against. Every import path runs its metadata through here so a photo
+ * behaves the same no matter how it got into the gallery, and Refresh Photo
+ * Details runs existing photos through it again.
+ *
+ * Call it before saving the attachment metadata, and save what it returns: the
+ * image_meta goes into the attachment metadata too, which is where the admin
+ * Keywords field reads it from.
+ *
+ * @param int         $attachment_id The attachment ID.
+ * @param array|false $image_meta    The image_meta array from wp_read_image_metadata().
+ * @param array       $metadata      The attachment metadata about to be saved.
+ * @return array The attachment metadata with image_meta added.
+ */
+function sunshine_apply_image_meta( $attachment_id, $image_meta, $metadata = array() ) {
+	if ( ! is_array( $image_meta ) ) {
+		$image_meta = array();
+	}
+	$metadata['image_meta'] = $image_meta;
+
+	$update_args = array();
+	$image_title = isset( $image_meta['title'] ) ? trim( (string) $image_meta['title'] ) : '';
+	if ( '' !== $image_title ) {
+		$update_args['post_title'] = $image_title;
+	}
+	$image_caption = isset( $image_meta['caption'] ) ? trim( (string) $image_meta['caption'] ) : '';
+	if ( '' !== $image_caption ) {
+		$update_args['post_excerpt'] = $image_caption;
+	}
+	if ( ! empty( $update_args ) ) {
+		$update_args['ID'] = $attachment_id;
+		wp_update_post( $update_args );
+	}
+
+	if ( ! empty( $image_meta['created_timestamp'] ) ) {
+		$created_timestamp = $image_meta['created_timestamp'];
+	} else {
+		$created_timestamp = current_time( 'timestamp' );
+	}
+
+	// Update rather than add, so running a photo through here again (Refresh
+	// Photo Details) replaces the old values instead of stacking up copies.
+	update_post_meta( $attachment_id, 'created_timestamp', $created_timestamp );
+	if ( ! empty( $image_meta['keywords'] ) && is_array( $image_meta['keywords'] ) ) {
+		update_post_meta( $attachment_id, 'sunshine_keywords', implode( ', ', $image_meta['keywords'] ) );
+	}
+
+	return $metadata;
+}
+
 function sunshine_get_image_file_name( $image_id ) {
 	return get_post_meta( $image_id, 'sunshine_file_name', true );
 }

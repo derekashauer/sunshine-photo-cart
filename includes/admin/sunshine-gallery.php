@@ -1252,32 +1252,8 @@ function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json
 			}
 		}
 
-		$image_meta  = $attachment_image_meta['image_meta'];
-		$update_args = array();
-		$image_title = isset( $image_meta['title'] ) ? trim( (string) $image_meta['title'] ) : '';
-		if ( '' !== $image_title ) {
-			$update_args['post_title'] = $image_title;
-		}
-		$image_caption = isset( $image_meta['caption'] ) ? trim( (string) $image_meta['caption'] ) : '';
-		if ( '' !== $image_caption ) {
-			$update_args['post_excerpt'] = $image_caption;
-		}
-		if ( ! empty( $update_args ) ) {
-			$update_args['ID'] = $attachment_id;
-			wp_update_post( $update_args );
-		}
-
-		if ( ! empty( $image_meta['created_timestamp'] ) ) {
-			$created_timestamp = $image_meta['created_timestamp'];
-		} else {
-			$created_timestamp = current_time( 'timestamp' );
-		}
-
-		add_post_meta( $attachment_id, 'created_timestamp', $created_timestamp );
+		$attachment_image_meta = sunshine_apply_image_meta( $attachment_id, $attachment_image_meta['image_meta'], $attachment_image_meta );
 		add_post_meta( $attachment_id, 'sunshine_file_name', $original_file_name );
-		if ( ! empty( $image_meta['keywords'] ) && is_array( $image_meta['keywords'] ) ) {
-			add_post_meta( $attachment_id, 'sunshine_keywords', implode( ', ', $image_meta['keywords'] ) );
-		}
 		$apply_watermark = ( ! empty( $watermark ) ) ? 1 : 0;
 		add_post_meta( $attachment_id, 'sunshine_watermark', $apply_watermark );
 
