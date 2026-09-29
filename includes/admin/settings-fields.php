@@ -1575,7 +1575,7 @@ function sunshine_get_settings_fields() {
 	}
 	$settings[] = array(
 		'id'     => 'privacy',
-		'title'  => __( 'Privacy', 'sunshine-photo-cart' ),
+		'title'  => __( 'Privacy & Data', 'sunshine-photo-cart' ),
 		'fields' => $privacy_fields,
 	);
 
@@ -1606,7 +1606,7 @@ function sunshine_get_settings_fields() {
 
 	$settings[] = array(
 		'id'          => 'data',
-		'title'       => __( 'Data', 'sunshine-photo-cart' ),
+		'title'       => __( 'Usage Tracking', 'sunshine-photo-cart' ),
 		'fields'      => $data_fields,
 		'description' => __( 'This data can help provide useful information to Sunshine Photo Cart and help guide new features and growth strategies. Your participation is extremely appreciated!', 'sunshine-photo-cart' ),
 	);
