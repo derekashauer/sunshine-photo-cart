@@ -51,6 +51,7 @@ class Sunshine_Admin {
 		// Check that Sunshine has been installed.
 		add_action( 'admin_notices', array( $this, 'install_notice' ), 5 );
 		add_action( 'admin_notices', array( $this, 'image_queue_notice' ), 5 );
+		add_action( 'admin_notices', array( $this, 'watermark_missing_notice' ), 5 );
 
 		// In-app promos from sunshinephotocart.com
 		add_action( 'admin_notices', array( $this, 'in_app_promos' ), 4 );
@@ -587,6 +588,38 @@ class Sunshine_Admin {
 			/* translators: %s is the URL to settings page */
 			SPC()->notices->add_admin( 'log', sprintf( __( 'Sunshine logging is enabled. <a href="%s">Please disable when no longer in use.</a>', 'sunshine-photo-cart' ), admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine' ) ), 'notice' );
 		}
+	}
+
+	/**
+	 * Warn when the watermark image is set but its file is not on this server.
+	 *
+	 * Watermarking reads the file from disk. If it was moved to cloud storage or
+	 * deleted, images are processed without a watermark and nothing else says so.
+	 */
+	function watermark_missing_notice() {
+		if ( ! current_user_can( 'sunshine_manage_options' ) ) {
+			return;
+		}
+
+		$watermark_image_id = SPC()->get_option( 'watermark_image' );
+		if ( empty( $watermark_image_id ) ) {
+			return;
+		}
+
+		$watermark_file = get_attached_file( $watermark_image_id );
+		if ( $watermark_file && file_exists( $watermark_file ) ) {
+			return;
+		}
+
+		SPC()->notices->add_admin(
+			'watermark_missing',
+			sprintf(
+				/* translators: %s is the URL to the Galleries settings page */
+				__( 'Your watermark image file could not be found on this server, so new images are not being watermarked. <a href="%s">Upload the watermark image again</a>.', 'sunshine-photo-cart' ),
+				admin_url( 'admin.php?page=sunshine&section=galleries' )
+			),
+			'error'
+		);
 	}
 
 	/**

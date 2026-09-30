@@ -80,6 +80,8 @@ function sunshine_watermark_image( $attachment_id, $metadata = array(), $passed_
 				SPC()->log( 'Watermarking thumbnail: ' . $thumb_path );
 			}
 
+		} else {
+			SPC()->log( 'Watermark image not found on the server, image ' . $attachment_id . ' was not watermarked: ' . $watermark_image );
 		}
 	}
 }
