@@ -248,6 +248,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: The "Set your password" link in new account emails, including accounts created during bulk gallery creation, and password reset links showed the login/register screen instead of the new password form on sites where the account URL settings had never been saved
 * New: `sunshine_cart_item_tax_rate` filter to charge a different tax rate on individual cart items, such as a reduced VAT rate on some products
 * Tweak: Renamed the Privacy settings tab to Privacy & Data, and the Data tab to Usage Tracking
+* Fix: A license check that got back a page that wasn't license data, such as a firewall or maintenance page, no longer wipes the saved license status and expiration for every addon, and no longer logs PHP warnings
 
 = 3.7.2 - September 24, 2026 =
 * Fix: The "Check your system information" link in the images-waiting warning opened a page that no longer exists. It now opens Tools > Site Health > Info, where the image queue details (images waiting, queue running, next run) have been added to the Sunshine section

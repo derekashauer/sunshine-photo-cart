@@ -420,7 +420,14 @@ class SPC_License {
 			)
 		);
 
-		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+		// A 200 that isn't license data (a firewall challenge or maintenance page) is a
+		// failed check too. Treating it as a success would wipe the saved license status.
+		$license_data = null;
+		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+		}
+
+		if ( ! is_object( $license_data ) || ! isset( $license_data->license ) ) {
 
 			if ( is_wp_error( $response ) ) {
 				$message = $response->get_error_message();
@@ -428,12 +435,12 @@ class SPC_License {
 				$message = __( 'Unknown error occured', 'sunshine-photo-cart' );
 			}
 
+			SPC()->log( 'License check failed for ' . $this->name . ': ' . $message );
+
 			/* translators: %1$s is the product name, %2$s is the error message */
 			SPC()->notices->add_admin( $this->id . '_license_update_fail', sprintf( __( 'License for %1$s failed to be updated: %2$s', 'sunshine-photo-cart' ), $this->name, $message ) );
 
 		} else {
-
-			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 			if ( false === $license_data->success ) {
 				SPC()->update_option( 'license_expiration_' . $this->id, '' );
