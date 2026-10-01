@@ -72,6 +72,13 @@ class SPC_Shipping_Method {
 	protected $needs_shipping_address = true;
 
 	/**
+	 * Whether products' Extra Shipping Cost is added to this method's price.
+	 *
+	 * @var boolean
+	 */
+	protected $adds_product_shipping = true;
+
+	/**
 	 * Shipping price.
 	 *
 	 * @var float
@@ -348,7 +355,7 @@ class SPC_Shipping_Method {
 			}
 
 			// Add product shipping costs.
-			if ( ! SPC()->cart->is_empty() ) {
+			if ( $this->adds_product_shipping && ! SPC()->cart->is_empty() ) {
 				foreach ( SPC()->cart->get_cart_items() as $item ) {
 					$product_shipping = floatval( $item->product->get_shipping() );
 					if ( $product_shipping ) {

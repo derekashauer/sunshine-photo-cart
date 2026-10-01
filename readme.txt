@@ -250,6 +250,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Tweak: Renamed the Privacy settings tab to Privacy & Data, and the Data tab to Usage Tracking
 * Fix: When the watermark image file is missing from the server (for example after it was moved to cloud storage), an admin notice now says new images aren't being watermarked, and the Sunshine log records each image that was skipped. Before, images were processed without a watermark and nothing said so
 * Fix: A license check that got back a page that wasn't license data, such as a firewall or maintenance page, no longer wipes the saved license status and expiration for every addon, and no longer logs PHP warnings
+* Fix: Pickup no longer adds products' Extra Shipping Cost to its price. Since 3.6.10, a Pickup set to 0 could charge the extra cost for each large item in the cart
 
 = 3.7.2 - September 24, 2026 =
 * Fix: The "Check your system information" link in the images-waiting warning opened a page that no longer exists. It now opens Tools > Site Health > Info, where the image queue details (images waiting, queue running, next run) have been added to the Sunshine section

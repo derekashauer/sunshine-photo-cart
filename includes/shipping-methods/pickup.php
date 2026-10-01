@@ -8,6 +8,7 @@ class SPC_Shipping_Method_Pickup extends SPC_Shipping_Method {
 		$this->class                  = 'SPC_Shipping_Method_Pickup';
 		$this->can_be_cloned          = true;
 		$this->needs_shipping_address = false;
+		$this->adds_product_shipping  = false;
 	}
 
 	public function options( $fields, $instance_id ) {
