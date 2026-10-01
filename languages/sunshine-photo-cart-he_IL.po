@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-09-24T18:22:53+00:00\n"
+"POT-Creation-Date: 2026-10-01T18:55:37+00:00\n"
 "PO-Revision-Date: 2026-03-02 20:27-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -76,7 +76,7 @@ msgstr ""
 "ל-SunshinePhotoCart.com: %s"
 
 #: includes/admin/addons.php:77 includes/admin/class-license.php:270
-#: includes/admin/class-license.php:428 class-paystack.php:196
+#: includes/admin/class-license.php:435 class-paystack.php:196
 msgid "Unknown error occured"
 msgstr "אירעה שגיאה לא ידועה"
 
@@ -162,7 +162,7 @@ msgid "Meta Box"
 msgstr "תיבת ניתוח על"
 
 #: includes/admin/class-admin-meta-box.php:137
-#: includes/admin/class-admin.php:255 includes/admin/class-options.php:160
+#: includes/admin/class-admin.php:256 includes/admin/class-options.php:160
 #: includes/admin/class-options.php:525
 msgid "Documentation"
 msgstr "תיעוד"
@@ -264,64 +264,64 @@ msgstr "חיפוש לקוחות"
 msgid "Edit on the full screen."
 msgstr "ערוך במסך מלא."
 
-#: includes/admin/class-admin.php:259
+#: includes/admin/class-admin.php:260
 msgid "Write a Review"
 msgstr "כתיבת חוות דעת"
 
-#: includes/admin/class-admin.php:263 includes/admin/class-admin.php:996
+#: includes/admin/class-admin.php:264 includes/admin/class-admin.php:1029
 msgid "Upgrade"
 msgstr "עדכון"
 
-#: includes/admin/class-admin.php:270
+#: includes/admin/class-admin.php:271
 msgid "Submit Support Ticket"
 msgstr "שלח כרטיס תמיכה"
 
-#: includes/admin/class-admin.php:308
+#: includes/admin/class-admin.php:309
 msgid "This add-on could not be turned on. Please try again."
 msgstr "לא ניתן היה להפעיל את התוסף הזה. נסה שוב."
 
-#: includes/admin/class-admin.php:309
+#: includes/admin/class-admin.php:310
 msgid ""
 "Could not reach your site to turn on this add-on. Please reload the page and "
 "try again."
 msgstr ""
 "לא הצלחנו להגיע לאתר שלך כדי להפעיל את התוסף הזה. רענן את הדף ונסה שוב."
 
-#: includes/admin/class-admin.php:338
+#: includes/admin/class-admin.php:339
 msgid "Sunshine Main Page"
 msgstr "עמוד ראשי של Sunshine"
 
-#: includes/admin/class-admin.php:339
+#: includes/admin/class-admin.php:340
 msgid "Sunshine Account"
 msgstr "חשבון Sunshine"
 
-#: includes/admin/class-admin.php:340
+#: includes/admin/class-admin.php:341
 msgid "Sunshine Cart"
 msgstr "עגלת שמש"
 
-#: includes/admin/class-admin.php:341
+#: includes/admin/class-admin.php:342
 msgid "Sunshine Checkout"
 msgstr "Sunshine Checkout"
 
-#: includes/admin/class-admin.php:342 includes/functions/favorites.php:270
+#: includes/admin/class-admin.php:343 includes/functions/favorites.php:270
 msgid "Sunshine Favorites"
 msgstr "מועדפי שמש"
 
-#: includes/admin/class-admin.php:343
+#: includes/admin/class-admin.php:344
 msgid "Sunshine Terms & Conditions"
 msgstr "תנאים והגבלות של Sunshine"
 
-#: includes/admin/class-admin.php:404 includes/admin/class-options.php:59
+#: includes/admin/class-admin.php:405 includes/admin/class-options.php:59
 #: class-admin-gift-cards.php:10
 msgid "Settings"
 msgstr "הגדרות"
 
-#: includes/admin/class-admin.php:412
+#: includes/admin/class-admin.php:413
 msgid "Go Pro"
 msgstr "שדרג ל-Pro"
 
 #. translators: %1$s is the URL to the Sunshine Photo Cart website, %2$s is the URL to the WordPress.org plugin reviews page
-#: includes/admin/class-admin.php:425
+#: includes/admin/class-admin.php:426
 #, php-format
 msgid ""
 "Thank you for using <a href=\"%1$s\" target=\"_blank\">Sunshine Photo Cart</"
@@ -332,11 +332,11 @@ msgstr ""
 "a> ! אנא <a href=\"%2$s\" target=\"_blank\">דרג אותנו</a> ב- <a "
 "href=\"%2$s\" target=\"_blank\">WordPress.org</a>"
 
-#: includes/admin/class-admin.php:534
+#: includes/admin/class-admin.php:535
 msgid "View Sunshine Galleries"
 msgstr "צפה בגלריות Sunshine"
 
-#: includes/admin/class-admin.php:563
+#: includes/admin/class-admin.php:564
 msgid ""
 "The slug for core order statuses is not editable as it could break Sunshine "
 "functionality"
@@ -344,32 +344,41 @@ msgstr ""
 "לא ניתן לערוך את ה-slug עבור סטטוסי הליבה מכיוון שהוא עלול לשבור את "
 "הפונקציונליות של Sunshine"
 
-#: includes/admin/class-admin.php:577
+#: includes/admin/class-admin.php:578
 msgid "Order Updated"
 msgstr "ההזמנה עודכנה"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:579
+#: includes/admin/class-admin.php:580
 #, php-format
 msgid "<strong>Gallery updated</strong>, <a href=\"%s\">view gallery</a>"
 msgstr "<strong>הגלריה עודכנה</strong> , <a href=\"%s\">הצג את הגלריה</a>"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:581
+#: includes/admin/class-admin.php:582
 #, php-format
 msgid "<strong>Gallery created</strong>, <a href=\"%s\">view gallery</a>"
 msgstr "<strong>הגלריה נוצרה</strong> , <a href=\"%s\">הצג את הגלריה</a>"
 
 #. translators: %s is the URL to settings page
-#: includes/admin/class-admin.php:588
+#: includes/admin/class-admin.php:589
 #, php-format
 msgid ""
 "Sunshine logging is enabled. <a href=\"%s\">Please disable when no longer in "
 "use.</a>"
 msgstr "רישום שמש מופעלת. <a href=\"%s\">נא להשבית כאשר אינו בשימוש עוד.</a>"
 
+#. translators: %s is the URL to the Galleries settings page
+#: includes/admin/class-admin.php:618
+#, php-format
+msgid ""
+"Your watermark image file could not be found on this server, so new images "
+"are not being watermarked. <a href=\"%s\">Upload the watermark image again</"
+"a>."
+msgstr "קובץ תמונת סימן המים לא נמצא בשרת הזה, ולכן לא מוטבע סימן מים בתמונות חדשות. <a href=\"%s\">העלה שוב את תמונת סימן המים</a>."
+
 #. translators: 1: number of images waiting, 2: URL to the Site Health info page
-#: includes/admin/class-admin.php:652
+#: includes/admin/class-admin.php:685
 #, php-format
 msgid ""
 "%1$d image is waiting to be processed, but WordPress could not save the "
@@ -385,7 +394,7 @@ msgstr[1] ""
 "אותן. <a href=\"%2$s\">בדוק את בריאות האתר</a>."
 
 #. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
-#: includes/admin/class-admin.php:669
+#: includes/admin/class-admin.php:702
 #, php-format
 msgid ""
 "%1$d image is waiting to be processed, but WordPress cron has not run for "
@@ -404,7 +413,7 @@ msgstr[1] ""
 "href=\"%3$s\">בדוק את בריאות האתר</a> או ראה <a href=\"%4$s\" "
 "target=\"_blank\">איך להגדיר cron אמין בשרת</a>."
 
-#: includes/admin/class-admin.php:682
+#: includes/admin/class-admin.php:715
 msgid ""
 "This site has WP-Cron turned off, so a server cron job has to call wp-"
 "cron.php for anything to run."
@@ -413,7 +422,7 @@ msgstr ""
 "שמשהו ירוץ."
 
 #. translators: %s is the URL to installation page
-#: includes/admin/class-admin.php:691
+#: includes/admin/class-admin.php:724
 #, php-format
 msgid ""
 "Sunshine installation process was skipped. <a href=\"%s\">Please complete "
@@ -422,85 +431,85 @@ msgstr ""
 "תהליך התקנת Sunshine דילג. <a href=\"%s\">נא להשלים את תהליך ההתקנה.</a>"
 
 #. translators: %1$d is the number of orders, %2$s is the number of orders in plural
-#: includes/admin/class-admin.php:974
+#: includes/admin/class-admin.php:1007
 #, php-format
 msgid "%s order"
 msgid_plural "%s orders"
 msgstr[0] "%s הזמנה"
 msgstr[1] "%s הזמנות"
 
-#: includes/admin/class-admin.php:982 includes/admin/customers.php:13
+#: includes/admin/class-admin.php:1015 includes/admin/customers.php:13
 #: includes/admin/customers.php:34 includes/admin/reports.php:20 reports.php:7
 msgid "Customers"
 msgstr "לקוחות"
 
-#: includes/admin/class-admin.php:983 includes/admin/reports.php:88
+#: includes/admin/class-admin.php:1016 includes/admin/reports.php:88
 msgid "Reports"
 msgstr "דוחות"
 
-#: includes/admin/class-admin.php:984 includes/admin/tools.php:36
+#: includes/admin/class-admin.php:1017 includes/admin/tools.php:36
 #: includes/admin/tools.php:42
 msgid "Tools"
 msgstr "כלים"
 
-#: includes/admin/class-admin.php:985
+#: includes/admin/class-admin.php:1018
 msgid "Add-ons"
 msgstr "תוספים"
 
-#: includes/admin/class-admin.php:988
+#: includes/admin/class-admin.php:1021
 msgid "Setup Guide"
 msgstr "מדריך התקנה"
 
-#: includes/admin/class-admin.php:993
+#: includes/admin/class-admin.php:1026
 msgid "Get Help"
 msgstr "קבל עזרה"
 
-#: includes/admin/class-admin.php:1024
+#: includes/admin/class-admin.php:1057
 msgid "Keywords"
 msgstr "מילות מפתח"
 
-#: includes/admin/class-admin.php:1036
+#: includes/admin/class-admin.php:1069
 msgid "Use gallery price level"
 msgstr "השתמש ברמת המחירים של הגלריה"
 
-#: includes/admin/class-admin.php:1044 includes/admin/sunshine-gallery.php:218
-#: includes/class-sunshinephotocart.php:500
-#: includes/class-sunshinephotocart.php:513 class-export-galleries.php:22
+#: includes/admin/class-admin.php:1077 includes/admin/sunshine-gallery.php:218
+#: includes/class-sunshinephotocart.php:501
+#: includes/class-sunshinephotocart.php:514 class-export-galleries.php:22
 msgid "Price Level"
 msgstr "רמת מחיר"
 
-#: includes/admin/class-admin.php:1055
+#: includes/admin/class-admin.php:1088
 msgid "Disable Purchasing"
 msgstr "השבת רכישה"
 
-#: includes/admin/class-admin.php:1061 includes/admin/settings-fields.php:702
+#: includes/admin/class-admin.php:1094 includes/admin/settings-fields.php:702
 #: admin/products.php:45
 msgid "Watermark"
 msgstr "סימן מים"
 
-#: includes/admin/class-admin.php:1106
+#: includes/admin/class-admin.php:1139
 msgid "Metadata"
 msgstr "מטא-דאטה"
 
-#: includes/admin/class-admin.php:1193
+#: includes/admin/class-admin.php:1226
 msgid "Log file has been cleared"
 msgstr "קובץ היומן נמחק"
 
-#: includes/admin/class-admin.php:1249
+#: includes/admin/class-admin.php:1282
 msgid "Error log file has been cleared"
 msgstr "קובץ יומן השגיאות נמחק"
 
-#: includes/admin/class-admin.php:1255 includes/admin/class-admin.php:1263
+#: includes/admin/class-admin.php:1288 includes/admin/class-admin.php:1296
 msgid "You do not have permission to access this file."
 msgstr "אין לך הרשאה לגשת לקובץ זה."
 
-#: includes/admin/class-admin.php:1271
+#: includes/admin/class-admin.php:1304
 msgid "Log file not found."
 msgstr "קובץ היומן לא נמצא."
 
 #: includes/admin/class-customers-table.php:42
 #: includes/admin/sunshine-product-category.php:166
-#: includes/class-payment-method.php:57 includes/class-shipping-method.php:152
+#: includes/class-payment-method.php:57 includes/class-shipping-method.php:159
 #: templates/admin/order-items.php:102 templates/image/add-comment.php:7
 #: class-reports-images-table.php:35
 #: reports/class-reports-image-downloads.php:37 admin.php:159
@@ -509,7 +518,7 @@ msgstr "שם"
 
 #: includes/admin/class-customers-table.php:43
 #: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1589 includes/functions/account.php:558
+#: includes/class-cart.php:1595 includes/functions/account.php:558
 #: includes/payment-methods/paypal-legacy.php:45
 #: includes/payment-methods/paypal-legacy.php:58
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
@@ -528,8 +537,8 @@ msgstr "אהבתי"
 #: includes/admin/class-customers-table.php:45 includes/admin/customers.php:137
 #: includes/admin/reports.php:16 includes/admin/settings-fields.php:297
 #: includes/admin/settings-fields.php:946
-#: includes/class-sunshinephotocart.php:533
-#: includes/class-sunshinephotocart.php:545 includes/functions/account.php:399
+#: includes/class-sunshinephotocart.php:534
+#: includes/class-sunshinephotocart.php:546 includes/functions/account.php:399
 #: templates/email/summary.php:30 class-reports-customers-table.php:35
 #: class-reports-galleries-table.php:37 class-reports-products-table.php:35
 #: gallery.php:271 gallery.php:298 templates/account/downloads.php:19
@@ -665,13 +674,13 @@ msgstr ""
 "href=\"%2$s\" target=\"_blank\">מחשבונך באתר SunshinePhotoCart.com</a> ."
 
 #. translators: %1$s is the product name, %2$s is the error message
-#: includes/admin/class-license.php:432
+#: includes/admin/class-license.php:441
 #, php-format
 msgid "License for %1$s failed to be updated: %2$s"
 msgstr "לא ניתן לעדכן את הרישיון עבור %1$s: %2$s"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:442
+#: includes/admin/class-license.php:449
 #, php-format
 msgid "License for %s has been updated"
 msgstr "הרישיון עבור %s עודכן"
@@ -743,7 +752,7 @@ msgstr "נתוני ההזמנה של Sunshine Photo Cart נשמרו בשל הג�
 
 #: includes/admin/class-privacy.php:190 includes/admin/class-privacy.php:257
 #: includes/admin/settings-fields.php:976
-#: includes/admin/settings-fields.php:986 includes/class-cart.php:1616
+#: includes/admin/settings-fields.php:986 includes/class-cart.php:1622
 #: templates/invoice/admin.php:164 templates/order/details.php:13
 #: class-export-orders.php:500
 msgid "Phone"
@@ -837,7 +846,7 @@ msgid "Billing Name"
 msgstr "שם לחיוב"
 
 #: includes/admin/class-privacy.php:259 includes/admin/customers.php:106
-#: includes/class-cart.php:1902 templates/invoice/admin.php:194
+#: includes/class-cart.php:1908 templates/invoice/admin.php:194
 msgid "Billing Address"
 msgstr "כתובת חיוב"
 
@@ -846,7 +855,7 @@ msgid "Shipping Name"
 msgstr "שם משלוח"
 
 #: includes/admin/class-privacy.php:268 includes/admin/customers.php:99
-#: includes/class-cart.php:1756 includes/template-hooks.php:432
+#: includes/class-cart.php:1762 includes/template-hooks.php:432
 #: templates/invoice/admin.php:191
 msgid "Shipping Address"
 msgstr "כתובת משלוח"
@@ -1031,7 +1040,7 @@ msgid "Permission denied"
 msgstr "גישה נדחתה"
 
 #: includes/admin/gallery-navigator.php:116
-#: includes/class-sunshinephotocart.php:381
+#: includes/class-sunshinephotocart.php:382
 msgid "No galleries found."
 msgstr "לא נמצאו גלריות."
 
@@ -1043,13 +1052,13 @@ msgstr "גרור כדי לשנות את הסדר"
 #: includes/admin/gallery-navigator.php:159
 #: includes/admin/gallery-navigator.php:319
 #: includes/admin/sunshine-gallery.php:55
-#: includes/admin/sunshine-gallery.php:1848
+#: includes/admin/sunshine-gallery.php:1825
 msgid "Password Protected"
 msgstr "מוגן בסיסמה"
 
 #: includes/admin/gallery-navigator.php:161
 #: includes/admin/gallery-navigator.php:321
-#: includes/admin/sunshine-gallery.php:1850
+#: includes/admin/sunshine-gallery.php:1827
 msgid "Private"
 msgstr "פרטי"
 
@@ -1066,7 +1075,7 @@ msgstr "פג תוקף"
 
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:336
-#: includes/admin/sunshine-gallery.php:1589
+#: includes/admin/sunshine-gallery.php:1566
 #: includes/class-cloud-storage-import.php:928
 msgid "images"
 msgstr "תמונות"
@@ -1080,7 +1089,7 @@ msgstr[1] "תת-גלריות"
 
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
-#: includes/admin/gallery-navigator.php:344 includes/class-cart.php:2038
+#: includes/admin/gallery-navigator.php:344 includes/class-cart.php:2044
 msgid "Edit"
 msgstr "ערוך"
 
@@ -1143,7 +1152,7 @@ msgstr "חדש"
 msgid "We have received your order and payment"
 msgstr "קיבלנו את ההזמנה והתשלום שלך"
 
-#: includes/admin/install.php:324 includes/admin/sunshine-gallery.php:962
+#: includes/admin/install.php:324 includes/admin/sunshine-gallery.php:963
 msgid "Processing"
 msgstr "מעבד"
 
@@ -1339,15 +1348,15 @@ msgstr "אחסון בענן"
 
 #: includes/admin/reports.php:17 includes/admin/sunshine-gallery.php:196
 #: includes/admin/sunshine-product-category.php:169
-#: includes/class-sunshinephotocart.php:421
-#: includes/class-sunshinephotocart.php:433 hooks.php:43 reports.php:4
+#: includes/class-sunshinephotocart.php:422
+#: includes/class-sunshinephotocart.php:434 hooks.php:43 reports.php:4
 #: price-levels.php:48 admin/products.php:54
 msgid "Products"
 msgstr "מוצרים"
 
 #: includes/admin/reports.php:18 includes/admin/settings-fields.php:321
 #: includes/admin/settings-fields.php:804 includes/admin/sunshine-order.php:427
-#: includes/class-sunshinephotocart.php:369 includes/functions/account.php:404
+#: includes/class-sunshinephotocart.php:370 includes/functions/account.php:404
 #: reports.php:5 class-admin-automated-emails.php:64 hooks.php:673
 #: templates/account/downloads.php:30 class-export-galleries.php:10
 #: class-export-orders.php:527
@@ -1631,8 +1640,8 @@ msgid "URLs"
 msgstr "כתובות אתרים"
 
 #: includes/admin/settings-fields.php:261
-#: includes/class-sunshinephotocart.php:370
-#: includes/class-sunshinephotocart.php:372
+#: includes/class-sunshinephotocart.php:371
+#: includes/class-sunshinephotocart.php:373
 #: class-reports-galleries-table.php:36 gallery.php:277
 #: class-export-orders.php:603 messaging.php:148
 msgid "Gallery"
@@ -2332,7 +2341,7 @@ msgstr "שדות אחרים"
 
 #: includes/admin/settings-fields.php:977
 #: includes/admin/settings-fields.php:987 includes/admin/sunshine-order.php:732
-#: includes/class-cart.php:1933 templates/email/admin-receipt.php:146
+#: includes/class-cart.php:1939 templates/email/admin-receipt.php:146
 #: templates/email/customer-receipt.php:150
 #: templates/email/order-status.php:118 templates/order/details.php:59
 msgid "Notes"
@@ -2642,8 +2651,8 @@ msgstr ""
 "ריק כדי לשמור גלריות שפג תוקפן ללא הגבלת זמן."
 
 #: includes/admin/settings-fields.php:1578
-msgid "Privacy"
-msgstr "פרטיות"
+msgid "Privacy & Data"
+msgstr "פרטיות ונתונים"
 
 #: includes/admin/settings-fields.php:1587
 msgid "Allow Tracking"
@@ -2690,8 +2699,8 @@ msgid "Real Estate"
 msgstr "נדל”ן"
 
 #: includes/admin/settings-fields.php:1609
-msgid "Data"
-msgstr "נתונים"
+msgid "Usage Tracking"
+msgstr "מעקב שימוש"
 
 #: includes/admin/settings-fields.php:1611
 msgid ""
@@ -2861,7 +2870,7 @@ msgid "Choose from Media Library"
 msgstr "בחר מתוך ספריית המדיה"
 
 #: includes/admin/sunshine-gallery.php:391
-#: includes/admin/sunshine-gallery.php:554
+#: includes/admin/sunshine-gallery.php:555
 msgid "Select all images"
 msgstr "בחר את כל התמונות"
 
@@ -2870,54 +2879,58 @@ msgid "Regenerate all gallery images"
 msgstr "לחדש את כל תמונות הגלריה"
 
 #: includes/admin/sunshine-gallery.php:393
+msgid "Refresh photo details"
+msgstr "רענן פרטי תמונות"
+
+#: includes/admin/sunshine-gallery.php:394
 msgid "Delete selected images"
 msgstr "מחק את התמונות שנבחרו"
 
 #. translators: %1$s is the number of images currently loaded, %2$s is the total number of images
-#: includes/admin/sunshine-gallery.php:398
+#: includes/admin/sunshine-gallery.php:399
 #, php-format
 msgid "Showing %1$s of %2$s images"
 msgstr "מציג %1$s מתוך %2$s תמונות"
 
 #. translators: %s is a select dropdown with options for number of images to load
-#: includes/admin/sunshine-gallery.php:401
+#: includes/admin/sunshine-gallery.php:402
 #, php-format
 msgid "Load %s more images"
 msgstr "טען עוד %s תמונות"
 
-#: includes/admin/sunshine-gallery.php:402
+#: includes/admin/sunshine-gallery.php:403
 msgid "GO"
 msgstr "התחבר"
 
-#: includes/admin/sunshine-gallery.php:417
+#: includes/admin/sunshine-gallery.php:418
 msgid "Loading"
 msgstr "טוען"
 
-#: includes/admin/sunshine-gallery.php:444
+#: includes/admin/sunshine-gallery.php:445
 msgid "Saving image order..."
 msgstr "שומר סדר תמונות..."
 
-#: includes/admin/sunshine-gallery.php:488
+#: includes/admin/sunshine-gallery.php:489
 msgid "Sorry, the image could not be deleted for some reason"
 msgstr "מצטערים, לא ניתן היה למחוק את התמונה מסיבה כלשהי"
 
-#: includes/admin/sunshine-gallery.php:520
+#: includes/admin/sunshine-gallery.php:521
 msgid "Sorry, the image could not be set as featured"
 msgstr "מצטערים, לא ניתן להגדיר את התמונה כמוצגת"
 
-#: includes/admin/sunshine-gallery.php:548
+#: includes/admin/sunshine-gallery.php:549
 msgid "Select no images"
 msgstr "בחר ללא תמונות"
 
-#: includes/admin/sunshine-gallery.php:607
+#: includes/admin/sunshine-gallery.php:608
 msgid "Allowed Files"
 msgstr "קבצים מורשים"
 
-#: includes/admin/sunshine-gallery.php:856
+#: includes/admin/sunshine-gallery.php:857
 msgid "No importable images were found in the selected folder."
 msgstr "לא נמצאו תמונות שניתן לייבא בתיקייה שנבחרה."
 
-#: includes/admin/sunshine-gallery.php:899
+#: includes/admin/sunshine-gallery.php:900
 msgid ""
 "The image did not fully upload because it is too large for your server to "
 "handle. Thumbnails and watermarks may not have been applied."
@@ -2925,56 +2938,56 @@ msgstr ""
 "התמונה לא הועלתה במלואה מכיוון שהיא גדולה מדי עבור השרת שלך. ייתכן שתמונות "
 "ממוזערות וסימני מים לא הוחלו."
 
-#: includes/admin/sunshine-gallery.php:919
+#: includes/admin/sunshine-gallery.php:920
 msgid ""
 "Unable to inspect the selected directory before import. Please try again."
 msgstr "לא ניתן לבדוק את הספרייה שנבחרה לפני הייבוא. אנא נסה שוב."
 
-#: includes/admin/sunshine-gallery.php:962
+#: includes/admin/sunshine-gallery.php:963
 msgid "Processing failed"
 msgstr "העיבוד נכשל"
 
-#: includes/admin/sunshine-gallery.php:1036
+#: includes/admin/sunshine-gallery.php:1037
 msgid "No file was uploaded"
 msgstr "לא הועלה קובץ"
 
-#: includes/admin/sunshine-gallery.php:1069
+#: includes/admin/sunshine-gallery.php:1070
 msgid "Invalid file type"
 msgstr "סוג קובץ לא תקף"
 
-#: includes/admin/sunshine-gallery.php:1084
+#: includes/admin/sunshine-gallery.php:1085
 msgid "Upload directory is not writable"
 msgstr "לא ניתן לכתוב לספריית ההעלאה"
 
-#: includes/admin/sunshine-gallery.php:1610
-#: includes/admin/sunshine-gallery.php:1659
+#: includes/admin/sunshine-gallery.php:1587
+#: includes/admin/sunshine-gallery.php:1636
 msgid "You do not have permission to import images."
 msgstr "אין לך הרשאה לייבא תמונות."
 
-#: includes/admin/sunshine-gallery.php:1619
+#: includes/admin/sunshine-gallery.php:1596
 msgid "A directory must be selected before importing."
 msgstr "יש לבחור ספרייה לפני הייבוא."
 
-#: includes/admin/sunshine-gallery.php:1628
-#: includes/admin/sunshine-gallery.php:1674
+#: includes/admin/sunshine-gallery.php:1605
+#: includes/admin/sunshine-gallery.php:1651
 msgid "The selected directory is not available."
 msgstr "הספרייה שנבחרה אינה זמינה."
 
-#: includes/admin/sunshine-gallery.php:1699
+#: includes/admin/sunshine-gallery.php:1676
 msgid "Already uploaded to gallery"
 msgstr "כבר הועלה לגלריה"
 
 #. translators: %s is the upload directory
-#: includes/admin/sunshine-gallery.php:1719
+#: includes/admin/sunshine-gallery.php:1696
 #, php-format
 msgid "The selected file could not be copied to %s."
 msgstr "לא ניתן היה להעתיק את הקובץ שנבחר אל %s."
 
-#: includes/admin/sunshine-gallery.php:1758
+#: includes/admin/sunshine-gallery.php:1735
 msgid "No emails collected yet"
 msgstr "עדיין לא נאספו מיילים"
 
-#: includes/admin/sunshine-gallery.php:1832
+#: includes/admin/sunshine-gallery.php:1809
 msgid "Add gallery name"
 msgstr "הוסף שם גלריה"
 
@@ -3034,7 +3047,7 @@ msgid "Select All"
 msgstr "בחר הכל"
 
 #: includes/admin/sunshine-order.php:421 includes/class-order.php:1013
-#: includes/class-sunshinephotocart.php:534 gallery.php:272 admin.php:237
+#: includes/class-sunshinephotocart.php:535 gallery.php:272 admin.php:237
 #: admin/customers.php:20 admin/customers.php:42 class-admin-gift-cards.php:189
 msgid "Order"
 msgstr "הזמנה"
@@ -3123,8 +3136,8 @@ msgid "Delivery/Shipping Method"
 msgstr "שיטת משלוח/משלוח"
 
 #: includes/admin/sunshine-order.php:670
-#: includes/class-sunshinephotocart.php:583
-#: includes/class-sunshinephotocart.php:594 class-export-orders.php:489
+#: includes/class-sunshinephotocart.php:584
+#: includes/class-sunshinephotocart.php:595 class-export-orders.php:489
 #: class-export-orders.php:581
 msgid "Order Status"
 msgstr "סטטוס ההזמנה"
@@ -3200,7 +3213,7 @@ msgid "Image Data"
 msgstr "נתוני תמונה"
 
 #: includes/admin/sunshine-order.php:794 includes/admin/sunshine-order.php:831
-#: includes/class-sunshinephotocart.php:422 templates/admin/order-items.php:104
+#: includes/class-sunshinephotocart.php:423 templates/admin/order-items.php:104
 #: templates/cart/item.php:5 templates/cart/items.php:5
 #: templates/checkout/summary.php:12 templates/invoice/admin.php:213
 #: templates/invoice/admin.php:225 templates/order/item.php:5
@@ -3230,7 +3243,7 @@ msgstr "סה\"כ פריטים"
 
 #: includes/admin/sunshine-order.php:840 includes/admin/sunshine-product.php:41
 #: includes/admin/sunshine-product.php:118
-#: includes/class-shipping-method.php:171 templates/cart/item.php:12
+#: includes/class-shipping-method.php:178 templates/cart/item.php:12
 #: templates/invoice/admin.php:241 templates/order/item.php:15
 msgid "Price"
 msgstr "מחיר"
@@ -3336,7 +3349,7 @@ msgid "Use this image"
 msgstr "השתמש בתמונה זו"
 
 #: includes/admin/sunshine-product-category.php:167
-#: includes/class-payment-method.php:64 includes/class-shipping-method.php:159
+#: includes/class-payment-method.php:64 includes/class-shipping-method.php:166
 #: admin.php:160
 msgid "Description"
 msgstr "תיאור"
@@ -3357,7 +3370,7 @@ msgid ""
 msgstr "נהל יותר רמות מחירים כדי להציע תמחור שונה בגלריות עבור אותו מוצר"
 
 #: includes/admin/sunshine-product.php:53
-#: includes/class-shipping-method.php:166
+#: includes/class-shipping-method.php:173
 msgid "Taxable"
 msgstr "חייב במס"
 
@@ -3491,7 +3504,9 @@ msgstr "מומלץ לבצע גיבוי לפני הפעלת כלי זה. התמו
 msgid "No orphans found!"
 msgstr "לא נמצאו יתומים!"
 
-#: includes/admin/tools/orphans.php:162 includes/admin/tools/regenerate.php:419
+#: includes/admin/tools/orphans.php:162
+#: includes/admin/tools/refresh-photo-details.php:221
+#: includes/admin/tools/regenerate.php:419
 #: includes/admin/tools/square-reconcile.php:191
 #: includes/admin/tools/unused-image-sizes.php:153 hooks.php:689
 msgid "Abort"
@@ -3501,6 +3516,59 @@ msgstr "לבטל"
 #: includes/admin/tools/unused-image-sizes.php:186
 msgid "Cannot process image, likely out of memory"
 msgstr "לא ניתן לעבד תמונה, כנראה חסר הזיכרון"
+
+#: includes/admin/tools/refresh-photo-details.php:25
+msgid "Refresh Photo Details"
+msgstr "רענון פרטי תמונות"
+
+#: includes/admin/tools/refresh-photo-details.php:27
+msgid ""
+"Reads the keywords, title, caption and photo date from your original files "
+"again, so gallery search can find photos by keyword. Use this on galleries "
+"imported before Sunshine read those details. Your photos and thumbnails are "
+"not changed. To run it, edit a gallery and use the \"Refresh photo details\" "
+"button below its images."
+msgstr "קורא שוב את מילות המפתח, הכותרת, הכיתוב ותאריך הצילום מהקבצים המקוריים שלך, כדי שהחיפוש בגלריה יוכל למצוא תמונות לפי מילות מפתח. השתמש בזה בגלריות שיובאו לפני ש-Sunshine התחיל לקרוא את הפרטים האלה. התמונות והתמונות הממוזערות שלך לא משתנות. כדי להפעיל, ערוך גלריה ולחץ על הכפתור \"רענן פרטי תמונות\" שמתחת לתמונות שלה."
+
+#: includes/admin/tools/refresh-photo-details.php:126
+msgid "Photo not found"
+msgstr "התמונה לא נמצאה"
+
+#: includes/admin/tools/refresh-photo-details.php:151
+msgid "Could not download the original file from cloud storage"
+msgstr "לא ניתן להוריד את הקובץ המקורי מהאחסון בענן"
+
+#: includes/admin/tools/refresh-photo-details.php:163
+msgid "Could not find the original file"
+msgstr "לא ניתן למצוא את הקובץ המקורי"
+
+#: includes/admin/tools/refresh-photo-details.php:179
+msgid "Could not read details from the original file"
+msgstr "לא ניתן לקרוא פרטים מהקובץ המקורי"
+
+#: includes/admin/tools/refresh-photo-details.php:206
+msgid ""
+"To run this, edit a gallery and use the \"Refresh photo details\" button "
+"below its images."
+msgstr "כדי להפעיל, ערוך גלריה ולחץ על הכפתור \"רענן פרטי תמונות\" שמתחת לתמונות שלה."
+
+#. translators: %s is the gallery title
+#: includes/admin/tools/refresh-photo-details.php:212
+#, php-format
+msgid "Refreshing photo details for \"%s\""
+msgstr "מרענן פרטי תמונות עבור \"%s\""
+
+#: includes/admin/tools/refresh-photo-details.php:231
+#: includes/admin/tools/refresh-photo-details.php:256
+#: includes/admin/tools/regenerate.php:449
+msgid "Done!"
+msgstr "בוצע!"
+
+#: includes/admin/tools/refresh-photo-details.php:291
+msgid ""
+"No photo found at this position. It may have been deleted since this run "
+"started."
+msgstr "לא נמצאה תמונה במיקום הזה. ייתכן שהיא נמחקה מאז שההרצה הזו התחילה."
 
 #: includes/admin/tools/regenerate.php:22
 #: includes/admin/tools/regenerate.php:25
@@ -3550,10 +3618,6 @@ msgid ""
 msgstr ""
 "התמונה לא הועלתה במלואה כי היא גדולה מדי עבור השרת שלך. ייתכן שלא הוחלו "
 "תמונות ממוזערות וסימני מים. ממליץ להגדיל את הזיכרון הזמין."
-
-#: includes/admin/tools/regenerate.php:449
-msgid "Done!"
-msgstr "בוצע!"
 
 #: includes/admin/tools/regenerate.php:483
 msgid "Watermark Settings Detected"
@@ -3736,53 +3800,53 @@ msgid "An item has been removed from your cart because it no longer exists"
 msgstr "פריט הוסר מהסל שלך מכיוון שהוא לא קיים יותר"
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:596
+#: includes/class-cart.php:602
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr "ההנחה \"%s\" הוסרה כי היא כבר לא תקפה"
 
-#: includes/class-cart.php:1566
+#: includes/class-cart.php:1572
 msgid "Contact Information"
 msgstr "פרטי יצירת קשר"
 
-#: includes/class-cart.php:1571 includes/class-countries.php:3424
+#: includes/class-cart.php:1577 includes/class-countries.php:3424
 #: includes/functions/account.php:542 templates/account/signup.php:20
 #: class-export-orders.php:497
 msgid "First Name"
 msgstr "שם פרטי"
 
-#: includes/class-cart.php:1580 includes/class-countries.php:3433
+#: includes/class-cart.php:1586 includes/class-countries.php:3433
 #: includes/functions/account.php:550 templates/account/signup.php:27
 #: class-export-orders.php:498
 msgid "Last Name"
 msgstr "שם משפחה"
 
-#: includes/class-cart.php:1606 templates/account/login.php:18
+#: includes/class-cart.php:1612 templates/account/login.php:18
 #: templates/account/signup.php:9 templates/shortcodes/password.php:4
 msgid "Password"
 msgstr "סיסמה"
 
-#: includes/class-cart.php:1608
+#: includes/class-cart.php:1614
 msgid "Optionally set a password"
 msgstr "אפשר להגדיר סיסמה"
 
-#: includes/class-cart.php:1625 templates/email/admin-receipt.php:199
+#: includes/class-cart.php:1631 templates/email/admin-receipt.php:199
 #: templates/email/customer-receipt.php:185
 #: templates/email/order-status.php:153 templates/invoice/admin.php:184
 #: templates/order/details.php:39 class-export-orders.php:501
 msgid "EU VAT Number"
 msgstr "מספר מע\"מ של האיחוד האירופי"
 
-#: includes/class-cart.php:1727
+#: includes/class-cart.php:1733
 msgid "Delivery Method"
 msgstr "אופן שליחת המתנה:"
 
-#: includes/class-cart.php:1787 includes/class-cart.php:1804
+#: includes/class-cart.php:1793 includes/class-cart.php:1810
 #: templates/invoice/admin.php:173 class-export-orders.php:495
 msgid "Shipping Method"
 msgstr "שיטת משלוח"
 
-#: includes/class-cart.php:1809 includes/class-cart.php:2307
+#: includes/class-cart.php:1815 includes/class-cart.php:2313
 msgid ""
 "Sorry, shipping is not available to the address you entered. Please double "
 "check the address or try a different shipping address."
@@ -3790,36 +3854,36 @@ msgstr ""
 "מצטערים, משלוח לא זמין לכתובת שהזנת. בדוק את הכתובת שוב או נסה כתובת משלוח "
 "אחרת."
 
-#: includes/class-cart.php:1870
+#: includes/class-cart.php:1876
 msgid "Use shipping address as billing address"
 msgstr "השתמש בכתובת המשלוח ככתובת החיוב"
 
-#: includes/class-cart.php:1908
+#: includes/class-cart.php:1914
 msgid "Same as shipping address"
 msgstr "זהה לכתובת המשלוח"
 
-#: includes/class-cart.php:1960
+#: includes/class-cart.php:1966
 msgid "Payment"
 msgstr "תשלום"
 
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:1970
+#: includes/class-cart.php:1976
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr "השתמש בקרדיט שלי (%s זמין)"
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:1978 includes/class-payment-method.php:242
+#: includes/class-cart.php:1984 includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr "שלח הזמנה ושלם %s"
 
-#: includes/class-cart.php:1980
+#: includes/class-cart.php:1986
 msgid "Submit Order for Free"
 msgstr "שלח הזמנה בחינם"
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:1997
+#: includes/class-cart.php:2003
 #, php-format
 msgid ""
 "By submitting this order, you agree to our <a href=\"%1$s\" "
@@ -3829,79 +3893,79 @@ msgstr ""
 "a> שלנו"
 
 #. translators: %s is the section name
-#: includes/class-cart.php:2038
+#: includes/class-cart.php:2044
 #, php-format
 msgid "Edit %s"
 msgstr "עריכת ה%s"
 
-#: includes/class-cart.php:2056
+#: includes/class-cart.php:2062
 msgid "Next Step"
 msgstr "לשלב הבא"
 
-#: includes/class-cart.php:2233
+#: includes/class-cart.php:2239
 msgid "Invalid checkout section"
 msgstr "סעיף קופה לא חוקי"
 
-#: includes/class-cart.php:2249
+#: includes/class-cart.php:2255
 msgid "Field contains invalid data"
 msgstr "השדה מכיל נתונים לא חוקיים"
 
 #. translators: %s is the field name
-#: includes/class-cart.php:2266
+#: includes/class-cart.php:2272
 #, php-format
 msgid "%s is required"
 msgstr "%s  נדרש"
 
-#: includes/class-cart.php:2278 frontend.php:173
+#: includes/class-cart.php:2284 frontend.php:173
 msgid "Invalid email"
 msgstr "דוא\"ל לא חוקי"
 
-#: includes/class-cart.php:2379 includes/class-cart.php:2587
+#: includes/class-cart.php:2385 includes/class-cart.php:2593
 msgid "Please select a shipping method before completing your order."
 msgstr "בחר שיטת משלוח לפני השלמת ההזמנה."
 
 #. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
-#: includes/class-cart.php:2500
+#: includes/class-cart.php:2506
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
 msgstr "השלם את הפרטים הבאים לפני שליחת ההזמנה: %s"
 
-#: includes/class-cart.php:2513
+#: includes/class-cart.php:2519
 msgid ""
 "Error encountered during checkout process and your order has already been "
 "marked as paid."
 msgstr "אירעה שגיאה בתהליך התשלום וההזמנה שלך כבר סומנה כמשולמת."
 
-#: includes/class-cart.php:2513 includes/class-cart.php:2846
+#: includes/class-cart.php:2519 includes/class-cart.php:2852
 msgid "View the order"
 msgstr "הצג את ההזמנה"
 
-#: includes/class-cart.php:2525
+#: includes/class-cart.php:2531
 msgid "No payment method selected"
 msgstr "לא נבחרה שיטת תשלום"
 
-#: includes/class-cart.php:2649
+#: includes/class-cart.php:2655
 msgid "Failed to initialize order"
 msgstr "נכשל באינציאליזציה של ההזמנה"
 
-#: includes/class-cart.php:2660
+#: includes/class-cart.php:2666
 msgid ""
 "Something happened while trying to process your order. Please contact the "
 "site owner for more details."
 msgstr ""
 "משהו קרה בעת ניסיון לעבד את הזמנתך. אנא פנה לבעל האתר לקבלת פרטים נוספים."
 
-#: includes/class-cart.php:2689
+#: includes/class-cart.php:2695
 msgid "No payment method"
 msgstr "אין אמצעי תשלום"
 
-#: includes/class-cart.php:2779
+#: includes/class-cart.php:2785
 msgid ""
 "User account already exists with that email address - please login to "
 "continue"
 msgstr "חשבון המשתמש כבר קיים עם כתובת דוא\"ל זו - אנא התחבר כדי להמשיך"
 
-#: includes/class-cart.php:2846
+#: includes/class-cart.php:2852
 msgid "It appears your previous checkout has already been processed."
 msgstr "נראה שההזמנה הקודמת שלך כבר עובדה."
 
@@ -12767,7 +12831,7 @@ msgid "Sorry, you are not allowed to view this image"
 msgstr "מצטערים, אינך רשאי לצפות בתמונה זו"
 
 #: includes/class-frontend.php:964 includes/functions/comments.php:16
-#: includes/functions/image.php:278 includes/functions/store.php:133
+#: includes/functions/image.php:331 includes/functions/store.php:133
 #: includes/functions/store.php:186 includes/functions/template.php:373
 msgid "Access denied"
 msgstr "הגישה נדחית"
@@ -12831,11 +12895,11 @@ msgstr "הזמנה #%s"
 msgid "Refund has been processed for %s"
 msgstr "ההחזר עובד עבור %s"
 
-#: includes/class-payment-method.php:60 includes/class-shipping-method.php:155
+#: includes/class-payment-method.php:60 includes/class-shipping-method.php:162
 msgid "Name displayed on the checkout page to the customer"
 msgstr "השם המוצג בעמוד התשלום ללקוח"
 
-#: includes/class-payment-method.php:67 includes/class-shipping-method.php:162
+#: includes/class-payment-method.php:67 includes/class-shipping-method.php:169
 msgid "Description displayed on the checkout page to the customer"
 msgstr "תיאור המוצג בעמוד התשלום ללקוח"
 
@@ -12907,279 +12971,279 @@ msgid "Sunshine Photo Cart is taking a %1$s%% fee on every %2$s order."
 msgstr "Sunshine Photo Cart גובה עמלה של %1$s%% על כל הזמנת %2$s."
 
 #. translators: %s: unique instance ID for this shipping method
-#: includes/class-shipping-method.php:147
+#: includes/class-shipping-method.php:154
 #, php-format
 msgid "Instance ID: %s"
 msgstr "מזהה מופע: %s"
 
-#: includes/class-shipping-method.php:186
+#: includes/class-shipping-method.php:193
 msgid "Shipping or delivery"
 msgstr "משלוח או משלוח"
 
-#: includes/class-sunshinephotocart.php:373
-#: includes/class-sunshinephotocart.php:535 common.php:7 common.php:47
+#: includes/class-sunshinephotocart.php:374
+#: includes/class-sunshinephotocart.php:536 common.php:7 common.php:47
 #: discounts.php:36 gift-cards.php:98
 msgid "Add New"
 msgstr "הוסף חדש"
 
-#: includes/class-sunshinephotocart.php:374
+#: includes/class-sunshinephotocart.php:375
 msgid "Add New Gallery"
 msgstr "הוסף גלריה חדשה"
 
-#: includes/class-sunshinephotocart.php:375
+#: includes/class-sunshinephotocart.php:376
 msgid "New Gallery"
 msgstr "גלריה חדשה"
 
-#: includes/class-sunshinephotocart.php:376 includes/functions/misc.php:493
+#: includes/class-sunshinephotocart.php:377 includes/functions/misc.php:493
 msgid "Edit Gallery"
 msgstr "ערוך גלריה"
 
-#: includes/class-sunshinephotocart.php:377
+#: includes/class-sunshinephotocart.php:378
 msgid "View Gallery"
 msgstr "הצג אלבום"
 
-#: includes/class-sunshinephotocart.php:378
+#: includes/class-sunshinephotocart.php:379
 msgid "All Galleries"
 msgstr "כל הגלריות"
 
-#: includes/class-sunshinephotocart.php:379
+#: includes/class-sunshinephotocart.php:380
 msgid "Search Galleries"
 msgstr "חיפוש גלריות"
 
-#: includes/class-sunshinephotocart.php:380
+#: includes/class-sunshinephotocart.php:381
 msgid "Parent Gallery:"
 msgstr "גלריית הורים:"
 
-#: includes/class-sunshinephotocart.php:382
+#: includes/class-sunshinephotocart.php:383
 msgid "No galleries found in Trash"
 msgstr "לא נמצאו גלריות בפח"
 
-#: includes/class-sunshinephotocart.php:383
+#: includes/class-sunshinephotocart.php:384
 msgid "Gallery Featured Image"
 msgstr "תמונה מוצגת בגלריה"
 
-#: includes/class-sunshinephotocart.php:384
+#: includes/class-sunshinephotocart.php:385
 msgid "Set featured image image"
 msgstr "הגדר תמונת תמונה מוצגת"
 
-#: includes/class-sunshinephotocart.php:385
+#: includes/class-sunshinephotocart.php:386
 msgid "Remove featured image"
 msgstr "הסר תמונה ראשית"
 
-#: includes/class-sunshinephotocart.php:386
+#: includes/class-sunshinephotocart.php:387
 msgid "Use as featured image"
 msgstr "השתמש כתמונה ראשית"
 
-#: includes/class-sunshinephotocart.php:387
+#: includes/class-sunshinephotocart.php:388
 msgid "Gallery archives"
 msgstr "ארכיון הגלריה"
 
-#: includes/class-sunshinephotocart.php:388
+#: includes/class-sunshinephotocart.php:389
 msgid "Insert into gallery"
 msgstr "הוסף לגלריה"
 
-#: includes/class-sunshinephotocart.php:389
+#: includes/class-sunshinephotocart.php:390
 msgid "Uploaded to this gallery"
 msgstr "הועלה לגלריה זו"
 
-#: includes/class-sunshinephotocart.php:390
+#: includes/class-sunshinephotocart.php:391
 msgid "Filter galleries list"
 msgstr "סנן רשימת גלריות"
 
-#: includes/class-sunshinephotocart.php:391
+#: includes/class-sunshinephotocart.php:392
 msgid "Galleries list navigation"
 msgstr "ניווט ברשימת גלריות"
 
-#: includes/class-sunshinephotocart.php:392
+#: includes/class-sunshinephotocart.php:393
 msgid "Galleries list"
 msgstr "רשימת גלריות"
 
-#: includes/class-sunshinephotocart.php:423
+#: includes/class-sunshinephotocart.php:424
 msgid "Add Product"
 msgstr "הוסף מוצר"
 
-#: includes/class-sunshinephotocart.php:424
+#: includes/class-sunshinephotocart.php:425
 msgid "Add New Product"
 msgstr "הוסף מוצר חדש"
 
-#: includes/class-sunshinephotocart.php:425
+#: includes/class-sunshinephotocart.php:426
 msgid "Edit Product"
 msgstr "ערוך מוצר"
 
-#: includes/class-sunshinephotocart.php:426
+#: includes/class-sunshinephotocart.php:427
 msgid "New Product"
 msgstr "מוצר חדש"
 
-#: includes/class-sunshinephotocart.php:427
+#: includes/class-sunshinephotocart.php:428
 msgid "All Products"
 msgstr "כל המוצרים"
 
-#: includes/class-sunshinephotocart.php:428
+#: includes/class-sunshinephotocart.php:429
 msgid "View Products"
 msgstr "הצג מוצרים"
 
-#: includes/class-sunshinephotocart.php:429
+#: includes/class-sunshinephotocart.php:430
 msgid "Search Products"
 msgstr "חפש מוצרים"
 
-#: includes/class-sunshinephotocart.php:430
+#: includes/class-sunshinephotocart.php:431
 msgid "No products found"
 msgstr "לא נמצאו מוצרים"
 
-#: includes/class-sunshinephotocart.php:431
+#: includes/class-sunshinephotocart.php:432
 msgid "No products found in trash"
 msgstr "לא נמצאו מוצרים באשפה"
 
-#: includes/class-sunshinephotocart.php:457
+#: includes/class-sunshinephotocart.php:458
 msgid "Product Categories"
 msgstr "קטגורית מוצר"
 
-#: includes/class-sunshinephotocart.php:458
-#: includes/class-sunshinephotocart.php:474
+#: includes/class-sunshinephotocart.php:459
+#: includes/class-sunshinephotocart.php:475
 msgid "Product Category"
 msgstr "קטגוריית מוצר"
 
-#: includes/class-sunshinephotocart.php:459
+#: includes/class-sunshinephotocart.php:460
 msgid "Search Product Categories"
 msgstr "חפש קטגוריות מוצרים"
 
-#: includes/class-sunshinephotocart.php:460
+#: includes/class-sunshinephotocart.php:461
 msgid "All Product Categories"
 msgstr "כל קטגוריות המוצר"
 
-#: includes/class-sunshinephotocart.php:461
+#: includes/class-sunshinephotocart.php:462
 msgid "Parent Product Category"
 msgstr "קטגוריית מוצרי האב"
 
-#: includes/class-sunshinephotocart.php:462
+#: includes/class-sunshinephotocart.php:463
 msgid "Parent Product Category:"
 msgstr "קטגוריית מוצרי אב:"
 
-#: includes/class-sunshinephotocart.php:463
+#: includes/class-sunshinephotocart.php:464
 msgid "Edit Product Category"
 msgstr "ערוך קטגוריית מוצרים"
 
-#: includes/class-sunshinephotocart.php:464
+#: includes/class-sunshinephotocart.php:465
 msgid "Update Product Category"
 msgstr "עדכן קטגוריית מוצרים"
 
-#: includes/class-sunshinephotocart.php:465
+#: includes/class-sunshinephotocart.php:466
 msgid "Add New Product Category"
 msgstr "הוסף קטגוריית מוצרים חדשה"
 
-#: includes/class-sunshinephotocart.php:466
+#: includes/class-sunshinephotocart.php:467
 msgid "New Product Category Name"
 msgstr "שם קטגוריית מוצרים חדשה"
 
-#: includes/class-sunshinephotocart.php:467
+#: includes/class-sunshinephotocart.php:468
 msgid "Separate categories with commas"
 msgstr "קטגוריות נפרדות עם פסיקים"
 
-#: includes/class-sunshinephotocart.php:468
+#: includes/class-sunshinephotocart.php:469
 msgid "Choose from the most used categories"
 msgstr "בחר מתוך הקטגוריות הנפוצות ביותר"
 
-#: includes/class-sunshinephotocart.php:499 class-admin-automated-emails.php:93
+#: includes/class-sunshinephotocart.php:500 class-admin-automated-emails.php:93
 msgid "Price Levels"
 msgstr "רמות מחירים"
 
-#: includes/class-sunshinephotocart.php:501
+#: includes/class-sunshinephotocart.php:502
 msgid "Search Price Levels"
 msgstr "חפש רמות מחירים"
 
-#: includes/class-sunshinephotocart.php:502
+#: includes/class-sunshinephotocart.php:503
 msgid "All Price Levels"
 msgstr "כל רמות המחיר"
 
-#: includes/class-sunshinephotocart.php:503
+#: includes/class-sunshinephotocart.php:504
 msgid "Parent Price Level"
 msgstr "רמת מחיר הורה"
 
-#: includes/class-sunshinephotocart.php:504
+#: includes/class-sunshinephotocart.php:505
 msgid "Parent Price Level:"
 msgstr "רמת מחיר הורה:"
 
-#: includes/class-sunshinephotocart.php:505
+#: includes/class-sunshinephotocart.php:506
 msgid "Edit Price Level"
 msgstr "ערוך את רמת המחיר"
 
-#: includes/class-sunshinephotocart.php:506
+#: includes/class-sunshinephotocart.php:507
 msgid "Update Price Level"
 msgstr "עדכן את רמת המחיר"
 
-#: includes/class-sunshinephotocart.php:507
+#: includes/class-sunshinephotocart.php:508
 msgid "Add New Price Level"
 msgstr "הוסף רמת מחיר חדשה"
 
-#: includes/class-sunshinephotocart.php:508
+#: includes/class-sunshinephotocart.php:509
 msgid "New Price Level"
 msgstr "רמת מחיר חדשה"
 
-#: includes/class-sunshinephotocart.php:536
+#: includes/class-sunshinephotocart.php:537
 msgid "Add New Order"
 msgstr "הוסף הזמנה חדשה"
 
-#: includes/class-sunshinephotocart.php:537
+#: includes/class-sunshinephotocart.php:538
 msgid "Edit Order"
 msgstr "לעריכת ההזמנה"
 
-#: includes/class-sunshinephotocart.php:538
+#: includes/class-sunshinephotocart.php:539
 msgid "New Order"
 msgstr "הזמנה חדשה"
 
-#: includes/class-sunshinephotocart.php:539
+#: includes/class-sunshinephotocart.php:540
 msgid "All Orders"
 msgstr "כל ההזמנות"
 
-#: includes/class-sunshinephotocart.php:540
+#: includes/class-sunshinephotocart.php:541
 msgid "View Orders"
 msgstr "הצג הזמנות"
 
-#: includes/class-sunshinephotocart.php:541
+#: includes/class-sunshinephotocart.php:542
 msgid "Search Orders"
 msgstr "לחפש בהזמנות"
 
-#: includes/class-sunshinephotocart.php:542
+#: includes/class-sunshinephotocart.php:543
 msgid "No orders found"
 msgstr "לא נמצאו הזמנות"
 
-#: includes/class-sunshinephotocart.php:543
+#: includes/class-sunshinephotocart.php:544
 msgid "No orders found in trash"
 msgstr "לא נמצאו הזמנות בפח"
 
-#: includes/class-sunshinephotocart.php:582
+#: includes/class-sunshinephotocart.php:583
 msgid "Order Statuses"
 msgstr "מצבי הזמנות"
 
-#: includes/class-sunshinephotocart.php:584
+#: includes/class-sunshinephotocart.php:585
 msgid "Search Order Status"
 msgstr "סטטוס הזמנת חיפוש"
 
-#: includes/class-sunshinephotocart.php:585
+#: includes/class-sunshinephotocart.php:586
 msgid "All Order Status"
 msgstr "כל סטטוס ההזמנה"
 
-#: includes/class-sunshinephotocart.php:586
+#: includes/class-sunshinephotocart.php:587
 msgid "Parent Order Status"
 msgstr "סטטוס הזמנת הורה"
 
-#: includes/class-sunshinephotocart.php:587
+#: includes/class-sunshinephotocart.php:588
 msgid "Parent Order Status:"
 msgstr "סטטוס הזמנת הורה:"
 
-#: includes/class-sunshinephotocart.php:588
+#: includes/class-sunshinephotocart.php:589
 msgid "Edit Order Status"
 msgstr "ערוך את סטטוס ההזמנה"
 
-#: includes/class-sunshinephotocart.php:589
+#: includes/class-sunshinephotocart.php:590
 msgid "Update Order Status"
 msgstr "עדכון סטטוס ההזמנה"
 
-#: includes/class-sunshinephotocart.php:590
+#: includes/class-sunshinephotocart.php:591
 msgid "Add New Order Status"
 msgstr "הוסף סטטוס הזמנה חדשה"
 
-#: includes/class-sunshinephotocart.php:591
+#: includes/class-sunshinephotocart.php:592
 msgid "New Order Status"
 msgstr "סטטוס הזמנה חדשה"
 
@@ -13502,13 +13566,13 @@ msgstr "פריטים שלא נוספו לעגלה"
 #. translators: %s is the product name
 #. translators: %s: product name (optionally followed by the image name)
 #. translators: %s: product name
-#: includes/functions/add-to-cart.php:431 customer-tracking.php:206
+#: includes/functions/add-to-cart.php:431 customer-tracking.php:207
 #: hooks.php:117
 #, php-format
 msgid "%s added to cart"
 msgstr "%s נוסף לעגלה"
 
-#: includes/functions/cart.php:38 customer-tracking.php:241 cart.php:114
+#: includes/functions/cart.php:38 customer-tracking.php:242 cart.php:114
 msgid "Cart updated"
 msgstr "העגלה עודכנה"
 
@@ -15602,11 +15666,11 @@ msgstr ""
 "80525,80526,80527. השתמש ב-* כתו כללי (805* מתאים לכל מה שמתחיל ב-805) או "
 "ב-... לטווח מספרי (80525...80527). השאר ריק כדי לאפשר את כולם."
 
-#: includes/shipping-methods/pickup.php:15
+#: includes/shipping-methods/pickup.php:16
 msgid "Pickup Location Details"
 msgstr "פרטי נקודת האיסוף"
 
-#: includes/shipping-methods/pickup.php:18
+#: includes/shipping-methods/pickup.php:19
 msgid ""
 "Address, hours, or other instructions for this pickup location. Shown to the "
 "customer on the order confirmation."
@@ -16458,86 +16522,86 @@ msgstr "ספירת פעולות לפי סוג"
 msgid "How many times each action_type was recorded in the period."
 msgstr "כמה פעמים כל action_type נרשם בתקופה."
 
-#: customer-tracking.php:108
+#: customer-tracking.php:109
 msgid "Logged in"
 msgstr "מחובר"
 
-#: customer-tracking.php:113
+#: customer-tracking.php:114
 msgid "Logged out"
 msgstr "התנתק"
 
 #. translators: %s: image name and filename
-#: customer-tracking.php:147
+#: customer-tracking.php:148
 #, php-format
 msgid "Image %s added to favorites"
 msgstr "תמונה %s נוספה למועדפים"
 
 #. translators: %s: image name and filename
-#: customer-tracking.php:155
+#: customer-tracking.php:156
 #, php-format
 msgid "Image %s removed from favorites"
 msgstr "תמונה %s הוסרה מהמועדפים"
 
 #. translators: %s: image name and filename
-#: customer-tracking.php:176
+#: customer-tracking.php:177
 #, php-format
 msgid "Comment added on %s"
 msgstr "תגובה נוספה ב-%s"
 
 #. translators: %s: image name and filename
-#: customer-tracking.php:228
+#: customer-tracking.php:229
 #, php-format
 msgid "Shared %s"
 msgstr "%s משותפים"
 
 #. translators: %s: gallery name
-#: customer-tracking.php:280
+#: customer-tracking.php:369
 #, php-format
 msgid "Viewed gallery %s"
 msgstr "צפו בגלריה %s"
 
 #. translators: %s: number of credits used
-#: customer-tracking.php:327
+#: customer-tracking.php:389
 #, php-format
 msgid "%s credits used"
 msgstr "השתמשו ב-%s זיכויים"
 
 #. translators: %s: image name
-#: customer-tracking.php:399
+#: customer-tracking.php:398
 #, php-format
 msgid "Viewed image %s"
 msgstr "צפו בתמונה %s"
 
 #. translators: %s: image name
-#: customer-tracking.php:429
+#: customer-tracking.php:428
 #, php-format
 msgid "Downloaded free image %s"
 msgstr "הורדת תמונה בחינם %s"
 
 #. translators: %s: image name
-#: customer-tracking.php:450
+#: customer-tracking.php:449
 #, php-format
 msgid "Downloaded image with credit %s"
 msgstr "תמונה שהורדה עם קרדיט %s"
 
 #. translators: %s: gallery name
-#: customer-tracking.php:479
+#: customer-tracking.php:478
 #, php-format
 msgid "Downloaded free gallery %s"
 msgstr "הורד גלריה בחינם %s"
 
-#: customer-tracking.php:486
+#: customer-tracking.php:485
 msgid "Signup"
 msgstr "הירשם"
 
 #. translators: %1$s: search query, %2$s: gallery name, %3$s: number of results
-#: customer-tracking.php:508
+#: customer-tracking.php:507
 #, php-format
 msgid "Search for \"%1$s\" in %2$s: %3$s results"
 msgstr "חפש \"%1$s\" ב-%2$s: %3$s תוצאות"
 
 #. translators: %1$s: search query, %2$s: number of results
-#: customer-tracking.php:511
+#: customer-tracking.php:510
 #, php-format
 msgid "Search for \"%1$s\": %2$s results"
 msgstr "חפש \"%1$s\": %2$s תוצאות"
@@ -16668,6 +16732,37 @@ msgstr "רווח כולל"
 #: reports.php:183
 msgid "Average Profit Per Order"
 msgstr "רווח ממוצע להזמנה"
+
+#: retention.php:12
+msgid ""
+"Leave blank to keep every view. When there are more than this, the oldest "
+"guest views are removed first, then the oldest views by customers who have "
+"not ordered. Views by customers who have ordered, other customer activity, "
+"and the Views totals on your galleries are never removed."
+msgstr "השאר ריק כדי לשמור את כל הצפיות. כשיש יותר מהמספר הזה, נמחקות קודם הצפיות הישנות ביותר של אורחים, ואחר כך הצפיות הישנות ביותר של לקוחות שלא הזמינו. צפיות של לקוחות שהזמינו, פעילות לקוחות אחרת וסך הצפיות בגלריות שלך אף פעם לא נמחקים."
+
+#. translators: %s: number of gallery and image view records currently stored
+#: retention.php:17
+#, php-format
+msgid "You currently have %s view records."
+msgstr "מספר רשומות הצפייה כרגע: %s."
+
+#: retention.php:22
+msgid "Customer Activity"
+msgstr "פעילות לקוחות"
+
+#: retention.php:26
+msgid "Maximum view records to keep"
+msgstr "מספר מרבי של רשומות צפייה לשמירה"
+
+#. translators: 1: number of customer activity records, 2: settings page URL
+#: retention.php:99
+#, php-format
+msgid ""
+"Your Sunshine customer activity log has %1$s records and is taking up a lot "
+"of database space. You can set a maximum number of view records to keep in "
+"<a href=\"%2$s\">Settings > Privacy & Data</a>."
+msgstr "ביומן פעילות הלקוחות של Sunshine יש %1$s רשומות, והוא תופס הרבה מקום במסד הנתונים. אפשר להגדיר מספר מרבי של רשומות צפייה לשמירה ב<a href=\"%2$s\">הגדרות > פרטיות ונתונים</a>."
 
 #: update.php:16
 msgid "Update Report Data"
@@ -16882,7 +16977,9 @@ msgstr ""
 msgid ""
 "Only send this email for galleries using the selected price levels. Leave "
 "empty to send for all price levels."
-msgstr "שלח את האימייל הזה רק לגלריות שמשתמשות ברמות המחיר שנבחרו. השאר ריק כדי לשלוח לכל רמות המחיר."
+msgstr ""
+"שלח את האימייל הזה רק לגלריות שמשתמשות ברמות המחיר שנבחרו. השאר ריק כדי "
+"לשלוח לכל רמות המחיר."
 
 #: class-admin-automated-emails.php:110 admin/schedule.php:28
 msgid "Time"
@@ -17116,12 +17213,12 @@ msgid "After gallery is published"
 msgstr "אחרי פרסום הגלריה"
 
 #. translators: %1$s: email name, %2$s: recipient email address
-#: common.php:287
+#: common.php:296
 #, php-format
 msgid "%1$s for %2$s"
 msgstr "%1$s עבור %2$s"
 
-#: common.php:360
+#: common.php:369
 msgid "Queue processed!"
 msgstr "התור עובד!"
 
@@ -18562,11 +18659,11 @@ msgstr "רמז לקוד הגישה"
 msgid "Expiration Date"
 msgstr "תאריך סיום"
 
-#: class-export-galleries.php:156 class-export-orders.php:597
+#: class-export-galleries.php:155 class-export-orders.php:597
 msgid "Dates"
 msgstr "תאריכים"
 
-#: class-export-galleries.php:158 class-export-orders.php:599
+#: class-export-galleries.php:157 class-export-orders.php:599
 msgid "to"
 msgstr "עד"
 
@@ -21948,15 +22045,15 @@ msgstr "אין תיקיות משנה"
 msgid "Error loading folders"
 msgstr "שגיאה בטעינת תיקיות"
 
-#: includes/class-cloud-storage-manager.php:2313
+#: includes/class-cloud-storage-manager.php:2335
 msgid "No objects found in WP Offload Media data"
 msgstr "לא נמצאו אובייקטים בנתוני WP Offload Media"
 
-#: includes/class-cloud-storage-manager.php:2373
+#: includes/class-cloud-storage-manager.php:2395
 msgid "Could not build URLs from WP Offload Media data"
 msgstr "לא ניתן לבנות כתובות URL מנתוני WP Offload Media"
 
-#: includes/class-cloud-storage-manager.php:2461
+#: includes/class-cloud-storage-manager.php:2483
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr "לא ניתן לאחזר כתובות URL מ-WP Offload Media"
 
@@ -22500,6 +22597,9 @@ msgstr "סכום מקורי:"
 msgid "Add to Cart"
 msgstr "הוסף לסל"
 
+#~ msgid "Data"
+#~ msgstr "נתונים"
+
 #~ msgid ""
 #~ "No reclaimable files found. Every image in cloud storage has already had "
 #~ "its local copy removed."
@@ -22614,10 +22714,6 @@ msgstr "הוסף לסל"
 #, fuzzy
 #~ msgid "Signature Required"
 #~ msgstr "חתימה"
-
-#, fuzzy
-#~ msgid "Tracking"
-#~ msgstr "אפשר מעקב"
 
 #, fuzzy, php-format
 #~ msgid "Package %d"
