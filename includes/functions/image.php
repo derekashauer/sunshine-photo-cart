@@ -178,15 +178,14 @@ function sunshine_apply_image_meta( $attachment_id, $image_meta, $metadata = arr
 		wp_update_post( $update_args );
 	}
 
-	if ( ! empty( $image_meta['created_timestamp'] ) ) {
-		$created_timestamp = $image_meta['created_timestamp'];
-	} else {
-		$created_timestamp = current_time( 'timestamp' );
-	}
-
 	// Update rather than add, so running a photo through here again (Refresh
 	// Photo Details) replaces the old values instead of stacking up copies.
-	update_post_meta( $attachment_id, 'created_timestamp', $created_timestamp );
+	// A file with no date only gets "now" if the photo has no date yet.
+	if ( ! empty( $image_meta['created_timestamp'] ) ) {
+		update_post_meta( $attachment_id, 'created_timestamp', $image_meta['created_timestamp'] );
+	} else {
+		add_post_meta( $attachment_id, 'created_timestamp', current_time( 'timestamp' ), true );
+	}
 	if ( ! empty( $image_meta['keywords'] ) && is_array( $image_meta['keywords'] ) ) {
 		update_post_meta( $attachment_id, 'sunshine_keywords', implode( ', ', $image_meta['keywords'] ) );
 	}

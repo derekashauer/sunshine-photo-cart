@@ -123,7 +123,7 @@ class SPC_Tool_Refresh_Photo_Details extends SPC_Tool {
 
 		$image = sunshine_get_image( $image_id );
 		if ( empty( $image ) ) {
-			return array( 'ok' => false, 'image_id' => (int) $image_id, 'file' => '', 'keywords' => '', 'error' => 'image_not_found' );
+			return array( 'ok' => false, 'image_id' => (int) $image_id, 'file' => '', 'keywords' => '', 'error' => __( 'Photo not found', 'sunshine-photo-cart' ) );
 		}
 
 		if ( function_exists( 'wp_get_original_image_path' ) ) {
