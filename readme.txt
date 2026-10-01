@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 3.7.2
+Stable tag: 3.7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,7 +243,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.7.3 =
+= 3.7.3 - October 1, 2026 =
 * New: A "Refresh photo details" button on the gallery edit screen reads the keywords, title, caption and photo date from your original files for photos already in that gallery and its sub-galleries, so galleries imported before this update can be searched by keyword
 * Fix: Viewing a gallery no longer gives a guest a session cookie, so galleries can be served from a page cache until the visitor adds to their cart, saves a favorite, or enters a gallery password. The cart's "Return to gallery" link still points to the gallery the item came from
 * Fix: The "Set your password" link in new account emails, including accounts created during bulk gallery creation, and password reset links showed the login/register screen instead of the new password form on sites where the account URL settings had never been saved
