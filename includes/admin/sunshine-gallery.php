@@ -390,6 +390,7 @@ function sunshine_meta_gallery_images_display() {
 		<div id="sunshine-gallery-image-actions">
 			<div id="sunshine-gallery-select-all"><a class="button" data-action="all"><?php esc_html_e( 'Select all images', 'sunshine-photo-cart' ); ?></a></div>
 			<div id="sunshine-gallery-regenerate-images"><a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-tools&tool=regenerate-images&sunshine_gallery=' . $post->ID ), 'sunshine_tool_regenerate-images' ) ); ?>"><?php esc_html_e( 'Regenerate all gallery images', 'sunshine-photo-cart' ); ?></a></div>
+			<div id="sunshine-gallery-refresh-photo-details"><a class="button" href="<?php echo esc_url( wp_nonce_url( admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-tools&tool=refresh-photo-details&sunshine_gallery=' . $post->ID ), 'sunshine_tool_refresh-photo-details' ) ); ?>"><?php esc_html_e( 'Refresh photo details', 'sunshine-photo-cart' ); ?></a></div>
 			<div id="sunshine-gallery-delete-images" style="display: none;"><a class="button delete"><?php esc_html_e( 'Delete selected images', 'sunshine-photo-cart' ); ?></a><span class="spinner"></span></div>
 		<?php
 		if ( $total_images > 20 ) {

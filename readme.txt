@@ -244,6 +244,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.7.3 =
+* New: A "Refresh photo details" button on the gallery edit screen reads the keywords, title, caption and photo date from your original files for photos already in that gallery and its sub-galleries, so galleries imported before this update can be searched by keyword
 * Fix: Viewing a gallery no longer gives a guest a session cookie, so galleries can be served from a page cache until the visitor adds to their cart, saves a favorite, or enters a gallery password. The cart's "Return to gallery" link still points to the gallery the item came from
 * Fix: The "Set your password" link in new account emails, including accounts created during bulk gallery creation, and password reset links showed the login/register screen instead of the new password form on sites where the account URL settings had never been saved
 * New: `sunshine_cart_item_tax_rate` filter to charge a different tax rate on individual cart items, such as a reduced VAT rate on some products

@@ -179,6 +179,7 @@ final class Sunshine_Photo_Cart {
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/tools.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/class-tool.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/tools/regenerate.php';
+		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/tools/refresh-photo-details.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/tools/sessions.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/tools/orphans.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/tools/unused-image-sizes.php';
