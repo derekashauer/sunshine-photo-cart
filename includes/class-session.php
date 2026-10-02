@@ -375,15 +375,10 @@ class SPC_Session {
 				$maybe_json = json_decode( $this->data[ $key ] );
 
 				// Since json_last_error is PHP 5.3+, we have to rely on a `null` value for failing to parse JSON.
+				// Never unserialize here. set() only stores JSON or plain text, so a
+				// serialized string can only come from visitor input.
 				if ( is_null( $maybe_json ) ) {
-					$is_serialized = is_serialized( $this->data[ $key ] );
-					if ( $is_serialized ) {
-						$value = @unserialize( $this->data[ $key ] );
-						$this->set( $key, (array) $value );
-						$return = $value;
-					} else {
-						$return = $this->data[ $key ];
-					}
+					$return = $this->data[ $key ];
 				} else {
 					$return = json_decode( $this->data[ $key ], true );
 				}

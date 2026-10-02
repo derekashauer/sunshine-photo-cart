@@ -243,6 +243,9 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.7.4 =
+* Security: Visitors can no longer use the favorites share link to send harmful data to the site
+
 = 3.7.3 - October 1, 2026 =
 * New: A "Refresh photo details" button on the gallery edit screen reads the keywords, title, caption and photo date from your original files for photos already in that gallery and its sub-galleries, so galleries imported before this update can be searched by keyword
 * Fix: Viewing a gallery no longer gives a guest a session cookie, so galleries can be served from a page cache until the visitor adds to their cart, saves a favorite, or enters a gallery password. The cart's "Return to gallery" link still points to the gallery the item came from
