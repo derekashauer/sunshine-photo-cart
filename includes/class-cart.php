@@ -1013,6 +1013,26 @@ class SPC_Cart {
 		return sunshine_price( $this->get_tax() );
 	}
 
+	/**
+	 * Name of the tax rate that applied to this cart, or an empty string when it has none.
+	 *
+	 * @return string
+	 */
+	public function get_tax_name() {
+		if ( empty( $this->tax_rate['name'] ) ) {
+			return '';
+		}
+		return trim( $this->tax_rate['name'] );
+	}
+
+	public function get_tax_label() {
+		return sunshine_get_tax_label( $this->get_tax_name() );
+	}
+
+	public function get_tax_included_text() {
+		return sunshine_get_tax_included_text( $this->get_tax_formatted(), $this->get_tax_name() );
+	}
+
 	public function get_credits() {
 		if ( ! $this->use_credits() ) {
 			return 0;
@@ -2575,6 +2595,7 @@ class SPC_Cart {
 		$order->set_credits( $this->get_credits_applied() );
 		$order->set_total( $this->get_total() );
 		$order->set_price_has_tax( SPC()->get_option( 'price_has_tax' ) );
+		$order->update_meta_value( 'tax_name', $this->get_tax_name() );
 
 		$fees = $this->get_fees();
 		$order->update_fees( $fees );

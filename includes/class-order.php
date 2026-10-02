@@ -20,6 +20,7 @@ class SPC_Order extends Sunshine_Data {
 		'subtotal'             => 0,
 		'subtotal_tax'         => 0,
 		'tax'                  => 0,
+		'tax_name'             => '',
 		'total'                => 0,
 
 		'customer_id'          => 0,
@@ -550,6 +551,22 @@ class SPC_Order extends Sunshine_Data {
 	}
 	public function set_tax( $value ) {
 		$this->update_meta_value( 'tax', floatval( $value ) );
+	}
+
+	/**
+	 * Name of the tax rate charged on this order, saved when it was placed so renaming
+	 * the rate later does not change past orders. Empty for orders without one.
+	 *
+	 * @return string
+	 */
+	public function get_tax_name() {
+		return trim( (string) $this->get_meta_value( 'tax_name' ) );
+	}
+	public function get_tax_label() {
+		return sunshine_get_tax_label( $this->get_tax_name() );
+	}
+	public function get_tax_included_text() {
+		return sunshine_get_tax_included_text( $this->get_tax_formatted(), $this->get_tax_name() );
 	}
 
 	public function get_discounts() {

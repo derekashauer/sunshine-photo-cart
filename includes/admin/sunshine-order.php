@@ -871,7 +871,7 @@ class SPC_Admin_Order {
 			<?php } ?>
 			<?php if ( $order->get_tax() ) { ?>
 			<tr class="sunshine-tax">
-				<th><?php esc_html_e( 'Tax', 'sunshine-photo-cart' ); ?></th>
+				<th><?php echo esc_html( $order->get_tax_label() ); ?></th>
 				<td><?php echo wp_kses_post( $order->get_tax_formatted() ); ?></td>
 			</tr>
 			<?php } ?>

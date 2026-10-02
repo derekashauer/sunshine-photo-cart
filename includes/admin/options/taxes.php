@@ -13,6 +13,7 @@ function sunshine_taxes_display() {
 			<th><?php esc_html_e( 'State/Province', 'sunshine-photo-cart' ); ?></th>
 			<th><?php esc_html_e( 'Zip/Postal Code(s)', 'sunshine-photo-cart' ); ?></th>
 			<th><?php esc_html_e( 'Tax Rate', 'sunshine-photo-cart' ); ?></th>
+			<th><?php esc_html_e( 'Name', 'sunshine-photo-cart' ); ?></th>
 			<th></th>
 		</thead>
 		<tbody>
@@ -47,6 +48,7 @@ function sunshine_taxes_display() {
 					</td>
 					<td class="tax-postcode"><input type="text" name="sunshine_tax_rates[<?php echo esc_attr( $i ); ?>][postcode]" value="<?php echo ( ! empty( $tax_rate['postcode'] ) ) ? esc_attr( $tax_rate['postcode'] ) : ''; ?>" /></td>
 					<td class="tax-rate"><input type="number" name="sunshine_tax_rates[<?php echo esc_attr( $i ); ?>][rate]" size="6" step=".001" min="0" max="100" value="<?php echo esc_attr( $tax_rate['rate'] ); ?>" />%</td>
+					<td class="tax-name"><input type="text" name="sunshine_tax_rates[<?php echo esc_attr( $i ); ?>][name]" value="<?php echo ( ! empty( $tax_rate['name'] ) ) ? esc_attr( $tax_rate['name'] ) : ''; ?>" placeholder="<?php esc_attr_e( 'Tax', 'sunshine-photo-cart' ); ?>" size="10" /></td>
 					<td class="tax-actions">
 						<a href="#" class="button delete"><?php esc_html_e( 'Delete', 'sunshine-photo-cart' ); ?></a>
 					</td>
@@ -70,6 +72,7 @@ function sunshine_taxes_display() {
 				<td class="tax-state"><input type="text" name="sunshine_tax_rates[<?php echo esc_attr( $i ); ?>][state]" value="" /></td>
 				<td class="tax-postcode"><input type="text" name="sunshine_tax_rates[<?php echo esc_attr( $i ); ?>][postcode]" value="" /></td>
 				<td class="tax-rate"><input type="number" name="sunshine_tax_rates[<?php echo esc_attr( $i ); ?>][rate]" step=".001" min="0" max="100" size="6" value="" />%</td>
+				<td class="tax-name"><input type="text" name="sunshine_tax_rates[<?php echo esc_attr( $i ); ?>][name]" value="" placeholder="<?php esc_attr_e( 'Tax', 'sunshine-photo-cart' ); ?>" size="10" /></td>
 				<td class="wps-actions">
 					<a href="#" class="button delete"><?php esc_html_e( 'Delete', 'sunshine-photo-cart' ); ?></a>
 				</td>
@@ -88,6 +91,7 @@ function sunshine_taxes_display() {
 	jQuery( document ).ready(function($){
 
 		var sunshine_next_instance = <?php echo intval( $i ); ?>;
+		var sunshine_tax_name_suggestions = <?php echo wp_json_encode( sunshine_get_tax_name_suggestions() ); ?>;
 
 		$( document ).on( 'click', '#sunshine-new-tax-rate a', function( e ){
 
@@ -103,6 +107,7 @@ function sunshine_taxes_display() {
 							'<td class="tax-state"><input type="text" name="sunshine_tax_rates[' + sunshine_next_instance + '][state]" value="" /></td>' +
 							'<td class="tax-postcode"><input type="text" name="sunshine_tax_rates[' + sunshine_next_instance + '][postcode]" value="" /></td>' +
 							'<td class="tax-rate"><input type="number" name="sunshine_tax_rates[' + sunshine_next_instance + '][rate]" step=".001" min="0" max="100" size="6" value="" />%</td>' +
+							'<td class="tax-name"><input type="text" name="sunshine_tax_rates[' + sunshine_next_instance + '][name]" value="" placeholder="<?php echo esc_js( __( 'Tax', 'sunshine-photo-cart' ) ); ?>" size="10" /></td>' +
 							'<td class="wps-actions">' +
 								'<a href="#" class="button delete"><?php echo esc_js( __( 'Delete', 'sunshine-photo-cart' ) ); ?></a>' +
 							'</td>' +
@@ -158,6 +163,13 @@ function sunshine_taxes_display() {
 		$( document ).on( 'change', '.tax-country select', function( e ){
 			var data_instance_id = $( this ).closest( 'tr' ).data( 'instance' );
 			var selected_country = $( 'option:selected', this ).val();
+
+			// Suggest a name for the country (GST, VAT) only when the field is still empty,
+			// so a name the store owner typed is never replaced.
+			var name_field = $( this ).closest( 'tr' ).find( 'td.tax-name input' );
+			if ( name_field.length && '' === $.trim( name_field.val() ) && sunshine_tax_name_suggestions[ selected_country ] ) {
+				name_field.val( sunshine_tax_name_suggestions[ selected_country ] );
+			}
 			$.ajax({
 				type: 'POST',
 				url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',

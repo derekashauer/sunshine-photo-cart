@@ -928,7 +928,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 				$order_data['taxes'] = array(
 					array(
 						'uid'        => 'tax-1',
-						'name'       => __( 'Tax', 'sunshine-photo-cart' ),
+						'name'       => $order->get_tax_label(),
 						'percentage' => number_format( $tax_rate['rate'] * 100, 5, '.', '' ),
 						'scope'      => 'LINE_ITEM',
 						'type'       => $price_has_tax ? 'INCLUSIVE' : 'ADDITIVE',

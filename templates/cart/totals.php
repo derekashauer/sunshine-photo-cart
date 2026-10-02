@@ -40,7 +40,7 @@
 	<?php } ?>
 	<?php if ( SPC()->cart->get_tax() && SPC()->get_option( 'display_price' ) != 'with_tax' ) { ?>
 	<tr class="sunshine--cart--tax">
-		<th><?php esc_html_e( 'Tax', 'sunshine-photo-cart' ); ?></th>
+		<th><?php echo esc_html( SPC()->cart->get_tax_label() ); ?></th>
 		<td><?php echo wp_kses_post( SPC()->cart->get_tax_formatted() ); ?></td>
 	</tr>
 	<?php } ?>
@@ -71,8 +71,7 @@
 		<td>
 			<?php echo wp_kses_post( SPC()->cart->get_total_formatted() ); ?>
 			<?php if ( SPC()->cart->get_total() > 0 && SPC()->cart->get_tax() && SPC()->get_option( 'display_price' ) == 'with_tax' ) { ?>
-				<?php /* translators: %s is the tax amount */ ?>
-				<span class="sunshine--cart--total--tax--explain">(<?php echo wp_kses_post( sprintf( __( 'includes %s tax', 'sunshine-photo-cart' ), SPC()->cart->get_tax_formatted() ) ); ?>)</span>
+				<span class="sunshine--cart--total--tax--explain">(<?php echo wp_kses_post( SPC()->cart->get_tax_included_text() ); ?>)</span>
 			<?php } ?>
 		</td>
 	</tr>

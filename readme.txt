@@ -244,6 +244,8 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.7.4 =
+* New: Each tax rate can have a name, like GST or VAT, that shows in place of "Tax" on the cart, checkout, order pages, emails and invoices. Picking a country on a tax rate fills in the usual name for that country, and rates without a name keep showing "Tax"
+* Fix: Invoices no longer list tax on its own line when prices are displayed with tax included, so the totals add up. The order total now says how much tax it includes, the same as the order page and emails
 * Security: Visitors can no longer use the favorites share link to send harmful data to the site
 
 = 3.7.3 - October 1, 2026 =

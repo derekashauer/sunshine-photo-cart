@@ -52,6 +52,7 @@
 		#sunshine--invoice--order-totals { margin-left: auto; }
 		#sunshine--invoice--order-totals th { padding: 0 15px 5px 0; font-size: 14px; text-align: right; }
 		#sunshine--invoice--order-totals td { padding: 0 0 5px 0; font-size: 14px; text-align: right; }
+		#sunshine--invoice--order-totals .sunshine--cart--total--tax--explain { display: block; font-size: 12px; font-style: italic; }
 
 		@media print {
 			#sunshine--invoice--actions { display: none; }
@@ -280,9 +281,9 @@
 		<td><?php echo wp_kses_post( $order->get_discount_formatted() ); ?></td>
 	</tr>
 	<?php } ?>
-	<?php if ( $order->get_tax() ) { ?>
+	<?php if ( $order->get_tax() && $order->get_meta_value( 'display_price' ) !== 'with_tax' ) { ?>
 	<tr class="sunshine-tax">
-		<th><?php esc_html_e( 'Tax', 'sunshine-photo-cart' ); ?></th>
+		<th><?php echo esc_html( $order->get_tax_label() ); ?></th>
 		<td><?php echo wp_kses_post( $order->get_tax_formatted() ); ?></td>
 	</tr>
 	<?php } ?>
@@ -309,7 +310,12 @@
 	
 	<tr class="sunshine-total">
 		<th><?php esc_html_e( 'Order Total', 'sunshine-photo-cart' ); ?></th>
-		<td><?php echo wp_kses_post( $order->get_total_formatted() ); ?></td>
+		<td>
+			<?php echo wp_kses_post( $order->get_total_formatted() ); ?>
+			<?php if ( $order->get_total() > 0 && $order->get_tax() && $order->get_meta_value( 'display_price' ) == 'with_tax' ) { ?>
+				<span class="sunshine--cart--total--tax--explain">(<?php echo wp_kses_post( $order->get_tax_included_text() ); ?>)</span>
+			<?php } ?>
+		</td>
 	</tr>
 </table>
 

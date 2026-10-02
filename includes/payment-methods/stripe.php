@@ -2131,7 +2131,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 				'price_data' => array(
 					'currency'     => strtolower( $this->currency ),
 					'product_data' => array(
-						'name' => __( 'Tax', 'sunshine-photo-cart' ),
+						'name' => $order->get_tax_label(),
 					),
 					'unit_amount'  => $this->convert_amount_to_stripe( $order->get_tax() ),
 				),
