@@ -139,6 +139,7 @@ function sunshine_multi_image_select_images() {
 	$ref             = ( ! empty( $_POST['ref'] ) ) ? sanitize_text_field( $_POST['ref'] ) : 'store-images';
 	$key             = ( isset( $_POST['key'] ) ) ? sanitize_text_field( $_POST['key'] ) : '0';
 	$selected        = ( isset( $_POST['selected'] ) ) ? sanitize_text_field( $_POST['selected'] ) : '';
+	$default_source  = ( ! empty( $_POST['default_source'] ) ) ? sanitize_key( $_POST['default_source'] ) : '';
 
 	$sources = sunshine_get_sources( ( ! empty( $source_product ) ) ? $source_product : $product, $gallery );
 
@@ -153,6 +154,7 @@ function sunshine_multi_image_select_images() {
 		'ref'             => $ref,
 		'key'             => $key,
 		'selected'        => ( ! empty( $selected ) ) ? explode( ',', $selected ) : array(),
+		'default_source'  => $default_source,
 	);
 
 	do_action( 'sunshine_before_multi_image_select_images', $product, $gallery );

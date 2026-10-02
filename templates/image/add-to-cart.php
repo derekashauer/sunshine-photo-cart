@@ -63,11 +63,7 @@
 				$price_level = 0;
 			}
 
-			// Get allowed product types - exclude packages in bulk mode.
 			$allowed_types = sunshine_get_allowed_product_types_for_image();
-			if ( ! empty( $bulk_mode ) && ! empty( $images ) && count( $images ) > 1 ) {
-				$allowed_types = array_diff( $allowed_types, array( 'package' ) );
-			}
 
 			$categories = sunshine_get_product_categories( $price_level, $allowed_types );
 			if ( ! empty( $categories ) && count( $categories ) > 1 ) {

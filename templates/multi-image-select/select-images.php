@@ -23,6 +23,8 @@ if ( empty( $id ) ) {
 	</div>
 	<?php
 	$favorite_count = SPC()->customer->get_favorite_count();
+	// Start on the customer's favorites when asked to, such as for a package added from "Add all to cart".
+	$start_with_favorites = ( $favorite_count > 0 && ! empty( $default_source ) && 'favorites' === $default_source );
 	if ( count( $sources ) > 1 || $favorite_count > 0 ) {
 		?>
 	<div class="sunshine--multi-image-select--sources">
@@ -32,10 +34,10 @@ if ( empty( $id ) ) {
 				<?php
 				if ( $favorite_count > 0 ) {
 					?>
-					<option value="favorites"><?php esc_html_e( 'Favorites', 'sunshine-photo-cart' ); ?> (<?php echo esc_html( $favorite_count ); ?>)</option>
+					<option value="favorites" <?php selected( $start_with_favorites ); ?>><?php esc_html_e( 'Favorites', 'sunshine-photo-cart' ); ?> (<?php echo esc_html( $favorite_count ); ?>)</option>
 					<?php
 				}
-				sunshine_source_dropdown_options( $sources, $gallery->get_id() );
+				sunshine_source_dropdown_options( $sources, $start_with_favorites ? '' : $gallery->get_id() );
 				?>
 			</select>
 		</label>
@@ -44,19 +46,22 @@ if ( empty( $id ) ) {
 	<?php } ?>
 	<div class="sunshine--multi-image-select--list">
 		<?php
-		sunshine_get_template(
-			'multi-image-select/gallery-list',
-			array(
-				'gallery'     => $gallery,
-				'product'     => $product,
-				'image_count' => $image_count,
-				'id'          => $id,
-				'selected'    => $selected,
-			)
-		);
+		// Skipped when starting on favorites. Picking the gallery in the dropdown loads it then.
+		if ( ! $start_with_favorites ) {
+			sunshine_get_template(
+				'multi-image-select/gallery-list',
+				array(
+					'gallery'     => $gallery,
+					'product'     => $product,
+					'image_count' => $image_count,
+					'id'          => $id,
+					'selected'    => $selected,
+				)
+			);
+		}
 		?>
 		<?php if ( $favorite_count > 0 ) { ?>
-			<div id="sunshine--multi-image-select--source-favorites--<?php echo esc_attr( $id ); ?>" class="sunshine--multi-image-select--source--list" data-product-type="<?php echo esc_attr( $product->get_type() ); ?>" style="display:none;">
+			<div id="sunshine--multi-image-select--source-favorites--<?php echo esc_attr( $id ); ?>" class="sunshine--multi-image-select--source--list" data-product-type="<?php echo esc_attr( $product->get_type() ); ?>" <?php echo $start_with_favorites ? '' : 'style="display:none;"'; ?>>
 				<?php foreach ( SPC()->customer->get_favorites() as $image ) { ?>
 					<figure class="sunshine--multi-image-select--image sunshine--multi-image-select--source-favorites">
 						<input type="checkbox" required="required" id="image-favorites-<?php echo esc_attr( $image->get_gallery_id() ); ?>-<?php echo esc_attr( $image->get_id() ); ?>-<?php echo esc_attr( $id ); ?>" name="images[]" data-option-id="images" value="<?php echo esc_attr( $image->get_id() ); ?>" data-image-url="<?php echo esc_url( $image->get_image_url() ); ?>" <?php checked( ! empty( $selected ) && in_array( $image->get_id(), $selected ), true ); ?> />

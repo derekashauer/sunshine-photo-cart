@@ -559,6 +559,7 @@ jQuery( document ).ready(function($){
 		let selected_target = $( this ).data( 'selected-target' );
 		let id = $( this ).data( 'id' );
 		let selected = $( this ).data( 'selected' );
+		let default_source = $( this ).data( 'default-source' );
 
         $( '#sunshine--modal--content' ).addClass( 'sunshine--loading' );
 
@@ -585,6 +586,7 @@ jQuery( document ).ready(function($){
 				selected_target: selected_target,
 				id: id,
 				selected: selected,
+				default_source: default_source,
             },
             success: function( result, textStatus, XMLHttpRequest) {
                 if ( result.success ) {

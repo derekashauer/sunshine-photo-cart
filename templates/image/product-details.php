@@ -22,7 +22,8 @@ $can_purchase      = $product->can_purchase();
 
 	<?php do_action( 'sunshine_product_details_before_price', $product, $image ); ?>
 
-	<?php if ( ! empty( $bulk_mode ) && ! empty( $images ) && count( $images ) > 1 ) : ?>
+	<?php // Packages get their photos picked after they are added, in the package's own window. ?>
+	<?php if ( ! empty( $bulk_mode ) && ! empty( $images ) && count( $images ) > 1 && 'package' !== $product->get_type() ) : ?>
 		<div id="sunshine--product--details--image-selection">
 			<div class="sunshine--product--details--image-selection--header">
 				<h4><?php esc_html_e( 'Select images for this product:', 'sunshine-photo-cart' ); ?></h4>

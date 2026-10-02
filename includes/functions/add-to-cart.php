@@ -341,6 +341,30 @@ function sunshine_modal_add_favorites_to_cart() {
 		wp_send_json_error( __( 'No images found', 'sunshine-photo-cart' ) );
 	}
 
+	// A package holds a mix of products, so there is no way to tell which favorite goes with
+	// which item. Add one package, like adding it from a single photo, and send back the same
+	// response so the packages add-on opens its window where the customer picks a photo for
+	// each item. The source meta makes that window start on their favorites.
+	$first_image = reset( $images );
+	$product     = sunshine_get_product( $product_id, $first_image->get_price_level() );
+	if ( $product->exists() && 'package' === $product->get_type() ) {
+		$add_to_cart_result = SPC()->cart->add_item( $product_id, $first_image->get_id(), $first_image->get_gallery_id(), $first_image->get_price_level(), ( ! empty( $options ) ) ? $options : '', $qty, $comments, false, array( 'source' => 'favorites' ) );
+		if ( empty( $add_to_cart_result ) ) {
+			SPC()->log( 'Bulk add to cart failed for package ' . $product_id );
+			wp_send_json_error( __( 'Items not added to cart', 'sunshine-photo-cart' ) );
+		}
+		wp_send_json_success(
+			array(
+				'item'            => $add_to_cart_result,
+				'count'           => SPC()->cart->get_item_count(),
+				'total_formatted' => SPC()->cart->get_total_formatted(),
+				'mini_cart'       => sunshine_get_template_html( 'cart/mini-cart' ),
+				'type'            => $product->get_type(),
+				'added_count'     => 1,
+			)
+		);
+	}
+
 	$added_count = 0;
 	$errors      = array();
 
