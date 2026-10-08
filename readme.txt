@@ -249,6 +249,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: Invoices no longer list tax on its own line when prices are displayed with tax included, so the totals add up. The order total now says how much tax it includes, the same as the order page and emails
 * Security: Visitors can no longer use the favorites share link to send harmful data to the site
 * Fix: Downloading a very large Sunshine log or PHP error log could crash the site with a memory error
+* Fix: Gallery cover photos smaller than 1800px no longer cause PHP warnings in the Media Library list view
 
 = 3.7.3 - October 1, 2026 =
 * New: A "Refresh photo details" button on the gallery edit screen reads the keywords, title, caption and photo date from your original files for photos already in that gallery and its sub-galleries, so galleries imported before this update can be searched by keyword

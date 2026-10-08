@@ -1465,8 +1465,13 @@ function sunshine_make_cover_size_image( $post_id, $post = '' ) {
 	}
 
 	// Make the new cover image and save to metadata.
-	$image_data                          = image_make_intermediate_size( $full_image_path, 1800, 1800, false );
-	$metadata['sizes']['sunshine-cover'] = $image_data;
+	$image_data = image_make_intermediate_size( $full_image_path, 1800, 1800, false );
+	if ( $image_data ) {
+		$metadata['sizes']['sunshine-cover'] = $image_data;
+	} else {
+		// No cover copy made (image smaller than 1800px or resize failed); drop any false entry older versions saved.
+		unset( $metadata['sizes']['sunshine-cover'] );
+	}
 	wp_update_attachment_metadata( $featured_image_id, $metadata );
 
 }
@@ -1512,8 +1517,13 @@ function sunshine_gallery_save_post( $post_id, $post = '' ) {
 	}
 
 	// Make the new cover image and save to metadata.
-	$image_data                          = image_make_intermediate_size( $full_image_path, 1800, 1800, false );
-	$metadata['sizes']['sunshine-cover'] = $image_data;
+	$image_data = image_make_intermediate_size( $full_image_path, 1800, 1800, false );
+	if ( $image_data ) {
+		$metadata['sizes']['sunshine-cover'] = $image_data;
+	} else {
+		// No cover copy made (image smaller than 1800px or resize failed); drop any false entry older versions saved.
+		unset( $metadata['sizes']['sunshine-cover'] );
+	}
 	wp_update_attachment_metadata( $featured_image_id, $metadata );
 
 }
