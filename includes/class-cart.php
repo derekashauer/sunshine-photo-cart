@@ -111,6 +111,10 @@ class SPC_Cart {
 			}
 		}
 
+		// Some shipping methods are only allowed when a discount is in the cart (free shipping
+		// "Via Discount"), so the discounts have to be known before the allowed methods are.
+		$this->load_discounts();
+
 		// Set shipping method. Pickup instances are stored as the shipping method too,
 		// so re-hydrate from saved data regardless of needs_shipping().
 		$allowed_shipping_methods = sunshine_get_allowed_shipping_methods();
@@ -607,6 +611,42 @@ class SPC_Cart {
 		}
 
 		$this->calculate_discount();
+
+	}
+
+	/**
+	 * Load the valid discounts saved in the session, without working out their amounts.
+	 * Amounts wait for set_discounts(), because a discount can include the shipping cost,
+	 * and the shipping method can't be chosen until it is known which discounts apply.
+	 * Invalid codes are skipped here and left for set_discounts() to remove and report.
+	 */
+	private function load_discounts() {
+
+		$this->discounts = array();
+
+		if ( $this->is_empty() ) {
+			return;
+		}
+
+		$discount_codes = SPC()->session->get( 'discounts' );
+		if ( empty( $discount_codes ) || ! is_array( $discount_codes ) ) {
+			return;
+		}
+
+		foreach ( $discount_codes as $discount_code ) {
+			if ( empty( $discount_code ) ) {
+				continue;
+			}
+			$discount = sunshine_get_discount_by_code( $discount_code );
+			if ( ! $discount || ! $discount->exists() || ! $discount->is_valid() ) {
+				continue;
+			}
+			if ( $discount->is_solo() ) {
+				$this->discounts = array( $discount );
+				break;
+			}
+			$this->discounts[ $discount->get_id() ] = $discount;
+		}
 
 	}
 
