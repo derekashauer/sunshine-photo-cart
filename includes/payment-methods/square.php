@@ -233,7 +233,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 	<?php } else { ?>
 
-			<p><a href="https://www.sunshinephotocart.com/?square_connect=1&mode=<?php echo esc_attr( $mode ); ?>&nonce=<?php echo esc_attr( wp_create_nonce( 'sunshine_square_connect' ) ); ?>&return_url=<?php echo esc_url( admin_url( 'admin.php' ) ); ?>" class="button"><?php esc_html_e( 'Connect to Square', 'sunshine-photo-cart' ); ?></a></p>
+			<p><a href="https://www.sunshinephotocart.com/?square_connect=1&mode=<?php echo esc_attr( $mode ); ?>&nonce=<?php echo esc_attr( wp_create_nonce( 'sunshine_square_connect' ) ); ?>&return_url=<?php echo rawurlencode( admin_url( 'admin.php' ) ); ?>" class="button"><?php esc_html_e( 'Connect to Square', 'sunshine-photo-cart' ); ?></a></p>
 
 			<?php
 	}

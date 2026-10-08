@@ -743,13 +743,13 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 					</div>
 				<?php endif; ?>
 				<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
-					<a href="https://www.sunshinephotocart.com/?stripe_disconnect=1&account_id=<?php echo esc_attr( $account_id ); ?>&mode=<?php echo esc_html( $mode ); ?>&nonce=<?php echo esc_html( wp_create_nonce( 'sunshine_stripe_disconnect' ) ); ?>&return_url=<?php echo esc_url( admin_url( 'admin.php?sunshine_stripe_disconnect_return' ) ); ?>" style="color: #dc3545; text-decoration: none; font-size: 12px;"><?php esc_html_e( 'Disconnect Stripe account', 'sunshine-photo-cart' ); ?></a>
+					<a href="https://www.sunshinephotocart.com/?stripe_disconnect=1&account_id=<?php echo esc_attr( $account_id ); ?>&mode=<?php echo esc_html( $mode ); ?>&nonce=<?php echo esc_html( wp_create_nonce( 'sunshine_stripe_disconnect' ) ); ?>&return_url=<?php echo rawurlencode( admin_url( 'admin.php?sunshine_stripe_disconnect_return' ) ); ?>" style="color: #dc3545; text-decoration: none; font-size: 12px;"><?php esc_html_e( 'Disconnect Stripe account', 'sunshine-photo-cart' ); ?></a>
 				</div>
 			</div>
 
 		<?php } else { ?>
 
-			<p><a href="https://www.sunshinephotocart.com/?stripe_connect=1&nonce=<?php echo esc_attr( wp_create_nonce( 'sunshine_stripe_connect' ) ); ?>&return_url=<?php echo esc_url( admin_url( 'admin.php?sunshine_stripe_connect_return' ) ); ?>&mode=<?php echo esc_attr( $mode ); ?>" class="sunshine-stripe-connect"><span><?php esc_html_e( 'Connect to', 'sunshine-photo-cart' ); ?></span> <span class="stripe">Stripe</span></a></p>
+			<p><a href="https://www.sunshinephotocart.com/?stripe_connect=1&nonce=<?php echo esc_attr( wp_create_nonce( 'sunshine_stripe_connect' ) ); ?>&return_url=<?php echo rawurlencode( admin_url( 'admin.php?sunshine_stripe_connect_return' ) ); ?>&mode=<?php echo esc_attr( $mode ); ?>" class="sunshine-stripe-connect"><span><?php esc_html_e( 'Connect to', 'sunshine-photo-cart' ); ?></span> <span class="stripe">Stripe</span></a></p>
 
 			<?php
 		}
