@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T18:55:37+00:00\n"
+"POT-Creation-Date: 2026-10-09T15:46:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: sunshine-photo-cart\n"
@@ -508,6 +508,7 @@ msgid "Log file not found."
 msgstr ""
 
 #: includes/admin/class-customers-table.php:42
+#: includes/admin/options/taxes.php:16
 #: includes/admin/sunshine-product-category.php:166
 #: includes/class-payment-method.php:57
 #: includes/class-shipping-method.php:159
@@ -522,13 +523,13 @@ msgstr ""
 #: includes/admin/class-customers-table.php:43
 #: includes/admin/class-privacy.php:256
 #: includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1595
+#: includes/class-cart.php:1655
 #: includes/functions/account.php:558
 #: includes/payment-methods/paypal-legacy.php:45
 #: includes/payment-methods/paypal-legacy.php:58
 #: templates/admin/order-items.php:69
 #: templates/email/signup.php:9
-#: templates/invoice/admin.php:159
+#: templates/invoice/admin.php:160
 #: templates/order/details.php:8
 #: templates/required-data.php:9
 #: class-export-orders.php:499
@@ -540,8 +541,8 @@ msgstr ""
 #: includes/admin/install.php:285
 #: includes/admin/settings-fields.php:245
 #: includes/admin/sunshine-gallery.php:170
-#: includes/class-frontend.php:931
-#: templates/multi-image-select/select-images.php:35
+#: includes/class-frontend.php:932
+#: templates/multi-image-select/select-images.php:37
 msgid "Favorites"
 msgstr ""
 
@@ -745,8 +746,8 @@ msgstr ""
 #: includes/admin/class-privacy.php:257
 #: includes/admin/settings-fields.php:976
 #: includes/admin/settings-fields.php:986
-#: includes/class-cart.php:1622
-#: templates/invoice/admin.php:164
+#: includes/class-cart.php:1682
+#: templates/invoice/admin.php:165
 #: templates/order/details.php:13
 #: class-export-orders.php:500
 msgid "Phone"
@@ -839,7 +840,7 @@ msgstr ""
 #: includes/admin/sunshine-order.php:622
 #: templates/account/orders.php:6
 #: templates/admin/order-items.php:61
-#: templates/invoice/admin.php:131
+#: templates/invoice/admin.php:132
 #: templates/order/details.php:18
 #: gallery.php:269
 #: admin/customers.php:19
@@ -863,8 +864,8 @@ msgstr ""
 
 #: includes/admin/class-privacy.php:259
 #: includes/admin/customers.php:106
-#: includes/class-cart.php:1908
-#: templates/invoice/admin.php:194
+#: includes/class-cart.php:1968
+#: templates/invoice/admin.php:195
 msgid "Billing Address"
 msgstr ""
 
@@ -874,15 +875,15 @@ msgstr ""
 
 #: includes/admin/class-privacy.php:268
 #: includes/admin/customers.php:99
-#: includes/class-cart.php:1762
+#: includes/class-cart.php:1822
 #: includes/template-hooks.php:432
-#: templates/invoice/admin.php:191
+#: templates/invoice/admin.php:192
 msgid "Shipping Address"
 msgstr ""
 
 #: includes/admin/class-privacy.php:276
 #: includes/admin/sunshine-order.php:720
-#: templates/invoice/admin.php:201
+#: templates/invoice/admin.php:202
 #: class-export-orders.php:547
 msgid "Customer Notes"
 msgstr ""
@@ -893,8 +894,8 @@ msgstr ""
 #: templates/account/orders.php:7
 #: templates/cart/item.php:19
 #: templates/checkout/summary.php:16
-#: templates/invoice/admin.php:135
-#: templates/invoice/admin.php:244
+#: templates/invoice/admin.php:136
+#: templates/invoice/admin.php:245
 #: templates/order/item.php:18
 #: class-reports-customers-table.php:36
 #: class-reports-galleries-table.php:39
@@ -1098,13 +1099,13 @@ msgstr ""
 #: includes/admin/gallery-navigator.php:159
 #: includes/admin/gallery-navigator.php:319
 #: includes/admin/sunshine-gallery.php:55
-#: includes/admin/sunshine-gallery.php:1825
+#: includes/admin/sunshine-gallery.php:1835
 msgid "Password Protected"
 msgstr ""
 
 #: includes/admin/gallery-navigator.php:161
 #: includes/admin/gallery-navigator.php:321
-#: includes/admin/sunshine-gallery.php:1827
+#: includes/admin/sunshine-gallery.php:1837
 msgid "Private"
 msgstr ""
 
@@ -1121,7 +1122,7 @@ msgstr ""
 
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:336
-#: includes/admin/sunshine-gallery.php:1566
+#: includes/admin/sunshine-gallery.php:1576
 #: includes/class-cloud-storage-import.php:928
 msgid "images"
 msgstr ""
@@ -1136,7 +1137,7 @@ msgstr[1] ""
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
 #: includes/admin/gallery-navigator.php:344
-#: includes/class-cart.php:2044
+#: includes/class-cart.php:2104
 msgid "Edit"
 msgstr ""
 
@@ -1304,7 +1305,7 @@ msgstr ""
 #: includes/admin/options/emails.php:64
 #: includes/admin/options/payment-methods.php:63
 #: includes/admin/options/shipping-methods.php:85
-#: includes/class-frontend.php:441
+#: includes/class-frontend.php:442
 #: includes/functions/checkout.php:98
 #: includes/functions/checkout.php:168
 #: includes/functions/checkout.php:226
@@ -1328,9 +1329,9 @@ msgstr ""
 
 #: includes/admin/options/shipping-methods.php:48
 #: includes/admin/options/shipping-methods.php:80
-#: includes/admin/options/taxes.php:51
-#: includes/admin/options/taxes.php:74
-#: includes/admin/options/taxes.php:107
+#: includes/admin/options/taxes.php:53
+#: includes/admin/options/taxes.php:77
+#: includes/admin/options/taxes.php:112
 #: templates/cart/item.php:17
 #: admin/schedule.php:93
 #: admin/schedule.php:100
@@ -1359,17 +1360,25 @@ msgstr ""
 msgid "Tax Rate"
 msgstr ""
 
-#: includes/admin/options/taxes.php:27
-#: includes/admin/options/taxes.php:64
-#: includes/admin/options/taxes.php:97
+#: includes/admin/options/taxes.php:28
+#: includes/admin/options/taxes.php:66
+#: includes/admin/options/taxes.php:101
 msgid "All countries"
 msgstr ""
 
-#: includes/admin/options/taxes.php:39
+#: includes/admin/options/taxes.php:40
 msgid "Any state/province"
 msgstr ""
 
-#: includes/admin/options/taxes.php:85
+#: includes/admin/options/taxes.php:51
+#: includes/admin/options/taxes.php:75
+#: includes/admin/options/taxes.php:110
+#: includes/admin/reports.php:22
+#: includes/functions/taxes.php:54
+msgid "Tax"
+msgstr ""
+
+#: includes/admin/options/taxes.php:88
 msgid "Zip/Postal Code(s): separate multiple codes with commas. Use * as a wildcard (902* matches anything starting with 902) or ... for a numeric range (90210...99000). Leave empty to match the whole state or country."
 msgstr ""
 
@@ -1454,20 +1463,6 @@ msgstr ""
 #: includes/admin/reports.php:21
 #: reports.php:8
 msgid "Profits"
-msgstr ""
-
-#: includes/admin/reports.php:22
-#: includes/admin/sunshine-order.php:874
-#: includes/payment-methods/square.php:931
-#: includes/payment-methods/stripe.php:2134
-#: templates/cart/totals.php:43
-#: templates/checkout/summary.php:71
-#: templates/email/admin-receipt.php:85
-#: templates/email/customer-receipt.php:89
-#: templates/email/order-status.php:85
-#: templates/invoice/admin.php:285
-#: templates/order/totals.php:28
-msgid "Tax"
 msgstr ""
 
 #: includes/admin/reports.php:38
@@ -1723,8 +1718,8 @@ msgid "Order Received"
 msgstr ""
 
 #: includes/admin/settings-fields.php:279
-#: includes/class-frontend.php:583
-#: templates/image/add-to-cart.php:89
+#: includes/class-frontend.php:584
+#: templates/image/add-to-cart.php:85
 msgid "Store"
 msgstr ""
 
@@ -1752,7 +1747,7 @@ msgid "Account Details"
 msgstr ""
 
 #: includes/admin/settings-fields.php:337
-#: includes/class-frontend.php:526
+#: includes/class-frontend.php:527
 #: templates/account/login.php:9
 #: templates/account/login.php:27
 msgid "Login"
@@ -1766,7 +1761,7 @@ msgid "Reset Password"
 msgstr ""
 
 #: includes/admin/settings-fields.php:353
-#: includes/class-frontend.php:509
+#: includes/class-frontend.php:510
 #: includes/functions/account.php:419
 msgid "Logout"
 msgstr ""
@@ -2321,10 +2316,10 @@ msgstr ""
 #: includes/admin/settings-fields.php:977
 #: includes/admin/settings-fields.php:987
 #: includes/admin/sunshine-order.php:732
-#: includes/class-cart.php:1939
-#: templates/email/admin-receipt.php:146
-#: templates/email/customer-receipt.php:150
-#: templates/email/order-status.php:118
+#: includes/class-cart.php:1999
+#: templates/email/admin-receipt.php:145
+#: templates/email/customer-receipt.php:149
+#: templates/email/order-status.php:117
 #: templates/order/details.php:59
 msgid "Notes"
 msgstr ""
@@ -2910,35 +2905,35 @@ msgstr ""
 msgid "Upload directory is not writable"
 msgstr ""
 
-#: includes/admin/sunshine-gallery.php:1587
-#: includes/admin/sunshine-gallery.php:1636
+#: includes/admin/sunshine-gallery.php:1597
+#: includes/admin/sunshine-gallery.php:1646
 msgid "You do not have permission to import images."
 msgstr ""
 
-#: includes/admin/sunshine-gallery.php:1596
+#: includes/admin/sunshine-gallery.php:1606
 msgid "A directory must be selected before importing."
 msgstr ""
 
-#: includes/admin/sunshine-gallery.php:1605
-#: includes/admin/sunshine-gallery.php:1651
+#: includes/admin/sunshine-gallery.php:1615
+#: includes/admin/sunshine-gallery.php:1661
 msgid "The selected directory is not available."
 msgstr ""
 
-#: includes/admin/sunshine-gallery.php:1676
+#: includes/admin/sunshine-gallery.php:1686
 msgid "Already uploaded to gallery"
 msgstr ""
 
 #. translators: %s is the upload directory
-#: includes/admin/sunshine-gallery.php:1696
+#: includes/admin/sunshine-gallery.php:1706
 #, php-format
 msgid "The selected file could not be copied to %s."
 msgstr ""
 
-#: includes/admin/sunshine-gallery.php:1735
+#: includes/admin/sunshine-gallery.php:1745
 msgid "No emails collected yet"
 msgstr ""
 
-#: includes/admin/sunshine-gallery.php:1809
+#: includes/admin/sunshine-gallery.php:1819
 msgid "Add gallery name"
 msgstr ""
 
@@ -3006,12 +3001,12 @@ msgid "Remove personal data"
 msgstr ""
 
 #: includes/admin/sunshine-order.php:420
-#: templates/image/product-details.php:30
+#: templates/image/product-details.php:31
 msgid "Select All"
 msgstr ""
 
 #: includes/admin/sunshine-order.php:421
-#: includes/class-order.php:1013
+#: includes/class-order.php:1030
 #: includes/class-sunshinephotocart.php:535
 #: gallery.php:272
 #: admin.php:237
@@ -3024,7 +3019,7 @@ msgstr ""
 #: includes/admin/sunshine-order.php:423
 #: includes/admin/sunshine-order.php:649
 #: templates/admin/order-items.php:65
-#: templates/invoice/admin.php:155
+#: templates/invoice/admin.php:156
 #: templates/order/details.php:4
 #: class-reports-customers-table.php:34
 #: gallery.php:270
@@ -3034,10 +3029,10 @@ msgstr ""
 
 #: includes/admin/sunshine-order.php:425
 #: includes/admin/sunshine-order.php:626
-#: templates/email/admin-receipt.php:134
-#: templates/email/customer-receipt.php:138
-#: templates/email/order-status.php:106
-#: templates/invoice/admin.php:169
+#: templates/email/admin-receipt.php:133
+#: templates/email/customer-receipt.php:137
+#: templates/email/order-status.php:105
+#: templates/invoice/admin.php:170
 #: templates/order/details.php:22
 #: class-export-orders.php:496
 msgid "Payment Method"
@@ -3050,7 +3045,7 @@ msgstr ""
 #: templates/email/admin-receipt.php:124
 #: templates/email/customer-receipt.php:128
 #: templates/email/order-status.php:96
-#: templates/invoice/admin.php:311
+#: templates/invoice/admin.php:312
 #: templates/order/totals.php:67
 #: class-export-orders.php:494
 msgid "Order Total"
@@ -3070,7 +3065,7 @@ msgstr ""
 
 #: includes/admin/sunshine-order.php:470
 #: includes/admin/sunshine-order.php:549
-#: includes/class-frontend.php:816
+#: includes/class-frontend.php:817
 #: includes/emails/class-email-customer-receipt.php:54
 #: templates/account/orders.php:22
 #: templates/email/customer-receipt.php:16
@@ -3139,9 +3134,9 @@ msgstr ""
 #: includes/payment-methods/stripe.php:2072
 #: templates/cart/totals.php:17
 #: templates/checkout/summary.php:46
-#: templates/email/admin-receipt.php:184
-#: templates/email/customer-receipt.php:170
-#: templates/email/order-status.php:138
+#: templates/email/admin-receipt.php:183
+#: templates/email/customer-receipt.php:169
+#: templates/email/order-status.php:137
 #: templates/order/details.php:46
 msgid "Shipping"
 msgstr ""
@@ -3151,9 +3146,9 @@ msgid "No shipping address collected for this order"
 msgstr ""
 
 #: includes/admin/sunshine-order.php:706
-#: templates/email/admin-receipt.php:191
-#: templates/email/customer-receipt.php:177
-#: templates/email/order-status.php:145
+#: templates/email/admin-receipt.php:190
+#: templates/email/customer-receipt.php:176
+#: templates/email/order-status.php:144
 #: templates/order/details.php:52
 msgid "Billing"
 msgstr ""
@@ -3175,7 +3170,7 @@ msgstr ""
 #: includes/admin/sunshine-order.php:894
 #: templates/email/admin-receipt.php:119
 #: templates/email/customer-receipt.php:123
-#: templates/invoice/admin.php:305
+#: templates/invoice/admin.php:306
 #: templates/order/totals.php:62
 msgid "Refunds"
 msgstr ""
@@ -3195,8 +3190,8 @@ msgstr ""
 #: templates/cart/item.php:2
 #: templates/cart/items.php:4
 #: templates/checkout/summary.php:8
-#: templates/invoice/admin.php:212
-#: templates/invoice/admin.php:222
+#: templates/invoice/admin.php:213
+#: templates/invoice/admin.php:223
 #: templates/order/item.php:2
 #: templates/order/items.php:5
 #: class-reports-images-table.php:34
@@ -3220,8 +3215,8 @@ msgstr ""
 #: templates/cart/item.php:5
 #: templates/cart/items.php:5
 #: templates/checkout/summary.php:12
-#: templates/invoice/admin.php:213
-#: templates/invoice/admin.php:225
+#: templates/invoice/admin.php:214
+#: templates/invoice/admin.php:226
 #: templates/order/item.php:5
 #: templates/order/items.php:6
 #: class-reports-products-table.php:34
@@ -3236,9 +3231,9 @@ msgstr ""
 #: templates/admin/order-items.php:105
 #: templates/cart/item.php:15
 #: templates/cart/items.php:7
-#: templates/image/product-details.php:59
-#: templates/invoice/admin.php:214
-#: templates/invoice/admin.php:238
+#: templates/image/product-details.php:60
+#: templates/invoice/admin.php:215
+#: templates/invoice/admin.php:239
 #: templates/order/item.php:12
 #: templates/order/items.php:7
 #: templates/product-details.php:31
@@ -3248,14 +3243,14 @@ msgstr ""
 
 #: includes/admin/sunshine-order.php:796
 #: templates/cart/items.php:6
-#: templates/invoice/admin.php:215
+#: templates/invoice/admin.php:216
 #: templates/order/items.php:8
 msgid "Item Price"
 msgstr ""
 
 #: includes/admin/sunshine-order.php:797
 #: templates/cart/items.php:8
-#: templates/invoice/admin.php:216
+#: templates/invoice/admin.php:217
 #: templates/order/items.php:9
 msgid "Item Total"
 msgstr ""
@@ -3265,7 +3260,7 @@ msgstr ""
 #: includes/admin/sunshine-product.php:118
 #: includes/class-shipping-method.php:178
 #: templates/cart/item.php:12
-#: templates/invoice/admin.php:241
+#: templates/invoice/admin.php:242
 #: templates/order/item.php:15
 msgid "Price"
 msgstr ""
@@ -3276,7 +3271,7 @@ msgstr ""
 #: templates/email/admin-receipt.php:45
 #: templates/email/customer-receipt.php:49
 #: templates/email/order-status.php:48
-#: templates/invoice/admin.php:256
+#: templates/invoice/admin.php:257
 #: templates/order/totals.php:5
 msgid "Subtotal"
 msgstr ""
@@ -3286,7 +3281,7 @@ msgstr ""
 #: templates/email/admin-receipt.php:59
 #: templates/email/customer-receipt.php:63
 #: templates/email/order-status.php:62
-#: templates/invoice/admin.php:270
+#: templates/invoice/admin.php:271
 #: templates/order/totals.php:19
 #, php-format
 msgid "Shipping via %s"
@@ -3302,7 +3297,7 @@ msgstr ""
 #: templates/email/customer-receipt.php:76
 #: templates/email/customer-receipt.php:96
 #: templates/email/order-status.php:72
-#: templates/invoice/admin.php:279
+#: templates/invoice/admin.php:280
 #: templates/order/totals.php:43
 #: admin.php:4
 #: discounts.php:34
@@ -3316,7 +3311,7 @@ msgstr ""
 #: templates/email/admin-receipt.php:113
 #: templates/email/customer-receipt.php:117
 #: templates/email/order-status.php:91
-#: templates/invoice/admin.php:299
+#: templates/invoice/admin.php:300
 #: templates/order/totals.php:56
 msgid "Credits Applied"
 msgstr ""
@@ -3762,21 +3757,21 @@ msgstr ""
 msgid "Return to tools"
 msgstr ""
 
-#: includes/class-cart.php:320
+#: includes/class-cart.php:324
 msgid "An item has been removed from your cart because it no longer exists"
 msgstr ""
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:602
+#: includes/class-cart.php:606
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr ""
 
-#: includes/class-cart.php:1572
+#: includes/class-cart.php:1632
 msgid "Contact Information"
 msgstr ""
 
-#: includes/class-cart.php:1577
+#: includes/class-cart.php:1637
 #: includes/class-countries.php:3424
 #: includes/functions/account.php:542
 #: templates/account/signup.php:20
@@ -3784,7 +3779,7 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: includes/class-cart.php:1586
+#: includes/class-cart.php:1646
 #: includes/class-countries.php:3433
 #: includes/functions/account.php:550
 #: templates/account/signup.php:27
@@ -3792,148 +3787,148 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: includes/class-cart.php:1612
+#: includes/class-cart.php:1672
 #: templates/account/login.php:18
 #: templates/account/signup.php:9
 #: templates/shortcodes/password.php:4
 msgid "Password"
 msgstr ""
 
-#: includes/class-cart.php:1614
+#: includes/class-cart.php:1674
 msgid "Optionally set a password"
 msgstr ""
 
-#: includes/class-cart.php:1631
-#: templates/email/admin-receipt.php:199
-#: templates/email/customer-receipt.php:185
-#: templates/email/order-status.php:153
-#: templates/invoice/admin.php:184
+#: includes/class-cart.php:1691
+#: templates/email/admin-receipt.php:198
+#: templates/email/customer-receipt.php:184
+#: templates/email/order-status.php:152
+#: templates/invoice/admin.php:185
 #: templates/order/details.php:39
 #: class-export-orders.php:501
 msgid "EU VAT Number"
 msgstr ""
 
-#: includes/class-cart.php:1733
+#: includes/class-cart.php:1793
 msgid "Delivery Method"
 msgstr ""
 
-#: includes/class-cart.php:1793
-#: includes/class-cart.php:1810
-#: templates/invoice/admin.php:173
+#: includes/class-cart.php:1853
+#: includes/class-cart.php:1870
+#: templates/invoice/admin.php:174
 #: class-export-orders.php:495
 msgid "Shipping Method"
 msgstr ""
 
-#: includes/class-cart.php:1815
-#: includes/class-cart.php:2313
+#: includes/class-cart.php:1875
+#: includes/class-cart.php:2373
 msgid "Sorry, shipping is not available to the address you entered. Please double check the address or try a different shipping address."
 msgstr ""
 
-#: includes/class-cart.php:1876
+#: includes/class-cart.php:1936
 msgid "Use shipping address as billing address"
 msgstr ""
 
-#: includes/class-cart.php:1914
+#: includes/class-cart.php:1974
 msgid "Same as shipping address"
 msgstr ""
 
-#: includes/class-cart.php:1966
+#: includes/class-cart.php:2026
 msgid "Payment"
 msgstr ""
 
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:1976
+#: includes/class-cart.php:2036
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr ""
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:1984
+#: includes/class-cart.php:2044
 #: includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr ""
 
-#: includes/class-cart.php:1986
+#: includes/class-cart.php:2046
 msgid "Submit Order for Free"
 msgstr ""
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:2003
+#: includes/class-cart.php:2063
 #, php-format
 msgid "By submitting this order, you agree to our <a href=\"%1$s\" target=\"_blank\">%2$s</a>"
 msgstr ""
 
 #. translators: %s is the section name
-#: includes/class-cart.php:2044
+#: includes/class-cart.php:2104
 #, php-format
 msgid "Edit %s"
 msgstr ""
 
-#: includes/class-cart.php:2062
+#: includes/class-cart.php:2122
 msgid "Next Step"
 msgstr ""
 
-#: includes/class-cart.php:2239
+#: includes/class-cart.php:2299
 msgid "Invalid checkout section"
 msgstr ""
 
-#: includes/class-cart.php:2255
+#: includes/class-cart.php:2315
 msgid "Field contains invalid data"
 msgstr ""
 
 #. translators: %s is the field name
-#: includes/class-cart.php:2272
+#: includes/class-cart.php:2332
 #, php-format
 msgid "%s is required"
 msgstr ""
 
-#: includes/class-cart.php:2284
+#: includes/class-cart.php:2344
 #: frontend.php:173
 msgid "Invalid email"
 msgstr ""
 
-#: includes/class-cart.php:2385
-#: includes/class-cart.php:2593
+#: includes/class-cart.php:2445
+#: includes/class-cart.php:2654
 msgid "Please select a shipping method before completing your order."
 msgstr ""
 
 #. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
-#: includes/class-cart.php:2506
+#: includes/class-cart.php:2566
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
 msgstr ""
 
-#: includes/class-cart.php:2519
+#: includes/class-cart.php:2579
 msgid "Error encountered during checkout process and your order has already been marked as paid."
 msgstr ""
 
-#: includes/class-cart.php:2519
-#: includes/class-cart.php:2852
+#: includes/class-cart.php:2579
+#: includes/class-cart.php:2913
 msgid "View the order"
 msgstr ""
 
-#: includes/class-cart.php:2531
+#: includes/class-cart.php:2591
 msgid "No payment method selected"
 msgstr ""
 
-#: includes/class-cart.php:2655
+#: includes/class-cart.php:2716
 msgid "Failed to initialize order"
 msgstr ""
 
-#: includes/class-cart.php:2666
+#: includes/class-cart.php:2727
 msgid "Something happened while trying to process your order. Please contact the site owner for more details."
 msgstr ""
 
-#: includes/class-cart.php:2695
+#: includes/class-cart.php:2756
 msgid "No payment method"
 msgstr ""
 
-#: includes/class-cart.php:2785
+#: includes/class-cart.php:2846
 msgid "User account already exists with that email address - please login to continue"
 msgstr ""
 
-#: includes/class-cart.php:2852
+#: includes/class-cart.php:2913
 msgid "It appears your previous checkout has already been processed."
 msgstr ""
 
@@ -12732,90 +12727,90 @@ msgstr ""
 msgid "Search results"
 msgstr ""
 
-#: includes/class-frontend.php:251
+#: includes/class-frontend.php:252
 msgid "Sorry, you do not have permission to view this page"
 msgstr ""
 
-#: includes/class-frontend.php:442
+#: includes/class-frontend.php:443
 msgid "You have already selected the maximum number of photos allowed"
 msgstr ""
 
-#: includes/class-frontend.php:443
+#: includes/class-frontend.php:444
 msgid "View Cart"
 msgstr ""
 
-#: includes/class-frontend.php:444
+#: includes/class-frontend.php:445
 msgid "Create an account to save your favorites permanently"
 msgstr ""
 
-#: includes/class-frontend.php:445
+#: includes/class-frontend.php:446
 msgid "Your selections will only be saved for this browser session. To save them permanently, <a href=\"#\" id=\"sunshine--guest-to-signup\">create an account</a>."
 msgstr ""
 
-#: includes/class-frontend.php:446
+#: includes/class-frontend.php:447
 #: templates/favorites/guest-choice.php:17
 msgid "Continue as guest"
 msgstr ""
 
-#: includes/class-frontend.php:447
+#: includes/class-frontend.php:448
 #: templates/favorites/guest-choice.php:10
 msgid "I already have an account"
 msgstr ""
 
-#: includes/class-frontend.php:448
+#: includes/class-frontend.php:449
 msgid "Back to sign up"
 msgstr ""
 
-#: includes/class-frontend.php:449
+#: includes/class-frontend.php:450
 msgid "I understand, continue"
 msgstr ""
 
-#: includes/class-frontend.php:537
+#: includes/class-frontend.php:538
 #: includes/emails/class-email-signup.php:8
 #: templates/account/signup.php:1
 msgid "Sign Up"
 msgstr ""
 
-#: includes/class-frontend.php:622
-#: includes/class-frontend.php:728
+#: includes/class-frontend.php:623
+#: includes/class-frontend.php:729
 #: templates/image/add-to-cart.php:2
 #: templates/fill.php:20
-#: templates/fill.php:33
+#: templates/fill.php:38
 msgid "Return to gallery"
 msgstr ""
 
 #. translators: %s: image name
-#: includes/class-frontend.php:632
+#: includes/class-frontend.php:633
 #, php-format
 msgid "Favorite: %s"
 msgstr ""
 
 #. translators: %s: image name
-#: includes/class-frontend.php:645
-#: includes/class-frontend.php:658
+#: includes/class-frontend.php:646
+#: includes/class-frontend.php:659
 #, php-format
 msgid "Purchase options: %s"
 msgstr ""
 
 #. translators: %s: image name
-#: includes/class-frontend.php:678
+#: includes/class-frontend.php:679
 #, php-format
 msgid "Comments: %s"
 msgstr ""
 
-#: includes/class-frontend.php:693
+#: includes/class-frontend.php:694
 #: class-lightbox.php:424
 msgid "Share"
 msgstr ""
 
-#: includes/class-frontend.php:718
+#: includes/class-frontend.php:719
 msgid "Visit store"
 msgstr ""
 
 #. translators: %s is the parent gallery name
 #. translators: %s is the gallery name
-#: includes/class-frontend.php:740
-#: includes/class-frontend.php:750
+#: includes/class-frontend.php:741
+#: includes/class-frontend.php:751
 #: templates/cart/cart.php:21
 #: templates/cart/empty.php:7
 #: themes/cover/functions.php:60
@@ -12824,108 +12819,109 @@ msgstr ""
 msgid "Return to %s"
 msgstr ""
 
-#: includes/class-frontend.php:762
+#: includes/class-frontend.php:763
 msgid "Add all to cart"
 msgstr ""
 
-#: includes/class-frontend.php:774
+#: includes/class-frontend.php:775
 msgid "Share your favorites"
 msgstr ""
 
-#: includes/class-frontend.php:786
+#: includes/class-frontend.php:787
 msgid "Clear all favorites"
 msgstr ""
 
 #. translators: %s is the gallery name
-#: includes/class-frontend.php:806
+#: includes/class-frontend.php:807
 #: includes/functions/template.php:889
 #, php-format
 msgid "Return to gallery \"%s\""
 msgstr ""
 
 #. translators: %1$s is the gallery name, %2$s is the site name
-#: includes/class-frontend.php:844
+#: includes/class-frontend.php:845
 #, php-format
 msgid "A photo from the gallery %1$s by %2$s"
 msgstr ""
 
 #. translators: %1$s is the gallery name, %2$s is the site name
-#: includes/class-frontend.php:874
+#: includes/class-frontend.php:875
 #, php-format
 msgid "Photo gallery %1$s by %2$s"
 msgstr ""
 
-#: includes/class-frontend.php:929
+#: includes/class-frontend.php:930
 msgid "Minimize"
 msgstr ""
 
-#: includes/class-frontend.php:935
+#: includes/class-frontend.php:936
 msgid "Show favorites"
 msgstr ""
 
-#: includes/class-frontend.php:964
+#: includes/class-frontend.php:965
 msgid "Sorry, you are not allowed to view this image"
 msgstr ""
 
-#: includes/class-frontend.php:964
+#: includes/class-frontend.php:965
 #: includes/functions/comments.php:16
+#: includes/functions/comments.php:63
 #: includes/functions/image.php:331
 #: includes/functions/store.php:133
-#: includes/functions/store.php:186
+#: includes/functions/store.php:188
 #: includes/functions/template.php:373
 msgid "Access denied"
 msgstr ""
 
-#: includes/class-frontend.php:1041
+#: includes/class-frontend.php:1042
 msgid "Images in your cart have been removed because they are no longer available"
 msgstr ""
 
-#: includes/class-frontend.php:1110
+#: includes/class-frontend.php:1111
 msgid "No gallery found with that password"
 msgstr ""
 
-#: includes/class-frontend.php:1127
+#: includes/class-frontend.php:1128
 msgid "Invalid submission"
 msgstr ""
 
-#: includes/class-frontend.php:1140
+#: includes/class-frontend.php:1141
 msgid "Invalid gallery"
 msgstr ""
 
-#: includes/class-frontend.php:1147
+#: includes/class-frontend.php:1148
 msgid "Gallery access code is incorrect, please try again"
 msgstr ""
 
-#: includes/class-frontend.php:1184
+#: includes/class-frontend.php:1185
 msgid "Not a valid email address"
 msgstr ""
 
-#: includes/class-frontend.php:1207
+#: includes/class-frontend.php:1208
 msgid "You have been logged out"
 msgstr ""
 
 #. translators: %1$s is the previous order status, %2$s is the new order status
-#: includes/class-order.php:129
+#: includes/class-order.php:130
 #, php-format
 msgid "Status change from %1$s to %2$s"
 msgstr ""
 
 #. translators: %s is the order status name
-#: includes/class-order.php:133
+#: includes/class-order.php:134
 #, php-format
 msgid "Status set to %s"
 msgstr ""
 
 #. translators: %s is the order number
-#: includes/class-order.php:220
-#: includes/class-order.php:1040
+#: includes/class-order.php:221
+#: includes/class-order.php:1057
 #, php-format
 msgid "Order #%s"
 msgstr ""
 
 #. translators: %s is the refund amount formatted as price
 #. translators: %s: refund amount
-#: includes/class-order.php:898
+#: includes/class-order.php:915
 #: includes/payment-methods/paypal.php:805
 #: includes/payment-methods/paypal.php:807
 #: includes/payment-methods/square.php:1794
@@ -13620,14 +13616,15 @@ msgstr ""
 msgid "No images found"
 msgstr ""
 
-#: includes/functions/add-to-cart.php:384
+#: includes/functions/add-to-cart.php:354
+#: includes/functions/add-to-cart.php:408
 msgid "Items not added to cart"
 msgstr ""
 
 #. translators: %s is the product name
 #. translators: %s: product name (optionally followed by the image name)
 #. translators: %s: product name
-#: includes/functions/add-to-cart.php:431
+#: includes/functions/add-to-cart.php:455
 #: customer-tracking.php:207
 #: hooks.php:117
 #, php-format
@@ -13704,11 +13701,11 @@ msgstr ""
 msgid "Invalid comment submission - comments not allowed"
 msgstr ""
 
-#: includes/functions/comments.php:77
+#: includes/functions/comments.php:83
 msgid "Invalid comment submission - invalid email address"
 msgstr ""
 
-#: includes/functions/comments.php:109
+#: includes/functions/comments.php:115
 msgid "Invalid comment submission - unknown reason"
 msgstr ""
 
@@ -14428,6 +14425,26 @@ msgstr ""
 #: includes/functions/product.php:7
 #: templates/admin/order-items.php:49
 msgid "Print"
+msgstr ""
+
+#. translators: %s is the tax amount
+#: includes/functions/taxes.php:70
+#, php-format
+msgid "includes %s tax"
+msgstr ""
+
+#. translators: %1$s is the tax amount, %2$s is the tax name such as GST or VAT
+#: includes/functions/taxes.php:73
+#, php-format
+msgid "includes %1$s %2$s"
+msgstr ""
+
+#: includes/functions/taxes.php:85
+msgid "GST"
+msgstr ""
+
+#: includes/functions/taxes.php:86
+msgid "VAT"
 msgstr ""
 
 #: includes/functions/template.php:333
@@ -15909,7 +15926,7 @@ msgstr ""
 
 #: templates/cart/mini-cart.php:5
 #: templates/fill.php:21
-#: templates/fill.php:34
+#: templates/fill.php:39
 msgid "View cart"
 msgstr ""
 
@@ -15939,17 +15956,6 @@ msgstr[1] ""
 #: templates/cart-item-extra.php:14
 #: cart.php:58
 msgid "Edit images"
-msgstr ""
-
-#. translators: %s is the tax amount
-#: templates/cart/totals.php:75
-#: templates/checkout/summary.php:111
-#: templates/email/admin-receipt.php:129
-#: templates/email/customer-receipt.php:133
-#: templates/email/order-status.php:101
-#: templates/order/totals.php:72
-#, php-format
-msgid "includes %s tax"
 msgstr ""
 
 #: templates/checkout/discount-applied.php:8
@@ -15987,14 +15993,14 @@ msgstr ""
 msgid "View Invoice"
 msgstr ""
 
-#: templates/email/admin-receipt.php:162
+#: templates/email/admin-receipt.php:161
 #: admin/orders.php:30
 msgid "Files"
 msgstr ""
 
-#: templates/email/admin-receipt.php:172
-#: templates/email/customer-receipt.php:158
-#: templates/email/order-status.php:126
+#: templates/email/admin-receipt.php:171
+#: templates/email/customer-receipt.php:157
+#: templates/email/order-status.php:125
 msgid "Customer Information"
 msgstr ""
 
@@ -16178,33 +16184,33 @@ msgstr ""
 msgid "Return to products"
 msgstr ""
 
-#: templates/image/product-details.php:28
+#: templates/image/product-details.php:29
 msgid "Select images for this product:"
 msgstr ""
 
-#: templates/image/product-details.php:31
+#: templates/image/product-details.php:32
 msgid "Select None"
 msgstr ""
 
-#: templates/image/product-details.php:58
+#: templates/image/product-details.php:59
 #: templates/store/product-details.php:67
 #: templates/product-details.php:30
 msgid "Decrease quantity"
 msgstr ""
 
-#: templates/image/product-details.php:60
+#: templates/image/product-details.php:61
 #: templates/store/product-details.php:65
 #: templates/product-details.php:32
 msgid "Increase quantity"
 msgstr ""
 
-#: templates/image/product-details.php:66
+#: templates/image/product-details.php:67
 #: templates/store/product-details.php:73
 #: templates/product-details.php:38
 msgid "Add comments for this item"
 msgstr ""
 
-#: templates/image/product-details.php:72
+#: templates/image/product-details.php:73
 #: templates/store/product-details.php:78
 #: templates/gallery-add-to-cart.php:34
 #: templates/product-details.php:44
@@ -16213,19 +16219,19 @@ msgid "Add to cart"
 msgstr ""
 
 #. translators: %1$s is the minimum quantity, %2$s is the maximum quantity
-#: templates/image/product-details.php:80
+#: templates/image/product-details.php:81
 #, php-format
 msgid "You must add at least %1$s and no more than %2$s to cart"
 msgstr ""
 
 #. translators: %1$s is the minimum quantity
-#: templates/image/product-details.php:83
+#: templates/image/product-details.php:84
 #, php-format
 msgid "You must add at least %1$s to cart"
 msgstr ""
 
 #. translators: %1$s is the maximum quantity
-#: templates/image/product-details.php:86
+#: templates/image/product-details.php:87
 #, php-format
 msgid "You can only add up to %1$s to cart"
 msgstr ""
@@ -16252,27 +16258,27 @@ msgid "Invoice for %s"
 msgstr ""
 
 #. translators: %s is the order number
-#: templates/invoice/admin.php:75
+#: templates/invoice/admin.php:76
 #, php-format
 msgid "invoice-%s"
 msgstr ""
 
-#: templates/invoice/admin.php:89
+#: templates/invoice/admin.php:90
 msgid "Download PDF"
 msgstr ""
 
 #. translators: %s is the order number
-#: templates/invoice/admin.php:105
+#: templates/invoice/admin.php:106
 #, php-format
 msgid "Invoice #%s"
 msgstr ""
 
-#: templates/invoice/admin.php:234
+#: templates/invoice/admin.php:235
 msgid "Filenames"
 msgstr ""
 
 #: templates/multi-image-select/gallery-list.php:33
-#: templates/multi-image-select/select-images.php:83
+#: templates/multi-image-select/select-images.php:88
 #: class-reports-products-table.php:37
 #: admin/products.php:86
 #: admin/products.php:148
@@ -16287,11 +16293,11 @@ msgstr ""
 msgid "Apply selected images"
 msgstr ""
 
-#: templates/multi-image-select/select-images.php:30
+#: templates/multi-image-select/select-images.php:32
 msgid "Select photos"
 msgstr ""
 
-#: templates/multi-image-select/select-images.php:42
+#: templates/multi-image-select/select-images.php:44
 msgid "Show selected"
 msgstr ""
 
@@ -19235,7 +19241,7 @@ msgid "Multi-image"
 msgstr ""
 
 #: templates/fill-item.php:15
-#: templates/fill-item.php:25
+#: templates/fill-item.php:26
 msgid "Select Image(s)"
 msgstr ""
 
@@ -19295,7 +19301,7 @@ msgstr ""
 msgid "Item not filled"
 msgstr ""
 
-#: templates/fill-item.php:46
+#: templates/fill-item.php:47
 msgid "This product does not need any images selected"
 msgstr ""
 
