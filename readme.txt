@@ -248,6 +248,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * New: Packages can be added from "Add all to cart" on the Favorites page. One package goes in the cart, and the customer then picks a photo for each item in it, starting from their favorites
 * Fix: Invoices no longer list tax on its own line when prices are displayed with tax included, so the totals add up. The order total now says how much tax it includes, the same as the order page and emails
 * Security: Visitors can no longer use the favorites share link to send harmful data to the site
+* Security: Visitors can no longer post image comments in a gallery they don't have access to, like a password-protected or private gallery. Thanks to Raphael P. Cigana for reporting this
 * Fix: Downloading a very large Sunshine log or PHP error log could crash the site with a memory error
 * Fix: Gallery cover photos smaller than 1800px no longer cause PHP warnings in the Media Library list view
 * Fix: A free shipping method set to "Via Discount" now stays selected at checkout instead of the shipping step reopening with nothing chosen

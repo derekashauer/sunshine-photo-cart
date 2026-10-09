@@ -57,6 +57,12 @@ function sunshine_modal_add_comment() {
 		wp_send_json_error( __( 'Invalid comment submission - comments not allowed', 'sunshine-photo-cart' ) );
 	}
 
+	// Verify user has access to the image's gallery, same as viewing comments.
+	if ( ! $image->can_access() ) {
+		SPC()->log( 'Add comment failed: No access to gallery' );
+		wp_send_json_error( array( 'reason' => __( 'Access denied', 'sunshine-photo-cart' ) ) );
+	}
+
 	$content = sanitize_textarea_field( $_POST['content'] );
 
 	$args = array(
