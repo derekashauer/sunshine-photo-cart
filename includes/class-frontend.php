@@ -192,7 +192,7 @@ class SPC_Frontend {
 		}
 
 		// Favorite keys come from wp_generate_password( 20, false ), so letters and numbers only
-		if ( is_sunshine_page( 'favorites' ) && isset( $_GET['key'] ) && preg_match( '/^[A-Za-z0-9]+$/', $_GET['key'] ) ) {
+		if ( is_sunshine_page( 'favorites' ) && isset( $_GET['key'] ) && is_string( $_GET['key'] ) && preg_match( '/^[A-Za-z0-9]+$/', $_GET['key'] ) ) {
 			SPC()->session->set( 'favorite_key', sanitize_text_field( $_GET['key'] ) );
 		}
 

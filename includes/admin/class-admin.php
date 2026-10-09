@@ -1304,9 +1304,9 @@ class Sunshine_Admin {
 			wp_die( __( 'Log file not found.', 'sunshine-photo-cart' ) );
 		}
 		// A log can grow past the memory limit. Any open output buffer would hold
-		// the whole file in memory, so end them all before sending it.
-		while ( ob_get_level() ) {
-			ob_end_clean();
+		// the whole file in memory, so end them all before sending it. Stop at one
+		// that can't be removed, or this would loop forever.
+		while ( ob_get_level() && @ob_end_clean() ) {
 		}
 		header( 'Content-Type: text/plain' );
 		header( 'Content-Disposition: attachment; filename="' . $download_name . '"' );
