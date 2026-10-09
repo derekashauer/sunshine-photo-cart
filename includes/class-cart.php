@@ -2789,6 +2789,23 @@ class SPC_Cart {
 	}
 
 	public function post_process_order( $order ) {
+		global $wpdb;
+
+		// Checkout and a payment webhook can both try to finish the same order, sometimes at the
+		// same moment. Hold a database lock while finishing it so the second one waits, then sees
+		// the marker and stops, instead of sending the receipts and counting discounts twice.
+		$lock_name = 'sunshine_post_process_' . $order->get_id();
+		$locked    = ( '1' === (string) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, 15)', $lock_name ) ) );
+
+		// Read straight from the database, the order object may hold meta loaded before the lock.
+		$already_processed = $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key = 'post_processed' LIMIT 1", $order->get_id() ) );
+		if ( $already_processed ) {
+			SPC()->log( 'Order ' . $order->get_id() . ' already post processed, skipping' );
+			if ( $locked ) {
+				$wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock_name ) );
+			}
+			return;
+		}
 
 		SPC()->log( 'Post processing order: ' . $order->get_id() );
 
@@ -2829,6 +2846,11 @@ class SPC_Cart {
 		}
 
 		SPC()->session->set( 'checkout_order_id', '' );
+
+		$order->update_meta_value( 'post_processed', current_time( 'timestamp' ) );
+		if ( $locked ) {
+			$wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock_name ) );
+		}
 
 	}
 

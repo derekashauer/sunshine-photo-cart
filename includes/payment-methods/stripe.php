@@ -24,6 +24,13 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	private $extra_meta_data = array();
 
 	/**
+	 * Whether this request has already confirmed with Stripe that the payment succeeded
+	 *
+	 * @var bool
+	 */
+	private $payment_confirmed = false;
+
+	/**
 	 * Stripe mode (live or test)
 	 *
 	 * @var string
@@ -1918,7 +1925,16 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	}
 
 	public function checkout_post_process_order( $do_post_process, $order, $data ) {
-		if ( $data['payment_method'] == $this->id && $this->get_webhook_secret() ) {
+		if ( $data['payment_method'] != $this->id ) {
+			return $do_post_process;
+		}
+		// A payment confirmed with Stripe in this request finishes the order now. The webhook is
+		// only a backup for when the customer never makes it back to the site.
+		if ( $this->payment_confirmed ) {
+			SPC()->log( 'Stripe payment confirmed in this request, finishing order now' );
+			return $do_post_process;
+		}
+		if ( $this->get_webhook_secret() ) {
 			SPC()->log( 'Stripe webhook secret is set, so not doing post process' );
 			return false;
 		}
@@ -2471,6 +2487,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			SPC()->session->set( 'stripe_customer_id', '' );
 		}
 		SPC()->log( 'Stripe payment processing complete' );
+		$this->payment_confirmed = true;
 
 		// DEBUG: Add artificial delay to test race condition
 		if ( isset( $_GET['test_race_condition'] ) ) {
@@ -2777,6 +2794,13 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			// Hosted checkout orders are processed via checkout.session.completed; payment_intent.succeeded would duplicate emails.
 			if ( $order->get_meta_value( 'stripe_checkout_session_id' ) ) {
 				SPC()->log( 'Stripe Webhook: Skipping payment_intent.succeeded for hosted checkout order ' . $order->get_id() );
+				status_header( 200 );
+				exit;
+			}
+
+			// Checkout already confirmed this payment and finished the order, nothing left to do.
+			if ( $order->get_meta_value( 'post_processed' ) ) {
+				SPC()->log( 'Stripe Webhook: order ' . $order->get_id() . ' already completed on site, nothing to do' );
 				status_header( 200 );
 				exit;
 			}
