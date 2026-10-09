@@ -163,13 +163,6 @@ class SPC_Tool_Square_Reconcile extends SPC_Tool {
 					/* translators: %1$s: order name, %2$s: Square payment status */
 					'summary' => sprintf( __( '%1$s: still pending at Square (%2$s)', 'sunshine-photo-cart' ), $order->get_name(), $status ),
 				);
-			case 'in_progress':
-				return array(
-					'ok'      => true,
-					'order'   => $order->get_name(),
-					/* translators: %s: order name */
-					'summary' => sprintf( __( '%s: another reconcile already running, skipped', 'sunshine-photo-cart' ), $order->get_name() ),
-				);
 			default:
 				return array(
 					'ok'    => false,

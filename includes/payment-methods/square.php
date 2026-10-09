@@ -1498,15 +1498,8 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			}
 		}
 
-		$lock_key = 'spc_square_reconcile_' . $payment_id;
-		if ( get_transient( $lock_key ) ) {
-			return array( 'ok' => true, 'action' => 'in_progress' );
-		}
-		set_transient( $lock_key, 1, 30 );
-
 		$mode = $order->get_mode();
 		if ( ! $this->get_access_token( $mode ) ) {
-			delete_transient( $lock_key );
 			return array( 'ok' => false, 'action' => 'invalid', 'error' => 'No Square access token for mode ' . $mode );
 		}
 		$this->environmentUrl = ( $mode === 'live' ) ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com';
@@ -1516,7 +1509,6 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			$response = $this->api_request( 'v2/payments/' . $payment_id, '', 'GET', $mode );
 			if ( is_wp_error( $response ) ) {
 				SPC()->log( 'reconcile_order: Square API WP_Error for ' . $payment_id . ': ' . $response->get_error_message() );
-				delete_transient( $lock_key );
 				return array( 'ok' => false, 'action' => 'error', 'error' => $response->get_error_message() );
 			}
 			$body = json_decode( wp_remote_retrieve_body( $response ), true );
@@ -1534,7 +1526,6 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		$order->update_meta_value( 'square_last_reconcile_check', current_time( 'timestamp' ) );
 
 		if ( empty( $payment ) ) {
-			delete_transient( $lock_key );
 			SPC()->log( 'reconcile_order: empty payment response for ' . $payment_id );
 			return array( 'ok' => false, 'action' => 'error', 'error' => 'Empty Square response' );
 		}
@@ -1549,7 +1540,6 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			SPC()->log( 'reconcile_order: finalizing order ' . $order->get_id() . ' for Square payment ' . $payment_id );
 			SPC()->cart->post_process_order( $order );
 			$order->update_meta_value( 'paid_date', current_time( 'timestamp' ) );
-			delete_transient( $lock_key );
 			return array( 'ok' => true, 'action' => 'finalized' );
 		}
 
@@ -1567,12 +1557,10 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			}
 			$order->set_status( 'failed', $log_msg );
 			$order->update_meta_value( 'square_idempotency_key', '' );
-			delete_transient( $lock_key );
 			return array( 'ok' => true, 'action' => 'marked_failed', 'error' => $reason );
 		}
 
 		// APPROVED, PENDING, or anything else - leave alone, recovery will try again later.
-		delete_transient( $lock_key );
 		return array( 'ok' => true, 'action' => 'still_pending', 'error' => $status );
 	}
 
@@ -1829,9 +1817,6 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 				$status = ! empty( $result['error'] ) ? $result['error'] : 'PENDING';
 				/* translators: %s is the Square payment status */
 				SPC()->notices->add_admin( $key, sprintf( __( 'Square still reports this payment as %s. The order remains pending. Try again in a moment.', 'sunshine-photo-cart' ), $status ), 'warning' );
-				break;
-			case 'in_progress':
-				SPC()->notices->add_admin( $key, __( 'A recheck for this payment is already running. Please wait a moment and try again.', 'sunshine-photo-cart' ), 'warning' );
 				break;
 			default:
 				$error = ! empty( $result['error'] ) ? $result['error'] : __( 'Could not reach Square', 'sunshine-photo-cart' );
