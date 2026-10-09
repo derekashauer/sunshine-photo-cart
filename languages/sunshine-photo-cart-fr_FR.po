@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-10-09T15:46:24+00:00\n"
+"POT-Creation-Date: 2026-10-09T17:07:54+00:00\n"
 "PO-Revision-Date: 2026-02-27 15:48-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -174,7 +174,7 @@ msgstr "Documentation"
 #: includes/admin/class-admin-meta-box.php:155
 #: includes/admin/class-admin-meta-box.php:675
 #: includes/admin/class-options.php:567 includes/class-payment-method.php:352
-#: includes/payment-methods/stripe.php:506 templates/admin/header.php:57
+#: includes/payment-methods/stripe.php:513 templates/admin/header.php:57
 msgid "Learn more"
 msgstr "En savoir plus"
 
@@ -1056,8 +1056,8 @@ msgstr "Effacer la recherche"
 
 #: includes/admin/gallery-navigator.php:83
 #: includes/admin/gallery-navigator.php:207
-#: includes/payment-methods/stripe.php:1149
-#: includes/payment-methods/stripe.php:1174
+#: includes/payment-methods/stripe.php:1156
+#: includes/payment-methods/stripe.php:1181
 msgid "Permission denied"
 msgstr "Permission refusée"
 
@@ -3093,14 +3093,14 @@ msgstr "Tous les modes"
 #: includes/payment-methods/paypal-legacy.php:39
 #: includes/payment-methods/paypal.php:63
 #: includes/payment-methods/square.php:100
-#: includes/payment-methods/stripe.php:542 class-authorizenet.php:50
+#: includes/payment-methods/stripe.php:549 class-authorizenet.php:50
 #: class-mollie.php:48 class-mercadopago-pro.php:41 class-mercadopago.php:46
 #: class-payfast.php:39 class-paystack.php:43
 msgid "Live"
 msgstr "Live"
 
 #: includes/admin/sunshine-order.php:130 includes/admin/sunshine-order.php:450
-#: includes/payment-methods/stripe.php:543 includes/payment-methods/test.php:7
+#: includes/payment-methods/stripe.php:550 includes/payment-methods/test.php:7
 #: class-authorizenet.php:51 class-mollie.php:49 class-mercadopago-pro.php:42
 #: class-mercadopago.php:47 class-payfast.php:40 class-paystack.php:44
 msgid "Test"
@@ -3234,7 +3234,7 @@ msgstr "Informer le client du changement de statut"
 
 #: includes/admin/sunshine-order.php:695
 #: includes/payment-methods/square.php:901
-#: includes/payment-methods/stripe.php:2072 templates/cart/totals.php:17
+#: includes/payment-methods/stripe.php:2089 templates/cart/totals.php:17
 #: templates/checkout/summary.php:46 templates/email/admin-receipt.php:183
 #: templates/email/customer-receipt.php:169
 #: templates/email/order-status.php:137 templates/order/details.php:46
@@ -3610,7 +3610,7 @@ msgstr "Pas d'orphelins trouvés !"
 #: includes/admin/tools/orphans.php:162
 #: includes/admin/tools/refresh-photo-details.php:221
 #: includes/admin/tools/regenerate.php:419
-#: includes/admin/tools/square-reconcile.php:191
+#: includes/admin/tools/square-reconcile.php:184
 #: includes/admin/tools/unused-image-sizes.php:153 hooks.php:689
 msgid "Abort"
 msgstr "Abandonner"
@@ -3892,13 +3892,7 @@ msgstr "%1$s : marquée en échec (Square : %2$s)"
 msgid "%1$s: still pending at Square (%2$s)"
 msgstr "%1$s : toujours en attente chez Square (%2$s)"
 
-#. translators: %s: order name
-#: includes/admin/tools/square-reconcile.php:171
-#, php-format
-msgid "%s: another reconcile already running, skipped"
-msgstr "%s : une vérification est déjà en cours, ignorée"
-
-#: includes/admin/tools/square-reconcile.php:224
+#: includes/admin/tools/square-reconcile.php:217
 msgid "Request failed"
 msgstr "La requête a échoué"
 
@@ -4068,7 +4062,7 @@ msgstr ""
 "Erreur rencontrée lors du processus de paiement et votre commande a déjà été "
 "marquée comme payée."
 
-#: includes/class-cart.php:2579 includes/class-cart.php:2913
+#: includes/class-cart.php:2579 includes/class-cart.php:2935
 msgid "View the order"
 msgstr "Voir la commande"
 
@@ -4092,7 +4086,7 @@ msgstr ""
 msgid "No payment method"
 msgstr "Aucun moyen de paiement"
 
-#: includes/class-cart.php:2846
+#: includes/class-cart.php:2868
 msgid ""
 "User account already exists with that email address - please login to "
 "continue"
@@ -4100,7 +4094,7 @@ msgstr ""
 "Un compte d'utilisateur existe déjà avec cette adresse e-mail - veuillez "
 "vous connecter pour continuer"
 
-#: includes/class-cart.php:2913
+#: includes/class-cart.php:2935
 msgid "It appears your previous checkout has already been processed."
 msgstr "Il semble que votre commande précédente ait déjà été traitée."
 
@@ -13026,8 +13020,8 @@ msgstr "Commande #%s"
 #. translators: %s: refund amount
 #: includes/class-order.php:915 includes/payment-methods/paypal.php:805
 #: includes/payment-methods/paypal.php:807
-#: includes/payment-methods/square.php:1794
-#: includes/payment-methods/stripe.php:3365 class-authorizenet.php:472
+#: includes/payment-methods/square.php:1782
+#: includes/payment-methods/stripe.php:3390 class-authorizenet.php:472
 #: class-mollie.php:410 class-mercadopago-pro.php:447 class-mercadopago.php:502
 #: class-payfast.php:556 class-paystack.php:435 class-quickpay.php:502
 #, php-format
@@ -14659,7 +14653,7 @@ msgstr "Payez avec votre carte de crédit ou votre compte PayPal"
 #: includes/payment-methods/paypal-legacy.php:35
 #: includes/payment-methods/paypal.php:59
 #: includes/payment-methods/square.php:96
-#: includes/payment-methods/stripe.php:538 class-authorizenet.php:46
+#: includes/payment-methods/stripe.php:545 class-authorizenet.php:46
 #: class-export-orders.php:485 class-mollie.php:44 class-mercadopago-pro.php:37
 #: class-mercadopago.php:42 class-payfast.php:35 class-paystack.php:39
 msgid "Mode"
@@ -14682,8 +14676,8 @@ msgstr "Envoyer le paiement via PayPal"
 
 #: includes/payment-methods/paypal-legacy.php:220
 #: includes/payment-methods/paypal.php:722
-#: includes/payment-methods/square.php:1610
-#: includes/payment-methods/stripe.php:3255 class-authorizenet.php:371
+#: includes/payment-methods/square.php:1598
+#: includes/payment-methods/stripe.php:3280 class-authorizenet.php:371
 #: class-mollie.php:323 class-mercadopago-pro.php:384 class-mercadopago.php:439
 #: class-payfast.php:451 class-paystack.php:348 class-quickpay.php:341
 msgid "Transaction ID"
@@ -14911,7 +14905,7 @@ msgstr ""
 
 #: includes/payment-methods/paypal.php:314
 #: includes/payment-methods/square.php:755
-#: includes/payment-methods/stripe.php:3150 class-authorizenet.php:129
+#: includes/payment-methods/stripe.php:3175 class-authorizenet.php:129
 #: class-mercadopago-pro.php:143 class-mercadopago.php:179
 msgid ""
 "This will be processed as a test payment and no real money will be exchanged"
@@ -14952,24 +14946,24 @@ msgid "Refund payment in PayPal"
 msgstr "Remboursement du paiement par PayPal"
 
 #: includes/payment-methods/paypal.php:750
-#: includes/payment-methods/square.php:1676
-#: includes/payment-methods/stripe.php:3280 class-authorizenet.php:389
+#: includes/payment-methods/square.php:1664
+#: includes/payment-methods/stripe.php:3305 class-authorizenet.php:389
 #: class-mollie.php:348 class-mercadopago-pro.php:405 class-mercadopago.php:460
 #: class-payfast.php:468 class-paystack.php:368 class-quickpay.php:369
 msgid "Notify customer via email"
 msgstr "Notifier le client par courrier électronique"
 
 #: includes/payment-methods/paypal.php:751
-#: includes/payment-methods/square.php:1677
-#: includes/payment-methods/stripe.php:3281 class-authorizenet.php:390
+#: includes/payment-methods/square.php:1665
+#: includes/payment-methods/stripe.php:3306 class-authorizenet.php:390
 #: class-mollie.php:349 class-mercadopago-pro.php:406 class-mercadopago.php:461
 #: class-payfast.php:469 class-paystack.php:369 class-quickpay.php:370
 msgid "Full refund"
 msgstr "Remboursement intégral"
 
 #: includes/payment-methods/paypal.php:752
-#: includes/payment-methods/square.php:1678
-#: includes/payment-methods/stripe.php:3282 class-authorizenet.php:391
+#: includes/payment-methods/square.php:1666
+#: includes/payment-methods/stripe.php:3307 class-authorizenet.php:391
 #: class-mollie.php:350 class-mercadopago-pro.php:407 class-mercadopago.php:462
 #: class-payfast.php:470 class-paystack.php:370 class-quickpay.php:371
 msgid "Amount to refund"
@@ -14996,18 +14990,18 @@ msgid "Order %s failed refund in PayPal"
 msgstr "La commande %s n'a pas été remboursée par PayPal"
 
 #: includes/payment-methods/paypal.php:831
-#: includes/payment-methods/square.php:1855
-#: includes/payment-methods/stripe.php:3389 class-mercadopago.php:523
+#: includes/payment-methods/square.php:1840
+#: includes/payment-methods/stripe.php:3414 class-mercadopago.php:523
 msgid "Invalid payment"
 msgstr "Paiement non valide"
 
 #: includes/payment-methods/square.php:16
-#: includes/payment-methods/square.php:1602
+#: includes/payment-methods/square.php:1590
 msgid "Square"
 msgstr "Carré"
 
 #: includes/payment-methods/square.php:18
-#: includes/payment-methods/stripe.php:310 class-authorizenet.php:16
+#: includes/payment-methods/stripe.php:317 class-authorizenet.php:16
 #: class-mercadopago.php:9 class-payfast.php:9 class-paystack.php:9
 #: class-quickpay.php:9
 msgid "Pay with credit card"
@@ -15130,7 +15124,7 @@ msgstr ""
 "Réessaie une fois le paiement encaissé."
 
 #: includes/payment-methods/square.php:560
-#: includes/payment-methods/square.php:1620
+#: includes/payment-methods/square.php:1608
 msgid "Square Processing Fee"
 msgstr "Frais de traitement Square"
 
@@ -15152,7 +15146,7 @@ msgid "Discount: %s"
 msgstr "Remise : %s"
 
 #: includes/payment-methods/square.php:946
-#: includes/payment-methods/stripe.php:2269 discounts.php:35
+#: includes/payment-methods/stripe.php:2286 discounts.php:35
 msgid "Discount"
 msgstr "Remise"
 
@@ -15176,7 +15170,7 @@ msgstr ""
 
 #. translators: %1$s: Square payment ID, %2$s: payment status
 #: includes/payment-methods/square.php:1255
-#: includes/payment-methods/square.php:1564
+#: includes/payment-methods/square.php:1554
 #, php-format
 msgid "Square reports payment %1$s as %2$s"
 msgstr "Square indique le paiement %1$s comme %2$s"
@@ -15205,47 +15199,47 @@ msgid "Every 15 minutes"
 msgstr "Toutes les 15 minutes"
 
 #. translators: %s: Square payment ID
-#: includes/payment-methods/square.php:1548
+#: includes/payment-methods/square.php:1539
 #, php-format
 msgid "Square payment %s reconciled as COMPLETED"
 msgstr "Paiement Square %s vérifié et marqué COMPLETED"
 
-#: includes/payment-methods/square.php:1615
+#: includes/payment-methods/square.php:1603
 msgid "Square Order ID"
 msgstr "Identifiant de commande Square"
 
-#: includes/payment-methods/square.php:1625
+#: includes/payment-methods/square.php:1613
 msgid "Not yet available - Square calculates fees at settlement. "
 msgstr ""
 "Pas encore disponible - Square calcule les frais au moment du règlement. "
 
-#: includes/payment-methods/square.php:1626
+#: includes/payment-methods/square.php:1614
 msgid "Refresh from Square"
 msgstr "Actualiser depuis Square"
 
-#: includes/payment-methods/square.php:1633
+#: includes/payment-methods/square.php:1621
 msgid "Card"
 msgstr "Carte"
 
-#: includes/payment-methods/square.php:1643
+#: includes/payment-methods/square.php:1631
 msgid "exp."
 msgstr "exp."
 
-#: includes/payment-methods/square.php:1651
-#: includes/payment-methods/stripe.php:3260
+#: includes/payment-methods/square.php:1639
+#: includes/payment-methods/stripe.php:3285
 msgid "Application Fee Amount (To Sunshine)"
 msgstr "Montant des frais de dossier (au soleil)"
 
-#: includes/payment-methods/square.php:1666
+#: includes/payment-methods/square.php:1654
 msgid "Recheck payment status in Square"
 msgstr "Revérifier le statut du paiement dans Square"
 
-#: includes/payment-methods/square.php:1668
+#: includes/payment-methods/square.php:1656
 msgid "Refund payment in Square"
 msgstr "Remboursement du paiement dans Square"
 
 #. translators: %s is the order's Square mode (live or test)
-#: includes/payment-methods/square.php:1722
+#: includes/payment-methods/square.php:1710
 #, php-format
 msgid ""
 "Could not refund payment: no Square credentials are connected for this "
@@ -15260,9 +15254,9 @@ msgstr ""
 #. translators: %s is the error detail message
 #. translators: %s: error message
 #. translators: %s: error response
-#: includes/payment-methods/square.php:1761
-#: includes/payment-methods/square.php:1774
-#: includes/payment-methods/stripe.php:3357 class-mercadopago-pro.php:450
+#: includes/payment-methods/square.php:1749
+#: includes/payment-methods/square.php:1762
+#: includes/payment-methods/stripe.php:3382 class-mercadopago-pro.php:450
 #: class-mercadopago-pro.php:452 class-mercadopago.php:505
 #: class-mercadopago.php:507 class-payfast.php:560 class-paystack.php:439
 #: class-quickpay.php:506
@@ -15270,39 +15264,39 @@ msgstr ""
 msgid "Could not refund payment: %s"
 msgstr "Impossible de rembourser le paiement : %s"
 
-#: includes/payment-methods/square.php:1771
+#: includes/payment-methods/square.php:1759
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
-#: includes/payment-methods/square.php:1780
+#: includes/payment-methods/square.php:1768
 msgid "Could not refund payment: Square did not return a refund"
 msgstr ""
 "Impossible de rembourser le paiement : Square n'a renvoyé aucun remboursement"
 
 #. translators: %s is the refund amount formatted as price
-#: includes/payment-methods/square.php:1790
+#: includes/payment-methods/square.php:1778
 #, php-format
 msgid "Sunshine contributed %s towards refund from processing fees"
 msgstr "Sunshine a contribué %s au remboursement des frais de traitement"
 
-#: includes/payment-methods/square.php:1798
-#: includes/payment-methods/stripe.php:3369
+#: includes/payment-methods/square.php:1786
+#: includes/payment-methods/stripe.php:3394
 msgid "Customer sent email about refund"
 msgstr "Le client a envoyé un courriel au sujet du remboursement"
 
-#: includes/payment-methods/square.php:1818
+#: includes/payment-methods/square.php:1806
 msgid ""
 "Square confirmed this payment was completed. The order has been finalized."
 msgstr ""
 "Square a confirmé que ce paiement a été effectué. La commande a été "
 "finalisée."
 
-#: includes/payment-methods/square.php:1821
+#: includes/payment-methods/square.php:1809
 msgid "This order is already marked as paid."
 msgstr "Cette commande est déjà marquée comme payée."
 
 #. translators: %s is the Square failure reason, if any
-#: includes/payment-methods/square.php:1826
+#: includes/payment-methods/square.php:1814
 #, php-format
 msgid ""
 "Square reports this payment failed or was canceled%s. The order has been "
@@ -15312,7 +15306,7 @@ msgstr ""
 "marquée comme échouée."
 
 #. translators: %s is the Square payment status
-#: includes/payment-methods/square.php:1831
+#: includes/payment-methods/square.php:1819
 #, php-format
 msgid ""
 "Square still reports this payment as %s. The order remains pending. Try "
@@ -15321,51 +15315,43 @@ msgstr ""
 "Square indique toujours ce paiement comme %s. La commande reste en attente. "
 "Réessaie dans un instant."
 
-#: includes/payment-methods/square.php:1834
-msgid ""
-"A recheck for this payment is already running. Please wait a moment and try "
-"again."
-msgstr ""
-"Une nouvelle vérification de ce paiement est déjà en cours. Patiente un "
-"instant et réessaie."
-
-#: includes/payment-methods/square.php:1837
+#: includes/payment-methods/square.php:1822
 msgid "Could not reach Square"
 msgstr "Impossible de joindre Square"
 
 #. translators: %s is the error message
-#: includes/payment-methods/square.php:1839
+#: includes/payment-methods/square.php:1824
 #, php-format
 msgid "Could not recheck this payment: %s"
 msgstr "Impossible de revérifier ce paiement : %s"
 
-#: includes/payment-methods/stripe.php:308
-#: includes/payment-methods/stripe.php:3247
+#: includes/payment-methods/stripe.php:315
+#: includes/payment-methods/stripe.php:3272
 msgid "Stripe"
 msgstr "Stripe"
 
-#: includes/payment-methods/stripe.php:315
+#: includes/payment-methods/stripe.php:322
 msgid "Stripe Pro"
 msgstr "Stripe Pro"
 
-#: includes/payment-methods/stripe.php:377
+#: includes/payment-methods/stripe.php:384
 msgid "Stripe Processing Fee"
 msgstr "Frais de traitement Stripe"
 
-#: includes/payment-methods/stripe.php:434
+#: includes/payment-methods/stripe.php:441
 msgid "Stripe webhook is not setup"
 msgstr "Stripe webhook n'est pas configuré"
 
-#: includes/payment-methods/stripe.php:434
+#: includes/payment-methods/stripe.php:441
 msgid "Configure here"
 msgstr "Configurer ici"
 
-#: includes/payment-methods/stripe.php:461
+#: includes/payment-methods/stripe.php:468
 msgid "Continue to payment"
 msgstr "Continuer vers le paiement"
 
 #. translators: %s is the application fee percentage
-#: includes/payment-methods/stripe.php:479
+#: includes/payment-methods/stripe.php:486
 #, php-format
 msgid ""
 "Note: An additional %s%% fee is added to each Stripe order and goes to "
@@ -15375,19 +15361,19 @@ msgstr ""
 "Stripe et reversés à Sunshine Photo Cart, en plus des frais de traitement de "
 "Stripe."
 
-#: includes/payment-methods/stripe.php:485
+#: includes/payment-methods/stripe.php:492
 msgid "Checkout Mode"
 msgstr "Mode de paiement"
 
-#: includes/payment-methods/stripe.php:489
+#: includes/payment-methods/stripe.php:496
 msgid "Inline Payment Form (recommended)"
 msgstr "Formulaire de paiement intégré (recommandé)"
 
-#: includes/payment-methods/stripe.php:490
+#: includes/payment-methods/stripe.php:497
 msgid "Redirect to Stripe Checkout"
 msgstr "Rediriger vers Stripe Checkout"
 
-#: includes/payment-methods/stripe.php:493
+#: includes/payment-methods/stripe.php:500
 msgid ""
 "Inline shows the payment form on your checkout page. Redirect sends "
 "customers to Stripe's hosted checkout page."
@@ -15396,23 +15382,23 @@ msgstr ""
 "La redirection envoie les clients vers la page de paiement hébergée par "
 "Stripe."
 
-#: includes/payment-methods/stripe.php:493
+#: includes/payment-methods/stripe.php:500
 msgid "Learn more about Stripe Checkout"
 msgstr "En savoir plus sur Stripe Checkout"
 
-#: includes/payment-methods/stripe.php:498
+#: includes/payment-methods/stripe.php:505
 msgid "Tax Calculation"
 msgstr "Calcul de taxe"
 
-#: includes/payment-methods/stripe.php:502
+#: includes/payment-methods/stripe.php:509
 msgid "Use Sunshine tax calculations"
 msgstr "Utiliser le calcul des taxes de Sunshine"
 
-#: includes/payment-methods/stripe.php:503
+#: includes/payment-methods/stripe.php:510
 msgid "Use Stripe Tax (automatic)"
 msgstr "Utiliser Stripe Tax (automatique)"
 
-#: includes/payment-methods/stripe.php:506
+#: includes/payment-methods/stripe.php:513
 msgid ""
 "When using Stripe Tax, tax is calculated automatically by Stripe based on "
 "customer location. Requires Stripe Tax to be enabled in your Stripe "
@@ -15422,55 +15408,55 @@ msgstr ""
 "localisation du client. Stripe Tax doit être activé dans ton Stripe "
 "Dashboard."
 
-#: includes/payment-methods/stripe.php:506
+#: includes/payment-methods/stripe.php:513
 msgid "Enable Stripe Tax"
 msgstr "Activer la taxe Stripe"
 
-#: includes/payment-methods/stripe.php:518
+#: includes/payment-methods/stripe.php:525
 msgid "Layout"
 msgstr "Mise en page"
 
-#: includes/payment-methods/stripe.php:522
+#: includes/payment-methods/stripe.php:529
 msgid "Tabs"
 msgstr "Onglets"
 
-#: includes/payment-methods/stripe.php:523
+#: includes/payment-methods/stripe.php:530
 msgid "Accordion"
 msgstr "Accordéon"
 
-#: includes/payment-methods/stripe.php:525
+#: includes/payment-methods/stripe.php:532
 msgid "See differences in layout options"
 msgstr "Voir les différences dans les options de mise en page"
 
-#: includes/payment-methods/stripe.php:549
+#: includes/payment-methods/stripe.php:556
 msgid "Stripe Connection (Live)"
 msgstr "Stripe Connection (Live)"
 
-#: includes/payment-methods/stripe.php:563
+#: includes/payment-methods/stripe.php:570
 msgid "Stripe Connection (Test)"
 msgstr "Connexion de la bande (test)"
 
-#: includes/payment-methods/stripe.php:579
+#: includes/payment-methods/stripe.php:586
 msgid "Stripe Webhook"
 msgstr "Webhook Stripe"
 
-#: includes/payment-methods/stripe.php:585
+#: includes/payment-methods/stripe.php:592
 msgid "Stripe Webhook Secret (Live)"
 msgstr "Stripe Webhook Secret (Live)"
 
-#: includes/payment-methods/stripe.php:599
+#: includes/payment-methods/stripe.php:606
 msgid "Stripe Webhook Secret (Test)"
 msgstr "Stripe Webhook Secret (Test)"
 
-#: includes/payment-methods/stripe.php:615
+#: includes/payment-methods/stripe.php:622
 msgid "Bank Statement Descriptor"
 msgstr "Libellé sur le relevé bancaire"
 
-#: includes/payment-methods/stripe.php:619
+#: includes/payment-methods/stripe.php:626
 msgid "e.g., WWW.YOURSITE.COM"
 msgstr "par ex. WWW.TONSITE.COM"
 
-#: includes/payment-methods/stripe.php:620
+#: includes/payment-methods/stripe.php:627
 msgid ""
 "The description that appears on your customer's bank statement. Max 22 "
 "characters, letters/numbers/spaces only. Leave blank to use your Stripe "
@@ -15480,11 +15466,11 @@ msgstr ""
 "caractères maximum, lettres, chiffres et espaces uniquement. Laisse vide "
 "pour utiliser la valeur par défaut de ton compte Stripe."
 
-#: includes/payment-methods/stripe.php:632
+#: includes/payment-methods/stripe.php:639
 msgid "Add Order Number to Statement"
 msgstr "Ajouter le numéro de commande au relevé"
 
-#: includes/payment-methods/stripe.php:636
+#: includes/payment-methods/stripe.php:643
 msgid ""
 "Append the order number to the bank statement descriptor (e.g., \"MYSHOP* "
 "#12345\"). Helps customers identify charges."
@@ -15492,15 +15478,15 @@ msgstr ""
 "Ajoute le numéro de commande au libellé du relevé bancaire (par exemple "
 "« MYSHOP* #12345 »). Aide les clients à identifier les débits."
 
-#: includes/payment-methods/stripe.php:648
+#: includes/payment-methods/stripe.php:655
 msgid "Shortened Descriptor"
 msgstr "Libellé raccourci"
 
-#: includes/payment-methods/stripe.php:652
+#: includes/payment-methods/stripe.php:659
 msgid "e.g., MYSHOP"
 msgstr "par ex. MABOUTIQUE"
 
-#: includes/payment-methods/stripe.php:653
+#: includes/payment-methods/stripe.php:660
 msgid ""
 "A shortened version (max 10 characters) used with the order number suffix. "
 "If blank, uses first 10 characters of the full descriptor."
@@ -15509,11 +15495,11 @@ msgstr ""
 "numéro de commande. Si le champ est vide, les 10 premiers caractères du "
 "libellé complet sont utilisés."
 
-#: includes/payment-methods/stripe.php:672
+#: includes/payment-methods/stripe.php:679
 msgid "Optimized Checkout"
 msgstr "Paiement optimisé"
 
-#: includes/payment-methods/stripe.php:676
+#: includes/payment-methods/stripe.php:683
 msgid ""
 "Use Stripe's Optimized Checkout Suite to dynamically display the most "
 "relevant payment methods to each customer. When disabled, you can manually "
@@ -15524,40 +15510,40 @@ msgstr ""
 "est désactivée, tu peux sélectionner manuellement les moyens de paiement à "
 "proposer."
 
-#: includes/payment-methods/stripe.php:689
+#: includes/payment-methods/stripe.php:696
 msgid "Payment Methods"
 msgstr "﻿Moyens de paiement"
 
-#: includes/payment-methods/stripe.php:725
+#: includes/payment-methods/stripe.php:732
 msgid "Connected"
 msgstr "Connecté"
 
-#: includes/payment-methods/stripe.php:729
+#: includes/payment-methods/stripe.php:736
 msgid "Account:"
 msgstr "Compte :"
 
-#: includes/payment-methods/stripe.php:736
-#: includes/payment-methods/stripe.php:741
+#: includes/payment-methods/stripe.php:743
+#: includes/payment-methods/stripe.php:748
 msgid "Account ID:"
 msgstr "ID de compte"
 
-#: includes/payment-methods/stripe.php:746
+#: includes/payment-methods/stripe.php:753
 msgid "Disconnect Stripe account"
 msgstr "Déconnecter le compte Stripe"
 
-#: includes/payment-methods/stripe.php:752
+#: includes/payment-methods/stripe.php:759
 msgid "Connect to"
 msgstr "Connecter à"
 
-#: includes/payment-methods/stripe.php:762
+#: includes/payment-methods/stripe.php:769
 msgid "Learn how to setup Stripe Webhooks"
 msgstr "Apprendre à configurer les Webhooks Stripe"
 
-#: includes/payment-methods/stripe.php:791
+#: includes/payment-methods/stripe.php:798
 msgid "Optimized Checkout is enabled"
 msgstr "Le paiement optimisé est activé"
 
-#: includes/payment-methods/stripe.php:792
+#: includes/payment-methods/stripe.php:799
 msgid ""
 "Stripe will automatically display the most relevant payment methods to each "
 "customer based on their location, device, and purchase amount. Disable "
@@ -15568,7 +15554,7 @@ msgstr ""
 "l'achat. Désactive le paiement optimisé ci-dessus pour sélectionner les "
 "moyens de paiement manuellement."
 
-#: includes/payment-methods/stripe.php:832
+#: includes/payment-methods/stripe.php:839
 msgid ""
 "Greyed-out methods are not active on your Stripe account. Enable them in "
 "your Stripe Dashboard, then use Sync Payment Methods."
@@ -15577,7 +15563,7 @@ msgstr ""
 "dans ton Stripe Dashboard, puis utilise Synchroniser les moyens de paiement."
 
 #. translators: %s is a link to the Stripe Dashboard Link settings page
-#: includes/payment-methods/stripe.php:836
+#: includes/payment-methods/stripe.php:843
 #, php-format
 msgid ""
 "When Link is enabled, Stripe automatically offers customers Link's own "
@@ -15590,202 +15576,208 @@ msgstr ""
 "permet pas de les désactiver une par une : désactive Link ci-dessous pour "
 "les retirer, ou gère Buy Now, Pay Later dans ton %s."
 
-#: includes/payment-methods/stripe.php:837
+#: includes/payment-methods/stripe.php:844
 msgid "Stripe Dashboard Link settings"
 msgstr "Réglages du lien vers le tableau de bord Stripe"
 
-#: includes/payment-methods/stripe.php:843
+#: includes/payment-methods/stripe.php:850
 msgid "Sync Payment Methods"
 msgstr "Synchroniser les moyens de paiement"
 
-#: includes/payment-methods/stripe.php:887
+#: includes/payment-methods/stripe.php:894
 msgid "Syncing..."
 msgstr "Synchronisation…"
 
-#: includes/payment-methods/stripe.php:898
+#: includes/payment-methods/stripe.php:905
 msgid "Synced successfully!"
 msgstr "Synchronisation réussie !"
 
-#: includes/payment-methods/stripe.php:903
-#: includes/payment-methods/stripe.php:908
+#: includes/payment-methods/stripe.php:910
+#: includes/payment-methods/stripe.php:915
 msgid "Sync failed"
 msgstr "Échec de synchronisation"
 
-#: includes/payment-methods/stripe.php:939
+#: includes/payment-methods/stripe.php:946
 msgid "Credit Card"
 msgstr "Carte de crédit"
 
-#: includes/payment-methods/stripe.php:942
+#: includes/payment-methods/stripe.php:949
 msgid "US Bank Account"
 msgstr "Compte bancaire américain"
 
-#: includes/payment-methods/stripe.php:945
+#: includes/payment-methods/stripe.php:952
 msgid "Canadian Debit"
 msgstr "Débit canadien"
 
-#: includes/payment-methods/stripe.php:948
+#: includes/payment-methods/stripe.php:955
 msgid "Affirm"
 msgstr "Affirmer"
 
-#: includes/payment-methods/stripe.php:951
+#: includes/payment-methods/stripe.php:958
 msgid "Afterpay/Clearpay"
 msgstr "Afterpay/Clearpay"
 
-#: includes/payment-methods/stripe.php:954
+#: includes/payment-methods/stripe.php:961
 msgid "Alipay"
 msgstr "Alipay"
 
-#: includes/payment-methods/stripe.php:957
+#: includes/payment-methods/stripe.php:964
 msgid "Amazon Pay"
 msgstr "Amazon Pay"
 
-#: includes/payment-methods/stripe.php:960
+#: includes/payment-methods/stripe.php:967
 msgid "Apple Pay"
 msgstr "Apple Pay"
 
-#: includes/payment-methods/stripe.php:963
+#: includes/payment-methods/stripe.php:970
 msgid "Bacs Debit"
 msgstr "Prélèvement Bacs"
 
-#: includes/payment-methods/stripe.php:966
+#: includes/payment-methods/stripe.php:973
 msgid "Bancontact"
 msgstr "Bancontact"
 
-#: includes/payment-methods/stripe.php:969
+#: includes/payment-methods/stripe.php:976
 msgid "Cash App"
 msgstr "Cash App"
 
-#: includes/payment-methods/stripe.php:972
+#: includes/payment-methods/stripe.php:979
 msgid "EPS"
 msgstr "EPS"
 
-#: includes/payment-methods/stripe.php:975
+#: includes/payment-methods/stripe.php:982
 msgid "giropay"
 msgstr "giropay"
 
-#: includes/payment-methods/stripe.php:978
+#: includes/payment-methods/stripe.php:985
 msgid "Google Pay"
 msgstr "Google Pay"
 
-#: includes/payment-methods/stripe.php:981
+#: includes/payment-methods/stripe.php:988
 msgid "iDEAL"
 msgstr "iDEAL"
 
-#: includes/payment-methods/stripe.php:984
+#: includes/payment-methods/stripe.php:991
 msgid "Klarna"
 msgstr "Klarna"
 
-#: includes/payment-methods/stripe.php:987
+#: includes/payment-methods/stripe.php:994
 msgid "Link"
 msgstr "Lien"
 
-#: includes/payment-methods/stripe.php:990
+#: includes/payment-methods/stripe.php:997
 msgid "Przelewy24"
 msgstr "Przelewy24"
 
-#: includes/payment-methods/stripe.php:993
+#: includes/payment-methods/stripe.php:1000
 msgid "SEPA Direct Debit"
 msgstr "Mandat SEPA"
 
-#: includes/payment-methods/stripe.php:996
+#: includes/payment-methods/stripe.php:1003
 msgid "SOFORT"
 msgstr "SOFORT"
 
-#: includes/payment-methods/stripe.php:999
+#: includes/payment-methods/stripe.php:1006
 msgid "WeChat Pay"
 msgstr "WeChat Pay"
 
-#: includes/payment-methods/stripe.php:1157
+#: includes/payment-methods/stripe.php:1164
 msgid "Could not sync payment methods from Stripe"
 msgstr "Impossible de synchroniser les moyens de paiement depuis Stripe"
 
-#: includes/payment-methods/stripe.php:1182
+#: includes/payment-methods/stripe.php:1189
 msgid "Invalid payment method"
 msgstr "Moyen de paiement non valide"
 
-#: includes/payment-methods/stripe.php:1186
+#: includes/payment-methods/stripe.php:1193
 msgid "Could not update payment method"
 msgstr "Impossible de mettre à jour le moyen de paiement"
 
-#: includes/payment-methods/stripe.php:1213
+#: includes/payment-methods/stripe.php:1220
 msgid "Stripe payment domain setup successfully"
 msgstr "Installation réussie du domaine de paiement Stripe"
 
-#: includes/payment-methods/stripe.php:1215
+#: includes/payment-methods/stripe.php:1222
 msgid "Stripe payment domain setup failed"
 msgstr "L'installation du domaine de paiement Stripe a échoué"
 
-#: includes/payment-methods/stripe.php:1267
+#: includes/payment-methods/stripe.php:1274
 msgid "Stripe could not be connected"
 msgstr "Stripe n'a pas pu être connecté"
 
-#: includes/payment-methods/stripe.php:1288
+#: includes/payment-methods/stripe.php:1295
 msgid "Stripe has successfully been connected"
 msgstr "Stripe a été connecté avec succès"
 
-#: includes/payment-methods/stripe.php:1304
+#: includes/payment-methods/stripe.php:1311
 msgid "Stripe could not be disconnected"
 msgstr "Impossible de déconnecter Stripe"
 
-#: includes/payment-methods/stripe.php:1321
+#: includes/payment-methods/stripe.php:1328
 msgid "Stripe has successfully been disconnected"
 msgstr "Stripe a été déconnecté avec succès"
 
-#: includes/payment-methods/stripe.php:1581
-#: includes/payment-methods/stripe.php:1582
+#: includes/payment-methods/stripe.php:1588
+#: includes/payment-methods/stripe.php:1589
 msgid ""
 "Payment form not properly initialized. Please refresh the page and try again."
 msgstr ""
 "Le formulaire de paiement n'a pas été correctement initialisé. Veuillez "
 "rafraîchir la page et réessayer."
 
-#: includes/payment-methods/stripe.php:1583
+#: includes/payment-methods/stripe.php:1590
 msgid ""
 "Payment form not properly mounted. Please refresh the page and try again."
 msgstr ""
 "Le formulaire de paiement n'est pas correctement monté. Veuillez rafraîchir "
 "la page et réessayer."
 
-#: includes/payment-methods/stripe.php:1584
+#: includes/payment-methods/stripe.php:1591
 msgid "Payment intent not created. Please refresh the page and try again."
 msgstr ""
 "L'intention de paiement n'a pas été créée. Veuillez rafraîchir la page et "
 "réessayer."
 
-#: includes/payment-methods/stripe.php:1585
+#: includes/payment-methods/stripe.php:1592
 msgid "Payment was not processed, please try again"
 msgstr "Le paiement n'a pas été traité, veuillez réessayer"
 
-#: includes/payment-methods/stripe.php:1586
+#: includes/payment-methods/stripe.php:1593
 msgid "Payment did not succeed"
 msgstr "Le paiement n'a pas abouti"
 
-#: includes/payment-methods/stripe.php:1587
+#: includes/payment-methods/stripe.php:1594
 msgid "Payment processing failed:"
 msgstr "Le traitement du paiement a échoué:"
 
-#: includes/payment-methods/stripe.php:1965
+#: includes/payment-methods/stripe.php:1595
+msgid ""
+"Still waiting for your bank to confirm this payment. Please keep this page "
+"open."
+msgstr "On attend toujours que ta banque confirme ce paiement. Garde cette page ouverte, s'il te plaît."
+
+#: includes/payment-methods/stripe.php:1982
 msgid "Sales Tax"
 msgstr "TVA"
 
-#: includes/payment-methods/stripe.php:2333
-#: includes/payment-methods/stripe.php:2340
+#: includes/payment-methods/stripe.php:2350
+#: includes/payment-methods/stripe.php:2357
 msgid "Redirecting to Stripe"
 msgstr "Actions à déclencher"
 
-#: includes/payment-methods/stripe.php:2345
+#: includes/payment-methods/stripe.php:2362
 msgid "Click here to continue to payment"
 msgstr "Clique ici pour continuer vers le paiement"
 
-#: includes/payment-methods/stripe.php:2386
-#: includes/payment-methods/stripe.php:2405
-#: includes/payment-methods/stripe.php:2460
+#: includes/payment-methods/stripe.php:2403
+#: includes/payment-methods/stripe.php:2422
+#: includes/payment-methods/stripe.php:2477
 msgid "Could not complete order, contact site owner for more details"
 msgstr ""
 "La commande n'a pas pu être complétée, contactez le propriétaire du site "
 "pour plus de détails"
 
-#: includes/payment-methods/stripe.php:2396
+#: includes/payment-methods/stripe.php:2413
 msgid ""
 "This payment has already been processed for a different order. Please "
 "refresh the page and try again."
@@ -15793,29 +15785,29 @@ msgstr ""
 "Ce paiement a déjà été traité pour une autre commande. Actualise la page et "
 "réessaie."
 
-#: includes/payment-methods/stripe.php:2412
+#: includes/payment-methods/stripe.php:2429
 msgid "Payment was not successful, please try again"
 msgstr "Le paiement n'a pas abouti, réessaie"
 
-#: includes/payment-methods/stripe.php:2531 class-mercadopago-pro.php:277
+#: includes/payment-methods/stripe.php:2549 class-mercadopago-pro.php:277
 #: class-payfast.php:323
 msgid "Could not process order, please try another payment method"
 msgstr ""
 "La commande n'a pas pu être traitée, veuillez essayer un autre mode de "
 "paiement"
 
-#: includes/payment-methods/stripe.php:2611
+#: includes/payment-methods/stripe.php:2629
 msgid "Stripe payment has been cancelled"
 msgstr "Le paiement Stripe a été annulé"
 
-#: includes/payment-methods/stripe.php:2999
+#: includes/payment-methods/stripe.php:3024
 msgid "Your payment was successful! Completing your order..."
 msgstr ""
 "Votre paiement a été effectué avec succès ! Votre commande est en cours de "
 "finalisation..."
 
 #. translators: %s is the order name/number
-#: includes/payment-methods/stripe.php:3019
+#: includes/payment-methods/stripe.php:3044
 #, php-format
 msgid ""
 "You have a recent pending order (#%s). If you recently made a payment, "
@@ -15825,19 +15817,19 @@ msgstr ""
 "effectué un paiement, veuillez patienter un instant ou contacter le service "
 "d'assistance."
 
-#: includes/payment-methods/stripe.php:3160
+#: includes/payment-methods/stripe.php:3185
 msgid "You will be redirected to Stripe to complete your payment securely."
 msgstr ""
 "Vous serez redirigé vers Stripe pour effectuer votre paiement en toute "
 "sécurité."
 
-#: includes/payment-methods/stripe.php:3170
+#: includes/payment-methods/stripe.php:3195
 msgid "Loading secure payment form..."
 msgstr "Chargement du formulaire de paiement sécurisé..."
 
 #. translators: %s is the payment method name
 #. translators: %s: payment method name
-#: includes/payment-methods/stripe.php:3272 class-mercadopago-pro.php:397
+#: includes/payment-methods/stripe.php:3297 class-mercadopago-pro.php:397
 #: class-mercadopago.php:452 class-payfast.php:460 class-paystack.php:360
 #: class-quickpay.php:356
 #, php-format
@@ -15845,17 +15837,17 @@ msgid "Refund payment in %s"
 msgstr "Remboursement en %s"
 
 #. translators: %s is the error message
-#: includes/payment-methods/stripe.php:3323
+#: includes/payment-methods/stripe.php:3348
 #, php-format
 msgid "Failed to connect: %s"
 msgstr "Échec de la connexion : %s"
 
-#: includes/payment-methods/stripe.php:3338
+#: includes/payment-methods/stripe.php:3363
 msgid "Refund amount is higher than allowed"
 msgstr "Le montant du remboursement est supérieur au montant autorisé"
 
 #. translators: %1$s is the maximum allowed refund amount, %2$s is the requested refund amount
-#: includes/payment-methods/stripe.php:3340
+#: includes/payment-methods/stripe.php:3365
 #, php-format
 msgid ""
 "Refund amount is higher than allowed (Total allowed: %1$s, Refund Requested: "
@@ -23135,6 +23127,17 @@ msgstr "Montant initial :"
 #: templates/shortcode/buy-gift-card.php:139
 msgid "Add to Cart"
 msgstr "Ajouter au panier"
+
+#, php-format
+#~ msgid "%s: another reconcile already running, skipped"
+#~ msgstr "%s : une vérification est déjà en cours, ignorée"
+
+#~ msgid ""
+#~ "A recheck for this payment is already running. Please wait a moment and "
+#~ "try again."
+#~ msgstr ""
+#~ "Une nouvelle vérification de ce paiement est déjà en cours. Patiente un "
+#~ "instant et réessaie."
 
 #~ msgid "Data"
 #~ msgstr "Données"
