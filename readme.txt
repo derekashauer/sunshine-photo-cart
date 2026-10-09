@@ -254,6 +254,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: A free shipping method set to "Via Discount" now stays selected at checkout instead of the shipping step reopening with nothing chosen
 * Fix: Stripe orders now move to New as soon as checkout confirms the payment, even with a webhook signing secret filled in. Before, they stayed on Pending until Stripe's webhook arrived, and stayed there for good if it never did
 * Fix: An order can no longer be completed twice when checkout and a payment webhook both finish it, which could send the receipt emails twice and count a discount code twice
+* Fix: Customers who take more than 15 seconds to approve a Stripe payment with their bank no longer see an error while they're still approving, and the order is no longer marked Failed in the meantime. Checkout now shows a note that it's still waiting on the bank
 
 = 3.7.3 - October 1, 2026 =
 * New: A "Refresh photo details" button on the gallery edit screen reads the keywords, title, caption and photo date from your original files for photos already in that gallery and its sub-galleries, so galleries imported before this update can be searched by keyword

@@ -1592,6 +1592,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 					'payment_not_processed'         => __( 'Payment was not processed, please try again', 'sunshine-photo-cart' ),
 					'payment_did_not_succeed'       => __( 'Payment did not succeed', 'sunshine-photo-cart' ),
 					'payment_processing_failed'     => __( 'Payment processing failed:', 'sunshine-photo-cart' ),
+					'payment_still_waiting'         => __( 'Still waiting for your bank to confirm this payment. Please keep this page open.', 'sunshine-photo-cart' ),
 				),
 			)
 		);

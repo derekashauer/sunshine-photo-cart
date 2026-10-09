@@ -195,12 +195,12 @@ jQuery( document ).on( 'sunshine_payment_processing', function( event, data ) {
 		jQuery( '#sunshine-stripe-payment-errors' ).html( '' );
 
 		// Do Stripe-specific processing
+		// A slow confirmation is usually the customer approving the payment with their bank, which
+		// can take a while. Let them know we're still waiting, but don't give up on the payment:
+		// only Stripe's answer below decides whether it succeeded or failed.
 		const paymentTimeout = setTimeout(() => {
-			jQuery('#sunshine-stripe-payment-errors').html('<div style="background:red;padding:15px;color:#FFF;margin:10px 0;">Payment processing is taking longer than expected. Please wait or refresh the page and try again.</div>');
-			sunshine_checkout_updating_done();
-			resetButtonState();
-			reject(new Error('Payment confirmation timeout'));
-		}, 15000); // 15 second timeout for payment confirmation
+			jQuery('#sunshine-stripe-payment-errors').html('<div style="background:#f3f5f6;padding:15px;margin:10px 0;">' + spc_stripe_vars.strings.payment_still_waiting + '</div>');
+		}, 15000);
 
 		sunshine_stripe.confirmPayment({
 			elements: sunshine_stripe_elements,
@@ -212,6 +212,7 @@ jQuery( document ).on( 'sunshine_payment_processing', function( event, data ) {
 		.then(function(result) {
 			// Clear the timeout since we got a response
 			clearTimeout(paymentTimeout);
+			jQuery( '#sunshine-stripe-payment-errors' ).html( '' );
 
 			// Send ajax request with the result of this confirmpayment solely to log it.
 			jQuery.ajax({
