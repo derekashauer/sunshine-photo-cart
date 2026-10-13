@@ -7,6 +7,10 @@ function sunshine_modal_display_store_product() {
 	}
 
 	$gallery = sunshine_get_gallery( intval( $_POST['galleryId'] ) );
+	if ( empty( $gallery->get_id() ) || ! $gallery->can_access() ) {
+		wp_send_json_error( array( 'reason' => __( 'Access denied', 'sunshine-photo-cart' ) ) );
+	}
+
 	$product = sunshine_get_product( intval( $_POST['productId'] ), $gallery->get_price_level() );
 
 	$image_count = '';

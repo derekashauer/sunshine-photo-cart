@@ -12,6 +12,11 @@ function sunshine_modal_display_add_to_cart() {
 		wp_send_json_error( __( 'Not a valid image ID', 'sunshine-photo-cart' ) );
 	}
 
+	// Verify user has access to the image's gallery.
+	if ( ! $image->can_access() ) {
+		wp_send_json_error( array( 'reason' => __( 'Access denied', 'sunshine-photo-cart' ) ) );
+	}
+
 	$result = array( 'html' => sunshine_get_template_html( 'image/add-to-cart', array( 'image' => $image ) ) );
 	wp_send_json_success( $result );
 
@@ -136,7 +141,7 @@ function sunshine_modal_product_details() {
 	}
 
 	$image = sunshine_get_image( intval( $_POST['image_id'] ) );
-	if ( ! $image->exists() || ! $image->can_view() ) {
+	if ( ! $image->exists() || ! $image->can_access() ) {
 		SPC()->log( 'Show product details failed: No image found: ' . intval( $_POST['image_id'] ) );
 		wp_send_json_error( __( 'Show product details failed - no image found', 'sunshine-photo-cart' ) );
 	}
@@ -155,7 +160,7 @@ function sunshine_modal_product_details() {
 		$images    = array();
 		foreach ( $image_ids as $image_id ) {
 			$img = sunshine_get_image( $image_id );
-			if ( $img && $img->can_view() ) {
+			if ( $img && $img->can_access() ) {
 				$images[] = $img;
 			}
 		}

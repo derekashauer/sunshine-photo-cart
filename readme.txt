@@ -243,6 +243,9 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.7.5 =
+* Security: Visitors can no longer see photos from a gallery they don't have access to, like a password-protected or private gallery, through the share, add to cart, or product options windows
+
 = 3.7.4 - October 9, 2026 =
 * New: Each tax rate can have a name, like GST or VAT, that shows in place of "Tax" on the cart, checkout, order pages, emails and invoices. Picking a country on a tax rate fills in the usual name for that country, and rates without a name keep showing "Tax"
 * New: Packages can be added from "Add all to cart" on the Favorites page. One package goes in the cart, and the customer then picks a photo for each item in it, starting from their favorites
