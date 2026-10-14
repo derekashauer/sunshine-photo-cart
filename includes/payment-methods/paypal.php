@@ -616,6 +616,8 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 
 		$order = $this->make_request( 'checkout/orders', $order_args );
 		if ( ! empty( $order->id ) ) {
+			// Remember which PayPal order this checkout created, so only that one can be captured.
+			SPC()->session->set( 'paypal_order_id', $order->id );
 			wp_send_json_success( array( 'order_id' => $order->id ) );
 		}
 
@@ -654,6 +656,12 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 
 		SPC()->log( 'Processing PayPal payment for PayPal Order ID ' . $paypal_order_id );
 
+		if ( empty( $paypal_order_id ) || SPC()->session->get( 'paypal_order_id' ) !== $paypal_order_id ) {
+			SPC()->log( 'PayPal Order ID ' . $paypal_order_id . ' was not created by this checkout session' );
+			SPC()->cart->add_error( __( 'Failed to capture PayPal payment', 'sunshine-photo-cart' ) );
+			return;
+		}
+
 		$this->setup();
 
 		$endpoint = 'checkout/orders/' . $paypal_order_id . '/capture';
@@ -665,6 +673,17 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 			}
 			SPC()->cart->add_error( $error );
 			SPC()->log( $error );
+			return;
+		}
+
+		// Make sure what PayPal captured is the full order total in the store currency.
+		$captured = $capture->purchase_units[0]->payments->captures[0];
+		if ( empty( $captured->amount ) || $captured->amount->currency_code !== SPC()->get_option( 'currency' ) || round( floatval( $captured->amount->value ), 2 ) !== round( $order->get_total(), 2 ) ) {
+			$captured_amount = ( ! empty( $captured->amount ) ) ? $captured->amount->value . ' ' . $captured->amount->currency_code : 'unknown';
+			SPC()->log( 'PayPal capture ' . $captured->id . ' amount (' . $captured_amount . ') does not match order total (' . $order->get_total() . ' ' . SPC()->get_option( 'currency' ) . ')' );
+			/* translators: 1: PayPal capture ID, 2: amount captured by PayPal */
+			$order->add_log( sprintf( __( 'PayPal capture %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $captured->id, $captured_amount ) );
+			SPC()->cart->add_error( __( 'Your payment did not match the order total, please contact the site owner', 'sunshine-photo-cart' ) );
 			return;
 		}
 

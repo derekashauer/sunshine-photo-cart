@@ -1446,6 +1446,29 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		return floatval( $amount / 100 );
 	}
 
+	/**
+	 * Check that a payment intent paid the full order total in the store currency
+	 *
+	 * Logs and adds an order note when it does not.
+	 *
+	 * @param array     $payment_intent Payment intent from Stripe.
+	 * @param SPC_Order $order          The order.
+	 * @return bool True if the amount and currency match the order.
+	 */
+	private function payment_intent_matches_order( $payment_intent, $order ) {
+		$this->setup(); // Webhooks arrive without setup(), and the currency is needed below.
+		$received = isset( $payment_intent['amount_received'] ) ? intval( $payment_intent['amount_received'] ) : 0;
+		$currency = isset( $payment_intent['currency'] ) ? strtolower( $payment_intent['currency'] ) : '';
+		if ( $currency === strtolower( $this->currency ) && $received === intval( $this->convert_amount_to_stripe( $order->get_total() ) ) ) {
+			return true;
+		}
+		$paid = $this->convert_amount_from_stripe( $received ) . ' ' . strtoupper( $currency );
+		SPC()->log( 'Stripe payment intent ' . $payment_intent['id'] . ' amount (' . $paid . ') does not match order ' . $order->get_id() . ' total (' . $order->get_total() . ' ' . $this->currency . ')' );
+		/* translators: 1: Stripe payment intent ID, 2: amount paid in Stripe */
+		$order->add_log( sprintf( __( 'Stripe payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_intent['id'], $paid ) );
+		return false;
+	}
+
 	private function get_publishable_key( $mode = '' ) {
 		return ( $mode == 'live' || $this->get_mode_value() == 'live' ) ? SPC()->get_option( $this->id . '_publishable_key_live' ) : SPC()->get_option( $this->id . '_publishable_key_test' );
 	}
@@ -2430,6 +2453,11 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			return;
 		}
 
+		if ( ! $this->payment_intent_matches_order( $payment_intent_object, $order ) ) {
+			SPC()->cart->add_error( __( 'Your payment did not match the order total, please contact the site owner', 'sunshine-photo-cart' ) );
+			return;
+		}
+
 		SPC()->log( 'Stripe payment intent verified as succeeded: ' . $payment_intent_id );
 
 		// Resync the stored intent ID to the one that actually paid. init_order stored the intent
@@ -2802,6 +2830,11 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			// Checkout already confirmed this payment and finished the order, nothing left to do.
 			if ( $order->get_meta_value( 'post_processed' ) ) {
 				SPC()->log( 'Stripe Webhook: order ' . $order->get_id() . ' already completed on site, nothing to do' );
+				status_header( 200 );
+				exit;
+			}
+
+			if ( ! $this->payment_intent_matches_order( $payment_intent, $order ) ) {
 				status_header( 200 );
 				exit;
 			}

@@ -243,6 +243,9 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.7.6 =
+* Security: PayPal and Stripe payments are now checked against the order total before an order is marked paid, so a payment for a smaller amount can't complete a bigger order
+
 = 3.7.5 - October 13, 2026 =
 * Security: Visitors can no longer see photos from a gallery they don't have access to, like a password-protected or private gallery, through the share, add to cart, or product options windows
 
