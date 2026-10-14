@@ -447,11 +447,13 @@ function sunshine_base_install() {
 		SPC()->log( 'Creating default upload directory' );
 	}
 
-	// Enable all emails and set default for them.
+	// Enable all emails and set default for them, leaving any already saved alone.
 	$emails = SPC()->emails->get_emails();
 	foreach ( $emails as $id => $email ) {
-		$options[ 'email_' . $id . '_active' ] = true;
-		if ( $email->allows_custom_recipients() ) {
+		if ( ! array_key_exists( 'email_' . $id . '_active', $options ) ) {
+			$options[ 'email_' . $id . '_active' ] = true;
+		}
+		if ( $email->allows_custom_recipients() && ! array_key_exists( 'email_' . $id . '_recipients', $options ) ) {
 			$options[ 'email_' . $id . '_recipients' ] = get_bloginfo( 'admin_email' );
 		}
 	}

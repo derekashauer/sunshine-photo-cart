@@ -245,6 +245,8 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 = 3.7.6 =
 * Security: PayPal and Stripe payments are now checked against the order total before an order is marked paid, so a payment for a smaller amount can't complete a bigger order
+* The Sunshine log now notes when an order status can't be set, like when that status has been deleted
+* Tools > Install process no longer turns your emails back on or resets who receives the admin emails
 
 = 3.7.5 - October 13, 2026 =
 * Security: Visitors can no longer see photos from a gallery they don't have access to, like a password-protected or private gallery, through the share, add to cart, or product options windows
