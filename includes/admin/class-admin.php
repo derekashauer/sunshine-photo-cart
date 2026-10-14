@@ -552,6 +552,9 @@ class Sunshine_Admin {
 				<?php
 				foreach ( $core_statuses as $slug ) {
 					$term = get_term_by( 'slug', $slug, 'sunshine-order-status' );
+					if ( ! $term ) {
+						continue;
+					}
 					?>
 					$( '#the-list #tag-<?php echo esc_js( $term->term_id ); ?> input' ).remove();
 				<?php } ?>
