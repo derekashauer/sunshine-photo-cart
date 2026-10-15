@@ -1469,6 +1469,52 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		return false;
 	}
 
+	/**
+	 * Amount a Checkout Session charges, in Stripe units, not counting tax
+	 *
+	 * @param array $session Checkout Session from Stripe.
+	 * @return int
+	 */
+	private function get_checkout_session_amount_before_tax( $session ) {
+		$total = isset( $session['amount_total'] ) ? intval( $session['amount_total'] ) : 0;
+		$tax   = isset( $session['total_details']['amount_tax'] ) ? intval( $session['total_details']['amount_tax'] ) : 0;
+		return $total - $tax;
+	}
+
+	/**
+	 * Check that a completed Checkout Session is the one made for this order, was paid
+	 * in full, and that the order hasn't changed since the session was made
+	 *
+	 * Compares Stripe's amount with Stripe's own amount from when the session was made
+	 * (not with Sunshine's total), because Stripe and Sunshine can round tax a cent apart.
+	 * Logs and adds an order note when it does not match.
+	 *
+	 * @param array     $session Checkout Session from Stripe.
+	 * @param SPC_Order $order   The order.
+	 * @return bool True if the session matches the order.
+	 */
+	private function checkout_session_matches_order( $session, $order ) {
+		$this->setup(); // Webhooks arrive without setup(), and the currency is needed below.
+		$currency       = isset( $session['currency'] ) ? strtolower( $session['currency'] ) : '';
+		$expected       = $order->get_meta_value( 'stripe_checkout_amount' );
+		$order_total_at = $order->get_meta_value( 'stripe_checkout_order_total' );
+
+		$matches = $session['id'] === $order->get_meta_value( 'stripe_checkout_session_id' )
+			&& $currency === strtolower( $this->currency )
+			&& '' !== (string) $expected
+			&& $this->get_checkout_session_amount_before_tax( $session ) === intval( $expected )
+			&& round( floatval( $order_total_at ), 2 ) === round( $order->get_total(), 2 );
+
+		if ( ! $matches ) {
+			$paid = $this->convert_amount_from_stripe( isset( $session['amount_total'] ) ? $session['amount_total'] : 0 ) . ' ' . strtoupper( $currency );
+			SPC()->log( 'Stripe Checkout Session ' . $session['id'] . ' (' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ' ' . $this->currency . ')' );
+			/* translators: 1: Stripe Checkout Session ID, 2: amount paid in Stripe */
+			$order->add_log( sprintf( __( 'Stripe payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $session['id'], $paid ) );
+		}
+
+		return $matches;
+	}
+
 	private function get_publishable_key( $mode = '' ) {
 		return ( $mode == 'live' || $this->get_mode_value() == 'live' ) ? SPC()->get_option( $this->id . '_publishable_key_live' ) : SPC()->get_option( $this->id . '_publishable_key_test' );
 	}
@@ -2266,6 +2312,13 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$order->update_meta_value( 'stripe_checkout_session_id', $response['id'] );
 		SPC()->log( 'Stripe Checkout Session created: ' . $response['id'] );
 
+		// Remember what this session charges and what the order totaled, so the webhook can
+		// confirm the paid session is this one and the order hasn't changed since. Tax is left
+		// out of the Stripe amount because Stripe Tax only works it out once the customer
+		// enters an address.
+		$order->update_meta_value( 'stripe_checkout_amount', $this->get_checkout_session_amount_before_tax( $response ) );
+		$order->update_meta_value( 'stripe_checkout_order_total', $order->get_total() );
+
 		// Sanity-check Stripe's computed total against Sunshine's. Skip for Stripe Tax
 		// mode (Stripe calculates tax from customer location; total isn't known until
 		// the customer enters their address in Checkout).
@@ -2722,8 +2775,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$event      = json_decode( $payload, true );
 		$event_type = $event['type'] ?? '';
 
-		// Handle checkout.session.completed (for hosted checkout mode)
-		if ( $event_type === 'checkout.session.completed' ) {
+		// Handle checkout.session.completed (for hosted checkout mode). Delayed payment methods
+		// like bank debits complete unpaid and send async_payment_succeeded once the money clears.
+		if ( $event_type === 'checkout.session.completed' || $event_type === 'checkout.session.async_payment_succeeded' ) {
 			$session  = $event['data']['object'];
 			$order_id = $session['metadata']['order_id'] ?? null;
 
@@ -2743,9 +2797,22 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 				exit;
 			}
 
-			SPC()->log( 'Processing Stripe webhook: checkout.session.completed for session ' . $session['id'] . ' and order ' . $order->get_id() );
+			if ( ( $session['payment_status'] ?? '' ) !== 'paid' ) {
+				SPC()->log( 'Stripe Webhook: session ' . $session['id'] . ' for order ' . $order->get_id() . ' is not paid yet (' . ( $session['payment_status'] ?? 'unknown' ) . ')' );
+				/* translators: %s: Stripe Checkout Session ID */
+				$order->add_log( sprintf( __( 'Stripe payment %s is not paid yet, waiting for it to clear', 'sunshine-photo-cart' ), $session['id'] ) );
+				status_header( 200 );
+				exit;
+			}
 
-			$order->add_log( 'Stripe webhook: checkout.session.completed for session ' . $session['id'] );
+			if ( ! $this->checkout_session_matches_order( $session, $order ) ) {
+				status_header( 200 );
+				exit;
+			}
+
+			SPC()->log( 'Processing Stripe webhook: ' . $event_type . ' for session ' . $session['id'] . ' and order ' . $order->get_id() );
+
+			$order->add_log( 'Stripe webhook: ' . $event_type . ' for session ' . $session['id'] );
 
 			// Store payment intent ID from session
 			if ( ! empty( $session['payment_intent'] ) ) {

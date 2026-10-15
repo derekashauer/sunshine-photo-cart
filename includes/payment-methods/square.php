@@ -1297,10 +1297,43 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 	}
 
 	public function process_payment( $order ) {
-		$payment_id = isset( $_POST['square_payment_id'] ) ? sanitize_text_field( $_POST['square_payment_id'] ) : '';
-		if ( ! empty( $payment_id ) && empty( $order->get_meta_value( 'square_payment_id' ) ) ) {
-			$order->update_meta_value( 'square_payment_id', $payment_id );
+		// Prefer the payment ID the server saved when it charged the card. The posted one
+		// comes from the browser, so it is only trusted after Square confirms it below.
+		$payment_id = $order->get_meta_value( 'square_payment_id' );
+		if ( empty( $payment_id ) && isset( $_POST['square_payment_id'] ) ) {
+			$payment_id = sanitize_text_field( $_POST['square_payment_id'] );
 		}
+		if ( empty( $payment_id ) ) {
+			SPC()->cart->add_error( __( 'Invalid payment', 'sunshine-photo-cart' ) );
+			return;
+		}
+
+		$mode = $order->get_mode();
+		$this->setup( $mode );
+		$response = $this->api_request( 'v2/payments/' . rawurlencode( $payment_id ), '', 'GET', $mode );
+		$body     = is_wp_error( $response ) ? array() : json_decode( wp_remote_retrieve_body( $response ), true );
+		$payment  = ! empty( $body['payment'] ) ? $body['payment'] : array();
+		$status   = ! empty( $payment['status'] ) ? strtoupper( $payment['status'] ) : '';
+
+		// Same math as the charge in setup(), so an honest payment always matches.
+		$expected = intval( floor( 100 * $order->get_total() ) );
+
+		$matches = in_array( $status, array( 'COMPLETED', 'APPROVED' ), true )
+			&& isset( $payment['reference_id'] ) && $payment['reference_id'] === substr( (string) $order->get_order_number(), 0, 40 )
+			&& isset( $payment['amount_money']['amount'], $payment['amount_money']['currency'] )
+			&& intval( $payment['amount_money']['amount'] ) === $expected
+			&& $payment['amount_money']['currency'] === SPC()->get_option( 'currency' );
+
+		if ( ! $matches ) {
+			$paid = isset( $payment['amount_money']['amount'] ) ? ( $payment['amount_money']['amount'] / 100 ) . ' ' . $payment['amount_money']['currency'] : 'unknown';
+			SPC()->log( 'Square payment ' . $payment_id . ' (status ' . ( $status ? $status : 'not found' ) . ', ' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ')' );
+			/* translators: 1: Square payment ID, 2: amount paid in Square */
+			$order->add_log( sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid ) );
+			SPC()->cart->add_error( __( 'Your payment did not match the order total, please contact the site owner', 'sunshine-photo-cart' ) );
+			return;
+		}
+
+		$order->update_meta_value( 'square_payment_id', $payment_id );
 	}
 
 	public function create_order_status( $status, $order ) {

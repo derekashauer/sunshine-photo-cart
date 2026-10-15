@@ -244,7 +244,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.7.6 =
-* Security: PayPal and Stripe payments are now checked against the order total before an order is marked paid, so a payment for a smaller amount can't complete a bigger order
+* Security: PayPal, Stripe and Square payments are now checked against the order total before an order is marked paid, so a payment for a smaller amount, or no payment at all, can't complete an order
 * The Sunshine log now notes when an order status can't be set, like when that status has been deleted
 * Tools > Install process no longer turns your emails back on or resets who receives the admin emails
 
