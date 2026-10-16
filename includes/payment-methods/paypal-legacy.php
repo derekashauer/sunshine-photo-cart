@@ -169,6 +169,17 @@ class SPC_Payment_Method_PayPal_Legacy extends SPC_Payment_Method {
 
 		$paypal_args = apply_filters( 'sunshine_paypal_args', $paypal_args );
 
+		// Remember what PayPal was asked to charge, and the order total at that moment, so the
+		// IPN can check the payment against them. PayPal adds up the lines itself, so this can
+		// differ from the order total by rounding.
+		$paypal_total = 0;
+		for ( $line = 1; isset( $paypal_args[ 'amount_' . $line ] ); $line++ ) {
+			$paypal_total += round( $paypal_args[ 'amount_' . $line ], 2 ) * intval( $paypal_args[ 'quantity_' . $line ] );
+		}
+		$paypal_total += round( $paypal_args['tax_cart'], 2 ) - round( $paypal_args['discount_amount_cart'], 2 );
+		$order->update_meta_value( 'paypal_legacy_expected_total', round( $paypal_total, 2 ) );
+		$order->update_meta_value( 'paypal_legacy_order_total', $order->get_total() );
+
 		foreach ( $paypal_args as $key => $value ) {
 			$paypal_args_array_escaped[] = '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" />';
 		}
@@ -296,6 +307,38 @@ class SPC_Payment_Method_PayPal_Legacy extends SPC_Payment_Method {
 			$order_id = intval( $_POST['custom'] );
 			$order    = sunshine_get_order( $order_id );
 			if ( ! $order->exists() ) {
+				exit;
+			}
+
+			// A VERIFIED IPN only proves PayPal sent it, not that the money went to this store for
+			// this order, so check who was paid, the currency, and the amount.
+			$status         = isset( $myPost['payment_status'] ) ? $myPost['payment_status'] : '';
+			$store_account  = strtolower( (string) $this->get_email() );
+			$paid_to        = array_map( 'strtolower', array( isset( $myPost['receiver_email'] ) ? $myPost['receiver_email'] : '', isset( $myPost['receiver_id'] ) ? $myPost['receiver_id'] : '' ) );
+			$expected_total = $order->get_meta_value( 'paypal_legacy_expected_total' );
+			$order_total_at = $order->get_meta_value( 'paypal_legacy_order_total' );
+			if ( '' === (string) $expected_total ) {
+				// Orders sent to PayPal before this check existed.
+				$expected_total = $order->get_total();
+				$order_total_at = $order->get_total();
+			}
+			$paid = ( isset( $myPost['mc_gross'] ) ? $myPost['mc_gross'] : '?' ) . ' ' . ( isset( $myPost['mc_currency'] ) ? $myPost['mc_currency'] : '' );
+
+			if ( 'Completed' !== $status ) {
+				SPC()->log( 'PayPal IPN for ' . $order->get_name() . ' has status ' . $status . ', not completing the order' );
+				exit;
+			}
+
+			$matches = '' !== $store_account && in_array( $store_account, $paid_to, true )
+				&& isset( $myPost['mc_currency'], $myPost['mc_gross'] ) && $myPost['mc_currency'] === SPC()->get_option( 'currency' )
+				&& round( floatval( $myPost['mc_gross'] ), 2 ) === round( floatval( $expected_total ), 2 )
+				&& round( floatval( $order_total_at ), 2 ) === round( $order->get_total(), 2 );
+
+			if ( ! $matches ) {
+				$txn_id = isset( $myPost['txn_id'] ) ? sanitize_text_field( $myPost['txn_id'] ) : '';
+				SPC()->log( 'PayPal IPN payment ' . $txn_id . ' (' . $paid . ' to ' . implode( '/', $paid_to ) . ') does not match ' . $order->get_name() . ' (total ' . $order->get_total() . ')' );
+				/* translators: 1: PayPal transaction ID, 2: amount paid in PayPal */
+				$order->add_log( sprintf( __( 'PayPal payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $txn_id, sanitize_text_field( $paid ) ) );
 				exit;
 			}
 

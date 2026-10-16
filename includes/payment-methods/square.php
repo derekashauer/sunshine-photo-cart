@@ -1315,16 +1315,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		$payment  = ! empty( $body['payment'] ) ? $body['payment'] : array();
 		$status   = ! empty( $payment['status'] ) ? strtoupper( $payment['status'] ) : '';
 
-		// Same math as the charge in setup(), so an honest payment always matches.
-		$expected = intval( floor( 100 * $order->get_total() ) );
-
-		$matches = in_array( $status, array( 'COMPLETED', 'APPROVED' ), true )
-			&& isset( $payment['reference_id'] ) && $payment['reference_id'] === substr( (string) $order->get_order_number(), 0, 40 )
-			&& isset( $payment['amount_money']['amount'], $payment['amount_money']['currency'] )
-			&& intval( $payment['amount_money']['amount'] ) === $expected
-			&& $payment['amount_money']['currency'] === SPC()->get_option( 'currency' );
-
-		if ( ! $matches ) {
+		if ( ! in_array( $status, array( 'COMPLETED', 'APPROVED' ), true ) || ! $this->payment_matches_order( $payment, $order ) ) {
 			$paid = isset( $payment['amount_money']['amount'] ) ? ( $payment['amount_money']['amount'] / 100 ) . ' ' . $payment['amount_money']['currency'] : 'unknown';
 			SPC()->log( 'Square payment ' . $payment_id . ' (status ' . ( $status ? $status : 'not found' ) . ', ' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ')' );
 			/* translators: 1: Square payment ID, 2: amount paid in Square */
@@ -1334,6 +1325,22 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		}
 
 		$order->update_meta_value( 'square_payment_id', $payment_id );
+	}
+
+	/**
+	 * Check that a Square payment was made for this order, for its full total, in the store currency
+	 *
+	 * @param array     $payment Payment from the Square API.
+	 * @param SPC_Order $order   The order.
+	 * @return bool
+	 */
+	private function payment_matches_order( $payment, $order ) {
+		// Same math as the charge in setup(), so an honest payment always matches.
+		$expected = intval( floor( 100 * $order->get_total() ) );
+		return isset( $payment['reference_id'] ) && $payment['reference_id'] === substr( (string) $order->get_order_number(), 0, 40 )
+			&& isset( $payment['amount_money']['amount'], $payment['amount_money']['currency'] )
+			&& intval( $payment['amount_money']['amount'] ) === $expected
+			&& $payment['amount_money']['currency'] === SPC()->get_option( 'currency' );
 	}
 
 	public function create_order_status( $status, $order ) {
@@ -1564,6 +1571,18 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		}
 
 		$status = strtoupper( $payment['status'] );
+
+		if ( $status === 'COMPLETED' && ! $this->payment_matches_order( $payment, $order ) ) {
+			// This runs on a schedule, so only note the mismatch on the order once.
+			if ( ! $order->get_meta_value( 'square_payment_mismatch' ) ) {
+				$paid = isset( $payment['amount_money']['amount'] ) ? ( $payment['amount_money']['amount'] / 100 ) . ' ' . $payment['amount_money']['currency'] : 'unknown';
+				SPC()->log( 'reconcile_order: Square payment ' . $payment_id . ' (' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ')' );
+				/* translators: 1: Square payment ID, 2: amount paid in Square */
+				$order->add_log( sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid ) );
+				$order->update_meta_value( 'square_payment_mismatch', 1 );
+			}
+			return array( 'ok' => false, 'action' => 'mismatch' );
+		}
 
 		if ( $status === 'COMPLETED' ) {
 			$square_order_id = ! empty( $payment['order_id'] ) ? $payment['order_id'] : '';

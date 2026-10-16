@@ -3009,7 +3009,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 					}
 				}
 
-				if ( $status == 'succeeded' || $has_successful_charge ) {
+				if ( ( $status == 'succeeded' || $has_successful_charge ) && $this->payment_intent_matches_order( $intent, $order ) ) {
 					SPC()->log( 'check_order_paid: Payment succeeded for order ' . $order->get_id() . ', auto-processing (attempt ' . $attempt . ')' );
 					$recovery_completed = true;
 					SPC()->cart->process_order();
@@ -3116,7 +3116,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 						}
 					}
 
-					if ( $status == 'succeeded' || $has_successful_charge ) {
+					if ( ( $status == 'succeeded' || $has_successful_charge ) && $this->payment_intent_matches_order( $intent, $order ) ) {
 						SPC()->log( 'check_order_paid: Found orphaned paid order ' . $order->get_id() . ', auto-processing (attempt ' . $attempt . ')' );
 						$found_completed_payment = true;
 

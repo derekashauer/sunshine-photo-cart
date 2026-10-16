@@ -2748,6 +2748,16 @@ class SPC_Cart {
 		}
 		*/
 
+		// The order's own payment method decides its status once it is processed, so the payment
+		// step that runs here has to be that same method. "Free" skips payment, so it is only
+		// allowed when there is nothing to pay.
+		$checkout_payment_method = $this->get_checkout_data_item( 'payment_method' );
+		if ( 'free' === $checkout_payment_method ? $order->get_total() > 0 : ( $checkout_payment_method && $checkout_payment_method !== $order->get_payment_method() ) ) {
+			SPC()->log( 'Blocked payment: checkout payment method ' . $checkout_payment_method . ' does not fit order ' . $order->get_id() . ' (payment method ' . $order->get_payment_method() . ', total ' . $order->get_total() . ')' );
+			$this->add_error( __( 'Please select a payment method before completing your order.', 'sunshine-photo-cart' ) );
+			return false;
+		}
+
 		// do_action( 'sunshine_checkout_process_payment', $this );
 		if ( $this->get_checkout_data_item( 'payment_method' ) ) {
 			SPC()->log( 'Processing payment action: ' . $this->get_checkout_data_item( 'payment_method' ) );
