@@ -167,10 +167,6 @@ function sunshine_modal_login() {
 
 	SPC()->customer = new SPC_Customer( $login->ID );
 	// SPC()->customer->add_action( 'login' );
-	$cart = SPC()->session->get( 'cart' );
-	if ( $cart ) {
-		SPC()->customer->set_cart( $cart );
-	}
 
 	SPC()->log( 'Customer logged in: ' . SPC()->customer->get_id() );
 	SPC()->notices->add( __( 'You have been logged in', 'sunshine-photo-cart' ) );
@@ -188,6 +184,16 @@ function sunshine_modal_login() {
 }
 add_action( 'wp_ajax_nopriv_sunshine_modal_login', 'sunshine_modal_login' );
 add_action( 'wp_ajax_sunshine_modal_login', 'sunshine_modal_login' );
+
+// Whatever a visitor put in their cart before logging in comes with them, whichever login form they used.
+add_action( 'wp_login', 'sunshine_login_keep_cart', 10, 2 );
+function sunshine_login_keep_cart( $user_login, $user ) {
+	$cart = SPC()->session->get( 'cart' );
+	if ( $cart ) {
+		$customer = new SPC_Customer( $user->ID );
+		$customer->set_cart( $cart );
+	}
+}
 
 add_action( 'wp_logout', 'sunshine_logout' );
 function sunshine_logout( $user_id ) {

@@ -156,7 +156,8 @@ function sunshine_addon_get_license_key( $name ) {
 	return $pro_license_key;
 
 	// Get license data from sunshine website
-	$url     = SUNSHINE_PHOTO_CART_STORE_URL . '/?sunshine_get_license&referrer=' . $_SERVER['SERVER_NAME'] . '&plugin=' . $name . '&license_key=' . $pro_license_key;
+	// No referrer: the server does not use it, and its firewall refuses any address containing "localhost".
+	$url     = SUNSHINE_PHOTO_CART_STORE_URL . '/?sunshine_get_license&plugin=' . $name . '&license_key=' . $pro_license_key;
 	$feed    = wp_remote_get( esc_url_raw( $url ) );
 	$license = '';
 
@@ -462,7 +463,8 @@ function sunshine_get_addon_data( $force = false ) {
 	$addons = get_transient( 'sunshine_addons_data' );
 
 	if ( $force || empty( $addons ) ) {
-		$url = SUNSHINE_PHOTO_CART_STORE_URL . '/?sunshine_addons_feed&referrer=' . $_SERVER['SERVER_NAME'] . '&time=' . time();
+		// No referrer: the server does not use it, and its firewall refuses any address containing "localhost".
+		$url = SUNSHINE_PHOTO_CART_STORE_URL . '/?sunshine_addons_feed&time=' . time();
 		if ( ! empty( SPC()->plan ) ) {
 			$license_key = SPC()->plan->get_license_key();
 			if ( ! empty( $license_key ) ) {
