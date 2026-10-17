@@ -533,6 +533,11 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 		if ( ! empty( $fees ) ) {
 			foreach ( $fees as $fee ) {
 				$unit_amount = round( $fee['amount'], 2 );
+				// PayPal does not allow items below zero. A fee that takes money off (a gift card)
+				// is left out here and ends up in the discount below, which balances the breakdown.
+				if ( $unit_amount <= 0 ) {
+					continue;
+				}
 				$item_total += $unit_amount;
 				$items[]     = array(
 					'name'        => $fee['name'],
