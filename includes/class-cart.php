@@ -66,7 +66,8 @@ class SPC_Cart {
 			return; // if in admin but not doing ajax, don't bother
 		}
 
-		$this->discount = 0;
+		$this->discount               = 0;
+		$this->discount_taxable_total = 0;
 
 		// Remember the tax context used by this item build. If resolving checkout state below
 		// changes it, items need one corrective rebuild; repeated setup() calls in the same
@@ -180,6 +181,9 @@ class SPC_Cart {
 			$this->set_discounts();
 			$this->set_tax();
 		}
+
+		// For things that pay part of the order once discounts and tax are known, like gift cards.
+		do_action( 'sunshine_cart_after_discounts_and_tax', $this );
 
 		// Recalculate the payment method fee now that discounts and tax are set.
 		// A percentage fee is based on get_total( array( 'fees' ) ), but set_payment_method()
@@ -391,7 +395,8 @@ class SPC_Cart {
 			'discount'    => 0,
 			'comments'    => $comments,
 			'meta'        => $meta,
-			'hash'        => md5( time() . $product_id . $qty ),
+			// Unique per line: two of the same product added in the same second are still two lines.
+			'hash'        => md5( uniqid( '', true ) . $product_id . $qty ),
 		);
 
 		// $item = wp_parse_args( $options, $options_default );
@@ -1017,10 +1022,6 @@ class SPC_Cart {
 				$taxable_total += $this->shipping_method->get_price();
 			}
 
-			if ( $this->discount ) {
-				$taxable_total -= $this->discount_taxable_total;
-			}
-
 			if ( $taxable_total < 0 ) {
 				$taxable_total = 0;
 			}
@@ -1043,7 +1044,7 @@ class SPC_Cart {
 	}
 
 	public function get_tax() {
-		if ( $this->tax > 0.01 ) {
+		if ( round( $this->tax, 2 ) > 0 ) {
 			return number_format( round( $this->tax, 2 ), 2, '.', '' );
 		}
 		return 0;
