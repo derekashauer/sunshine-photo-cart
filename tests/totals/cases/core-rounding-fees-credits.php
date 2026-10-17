@@ -111,6 +111,21 @@ $t::test(
 	}
 );
 
+// The card pays for the order and nothing more, and there is no fee when nothing is left to pay.
+$t::test(
+	'Payment fee: gift card covers a discounted, taxed order',
+	function () use ( $t, $payment_fee ) {
+		$t::tax( 10 );
+		$t::add( $t::product( 100 ) );
+		$t::discount( 'percent-total', 20 );
+		$t::gift_card( 500 );
+		$payment_fee( 'percent', 3 );
+		$cart = $t::calculate();
+		$t::money( 88, array_sum( array_map( 'floatval', (array) SPC()->session->get( 'gift_card_amounts' ) ) ), 'taken from the card' );
+		$t::money( 0, $cart->get_total(), 'left to pay' );
+	}
+);
+
 $credits = function ( $amount ) use ( $t ) {
 	$customer_id = $t::customer();
 	update_user_meta( $customer_id, 'sunshine_credits', $amount );
