@@ -256,6 +256,9 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: A fixed amount discount can't be worth more than the order, and lowers the tax only by its share on taxed items
 * Fix: A discount that includes shipping no longer lowers the tax when shipping isn't taxed
 * Fix: A percent payment method fee is now worked out on what's left to pay after a gift card
+* Fix: Stripe's hosted checkout page now works when a gift card pays part of the order
+* Fix: Stripe's hosted checkout page now charges the order's tax when store credit is used or discounts apply after tax
+* Fix: Stripe's hosted checkout page no longer fails on taxed orders after switching between test and live mode or to a different Stripe account
 
 = 3.7.5 - October 13, 2026 =
 * Security: Visitors can no longer see photos from a gallery they don't have access to, like a password-protected or private gallery, through the share, add to cart, or product options windows

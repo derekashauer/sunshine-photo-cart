@@ -2037,10 +2037,27 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	 * @param bool   $inclusive  Whether prices include tax.
 	 * @return string|false Stripe Tax Rate ID, or false on failure.
 	 */
+	/**
+	 * Total of the order's fees below zero, like a gift card, as a positive amount.
+	 *
+	 * @param SPC_Order $order The order.
+	 * @return float
+	 */
+	private function get_order_fees_below_zero( $order ) {
+		$total = 0;
+		foreach ( (array) $order->get_fees() as $fee ) {
+			if ( floatval( $fee['amount'] ) < 0 ) {
+				$total -= floatval( $fee['amount'] );
+			}
+		}
+		return $total;
+	}
+
 	private function find_or_create_stripe_tax_rate( $percentage, $inclusive ) {
 		$cache = $this->get_option( 'stripe_tax_rate_ids' );
 		$cache = is_array( $cache ) ? $cache : array();
-		$key   = $percentage . '|' . ( $inclusive ? '1' : '0' );
+		// Tax rates belong to one Stripe account and to test or live mode.
+		$key   = $this->get_mode_value() . '|' . $this->get_account_id() . '|' . $percentage . '|' . ( $inclusive ? '1' : '0' );
 
 		if ( ! empty( $cache[ $key ] ) ) {
 			return $cache[ $key ];
@@ -2114,11 +2131,20 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$sunshine_tax_rate = SPC()->cart->get_tax_rate();
 		$rate              = ! empty( $sunshine_tax_rate['rate'] ) ? floatval( $sunshine_tax_rate['rate'] ) : 0;
 
+		// Credits, gift cards (fees below zero) and, with discounts after tax, the discount come
+		// off after tax. Stripe works out tax after the coupon they go in, so it would charge
+		// less tax than the order has. When any are on the order, the order's tax is sent as its
+		// own line item below instead of as a Stripe Tax Rate.
+		$after_tax_reduction = floatval( $order->get_credits() ) + $this->get_order_fees_below_zero( $order );
+		if ( SPC()->get_option( 'discount_after_tax' ) ) {
+			$after_tax_reduction += floatval( $order->get_discount() );
+		}
+
 		// In manual tax mode, find/create a Stripe Tax Rate matching the order's
 		// configured rate so tax appears in Stripe's tax reports as real tax data
 		// (not as a regular line item).
 		$tax_rate_id = null;
-		if ( ! $use_stripe_tax && $order->get_tax() > 0 && $rate > 0 ) {
+		if ( ! $use_stripe_tax && $order->get_tax() > 0 && $rate > 0 && $after_tax_reduction <= 0 ) {
 			$percentage  = number_format( $rate * 100, 4, '.', '' );
 			$tax_rate_id = $this->find_or_create_stripe_tax_rate( $percentage, $price_has_tax );
 		}
@@ -2192,10 +2218,14 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			}
 		}
 
-		// Add fees (e.g. payment gateway fee) as line items
+		// Add fees (e.g. payment gateway fee) as line items. Fees below zero (gift cards) go in
+		// the coupon instead, because Stripe Checkout refuses line items below zero.
 		$fees = $order->get_fees();
 		if ( ! empty( $fees ) ) {
 			foreach ( $fees as $fee ) {
+				if ( floatval( $fee['amount'] ) <= 0 ) {
+					continue;
+				}
 				$line_items[] = array(
 					'price_data' => array(
 						'currency'     => strtolower( $this->currency ),
@@ -2351,7 +2381,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	 * @return string|null|WP_Error Coupon ID, null if no discount/credits, or WP_Error on failure.
 	 */
 	private function get_or_create_order_discount_coupon( $order ) {
-		$discount_total = round( floatval( $order->get_discount() ) + floatval( $order->get_credits() ), 2 );
+		$discount_total = round( floatval( $order->get_discount() ) + floatval( $order->get_credits() ) + $this->get_order_fees_below_zero( $order ), 2 );
 		if ( $discount_total <= 0 ) {
 			return null;
 		}
