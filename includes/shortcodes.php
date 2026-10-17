@@ -55,7 +55,8 @@ function sunshine_gallery_shortcode( $atts ) {
 		$gallery = sunshine_get_gallery( $atts['id'] );
 	}
 
-	if ( ! $gallery->get_id() ) {
+	// Draft, pending, private or trashed galleries only show to people who can edit them.
+	if ( ! $gallery->get_id() || ( 'publish' !== get_post_status( $gallery->get_id() ) && ! current_user_can( 'edit_post', $gallery->get_id() ) ) ) {
 		return '<p>' . __( 'Sorry, no gallery with that ID', 'sunshine-photo-cart' ) . '</p>';
 	}
 

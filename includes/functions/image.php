@@ -141,6 +141,50 @@ function sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $file_pa
 }
 
 /**
+ * Give each resized copy of a photo its own random file name when secure file names are on.
+ *
+ * WordPress names resized copies after the original plus "-WxH". With secure file names the
+ * original's name holds a random string, so a copy named after it would let anyone work out the
+ * original's URL by removing the size from a copy's URL.
+ *
+ * @param array  $metadata  The attachment metadata, with the sizes made so far.
+ * @param string $file_path The full path to the original image file.
+ * @param array  $sizes     Only rename these sizes. Every size when empty.
+ * @return array The metadata with the new file names.
+ */
+function sunshine_secure_intermediate_file_names( $metadata, $file_path, $sizes = array() ) {
+	if ( function_exists( 'as3cf_get_attachment_url' ) || ! SPC()->get_option( 'use_secure_file_names' ) || empty( $metadata['sizes'] ) ) {
+		return $metadata;
+	}
+
+	// Get the random string from the main file name if it exists.
+	if ( ! preg_match( '/-([a-zA-Z0-9]{24})\./', basename( $file_path ), $matches ) ) {
+		return $metadata;
+	}
+	$random_string = $matches[1];
+	$base_dir      = trailingslashit( dirname( $file_path ) );
+
+	// Two sizes can share one file, so a file is only renamed once and both point to the new name.
+	$renamed = array();
+	foreach ( $metadata['sizes'] as $size => &$size_data ) {
+		if ( ( ! empty( $sizes ) && ! in_array( $size, $sizes, true ) ) || empty( $size_data['file'] ) || false === strpos( $size_data['file'], $random_string ) ) {
+			continue;
+		}
+		$old_file = $size_data['file'];
+		if ( ! isset( $renamed[ $old_file ] ) ) {
+			$renamed[ $old_file ] = str_replace( $random_string, wp_generate_password( 24, false ), $old_file );
+			if ( file_exists( $base_dir . $old_file ) ) {
+				rename( $base_dir . $old_file, $base_dir . $renamed[ $old_file ] );
+			}
+		}
+		$size_data['file'] = $renamed[ $old_file ];
+	}
+	unset( $size_data );
+
+	return $metadata;
+}
+
+/**
  * Save the parts of a photo's embedded metadata that Sunshine uses.
  *
  * The title and caption become the attachment title and excerpt, the capture

@@ -242,33 +242,7 @@ class SPC_Background_Process_Images extends SPC_Background_Process {
 		$metadata = sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $file_path );
 
 		// Handle secure file names if enabled
-		if ( ! function_exists( 'as3cf_get_attachment_url' ) && SPC()->get_option( 'use_secure_file_names' ) ) {
-			$file_name = basename( $file_path );
-			$info      = pathinfo( $file_name );
-			// Get the random string from the main file name if it exists
-			$random_string = '';
-			if ( preg_match( '/-([a-zA-Z0-9]{24})\./', $file_name, $matches ) ) {
-				$random_string = $matches[1];
-			}
-
-			if ( ! empty( $random_string ) && ! empty( $metadata['sizes'] ) ) {
-				$upload_dir = wp_upload_dir();
-				$base_dir   = dirname( $file_path );
-				foreach ( $metadata['sizes'] as $size => &$size_data ) {
-					$size_info          = pathinfo( $size_data['file'] );
-					$size_random_string = wp_generate_password( 24, false );
-					$size_data['file']  = str_replace( $random_string, $size_random_string, $size_data['file'] );
-
-					// Rename the intermediate file on the server
-					// The file should be in the same directory as the main file
-					$original_size_path = trailingslashit( $base_dir ) . $size_info['basename'];
-					$new_size_path      = trailingslashit( $base_dir ) . $size_data['file'];
-					if ( file_exists( $original_size_path ) ) {
-						rename( $original_size_path, $new_size_path );
-					}
-				}
-			}
-		}
+		$metadata = sunshine_secure_intermediate_file_names( $metadata, $file_path );
 
 		// Update attachment metadata BEFORE watermarking so watermark function can find the files
 		wp_update_attachment_metadata( $attachment_id, $metadata );

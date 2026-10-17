@@ -306,6 +306,7 @@ class Sunshine_Admin {
 			'sunshine_admin',
 			array(
 				'addon_security'       => wp_create_nonce( 'sunshine_addon_toggle' ),
+				'notice_security'      => wp_create_nonce( 'sunshine_notice_dismiss' ),
 				'addon_error_generic'  => __( 'This add-on could not be turned on. Please try again.', 'sunshine-photo-cart' ),
 				'addon_error_request'  => __( 'Could not reach your site to turn on this add-on. Please reload the page and try again.', 'sunshine-photo-cart' ),
 			),
@@ -362,7 +363,9 @@ class Sunshine_Admin {
 
 	public function update_check() {
 
-		if ( isset( $_GET['summary'] ) ) {
+		// Manual send of the weekly summary, for admins only. admin_init also runs for logged-out
+		// visitors on admin-ajax.php and admin-post.php, so this needs a permission and nonce check.
+		if ( isset( $_GET['summary'] ) && current_user_can( 'manage_options' ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['summary'] ) ), 'sunshine_send_summary' ) ) {
 			do_action( 'sunshine_send_summary' );
 		}
 
@@ -488,7 +491,7 @@ class Sunshine_Admin {
 
 	function clean_media_library( $query ) {
 
-		if ( isset( $_POST['action'] ) && $_POST['action'] = 'query-attachments' && isset( $_POST['post_id'] ) && get_post_type( $_POST['post_id'] ) == 'sunshine-gallery' ) {
+		if ( isset( $_POST['action'] ) && $_POST['action'] === 'query-attachments' && isset( $_POST['post_id'] ) && get_post_type( $_POST['post_id'] ) == 'sunshine-gallery' ) {
 			return $query;
 		}
 

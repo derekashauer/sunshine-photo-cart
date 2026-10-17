@@ -66,6 +66,10 @@ function sunshine_get_customers( $custom_args = array() ) {
  */
 function sunshine_modal_display_signup() {
 
+	if ( SPC()->get_option( 'disable_signup' ) ) {
+		wp_send_json_error( __( 'New accounts are not allowed', 'sunshine-photo-cart' ) );
+	}
+
 	$result = array( 'html' => sunshine_get_template_html( 'account/signup' ) );
 	wp_send_json_success( $result );
 
@@ -104,7 +108,7 @@ function sunshine_modal_display_require_login() {
 	}
 
 	// If we passed the image id to add to favorites, set session to process after login.
-	if ( isset( $post_data['after'] ) && isset( $post_data['imageId'] ) ) {
+	if ( isset( $post_data['after'] ) && isset( $post_data['imageId'] ) && sunshine_can_favorite_image( intval( $post_data['imageId'] ) ) ) {
 		SPC()->session->set( 'add_to_favorites', intval( $post_data['imageId'] ) );
 	}
 
@@ -144,6 +148,11 @@ function sunshine_modal_login() {
 		wp_send_json_error( $validation_error );
 	}
 
+	if ( sunshine_is_rate_limited( 'login', 10 ) ) {
+		SPC()->log( 'Login blocked - too many failed attempts' );
+		wp_send_json_error( __( 'Too many failed login attempts, please try again later', 'sunshine-photo-cart' ) );
+	}
+
 	$creds = array(
 		'user_login'    => sanitize_email( $post_data['email'] ),
 		'user_password' => sanitize_text_field( $post_data['password'] ),
@@ -151,6 +160,7 @@ function sunshine_modal_login() {
 	);
 	$login = wp_signon( $creds, is_ssl() );
 	if ( is_wp_error( $login ) ) {
+		sunshine_add_rate_limit_attempt( 'login', 15 * MINUTE_IN_SECONDS );
 		SPC()->log( 'Failed modal login: ' . $login->get_error_message() );
 		wp_send_json_error( __( 'Invalid email or password, please try again', 'sunshine-photo-cart' ) );
 	}
@@ -200,6 +210,12 @@ function sunshine_modal_signup() {
 		wp_send_json_error( __( 'Invalid signup attempt', 'sunshine-photo-cart' ) );
 	}
 
+	// Hiding the form is not enough, the request can still be sent directly.
+	if ( SPC()->get_option( 'disable_signup' ) ) {
+		SPC()->log( 'Signup blocked - signup is disabled' );
+		wp_send_json_error( __( 'New accounts are not allowed', 'sunshine-photo-cart' ) );
+	}
+
 	// Honeypot check - if this field has a value, it's likely a bot.
 	if ( ! empty( $_POST['sunshine_signup_website'] ) ) {
 		SPC()->log( 'Signup blocked - spam detected' );
@@ -223,7 +239,7 @@ function sunshine_modal_signup() {
 	// Get user by email address.
 	$user = get_user_by( 'email', $email );
 	if ( $user ) {
-		wp_send_json_error( __( 'User account already exists with that email address', 'sunshine-photo-cart' ) );
+		wp_send_json_error( __( 'An account could not be created with that email address. If you already have one, log in or reset your password.', 'sunshine-photo-cart' ) );
 	}
 
 	$password_notice = false;
@@ -312,21 +328,20 @@ function sunshine_modal_reset_password() {
 		wp_send_json_error( __( 'Invalid email address', 'sunshine-photo-cart' ) );
 	}
 
-	// Get user by email address.
-	$user = get_user_by( 'email', $email );
-	if ( empty( $user ) ) {
-		wp_send_json_error( __( 'No user with that email address', 'sunshine-photo-cart' ) );
-	}
-
+	// The same answer whether or not there is an account, so this can't be used to find out who has one.
 	SPC()->notices->add(
 		sprintf(
 			/* translators: %s: User email address */
-			__( 'An email has been sent to %s with information on resetting your password', 'sunshine-photo-cart' ),
+			__( 'If there is an account for %s, an email has been sent to it with information on resetting your password', 'sunshine-photo-cart' ),
 			$email
 		)
 	);
 
-	do_action( 'sunshine_reset_password', $user );
+	// Get user by email address.
+	$user = get_user_by( 'email', $email );
+	if ( ! empty( $user ) ) {
+		do_action( 'sunshine_reset_password', $user );
+	}
 
 	wp_send_json_success();
 
@@ -498,6 +513,12 @@ function sunshine_login_process() {
 		return;
 	}
 
+	if ( sunshine_is_rate_limited( 'login', 10 ) ) {
+		SPC()->log( 'Login blocked - too many failed attempts' );
+		SPC()->notices->add( __( 'Too many failed login attempts, please try again later', 'sunshine-photo-cart' ), 'error' );
+		return;
+	}
+
 	$creds = array(
 		'user_login'    => sanitize_email( $_POST['sunshine_login_email'] ),
 		'user_password' => sanitize_text_field( $_POST['sunshine_login_password'] ),
@@ -505,6 +526,7 @@ function sunshine_login_process() {
 	);
 	$login = wp_signon( $creds, is_ssl() );
 	if ( is_wp_error( $login ) ) {
+		sunshine_add_rate_limit_attempt( 'login', 15 * MINUTE_IN_SECONDS );
 		SPC()->notices->add( __( 'Invalid email or password, please try again', 'sunshine-photo-cart' ), 'error' );
 		return;
 	}
@@ -562,7 +584,7 @@ function sunshine_get_profile_fields() {
 		'id'          => 'current_password',
 		'type'        => 'password',
 		'name'        => __( 'Current Password', 'sunshine-photo-cart' ),
-		'description' => __( 'Leave empty to keep current password', 'sunshine-photo-cart' ),
+		'description' => __( 'Needed to change your email address or password', 'sunshine-photo-cart' ),
 	);
 	$fields[] = array(
 		'id'          => 'new_password',
@@ -586,9 +608,16 @@ function sunshine_save_profile() {
 		return;
 	}
 
+	// Changing the email address or password needs the current password, so someone using a
+	// logged in session that isn't theirs can't take the account over.
+	$user                     = wp_get_current_user();
+	$current_password_correct = ! empty( $_POST['current_password'] ) && wp_check_password( wp_unslash( $_POST['current_password'] ), $user->user_pass, $user->ID );
+
 	// Check we have both password fields
 	if ( ! empty( $_POST['current_password'] ) ) {
-		if ( empty( $_POST['new_password'] ) || empty( $_POST['new_password_confirm'] ) ) {
+		if ( ! $current_password_correct ) {
+			SPC()->notices->add( __( 'Your current password is not correct', 'sunshine-photo-cart' ), 'error' );
+		} elseif ( empty( $_POST['new_password'] ) || empty( $_POST['new_password_confirm'] ) ) {
 			SPC()->notices->add( __( 'Missing required password reset fields', 'sunshine-photo-cart' ), 'error' );
 		} elseif ( $_POST['new_password'] != $_POST['new_password_confirm'] ) {
 			SPC()->notices->add( __( 'New passwords do not match', 'sunshine-photo-cart' ), 'error' );
@@ -608,6 +637,12 @@ function sunshine_save_profile() {
 	$first_name = ( ! empty( $_POST['first_name'] ) ) ? sanitize_text_field( $_POST['first_name'] ) : '';
 	$last_name  = ( ! empty( $_POST['last_name'] ) ) ? sanitize_text_field( $_POST['last_name'] ) : '';
 	$email      = ( ! empty( $_POST['email'] ) ) ? sanitize_email( $_POST['email'] ) : '';
+	if ( empty( $email ) ) {
+		$email = $user->user_email;
+	} elseif ( strtolower( $email ) !== strtolower( $user->user_email ) && ! $current_password_correct ) {
+		SPC()->notices->add( __( 'Please enter your current password to change your email address', 'sunshine-photo-cart' ), 'error' );
+		$email = $user->user_email;
+	}
 
 	$result = wp_update_user(
 		array(

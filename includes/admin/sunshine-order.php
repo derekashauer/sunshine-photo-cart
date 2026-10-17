@@ -912,6 +912,10 @@ class SPC_Admin_Order {
 			return;
 		}
 
+		if ( 'sunshine-order' !== get_post_type( intval( $_GET['post'] ) ) || ! current_user_can( 'edit_post', intval( $_GET['post'] ) ) ) {
+			return;
+		}
+
 		$order      = new SPC_Order( intval( $_GET['post'] ) );
 		$items      = $order->get_items();
 		$meta_items = get_post_meta( $order->get_id(), 'cart', true );
@@ -1024,6 +1028,11 @@ class SPC_Admin_Order {
 			return;
 		}
 
+		if ( 'sunshine-order' !== get_post_type( intval( $_POST['order_id'] ) ) || ! current_user_can( 'edit_post', intval( $_POST['order_id'] ) ) ) {
+			wp_send_json_error();
+			return;
+		}
+
 		$args       = array(
 			'comment_post_ID'  => intval( $_POST['order_id'] ),
 			'comment_approved' => 1,
@@ -1091,6 +1100,11 @@ class SPC_Admin_Order {
 			return;
 		}
 
+		if ( 'sunshine-order' !== get_post_type( intval( $_POST['order_id'] ) ) || ! current_user_can( 'edit_post', intval( $_POST['order_id'] ) ) ) {
+			wp_send_json_error();
+			return;
+		}
+
 		update_post_meta( intval( $_POST['order_id'] ), 'notes', sanitize_textarea_field( $_POST['notes'] ) );
 		wp_send_json_success();
 
@@ -1131,6 +1145,12 @@ class SPC_Admin_Order {
 	function save_post( $post_id ) {
 
 		if ( get_post_type( $post_id ) != 'sunshine-order' || ! empty( $_POST['sunshine_order_action'] ) ) {
+			return;
+		}
+
+		// save_post also runs when checkout creates or updates an order, with the customer's own
+		// request data. Only an admin saving the order edit screen may change the status here.
+		if ( ! current_user_can( 'edit_post', $post_id ) || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'update-post_' . $post_id ) ) {
 			return;
 		}
 

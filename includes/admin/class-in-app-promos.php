@@ -149,7 +149,6 @@ class Sunshine_In_App_Promos {
 			$url,
 			array(
 				'timeout'     => 15,
-				'sslverify'   => false,
 				'redirection' => 5,
 				'httpversion' => '1.1',
 				'headers'     => array(

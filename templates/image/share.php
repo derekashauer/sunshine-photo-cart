@@ -14,6 +14,6 @@ jQuery( 'body' ).on( 'click', '#sunshine--image--share--url button', function(){
 <div id="sunshine--image--share--services">
 	<a href="http://www.facebook.com/sharer.php?u=<?php echo urlencode( $image->get_permalink() ); ?>" target="_blank" id="sunshine--facebook">Facebook</a>
 	<a href="https://twitter.com/intent/tweet?url=<?php echo urlencode( $image->get_permalink() ); ?>" target="_blank" id="sunshine--twitter">Twitter</a>
-	<a href="http://pinterest.com/pin/create/button/?url=<?php echo urlencode( $image->get_permalink() ); ?>&media=<?php echo esc_url( $image->get_image_url( 'full' ) ); ?>&description=<?php echo esc_html( $image->get_name() ); ?>" target="_blank" id="sunshine--pinterest">Pinterest</a>
+	<a href="http://pinterest.com/pin/create/button/?url=<?php echo urlencode( $image->get_permalink() ); ?>&media=<?php echo urlencode( $image->get_image_url( 'sunshine-large' ) ); ?>&description=<?php echo esc_html( $image->get_name() ); ?>" target="_blank" id="sunshine--pinterest">Pinterest</a>
 	<a href="https://wa.me/?text=<?php echo urlencode( $image->get_permalink() ); ?>" target="_blank" id="sunshine--whatsapp">WhatsApp</a>
 </div>

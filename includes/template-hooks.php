@@ -75,6 +75,53 @@ function sunshine_show_page_content() {
 
 }
 
+/**
+ * Show the screen for a gallery above the current one that the visitor has not unlocked yet.
+ *
+ * @param SPC_Gallery $gallery     The locked gallery.
+ * @param string      $redirect_to Where to send the visitor once it is unlocked.
+ * @return bool True when a screen was shown.
+ */
+function sunshine_display_locked_gallery( $gallery, $redirect_to ) {
+	if ( $gallery->is_expired() ) {
+		sunshine_get_template( 'gallery/expired', array( 'gallery' => $gallery ) );
+		return true;
+	}
+	if ( $gallery->get_access_type() == 'account' && ! is_user_logged_in() ) {
+		sunshine_get_template(
+			'account/login-signup',
+			array(
+				'message'  => apply_filters( 'sunshine_gallery_require_login_signup_message', __( 'The gallery you tried to access is private and requires you to login first', 'sunshine-photo-cart' ), $gallery ),
+				'redirect' => $redirect_to,
+			)
+		);
+		return true;
+	}
+	if ( ! $gallery->can_view() ) {
+		sunshine_get_template(
+			'account/login',
+			array(
+				'message'  => apply_filters( 'sunshine_gallery_require_login_message', __( 'You must have proper permissions to view this gallery', 'sunshine-photo-cart' ), $gallery ),
+				'redirect' => $redirect_to,
+			)
+		);
+		return true;
+	}
+	if ( $gallery->password_required() || $gallery->email_required() ) {
+		sunshine_get_template(
+			'gallery/access',
+			array(
+				'gallery'     => $gallery,
+				'password'    => $gallery->password_required(),
+				'email'       => $gallery->email_required(),
+				'redirect_to' => $redirect_to,
+			)
+		);
+		return true;
+	}
+	return false;
+}
+
 add_action( 'sunshine_single_gallery', 'sunshine_single_gallery_display' );
 function sunshine_single_gallery_display( $gallery = '' ) {
 
@@ -142,25 +189,10 @@ function sunshine_single_gallery_display( $gallery = '' ) {
 			);
 			return;
 		} else {
-			$needs_password   = false;
-			$password_content = '';
-			$ancestors        = get_ancestors( $gallery->get_id(), 'sunshine-gallery', 'post_type' );
-			if ( $ancestors ) {
-				foreach ( $ancestors as $ancestor_id ) {
-					$ancestor_gallery = sunshine_get_gallery( $ancestor_id );
-					if ( $ancestor_gallery->password_required() ) {
-						sunshine_get_template(
-							'gallery/access',
-							array(
-								'gallery'     => $ancestor_gallery,
-								'password'    => true,
-								'email'       => $ancestor_gallery->email_required(),
-								'redirect_to' => $gallery->get_permalink(),
-							)
-						);
-						return;
-					}
-				}
+			// Every gallery above this one has to be unlocked too.
+			$locked_ancestor = $gallery->get_locked_ancestor();
+			if ( $locked_ancestor && sunshine_display_locked_gallery( $locked_ancestor, $gallery->get_permalink() ) ) {
+				return;
 			}
 		}
 	}
@@ -216,6 +248,16 @@ function sunshine_single_image_display() {
 			sunshine_get_template( 'gallery/expired', array( 'gallery' => $gallery ) );
 			return;
 		}
+		if ( $gallery->get_access_type() == 'account' && ! is_user_logged_in() ) {
+			sunshine_get_template(
+				'account/login-signup',
+				array(
+					'message'  => apply_filters( 'sunshine_gallery_require_login_signup_message', __( 'The gallery you tried to access is private and requires you to login first', 'sunshine-photo-cart' ), $gallery ),
+					'redirect' => $image->get_permalink(),
+				)
+			);
+			return;
+		}
 		$password_required = $gallery->password_required();
 		// A favorited image was already reached once, so do not ask for the email again just for that image.
 		$email_required    = $gallery->email_required() && ! $image->is_favorite();
@@ -231,24 +273,10 @@ function sunshine_single_image_display() {
 			);
 			return;
 		} else {
-			$needs_password   = false;
-			$password_content = '';
-			$ancestors        = get_ancestors( $gallery->get_id(), 'sunshine-gallery', 'post_type' );
-			if ( $ancestors ) {
-				foreach ( $ancestors as $ancestor_id ) {
-					$ancestor_gallery = sunshine_get_gallery( $ancestor_id );
-					if ( $ancestor_gallery->password_required() ) {
-						sunshine_get_template(
-							'gallery/access',
-							array(
-								'gallery'  => $gallery,
-								'password' => true,
-								'email'    => true,
-							)
-						);
-						return;
-					}
-				}
+			// Every gallery above this one has to be unlocked too.
+			$locked_ancestor = $gallery->get_locked_ancestor();
+			if ( $locked_ancestor && sunshine_display_locked_gallery( $locked_ancestor, $image->get_permalink() ) ) {
+				return;
 			}
 		}
 	}

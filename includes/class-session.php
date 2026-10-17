@@ -34,6 +34,7 @@ class SPC_Session {
 
 		add_action( 'shutdown', array( $this, 'write_data' ), 0 );
 		add_action( 'template_redirect', array( $this, 'maybe_destroy_empty_session' ), 999 );
+		add_action( 'wp_login', array( $this, 'regenerate_after_login' ) );
 
 		if ( isset( $_COOKIE[ SUNSHINE_SESSION_COOKIE ] ) ) {
 
@@ -273,7 +274,18 @@ class SPC_Session {
 			ARRAY_A
 		);
 
-		if ( null === $session || $session['data'] == '' ) {
+		if ( null === $session ) {
+			return false;
+		}
+
+		// The expiry in the cookie can be edited by the visitor, so go by the stored one.
+		// An expired session keeps none of its data, such as unlocked gallery passwords.
+		$this->expiration = (int) $session['expiration'];
+		if ( $this->expiration < time() ) {
+			return false;
+		}
+
+		if ( $session['data'] == '' ) {
 			return false;
 		}
 
@@ -354,6 +366,16 @@ class SPC_Session {
 		$this->dirty      = true;
 		$this->set_expiration();
 		$this->set_cookie();
+	}
+
+	/**
+	 * Give the visitor a new session ID when they log in, keeping what is in the session.
+	 * Someone who knew or planted the old ID can't use it to ride along on the logged in session.
+	 */
+	public function regenerate_after_login() {
+		if ( $this->started && ! headers_sent() ) {
+			$this->regenerate_id( true );
+		}
 	}
 
 	public function reset() {

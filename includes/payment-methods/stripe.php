@@ -402,7 +402,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	 * @return void
 	 */
 	public function log_payment() {
-		if ( ! isset( $_POST['result'] ) ) {
+		if ( ! isset( $_POST['result'] ) || ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['security'] ) ), 'sunshine_stripe' ) ) {
 			return;
 		}
 		$result   = wp_unslash( $_POST['result'] );
@@ -437,14 +437,15 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 		$mode    = $this->get_mode_value();
 		$webhook = SPC()->get_option( 'stripe_webhook_' . $mode );
-		if ( empty( $webhook_id ) ) {
-			SPC()->notices->add_admin( 'stripe_webhook_not_setup', __( 'Stripe webhook is not setup', 'sunshine-photo-cart' ), 'error' ) . ' <a href="' . admin_url( 'admin.php?page=sunshine&section=payment_methods&payment_method=stripe' ) . '">' . __( 'Configure here', 'sunshine-photo-cart' ) . '</a>';
+		if ( empty( $webhook ) ) {
+			SPC()->notices->add_admin( 'stripe_webhook_not_setup', __( 'Stripe webhook is not setup', 'sunshine-photo-cart' ) . ' <a href="' . esc_url( admin_url( 'admin.php?page=sunshine&section=payment_methods&payment_method=stripe' ) ) . '">' . __( 'Configure here', 'sunshine-photo-cart' ) . '</a>', 'error' );
 		}
 
 	}
 
+	// Troubleshooting aid for store managers only.
 	public function set_payment_intent_manually() {
-		if ( isset( $_GET['stripe_payment_intent_id'] ) ) {
+		if ( isset( $_GET['stripe_payment_intent_id'] ) && current_user_can( 'sunshine_manage_options' ) ) {
 			SPC()->session->set( 'stripe_payment_intent_id', sanitize_text_field( $_GET['stripe_payment_intent_id'] ) );
 			SPC()->log( 'Set payment intent manually: ' . SPC()->session->get( 'stripe_payment_intent_id' ) );
 		}
@@ -2240,7 +2241,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			'success_url'         => add_query_arg( 'stripe_checkout_complete', '1', $order->get_received_permalink() ),
 			'cancel_url'          => wp_nonce_url(
 				add_query_arg( 'order_id', $order->get_id(), sunshine_get_page_url( 'checkout' ) ),
-				'stripe_cancel',
+				'stripe_cancel_' . $order->get_id(),
 				'stripe_cancel'
 			),
 			'line_items'          => $line_items,
@@ -2679,16 +2680,26 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	 * @return void
 	 */
 	public function stripe_checkout_cancel() {
-		if ( ! isset( $_GET['stripe_cancel'] ) || ! wp_verify_nonce( $_GET['stripe_cancel'], 'stripe_cancel' ) ) {
-			return;
-		}
-
-		if ( ! isset( $_GET['order_id'] ) ) {
+		if ( ! isset( $_GET['stripe_cancel'] ) || ! isset( $_GET['order_id'] ) ) {
 			return;
 		}
 
 		$order_id = intval( $_GET['order_id'] );
-		$order    = sunshine_get_order( $order_id );
+		if ( ! wp_verify_nonce( $_GET['stripe_cancel'], 'stripe_cancel_' . $order_id ) ) {
+			return;
+		}
+
+		// Only the order this visitor is checking out with, and only while it still waits for payment.
+		if ( ! $order_id || intval( SPC()->session->get( 'checkout_order_id' ) ) !== $order_id ) {
+			SPC()->log( 'Stripe hosted checkout cancel ignored, order ' . $order_id . ' is not this checkout session\'s order' );
+			return;
+		}
+
+		$order = sunshine_get_order( $order_id );
+		if ( ! $order->exists() || ! in_array( $order->get_status(), sunshine_order_statuses_needs_payment(), true ) ) {
+			SPC()->log( 'Stripe hosted checkout cancel ignored, order ' . $order_id . ' is not waiting for payment' );
+			return;
+		}
 
 		SPC()->log( 'Stripe hosted checkout cancelled for order: ' . $order_id );
 
@@ -2703,8 +2714,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 				}
 			}
 
-			// Delete the order
-			$order->delete( true );
+			// Keep the order on record as cancelled, and start a new one if they check out again.
+			$order->set_status( 'cancelled', __( 'Customer cancelled the Stripe payment', 'sunshine-photo-cart' ) );
+			SPC()->session->set( 'checkout_order_id', '' );
 		}
 
 		SPC()->cart->add_error( __( 'Stripe payment has been cancelled', 'sunshine-photo-cart' ) );
@@ -3491,7 +3503,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 		if ( ! empty( $_POST['stripe_refund_notify'] ) ) {
 			$order->notify( false );
-			SPC()->notices->add_admin( 'stripe_refund_notify_' . $payment_id, __( 'Customer sent email about refund', 'sunshine-photo-cart' ) );
+			SPC()->notices->add_admin( 'stripe_refund_notify_' . $payment_intent_id, __( 'Customer sent email about refund', 'sunshine-photo-cart' ) );
 		}
 
 	}

@@ -80,8 +80,10 @@ class SPC_Background_Processing {
 
 		// Delete the source FTP folder if it exists.
 		if ( SPC()->get_option( 'delete_images_folder' ) && $gallery->get_image_directory() ) {
-			$folder_path = sunshine_get_import_directory() . '/' . $gallery->get_image_directory();
-			if ( is_dir( $folder_path ) ) {
+			// Only a folder inside the import folder, never the import folder itself or anything outside it.
+			$folder_path = sunshine_validate_import_subdirectory( $gallery->get_image_directory() );
+			$import_root = realpath( sunshine_get_import_directory() );
+			if ( $folder_path && $import_root && wp_normalize_path( $import_root ) !== $folder_path && is_dir( $folder_path ) ) {
 				$files = array_merge( glob( $folder_path . '/.*' ), glob( $folder_path . '/*' ) );
 				foreach ( $files as $file ) {
 					if ( is_file( $file ) ) {

@@ -239,6 +239,11 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 
 	public function create_order_status( $status, $order ) {
 		if ( $order->get_payment_method() == $this->id ) {
+			// Only an order PayPal actually captured money for counts as paid.
+			if ( ! $order->get_meta_value( 'paypal_capture_id' ) ) {
+				SPC()->log( 'Not setting order status to new for PayPal payment, order ' . $order->get_id() . ' has no PayPal capture' );
+				return $status;
+			}
 			SPC()->log( 'Setting order status to new for PayPal payment' );
 			return 'new'; // Straight to new.
 		}
@@ -649,6 +654,8 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 	public function process_payment( $order ) {
 
 		if ( ! isset( $_POST['paypal_order_id'] ) ) {
+			SPC()->log( 'PayPal payment failed: no PayPal Order ID submitted' );
+			SPC()->cart->add_error( __( 'Failed to capture PayPal payment', 'sunshine-photo-cart' ) );
 			return false;
 		}
 

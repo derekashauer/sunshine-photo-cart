@@ -21,9 +21,14 @@ class SPC_Payment_Method_PayPal_Legacy extends SPC_Payment_Method {
 		add_filter( 'sunshine_admin_order_tabs', array( $this, 'admin_order_tab' ), 10, 2 );
 		add_action( 'sunshine_admin_order_tab_paypal-legacy', array( $this, 'admin_order_tab_content_paypal_legacy' ) );
 
+		// IPNs keep being handled while the method is off, so a payment made just before it was
+		// turned off still completes its order. IPNs are verified with PayPal before they count.
 		add_action( 'wp', array( $this, 'ipn' ) );
-		add_action( 'wp', array( $this, 'clear_cart' ) );
-		add_action( 'wp', array( $this, 'cancel_order' ) );
+
+		if ( $this->is_active() ) {
+			add_action( 'wp', array( $this, 'clear_cart' ) );
+			add_action( 'wp', array( $this, 'cancel_order' ) );
+		}
 
 	}
 
@@ -137,7 +142,7 @@ class SPC_Payment_Method_PayPal_Legacy extends SPC_Payment_Method {
 		$paypal_args['charset']       = 'utf-8';
 		$paypal_args['currency_code'] = SPC()->get_option( 'currency' );
 		$paypal_args['return']        = add_query_arg( array( 'paypal_complete' => '1' ), $order->get_permalink() );
-		$paypal_args['cancel_return'] = wp_nonce_url( add_query_arg( 'order_id', $order->get_id(), sunshine_get_page_url( 'checkout' ) ), 'paypal_cancel', 'paypal_cancel' );
+		$paypal_args['cancel_return'] = wp_nonce_url( add_query_arg( 'order_id', $order->get_id(), sunshine_get_page_url( 'checkout' ) ), 'paypal_cancel_' . $order->get_id(), 'paypal_cancel' );
 		$paypal_args['notify_url']    = trailingslashit( get_bloginfo( 'url' ) ) . '?sunshine_paypal_ipn=paypal_standard_ipn';
 		if ( $order->get_delivery_method() == 'pickup' || $order->get_delivery_method() == 'download' ) {
 			// Don't need any shipping info, so don't pass anything
@@ -376,12 +381,24 @@ class SPC_Payment_Method_PayPal_Legacy extends SPC_Payment_Method {
 	}
 
 	function cancel_order() {
-		if ( isset( $_GET['paypal_cancel'] ) && wp_verify_nonce( $_GET['paypal_cancel'], 'paypal_cancel' ) && isset( $_GET['order_id'] ) ) {
+		if ( isset( $_GET['paypal_cancel'] ) && isset( $_GET['order_id'] ) && wp_verify_nonce( $_GET['paypal_cancel'], 'paypal_cancel_' . intval( $_GET['order_id'] ) ) ) {
 			$order_id = intval( $_GET['order_id'] );
-			$order    = sunshine_get_order( $order_id );
-			if ( $order->exists() ) {
-				$order->delete( true );
+
+			// Only the order this visitor is checking out with, and only while it still waits for payment.
+			if ( ! $order_id || intval( SPC()->session->get( 'checkout_order_id' ) ) !== $order_id ) {
+				SPC()->log( 'PayPal Legacy cancel ignored, order ' . $order_id . ' is not this checkout session\'s order' );
+				return;
 			}
+
+			$order = sunshine_get_order( $order_id );
+			if ( ! $order->exists() || ! in_array( $order->get_status(), sunshine_order_statuses_needs_payment(), true ) ) {
+				SPC()->log( 'PayPal Legacy cancel ignored, order ' . $order_id . ' is not waiting for payment' );
+				return;
+			}
+
+			// Keep the order on record as cancelled, and start a new one if they check out again.
+			$order->set_status( 'cancelled', __( 'Customer cancelled the PayPal payment', 'sunshine-photo-cart' ) );
+			SPC()->session->set( 'checkout_order_id', '' );
 			SPC()->cart->add_error( __( 'PayPal payment has been cancelled', 'sunshine-photo-cart' ) );
 			wp_safe_redirect( sunshine_get_page_url( 'checkout' ) );
 			exit;

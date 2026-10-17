@@ -167,15 +167,14 @@ class SPC_Discount extends Sunshine_Data {
 	}
 
 	public function get_use_count_by( $value ) {
-		if ( ! empty( $this->meta['used_by'] ) ) {
-			if ( is_array( $this->meta['used_by'] ) ) {
-				$count = count( array_keys( $this->meta['used_by'], $value ) );
-				return $count;
-			} elseif ( $this->meta['used_by'] == $value ) {
-				return 1;
+		// Each use is stored as its own row, so read them all. Loaded meta only keeps the last one.
+		$count = 0;
+		foreach ( (array) get_post_meta( $this->get_id(), 'used_by', false ) as $used_by ) {
+			if ( is_scalar( $used_by ) && strtolower( (string) $used_by ) === strtolower( (string) $value ) ) {
+				$count++;
 			}
 		}
-		return 0;
+		return $count;
 	}
 
 	public function get_max_uses() {
@@ -205,10 +204,19 @@ class SPC_Discount extends Sunshine_Data {
 			return false;
 		}
 
-		// Only checking by logged in user id for now.
+		// Counted by account and by the email used at checkout, so guests are limited too.
 		$max_uses_per_person = $this->get_max_uses_per_person();
-		if ( $max_uses_per_person && is_user_logged_in() && $this->get_use_count_by( get_current_user_id() ) >= $max_uses_per_person ) {
-			return false;
+		if ( $max_uses_per_person ) {
+			if ( is_user_logged_in() && $this->get_use_count_by( get_current_user_id() ) >= $max_uses_per_person ) {
+				return false;
+			}
+			$email = ! empty( SPC()->cart ) ? SPC()->cart->get_checkout_data_item( 'email' ) : '';
+			if ( empty( $email ) && is_user_logged_in() ) {
+				$email = wp_get_current_user()->user_email;
+			}
+			if ( $email && $this->get_use_count_by( $email ) >= $max_uses_per_person ) {
+				return false;
+			}
 		}
 
 		$min_amount = $this->get_min_amount();

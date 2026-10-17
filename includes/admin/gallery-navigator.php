@@ -203,7 +203,7 @@ add_action( 'wp_ajax_sunshine_gallery_navigator_reorder', 'sunshine_gallery_navi
 function sunshine_gallery_navigator_reorder() {
 	check_ajax_referer( 'sunshine_gallery_navigator', 'nonce' );
 
-	if ( ! current_user_can( 'edit_posts' ) ) {
+	if ( ! current_user_can( 'edit_sunshine_galleries' ) ) {
 		wp_send_json_error( __( 'Permission denied', 'sunshine-photo-cart' ) );
 	}
 
@@ -217,6 +217,10 @@ function sunshine_gallery_navigator_reorder() {
 	// Update menu_order for each gallery
 	$menu_order = 0;
 	foreach ( $order as $gallery_id ) {
+		// Only galleries this user may edit, never other kinds of posts.
+		if ( 'sunshine-gallery' !== get_post_type( $gallery_id ) || ! current_user_can( 'edit_post', $gallery_id ) ) {
+			continue;
+		}
 		wp_update_post(
 			array(
 				'ID'         => $gallery_id,

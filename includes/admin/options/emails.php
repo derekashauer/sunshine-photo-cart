@@ -75,7 +75,7 @@ function sunshine_emails_display() {
 add_action( 'wp_ajax_sunshine_active_emails', 'sunshine_active_emails_toggle' );
 function sunshine_active_emails_toggle() {
 
-	if ( ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-active-emails' ) ) {
+	if ( ! current_user_can( 'sunshine_manage_options' ) || ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-active-emails' ) ) {
 		return false;
 	}
 

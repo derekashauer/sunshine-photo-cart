@@ -86,7 +86,8 @@ jQuery( document ).ready(function($) {
 		var notice = $( this ).closest( '.sunshine-notice, .sunshine-in-app-promo' );
 		var data = {
             'action': 'sunshine_notice_dismiss',
-            'notice': notice.data( 'notice' )
+            'notice': notice.data( 'notice' ),
+            'security': sunshine_admin.notice_security
         };
         $.post( ajaxurl, data, function( response ) {
 			if ( response.success ) {

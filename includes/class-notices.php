@@ -129,7 +129,7 @@ class SPC_Notices {
 
 	public function dismiss() {
 
-		if ( empty( $_POST ) ) {
+		if ( empty( $_POST ) || empty( $_POST['security'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['security'] ) ), 'sunshine_notice_dismiss' ) ) {
 			wp_send_json_error();
 		}
 

@@ -981,10 +981,25 @@ function sunshine_admin_gallery_image_thumbnail( $image, $echo = true ) {
 
 }
 
+/**
+ * Stop a gallery admin request unless the current user may edit this gallery.
+ *
+ * @param int $gallery_id Gallery ID.
+ * @return SPC_Gallery The gallery, when the user may edit it.
+ */
+function sunshine_admin_gallery_ajax_check( $gallery_id ) {
+	$gallery_id = intval( $gallery_id );
+	if ( ! $gallery_id || 'sunshine-gallery' !== get_post_type( $gallery_id ) || ! current_user_can( 'edit_post', $gallery_id ) ) {
+		wp_send_json_error( array( 'error' => __( 'You do not have permission to edit this gallery', 'sunshine-photo-cart' ) ) );
+	}
+	return sunshine_get_gallery( $gallery_id );
+}
+
 add_action( 'wp_ajax_sunshine_gallery_add_media_images', 'sunshine_gallery_add_media_images' );
 function sunshine_gallery_add_media_images() {
 
 	check_ajax_referer( 'sunshine_gallery_add_media_images', 'security' );
+	sunshine_admin_gallery_ajax_check( $_POST['gallery_id'] );
 
 	$gallery_id = intval( $_POST['gallery_id'] );
 	$image_ids  = array_map( 'intval', $_POST['image_ids'] );
@@ -1073,6 +1088,10 @@ function sunshine_gallery_admin_ajax_upload() {
 	}
 
 	$gallery_id = intval( $_POST['gallery_id'] );
+	sunshine_admin_gallery_ajax_check( $gallery_id );
+	if ( ! current_user_can( 'upload_files' ) ) {
+		wp_send_json_error( array( 'error' => __( 'You do not have permission to upload files', 'sunshine-photo-cart' ) ) );
+	}
 
 	sunshine_doing_upload( $gallery_id );
 
@@ -1340,13 +1359,16 @@ function sunshine_gallery_image_sort() {
 	$images           = str_replace( 'image-', '', $images );
 	$sorted_image_ids = explode( ',', $images );
 
-	$gallery = sunshine_get_gallery( intval( $_POST['gallery_id'] ) );
+	$gallery = sunshine_admin_gallery_ajax_check( $_POST['gallery_id'] );
 
 	// The image ids passed are only what is currently visible. There could be more in the gallery because of pagination.
 	// So we are only going to rebuild the same amount of gallery image ids that are passsed.
 
 	// Get image ids first.
 	$existing_image_ids = $gallery->get_image_ids();
+
+	// Sorting can only reorder images already in this gallery, never add others to it.
+	$sorted_image_ids = array_values( array_intersect( array_map( 'intval', $sorted_image_ids ), array_map( 'intval', (array) $existing_image_ids ) ) );
 
 	// Count how many image ids we were sent.
 	$sorted_image_count = count( $sorted_image_ids );
@@ -1367,10 +1389,10 @@ function sunshine_gallery_load_more() {
 
 	check_ajax_referer( 'sunshine_gallery_load_more', 'security' );
 
-	$gallery = sunshine_get_gallery( intval( $_POST['gallery_id'] ) );
+	$gallery = sunshine_admin_gallery_ajax_check( $_POST['gallery_id'] );
 	$images  = $gallery->get_images(
 		array(
-			'posts_per_page' => $_POST['count'],
+			'posts_per_page' => intval( $_POST['count'] ),
 			'offset'         => intval( $_POST['offset'] ),
 		)
 	);
@@ -1397,7 +1419,7 @@ function sunshine_gallery_image_delete() {
 	$image_id   = intval( $_POST['image_id'] );
 	$gallery_id = intval( $_POST['gallery_id'] );
 	if ( ! empty( $image_id ) && ! empty( $gallery_id ) ) {
-		$gallery = sunshine_get_gallery( $gallery_id );
+		$gallery = sunshine_admin_gallery_ajax_check( $gallery_id );
 		$result  = $gallery->delete_image( $image_id );
 		if ( $result ) {
 			wp_send_json_success( array( 'image_id' => $image_id ) );
@@ -1414,6 +1436,7 @@ function sunshine_gallery_image_featured() {
 	$image_id   = intval( $_POST['image_id'] );
 	$gallery_id = intval( $_POST['gallery_id'] );
 	if ( ! empty( $image_id ) && ! empty( $gallery_id ) ) {
+		sunshine_admin_gallery_ajax_check( $gallery_id );
 		$current_post_thumbnail_id = get_post_thumbnail_id( $gallery_id );
 		if ( $image_id == $current_post_thumbnail_id ) {
 			set_post_thumbnail( $gallery_id, 1 );
@@ -1468,6 +1491,7 @@ function sunshine_make_cover_size_image( $post_id, $post = '' ) {
 	$image_data = image_make_intermediate_size( $full_image_path, 1800, 1800, false );
 	if ( $image_data ) {
 		$metadata['sizes']['sunshine-cover'] = $image_data;
+		$metadata                            = sunshine_secure_intermediate_file_names( $metadata, $full_image_path, array( 'sunshine-cover' ) );
 	} else {
 		// No cover copy made (image smaller than 1800px or resize failed); drop any false entry older versions saved.
 		unset( $metadata['sizes']['sunshine-cover'] );
@@ -1520,6 +1544,7 @@ function sunshine_gallery_save_post( $post_id, $post = '' ) {
 	$image_data = image_make_intermediate_size( $full_image_path, 1800, 1800, false );
 	if ( $image_data ) {
 		$metadata['sizes']['sunshine-cover'] = $image_data;
+		$metadata                            = sunshine_secure_intermediate_file_names( $metadata, $full_image_path, array( 'sunshine-cover' ) );
 	} else {
 		// No cover copy made (image smaller than 1800px or resize failed); drop any false entry older versions saved.
 		unset( $metadata['sizes']['sunshine-cover'] );

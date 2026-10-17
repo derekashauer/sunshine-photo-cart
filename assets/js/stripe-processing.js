@@ -220,7 +220,8 @@ jQuery( document ).on( 'sunshine_payment_processing', function( event, data ) {
 				type: 'POST',
 				data: {
 					action: 'sunshine_stripe_log_payment',
-					result: result
+					result: result,
+					security: spc_stripe_vars.security
 				},
 				timeout: 15000 // 15 second timeout for logging
 			});

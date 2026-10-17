@@ -10,10 +10,19 @@ if ( $uninstall ) {
 	// $galleries = $wpdb->query( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'sunshine-gallery';" );
 	// sunshine_log( $galleries, 'GALLERIES DURING DELETE' );
 
+	// Other WP Sunshine plugins also start their settings with "sunshine_", so leave theirs alone.
+	$keep_prefixes = array( 'sunshine_analytics', 'sunshine_consent', 'sunshine_utm' );
+	$keep_options  = '';
+	$keep_usermeta = '';
+	foreach ( $keep_prefixes as $keep_prefix ) {
+		$keep_options  .= $wpdb->prepare( ' AND option_name NOT LIKE %s', $wpdb->esc_like( $keep_prefix ) . '%' );
+		$keep_usermeta .= $wpdb->prepare( ' AND meta_key NOT LIKE %s', $wpdb->esc_like( $keep_prefix ) . '%' );
+	}
+
 	// Remove settings.
-	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'sunshine_%'" );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( 'sunshine_' ) . '%' ) . $keep_options );
 	// Remove user meta data.
-	$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'sunshine_%'" );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s", $wpdb->esc_like( 'sunshine_' ) . '%' ) . $keep_usermeta );
 
 	// Remove pages
 	$pages = array(
@@ -30,7 +39,7 @@ if ( $uninstall ) {
 	}
 
 	// Get all galleries for use in deleting attachments.
-	$galleries = $wpdb->query( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'sunshine-gallery';" );
+	$galleries = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'sunshine-gallery';" );
 
 	// Remove post type data.
 	$wpdb->query( "DELETE FROM {$wpdb->posts} WHERE post_type IN ( 'sunshine-product', 'sunshine-gallery', 'sunshine-order', 'sunshine-prodcut-opt' );" );
@@ -39,6 +48,7 @@ if ( $uninstall ) {
 
 	// Remove taxonomy data
 	foreach ( array( 'sunshine-product-category', 'sunshine-product-price-level', 'sunshine-order-status' ) as $taxonomy ) {
+		delete_option( $taxonomy . '_children' );
 		$wpdb->delete(
 			$wpdb->term_taxonomy,
 			array(
@@ -57,7 +67,7 @@ if ( $uninstall ) {
 
 		$gallery_ids = array();
 		foreach ( $galleries as $gallery_id ) {
-			$gallery_ids[] = $gallery_id;
+			$gallery_ids[] = intval( $gallery_id );
 		}
 
 		// Build single query to delete all attachment posts

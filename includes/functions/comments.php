@@ -84,12 +84,7 @@ function sunshine_modal_add_comment() {
 		}
 		$args['comment_author']       = $name;
 		$args['comment_author_email'] = $email;
-
-		// Let's see if this email is tied to an account by chance, what the heck
-		$user = get_user_by( 'email', $email );
-		if ( ! empty( $user ) ) {
-			$args['user_id'] = $user->ID;
-		}
+		// Not tied to an account even when the email matches one: anyone can type any email here.
 	}
 
 	$comment_id = wp_insert_comment( $args );

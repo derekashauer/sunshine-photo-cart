@@ -371,6 +371,17 @@ class SPC_Cart {
 			return false;
 		}
 
+		// Multi-image products carry more photos in their options. Each one has to be a photo the customer can open.
+		if ( is_array( $options ) && ! empty( $options['images'] ) ) {
+			foreach ( sunshine_modal_get_add_to_cart_image_ids_from_option( $options['images'] ) as $option_image_id ) {
+				$option_image = sunshine_get_image( $option_image_id );
+				if ( ! $option_image->exists() || ! $option_image->can_access() ) {
+					SPC()->log( 'Item not added to cart because a selected image can not be accessed: ' . $option_image_id );
+					return false;
+				}
+			}
+		}
+
 		$this->get_cart();
 
 		$item = array(
@@ -2430,8 +2441,15 @@ class SPC_Cart {
 		SPC()->log( 'Processing payment' );
 
 		if ( ! empty( $_POST['payment_method'] ) ) {
-			SPC()->log( 'Processing payment for ' . $_POST['payment_method'] );
+			SPC()->log( 'Processing payment for ' . sanitize_key( $_POST['payment_method'] ) );
 			$this->process_section( 'payment', $_POST );
+		} elseif ( $this->get_total() > 0 ) {
+			// The payment step's checks (each gateway's own validation included) only run when
+			// the form names a payment method. Without one there is nothing to check the payment
+			// against, so an order that costs money must not go any further.
+			SPC()->log( 'Blocked payment: no payment method submitted for an order with a total' );
+			$this->add_error( __( 'Please select a payment method before completing your order.', 'sunshine-photo-cart' ) );
+			return false;
 		}
 
 		// If we have any errors then we do not process payment.
@@ -2879,7 +2897,8 @@ class SPC_Cart {
 				wp_send_json_error();
 			}
 
-			if ( ! empty( $data['password'] ) ) {
+			// The password field is hidden when signup is disabled, but a password can still be sent.
+			if ( ! empty( $data['password'] ) && ! SPC()->get_option( 'disable_signup' ) ) {
 
 				SPC()->log( 'Creating customer at checkout' );
 

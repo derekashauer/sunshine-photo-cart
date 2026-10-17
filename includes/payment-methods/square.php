@@ -449,7 +449,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 				}
 			}
 			if ( $processing_fee_total > 0 ) {
-				$order->update_meta_value( 'square_processing_fee', $processing_fee_total / 100 );
+				$order->update_meta_value( 'square_processing_fee', $processing_fee_total / $this->get_amount_multiplier() );
 				SPC()->notices->add_admin( 'square_refresh_fee_success_' . $payment_id, __( 'Square processing fee refreshed', 'sunshine-photo-cart' ) );
 			} else {
 				SPC()->notices->add_admin( 'square_refresh_fee_empty_' . $payment_id, __( 'Square has not yet calculated the processing fee for this payment. Try again after the payment has settled.', 'sunshine-photo-cart' ) );
@@ -547,7 +547,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 				}
 			}
 			if ( $total > 0 ) {
-				$order->update_meta_value( 'square_processing_fee', $total / 100 );
+				$order->update_meta_value( 'square_processing_fee', $total / $this->get_amount_multiplier() );
 				++$updated;
 			}
 		}
@@ -658,7 +658,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		if ( empty( SPC()->cart ) ) {
 			SPC()->cart->setup();
 		}
-		$this->total    = floor( 100 * SPC()->cart->get_total() );
+		$this->total    = floor( $this->get_amount_multiplier() * SPC()->cart->get_total() );
 		$this->currency = SPC()->get_option( 'currency' );
 
 	}
@@ -867,7 +867,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 				'name'             => substr( $item->get_name_raw(), 0, 512 ),
 				'quantity'         => (string) $qty,
 				'base_price_money' => array(
-					'amount'   => intval( round( $per_unit_for_square * 100 ) ),
+					'amount'   => intval( round( $per_unit_for_square * $this->get_amount_multiplier() ) ),
 					'currency' => $this->currency,
 				),
 			);
@@ -885,7 +885,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 				'name'             => substr( $fee['name'], 0, 512 ),
 				'quantity'         => '1',
 				'base_price_money' => array(
-					'amount'   => intval( round( $fee['amount'] * 100 ) ),
+					'amount'   => intval( round( $fee['amount'] * $this->get_amount_multiplier() ) ),
 					'currency' => $this->currency,
 				),
 			);
@@ -910,7 +910,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 				'uid'                => 'shipping',
 				'name'               => substr( $shipping_name, 0, 255 ),
 				'amount_money'       => array(
-					'amount'   => intval( round( $shipping_amount * 100 ) ),
+					'amount'   => intval( round( $shipping_amount * $this->get_amount_multiplier() ) ),
 					'currency' => $this->currency,
 				),
 				'calculation_phase'  => 'SUBTOTAL_PHASE',
@@ -949,7 +949,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 					'uid'          => 'discount-1',
 					'name'         => substr( $discount_label, 0, 255 ),
 					'amount_money' => array(
-						'amount'   => intval( round( $discount_total * 100 ) ),
+						'amount'   => intval( round( $discount_total * $this->get_amount_multiplier() ) ),
 						'currency' => $this->currency,
 					),
 					'scope'        => 'ORDER',
@@ -1316,7 +1316,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		$status   = ! empty( $payment['status'] ) ? strtoupper( $payment['status'] ) : '';
 
 		if ( ! in_array( $status, array( 'COMPLETED', 'APPROVED' ), true ) || ! $this->payment_matches_order( $payment, $order ) ) {
-			$paid = isset( $payment['amount_money']['amount'] ) ? ( $payment['amount_money']['amount'] / 100 ) . ' ' . $payment['amount_money']['currency'] : 'unknown';
+			$paid = isset( $payment['amount_money']['amount'] ) ? ( $payment['amount_money']['amount'] / $this->get_amount_multiplier() ) . ' ' . $payment['amount_money']['currency'] : 'unknown';
 			SPC()->log( 'Square payment ' . $payment_id . ' (status ' . ( $status ? $status : 'not found' ) . ', ' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ')' );
 			/* translators: 1: Square payment ID, 2: amount paid in Square */
 			$order->add_log( sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid ) );
@@ -1334,9 +1334,21 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 	 * @param SPC_Order $order   The order.
 	 * @return bool
 	 */
+	/**
+	 * Square takes amounts in the currency's smallest unit: cents for most currencies, but whole
+	 * units for currencies with no cents, like Japanese yen. Multiplying those by 100 would charge
+	 * 100 times too much.
+	 *
+	 * @return int What to multiply an amount by to get Square's amount.
+	 */
+	private function get_amount_multiplier() {
+		$zero_decimal_currencies = array( 'BIF', 'CLP', 'DJF', 'GNF', 'JPY', 'KMF', 'KRW', 'MGA', 'PYG', 'RWF', 'VND', 'VUV', 'XAF', 'XOF', 'XPF' );
+		return in_array( SPC()->get_option( 'currency' ), $zero_decimal_currencies, true ) ? 1 : 100;
+	}
+
 	private function payment_matches_order( $payment, $order ) {
 		// Same math as the charge in setup(), so an honest payment always matches.
-		$expected = intval( floor( 100 * $order->get_total() ) );
+		$expected = intval( floor( $this->get_amount_multiplier() * $order->get_total() ) );
 		return isset( $payment['reference_id'] ) && $payment['reference_id'] === substr( (string) $order->get_order_number(), 0, 40 )
 			&& isset( $payment['amount_money']['amount'], $payment['amount_money']['currency'] )
 			&& intval( $payment['amount_money']['amount'] ) === $expected
@@ -1360,7 +1372,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			$order->update_meta_value( 'square_order_id', $square_order_id );
 		}
 		if ( ! empty( $payment['app_fee_money']['amount'] ) ) {
-			$order->update_meta_value( 'square_app_fee', $payment['app_fee_money']['amount'] / 100 );
+			$order->update_meta_value( 'square_app_fee', $payment['app_fee_money']['amount'] / $this->get_amount_multiplier() );
 		}
 		if ( ! empty( $payment['processing_fee'] ) ) {
 			$processing_fee_total = 0;
@@ -1370,7 +1382,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 				}
 			}
 			if ( $processing_fee_total > 0 ) {
-				$order->update_meta_value( 'square_processing_fee', $processing_fee_total / 100 );
+				$order->update_meta_value( 'square_processing_fee', $processing_fee_total / $this->get_amount_multiplier() );
 			}
 		}
 		if ( ! empty( $payment['card_details']['card'] ) ) {
@@ -1575,7 +1587,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		if ( $status === 'COMPLETED' && ! $this->payment_matches_order( $payment, $order ) ) {
 			// This runs on a schedule, so only note the mismatch on the order once.
 			if ( ! $order->get_meta_value( 'square_payment_mismatch' ) ) {
-				$paid = isset( $payment['amount_money']['amount'] ) ? ( $payment['amount_money']['amount'] / 100 ) . ' ' . $payment['amount_money']['currency'] : 'unknown';
+				$paid = isset( $payment['amount_money']['amount'] ) ? ( $payment['amount_money']['amount'] / $this->get_amount_multiplier() ) . ' ' . $payment['amount_money']['currency'] : 'unknown';
 				SPC()->log( 'reconcile_order: Square payment ' . $payment_id . ' (' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ')' );
 				/* translators: 1: Square payment ID, 2: amount paid in Square */
 				$order->add_log( sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid ) );
@@ -1747,7 +1759,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			$refund_amount = sanitize_text_field( $_POST['square_refund_amount'] );
 		}
 
-		$refund_amount_square = intval( $refund_amount * 100 ); // Lose decimals because Square
+		$refund_amount_square = intval( $refund_amount * $this->get_amount_multiplier() ); // Lose decimals because Square
 
 		$this->setup( $order->get_mode() );
 
@@ -1778,7 +1790,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		$app_fee = $this->get_app_fee( $order );
 		if ( $app_fee ) {
 			$refund_percent        = $refund_amount / $order->get_total_minus_refunds();
-			$refund_app_fee        = ( $app_fee * $refund_percent ) * 100;
+			$refund_app_fee        = ( $app_fee * $refund_percent ) * $this->get_amount_multiplier();
 			$args['app_fee_money'] = array(
 				'amount'   => intval( $refund_app_fee ),
 				'currency' => $order->get_currency(),
@@ -1827,7 +1839,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 		if ( ! empty( $refund_app_fee ) ) {
 			/* translators: %s is the refund amount formatted as price */
-			$order->add_log( sprintf( __( 'Sunshine contributed %s towards refund from processing fees', 'sunshine-photo-cart' ), sunshine_price( $refund_app_fee / 100 ) ) );
+			$order->add_log( sprintf( __( 'Sunshine contributed %s towards refund from processing fees', 'sunshine-photo-cart' ), sunshine_price( $refund_app_fee / $this->get_amount_multiplier() ) ) );
 		}
 
 		/* translators: %s is the refund amount formatted as price */

@@ -192,7 +192,17 @@ class SPC_License {
 
 		$key = 'sunshine_license_' . $this->id;
 
+		// admin_init also runs for logged-out visitors on admin-ajax.php and admin-post.php.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		if ( isset( $_POST[ $key ] ) ) {
+
+			// The license key is submitted with the Licenses settings form.
+			if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'sunshine_license-options' ) ) {
+				return;
+			}
 
 			$license_key = sanitize_text_field( $_POST[ $key ] );
 
@@ -257,7 +267,6 @@ class SPC_License {
 			SUNSHINE_PHOTO_CART_STORE_URL . '?time=' . time(),
 			array(
 				'timeout'   => 15,
-				'sslverify' => false,
 				'body'      => $api_params,
 			)
 		);
@@ -322,7 +331,6 @@ class SPC_License {
 			SUNSHINE_PHOTO_CART_STORE_URL,
 			array(
 				'timeout'   => 15,
-				'sslverify' => false,
 				'body'      => $api_params,
 			)
 		);
@@ -385,6 +393,10 @@ class SPC_License {
 			return;
 		}
 
+		if ( ! current_user_can( 'manage_options' ) || empty( $_GET['sunshine_check_license'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['sunshine_check_license'] ) ), 'sunshine_check_license_' . $this->id ) ) {
+			return;
+		}
+
 		$this->check_license();
 
 		wp_redirect( admin_url( 'admin.php?page=sunshine&section=license' ) );
@@ -415,7 +427,6 @@ class SPC_License {
 			SUNSHINE_PHOTO_CART_STORE_URL . '?time=' . time(),
 			array(
 				'timeout'   => 15,
-				'sslverify' => false,
 				'body'      => $api_params,
 			)
 		);

@@ -159,8 +159,41 @@ function sunshine_get_seo_sitemap_exclude_ids() {
 	if ( ! empty( $gallery_ids ) ) {
 		$exclude_galleries = array_map( 'intval', $gallery_ids );
 	}
+
+	// Galleries inside a hidden gallery are hidden too.
+	$parent_ids = $exclude_galleries;
+	while ( ! empty( $parent_ids ) ) {
+		$child_ids         = get_posts(
+			array(
+				'post_type'       => 'sunshine-gallery',
+				'post_status'     => 'any',
+				'post_parent__in' => $parent_ids,
+				'post__not_in'    => $exclude_galleries,
+				'fields'          => 'ids',
+				'numberposts'     => -1,
+			)
+		);
+		$parent_ids        = array_map( 'intval', $child_ids );
+		$exclude_galleries = array_merge( $exclude_galleries, $parent_ids );
+	}
+
 	return $exclude_galleries;
 }
+
+/**
+ * Hide necessary galleries from the sitemap built into WordPress
+ *
+ * @param array  $args      WP_Query arguments for the sitemap.
+ * @param string $post_type Post type the sitemap is for.
+ * @return array
+ */
+function sunshine_wp_sitemaps_exclude_galleries( $args, $post_type ) {
+	if ( 'sunshine-gallery' === $post_type ) {
+		$args['post__not_in'] = array_merge( isset( $args['post__not_in'] ) ? (array) $args['post__not_in'] : array(), sunshine_get_seo_sitemap_exclude_ids() );
+	}
+	return $args;
+}
+add_filter( 'wp_sitemaps_posts_query_args', 'sunshine_wp_sitemaps_exclude_galleries', 10, 2 );
 
 
 /**
