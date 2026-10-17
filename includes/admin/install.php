@@ -45,16 +45,30 @@ function maybe_sunshine_create_custom_tables() {
 			`order_id` bigint(20) unsigned NOT NULL,
 			`type` varchar(50) COLLATE utf8mb4_unicode_520_ci NOT NULL,
 			`image_id` bigint(20) NOT NULL,
-			`qty` tinyint(3) unsigned NOT NULL,
+			`qty` int(10) unsigned NOT NULL,
 			`product_id` bigint(20) unsigned NOT NULL,
 			`gallery_id` bigint(20) unsigned NOT NULL,
 			`price_level` bigint(20) unsigned NOT NULL,
 			`price` float unsigned NOT NULL,
 			`tax` float unsigned NOT NULL,
 			`discount` float unsigned NOT NULL,
-			PRIMARY KEY (`order_item_id`)
+			PRIMARY KEY (`order_item_id`),
+			KEY `order_id` (`order_id`)
 		) $collate;"
 	);
+
+	// Existing installs were created without an order_id index, which made
+	// loading an order's items a full table scan.
+	$has_order_id_index = $wpdb->get_var( "SHOW INDEX FROM {$wpdb->prefix}sunshine_order_items WHERE Key_name = 'order_id'" );
+	if ( ! $has_order_id_index ) {
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}sunshine_order_items ADD KEY order_id (order_id)" );
+	}
+
+	// Existing installs stored qty as tinyint, which caps a line at 255.
+	$qty_type = $wpdb->get_var( "SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{$wpdb->prefix}sunshine_order_items' AND COLUMN_NAME = 'qty'" );
+	if ( 'tinyint' === $qty_type ) {
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}sunshine_order_items MODIFY qty int(10) unsigned NOT NULL" );
+	}
 
 	$created = maybe_create_table(
 		"{$wpdb->prefix}sunshine_order_itemmeta",
