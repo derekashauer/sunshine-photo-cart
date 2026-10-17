@@ -247,6 +247,18 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Security: PayPal, Stripe and Square payments are now checked against the order total before an order is marked paid, so a payment for a smaller amount, or no payment at all, can't complete an order
 * The Sunshine log now notes when an order status can't be set, like when that status has been deleted
 * Tools > Install process no longer turns your emails back on or resets who receives the admin emails
+* Fix: A discount code no longer lowers the tax twice when shipping is taxed, so the right tax is charged
+* Fix: With discounts applied after tax, the discount no longer also lowers the tax when the order is placed
+* Fix: A tax of exactly one cent is now charged instead of dropped
+* Fix: Changing the quantity of one cart item no longer changes a matching item added at the same moment
+* Fix: When a gift card pays part of an order, PayPal is sent the gift card as a discount instead of an item below zero
+* Fix: A discount code limited to a number of each product no longer takes off more than that number
+* Fix: A fixed amount discount can't be worth more than the order, and lowers the tax only by its share on taxed items
+* Fix: A discount that includes shipping no longer lowers the tax when shipping isn't taxed
+* Fix: A percent payment method fee is now worked out on what's left to pay after a gift card
+* Fix: Stripe's hosted checkout page now works when a gift card pays part of the order
+* Fix: Stripe's hosted checkout page now charges the order's tax when store credit is used or discounts apply after tax
+* Fix: Stripe's hosted checkout page no longer fails on taxed orders after switching between test and live mode or to a different Stripe account
 
 = 3.7.5 - October 13, 2026 =
 * Security: Visitors can no longer see photos from a gallery they don't have access to, like a password-protected or private gallery, through the share, add to cart, or product options windows
