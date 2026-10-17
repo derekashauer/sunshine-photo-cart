@@ -252,6 +252,10 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: A tax of exactly one cent is now charged instead of dropped
 * Fix: Changing the quantity of one cart item no longer changes a matching item added at the same moment
 * Fix: When a gift card pays part of an order, PayPal is sent the gift card as a discount instead of an item below zero
+* Fix: A discount code limited to a number of each product no longer takes off more than that number
+* Fix: A fixed amount discount can't be worth more than the order, and lowers the tax only by its share on taxed items
+* Fix: A discount that includes shipping no longer lowers the tax when shipping isn't taxed
+* Fix: A percent payment method fee is now worked out on what's left to pay after a gift card
 
 = 3.7.5 - October 13, 2026 =
 * Security: Visitors can no longer see photos from a gallery they don't have access to, like a password-protected or private gallery, through the share, add to cart, or product options windows

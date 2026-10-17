@@ -249,8 +249,15 @@ class SPC_Payment_Method {
 			$fee_amount = $this->get_option( 'fee_amount' );
 			if ( ! empty( $fee_amount ) ) {
 				if ( $fee_type == 'percent' ) {
-					$cart_total = SPC()->cart->get_total( array( 'fees' ) );
-					$amount     = ( $fee_amount / 100 ) * $cart_total;
+					// A percent of what is left to pay. Other fees count, like a gift card (a fee
+					// below zero), but not this fee itself.
+					$cart_total = (float) SPC()->cart->get_total( array( 'fees' ) );
+					foreach ( (array) SPC()->cart->get_fees() as $other_fee_id => $other_fee ) {
+						if ( 'payment_method' !== $other_fee_id ) {
+							$cart_total += (float) $other_fee['amount'];
+						}
+					}
+					$amount = ( $fee_amount / 100 ) * max( 0, $cart_total );
 				} elseif ( $fee_type == 'amount' ) {
 					$amount = $fee_amount;
 				}
