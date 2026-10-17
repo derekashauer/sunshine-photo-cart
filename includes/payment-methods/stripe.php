@@ -2239,10 +2239,14 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$args = array(
 			'mode'                => 'payment',
 			'success_url'         => add_query_arg( 'stripe_checkout_complete', '1', $order->get_received_permalink() ),
-			'cancel_url'          => wp_nonce_url(
-				add_query_arg( 'order_id', $order->get_id(), sunshine_get_page_url( 'checkout' ) ),
-				'stripe_cancel_' . $order->get_id(),
-				'stripe_cancel'
+			// Built with add_query_arg(), not wp_nonce_url(): that one escapes & for HTML, and
+			// Stripe sends the visitor to the URL as given, so the cancel was never seen.
+			'cancel_url'          => add_query_arg(
+				array(
+					'order_id'      => $order->get_id(),
+					'stripe_cancel' => wp_create_nonce( 'stripe_cancel_' . $order->get_id() ),
+				),
+				sunshine_get_page_url( 'checkout' )
 			),
 			'line_items'          => $line_items,
 			'metadata'            => array(
