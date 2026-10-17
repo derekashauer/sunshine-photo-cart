@@ -302,6 +302,21 @@ class SPC_Cart {
 		}
 		if ( ! empty( $cart ) ) {
 			$this->cart = $cart;
+
+			// Carts saved before hashes were unique can have lines that share one. Lines are
+			// found by hash, so give each repeat its own and save the cart.
+			$hashes      = array();
+			$made_unique = false;
+			foreach ( $this->cart as $key => $item ) {
+				if ( empty( $item['hash'] ) || isset( $hashes[ $item['hash'] ] ) ) {
+					$this->cart[ $key ]['hash'] = md5( uniqid( '', true ) . $item['product_id'] . $item['qty'] );
+					$made_unique                = true;
+				}
+				$hashes[ $this->cart[ $key ]['hash'] ] = true;
+			}
+			if ( $made_unique ) {
+				$this->update_cart();
+			}
 		}
 		return $this->cart;
 	}

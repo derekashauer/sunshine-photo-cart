@@ -100,3 +100,31 @@ $t::test(
 		$t::money( 10, $order_line_discounts(), 'line discount when the order is saved' );
 	}
 );
+
+$t::test(
+	'Session fee: lines from an old cart that share a hash use the included quantity once',
+	function () use ( $t, $order_line_discounts, $cart_line_discounts ) {
+		$t::require_plugin( 'sunshine_session_fees_cart_item_discount', 'Session Fees add-on' );
+		$customer_id = $t::customer();
+		$product_id  = $t::product( 10, array( 'taxable' => false ) );
+		update_user_meta( $customer_id, 'sunshine_session_products', array( array( 'product' => $product_id, 'qty' => 1 ) ) );
+		$line = array(
+			'image_id'    => 0,
+			'gallery_id'  => '',
+			'product_id'  => $product_id,
+			'options'     => array(),
+			'price_level' => sunshine_get_default_price_level_id(),
+			'qty'         => 1,
+			'price'       => '10',
+			'discount'    => 0,
+			'comments'    => '',
+			'meta'        => array(),
+			'hash'        => 'samehash',
+		);
+		SPC()->customer->set_cart( array( $line, $line, $line ) );
+		$cart = $t::new_request();
+		$t::money( 10, $cart_line_discounts( $cart ), 'one included, so one line free' );
+		$t::money( 20, $cart->get_total(), 'total' );
+		$t::money( 10, $order_line_discounts(), 'line discount when the order is saved' );
+	}
+);
