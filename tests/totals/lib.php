@@ -16,6 +16,7 @@ class SPC_Totals_Test {
 	private static $option_filters = array();
 	private static $created_posts  = array();
 	private static $created_users  = array();
+	private static $created_orders = array();
 	private static $passed         = 0;
 	private static $failed         = array();
 	private static $skipped        = array();
@@ -105,7 +106,7 @@ class SPC_Totals_Test {
 		wp_set_current_user( 0 );
 		SPC()->customer = new SPC_Customer( 0 );
 
-		foreach ( array( 'cart', 'discounts', 'checkout_data', 'checkout_sections_completed', 'gift_cards', 'gift_cards_applied', 'gift_card_amounts', 'use_credits' ) as $key ) {
+		foreach ( array( 'cart', 'discounts', 'checkout_data', 'checkout_sections_completed', 'gift_cards', 'gift_cards_applied', 'gift_card_amounts', 'use_credits', 'checkout_order_id', 'paypal_order_id' ) as $key ) {
 			SPC()->session->set( $key, '' );
 		}
 		SPC()->cart = new SPC_Cart();
@@ -265,8 +266,80 @@ class SPC_Totals_Test {
 		return self::calculate();
 	}
 
+	/**
+	 * Fill in the checkout form with a US address, so an order can be placed.
+	 */
+	public static function checkout_address() {
+		$fields = array(
+			'email'               => 'totals-test@example.com',
+			'first_name'          => 'Totals',
+			'last_name'           => 'Test',
+			'phone'               => '5555555555',
+			'shipping_as_billing' => 'yes',
+		);
+		foreach ( array( 'shipping_', 'billing_' ) as $prefix ) {
+			$fields[ $prefix . 'first_name' ] = 'Totals';
+			$fields[ $prefix . 'last_name' ]  = 'Test';
+			$fields[ $prefix . 'address1' ]   = '1 Main St';
+			$fields[ $prefix . 'city' ]       = 'Denver';
+			$fields[ $prefix . 'state' ]      = 'CO';
+			$fields[ $prefix . 'postcode' ]   = '80202';
+			$fields[ $prefix . 'country' ]    = 'US';
+		}
+		foreach ( $fields as $key => $value ) {
+			SPC()->cart->set_checkout_data_item( $key, $value );
+		}
+	}
+
+	/**
+	 * Place the order through the real checkout step that saves it, and return the saved order.
+	 * Uses the built-in Test payment method, so nothing is charged anywhere.
+	 */
+	public static function place_order( $payment_method = 'test' ) {
+		self::checkout_address();
+
+		$ajax = '__return_true';
+		$die  = function () {
+			return function () {
+				throw new SPC_Totals_Test_Done();
+			};
+		};
+		add_filter( 'wp_doing_ajax', $ajax );
+		add_filter( 'wp_die_ajax_handler', $die );
+		$_POST['security']       = wp_create_nonce( 'sunshine-checkout-init-order' );
+		$_POST['payment_method'] = $payment_method;
+		SPC()->cart->set_checkout_data_item( 'payment_method', $payment_method );
+		ob_start();
+		try {
+			SPC()->cart->init_order();
+		} catch ( SPC_Totals_Test_Done $e ) {
+			// init_order() always ends by sending a JSON response.
+		}
+		$output = ob_get_clean();
+		unset( $_POST['security'], $_POST['payment_method'] );
+		remove_filter( 'wp_doing_ajax', $ajax );
+		remove_filter( 'wp_die_ajax_handler', $die );
+
+		$response = json_decode( $output, true );
+		if ( empty( $response['success'] ) || empty( $response['data']['order_id'] ) ) {
+			throw new Exception( 'Order was not placed: ' . wp_json_encode( SPC()->cart->get_errors() ) . ' ' . substr( $output, 0, 300 ) );
+		}
+		self::$created_orders[] = $response['data']['order_id'];
+		return sunshine_get_order( $response['data']['order_id'] );
+	}
+
 	public static function cleanup() {
+		global $wpdb;
 		self::reset();
+		foreach ( self::$created_orders as $id ) {
+			$item_ids = $wpdb->get_col( $wpdb->prepare( "SELECT order_item_id FROM {$wpdb->prefix}sunshine_order_items WHERE order_id = %d", $id ) );
+			foreach ( $item_ids as $item_id ) {
+				$wpdb->delete( $wpdb->prefix . 'sunshine_order_itemmeta', array( 'order_item_id' => $item_id ) );
+			}
+			$wpdb->delete( $wpdb->prefix . 'sunshine_order_items', array( 'order_id' => $id ) );
+			wp_delete_post( $id, true );
+		}
+		self::$created_orders = array();
 		foreach ( self::$created_posts as $id ) {
 			wp_delete_post( $id, true );
 		}
@@ -291,3 +364,4 @@ class SPC_Totals_Test {
 }
 
 class SPC_Totals_Test_Skip extends Exception {}
+class SPC_Totals_Test_Done extends Exception {}

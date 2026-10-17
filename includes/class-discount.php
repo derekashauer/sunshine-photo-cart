@@ -328,15 +328,12 @@ class SPC_Discount extends Sunshine_Data {
 		$max_product_quantity = $this->max_product_quantity();
 
 		$discountable_total = 0;
+		$eligible_total     = 0;
 		$product_total      = array();
 
 		foreach ( $cart as $item ) {
 
 			// Skip the cart item if it does not meet the rules for it.
-			if ( $tax && ! $item->is_taxable() ) {
-				continue;
-			}
-
 			if ( ! empty( $allowed_products ) && ! in_array( $item->get_product_id(), $allowed_products ) ) {
 				continue;
 			}
@@ -361,6 +358,17 @@ class SPC_Discount extends Sunshine_Data {
 				continue;
 			}
 
+			// Everything this discount applies to, taxed or not. A fixed amount off the order
+			// is shared between the taxed and untaxed items.
+			$eligible_total += $item->get_total();
+			if ( SPC()->get_option( 'discount_after_tax' ) || 'yes' === SPC()->get_option( 'price_has_tax' ) ) {
+				$eligible_total += $item->get_tax_total();
+			}
+
+			if ( $tax && ! $item->is_taxable() ) {
+				continue;
+			}
+
 			// This is the total after the line item discount has been applied.
 			$discountable_total += $item->get_total();
 
@@ -370,7 +378,6 @@ class SPC_Discount extends Sunshine_Data {
 			}
 			$product_total[ $item->get_product_id() ] += $item->get_total();
 			$product_qty[ $item->get_product_id() ]   += $item->get_qty();
-			$product_price[ $item->get_product_id() ]  = $item->get_subtotal();
 
 			if ( SPC()->get_option( 'discount_after_tax' ) || 'yes' === SPC()->get_option( 'price_has_tax' ) ) {
 				$discountable_total                       += $item->get_tax_total();
@@ -381,8 +388,8 @@ class SPC_Discount extends Sunshine_Data {
 		if ( $max_product_quantity > 0 && ! empty( $product_qty ) ) {
 			foreach ( $product_qty as $product_id => $qty ) {
 				if ( $qty > $max_product_quantity ) {
+					$product_total[ $product_id ] = $product_total[ $product_id ] / $qty * $max_product_quantity;
 					$product_qty[ $product_id ]   = $max_product_quantity;
-					$product_total[ $product_id ] = $product_price[ $product_id ] * $max_product_quantity;
 				}
 			}
 		}
@@ -395,7 +402,9 @@ class SPC_Discount extends Sunshine_Data {
 
 			$percent = $this->get_amount();
 
-			if ( $this->apply_to_shipping() ) {
+			// For the taxed part of the discount, shipping only counts when shipping is taxed.
+			$shipping_method = SPC()->cart->get_shipping_method();
+			if ( $this->apply_to_shipping() && ( ! $tax || ( $shipping_method && $shipping_method->is_taxable() ) ) ) {
 				$discountable_total += SPC()->cart->get_shipping();
 				if ( SPC()->get_option( 'discount_after_tax' ) ) {
 					$discountable_total += SPC()->cart->get_shipping_tax();
@@ -407,7 +416,12 @@ class SPC_Discount extends Sunshine_Data {
 
 		} elseif ( $type == 'amount-total' ) {
 
-			return $this->get_amount();
+			// Never more than what the discount applies to. The taxed part is its share of that.
+			$discount = min( $this->get_amount(), $eligible_total );
+			if ( $tax && $eligible_total > 0 ) {
+				$discount = round( $discount * $discountable_total / $eligible_total, 2 );
+			}
+			return $discount;
 
 		} elseif ( $type == 'percent-product' ) {
 
