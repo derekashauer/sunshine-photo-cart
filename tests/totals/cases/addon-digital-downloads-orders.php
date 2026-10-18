@@ -459,12 +459,12 @@ $dl_test(
 		$t::money( 100, $order->get_total(), 'order total' );
 		$t::same( true, $order->is_paid(), 'paid' );
 		$t::same( 10, $dl_download_credits( $customer_id ), 'download credits given when paid' );
-		$t::same( 25, ( new SPC_Customer( $customer_id ) )->get_credits(), 'store credit given when paid' );
+		$t::money( 25, ( new SPC_Customer( $customer_id ) )->get_credits(), 'store credit given when paid' );
 
 		// The photographer marks the paid order as done, the way the order screen does.
 		$order->set_status( 'shipped' );
 		$t::same( 10, $dl_download_credits( $customer_id ), 'still 10 download credits after marking it shipped' );
-		$t::same( 25, ( new SPC_Customer( $customer_id ) )->get_credits(), 'still 25 store credit after marking it shipped' );
+		$t::money( 25, ( new SPC_Customer( $customer_id ) )->get_credits(), 'still 25 store credit after marking it shipped' );
 	}
 );
 
