@@ -221,7 +221,7 @@
 <?php foreach ( $cart as $cart_item ) { ?>
 	<tr class="sunshine--cart-item <?php echo esc_attr( $cart_item->classes() ); ?>">
 		<td class="sunshine--cart-item--image" data-label="<?php esc_attr_e( 'Image', 'sunshine-photo-cart' ); ?>">
-			<?php echo wp_kses_post( $cart_item->get_image_html( '', true, array( 'width' => '50' ) ) ); ?>
+			<?php echo wp_kses_post( $cart_item->get_image_html( 'sunshine-thumbnail', true, array( 'width' => '50' ) ) ); ?>
 		</td>
 		<td class="sunshine--cart-item--name" data-label="<?php esc_attr_e( 'Product', 'sunshine-photo-cart' ); ?>">
 			<div class="sunshine--cart-item--product-name"><?php echo wp_kses_post( $cart_item->get_name() ); ?></div>

@@ -82,26 +82,6 @@ if ( $uninstall ) {
 
 		sunshine_uninstall_folder( $folder );
 
-		// Check if the path exists and is a directory
-	    if (is_dir($folderPath)) {
-	        // Get a list of all the files and directories inside the folder
-	        $files = array_diff(scandir($folderPath), array('.', '..'));
-
-	        // Loop through the files and directories
-	        foreach ($files as $file) {
-	            // If the file is a directory, recursively call this function
-	            if (is_dir("$folderPath/$file")) {
-	                deleteFolder("$folderPath/$file");
-	            } else {
-	                // If the file is a file, delete it
-	                unlink("$folderPath/$file");
-	            }
-	        }
-
-	        // Once all the files have been deleted, delete the folder itself
-	        rmdir($folderPath);
-	    }
-
 	}
 
 	do_action( 'sunshine_uninstall' );

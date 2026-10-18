@@ -112,34 +112,6 @@ function sunshine_sort_payment_methods() {
 
 }
 
-add_action( 'wp_ajax_sunshine_delete_payment_method', 'sunshine_delete_payment_method' );
-function sunshine_delete_payment_method() {
-	global $wpdb;
-
-	if ( ! current_user_can( 'sunshine_manage_options' ) || ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-delete-payment-method' ) ) {
-		return false;
-	}
-
-	$id              = sanitize_text_field( $_REQUEST['instance_id'] );
-	$payment_methods = sunshine_get_available_payment_methods();
-	if ( array_key_exists( $id, $payment_methods ) ) {
-		// Remove this from the available methods array
-		unset( $payment_methods[ $id ] );
-	}
-
-	// Update the payment methods settings
-	SPC()->update_option( 'payment_methods', $payment_methods );
-
-	// Delete all settings related to this payment method
-	if ( '' !== $id ) {
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", '%' . $wpdb->esc_like( $id ) ) );
-	}
-
-	echo true;
-	exit;
-
-}
-
 add_action( 'wp_ajax_sunshine_activate_payment_method', 'sunshine_activate_payment_method' );
 function sunshine_activate_payment_method() {
 

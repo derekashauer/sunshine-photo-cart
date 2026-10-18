@@ -709,6 +709,12 @@ RewriteRule \.(jpe?g)$ - [L,NC]";
 		update_option( 'sunshine_download_htaccess_version', $rules_version, false );
 	}
 
+	// Photos waiting in the FTP import folder are only ever read by PHP, never by a browser.
+	$import_dir = sunshine_get_import_directory();
+	if ( is_dir( $import_dir ) && ! file_exists( $import_dir . '/.htaccess' ) ) {
+		file_put_contents( $import_dir . '/.htaccess', "<IfModule mod_authz_core.c>\n\tRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n\tDeny from all\n</IfModule>\n" );
+	}
+
 }
 
 add_action( 'sunshine_daily', 'sunshine_create_htaccess' );

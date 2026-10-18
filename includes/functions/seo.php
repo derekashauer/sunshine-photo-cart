@@ -142,8 +142,9 @@ function sunshine_get_seo_sitemap_exclude_ids() {
 				'compare' => '!=',
 			),
 			array(
-				'key'   => 'access_type',
-				'value' => 'url',
+				'key'     => 'access_type',
+				'value'   => array( 'url', 'account' ),
+				'compare' => 'IN',
 			),
 		),
 	);

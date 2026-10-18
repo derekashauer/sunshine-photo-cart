@@ -757,3 +757,62 @@ function sunshine_downsize_unprocessed_image( $out, $attachment_id, $size ) {
 
 	return array( sunshine_image_placeholder_url(), $width, $height, true );
 }
+
+/**
+ * Whether the current visitor should only ever get resized copies of this image, never the
+ * original file: a gallery photo, seen by someone who can't edit that gallery.
+ *
+ * @param int $attachment_id Attachment ID.
+ * @return bool
+ */
+function sunshine_hide_original_image( $attachment_id ) {
+	$parent_id = wp_get_post_parent_id( $attachment_id );
+	return $parent_id && 'sunshine-gallery' === get_post_type( $parent_id ) && ! current_user_can( 'edit_post', $parent_id );
+}
+
+/**
+ * Never hand a visitor a gallery photo's original file, whatever size a theme or plugin asks for.
+ *
+ * Sunshine only makes its own sizes, and WordPress falls back to the original for any size that
+ * was never made (thumbnail, medium, woocommerce_single...) and for 'full'. Those requests get the
+ * large size instead, which is the one Sunshine watermarks. People who can edit the gallery
+ * still get the real thing.
+ */
+add_filter( 'image_downsize', 'sunshine_downsize_hide_original', 6, 3 );
+function sunshine_downsize_hide_original( $out, $attachment_id, $size ) {
+	if ( false !== $out || 'sunshine-large' === $size || ! sunshine_hide_original_image( $attachment_id ) ) {
+		return $out;
+	}
+
+	// A resized copy of the size asked for exists, so WordPress will use that, not the original.
+	$metadata = wp_get_attachment_metadata( $attachment_id );
+	if ( is_string( $size ) && 'full' !== $size && ! empty( $metadata['sizes'][ $size ]['file'] ) ) {
+		return $out;
+	}
+	if ( is_array( $size ) && image_get_intermediate_size( $attachment_id, $size ) ) {
+		return $out;
+	}
+
+	if ( empty( $metadata['sizes']['sunshine-large']['file'] ) ) {
+		return $out;
+	}
+
+	return image_downsize( $attachment_id, 'sunshine-large' );
+}
+
+/**
+ * Leave the original file out of the choices WordPress gives browsers (srcset), for the same visitors.
+ */
+add_filter( 'wp_calculate_image_srcset', 'sunshine_srcset_hide_original', 10, 5 );
+function sunshine_srcset_hide_original( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
+	if ( empty( $sources ) || empty( $image_meta['file'] ) || ! sunshine_hide_original_image( $attachment_id ) ) {
+		return $sources;
+	}
+	$original = wp_basename( $image_meta['file'] );
+	foreach ( $sources as $width => $source ) {
+		if ( wp_basename( $source['url'] ) === $original ) {
+			unset( $sources[ $width ] );
+		}
+	}
+	return $sources;
+}

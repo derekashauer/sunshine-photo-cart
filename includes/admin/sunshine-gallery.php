@@ -995,42 +995,6 @@ function sunshine_admin_gallery_ajax_check( $gallery_id ) {
 	return sunshine_get_gallery( $gallery_id );
 }
 
-add_action( 'wp_ajax_sunshine_gallery_add_media_images', 'sunshine_gallery_add_media_images' );
-function sunshine_gallery_add_media_images() {
-
-	check_ajax_referer( 'sunshine_gallery_add_media_images', 'security' );
-	sunshine_admin_gallery_ajax_check( $_POST['gallery_id'] );
-
-	$gallery_id = intval( $_POST['gallery_id'] );
-	$image_ids  = array_map( 'intval', $_POST['image_ids'] );
-	$gallery    = sunshine_get_gallery( $gallery_id );
-	$gallery->set_image_ids( $image_ids );
-
-	/*
-	 Don't need this as we are not allowing things to be moved into this gallery
-	// Set these images to this gallery
-	$i = 0;
-	foreach ( $image_ids as $image_id ) {
-		wp_update_post(array(
-			'ID' => $image_id,
-			'post_parent' => $gallery_id,
-			'menu_order' => $i++
-		));
-	}
-	*/
-
-	$image_html = '';
-	foreach ( $image_ids as $image_id ) {
-		$image_html .= sunshine_admin_gallery_image_thumbnail( $image_id, false );
-	}
-	wp_send_json_success(
-		array(
-			'image_html' => $image_html,
-		)
-	);
-
-}
-
 add_action( 'wp_ajax_sunshine_gallery_upload', 'sunshine_gallery_admin_ajax_upload' );
 function sunshine_gallery_admin_ajax_upload() {
 
