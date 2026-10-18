@@ -363,3 +363,43 @@ $admin_order_changes_test(
 		$t::same( false, sunshine_get_session_date( $ids['session_date'] )->is_booked(), 'session date stays free' );
 	}
 );
+
+// Cancelled and refunded give the stock back once between them; set back to New, the order
+// takes it again. 5 in stock, 2 on a cheque order.
+$admin_order_changes_test(
+	'Cancel, Refunded, then New again: Sell Anything stock is given back once and taken again',
+	function () use ( $t, $admin_order_changes_checkout, $admin_order_changes_save_status, $admin_order_changes_general ) {
+		$general = $admin_order_changes_general( 15, 5 );
+		$t::add( $general, 2 );
+		$order = $admin_order_changes_checkout( 'offline' );
+		$t::same( 3, (int) get_post_meta( $general, 'stock', true ), 'stock 3 after checkout' );
+
+		$admin_order_changes_save_status( $order->get_id(), 'cancelled' );
+		$t::same( 5, (int) get_post_meta( $general, 'stock', true ), 'stock back to 5 after cancelling' );
+		$admin_order_changes_save_status( $order->get_id(), 'refunded' );
+		$t::same( 5, (int) get_post_meta( $general, 'stock', true ), 'still 5 after also marking it refunded' );
+		$admin_order_changes_save_status( $order->get_id(), 'new' );
+		$t::same( 3, (int) get_post_meta( $general, 'stock', true ), 'stock 3 again once the order is New' );
+		$admin_order_changes_save_status( $order->get_id(), 'cancelled' );
+		$t::same( 5, (int) get_post_meta( $general, 'stock', true ), 'stock back to 5 after cancelling again' );
+	}
+);
+
+// Two in the cart, but another customer buys all but one before this customer pays. The
+// checkout stops before payment and the stock is not taken.
+$admin_order_changes_test(
+	'Sell Anything: checkout stops when the stock ran out while the item was in the cart',
+	function () use ( $t, $admin_order_changes_general ) {
+		$general = $admin_order_changes_general( 15, 3 );
+		$t::add( $general, 2 );
+		update_post_meta( $general, 'stock', '1' );
+		$t::checkout_address();
+		$t::calculate();
+		$order = $t::place_order();
+		$done  = SPC()->cart->process_order();
+		$t::same( true, empty( $done ), 'order is not finished' );
+		$t::same( true, SPC()->cart->has_errors(), 'the customer is told why' );
+		$t::same( 1, (int) get_post_meta( $general, 'stock', true ), 'stock stays at 1' );
+		$t::same( true, empty( sunshine_get_order( $order->get_id() )->get_meta_value( 'order_created_done' ) ), 'nothing was taken for the order' );
+	}
+);

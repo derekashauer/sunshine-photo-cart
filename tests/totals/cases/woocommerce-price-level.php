@@ -1304,6 +1304,117 @@ $wcpl_test(
 	}
 );
 
+/*
+ * Rules agreed after the tests above (Derek, 2026-10-17): price level 0, the product's normal
+ * WooCommerce price, is right for products sold outside a gallery, so it stays. Instead the
+ * add-on refuses products that are always bought from a photo when no photo is sent, and a
+ * gallery named in the request has to be one the shopper can buy from.
+ */
+
+// Prints, multi-image products and packages are only ever added from a photo. Without one the
+// line would get level 0, which can be less than the gallery's level or a product the
+// gallery doesn't sell at all.
+$wcpl_test(
+	'WooCommerce price level: a print, multi-image product or package sent with no photo is refused',
+	function () use ( $t, $wcpl_level, $wcpl_product, $wcpl_gallery, $wcpl_ajax, $wcpl_calculate ) {
+		$wedding = $wcpl_level( 'Wedding' );
+		$gallery = $wcpl_gallery( $wedding );
+		$types   = array(
+			'print'       => '',
+			'multi-image' => 'multi_image',
+			'package'     => 'package',
+		);
+		foreach ( $types as $label => $type ) {
+			// 20 normally, 25 in the Wedding gallery.
+			$product = $wcpl_product(
+				20,
+				array(
+					'name'          => 'Totals WCPL ' . $label,
+					'sunshine_type' => $type,
+					'image_count'   => 'multi_image' === $type ? 2 : '',
+					'level_prices'  => array( $wedding => '25' ),
+				)
+			);
+			$requests = array(
+				'nothing named'          => array(),
+				'only the gallery named' => array( 'gallery_id' => $gallery['id'] ),
+			);
+			foreach ( $requests as $request_label => $fields ) {
+				WC()->cart->empty_cart();
+				$response = $wcpl_ajax(
+					'sunshine_modal_add_item_to_cart',
+					array_merge(
+						array(
+							'product_id' => $product,
+							'qty'        => 1,
+						),
+						$fields
+					)
+				);
+				$t::same( false, ! empty( $response['success'] ), $label . ', ' . $request_label . ': refused' );
+				$t::same( 0, $wcpl_calculate()->get_cart_contents_count(), $label . ', ' . $request_label . ': cart is empty' );
+			}
+		}
+	}
+);
+
+// A download with no photo can still be named with a gallery. The gallery decides its level,
+// so it has to be a gallery the shopper can buy from, checked when it is added.
+$wcpl_test(
+	'WooCommerce price level: a gallery the shopper can\'t open is refused when added, an open one sets the level',
+	function () use ( $t, $wcpl_vip, $wcpl_level, $wcpl_product, $wcpl_gallery, $wcpl_ajax, $wcpl_calculate ) {
+		$vip     = $wcpl_vip();
+		$wedding = $wcpl_level( 'Wedding' );
+		$product = $wcpl_product(
+			20,
+			array(
+				'name'          => 'Totals WCPL download',
+				'sunshine_type' => 'download',
+				'level_prices'  => array(
+					$vip['level'] => '5',
+					$wedding      => '25',
+				),
+			)
+		);
+		$locked  = $wcpl_gallery( $vip['level'], 'password', array( 'password' => 'SECRET' . wp_rand( 1000, 9999 ) ) );
+		$expired = $wcpl_gallery( $vip['level'], 'default', array( 'end_date' => current_time( 'timestamp' ) - DAY_IN_SECONDS ) );
+
+		$closed = array(
+			'private gallery' => $vip['gallery'],
+			'locked gallery'  => $locked['id'],
+			'expired gallery' => $expired['id'],
+		);
+		foreach ( $closed as $label => $gallery_id ) {
+			WC()->cart->empty_cart();
+			$response = $wcpl_ajax(
+				'sunshine_modal_add_item_to_cart',
+				array(
+					'product_id' => $product,
+					'gallery_id' => $gallery_id,
+					'qty'        => 1,
+				)
+			);
+			// Refused right away, not only later at checkout. Kept, it would cost 5.
+			$t::same( false, ! empty( $response['success'] ), $label . ': refused' );
+			$t::same( 0, $wcpl_calculate()->get_cart_contents_count(), $label . ': cart is empty' );
+		}
+
+		// A gallery anyone can open still sets its own price.
+		WC()->cart->empty_cart();
+		$open     = $wcpl_gallery( $wedding );
+		$response = $wcpl_ajax(
+			'sunshine_modal_add_item_to_cart',
+			array(
+				'product_id' => $product,
+				'gallery_id' => $open['id'],
+				'qty'        => 1,
+			)
+		);
+		$t::same( true, ! empty( $response['success'] ), 'open gallery: added' );
+		$t::money( 25, $wcpl_calculate()->get_total( 'edit' ), 'open gallery: at its Wedding price' );
+	}
+);
+
 if ( $wcpl->blocked ) {
 	foreach ( array_unique( $wcpl->blocked ) as $wcpl_url ) {
 		WP_CLI::log( 'BLOCKED REQUEST (woocommerce-price-level) ' . $wcpl_url );
