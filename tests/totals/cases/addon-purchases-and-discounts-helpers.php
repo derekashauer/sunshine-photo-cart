@@ -190,15 +190,18 @@ $purchases_gift_card_applied = function () {
 $purchases_finish_order = function ( $order ) use ( $t ) {
 	SPC()->cart->post_process_order( $order );
 	$order = sunshine_get_order( $order->get_id() );
-	if ( function_exists( 'sunshine_gift_cards_store_order_meta' ) ) {
+	// Newer versions run the order created step (gift cards, sessions) when the order is
+	// finished, once. Older ones only ran it at the end of checkout, so run it here for them.
+	$finishing_runs_it = method_exists( SPC()->cart, 'order_created' );
+	if ( ! $finishing_runs_it && function_exists( 'sunshine_gift_cards_store_order_meta' ) ) {
 		sunshine_gift_cards_store_order_meta( $order, array() );
 		sunshine_gift_cards_create_from_order( $order, array() );
 		sunshine_gift_cards_deduct_balance( $order, array() );
 	}
-	if ( function_exists( 'sunshine_session_fees_checkout_create_order' ) ) {
+	if ( ! $finishing_runs_it && function_exists( 'sunshine_session_fees_checkout_create_order' ) ) {
 		sunshine_session_fees_checkout_create_order( $order );
 	}
-	if ( function_exists( 'sunshine_gift_cards_set_payment_method' ) ) {
+	if ( ! $finishing_runs_it && function_exists( 'sunshine_gift_cards_set_payment_method' ) ) {
 		sunshine_gift_cards_set_payment_method( $order, array() );
 	}
 	$cards = get_posts(
