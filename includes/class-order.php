@@ -1173,8 +1173,9 @@ class SPC_Order extends Sunshine_Data {
 			$item['meta'] = array();
 		}
 
-		if ( ! empty( $item['image_id'] ) ) {
-			$image = $cart_item->get_image();
+		$image = ! empty( $item['image_id'] ) ? $cart_item->get_image() : false;
+		// A photo deleted while it sat in the cart leaves no name to save, but the order still goes through.
+		if ( $image && $image->exists() ) {
 			// $item['gallery_id']   = $cart_item->get_gallery_id();
 			// $item['price_level']   = $image->gallery->get_price_level();
 			// $item['meta']['gallery_name'] = $cart_item->get_gallery_name();
