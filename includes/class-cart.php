@@ -2343,6 +2343,12 @@ class SPC_Cart {
 				$value = '';
 			}
 
+			// Only keep a payment method this cart is offered; a request can name any method.
+			if ( 'payment_method' === $field['id'] && '' !== $value && ! array_key_exists( $value, (array) sunshine_get_allowed_payment_methods() ) ) {
+				SPC()->log( 'Checkout ignored a payment method that is not allowed: ' . sanitize_key( $value ) );
+				$value = '';
+			}
+
 			// Save this value to checkout session data (even if invalid, so when we reload form it can prepopulate still)
 			if ( $field['type'] != 'password' ) {
 				$this->set_checkout_data_item( $field['id'], $value );
@@ -2792,6 +2798,23 @@ class SPC_Cart {
 			return false;
 		}
 
+		// A method this cart isn't offered (one turned off, limited to admins, or only for free
+		// orders) can still be named in a crafted request, so check the order's method here.
+		if ( $order->get_total() > 0 && ! array_key_exists( $order->get_payment_method(), (array) sunshine_get_allowed_payment_methods() ) ) {
+			SPC()->log( 'Blocked payment: payment method ' . $order->get_payment_method() . ' is not allowed for order ' . $order->get_id() );
+			$this->add_error( __( 'Please select a payment method before completing your order.', 'sunshine-photo-cart' ) );
+			return false;
+		}
+
+		// Store credit, gift cards and limited discount codes can be used up by another order
+		// between saving this order and paying for it. Check before any payment is taken.
+		$this->check_order_still_covered( $order );
+		do_action( 'sunshine_checkout_before_payment', $order );
+		if ( $this->has_errors() ) {
+			SPC()->log( 'Blocked payment: ' . json_encode( $this->get_errors() ) );
+			return false;
+		}
+
 		// do_action( 'sunshine_checkout_process_payment', $this );
 		if ( $this->get_checkout_data_item( 'payment_method' ) ) {
 			SPC()->log( 'Processing payment action: ' . $this->get_checkout_data_item( 'payment_method' ) );
@@ -2813,9 +2836,6 @@ class SPC_Cart {
 		} else {
 			SPC()->log( 'Not doing post process in process_order' );
 		}
-
-		SPC()->log( 'Doing sunshine_checkout_create_order' );
-		do_action( 'sunshine_checkout_create_order', $order, $data );
 
 		if ( apply_filters( 'sunshine_order_clear_cart', true, $order ) ) {
 			// Clear checkout data from session data.
@@ -2860,12 +2880,21 @@ class SPC_Cart {
 			$order->set_status( $order_status, 'Checkout is setting status to ' . $order_status );
 		}
 
-		if ( $order->get_credits() > 0 ) {
-			SPC()->customer->decrease_credits( $order->get_credits() );
-			SPC()->log( 'Decreasing customer credits by ' . $order->get_credits() );
+		// The order's own customer, not whoever is making this request: a payment service's
+		// notice finishes orders with nobody logged in, and an admin can finish one too.
+		$customer = $order->get_customer();
+
+		if ( $order->get_credits() > 0 && $customer ) {
+			// Spent elsewhere while this order was being paid on another site: the payment is
+			// already taken, so say plainly on the order how much store credit was missing.
+			if ( $customer->get_credits() < $order->get_credits() ) {
+				/* translators: 1: store credit the order used, 2: store credit the customer had left */
+				$order->add_log( sprintf( __( 'This order used %1$s of store credit, but the customer only had %2$s left when it was paid. The difference was not collected.', 'sunshine-photo-cart' ), sunshine_price( $order->get_credits() ), sunshine_price( $customer->get_credits() ) ) );
+			}
+			$customer->decrease_credits( $order->get_credits() );
+			SPC()->log( 'Decreasing customer ' . $customer->get_id() . ' credits by ' . $order->get_credits() );
 		}
 
-		$customer = $order->get_customer();
 		if ( $customer ) {
 			SPC()->log( 'Recalculating customer stats' );
 			$customer->recalculate_stats();
@@ -2878,11 +2907,13 @@ class SPC_Cart {
 				$discount = sunshine_get_discount_by_code( $discount_code );
 				$discount->increment_use_count();
 				$discount->increment_use_count_by( $order->get_email() );
-				if ( is_user_logged_in() ) {
-					$discount->increment_use_count_by( get_current_user_id() );
+				if ( $order->get_customer_id() ) {
+					$discount->increment_use_count_by( $order->get_customer_id() );
 				}
 			}
 		}
+
+		$this->order_created( $order );
 
 		if ( apply_filters( 'sunshine_checkout_allow_order_notify', true, $order ) ) {
 			SPC()->log( 'Notifying order: ' . $order->get_id() );
@@ -2896,6 +2927,49 @@ class SPC_Cart {
 			$wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock_name ) );
 		}
 
+	}
+
+	/**
+	 * Run sunshine_checkout_create_order for an order, once.
+	 *
+	 * Add-ons use it to take gift card balances, make bought gift cards, book sessions and lower
+	 * stock. It runs when the order is finished, which for payments made on another site is a
+	 * later request with no checkout session, so the order's saved checkout data is passed then.
+	 */
+	public function order_created( $order ) {
+		if ( $order->get_meta_value( 'order_created_done' ) ) {
+			return;
+		}
+		$order->update_meta_value( 'order_created_done', current_time( 'timestamp' ) );
+		$data = ( (int) SPC()->session->get( 'checkout_order_id' ) === (int) $order->get_id() ) ? $this->get_checkout_data() : array();
+		if ( empty( $data ) ) {
+			$data = (array) $order->get_meta_data();
+		}
+		SPC()->log( 'Doing sunshine_checkout_create_order for order ' . $order->get_id() );
+		do_action( 'sunshine_checkout_create_order', $order, $data );
+	}
+
+	/**
+	 * Add an error when store credit or a discount code on the order has been used up since
+	 * the order was saved, for example by an order placed in another browser tab.
+	 */
+	private function check_order_still_covered( $order ) {
+		$credits = (float) $order->get_credits();
+		if ( $credits > 0 ) {
+			$customer = $order->get_customer();
+			if ( ! $customer || $customer->get_credits() < $credits ) {
+				SPC()->log( 'Blocked payment: order ' . $order->get_id() . ' uses ' . $credits . ' credits the customer no longer has' );
+				$this->add_error( __( 'Your store credit has changed. Please review your order and try again.', 'sunshine-photo-cart' ) );
+			}
+		}
+		foreach ( array_filter( (array) $order->get_discounts() ) as $discount_code ) {
+			$discount = function_exists( 'sunshine_get_discount_by_code' ) ? sunshine_get_discount_by_code( $discount_code ) : false;
+			if ( $discount && $discount->exists() && $discount->get_max_uses() && $discount->get_use_count() >= $discount->get_max_uses() ) {
+				SPC()->log( 'Blocked payment: discount ' . $discount_code . ' has no uses left for order ' . $order->get_id() );
+				/* translators: %s is the discount code */
+				$this->add_error( sprintf( __( 'Discount "%s" can no longer be used. Please review your order and try again.', 'sunshine-photo-cart' ), $discount_code ) );
+			}
+		}
 	}
 
 	public function get_active_section() {

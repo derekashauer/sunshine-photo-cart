@@ -132,6 +132,8 @@ $pmc_test(
 	'A customer cannot use the Admin Only Test method with a crafted request',
 	function () use ( $t, $pmc_place_and_finish ) {
 		$t::option( 'test_admin', 1 );
+		// Newer versions call it "Allow Customers" and keep the Test method to admins when it's off.
+		$t::option( 'test_allow_customers', '' );
 		$t::customer();
 		// Proof the method really is off-limits to this customer.
 		$t::same( false, array_key_exists( 'test', (array) sunshine_get_allowed_payment_methods() ), 'Test is not an allowed method for a non-admin customer' );
