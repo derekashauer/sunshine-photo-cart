@@ -226,6 +226,9 @@ $t::test(
 		);
 		$t::same( 1010, intval( $orders_after_refunds_sent_amount( $first, 'v1/refunds' ) ), 'first refund in cents' );
 		$t::same( array(), $warnings, 'no PHP warnings while refunding and emailing the customer' );
+		// A part refund must not mark the order Refunded: Reports, the dashboard and the Gift Cards
+		// add-on treat a Refunded order as having nothing left.
+		$t::same( 'new', sunshine_get_order( $order->get_id() )->get_status(), 'status after a part refund' );
 
 		$second = $orders_after_refunds_offline(
 			$orders_after_refunds_reply( 6432 ),
@@ -239,6 +242,7 @@ $t::test(
 		$order = sunshine_get_order( $order->get_id() );
 		$t::money( 64.32, $order->get_refund_total(), 'refunds recorded on the order' );
 		$t::money( 0, $order->get_total_minus_refunds(), 'nothing left to refund' );
+		$t::same( 'refunded', $order->get_status(), 'status once everything is refunded' );
 	}
 );
 

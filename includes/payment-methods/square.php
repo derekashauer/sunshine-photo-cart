@@ -1896,9 +1896,13 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			return;
 		}
 
-		$order->set_status( 'refunded' );
 		// No $order->update() here: it would switch a fully refunded order's payment method to Free.
 		$order->add_refund( $refund_amount );
+		// Only a refund of everything that was left makes the order Refunded. A part refund
+		// keeps the order's status; the refund is recorded on it and comes off its total.
+		if ( $order->get_total_minus_refunds() < 0.005 ) {
+			$order->set_status( 'refunded' );
+		}
 
 		if ( ! empty( $refund_app_fee ) ) {
 			/* translators: %s is the refund amount formatted as price */
