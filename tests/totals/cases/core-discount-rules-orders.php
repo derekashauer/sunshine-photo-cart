@@ -508,6 +508,8 @@ $t::test(
 		$t::same( true, $discount_rules_orders_enter( $code ), 'first customer: accepted' );
 		$discount_rules_orders_finish( $t::place_order() );
 		$t::customer();
+		// A different shopper checks out with their own email address.
+		$t::checkout_email( 'totals-second-shopper@example.com' );
 		SPC()->session->set( 'discounts', '' );
 		$t::add( $product );
 		$t::calculate();

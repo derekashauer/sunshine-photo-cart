@@ -18,6 +18,7 @@ class SPC_Totals_Test {
 	private static $created_users  = array();
 	private static $created_orders = array();
 	private static $created_terms  = array();
+	private static $checkout_email = 'totals-test@example.com';
 	private static $passed         = 0;
 	private static $failed         = array();
 	private static $skipped        = array();
@@ -106,6 +107,7 @@ class SPC_Totals_Test {
 		// Newer versions keep the Test payment method to admins unless this is on.
 		self::option( 'test_allow_customers', 1 );
 
+		self::$checkout_email = 'totals-test@example.com';
 		wp_set_current_user( 0 );
 		SPC()->customer = new SPC_Customer( 0 );
 
@@ -286,11 +288,19 @@ class SPC_Totals_Test {
 	}
 
 	/**
+	 * Use a different checkout email from now on in this test, for a second shopper.
+	 */
+	public static function checkout_email( $email ) {
+		self::$checkout_email = $email;
+		SPC()->cart->set_checkout_data_item( 'email', $email );
+	}
+
+	/**
 	 * Fill in the checkout form with a US address, so an order can be placed.
 	 */
 	public static function checkout_address() {
 		$fields = array(
-			'email'               => 'totals-test@example.com',
+			'email'               => self::$checkout_email,
 			'first_name'          => 'Totals',
 			'last_name'           => 'Test',
 			'phone'               => '5555555555',
