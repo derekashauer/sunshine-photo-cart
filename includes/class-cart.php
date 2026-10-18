@@ -2889,9 +2889,23 @@ class SPC_Cart {
 	public function create_customer( $data ) {
 		if ( ! is_user_logged_in() && ! empty( $data['email'] ) ) {
 
+			// Same limit as the signup popup on "that email already has an account" answers. Once a
+			// visitor reaches it, stop answering: they carry on as a guest, so the answer can't be
+			// read from what happens and a real sale isn't lost. Stores that require an account
+			// can't take a guest order, so they ask the visitor to try again later.
+			if ( sunshine_is_rate_limited( 'signup_existing_email', 5 ) ) {
+				SPC()->log( 'Checkout account check skipped - too many attempts with emails that already have an account' );
+				if ( ! SPC()->get_option( 'allow_guest_checkout' ) ) {
+					$this->add_error( __( 'Too many signup attempts, please try again later', 'sunshine-photo-cart' ) );
+					wp_send_json_error();
+				}
+				return;
+			}
+
 			// Get user by email address.
 			$user = get_user_by( 'email', $data['email'] );
 			if ( $user ) {
+				sunshine_add_rate_limit_attempt( 'signup_existing_email', HOUR_IN_SECONDS );
 				SPC()->log( 'User account already exists with that email address' );
 				$this->add_error( __( 'User account already exists with that email address - please login to continue', 'sunshine-photo-cart' ) );
 				wp_send_json_error();

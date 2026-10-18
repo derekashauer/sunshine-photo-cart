@@ -242,9 +242,18 @@ function sunshine_modal_signup() {
 		wp_send_json_error( __( 'Invalid email address', 'sunshine-photo-cart' ) );
 	}
 
+	// Each "that email already has an account" answer tells the visitor who is a customer, so one
+	// visitor only gets a few. After that, signups stop for a while whatever the email, so the
+	// answer can't be worked out from which emails still go through.
+	if ( sunshine_is_rate_limited( 'signup_existing_email', 5 ) ) {
+		SPC()->log( 'Signup blocked - too many attempts with emails that already have an account' );
+		wp_send_json_error( __( 'Too many signup attempts, please try again later', 'sunshine-photo-cart' ) );
+	}
+
 	// Get user by email address.
 	$user = get_user_by( 'email', $email );
 	if ( $user ) {
+		sunshine_add_rate_limit_attempt( 'signup_existing_email', HOUR_IN_SECONDS );
 		wp_send_json_error( __( 'An account could not be created with that email address. If you already have one, log in or reset your password.', 'sunshine-photo-cart' ) );
 	}
 
