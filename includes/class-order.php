@@ -1141,7 +1141,11 @@ class SPC_Order extends Sunshine_Data {
 		// Get more verbose details on the cart items.
 		// We want this saved to database so it is permanent should products/images be removed in the future.
 
-		// Instead of inserting, we are going to delete and re-insert.
+		// Instead of inserting, we are going to delete and re-insert, line details included.
+		$old_item_ids = $wpdb->get_col( $wpdb->prepare( "SELECT order_item_id FROM {$wpdb->prefix}sunshine_order_items WHERE order_id = %d", $this->get_id() ) );
+		foreach ( $old_item_ids as $old_item_id ) {
+			$wpdb->delete( $wpdb->prefix . 'sunshine_order_itemmeta', array( 'order_item_id' => $old_item_id ) );
+		}
 		$wpdb->delete(
 			$wpdb->prefix . 'sunshine_order_items',
 			array( 'order_id' => $this->get_id() )

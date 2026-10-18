@@ -2612,6 +2612,18 @@ class SPC_Cart {
 			$order = sunshine_get_order( $order_id );
 			if ( $order && $order->exists() && ! $order->is_paid() ) {
 				SPC()->log( 'Order already exists during init order so using existing order to update: ' . $order_id );
+				// A second try after a declined or cancelled payment starts the order over: waiting
+				// for payment again, and dated now rather than when the first try was made.
+				if ( in_array( $order->get_status(), array( 'failed', 'cancelled' ), true ) ) {
+					$order->set_status( 'pending', __( 'Customer is trying to pay again', 'sunshine-photo-cart' ) );
+				}
+				wp_update_post(
+					array(
+						'ID'            => $order->get_id(),
+						'post_date'     => current_time( 'mysql' ),
+						'post_date_gmt' => current_time( 'mysql', 1 ),
+					)
+				);
 			} elseif ( $order && $order->exists() && $order->get_status() != 'pending' ) {
 				SPC()->log( 'Order is not the expected status of pending so something went wrong during checkout process: ' . $order->get_status() );
 				$url = $order->get_received_permalink();
@@ -2700,6 +2712,10 @@ class SPC_Cart {
 		}
 		if ( ! empty( $this->shipping_method ) ) {
 			$order->set_shipping_method( $this->shipping_method->get_instance_id() );
+		} else {
+			// Saving the order again with nothing left to ship drops the first try's method.
+			$order->update_meta_value( 'shipping_method', '' );
+			$order->update_meta_value( 'shipping_method_name', '' );
 		}
 		if ( ! empty( $this->payment_method ) ) {
 			$order->set_payment_method( $this->payment_method->get_id() );
