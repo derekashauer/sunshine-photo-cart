@@ -146,8 +146,8 @@ $t::test(
 );
 
 /*
- * QuickPay: the cancel link deletes the order when it is still waiting for payment. The order
- * keeps the QuickPay payment ID, so QuickPay can be asked whether it was paid.
+ * QuickPay: the cancel link marks the visitor's own unpaid order Cancelled (never deletes it). The
+ * order keeps the QuickPay payment ID, so QuickPay can be asked whether it was paid.
  */
 
 // Send the customer to QuickPay. Returns the continue and cancel links QuickPay was given.
@@ -217,11 +217,11 @@ $payment_results_quickpay_use = function () use ( $t, $payment_results_settings 
 	);
 };
 
-// Giving up before paying: the waiting order goes away, and checking out again makes a fresh
-// order for the same total. Deleting an order should also remove its saved lines.
+// Giving up before paying: the waiting order is kept but marked Cancelled (a cancel link never
+// deletes an order), its lines stay, and checking out again costs the same.
 $t::test(
-	'QuickPay: cancelling before paying removes the unpaid order, and checking out again costs the same',
-	function () use ( $t, $payment_results_quickpay_use, $payment_results_place, $payment_results_quickpay_start, $payment_results_quickpay_lookup, $payment_results_visit, $payment_results_exists, $payment_results_links_errors, $payment_results_links_line_rows ) {
+	'QuickPay: cancelling before paying cancels the unpaid order, and checking out again costs the same',
+	function () use ( $t, $payment_results_quickpay_use, $payment_results_place, $payment_results_quickpay_start, $payment_results_quickpay_lookup, $payment_results_visit, $payment_results_exists, $payment_results_fresh, $payment_results_links_errors, $payment_results_links_line_rows ) {
 		$payment_results_quickpay_use();
 		$t::tax( 10 );
 		$t::add( $t::product( 100 ) );
@@ -237,8 +237,9 @@ $t::test(
 			$payment_results_quickpay_lookup( $order, 11000, false ),
 			'QuickPay cancel link'
 		);
-		$t::same( false, $payment_results_exists( $order->get_id() ), 'the unpaid order is removed' );
-		$t::same( 0, $payment_results_links_line_rows( $order->get_id() ), 'its order lines are removed too' );
+		$t::same( true, $payment_results_exists( $order->get_id() ), 'the unpaid order is kept, not deleted' );
+		$t::same( 'cancelled', $payment_results_fresh( $order->get_id() )->get_status(), 'the unpaid order is marked Cancelled' );
+		$t::same( 1, $payment_results_links_line_rows( $order->get_id() ), 'its order line is kept' );
 		$t::same( true, false !== stripos( $payment_results_links_errors(), 'cancelled' ), 'the customer is told the payment was cancelled' );
 
 		$t::new_request();
@@ -285,7 +286,7 @@ $t::test(
 );
 
 /*
- * Paystack: the cancel link deletes the order whenever it is not marked paid. The order keeps
+ * Paystack: the cancel link marks the visitor's own unpaid order Cancelled (never deletes it). It keeps
  * the Paystack transaction reference, so Paystack can be asked whether it was paid.
  */
 
@@ -374,8 +375,8 @@ $payment_results_paystack_open = function ( $url, $reference, $callback, $reply,
 };
 
 $t::test(
-	'Paystack: cancelling before paying removes the unpaid order, and checking out again costs the same',
-	function () use ( $t, $payment_results_paystack_use, $payment_results_place, $payment_results_paystack_start, $payment_results_paystack_lookup, $payment_results_paystack_open, $payment_results_exists, $payment_results_links_errors ) {
+	'Paystack: cancelling before paying cancels the unpaid order, and checking out again costs the same',
+	function () use ( $t, $payment_results_paystack_use, $payment_results_place, $payment_results_paystack_start, $payment_results_paystack_lookup, $payment_results_paystack_open, $payment_results_exists, $payment_results_fresh, $payment_results_links_errors, $payment_results_links_line_rows ) {
 		$payment_results_paystack_use();
 		$t::tax( 10 );
 		$t::add( $t::product( 100 ) );
@@ -392,7 +393,9 @@ $t::test(
 			$payment_results_paystack_lookup( 'spcref' . $order->get_id(), 11000, 'abandoned' ),
 			'Paystack cancel link'
 		);
-		$t::same( false, $payment_results_exists( $order->get_id() ), 'the unpaid order is removed' );
+		$t::same( true, $payment_results_exists( $order->get_id() ), 'the unpaid order is kept, not deleted' );
+		$t::same( 'cancelled', $payment_results_fresh( $order->get_id() )->get_status(), 'the unpaid order is marked Cancelled' );
+		$t::same( 1, $payment_results_links_line_rows( $order->get_id() ), 'its order line is kept' );
 		$t::same( true, false !== stripos( $payment_results_links_errors(), 'cancelled' ), 'the customer is told the payment was cancelled' );
 
 		$t::new_request();
@@ -485,14 +488,13 @@ $t::test(
 );
 
 /*
- * PayPal Legacy: the cancel link (cancel_return in the PayPal form) deletes the order. Its
- * security check is the same for every order, and the order number is a separate part of the
- * link.
+ * PayPal Legacy: the cancel link (cancel_return in the PayPal form) marks the visitor's own
+ * unpaid order Cancelled. It never deletes an order.
  */
 
 $t::test(
 	'PayPal Legacy: cancelling before paying lets the customer check out again for the same total',
-	function () use ( $t, $payment_results_legacy_settings, $payment_results_place, $payment_results_legacy_form, $payment_results_visit, $payment_results_exists, $payment_results_links_errors, $payment_results_links_line_rows ) {
+	function () use ( $t, $payment_results_legacy_settings, $payment_results_place, $payment_results_legacy_form, $payment_results_visit, $payment_results_exists, $payment_results_fresh, $payment_results_links_errors, $payment_results_links_line_rows ) {
 		$options = $payment_results_legacy_settings();
 		$t::tax( 10 );
 		$t::add( $t::product( 100 ) );
@@ -509,8 +511,9 @@ $t::test(
 			'PayPal Legacy cancel link'
 		);
 		$t::same( sunshine_get_page_url( 'checkout' ), $run['redirect'], 'customer is sent back to the checkout' );
-		$t::same( false, $payment_results_exists( $order->get_id() ), 'the unpaid order is removed' );
-		$t::same( 0, $payment_results_links_line_rows( $order->get_id() ), 'its order lines are removed too' );
+		$t::same( true, $payment_results_exists( $order->get_id() ), 'the unpaid order is kept, not deleted' );
+		$t::same( 'cancelled', $payment_results_fresh( $order->get_id() )->get_status(), 'the unpaid order is marked Cancelled' );
+		$t::same( 1, $payment_results_links_line_rows( $order->get_id() ), 'its order line is kept' );
 		$t::same( true, false !== stripos( $payment_results_links_errors(), 'cancelled' ), 'the customer is told the payment was cancelled' );
 
 		$t::new_request();

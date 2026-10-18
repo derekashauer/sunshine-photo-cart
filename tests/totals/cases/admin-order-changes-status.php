@@ -267,8 +267,9 @@ $admin_order_changes_test(
 	}
 );
 
-// The customer picked Offline, bought a 50.00 gift card and never paid. The card is made and
-// emailed at checkout. Once the photographer cancels the order, the card must not be spendable.
+// The customer picked Offline, bought a 50.00 gift card and never paid. The card is only made
+// once the order is paid, so nothing can be spent while the cheque is awaited, and once the
+// photographer cancels the order there is still no card to spend.
 $admin_order_changes_test(
 	'Cancel: a gift card bought on an unpaid order can not be spent',
 	function () use ( $t, $admin_order_changes_checkout, $admin_order_changes_save_status, $admin_order_changes_gift_card_product, $admin_order_changes_buy_gift_card, $admin_order_changes_cards_made ) {
@@ -276,9 +277,10 @@ $admin_order_changes_test(
 		$order = $admin_order_changes_checkout( 'offline' );
 		$t::same( 'pending', $order->get_status(), 'order waits for the cheque' );
 		$t::money( 50, $order->get_total(), 'order total' );
-		$t::same( 1, count( $admin_order_changes_cards_made( $order->get_id() ) ), 'card made at checkout' );
+		$t::same( 0, count( $admin_order_changes_cards_made( $order->get_id() ) ), 'no card is made before the order is paid' );
 
 		$admin_order_changes_save_status( $order->get_id(), 'cancelled' );
+		$t::same( 0, count( $admin_order_changes_cards_made( $order->get_id() ) ), 'cancelling does not make the card' );
 		foreach ( $admin_order_changes_cards_made( $order->get_id() ) as $card_id => $balance ) {
 			$t::money( 0, $balance, 'card bought on the cancelled order has nothing to spend' );
 			$t::same( false, sunshine_get_gift_card( $card_id )->is_valid(), 'card bought on the cancelled order is not accepted' );

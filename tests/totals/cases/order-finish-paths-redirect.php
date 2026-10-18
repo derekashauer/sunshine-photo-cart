@@ -113,68 +113,77 @@ $order_finish_payfast_use = function () use ( $t, $order_finish_use ) {
 	$t::option( 'payfast_passphrase_test', 'sunshine totals' );
 };
 
+// PayFast posts its ITN for a COMPLETE payment of the whole 147.00, signed the way PayFast signs
+// it, and answers VALID when the site sends the ITN back to PayFast's validate address. Returns
+// true once the ITN has finished the order.
+$order_finish_payfast_itn = function ( $order, $name ) use ( $t, $order_finish_as_server, $order_finish_until_meta, &$order_finish_replies ) {
+	// The ITN fields PayFast posts, in its order, signed the way PayFast signs them.
+	$itn  = array(
+		'm_payment_id'   => (string) $order->get_id(),
+		'pf_payment_id'  => '1089250',
+		'payment_status' => 'COMPLETE',
+		'item_name'      => $order->get_name(),
+		'amount_gross'   => '147.00',
+		'amount_fee'     => '-3.38',
+		'amount_net'     => '143.62',
+		'merchant_id'    => '10000100',
+	);
+	$sign = array();
+	foreach ( $itn as $key => $value ) {
+		$sign[] = $key . '=' . urlencode( trim( $value ) );
+	}
+	$itn['signature'] = md5( implode( '&', $sign ) . '&passphrase=' . urlencode( 'sunshine totals' ) );
+	// PayFast's answer when the site sends the ITN back to check PayFast sent it.
+	$order_finish_replies[] = array( '#^https://sandbox\.payfast\.co\.za/eng/query/validate$#', 200, 'VALID' );
+
+	// The ITN step ends with exit whenever it stops early, which would end the whole run. Make
+	// sure it gets as far as finishing the order before calling it.
+	$payfast = sunshine_get_payment_method_by_id( 'payfast' );
+	$check   = new ReflectionMethod( $payfast, 'verify_itn_signature' );
+	$check->setAccessible( true );
+	$t::same( true, $check->invoke( $payfast, $itn ), 'ITN signature is accepted' );
+	if ( ! $check->invoke( $payfast, $itn ) || 'pending' !== sunshine_get_order( $order->get_id() )->get_status() ) {
+		return false;
+	}
+
+	return $order_finish_as_server(
+		function () use ( $payfast, $itn, $order, $name, $order_finish_until_meta ) {
+			$_GET['sunshine_payfast_notify'] = 1;
+			foreach ( $itn as $key => $value ) {
+				$_POST[ $key ] = $value;
+			}
+			return $order_finish_until_meta(
+				$order->get_id(),
+				'payfast_fees',
+				$name,
+				function () use ( $payfast ) {
+					$payfast->notify();
+				}
+			);
+		}
+	);
+};
+
 $order_finish_test(
 	'PayFast: ITN finishes everything',
-	function () use ( $t, $order_finish_payfast_use, $order_finish_everything_cart, $order_finish_place_everything, $order_finish_checkout_leaves, $order_finish_as_server, $order_finish_until_meta, $order_finish_check_everything, &$order_finish_replies ) {
+	function () use ( $t, $order_finish_payfast_use, $order_finish_everything_cart, $order_finish_place_everything, $order_finish_checkout_leaves, $order_finish_payfast_itn, $order_finish_check_everything ) {
 		$t::require_plugin( 'sunshine_gift_cards_deduct_balance', 'Gift Cards add-on' );
 		$ids = $order_finish_everything_cart();
 		$order_finish_payfast_use();
 		$order_finish_place_everything( 'payfast' );
 		$order = $order_finish_checkout_leaves( 'payfast' );
 
-		// The ITN fields PayFast posts, in its order, signed the way PayFast signs them.
-		$itn  = array(
-			'm_payment_id'   => (string) $order->get_id(),
-			'pf_payment_id'  => '1089250',
-			'payment_status' => 'COMPLETE',
-			'item_name'      => $order->get_name(),
-			'amount_gross'   => '147.00',
-			'amount_fee'     => '-3.38',
-			'amount_net'     => '143.62',
-			'merchant_id'    => '10000100',
-		);
-		$sign = array();
-		foreach ( $itn as $key => $value ) {
-			$sign[] = $key . '=' . urlencode( trim( $value ) );
-		}
-		$itn['signature'] = md5( implode( '&', $sign ) . '&passphrase=' . urlencode( 'sunshine totals' ) );
-		// PayFast's answer when the site sends the ITN back to check PayFast sent it.
-		$order_finish_replies[] = array( '#^https://sandbox\.payfast\.co\.za/eng/query/validate$#', 200, 'VALID' );
-
-		// The ITN step ends with exit whenever it stops early, which would end the whole run. Make
-		// sure it gets as far as finishing the order before calling it.
-		$payfast = sunshine_get_payment_method_by_id( 'payfast' );
-		$check   = new ReflectionMethod( $payfast, 'verify_itn_signature' );
-		$check->setAccessible( true );
-		$t::same( true, $check->invoke( $payfast, $itn ), 'ITN signature is accepted' );
-		if ( ! $check->invoke( $payfast, $itn ) || 'pending' !== sunshine_get_order( $order->get_id() )->get_status() ) {
-			return;
-		}
-
-		$reached = $order_finish_as_server(
-			function () use ( $payfast, $itn, $order, $order_finish_until_meta ) {
-				$_GET['sunshine_payfast_notify'] = 1;
-				foreach ( $itn as $key => $value ) {
-					$_POST[ $key ] = $value;
-				}
-				return $order_finish_until_meta(
-					$order->get_id(),
-					'payfast_fees',
-					'PayFast: ITN finishes everything',
-					function () use ( $payfast ) {
-						$payfast->notify();
-					}
-				);
-			}
-		);
-		$t::same( true, $reached, 'ITN finished the order' );
+		$t::same( true, $order_finish_payfast_itn( $order, 'PayFast: ITN finishes everything' ), 'ITN finished the order' );
 		$order_finish_check_everything( $order->get_id(), $ids, 'PayFast ITN' );
 	}
 );
 
+// The customer comes back to the success page. That link is in the form the customer's browser
+// gets before going to PayFast, so opening it is not proof of payment: the order waits until
+// PayFast's checked ITN arrives, and that ITN finishes everything.
 $order_finish_test(
-	'PayFast: customer coming back to the success page finishes everything',
-	function () use ( $t, $order_finish_payfast_use, $order_finish_everything_cart, $order_finish_place_everything, $order_finish_checkout_leaves, $order_finish_until_redirect, $order_finish_check_everything ) {
+	'PayFast: customer coming back to the success page, then the ITN, finishes everything',
+	function () use ( $t, $order_finish_payfast_use, $order_finish_everything_cart, $order_finish_place_everything, $order_finish_checkout_leaves, $order_finish_until_redirect, $order_finish_payfast_itn, $order_finish_check_everything ) {
 		$t::require_plugin( 'sunshine_gift_cards_deduct_balance', 'Gift Cards add-on' );
 		$ids = $order_finish_everything_cart();
 		$order_finish_payfast_use();
@@ -191,6 +200,11 @@ $order_finish_test(
 			}
 		);
 		$t::same( $order->get_received_permalink(), $redirect, 'customer is sent to the order page' );
+		$back = sunshine_get_order( $order->get_id() );
+		$t::same( false, $back->is_paid(), 'the success page alone does not mark the order paid' );
+		$t::same( 'pending', $back->get_status(), 'the order still waits for PayFast' );
+
+		$t::same( true, $order_finish_payfast_itn( $order, 'PayFast: customer coming back to the success page, then the ITN, finishes everything' ), 'ITN finished the order' );
 		$order_finish_check_everything( $order->get_id(), $ids, 'PayFast success page' );
 	}
 );
@@ -256,14 +270,28 @@ $order_finish_test(
 		// Saved by QuickPay's own step before it sent the customer away.
 		$order->update_meta_value( 'quickpay_payment_id', '90210' );
 
+		// QuickPay's answer when the site looks the payment up: accepted, for this order (the
+		// order number the site gave QuickPay), in the store's currency, with one successful
+		// authorize of the whole 147.00 order total in cents.
 		$order_finish_replies[] = array(
 			'#^https://api\.quickpay\.net/payments/90210$#',
 			200,
 			array(
-				'id'        => 90210,
-				'accepted'  => true,
-				'test_mode' => true,
-				'currency'  => 'USD',
+				'id'         => 90210,
+				'order_id'   => (string) $order->get_id(),
+				'accepted'   => true,
+				'test_mode'  => true,
+				'currency'   => 'USD',
+				'operations' => array(
+					array(
+						'id'             => 1,
+						'type'           => 'authorize',
+						'amount'         => 14700,
+						'pending'        => false,
+						'qp_status_code' => '20000',
+						'aq_status_code' => '20000',
+					),
+				),
 			),
 		);
 		$quickpay = sunshine_get_payment_method_by_id( 'quickpay' );
@@ -291,6 +319,9 @@ $order_finish_test(
 		}
 		$ids = $order_finish_everything_cart();
 		$order_finish_use( 'systempay' );
+		// The shop ID and test key from the Systempay settings. Systempay signs its IPN with the key.
+		$t::option( 'systempay_site_id', '12345678' );
+		$t::option( 'systempay_test_key', 'spctotalskey' );
 		$order_finish_place_everything( 'systempay' );
 		$order = $order_finish_checkout_leaves( 'systempay' );
 
@@ -301,19 +332,47 @@ $order_finish_test(
 		$fields   = $build->invoke( $systempay, $order );
 		$trans_id = (string) get_post_meta( $order->get_id(), 'vads_trans_id', true );
 		$t::same( true, '' !== $trans_id && $trans_id === (string) $fields['vads_trans_id'], 'transaction ID saved on the order' );
-		// The IPN step ends with exit whenever the transaction ID doesn't match, which would end
-		// the whole run.
-		if ( '' === $trans_id || $trans_id !== (string) $fields['vads_trans_id'] ) {
+		$t::same( '14700', (string) $fields['vads_amount'], 'Systempay is asked for 147.00 (in cents)' );
+
+		// The IPN Systempay posts once the card is accepted: this order's transaction, shop ID,
+		// currency and the full 147.00, signed with the store key (every vads_ field sorted by
+		// name, values joined with +, then the key, HMAC-SHA-256 in base64).
+		$ipn = array(
+			'vads_amount'         => '14700',
+			'vads_auth_result'    => '00',
+			'vads_ctx_mode'       => 'TEST',
+			'vads_currency'       => (string) $fields['vads_currency'],
+			'vads_operation_type' => 'DEBIT',
+			'vads_order_id'       => (string) $order->get_id(),
+			'vads_page_action'    => 'PAYMENT',
+			'vads_payment_config' => 'SINGLE',
+			'vads_result'         => '00',
+			'vads_site_id'        => (string) $fields['vads_site_id'],
+			'vads_trans_date'     => (string) $fields['vads_trans_date'],
+			'vads_trans_id'       => $trans_id,
+			'vads_trans_status'   => 'AUTHORISED',
+			'vads_url_check_src'  => 'PAY',
+			'vads_version'        => 'V2',
+		);
+		ksort( $ipn );
+		$ipn['signature'] = base64_encode( hash_hmac( 'sha256', implode( '+', $ipn ) . '+spctotalskey', 'spctotalskey', true ) );
+
+		// The IPN step always ends with exit, which would end the whole run unless it is stopped
+		// once the order is finished. Make sure the IPN is accepted before calling it.
+		$check = new ReflectionMethod( $systempay, 'check_ipn' );
+		$check->setAccessible( true );
+		$problem = $check->invoke( $systempay, $ipn, $order->get_id() );
+		$t::same( '', $problem, 'the signed IPN is accepted' );
+		if ( '' === $trans_id || $trans_id !== (string) $fields['vads_trans_id'] || '' !== $problem ) {
 			return;
 		}
 
 		$reached = $order_finish_as_server(
-			function () use ( $systempay, $order, $trans_id, $order_finish_until_meta ) {
+			function () use ( $systempay, $order, $ipn, $order_finish_until_meta ) {
 				$_GET['sunshine_systempay_ipn'] = 1;
-				$_POST['vads_order_id']         = (string) $order->get_id();
-				$_POST['vads_trans_id']         = $trans_id;
-				$_POST['vads_trans_status']     = 'AUTHORISED';
-				$_POST['vads_amount']           = '14700';
+				foreach ( $ipn as $key => $value ) {
+					$_POST[ $key ] = $value;
+				}
 				return $order_finish_until_meta(
 					$order->get_id(),
 					'post_processed',
