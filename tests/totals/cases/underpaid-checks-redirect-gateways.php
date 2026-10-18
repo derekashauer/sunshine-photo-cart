@@ -266,6 +266,8 @@ $underpaid_payfast_notify = function ( $order, $options, $fields ) use ( $underp
 			'options'  => $options,
 			'get'      => array( 'sunshine_payfast_notify' => '1' ),
 			'post'     => $fields,
+			// PayFast's answer when the site sends the ITN back to check PayFast sent it.
+			'replies'  => array( array( '#^https://sandbox\.payfast\.co\.za/eng/query/validate$#', 200, 'VALID' ) ),
 			'orders'   => array( $order->get_id() ),
 		)
 	);

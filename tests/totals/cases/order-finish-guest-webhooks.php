@@ -662,8 +662,12 @@ $finish_guest_payfast_itn = function ( $order, $gross ) use ( $finish_guest_run 
 			sunshine_get_payment_method_by_id( 'payfast' )->notify();
 		},
 		array(
-			'get'  => array( 'sunshine_payfast_notify' => 1 ),
-			'post' => $fields,
+			'get'   => array( 'sunshine_payfast_notify' => 1 ),
+			'post'  => $fields,
+			// PayFast's answer when the site sends the ITN back to check PayFast sent it.
+			'reply' => function ( $request ) {
+				return 'sandbox.payfast.co.za' === $request['host'] && '/eng/query/validate' === $request['path'] ? array( 200, 'VALID' ) : null;
+			},
 			// Every way out of the ITN handler writes a "Payfast notify - ..." line first.
 			'logs' => array( 'Payfast notify - ' ),
 		)

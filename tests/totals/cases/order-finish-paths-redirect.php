@@ -115,7 +115,7 @@ $order_finish_payfast_use = function () use ( $t, $order_finish_use ) {
 
 $order_finish_test(
 	'PayFast: ITN finishes everything',
-	function () use ( $t, $order_finish_payfast_use, $order_finish_everything_cart, $order_finish_place_everything, $order_finish_checkout_leaves, $order_finish_as_server, $order_finish_until_meta, $order_finish_check_everything ) {
+	function () use ( $t, $order_finish_payfast_use, $order_finish_everything_cart, $order_finish_place_everything, $order_finish_checkout_leaves, $order_finish_as_server, $order_finish_until_meta, $order_finish_check_everything, &$order_finish_replies ) {
 		$t::require_plugin( 'sunshine_gift_cards_deduct_balance', 'Gift Cards add-on' );
 		$ids = $order_finish_everything_cart();
 		$order_finish_payfast_use();
@@ -138,6 +138,8 @@ $order_finish_test(
 			$sign[] = $key . '=' . urlencode( trim( $value ) );
 		}
 		$itn['signature'] = md5( implode( '&', $sign ) . '&passphrase=' . urlencode( 'sunshine totals' ) );
+		// PayFast's answer when the site sends the ITN back to check PayFast sent it.
+		$order_finish_replies[] = array( '#^https://sandbox\.payfast\.co\.za/eng/query/validate$#', 200, 'VALID' );
 
 		// The ITN step ends with exit whenever it stops early, which would end the whole run. Make
 		// sure it gets as far as finishing the order before calling it.
@@ -206,6 +208,8 @@ $order_finish_test(
 		$order_finish_use( 'paystack' );
 		$order_finish_place_everything( 'paystack' );
 		$order = $order_finish_checkout_leaves( 'paystack' );
+		// Saved by Paystack's own step before it sent the customer away.
+		$order->update_meta_value( 'paystack_reference_access_code', 'spcfinishref' );
 
 		$order_finish_replies[] = array(
 			'#^https://api\.paystack\.co/transaction/verify/spcfinishref$#',
@@ -213,11 +217,12 @@ $order_finish_test(
 			array(
 				'status' => true,
 				'data'   => array(
-					'id'       => 4099260516,
-					'status'   => 'success',
-					'amount'   => 14700,
-					'currency' => 'USD',
-					'fees'     => 230,
+					'id'        => 4099260516,
+					'status'    => 'success',
+					'reference' => 'spcfinishref',
+					'amount'    => 14700,
+					'currency'  => 'USD',
+					'fees'      => 230,
 				),
 			),
 		);
