@@ -201,7 +201,8 @@ $t::test(
 		$order = $payment_results_mollie_paid_order( 64.92, 'tr_spcpart' );
 		$payment_results_mollie_refunded( $order, 'tr_spcpart', 64.92, array( 're_spcpart' => array( '21.64' ) ) );
 		$saved = $payment_results_fresh( $order->get_id() );
-		$t::same( 'refunded', $saved->get_status(), 'order status is Refunded' );
+		// A part refund keeps the order's paid status; only refunding everything marks it Refunded.
+		$t::same( true, $saved->is_paid(), 'order is still paid, not marked Refunded' );
 		$t::money( 21.64, $saved->get_refund_total(), 'refund recorded' );
 		$t::money( 43.28, $saved->get_total_minus_refunds(), 'left on the order' );
 		$t::money( 43.28, $saved->get_total(), 'order total shown' );
