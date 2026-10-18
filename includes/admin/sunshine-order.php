@@ -365,6 +365,19 @@ class SPC_Admin_Order {
 
 	}
 
+	/**
+	 * An order marked paid by hand (a cheque, a charge approved after a review, a payment
+	 * notice that never arrived) is finished the same way checkout finishes a paid order, so
+	 * its gift card, store credit and code uses are taken and the receipt is sent. Orders
+	 * finished already are left alone.
+	 */
+	private function finish_if_paid( $order ) {
+		if ( sunshine_order_is_paid( $order->get_status() ) && ! $order->get_meta_value( 'post_processed' ) ) {
+			$order->add_log( __( 'Order finished after being marked paid by hand', 'sunshine-photo-cart' ) );
+			SPC()->cart->post_process_order( $order, false );
+		}
+	}
+
 	function handle_bulk_actions( $redirect_to, $action, $ids ) {
 		$changed = 0;
 		if ( false !== strpos( $action, 'sunshine_order_status_' ) ) {
@@ -372,6 +385,7 @@ class SPC_Admin_Order {
 			foreach ( $ids as $order_id ) {
 				$order = new SPC_Order( $order_id );
 				$order->set_status( $new_status );
+				$this->finish_if_paid( $order );
 				do_action( 'sunshine_admin_order_status_update', $order );
 				$changed++;
 			}
@@ -1162,6 +1176,7 @@ class SPC_Admin_Order {
 			if ( $current_order_status != $new_order_status ) {
 				$order->add_log( 'Order status changed in admin' );
 				$order->set_status( $new_order_status );
+				$this->finish_if_paid( $order );
 				if ( ! empty( $_POST['order_status_change_notify'] ) && $_POST['order_status_change_notify'] == 'yes' ) {
 					do_action( 'sunshine_admin_order_status_update', $order );
 					// $order->notify( false );

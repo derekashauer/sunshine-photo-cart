@@ -2868,7 +2868,15 @@ class SPC_Cart {
 
 	}
 
-	public function post_process_order( $order ) {
+	/**
+	 * Finish an order once it is paid: status, store credit, code counts, the order created
+	 * step (gift cards, bookings, stock) and the receipt. Runs once per order.
+	 *
+	 * @param SPC_Order $order      The order.
+	 * @param bool      $set_status False when the status was already chosen, like an admin
+	 *                              marking an order paid by hand.
+	 */
+	public function post_process_order( $order, $set_status = true ) {
 		global $wpdb;
 
 		// Checkout and a payment webhook can both try to finish the same order, sometimes at the
@@ -2891,7 +2899,9 @@ class SPC_Cart {
 
 		// Set order status.
 		$order_status = '';
-		$order_status = apply_filters( 'sunshine_create_order_status', $order_status, $order );
+		if ( $set_status ) {
+			$order_status = apply_filters( 'sunshine_create_order_status', $order_status, $order );
+		}
 		if ( ! empty( $order_status ) ) {
 			$order->set_status( $order_status, 'Checkout is setting status to ' . $order_status );
 		}
