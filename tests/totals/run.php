@@ -6,6 +6,10 @@
  *   wp eval-file wp-content/plugins/sunshine-photo-cart/tests/totals/run.php
  *
  * Add-on tests are skipped when that add-on is not active.
+ * SPC_TOTALS_ONLY=name runs only the case files with that in their name.
+ *
+ * The whole suite in one process gets very slow (each shipping method lookup adds filters that
+ * are never removed), so run it with run-all.sh, which runs each group of files on its own.
  */
 
 if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
@@ -18,8 +22,15 @@ if ( 'production' === wp_get_environment_type() ) {
 
 require __DIR__ . '/lib.php';
 
+// SPC_TOTALS_ONLY=name runs only the case files whose name contains it, e.g. SPC_TOTALS_ONLY=gift-cards.
+// SPC_TOTALS_FILES=a,b runs exactly those case files (names without .php); run-all.sh uses it.
+$only  = (string) getenv( 'SPC_TOTALS_ONLY' );
+$files = array_filter( explode( ',', (string) getenv( 'SPC_TOTALS_FILES' ) ) );
 foreach ( glob( __DIR__ . '/cases/*.php' ) as $file ) {
-	require $file;
+	$name = basename( $file, '.php' );
+	if ( $files ? in_array( $name, $files, true ) : ( '' === $only || false !== strpos( $name, $only ) ) ) {
+		require $file;
+	}
 }
 
 SPC_Totals_Test::cleanup();

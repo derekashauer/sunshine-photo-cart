@@ -17,6 +17,7 @@ class SPC_Totals_Test {
 	private static $created_posts  = array();
 	private static $created_users  = array();
 	private static $created_orders = array();
+	private static $created_terms  = array();
 	private static $passed         = 0;
 	private static $failed         = array();
 	private static $skipped        = array();
@@ -102,6 +103,8 @@ class SPC_Totals_Test {
 		self::option( 'price_has_tax', 'no' );
 		self::option( 'discount_after_tax', '' );
 		self::option( 'shipping_methods', array() );
+		// Newer versions keep the Test payment method to admins unless this is on.
+		self::option( 'test_allow_customers', 1 );
 
 		wp_set_current_user( 0 );
 		SPC()->customer = new SPC_Customer( 0 );
@@ -267,6 +270,22 @@ class SPC_Totals_Test {
 	}
 
 	/**
+	 * Delete something at the end of the run that a test made without a helper:
+	 * track( 'post', $id ), track( 'user', $id ), track( 'order', $id ) or track( 'term', $id, $taxonomy ).
+	 */
+	public static function track( $type, $id, $taxonomy = '' ) {
+		if ( 'post' === $type ) {
+			self::$created_posts[] = $id;
+		} elseif ( 'user' === $type ) {
+			self::$created_users[] = $id;
+		} elseif ( 'order' === $type ) {
+			self::$created_orders[] = $id;
+		} elseif ( 'term' === $type ) {
+			self::$created_terms[] = array( $id, $taxonomy );
+		}
+	}
+
+	/**
 	 * Fill in the checkout form with a US address, so an order can be placed.
 	 */
 	public static function checkout_address() {
@@ -340,6 +359,10 @@ class SPC_Totals_Test {
 			wp_delete_post( $id, true );
 		}
 		self::$created_orders = array();
+		foreach ( self::$created_terms as $term ) {
+			wp_delete_term( $term[0], $term[1] );
+		}
+		self::$created_terms = array();
 		foreach ( self::$created_posts as $id ) {
 			wp_delete_post( $id, true );
 		}
