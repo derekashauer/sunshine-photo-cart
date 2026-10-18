@@ -202,11 +202,26 @@ function sunshine_currency_decimal_filter( $decimals = 2 ) {
 		case 'JPY':
 		case 'TWD':
 		case 'HUF':
+		case 'KRW':
+		case 'CLP':
+		case 'PYG':
+		case 'VND':
 			$decimals = 0;
 			break;
 	}
 
 	return apply_filters( 'sunshine_currency_decimal_count', $decimals, $currency );
+}
+
+/**
+ * Round an amount of money to the store currency's own decimals: cents for most currencies,
+ * whole units for ones like yen, which payment services can't charge a fraction of.
+ *
+ * @param float $amount The amount.
+ * @return float
+ */
+function sunshine_round_amount( $amount ) {
+	return round( (float) $amount, (int) sunshine_currency_decimal_filter( 2 ) );
 }
 add_filter( 'sunshine_sanitize_amount_decimals', 'sunshine_currency_decimal_filter' );
 add_filter( 'sunshine_format_amount_decimals', 'sunshine_currency_decimal_filter' );

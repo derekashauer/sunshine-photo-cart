@@ -93,7 +93,9 @@ class SPC_Cart_Item {
 			}
 		}
 
-		if ( ! empty( $item['gallery_id'] ) ) {
+		// A photo always belongs to its own gallery. The gallery saved with the line comes from the
+		// add to cart request, so it only counts for lines without a photo.
+		if ( empty( $this->image ) && ! empty( $item['gallery_id'] ) ) {
 			$this->gallery_id = $item['gallery_id'];
 			$this->gallery    = sunshine_get_gallery( $item['gallery_id'] );
 		}
@@ -158,12 +160,12 @@ class SPC_Cart_Item {
 
 					// Extract base price and tax per item.
 					// Round base, then tax is exact difference to ensure they sum to original.
-					$this->price = round( $price_with_tax / ( $tax_rate['rate'] + 1 ), 2 );
+					$this->price = sunshine_round_amount( $price_with_tax / ( $tax_rate['rate'] + 1 ) );
 					$this->tax   = $price_with_tax - $this->price; // Exact difference, no rounding.
 
 					// Extract options base price and add its tax.
 					if ( $options_total_with_tax ) {
-						$this->options_total = round( $options_total_with_tax / ( $tax_rate['rate'] + 1 ), 2 );
+						$this->options_total = sunshine_round_amount( $options_total_with_tax / ( $tax_rate['rate'] + 1 ) );
 						$this->tax          += $options_total_with_tax - $this->options_total; // Exact difference.
 					}
 
@@ -181,7 +183,7 @@ class SPC_Cart_Item {
 
 						// Extract base and tax from the discounted total.
 						// Round base, then tax is exact difference to ensure they sum to discounted total.
-						$this->taxable_total = round( $total_with_tax / ( $tax_rate['rate'] + 1 ), 2 );
+						$this->taxable_total = sunshine_round_amount( $total_with_tax / ( $tax_rate['rate'] + 1 ) );
 						$this->tax_total     = $total_with_tax - $this->taxable_total; // Exact difference.
 						$this->total         = $this->taxable_total;
 					} else {
@@ -195,14 +197,14 @@ class SPC_Cart_Item {
 					// Need to calculate from price whenever tax is not included.
 					// Store original values before discount calculations.
 					$this->original_subtotal  = ( $this->price + $this->options_total ) * $this->qty;
-					$this->original_tax_total = round( $this->original_subtotal * $tax_rate['rate'], 2 );
+					$this->original_tax_total = sunshine_round_amount( $this->original_subtotal * $tax_rate['rate'] );
 
 					// Calculate taxable amount after discount.
 					$this->taxable_total = ( ( $this->price + $this->options_total ) * $this->qty ) - $this->discount;
 
 					// Calculate tax on the discounted amount.
-					$this->tax_total = round( $this->taxable_total * $tax_rate['rate'], 2 );
-					$this->tax       = round( $this->tax_total / $this->qty, 2 );
+					$this->tax_total = sunshine_round_amount( $this->taxable_total * $tax_rate['rate'] );
+					$this->tax       = sunshine_round_amount( $this->tax_total / $this->qty );
 					$this->total     = $this->taxable_total;
 				}
 			} else {
@@ -235,6 +237,23 @@ class SPC_Cart_Item {
 			}
 		}
 
+	}
+
+	/**
+	 * Whether every option chosen on this line is still sold at the line's price level.
+	 *
+	 * @return bool
+	 */
+	public function options_are_offered() {
+		if ( empty( $this->product ) || empty( $this->item['options'] ) || ! is_array( $this->item['options'] ) ) {
+			return true;
+		}
+		foreach ( $this->item['options'] as $option_id => $value ) {
+			if ( ! $this->product->option_is_offered( $option_id, $value, $this->price_level ) ) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public function set_total() {

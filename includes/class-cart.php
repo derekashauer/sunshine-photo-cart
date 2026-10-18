@@ -341,6 +341,10 @@ class SPC_Cart {
 				unset( $this->cart[ $key ] );
 				$this->update_cart();
 				SPC()->notices->add( __( 'An item has been removed from your cart because it no longer exists', 'sunshine-photo-cart' ) );
+			} elseif ( ! $cart_item->options_are_offered() ) {
+				unset( $this->cart[ $key ] );
+				$this->update_cart();
+				SPC()->notices->add( __( 'An item has been removed from your cart because one of its options is no longer available', 'sunshine-photo-cart' ) );
 			} else {
 				$final_contents[] = $cart_item;
 			}
@@ -399,6 +403,22 @@ class SPC_Cart {
 					return false;
 				}
 			}
+		}
+
+		// Every chosen option has to be sold at this price level. One with no price here is not
+		// offered, and would otherwise be added for free.
+		if ( is_array( $options ) ) {
+			foreach ( $options as $option_id => $option_value ) {
+				if ( ! $product->option_is_offered( $option_id, $option_value, $price_level ) ) {
+					SPC()->log( 'Item not added to cart because option ' . $option_id . ' is not sold at price level ' . $price_level . ' for product ' . $product_id );
+					return false;
+				}
+			}
+		}
+
+		// A photo's line always uses the photo's own gallery, never the one named in the request.
+		if ( $image ) {
+			$gallery_id = $gallery ? $gallery->get_id() : '';
 		}
 
 		$this->get_cart();
@@ -1007,12 +1027,12 @@ class SPC_Cart {
 					}
 				}
 				$discounted      = max( $taxable_items_total - $this->discount_taxable_total, 0 );
-				$discounted_base = round( $discounted / ( $this->tax_rate['rate'] + 1 ), 2 );
+				$discounted_base = sunshine_round_amount( $discounted / ( $this->tax_rate['rate'] + 1 ) );
 				$this->tax       = $discounted - $discounted_base;
 
 				// The discount itself is tax-inclusive, so split out its tax portion.
 				// This lets gateways (PayPal) and ex-tax displays reconcile the breakdown.
-				$discount_base      = round( $this->discount_taxable_total / ( $this->tax_rate['rate'] + 1 ), 2 );
+				$discount_base      = sunshine_round_amount( $this->discount_taxable_total / ( $this->tax_rate['rate'] + 1 ) );
 				$this->discount_tax = $this->discount_taxable_total - $discount_base;
 			} else {
 				// No cart-level discount, sum item taxes.
@@ -1036,7 +1056,7 @@ class SPC_Cart {
 
 			// Reduce tax by the discount amount applied to taxable items.
 			if ( $this->discount_taxable_total > 0 ) {
-				$this->tax -= round( $this->discount_taxable_total * $this->tax_rate['rate'], 2 );
+				$this->tax -= sunshine_round_amount( $this->discount_taxable_total * $this->tax_rate['rate'] );
 				if ( $this->tax < 0 ) {
 					$this->tax = 0;
 				}
@@ -1056,7 +1076,7 @@ class SPC_Cart {
 
 			if ( $taxable_total ) {
 				$this->tax += $taxable_total * $this->tax_rate['rate'];
-				$this->tax  = round( $this->tax, 2 );
+				$this->tax  = sunshine_round_amount( $this->tax );
 			}
 		}
 
@@ -1070,8 +1090,8 @@ class SPC_Cart {
 	}
 
 	public function get_tax() {
-		if ( round( $this->tax, 2 ) > 0 ) {
-			return number_format( round( $this->tax, 2 ), 2, '.', '' );
+		if ( sunshine_round_amount( $this->tax ) > 0 ) {
+			return number_format( sunshine_round_amount( $this->tax ), 2, '.', '' );
 		}
 		return 0;
 	}
@@ -1485,7 +1505,7 @@ class SPC_Cart {
 		$total = max( $total, 0 );
 
 		$this->total = apply_filters( 'sunshine_get_cart_total', $total, $this );
-		$this->total = number_format( round( $this->total, 2 ), 2, '.', '' );
+		$this->total = number_format( sunshine_round_amount( $this->total ), 2, '.', '' );
 
 		return $this->total;
 	}
@@ -2913,12 +2933,16 @@ class SPC_Cart {
 		if ( $order->get_credits() > 0 && $customer ) {
 			// Spent elsewhere while this order was being paid on another site: the payment is
 			// already taken, so say plainly on the order how much store credit was missing.
-			if ( $customer->get_credits() < $order->get_credits() ) {
+			$credits_taken = min( (float) $order->get_credits(), $customer->get_credits() );
+			if ( $credits_taken < (float) $order->get_credits() ) {
 				/* translators: 1: store credit the order used, 2: store credit the customer had left */
-				$order->add_log( sprintf( __( 'This order used %1$s of store credit, but the customer only had %2$s left when it was paid. The difference was not collected.', 'sunshine-photo-cart' ), sunshine_price( $order->get_credits() ), sunshine_price( $customer->get_credits() ) ) );
+				$order->add_log( sprintf( __( 'This order used %1$s of store credit, but the customer only had %2$s left when it was paid. The difference was not collected.', 'sunshine-photo-cart' ), sunshine_price( $order->get_credits() ), sunshine_price( $credits_taken ) ) );
+				// The order says what really came off the account, so a refund or cancel gives
+				// back only that.
+				$order->set_credits( $credits_taken );
 			}
-			$customer->decrease_credits( $order->get_credits() );
-			SPC()->log( 'Decreasing customer ' . $customer->get_id() . ' credits by ' . $order->get_credits() );
+			$customer->decrease_credits( $credits_taken );
+			SPC()->log( 'Decreasing customer ' . $customer->get_id() . ' credits by ' . $credits_taken );
 		}
 
 		if ( $customer ) {
@@ -2931,6 +2955,12 @@ class SPC_Cart {
 			SPC()->log( 'Processing discount usage from order: ' . $order->get_id() );
 			foreach ( $order->get_discounts() as $discount_code ) {
 				$discount = sunshine_get_discount_by_code( $discount_code );
+				// The code can be deleted while the customer pays. The order is still paid, so
+				// finish it and skip counting a code that no longer exists.
+				if ( empty( $discount ) || ! $discount->exists() ) {
+					SPC()->log( 'Discount ' . $discount_code . ' on order ' . $order->get_id() . ' no longer exists, use not counted' );
+					continue;
+				}
 				$discount->increment_use_count();
 				$discount->increment_use_count_by( $order->get_email() );
 				if ( $order->get_customer_id() ) {

@@ -394,6 +394,42 @@ class SPC_Product extends Sunshine_Data {
 
 	}
 
+	/**
+	 * Whether a chosen product option is sold at a price level. An option with no price at a
+	 * level is not offered there, so it must not be added for free.
+	 *
+	 * @param int|string $option_id      The product option ID, as used in a cart line's options.
+	 * @param mixed      $value          The chosen value: an option item ID, or the checkbox or text value.
+	 * @param int        $price_level_id The price level.
+	 * @return bool True when offered, or when the key is not one of this product's own options
+	 *              (add-ons keep other data in a line's options, like a multi-image product's photos).
+	 */
+	public function option_is_offered( $option_id, $value, $price_level_id = '' ) {
+		if ( '' === $value || null === $value || array() === $value ) {
+			return true; // Nothing chosen.
+		}
+		if ( ! is_numeric( $option_id ) ) {
+			return true;
+		}
+		if ( empty( $price_level_id ) ) {
+			$price_level_id = $this->price_level ? $this->price_level : sunshine_get_default_price_level_id();
+		}
+		$options = $this->get_meta_value( 'options' );
+		if ( ! is_array( $options ) || ! array_key_exists( $option_id, $options ) || ! is_array( $options[ $option_id ] ) ) {
+			return true;
+		}
+		$option = $options[ $option_id ];
+		if ( ! empty( $option['items'] ) && is_array( $option['items'] ) ) {
+			foreach ( (array) $value as $item_id ) {
+				if ( ! is_scalar( $item_id ) || ! isset( $option['items'][ $item_id ][ $price_level_id ] ) || '' === $option['items'][ $item_id ][ $price_level_id ] ) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return isset( $option[ $price_level_id ] ) && '' !== $option[ $price_level_id ];
+	}
+
 	public function option_is_required( $option_id ) {
 
 		$options = $this->get_meta_value( 'options' );

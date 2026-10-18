@@ -222,3 +222,34 @@ function sunshine_generate_order_key( $key = '' ) {
 
 	return 'spc_' . apply_filters( 'sunshine_generate_order_key', 'order_' . $key );
 }
+
+/**
+ * Give back the store credit an order used when the order is refunded or cancelled.
+ *
+ * Credit is taken when an order is finished (post_processed), so only finished orders give
+ * any back, and only once, even when the status changes between Refunded and Cancelled.
+ *
+ * @param string    $status The new order status.
+ * @param SPC_Order $order  The order.
+ */
+function sunshine_order_return_credits( $status, $order ) {
+	if ( ! in_array( $status, array( 'refunded', 'cancelled' ), true ) ) {
+		return;
+	}
+	$credits = (float) $order->get_credits();
+	if ( $credits <= 0 || ! $order->get_meta_value( 'post_processed' ) ) {
+		return;
+	}
+	$customer = $order->get_customer();
+	if ( empty( $customer ) ) {
+		return;
+	}
+	// Unique meta: if two requests change the status at once, only one can add it.
+	if ( ! add_post_meta( $order->get_id(), 'credits_returned', current_time( 'timestamp' ), true ) ) {
+		return;
+	}
+	$customer->increase_credits( $credits );
+	/* translators: %s is the store credit amount given back to the customer */
+	$order->add_log( sprintf( __( '%s of store credit given back to the customer', 'sunshine-photo-cart' ), sunshine_price( $credits ) ) );
+}
+add_action( 'sunshine_order_status_change', 'sunshine_order_return_credits', 10, 2 );

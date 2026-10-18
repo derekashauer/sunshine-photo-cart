@@ -185,6 +185,20 @@ class SPC_Discount extends Sunshine_Data {
 		return apply_filters( 'sunshine_discount_max_uses_per_person', intval( $this->meta['max_uses_per_person'] ), $this );
 	}
 
+	/**
+	 * Whether a discount code may take money off this cart line at all, before the code's own
+	 * product, category and gallery rules. Gift card purchases never are: a card bought at a
+	 * discount can still be spent at its full value.
+	 *
+	 * @param SPC_Cart_Item $item The cart line.
+	 * @return bool
+	 */
+	public function can_discount_item( $item ) {
+		$product      = $item->get_product();
+		$discountable = ! ( $product && 'gift-card' === $product->get_type() );
+		return (bool) apply_filters( 'sunshine_discount_can_discount_item', $discountable, $item, $this );
+	}
+
 	// Determines if this coupon is valid with the current cart vs discount settings
 	public function is_valid() {
 
@@ -256,7 +270,7 @@ class SPC_Discount extends Sunshine_Data {
 
 			foreach ( $cart as $key => $item ) {
 
-				$allowed = 1;
+				$allowed = $this->can_discount_item( $item ) ? 1 : 0;
 
 				if ( $allowed && ! empty( $allowed_products ) && ! in_array( $item->get_product_id(), $allowed_products ) ) {
 					$allowed = 0;
@@ -334,6 +348,10 @@ class SPC_Discount extends Sunshine_Data {
 		foreach ( $cart as $item ) {
 
 			// Skip the cart item if it does not meet the rules for it.
+			if ( ! $this->can_discount_item( $item ) ) {
+				continue;
+			}
+
 			if ( ! empty( $allowed_products ) && ! in_array( $item->get_product_id(), $allowed_products ) ) {
 				continue;
 			}
@@ -411,7 +429,7 @@ class SPC_Discount extends Sunshine_Data {
 				}
 			}
 
-			$discount = round( $discountable_total * ( $percent / 100 ), 2 );
+			$discount = sunshine_round_amount( $discountable_total * ( $percent / 100 ) );
 			return $discount;
 
 		} elseif ( $type == 'amount-total' ) {
@@ -419,7 +437,7 @@ class SPC_Discount extends Sunshine_Data {
 			// Never more than what the discount applies to. The taxed part is its share of that.
 			$discount = min( $this->get_amount(), $eligible_total );
 			if ( $tax && $eligible_total > 0 ) {
-				$discount = round( $discount * $discountable_total / $eligible_total, 2 );
+				$discount = sunshine_round_amount( $discount * $discountable_total / $eligible_total );
 			}
 			return $discount;
 
@@ -427,13 +445,13 @@ class SPC_Discount extends Sunshine_Data {
 
 			$percent                    = $this->get_amount();
 			$discountable_product_total = array_sum( $product_total );
-			return round( $discountable_product_total * ( $percent / 100 ), 2 );
+			return sunshine_round_amount( $discountable_product_total * ( $percent / 100 ) );
 
 		} elseif ( $type == 'amount-product' ) {
 
 			$amount                   = $this->get_amount();
 			$discountable_product_qty = array_sum( $product_qty );
-			return round( $discountable_product_qty * $amount, 2 );
+			return sunshine_round_amount( $discountable_product_qty * $amount );
 
 		}
 
