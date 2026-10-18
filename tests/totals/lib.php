@@ -108,6 +108,10 @@ class SPC_Totals_Test {
 		self::option( 'test_allow_customers', 1 );
 
 		self::$checkout_email = 'totals-test@example.com';
+		// Tests make many accounts in one run, so the signup attempt limit is lifted for them.
+		if ( ! has_filter( 'sunshine_rate_limit', array( __CLASS__, 'no_rate_limit' ) ) ) {
+			add_filter( 'sunshine_rate_limit', array( __CLASS__, 'no_rate_limit' ) );
+		}
 		wp_set_current_user( 0 );
 		SPC()->customer = new SPC_Customer( 0 );
 
@@ -285,6 +289,10 @@ class SPC_Totals_Test {
 		} elseif ( 'term' === $type ) {
 			self::$created_terms[] = array( $id, $taxonomy );
 		}
+	}
+
+	public static function no_rate_limit() {
+		return PHP_INT_MAX;
 	}
 
 	/**
