@@ -118,7 +118,7 @@ $orders_after_refunds_sent_amount = function ( $sent, $url_part ) {
 
 $t::test(
 	'Refund: part of an order',
-	function () use ( $t ) {
+	function () use ( $t, $orders_after_refunds_offline ) {
 		$customer_id = $t::customer();
 		$t::tax( 10 );
 		$t::add( $t::product( 100 ) );
@@ -127,6 +127,15 @@ $t::test(
 		// 100 + 10 shipping + 11 tax = 121.
 		$order = $t::place_order();
 		$t::money( 121, $order->get_total(), 'order total before the refund' );
+		// Refunds are taken from paid orders, and only paid orders count toward the lifetime total.
+		$orders_after_refunds_offline(
+			function ( $url ) {
+				return '';
+			},
+			function () use ( $order ) {
+				$order->set_status( 'processing' );
+			}
+		);
 
 		$order->add_refund( 21, 'One print was damaged' );
 
@@ -138,7 +147,7 @@ $t::test(
 		$t::money( 100, $order->get_subtotal(), 'subtotal does not change' );
 		$t::money( 11, $order->get_tax(), 'tax does not change' );
 		$t::money( 10, $order->get_shipping(), 'shipping does not change' );
-		$t::same( 'pending', $order->get_status(), 'recording a refund on its own does not change the status' );
+		$t::same( 'processing', $order->get_status(), 'recording a refund on its own does not change the status' );
 
 		// The customer's lifetime total on their admin profile drops by what was refunded.
 		$customer = new SPC_Customer( $customer_id );

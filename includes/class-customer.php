@@ -753,8 +753,11 @@ class SPC_Customer extends WP_User {
 		$order_totals = 0;
 		while ( $query->have_posts() ) :
 			$query->the_post();
-			$order         = new SPC_Order( get_the_ID() );
-			$order_totals += $order->get_total_minus_refunds();
+			$order = new SPC_Order( get_the_ID() );
+			// Only paid orders count toward what the customer has spent; a cancelled or unpaid one was never paid for.
+			if ( $order->is_paid() ) {
+				$order_totals += $order->get_total_minus_refunds();
+			}
 		endwhile;
 		wp_reset_postdata();
 
