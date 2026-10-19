@@ -958,8 +958,12 @@ class SPC_Order extends Sunshine_Data {
 		$fees            = floatval( $this->get_fees_total() );
 		$application_fee = $this->get_application_fee();
 		// Item totals already have any line item discounts taken off. Discount
-		// codes are held separately on the order, so they come off here.
+		// codes are held separately on the order, so they come off here. When prices include
+		// tax the discount holds its tax too, and the items are counted without tax.
 		$discount = floatval( $this->get_discount() );
+		if ( 'yes' === $this->get_meta_value( 'price_has_tax' ) ) {
+			$discount -= $this->get_discount_tax();
+		}
 		if ( ! empty( $items ) ) {
 			foreach ( $items as $item ) {
 				$cost  += floatval( $item->get_meta_value( 'cost' ) ) * intval( $item->get_qty() );
