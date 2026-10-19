@@ -147,6 +147,22 @@ $t::test(
 	}
 );
 
+// A cart whose prints cost nothing (all included in a session, say) still pays for shipping. A
+// code for a percent off the order and shipping must still take its percent off that shipping.
+$t::test(
+	'Discount: includes shipping when the items cost nothing',
+	function () use ( $t ) {
+		$t::tax( 10 );
+		$t::add( $t::product( 0 ) );
+		$t::flat_shipping( 10, true );
+		$t::discount( 'percent-total', 10, array( 'apply_to_shipping' => 1 ) );
+		$cart = $t::calculate();
+		$t::money( 1, $cart->get_discount(), 'discount: 10% of the 10 shipping' );
+		$t::money( 0.90, $cart->get_tax(), 'tax on the 9 shipping left' );
+		$t::money( 9.90, $cart->get_total(), 'total' );
+	}
+);
+
 $t::test(
 	'Discount: prices include tax',
 	function () use ( $t ) {

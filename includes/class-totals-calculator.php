@@ -271,7 +271,11 @@ class SPC_Totals_Calculator {
 			$product[ $product_id ]['lines'][] = $i;
 		}
 
-		if ( $all <= 0 ) {
+		// Nothing to take off, unless the code also covers shipping: a percent off the order and
+		// shipping still takes its percent off the shipping when the lines it covers cost nothing
+		// (all included prints, say).
+		$covers_shipping = ( 'percent-total' === $type && $discount->apply_to_shipping() );
+		if ( empty( $product ) || ( $all <= 0 && ! $covers_shipping ) ) {
 			return $parts;
 		}
 
