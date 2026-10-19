@@ -594,8 +594,10 @@ $t::test(
 );
 
 /*
- * Products: "Only make this shipping option available when cart contains only the selected
- * products. Leave empty for all products." (the setting's own description).
+ * Products: "Configure the current shipping option to only show when the cart contains specific
+ * products." (the Advanced Shipping doc). The rate is offered when the cart has at least one of
+ * the selected products. Live stores have always worked this way, and Include Galleries works
+ * the same way, so the setting's text was changed to match rather than the check.
  */
 
 $shiprules_envelope_or_box = function ( $small_print ) use ( $shiprules_setup ) {
@@ -631,10 +633,10 @@ $t::test(
 	}
 );
 
-// Assumption: the setting says "contains only the selected products", so a canvas in the cart
-// must not ship at the 2.00 envelope rate. The docs only say "contains specific products".
+// A cart with no small print never gets the envelope rate. Once a small print is in the cart
+// the envelope rate is offered too, as the doc describes.
 $t::test(
-	'Products rule: the envelope rate is not offered once a canvas is in the cart',
+	'Products rule: the envelope rate needs a small print in the cart, and any one is enough',
 	function () use ( $t, $shiprules_envelope_or_box, $shiprules_choose, $shiprules_offered ) {
 		$small  = $t::product( 5, array( 'taxable' => false ) );
 		$canvas = $t::product( 100, array( 'taxable' => false ) );
@@ -646,10 +648,10 @@ $t::test(
 		$t::money( 8, $cart->get_shipping(), 'box rate with just a canvas' );
 
 		$t::add( $small );
-		$shiprules_choose( 'spcshiprulesenvelope' );
+		$shiprules_choose( 'spcshiprulesbox' );
 		$cart = $t::new_request();
-		$t::same( array( 'spcshiprulesbox' ), $shiprules_offered(), 'only the box rate with a canvas and a small print' );
-		$t::money( 8, $cart->get_shipping(), 'box rate with a canvas and a small print' );
+		$t::same( array( 'spcshiprulesbox', 'spcshiprulesenvelope' ), $shiprules_offered(), 'both rates with a canvas and a small print' );
+		$t::money( 8, $cart->get_shipping(), 'box rate as chosen' );
 		$t::money( 113, $cart->get_total(), 'total 105 + 8' );
 	}
 );

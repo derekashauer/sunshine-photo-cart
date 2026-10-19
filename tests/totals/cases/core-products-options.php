@@ -153,12 +153,13 @@ $t::test(
 // The product window shows the price as options are picked. It must show what the cart charges.
 $products_window_price = function ( $product_id, $image_id, $options ) use ( $products_ajax ) {
 	// The Add to cart button in the product window has the product, gallery and photo ids but
-	// no price level, so the script (product-options.js) posts an empty price level.
+	// no price level, so the script (product-options.js) posts those ids and an empty price level.
 	$response = $products_ajax(
 		'sunshine_modal_select_options_price',
 		array(
 			'product_id'  => $product_id,
 			'gallery_id'  => sunshine_get_image( $image_id )->get_gallery_id(),
+			'image_id'    => $image_id,
 			'price_level' => '',
 			'options'     => $options,
 		)
@@ -589,6 +590,27 @@ $t::test(
 		$products_add_store( $product, $default, 1, array( $o['rush'] => '1' ) );
 		$cart = $t::calculate();
 		$t::money( 1350, $cart->get_total(), '100 + 1,250' );
+	}
+);
+
+// A decimal comma store: the price box shows a saved 12.50 as "12,50". Saving the product
+// again without touching it must keep the cents, or every resave quietly cuts the price.
+$t::test(
+	'Option price in a decimal comma store keeps its cents after the product is saved again',
+	function () use ( $t, $products_make_options, $products_option_prices, $products_resave_options_box, $products_add_store ) {
+		$t::option( 'currency_thousands_separator', '.' );
+		$t::option( 'currency_decimal_separator', ',' );
+		$o       = $products_make_options();
+		$default = sunshine_get_default_price_level_id();
+		$product = $t::product( 10, array( 'taxable' => false ) );
+		$products_option_prices( $product, array( $o['rush'] => array( $default => '12.50' ) ) );
+
+		$posted = $products_resave_options_box( $product, $o['rush'] );
+
+		$t::same( '12.50', isset( $posted[ $o['rush'] ][ $default ] ) ? $posted[ $o['rush'] ][ $default ] : null, 'saved price' );
+		$products_add_store( $product, $default, 1, array( $o['rush'] => '1' ) );
+		$cart = $t::calculate();
+		$t::money( 22.50, $cart->get_total(), '10 + 12.50' );
 	}
 );
 
