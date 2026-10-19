@@ -722,6 +722,19 @@ $combo['check_cart'] = function ( $r, $built, $s ) use ( &$combo ) {
 	$ship_codes    = false;
 	$active        = $combo['active_codes']( $r, $built );
 	$out['_active'] = array_keys( $active );
+
+	// Codes together never take more than what they apply to, so a later code can only take what
+	// the codes before it left: of the products, plus the shipping when a code covers shipping.
+	$room_items = 0;
+	foreach ( $lines as $l ) {
+		$room_items += $l['total'] + ( ( $yes || $r['after'] ) ? $l['tax'] : 0 );
+	}
+	$room_ship = 0;
+	foreach ( $active as $code ) {
+		if ( 'percent-total' === $code['type'] && $code['shipping'] ) {
+			$room_ship = $s['shipping'] + $s['shipping_tax'];
+		}
+	}
 	foreach ( $r['codes'] as $c => $code ) {
 		$code_string = $built['codes'][ $c ];
 		if ( ! isset( $active[ $c ] ) ) {
@@ -783,20 +796,25 @@ $combo['check_cart'] = function ( $r, $built, $s ) use ( &$combo ) {
 		if ( $ship ) {
 			$ship_codes = true;
 		}
+		// Most this code can take after the codes before it.
+		$room = max( 0, $room_items + ( $ship ? $room_ship : 0 ) - ( $code_sum - $amount ) );
+		if ( $amount < $room - 0.006 ) {
+			$room = PHP_FLOAT_MAX;
+		}
 		if ( 'percent-total' === $code['type'] ) {
 			// At least the percent of the products, at most the percent of products and shipping.
-			if ( $amount < $percent * $base - 0.006 || $amount > $percent * ( $base + $ship ) + 0.006 ) {
+			if ( $amount < min( $room, $percent * $base ) - 0.006 || $amount > $percent * ( $base + $ship ) + 0.006 ) {
 				$problems[] = $name . ' took ' . $num( $amount ) . ', expected ' . $num( $percent * $base ) . ( $ship ? ' to ' . $num( $percent * ( $base + $ship ) ) : '' ) . ' (' . $code['amount'] . '% of ' . $num( $base ) . ( $ship ? ' + shipping ' . $num( $ship ) : '' ) . ')';
 			}
 		} elseif ( 'amount-total' === $code['type'] ) {
-			if ( ! $near( min( $code['amount'], $base ), $amount, 0.006 ) ) {
+			if ( ! $near( min( $code['amount'], $base, $room ), $amount, 0.006 ) ) {
 				$problems[] = $name . ' took ' . $num( $amount ) . ', expected ' . $num( min( $code['amount'], $base ) ) . ' (it applies to ' . $num( $base ) . ')';
 			}
 		} elseif ( 'percent-product' === $code['type'] ) {
-			if ( ! $near( $percent * $base, $amount, 0.006 ) ) {
+			if ( ! $near( min( $room, $percent * $base ), $amount, 0.006 ) ) {
 				$problems[] = $name . ' took ' . $num( $amount ) . ', expected ' . $code['amount'] . '% of ' . $num( $base ) . ' = ' . $num( $percent * $base );
 			}
-		} elseif ( ! $near( $per_item, $amount, 0.006 ) ) {
+		} elseif ( ! $near( min( $room, $per_item ), $amount, 0.006 ) ) {
 			$problems[] = $name . ' took ' . $num( $amount ) . ', expected ' . $num( $per_item ) . ': ' . $code['amount'] . ' off each of ' . $qty . ' items, but never more than an item costs';
 			if ( $amount > $per_item + 0.006 ) {
 				$out['_amount_product_over'] = true;
@@ -901,9 +919,11 @@ $combo['check_cart'] = function ( $r, $built, $s ) use ( &$combo ) {
 		$out['credits'] = $eq( 0, $s['credits'] ) ? '' : 'no credit but ' . $num( $s['credits'] ) . ' was used';
 	}
 
-	// Payment fee.
+	// Payment fee. With nothing left to pay there is no card payment, so no fee of either kind.
 	if ( $r['fee'] ) {
-		if ( ! isset( $s['fees']['payment_method'] ) ) {
+		if ( ! isset( $s['fees']['payment_method'] ) && $eq( 0, $s['total'] ) ) {
+			$out['payment_fee'] = '';
+		} elseif ( ! isset( $s['fees']['payment_method'] ) ) {
 			$out['payment_fee'] = 'no payment fee in the cart';
 		} elseif ( 'amount' === $r['fee']['type'] ) {
 			$out['payment_fee'] = $eq( $r['fee']['amount'], $fee ) ? '' : 'fee ' . $num( $fee ) . ', expected the fixed ' . $num( $r['fee']['amount'] );
