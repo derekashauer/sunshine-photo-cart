@@ -940,8 +940,10 @@ class SPC_Cart {
 		}
 		*/
 
+		// An empty cart still gets a rate: product prices shown with tax use it, and an empty cart
+		// has nothing to tax anyway.
 		$taxes_enabled = SPC()->get_option( 'taxes_enabled' );
-		if ( $this->is_empty() || ! $taxes_enabled ) {
+		if ( ! $taxes_enabled ) {
 			$this->tax_rate = false;
 			return false;
 		}
@@ -968,16 +970,20 @@ class SPC_Cart {
 		//
 		// Deliberately reads the delivery method rather than calling needs_shipping(): shipping
 		// methods work out their price by asking for the tax rate, so calling anything here
-		// that loads shipping methods would call straight back into this method.
+		// that loads shipping methods would call straight back into this method. For the same
+		// reason the products are read from the raw cart, not the cart items. When nothing left
+		// in the cart is shipped (the print was removed, a download remains), the shipping
+		// address still in the checkout session no longer counts. An empty cart keeps using the
+		// shipping address for the prices it shows.
 		$checkout_data    = $this->get_checkout_data();
-		$is_being_shipped = empty( $this->delivery_method ) || $this->delivery_method->needs_shipping();
+		$is_being_shipped = ( empty( $this->delivery_method ) || $this->delivery_method->needs_shipping() ) && ( $this->is_empty() || $this->has_shipped_products() );
 
 		if ( ! empty( $this->delivery_method ) && $this->delivery_method->is_taxed_at_store() ) {
 
 			// Collected in person: the goods never move, so the sale happens at the store and
 			// the store's own rate applies wherever the customer happens to live.
 			$customer_country  = SPC()->get_option( 'country' );
-			$customer_state    = SPC()->get_option( 'state' );
+			$customer_state    = $this->get_store_state_code();
 			$customer_postcode = SPC()->get_option( 'postcode' );
 
 		} else {
@@ -998,7 +1004,7 @@ class SPC_Cart {
 
 		if ( empty( $customer_country ) && empty( $customer_state ) && empty( $customer_postcode ) && 'store' == SPC()->get_option( 'tax_default_location' ) ) {
 			$customer_country  = SPC()->get_option( 'country' );
-			$customer_state    = SPC()->get_option( 'state' );
+			$customer_state    = $this->get_store_state_code();
 			$customer_postcode = SPC()->get_option( 'postcode' );
 		}
 
@@ -1018,7 +1024,8 @@ class SPC_Cart {
 
 		foreach ( $tax_rates as $tax_rate ) {
 
-			if ( empty( $tax_rate['rate'] ) ) {
+			// Only a rate box left blank is skipped. A 0% row is a real rate that exempts a place.
+			if ( ! isset( $tax_rate['rate'] ) || '' === trim( (string) $tax_rate['rate'] ) ) {
 				continue;
 			}
 
@@ -1030,8 +1037,10 @@ class SPC_Cart {
 			} else
 			*/
 			if ( ! empty( $tax_rate['postcode'] ) ) {
+				// A blank state is "Any state", which is also how countries without states
+				// (the UK and others) save their postcode rates.
 				if ( sunshine_postcode_matches( $customer_postcode, $tax_rate['postcode'] ) ) {
-					if ( ! empty( $tax_rate['state'] ) && $customer_state == $tax_rate['state'] ) {
+					if ( empty( $tax_rate['state'] ) || $customer_state == $tax_rate['state'] ) {
 						if ( ! empty( $tax_rate['country'] ) && $customer_country == $tax_rate['country'] ) {
 							$this->tax_rate = $tax_rate;
 							break;
@@ -1061,6 +1070,50 @@ class SPC_Cart {
 
 		return $this->tax_rate;
 
+	}
+
+	/**
+	 * Whether anything in the cart is a product that gets shipped (not a download, a gift card...).
+	 *
+	 * Reads the saved cart lines rather than the cart items, because building cart items asks
+	 * for the tax rate.
+	 *
+	 * @return bool
+	 */
+	protected function has_shipped_products() {
+		foreach ( (array) $this->cart as $item ) {
+			if ( empty( $item['product_id'] ) || empty( $item['qty'] ) ) {
+				continue;
+			}
+			$product = sunshine_get_product( $item['product_id'], ! empty( $item['price_level'] ) ? $item['price_level'] : '' );
+			if ( $product && $product->exists() && $product->needs_shipping() ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * The store's state from Sunshine > Settings > General as a state code.
+	 *
+	 * That setting is a free text box, so owners often type the name ("Colorado") while tax
+	 * rates save the code ("CO"). A name found in the country's state list becomes its code;
+	 * anything else is used as typed.
+	 *
+	 * @return string
+	 */
+	protected function get_store_state_code() {
+		$state  = trim( (string) SPC()->get_option( 'state' ) );
+		$states = SPC()->countries->get_states( SPC()->get_option( 'country' ) );
+		if ( '' === $state || empty( $states ) || isset( $states[ $state ] ) ) {
+			return $state;
+		}
+		foreach ( $states as $code => $name ) {
+			if ( 0 === strcasecmp( $state, $name ) || 0 === strcasecmp( $state, (string) $code ) ) {
+				return $code;
+			}
+		}
+		return $state;
 	}
 
 	public function set_tax() {
