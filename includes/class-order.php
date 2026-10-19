@@ -579,11 +579,10 @@ class SPC_Order extends Sunshine_Data {
 	 * @param array $value Array of discounts, could be classes or codes
 	 */
 	public function set_discounts( $values ) {
-		if ( empty( $values ) ) {
-			return;
-		}
+		// An empty list is saved too: an unpaid order placed again after its code was taken off
+		// must not keep the old code (it would be shown and counted as used).
 		$discounts = array();
-		foreach ( $values as $discount ) {
+		foreach ( (array) $values as $discount ) {
 			if ( is_a( $discount, 'SPC_Discount' ) ) {
 				$discounts[] = $discount->get_code();
 			} elseif ( is_string( $discount ) ) {
