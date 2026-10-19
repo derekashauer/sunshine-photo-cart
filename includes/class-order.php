@@ -956,8 +956,18 @@ class SPC_Order extends Sunshine_Data {
 		$items           = $this->get_items();
 		$cost            = 0;
 		$price           = 0;
-		$fees            = floatval( $this->get_fees_total() );
 		$application_fee = $this->get_application_fee();
+		// Fees that are a way to pay, like a gift card (saved as a negative fee), are not money
+		// the store charged or gave off, so they don't change the profit. Add-ons name theirs.
+		$payment_fee_ids = (array) apply_filters( 'sunshine_order_profit_payment_fees', array(), $this );
+		$fees            = 0;
+		if ( ! empty( $this->meta['fees'] ) && is_array( $this->meta['fees'] ) ) {
+			foreach ( $this->meta['fees'] as $fee_id => $fee ) {
+				if ( ! in_array( $fee_id, $payment_fee_ids, true ) ) {
+					$fees += floatval( $fee['amount'] );
+				}
+			}
+		}
 		// Item totals already have any line item discounts taken off. Discount
 		// codes are held separately on the order, so they come off here. When prices include
 		// tax the discount holds its tax too, and the items are counted without tax.
