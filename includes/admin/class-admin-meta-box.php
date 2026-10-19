@@ -346,7 +346,7 @@ class Sunshine_Admin_Meta_Boxes {
 						$html .= '<div class="sunshine-price-levels">';
 						foreach ( $price_levels as $price_level ) {
 							if ( is_array( $meta_value ) && array_key_exists( $price_level->get_id(), $meta_value ) && $meta_value[ $price_level->get_id() ] != '' ) {
-								$price = $meta_value[ $price_level->get_id() ];
+								$price = sunshine_format_amount_for_input( $meta_value[ $price_level->get_id() ] );
 							} else {
 								$price = '';
 							}
@@ -361,7 +361,7 @@ class Sunshine_Admin_Meta_Boxes {
 						$html .= '</div>';
 
 					} else {
-						$value       = ( ! empty( $meta_value[ $price_levels[0]->get_id() ] ) ) ? $meta_value[ $price_levels[0]->get_id() ] : '';
+						$value       = ( ! empty( $meta_value[ $price_levels[0]->get_id() ] ) ) ? sunshine_format_amount_for_input( $meta_value[ $price_levels[0]->get_id() ] ) : '';
 						$price_field = '<input id="' . esc_attr( $field['id'] ) . '" type="text" size="8" name="' . esc_attr( $meta_key ) . '[' . $price_levels[0]->get_id() . ']" placeholder="' . esc_attr( $field['placeholder'] ) . '" value="' . esc_attr( $value ) . '" />' . "\n";
 						if ( $position == 'left' ) {
 							$price_field = sunshine_currency_symbol( $currency ) . $price_field;

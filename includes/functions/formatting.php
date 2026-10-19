@@ -65,6 +65,28 @@ function sunshine_sanitize_amount( $amount ) {
 }
 
 /**
+ * Prepares a saved amount for an admin text box, written with the store's decimal separator.
+ *
+ * Amounts saved by code (the API, the Price Levels add-on) are plain numbers with a dot, like
+ * 12.5. In a store that writes 12,50, the box's save step takes out the thousands separator,
+ * which is a dot there, so showing 12.5 as is would save it back as 125. A plain number is
+ * shown with the store's decimal separator instead (12,5). Anything else is shown as it was
+ * typed and saved.
+ *
+ * @param mixed $amount Saved amount.
+ * @return string Amount for the text box.
+ */
+function sunshine_format_amount_for_input( $amount ) {
+	if ( is_int( $amount ) || is_float( $amount ) || ( is_string( $amount ) && is_numeric( $amount ) ) ) {
+		$decimal_sep = SPC()->get_option( 'currency_decimal_separator' );
+		if ( $decimal_sep && '.' !== $decimal_sep ) {
+			return str_replace( '.', $decimal_sep, (string) $amount );
+		}
+	}
+	return (string) $amount;
+}
+
+/**
  * Returns a nicely formatted amount.
  *
  * @since 1.0

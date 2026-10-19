@@ -129,7 +129,7 @@ class Sunshine_Admin_Quick_Bulk_Edit {
 					$value = array();
 				}
 				foreach ( $value as $level_id => $price ) {
-					echo '<span data-field="' . esc_attr( $field['id'] ) . '[' . esc_attr( $level_id ) . ']" data-value="' . esc_attr( $price ) . '"></span>';
+					echo '<span data-field="' . esc_attr( $field['id'] ) . '[' . esc_attr( $level_id ) . ']" data-value="' . esc_attr( sunshine_format_amount_for_input( $price ) ) . '"></span>';
 				}
 			} elseif ( 'date_time' === $type ) {
 				$date = $time = '';
@@ -454,6 +454,16 @@ class Sunshine_Admin_Quick_Bulk_Edit {
 				if ( 'bulk' === $mode && ! $has_any_value ) {
 					continue;
 				}
+				if ( 'bulk' === $mode ) {
+					// Only the levels typed in change. A level left on "No change" keeps what each
+					// product has saved (added back after the clean-up below, as it is saved).
+					$value = array_filter(
+						$value,
+						function ( $level_value ) {
+							return '' !== trim( (string) $level_value );
+						}
+					);
+				}
 			} elseif ( 'users' === $type ) {
 				$value = isset( $_REQUEST[ $key ] ) ? wp_unslash( $_REQUEST[ $key ] ) : array();
 				if ( ! is_array( $value ) ) {
@@ -491,6 +501,10 @@ class Sunshine_Admin_Quick_Bulk_Edit {
 			}
 
 			$value = $instance->sanitize( $value, $type );
+			if ( 'price' === $type && 'bulk' === $mode ) {
+				$saved = get_post_meta( $post_id, $key, true );
+				$value = array_replace( is_array( $saved ) ? $saved : array(), $value );
+			}
 			$value = apply_filters( 'sunshine_meta_' . $key . '_validate', $value );
 
 			delete_post_meta( $post_id, $key );
