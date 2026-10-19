@@ -878,6 +878,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		}
 
 		$line_items = array();
+		$item_lines = array(); // Product lines by their index in $line_items: taxed by Square, and amount in cents.
 		foreach ( $order->get_items() as $item ) {
 			$qty           = max( 1, intval( $item->get_qty() ) );
 			$discount      = floatval( $item->get_discount() );
@@ -915,9 +916,14 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 						'currency' => $this->currency,
 					),
 				);
-				if ( $square_taxes && $item->is_taxable() && ! empty( $item_tax_rate['rate'] ) ) {
+				$line_taxed = $square_taxes && $item->is_taxable() && ! empty( $item_tax_rate['rate'] );
+				if ( $line_taxed ) {
 					$line_item['applied_taxes'] = array( array( 'tax_uid' => $tax_uid_for( $item_tax_rate['rate'] ) ) );
 				}
+				$item_lines[ count( $line_items ) ] = array(
+					'taxed' => $line_taxed,
+					'cents' => $part_cents * $part_qty,
+				);
 				$line_items[] = $line_item;
 			}
 		}
@@ -996,8 +1002,31 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 				/* translators: %s is a comma-separated list of discount codes */
 				? sprintf( __( 'Discount: %s', 'sunshine-photo-cart' ), implode( ', ', (array) $discount_names ) )
 				: __( 'Discount', 'sunshine-photo-cart' );
-			$order_data['discounts'] = array(
-				array(
+
+			$order_data['discounts'] = array();
+			$line_discounts          = $square_taxes ? $this->get_line_discounts( $order, $item_lines ) : array();
+			foreach ( $line_discounts as $uid => $line_discount ) {
+				$order_data['discounts'][] = array(
+					'uid'          => $uid,
+					'name'         => substr( $discount_label, 0, 255 ),
+					'amount_money' => array(
+						'amount'   => $line_discount['cents'],
+						'currency' => $this->currency,
+					),
+					'scope'        => 'LINE_ITEM',
+				);
+				foreach ( $line_discount['lines'] as $index ) {
+					$line_items[ $index ]['applied_discounts'][] = array( 'discount_uid' => $uid );
+				}
+			}
+			if ( ! empty( $line_discounts ) ) {
+				// The codes are on their lines. Credits and gift cards stay an order discount.
+				$discount_total          -= floatval( $order->get_discount() );
+				$order_data['line_items'] = $line_items;
+			}
+
+			if ( empty( $line_discounts ) || $discount_total > 0.005 ) {
+				$order_data['discounts'][] = array(
 					'uid'          => 'discount-1',
 					'name'         => substr( $discount_label, 0, 255 ),
 					'amount_money' => array(
@@ -1005,12 +1034,76 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 						'currency' => $this->currency,
 					),
 					'scope'        => 'ORDER',
-				),
-			);
+				);
+			}
 		}
 
 		return array( 'order' => $order_data );
 
+	}
+
+	/**
+	 * Discount codes on the lines they came off, instead of one order discount that Square
+	 * spreads over every line. Square works out tax after discounts, so a code for an untaxed
+	 * product spread onto a taxed one gives less tax than the order has. The part of the codes
+	 * that came off taxed things goes on the taxed lines and the rest on the untaxed ones, the way
+	 * Sunshine worked out its tax. Square shares a line discount over its lines by price.
+	 *
+	 * Only used when the order has both taxed and untaxed product lines; otherwise an order
+	 * discount comes out the same.
+	 *
+	 * @param SPC_Order $order      The order.
+	 * @param array     $item_lines Product lines by index: taxed (bool) and cents.
+	 * @return array Discount uid => cents and lines (indexes), or empty to use an order discount.
+	 */
+	private function get_line_discounts( $order, $item_lines ) {
+		$order_discount = floatval( $order->get_discount() );
+		if ( $order_discount <= 0 || empty( SPC()->cart ) ) {
+			return array();
+		}
+
+		$groups = array(
+			'discount-taxed'   => array( 'cents' => 0, 'room' => 0, 'lines' => array() ),
+			'discount-untaxed' => array( 'cents' => 0, 'room' => 0, 'lines' => array() ),
+		);
+		foreach ( $item_lines as $index => $line ) {
+			$key                         = $line['taxed'] ? 'discount-taxed' : 'discount-untaxed';
+			$groups[ $key ]['room']     += $line['cents'];
+			$groups[ $key ]['lines'][]   = $index;
+		}
+		if ( empty( $groups['discount-taxed']['lines'] ) || empty( $groups['discount-untaxed']['lines'] ) ) {
+			return array();
+		}
+
+		// How much of the discount was on taxed things is only known from the discount codes.
+		$total = 0;
+		$taxed = 0;
+		foreach ( (array) SPC()->cart->get_discounts() as $discount ) {
+			if ( is_a( $discount, 'SPC_Discount' ) ) {
+				$total += floatval( $discount->get_total() );
+				$taxed += floatval( $discount->get_total( true ) );
+			}
+		}
+		if ( $this->to_square_amount( $total ) !== $this->to_square_amount( $order_discount ) ) {
+			return array();
+		}
+
+		$groups['discount-taxed']['cents']   = $this->to_square_amount( $taxed );
+		$groups['discount-untaxed']['cents'] = $this->to_square_amount( $order_discount ) - $groups['discount-taxed']['cents'];
+
+		$line_discounts = array();
+		foreach ( $groups as $uid => $group ) {
+			if ( $group['cents'] < 0 || $group['cents'] > $group['room'] ) {
+				return array();
+			}
+			if ( $group['cents'] > 0 ) {
+				$line_discounts[ $uid ] = array(
+					'cents' => $group['cents'],
+					'lines' => $group['lines'],
+				);
+			}
+		}
+		return $line_discounts;
 	}
 
 	private function cancel_square_order( $square_order_id, $version ) {

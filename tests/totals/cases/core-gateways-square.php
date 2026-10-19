@@ -54,25 +54,36 @@ $gateways_square_charge = function ( $square_order ) {
 
 	$lines = array();
 	foreach ( $square_order['line_items'] as $line ) {
+		$gross   = intval( $line['base_price_money']['amount'] ) * intval( $line['quantity'] );
 		$lines[] = array(
-			'gross' => intval( $line['base_price_money']['amount'] ) * intval( $line['quantity'] ),
-			'taxes' => isset( $line['applied_taxes'] ) ? $line['applied_taxes'] : array(),
+			'gross'     => $gross,
+			'net'       => $gross,
+			'taxes'     => isset( $line['applied_taxes'] ) ? $line['applied_taxes'] : array(),
+			'discounts' => isset( $line['applied_discounts'] ) ? wp_list_pluck( $line['applied_discounts'], 'discount_uid' ) : array(),
 		);
 	}
 
-	// Share the order discount across the line items by their price; the last line takes
-	// whatever is left so the shares add up exactly.
-	$discount = 0;
+	// Share each discount across the line items it is on (an ORDER discount: every line) by
+	// their price; the last line takes whatever is left so the shares add up exactly.
 	foreach ( (array) ( isset( $square_order['discounts'] ) ? $square_order['discounts'] : array() ) as $order_discount ) {
-		$discount += intval( $order_discount['amount_money']['amount'] );
-	}
-	$gross = array_sum( wp_list_pluck( $lines, 'gross' ) );
-	$left  = $discount;
-	$last  = count( $lines ) - 1;
-	foreach ( $lines as $i => $line ) {
-		$share              = ( $i === $last || ! $gross ) ? $left : (int) round( $discount * $line['gross'] / $gross );
-		$left              -= $share;
-		$lines[ $i ]['net'] = $line['gross'] - $share;
+		$on = array();
+		foreach ( $lines as $i => $line ) {
+			if ( 'ORDER' === $order_discount['scope'] || in_array( $order_discount['uid'], $line['discounts'], true ) ) {
+				$on[] = $i;
+			}
+		}
+		$discount = intval( $order_discount['amount_money']['amount'] );
+		$gross    = 0;
+		foreach ( $on as $i ) {
+			$gross += $lines[ $i ]['gross'];
+		}
+		$left = $discount;
+		$last = end( $on );
+		foreach ( $on as $i ) {
+			$share              = ( $i === $last || ! $gross ) ? $left : (int) round( $discount * $lines[ $i ]['gross'] / $gross );
+			$left              -= $share;
+			$lines[ $i ]['net'] -= $share;
+		}
 	}
 
 	$total = 0;
@@ -263,7 +274,9 @@ $t::test(
 );
 
 // $10 off only the untaxed product: the taxed one keeps its full tax. 50 + 5 tax + 40 = 95.
-// Square spreads an order discount over every line, which lowers the tax it works out.
+// Square spreads an order discount over every line, which lowers the tax it works out, so the
+// itemized order is cancelled and the seller's Square dashboard loses the items and tax. The
+// code has to go on the untaxed line only.
 $t::test(
 	'Square: discount on one untaxed product',
 	function () use ( $t, $gateways_square_use, $gateways_square_pay, $gateways_square_check ) {
@@ -276,7 +289,29 @@ $t::test(
 		$gateways_square_use();
 		$cart = $t::calculate();
 		$t::money( 5, $cart->get_tax(), 'tax on the taxed product only' );
-		$gateways_square_check( $gateways_square_pay(), 95 );
+		$sent = $gateways_square_pay();
+		$gateways_square_check( $sent, 95 );
+		$t::same( 'sq_order_spctest', isset( $sent['payment']['order_id'] ) ? $sent['payment']['order_id'] : null, 'payment keeps the itemized Square order' );
+	}
+);
+
+// $10 off only the taxed product: tax on 50 - 10 = 4. 40 + 4 + 50 = 94. Spread over both lines,
+// Square would work out tax on 45 instead.
+$t::test(
+	'Square: discount on one taxed product',
+	function () use ( $t, $gateways_square_use, $gateways_square_pay, $gateways_square_check ) {
+		$t::tax( 10 );
+		$taxed   = $t::product( 50 );
+		$untaxed = $t::product( 50, array( 'taxable' => false ) );
+		$t::add( $taxed );
+		$t::add( $untaxed );
+		$t::discount( 'amount-product', 10, array( 'allowed_products' => array( (string) $taxed ) ) );
+		$gateways_square_use();
+		$cart = $t::calculate();
+		$t::money( 4, $cart->get_tax(), 'tax on the taxed product after its discount' );
+		$sent = $gateways_square_pay();
+		$gateways_square_check( $sent, 94 );
+		$t::same( 'sq_order_spctest', isset( $sent['payment']['order_id'] ) ? $sent['payment']['order_id'] : null, 'payment keeps the itemized Square order' );
 	}
 );
 
