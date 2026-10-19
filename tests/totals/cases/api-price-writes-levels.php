@@ -282,7 +282,8 @@ $apw_test(
 		$apw_buy( $b, $level, 1 );
 		$cart = $t::calculate();
 		$free = 0;
-		foreach ( (array) $cart->get_cart_items() as $line ) {
+		// An empty cart gives false, not an empty list.
+		foreach ( $cart->get_cart_items() ?: array() as $line ) {
 			if ( (float) $line->get_total() <= 0 ) {
 				$free++;
 			}

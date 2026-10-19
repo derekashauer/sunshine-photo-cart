@@ -125,10 +125,17 @@ function sunshine_get_price_levels() {
 
 function sunshine_get_default_price_level() {
 	$price_levels = sunshine_get_price_levels();
-	if ( ! empty( $price_levels ) ) {
-		return array_shift( $price_levels );
+	if ( empty( $price_levels ) ) {
+		return false;
 	}
-	return false;
+	// The level marked default at install, whatever it has been renamed to.
+	foreach ( $price_levels as $price_level ) {
+		if ( get_term_meta( $price_level->get_id(), 'default', true ) ) {
+			return $price_level;
+		}
+	}
+	// No level marked default: fall back to the first level.
+	return array_shift( $price_levels );
 }
 
 function sunshine_get_default_price_level_id() {
