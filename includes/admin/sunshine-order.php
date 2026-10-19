@@ -56,7 +56,6 @@ class SPC_Admin_Order {
 		// Change customer stats when orders are trashed/changed
 		add_action( 'trashed_post', array( $this, 'trash' ) );
 		add_action( 'untrashed_post', array( $this, 'untrash' ) );
-		add_action( 'before_delete_post', array( $this, 'delete' ) );
 
 		// Fix order items
 		add_action( 'admin_init', array( $this, 'fix_order_items' ) );
@@ -1286,16 +1285,6 @@ class SPC_Admin_Order {
 			$customer    = new SPC_Customer( $customer_id );
 			$customer->recalculate_stats();
 		}
-	}
-
-	function delete( $post_id ) {
-		global $wpdb;
-		$wpdb->delete(
-			$wpdb->prefix . 'sunshine_order_items',
-			array( 'order_id' => $post_id ),
-			array( '%d' ),
-		);
-		// Data in sunshine_order_itemmeta will automatically be deleted because of foreign key cascade.
 	}
 
 }

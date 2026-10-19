@@ -294,3 +294,27 @@ function sunshine_clear_dashboard_stats() {
 add_action( 'sunshine_order_create', 'sunshine_clear_dashboard_stats' );
 add_action( 'sunshine_order_status_change', 'sunshine_clear_dashboard_stats' );
 add_action( 'sunshine_order_refund', 'sunshine_clear_dashboard_stats' );
+
+/**
+ * Remove an order's lines and their meta when the order itself is deleted.
+ *
+ * Runs wherever the order is deleted (admin, payment cancel links, emptying the
+ * trash on a schedule, the REST API), not only in the admin. The line tables have no
+ * foreign keys, so the meta rows have to be removed here too.
+ *
+ * @param int $post_id Post being deleted.
+ */
+function sunshine_delete_order_lines( $post_id ) {
+	global $wpdb;
+	if ( 'sunshine-order' !== get_post_type( $post_id ) ) {
+		return;
+	}
+	$item_ids = $wpdb->get_col( $wpdb->prepare( "SELECT order_item_id FROM {$wpdb->prefix}sunshine_order_items WHERE order_id = %d", $post_id ) );
+	if ( empty( $item_ids ) ) {
+		return;
+	}
+	$placeholders = implode( ',', array_fill( 0, count( $item_ids ), '%d' ) );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}sunshine_order_itemmeta WHERE order_item_id IN ({$placeholders})", $item_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$wpdb->delete( $wpdb->prefix . 'sunshine_order_items', array( 'order_id' => $post_id ), array( '%d' ) );
+}
+add_action( 'before_delete_post', 'sunshine_delete_order_lines' );

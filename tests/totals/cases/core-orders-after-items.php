@@ -232,3 +232,32 @@ $t::test(
 		$t::money( 38.97, $orders_after_items_shown( $lines[0]->get_subtotal_formatted() ), 'line total shown' );
 	}
 );
+
+// Orders are also deleted outside the admin: a scheduled trash empty, the REST API, or code on
+// the front end. The order's lines and their meta live in Sunshine's own tables, which WordPress
+// does not clean up itself. Lines left behind pile up and get counted by anything that reads the
+// line tables directly. Deleting the order away from the admin must remove them too.
+$t::test(
+	'Deleting an order outside the admin removes its lines and their meta',
+	function () use ( $t ) {
+		global $wpdb;
+		$t::add( $t::product( 20, array( 'taxable' => false ) ), 2 );
+		$t::calculate();
+		$order    = $t::place_order();
+		$order_id = $order->get_id();
+		$item_ids = $wpdb->get_col( $wpdb->prepare( "SELECT order_item_id FROM {$wpdb->prefix}sunshine_order_items WHERE order_id = %d", $order_id ) );
+		$t::same( true, ! empty( $item_ids ), 'the order has lines before it is deleted' );
+		$t::same( false, is_admin(), 'running outside the admin' );
+
+		wp_delete_post( $order_id, true );
+
+		$lines = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}sunshine_order_items WHERE order_id = %d", $order_id ) );
+		$meta  = 0;
+		if ( $item_ids ) {
+			$placeholders = implode( ',', array_fill( 0, count( $item_ids ), '%d' ) );
+			$meta         = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->prefix}sunshine_order_itemmeta WHERE order_item_id IN ({$placeholders})", $item_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		}
+		$t::same( 0, $lines, 'order lines left after the order is deleted' );
+		$t::same( 0, $meta, 'line meta left after the order is deleted' );
+	}
+);
