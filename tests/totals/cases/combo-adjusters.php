@@ -724,10 +724,16 @@ $combo['check_cart'] = function ( $r, $built, $s ) use ( &$combo ) {
 	$out['_active'] = array_keys( $active );
 
 	// Codes together never take more than what they apply to, so a later code can only take what
-	// the codes before it left: of the products, plus the shipping when a code covers shipping.
+	// the codes before it left: of the products any code applies to, and, kept apart, of the
+	// shipping when a code covers shipping.
 	$room_items = 0;
-	foreach ( $lines as $l ) {
-		$room_items += $l['total'] + ( ( $yes || $r['after'] ) ? $l['tax'] : 0 );
+	foreach ( $lines as $i => $l ) {
+		foreach ( $active as $code ) {
+			if ( $combo['code_applies']( $built, $code, $i ) ) {
+				$room_items += $l['total'] + ( ( $yes || $r['after'] ) ? $l['tax'] : 0 );
+				break;
+			}
+		}
 	}
 	$room_ship = 0;
 	foreach ( $active as $code ) {
@@ -796,8 +802,12 @@ $combo['check_cart'] = function ( $r, $built, $s ) use ( &$combo ) {
 		if ( $ship ) {
 			$ship_codes = true;
 		}
-		// Most this code can take after the codes before it.
-		$room = max( 0, $room_items + ( $ship ? $room_ship : 0 ) - ( $code_sum - $amount ) );
+		// Most this code can take after the codes before it. Its share of the shipping comes out of
+		// the shipping that is left, the rest out of the products that are left.
+		$room       = max( 0, $room_items + ( $ship ? $room_ship : 0 ) );
+		$ship_taken = $ship ? min( $percent * $ship, $room_ship, $amount ) : 0;
+		$room_items = max( 0, $room_items - ( $amount - $ship_taken ) );
+		$room_ship  = max( 0, $room_ship - $ship_taken );
 		if ( $amount < $room - 0.006 ) {
 			$room = PHP_FLOAT_MAX;
 		}
@@ -808,7 +818,7 @@ $combo['check_cart'] = function ( $r, $built, $s ) use ( &$combo ) {
 			}
 		} elseif ( 'amount-total' === $code['type'] ) {
 			if ( ! $near( min( $code['amount'], $base, $room ), $amount, 0.006 ) ) {
-				$problems[] = $name . ' took ' . $num( $amount ) . ', expected ' . $num( min( $code['amount'], $base ) ) . ' (it applies to ' . $num( $base ) . ')';
+				$problems[] = $name . ' took ' . $num( $amount ) . ', expected ' . $num( min( $code['amount'], $base, $room ) ) . ' (it applies to ' . $num( $base ) . ( $room < PHP_FLOAT_MAX ? ', ' . $num( $room ) . ' left after the codes before it' : '' ) . ')';
 			}
 		} elseif ( 'percent-product' === $code['type'] ) {
 			if ( ! $near( min( $room, $percent * $base ), $amount, 0.006 ) ) {
@@ -863,7 +873,18 @@ $combo['check_cart'] = function ( $r, $built, $s ) use ( &$combo ) {
 			// is taken out of its own price, so allow half a cent for every taxed item.
 			$part      = $rate / ( 1 + $rate );
 			$gross    += $ship_taxed ? $r['shipping']['price'] : 0;
-			$expected  = ( $r['after'] ? $part * $net : $part * max( 0, $net - $taxed_sum ) ) + $s['shipping_tax'];
+			// A code that covers taxed shipping takes its share off the shipping's tax, apart from
+			// the products, so a product discount that uses up the products leaves it alone.
+			$ship_off = 0;
+			if ( $ship_taxed && ! $r['after'] ) {
+				foreach ( $active as $code ) {
+					if ( 'percent-total' === $code['type'] && $code['shipping'] ) {
+						$ship_off += $code['amount'] / 100 * ( $s['shipping'] + $s['shipping_tax'] );
+					}
+				}
+				$ship_off = min( $ship_off, $s['shipping'] + $s['shipping_tax'], $taxed_sum );
+			}
+			$expected  = ( $r['after'] ? $part * $net : $part * max( 0, $net - ( $taxed_sum - $ship_off ) ) ) + max( 0, $s['shipping_tax'] - $part * $ship_off );
 			$tolerance = 0.005 * ( $taxed_qty + 2 );
 			$most      = $part * $gross;
 			$what      = 'taxed items ' . $num( $net ) . ( $r['after'] ? '' : ' - taxed part of the discount ' . $num( $taxed_sum ) ) . ' hold ' . $num( $expected - $s['shipping_tax'] ) . ' tax, + shipping tax ' . $num( $s['shipping_tax'] );
