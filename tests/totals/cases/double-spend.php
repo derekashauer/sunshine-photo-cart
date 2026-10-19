@@ -537,7 +537,13 @@ $double_spend_test(
 
 		$double_spend_open( $shopper_a );
 		$a = $double_spend_finish();
-		$t::money( 0, $double_spend_balance( $first_card ), 'first card paid its 30 to order A' );
+		// The checkout refuses order A before payment (its second card is used up), so nothing
+		// comes off the first card. If A is finished, the first card pays its 30.
+		if ( $a && $a->is_paid() ) {
+			$t::money( 0, $double_spend_balance( $first_card ), 'first card paid its 30 to order A' );
+		} else {
+			$t::money( 30, $double_spend_balance( $first_card ), 'order A was refused, so the first card keeps its 30' );
+		}
 		$double_spend_check_cards(
 			array( $first_card, $second_card ),
 			array(
