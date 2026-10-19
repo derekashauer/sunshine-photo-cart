@@ -25,6 +25,7 @@ class SPC_Cart_Item {
 	protected $tax           = 0.00;
 	protected $taxable_total = 0.00;
 	protected $tax_total     = 0.00;
+	protected $tax_rate      = false;
 	protected $subtotal      = 0.00;
 	protected $total         = 0.00;
 	protected $comments      = '';
@@ -117,8 +118,24 @@ class SPC_Cart_Item {
 			$this->hash = $item['hash'];
 		}
 
+		if ( ! empty( $item['meta'] ) ) {
+			$this->meta = $item['meta'];
+		}
+
+		$this->calculate_line( $item );
+
+	}
+
+	/**
+	 * Work out the line's money: its line discount (sunshine_cart_item_discount), its tax rate
+	 * (sunshine_cart_item_tax_rate), then SPC_Totals_Calculator::line() does the math.
+	 *
+	 * @param array $item The cart line as saved in the cart.
+	 */
+	protected function calculate_line( $item ) {
+
 		if ( ! empty( $item['discount'] ) ) {
-			$this->discount = $item['discount'];
+			$this->discount = floatval( $item['discount'] );
 		} else {
 			$discount = apply_filters( 'sunshine_cart_item_discount', $this->discount, $this );
 			if ( $discount ) {
@@ -126,98 +143,73 @@ class SPC_Cart_Item {
 			}
 		}
 
-		// Calculate per-item discount for consistent display.
-		if ( $this->discount > 0 && $this->qty > 0 ) {
-			$this->discount_per_item = $this->discount / $this->qty;
-		}
-
-		if ( ! empty( $item['meta'] ) ) {
-			$this->meta = $item['meta'];
-		}
-
-		$this->set_total();
-
-		if ( ! empty( $item['subtotal'] ) ) {
-			$this->subtotal = $item['subtotal'];
-		}
-
-		// Do all the magic to determine actual price and tax based on store settings.
+		// A line saved with its tax already worked out keeps it.
 		if ( ! empty( $item['tax'] ) ) {
-			$this->tax = $item['tax'];
+			$this->set_total();
+			if ( ! empty( $item['subtotal'] ) ) {
+				$this->subtotal = $item['subtotal'];
+			}
+			$this->tax                = $item['tax'];
+			$this->original_subtotal  = $this->subtotal;
+			$this->original_tax_total = 0;
+			if ( $this->discount > 0 && $this->qty > 0 ) {
+				$this->discount_per_item = $this->discount / $this->qty;
+			}
 		} else {
-			$tax_rate = SPC()->cart->get_tax_rate();
-			// Lets custom code charge a different rate on some items, e.g. a reduced VAT rate on prints.
-			// Only item tax uses it: when a coupon applies, SPC_Cart::set_tax() works out the cart's
-			// tax at the cart-wide rate, and with no cart-wide rate the cart charges no tax.
-			$tax_rate = apply_filters( 'sunshine_cart_item_tax_rate', $tax_rate, $this );
-			// Only do if we have a price, product is taxable and we have a matched tax rate.
-			if ( $this->price && $this->taxable && ! empty( $tax_rate ) ) {
-				$price_has_tax = SPC()->get_option( 'price_has_tax' );
-				if ( 'yes' === $price_has_tax ) {
-					// When prices include tax, extract base amounts for all storage/calculations.
-					$price_with_tax         = $this->price;
-					$options_total_with_tax = $this->options_total;
+			// Lets custom code charge a different rate on some items, e.g. a reduced VAT rate on
+			// prints. With no cart-wide rate the cart charges no tax.
+			$this->tax_rate = apply_filters( 'sunshine_cart_item_tax_rate', SPC()->cart->get_tax_rate(), $this );
 
-					// Extract base price and tax per item.
-					// Round base, then tax is exact difference to ensure they sum to original.
-					$this->price = sunshine_round_amount( $price_with_tax / ( $tax_rate['rate'] + 1 ) );
-					$this->tax   = $price_with_tax - $this->price; // Exact difference, no rounding.
+			$line = SPC_Totals_Calculator::line(
+				array(
+					'price'         => $this->price,
+					'options_total' => $this->options_total,
+					'qty'           => $this->qty,
+					'discount'      => $this->discount,
+					'taxable'       => $this->taxable,
+					'tax_rate'      => $this->tax_rate,
+				)
+			);
+			$this->set_line( $line );
 
-					// Extract options base price and add its tax.
-					if ( $options_total_with_tax ) {
-						$this->options_total = sunshine_round_amount( $options_total_with_tax / ( $tax_rate['rate'] + 1 ) );
-						$this->tax          += $options_total_with_tax - $this->options_total; // Exact difference.
-					}
-
-					// Calculate base subtotal (without tax) - this is for internal calculations.
-					$this->subtotal = ( $this->price + $this->options_total ) * $this->qty;
-
-					// Store original values WITH tax (what user entered) before discount calculations.
-					$this->original_subtotal  = ( $price_with_tax + $options_total_with_tax ) * $this->qty;
-					$this->original_tax_total = 0; // Tax already included in original_subtotal.
-
-					// For line item discounts, apply discount to price with tax, then extract base/tax.
-					if ( $this->discount > 0 ) {
-						$subtotal_with_tax = ( $price_with_tax + $options_total_with_tax ) * $this->qty;
-						$total_with_tax    = $subtotal_with_tax - $this->discount;
-
-						// Extract base and tax from the discounted total.
-						// Round base, then tax is exact difference to ensure they sum to discounted total.
-						$this->taxable_total = sunshine_round_amount( $total_with_tax / ( $tax_rate['rate'] + 1 ) );
-						$this->tax_total     = $total_with_tax - $this->taxable_total; // Exact difference.
-						$this->total         = $this->taxable_total;
-					} else {
-						// No discount at line item level.
-						// When prices include tax, use already-extracted per-item tax to avoid rounding errors.
-						$this->taxable_total = $this->subtotal;
-						$this->tax_total     = $this->tax * $this->qty; // Use extracted tax, don't recalculate.
-						$this->total         = $this->taxable_total;
-					}
-				} else {
-					// Need to calculate from price whenever tax is not included.
-					// Store original values before discount calculations.
-					$this->original_subtotal  = ( $this->price + $this->options_total ) * $this->qty;
-					$this->original_tax_total = sunshine_round_amount( $this->original_subtotal * $tax_rate['rate'] );
-
-					// Calculate taxable amount after discount.
-					$this->taxable_total = ( ( $this->price + $this->options_total ) * $this->qty ) - $this->discount;
-
-					// Calculate tax on the discounted amount.
-					$this->tax_total = sunshine_round_amount( $this->taxable_total * $tax_rate['rate'] );
-					$this->tax       = sunshine_round_amount( $this->tax_total / $this->qty );
-					$this->total     = $this->taxable_total;
-				}
-			} else {
-				// No tax calculations needed, but still store original values.
-				$this->original_subtotal  = $this->subtotal;
-				$this->original_tax_total = 0;
+			if ( ! $line['rate'] && ! empty( $item['subtotal'] ) ) {
+				$this->subtotal = $item['subtotal'];
 			}
 		}
 
+		// Some add-ons set the line's total themselves, like a gift card bought for an amount.
 		if ( ! empty( $item['total'] ) ) {
 			$this->total = $item['total'];
 		}
 
+	}
+
+	/**
+	 * Take the numbers SPC_Totals_Calculator::line() worked out for this line.
+	 *
+	 * @param array $line The line's numbers.
+	 */
+	protected function set_line( $line ) {
+		$this->price              = $line['price'];
+		$this->options_total      = $line['options_total'];
+		$this->tax                = $line['tax'];
+		$this->subtotal           = $line['subtotal'];
+		$this->discount           = $line['discount'];
+		$this->discount_per_item  = $line['discount_per_item'];
+		$this->taxable_total      = $line['taxable_total'];
+		$this->tax_total          = $line['tax_total'];
+		$this->total              = $line['total'];
+		$this->original_subtotal  = $line['original_subtotal'];
+		$this->original_tax_total = $line['original_tax_total'];
+	}
+
+	/**
+	 * The tax rate this line was taxed at (after sunshine_cart_item_tax_rate), or false.
+	 *
+	 * @return array|false
+	 */
+	public function get_tax_rate() {
+		return ( ! empty( $this->tax_rate['rate'] ) ) ? $this->tax_rate : false;
 	}
 
 	public function get_item_data() {
