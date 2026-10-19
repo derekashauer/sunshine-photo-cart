@@ -55,6 +55,21 @@ $t::test(
 		$cards = $purchases_cards_from_order( $order->get_id() );
 		$t::money( 100, array_sum( $cards ), 'gift card value made' );
 		$t::same( 2, count( $cards ), 'two cards made' );
+		$codes = array_map(
+			function ( $card_id ) {
+				return get_post_meta( $card_id, 'code', true );
+			},
+			array_keys( $cards )
+		);
+		$t::same( 2, count( array_unique( $codes ) ), 'each card has its own code' );
+
+		// Finishing the order again makes no extra cards.
+		sunshine_gift_cards_create_from_order( sunshine_get_order( $order->get_id() ) );
+		$t::same( 2, count( $purchases_cards_from_order( $order->get_id() ) ), 'still two cards after a second run' );
+
+		// A cancelled order voids both cards, not only the first.
+		$order->set_status( 'cancelled' );
+		$t::money( 0, array_sum( $purchases_cards_from_order( $order->get_id() ) ), 'both cards voided on cancel' );
 	}
 );
 
