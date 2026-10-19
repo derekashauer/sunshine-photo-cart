@@ -17,7 +17,8 @@ if ( ! isset( $api_reports_test ) ) {
 
 // Assumption: when an API client sends lines but no totals, the order's totals are worked out
 // from the lines, like checkout does. A $0 order would show as $0 on the order screen, in
-// reports, in exports and in the customer's total spent.
+// reports, in exports and in the customer's total spent. Like a checkout order, the subtotal
+// is the lines before their discounts and the order's discount is what the lines took off.
 $api_reports_test(
 	'API order: totals come from the lines when none are sent',
 	function () use ( $t, $api_reports_create_order ) {
@@ -43,8 +44,9 @@ $api_reports_test(
 			)
 		);
 		$order = sunshine_get_order( $id );
-		// 2 x 30 + (3 x 10 - 6) = 60 + 24 = 84.
-		$t::money( 84, $order->get_subtotal(), 'subtotal' );
+		// 2 x 30 + 3 x 10 = 90, less the 6 taken off the second line = 84.
+		$t::money( 90, $order->get_subtotal(), 'subtotal' );
+		$t::money( 6, $order->get_discount(), 'discount' );
 		$t::money( 84, $order->get_total(), 'total' );
 	}
 );
@@ -410,7 +412,7 @@ $api_reports_test(
 
 // When prices include tax, Sunshine saves the subtotal without tax but the discount with tax.
 // The order screen takes the tax back out of the discount (discount_tax) before showing it.
-// An API client gets only subtotal, discount, tax and total, so it can't make them add up.
+// The reply must give an API client discount_tax and price_has_tax so it can do the same.
 $api_reports_test(
 	'API order: prices include tax: the money in the reply adds up',
 	function () use ( $t, $api_reports_rest ) {
@@ -422,8 +424,10 @@ $api_reports_test(
 		$order = $t::place_order();
 		$t::money( 99, $order->get_total(), 'order total (110 - 11)' );
 		$read = $api_reports_rest( 'GET', '/orders/' . $order->get_id() )->get_data();
-		// 100 without tax - 10 discount without tax + 9 tax = 99.
-		$t::money( 99, $read['subtotal'] - $read['discount'] + $read['shipping'] + $read['tax'], 'subtotal - discount + shipping + tax' );
+		$t::same( true, isset( $read['price_has_tax'] ) ? $read['price_has_tax'] : null, 'reply says prices include tax' );
+		$discount_tax = isset( $read['discount_tax'] ) ? (float) $read['discount_tax'] : 0;
+		// 100 without tax - (11 discount - 1 tax in it) + 9 tax = 99.
+		$t::money( 99, $read['subtotal'] - ( $read['discount'] - $discount_tax ) + $read['shipping'] + $read['tax'], 'subtotal - discount without its tax + shipping + tax' );
 	}
 );
 
