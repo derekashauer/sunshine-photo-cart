@@ -351,7 +351,8 @@ class SPC_Product extends Sunshine_Data {
 	}
 
 	public function is_taxable() {
-		return ( ! empty( $this->meta['taxable'] ) ? true : false );
+		$taxable = ( ! empty( $this->meta['taxable'] ) ? true : false );
+		return (bool) apply_filters( 'sunshine_product_is_taxable', $taxable, $this );
 	}
 
 	public function set_taxable( $taxable ) {
