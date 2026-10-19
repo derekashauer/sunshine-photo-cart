@@ -225,6 +225,9 @@ class SPC_Cart_Item {
 		if ( ! empty( $this->product ) && ! empty( $this->item['options'] ) ) {
 			$this->options = $this->item['options'];
 			foreach ( $this->options as $option_id => $id ) {
+				if ( '' === $id || null === $id || array() === $id ) {
+					continue; // Left empty, so not chosen: a text option is only charged when text is entered.
+				}
 				$this->options_total += floatval( $this->product->get_option_item_price( $option_id, $id, $this->price_level ) );
 			}
 		}

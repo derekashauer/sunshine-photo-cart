@@ -474,6 +474,16 @@ class SPC_Cart {
 			}
 		}
 
+		// The product window sends every text field, typed in or not. An option left empty was not
+		// chosen, so it is not saved on the line (and is not charged for).
+		if ( is_array( $options ) ) {
+			foreach ( $options as $option_id => $option_value ) {
+				if ( '' === $option_value || null === $option_value || array() === $option_value ) {
+					unset( $options[ $option_id ] );
+				}
+			}
+		}
+
 		// Every chosen option has to be sold at this price level. One with no price here is not
 		// offered, and would otherwise be added for free.
 		if ( is_array( $options ) ) {
@@ -713,8 +723,9 @@ class SPC_Cart {
 				if ( $discount && $discount->exists() && $discount->is_valid() ) {
 					if ( $discount->is_solo() ) {
 						// If solo discount, unset all others, set this one, and then stop looping.
-						$this->discounts   = array();
-						$this->discounts[] = $discount;
+						$this->discounts      = array();
+						$this->discounts[]    = $discount;
+						$this->discount_names = array( $discount->get_name() );
 						break;
 					}
 					$this->discounts[ $discount->get_id() ] = $discount;
