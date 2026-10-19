@@ -2617,6 +2617,16 @@ class SPC_Cart {
 			wp_send_json_error();
 		}
 
+		// A cart that needs an account (a session fee's credit and free prints are kept on one)
+		// can't be paid for by a guest, or what was paid for goes to nobody. Send the customer
+		// back to the Contact step to make an account or log in.
+		if ( ! is_user_logged_in() && $this->needs_account() ) {
+			SPC()->log( 'Blocked order init: cart needs an account and nobody is logged in' );
+			$this->uncomplete_checkout_section( 'contact' );
+			$this->add_error( __( 'Please log in or create an account to complete this order', 'sunshine-photo-cart' ) );
+			wp_send_json_error();
+		}
+
 		$order_id = SPC()->session->get( 'checkout_order_id' );
 		if ( $order_id ) {
 			$order = sunshine_get_order( $order_id );
@@ -3065,6 +3075,7 @@ class SPC_Cart {
 				SPC()->log( 'Checkout account check skipped - too many attempts with emails that already have an account' );
 				if ( ! SPC()->get_option( 'allow_guest_checkout' ) ) {
 					$this->add_error( __( 'Too many signup attempts, please try again later', 'sunshine-photo-cart' ) );
+					$this->uncomplete_checkout_section( 'contact' );
 					wp_send_json_error();
 				}
 				return;
@@ -3076,6 +3087,7 @@ class SPC_Cart {
 				sunshine_add_rate_limit_attempt( 'signup_existing_email', HOUR_IN_SECONDS );
 				SPC()->log( 'User account already exists with that email address' );
 				$this->add_error( __( 'User account already exists with that email address - please login to continue', 'sunshine-photo-cart' ) );
+				$this->uncomplete_checkout_section( 'contact' );
 				wp_send_json_error();
 			}
 
@@ -3085,7 +3097,7 @@ class SPC_Cart {
 				SPC()->log( 'Creating customer at checkout' );
 
 				$args    = array(
-					'user_login' => $data['email'],
+					'user_login' => sunshine_new_customer_username( $data['email'] ),
 					'user_email' => $data['email'],
 					'user_pass'  => $data['password'],
 					'first_name' => $data['first_name'],
@@ -3096,6 +3108,7 @@ class SPC_Cart {
 				if ( is_wp_error( $user_id ) ) {
 					SPC()->log( 'Error creating user: ' . $user_id->get_error_message() );
 					$this->add_error( $user_id->get_error_message() );
+					$this->uncomplete_checkout_section( 'contact' );
 					wp_send_json_error();
 				}
 
@@ -3108,6 +3121,7 @@ class SPC_Cart {
 				if ( is_wp_error( $login ) ) {
 					SPC()->log( 'Error logging in user: ' . $login->get_error_message() );
 					$this->add_error( $login->get_error_message() );
+					$this->uncomplete_checkout_section( 'contact' );
 					wp_send_json_error();
 				}
 
