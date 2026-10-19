@@ -489,16 +489,16 @@ class SPC_Product extends Sunshine_Data {
 
 	public function get_option_item_price( $this_option_id, $this_option_item_id, $this_price_level_id = '' ) {
 
-		if ( empty( $price_level_id ) ) {
-			$price_level_id = $this->price_level;
+		if ( empty( $this_price_level_id ) ) {
+			$this_price_level_id = $this->price_level;
 		}
 
 		$options = $this->get_meta_value( 'options' );
 		if ( ! empty( $options ) && array_key_exists( $this_option_id, $options ) ) {
 			if ( array_key_exists( 'items', $options[ $this_option_id ] ) && array_key_exists( $this_option_item_id, $options[ $this_option_id ]['items'] ) && array_key_exists( $this_price_level_id, $options[ $this_option_id ]['items'][ $this_option_item_id ] ) ) { // Multi
-				return floatval( $options[ $this_option_id ]['items'][ $this_option_item_id ][ $this_price_level_id ] );
-			} elseif ( array_key_exists( $price_level_id, $options[ $this_option_id ] ) ) {
-				return floatval( $options[ $this_option_id ][ $this_price_level_id ] );
+				return (float) sunshine_sanitize_amount( (string) $options[ $this_option_id ]['items'][ $this_option_item_id ][ $this_price_level_id ] );
+			} elseif ( array_key_exists( $this_price_level_id, $options[ $this_option_id ] ) ) {
+				return (float) sunshine_sanitize_amount( (string) $options[ $this_option_id ][ $this_price_level_id ] );
 			}
 		}
 		return 0;
