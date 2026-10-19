@@ -143,10 +143,12 @@ function sunshine_currency_filter( $price = '', $currency = '' ) {
 	$position  = SPC()->get_option( 'currency_symbol_position' );
 	$show_code = SPC()->get_option( 'currency_show_code' );
 
-	$negative = is_numeric( $price ) && $price < 0;
+	// Look at the leading minus, not is_numeric(): the amount is already formatted text, and
+	// "-25,50" or "-1,250.50" aren't numeric, so the minus would end up after the symbol.
+	$negative = '-' === substr( trim( (string) $price ), 0, 1 );
 
 	if ( $negative ) {
-		$price = substr( $price, 1 ); // Remove proceeding "-" -
+		$price = substr( trim( (string) $price ), 1 ); // Remove proceeding "-" -
 	}
 
 	$symbol_html = '<span class="sunshine-currency-symbol">' . sunshine_currency_symbol( $currency ) . '</span>';
