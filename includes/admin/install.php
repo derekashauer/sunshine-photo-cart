@@ -49,9 +49,9 @@ function maybe_sunshine_create_custom_tables() {
 			`product_id` bigint(20) unsigned NOT NULL,
 			`gallery_id` bigint(20) unsigned NOT NULL,
 			`price_level` bigint(20) unsigned NOT NULL,
-			`price` float unsigned NOT NULL,
-			`tax` float unsigned NOT NULL,
-			`discount` float unsigned NOT NULL,
+			`price` decimal(19,4) unsigned NOT NULL,
+			`tax` decimal(19,4) unsigned NOT NULL,
+			`discount` decimal(19,4) unsigned NOT NULL,
 			PRIMARY KEY (`order_item_id`),
 			KEY `order_id` (`order_id`)
 		) $collate;"
@@ -68,6 +68,13 @@ function maybe_sunshine_create_custom_tables() {
 	$qty_type = $wpdb->get_var( "SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{$wpdb->prefix}sunshine_order_items' AND COLUMN_NAME = 'qty'" );
 	if ( 'tinyint' === $qty_type ) {
 		$wpdb->query( "ALTER TABLE {$wpdb->prefix}sunshine_order_items MODIFY qty int(10) unsigned NOT NULL" );
+	}
+
+	// Existing installs stored price, tax and discount as float, which keeps only about 7 digits,
+	// so a 12,345.67 line was saved as 12,345.70.
+	$price_type = $wpdb->get_var( "SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{$wpdb->prefix}sunshine_order_items' AND COLUMN_NAME = 'price'" );
+	if ( 'float' === $price_type ) {
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}sunshine_order_items MODIFY price decimal(19,4) unsigned NOT NULL, MODIFY tax decimal(19,4) unsigned NOT NULL, MODIFY discount decimal(19,4) unsigned NOT NULL" );
 	}
 
 	$created = maybe_create_table(
