@@ -81,6 +81,24 @@ $apw_test(
 	}
 );
 
+// The same rule for the card itself, whoever calls it: a refund gives back what the usage log
+// says the card paid, so a log of 80 on a $50 card would later put 80 back on it.
+$apw_test(
+	'Gift card: a use bigger than the balance logs only what the card had',
+	function () use ( $t, $apw_make_card, $apw_balance ) {
+		$card_id = $apw_make_card( array( 'original_amount' => 50 ) );
+		$card    = new SPC_Gift_Card( $card_id );
+		$card->add_usage( 0, 80 );
+		$log   = get_post_meta( $card_id, 'usage_log', true );
+		$spent = 0;
+		foreach ( is_array( $log ) ? $log : array() as $entry ) {
+			$spent += (float) $entry['amount'];
+		}
+		$t::money( 0, $apw_balance( $card_id ), 'balance used up' );
+		$t::money( 50, $spent, 'usage log shows the 50 the card had, not 80' );
+	}
+);
+
 $apw_test(
 	'Gift card update: a balance set to 0 stays 0',
 	function () use ( $t, $apw_rest, $apw_make_card, $apw_balance, $apw_use_card, $apw_card_applied ) {
