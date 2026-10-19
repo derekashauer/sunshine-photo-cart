@@ -557,8 +557,23 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 		// already, so the discount line is whatever balances the equation. With the cart's discount
 		// tax/base split now correct, this equals the real ex-tax discount (cart + line-item + credits).
 		// Every amount is sent with the currency's own decimals (none for yen); PayPal refuses more.
-		$item_total      = $this->round_amount( $item_total );
-		$tax_total       = $this->round_amount( SPC()->cart->get_tax() );
+		$item_total = $this->round_amount( $item_total );
+		$tax_total  = (float) SPC()->cart->get_tax();
+
+		// When prices include tax, each line's tax is taken out of the whole line, but PayPal
+		// only takes a price for one item. One item's price before tax times the quantity can be
+		// a cent or so off the line's own before-tax amount, so the tax sent moves by the same
+		// cents and the breakdown still adds up without a made up discount.
+		if ( 'yes' === SPC()->get_option( 'price_has_tax' ) ) {
+			foreach ( SPC()->cart->get_cart_items() as $cart_item ) {
+				if ( $cart_item->get_tax_rate() ) {
+					$tax_total -= $this->round_amount( $cart_item->get_price() ) * $cart_item->get_qty() - (float) $cart_item->get_subtotal();
+				}
+			}
+			$tax_total = max( 0, $tax_total );
+		}
+
+		$tax_total       = $this->round_amount( $tax_total );
 		$shipping_amount = $this->round_amount( SPC()->cart->get_shipping() );
 		$amount          = (float) SPC()->cart->get_total();
 		$discount        = $this->round_amount( $item_total + $tax_total + $shipping_amount - $amount );
