@@ -322,6 +322,17 @@ $t::test(
 				throw $e;
 			}
 		}
-		$t::same( true, null === $placed, 'a 30.00 order is refused under the 50 minimum' . ( $placed ? ' (order ' . $placed->get_id() . ' was placed for ' . $placed->get_total() . ')' : '' ) );
+		// Saving the order (init_order) only makes a pending order. Pressing Place Order
+		// (process_order) is where it is paid, so that is where the minimum must hold.
+		$paid = false;
+		if ( $placed ) {
+			$done = SPC()->cart->process_order();
+			$paid = ! empty( $done ) || sunshine_get_order( $placed->get_id() )->is_paid();
+		}
+		$t::same( false, $paid, 'a 30.00 order is refused under the 50 minimum' . ( $paid ? ' (order ' . $placed->get_id() . ' was paid for ' . $placed->get_total() . ')' : '' ) );
+		if ( $placed ) {
+			$errors = implode( ' ', (array) SPC()->cart->get_errors() );
+			$t::same( true, false !== strpos( wp_strip_all_tags( $errors ), wp_strip_all_tags( sunshine_price( 50 ) ) ), 'the customer is told about the 50 minimum' );
+		}
 	}
 );
