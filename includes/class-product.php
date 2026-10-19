@@ -5,6 +5,7 @@ class SPC_Product extends Sunshine_Data {
 	protected $price_level; // int
 	protected $price; // float
 	protected $category; // int
+	protected $category_ids;
 	protected $options;
 	protected $meta = array(
 		'type'     => '',
@@ -245,6 +246,19 @@ class SPC_Product extends Sunshine_Data {
 			}
 		}
 		return $this->category;
+	}
+
+	/**
+	 * Every category the product is in.
+	 *
+	 * @return int[]
+	 */
+	public function get_category_ids() {
+		if ( ! isset( $this->category_ids ) ) {
+			$ids                = wp_get_object_terms( $this->get_id(), 'sunshine-product-category', array( 'fields' => 'ids' ) );
+			$this->category_ids = is_wp_error( $ids ) ? array() : array_map( 'intval', $ids );
+		}
+		return $this->category_ids;
 	}
 
 	public function get_category_name() {

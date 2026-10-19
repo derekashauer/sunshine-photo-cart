@@ -2,6 +2,9 @@
 class SPC_Discount extends Sunshine_Data {
 
 	protected $post_type = 'sunshine-discount';
+
+	// The code's product, category and gallery rules, read once.
+	protected $rules;
 	protected $meta      = array(
 		'code'                  => '',
 		'auto'                  => '',
@@ -246,13 +249,7 @@ class SPC_Discount extends Sunshine_Data {
 		$cart = SPC()->cart->get_cart_items();
 		if ( ! empty( $cart ) ) {
 
-			$required_products     = $this->get_required_products();
-			$allowed_products      = $this->get_allowed_products();
-			$disallowed_products   = $this->get_disallowed_products();
-			$allowed_categories    = $this->get_allowed_categories();
-			$disallowed_categories = $this->get_disallowed_categories();
-			$allowed_galleries     = $this->get_allowed_galleries();
-			$disallowed_galleries  = $this->get_disallowed_galleries();
+			$required_products = $this->get_required_products();
 
 			$discount_allowed = array();
 
@@ -269,35 +266,7 @@ class SPC_Discount extends Sunshine_Data {
 			}
 
 			foreach ( $cart as $key => $item ) {
-
-				$allowed = $this->can_discount_item( $item ) ? 1 : 0;
-
-				if ( $allowed && ! empty( $allowed_products ) && ! in_array( $item->get_product_id(), $allowed_products ) ) {
-					$allowed = 0;
-				}
-
-				if ( $allowed && ! empty( $disallowed_products ) && $item->get_product_id() && in_array( $item->get_product_id(), $disallowed_products ) ) {
-					$allowed = 0;
-				}
-
-				if ( $allowed && ! empty( $allowed_categories ) && ! in_array( $item->product->get_category_id(), $allowed_categories ) ) {
-					$allowed = 0;
-				}
-
-				if ( $allowed && ! empty( $disallowed_categories ) && $item->get_category_id() && in_array( $item->get_category_id(), $disallowed_categories ) ) {
-					$allowed = 0;
-				}
-
-				if ( $allowed && ! empty( $allowed_galleries ) && ( empty( $item->get_gallery_id() ) || ! in_array( $item->get_gallery_id(), $allowed_galleries ) ) ) {
-					$allowed = 0;
-				}
-
-				if ( $allowed && ! empty( $disallowed_galleries ) && in_array( $item->get_gallery_id(), $disallowed_galleries ) ) {
-					$allowed = 0;
-				}
-
-				$discount_allowed[ $key ] = $allowed;
-
+				$discount_allowed[ $key ] = $this->applies_to_item( $item ) ? 1 : 0;
 			}
 
 			// If any item in cart allows the discount, then it is valid.
@@ -323,139 +292,85 @@ class SPC_Discount extends Sunshine_Data {
 
 	}
 
+	/**
+	 * Whether this code may take money off a cart line: the line can be discounted at all, and it
+	 * passes the code's product, category and gallery rules. A product in several categories
+	 * counts for any of them.
+	 *
+	 * @param SPC_Cart_Item $item The cart line.
+	 * @return bool
+	 */
+	public function applies_to_item( $item ) {
+
+		if ( ! $this->can_discount_item( $item ) ) {
+			return false;
+		}
+
+		if ( ! isset( $this->rules ) ) {
+			$this->rules = array(
+				'allowed_products'      => $this->get_allowed_products(),
+				'disallowed_products'   => $this->get_disallowed_products(),
+				'allowed_categories'    => $this->get_allowed_categories(),
+				'disallowed_categories' => $this->get_disallowed_categories(),
+				'allowed_galleries'     => $this->get_allowed_galleries(),
+				'disallowed_galleries'  => $this->get_disallowed_galleries(),
+			);
+		}
+		$rules = $this->rules;
+
+		if ( ! empty( $rules['allowed_products'] ) && ! in_array( $item->get_product_id(), (array) $rules['allowed_products'] ) ) {
+			return false;
+		}
+
+		if ( ! empty( $rules['disallowed_products'] ) && $item->get_product_id() && in_array( $item->get_product_id(), (array) $rules['disallowed_products'] ) ) {
+			return false;
+		}
+
+		if ( ! empty( $rules['allowed_categories'] ) || ! empty( $rules['disallowed_categories'] ) ) {
+			$product      = $item->get_product();
+			$category_ids = ( $product && method_exists( $product, 'get_category_ids' ) ) ? $product->get_category_ids() : array();
+			if ( ! empty( $rules['allowed_categories'] ) && ! array_intersect( $category_ids, (array) $rules['allowed_categories'] ) ) {
+				return false;
+			}
+			if ( ! empty( $rules['disallowed_categories'] ) && array_intersect( $category_ids, (array) $rules['disallowed_categories'] ) ) {
+				return false;
+			}
+		}
+
+		if ( ! empty( $rules['allowed_galleries'] ) && ( empty( $item->get_gallery_id() ) || ! in_array( $item->get_gallery_id(), $rules['allowed_galleries'] ) ) ) {
+			return false;
+		}
+
+		if ( ! empty( $rules['disallowed_galleries'] ) && in_array( $item->get_gallery_id(), $rules['disallowed_galleries'] ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * What this code takes off the cart. The cart's SPC_Totals_Calculator works this out with the
+	 * other codes, so codes together never take more than they apply to.
+	 *
+	 * @param bool $tax Only the part that comes off taxed items (and taxed shipping).
+	 * @return float|false
+	 */
 	public function get_total( $tax = false ) {
 
-		if ( SPC()->cart->is_empty() || empty( $this->get_amount() ) ) {
+		if ( empty( SPC()->cart ) || SPC()->cart->is_empty() || empty( $this->get_amount() ) ) {
 			return false;
 		}
 
-		$type = $this->get_type();
-		$cart = SPC()->cart->get_cart_items();
-
-		$allowed_products      = $this->get_allowed_products();
-		$disallowed_products   = $this->get_disallowed_products();
-		$allowed_categories    = $this->get_allowed_categories();
-		$disallowed_categories = $this->get_disallowed_categories();
-		$allowed_galleries     = $this->get_allowed_galleries();
-		$disallowed_galleries  = $this->get_disallowed_galleries();
-
-		$max_product_quantity = $this->max_product_quantity();
-
-		$discountable_total = 0;
-		$eligible_total     = 0;
-		$product_total      = array();
-
-		foreach ( $cart as $item ) {
-
-			// Skip the cart item if it does not meet the rules for it.
-			if ( ! $this->can_discount_item( $item ) ) {
-				continue;
-			}
-
-			if ( ! empty( $allowed_products ) && ! in_array( $item->get_product_id(), $allowed_products ) ) {
-				continue;
-			}
-
-			if ( ! empty( $disallowed_products ) && $item->get_product_id() && in_array( $item->get_product_id(), $disallowed_products ) ) {
-				continue;
-			}
-
-			if ( ! empty( $allowed_categories ) && ! in_array( $item->product->get_category_id(), $allowed_categories ) ) {
-				continue;
-			}
-
-			if ( ! empty( $disallowed_categories ) && $item->get_category_id() && in_array( $item->get_category_id(), $disallowed_categories ) ) {
-				continue;
-			}
-
-			if ( ! empty( $allowed_galleries ) && ( empty( $item->get_gallery_id() ) || ! in_array( $item->get_gallery_id(), $allowed_galleries ) ) ) {
-				continue;
-			}
-
-			if ( ! empty( $disallowed_galleries ) && in_array( $item->get_gallery_id(), $disallowed_galleries ) ) {
-				continue;
-			}
-
-			// Everything this discount applies to, taxed or not. A fixed amount off the order
-			// is shared between the taxed and untaxed items.
-			$eligible_total += $item->get_total();
-			if ( SPC()->get_option( 'discount_after_tax' ) || 'yes' === SPC()->get_option( 'price_has_tax' ) ) {
-				$eligible_total += $item->get_tax_total();
-			}
-
-			if ( $tax && ! $item->is_taxable() ) {
-				continue;
-			}
-
-			// This is the total after the line item discount has been applied.
-			$discountable_total += $item->get_total();
-
-			if ( empty( $product_total[ $item->get_product_id() ] ) ) {
-				$product_total[ $item->get_product_id() ] = 0;
-				$product_qty[ $item->get_product_id() ]   = 0;
-			}
-			$product_total[ $item->get_product_id() ] += $item->get_total();
-			$product_qty[ $item->get_product_id() ]   += $item->get_qty();
-
-			if ( SPC()->get_option( 'discount_after_tax' ) || 'yes' === SPC()->get_option( 'price_has_tax' ) ) {
-				$discountable_total                       += $item->get_tax_total();
-				$product_total[ $item->get_product_id() ] += $item->get_tax_total();
-			}
+		$code = SPC()->cart->get_discount_breakdown( $this->get_id() );
+		if ( null === $code ) {
+			// Not one of the cart's codes: what it would take off on its own.
+			$calculator = new SPC_Totals_Calculator( SPC()->cart->get_tax_rate() );
+			$calculator->set_lines( SPC()->cart->get_cart_items(), SPC()->cart->get_shipping_for_totals() );
+			$code = $calculator->code_parts( $this );
 		}
 
-		if ( $max_product_quantity > 0 && ! empty( $product_qty ) ) {
-			foreach ( $product_qty as $product_id => $qty ) {
-				if ( $qty > $max_product_quantity ) {
-					$product_total[ $product_id ] = $product_total[ $product_id ] / $qty * $max_product_quantity;
-					$product_qty[ $product_id ]   = $max_product_quantity;
-				}
-			}
-		}
-
-		if ( $discountable_total <= 0 ) {
-			return false;
-		}
-
-		if ( $type == 'percent-total' ) {
-
-			$percent = $this->get_amount();
-
-			// For the taxed part of the discount, shipping only counts when shipping is taxed.
-			$shipping_method = SPC()->cart->get_shipping_method();
-			if ( $this->apply_to_shipping() && ( ! $tax || ( $shipping_method && $shipping_method->is_taxable() ) ) ) {
-				$discountable_total += SPC()->cart->get_shipping();
-				if ( SPC()->get_option( 'discount_after_tax' ) ) {
-					$discountable_total += SPC()->cart->get_shipping_tax();
-				}
-			}
-
-			$discount = sunshine_round_amount( $discountable_total * ( $percent / 100 ) );
-			return $discount;
-
-		} elseif ( $type == 'amount-total' ) {
-
-			// Never more than what the discount applies to. The taxed part is its share of that.
-			$discount = min( $this->get_amount(), $eligible_total );
-			if ( $tax && $eligible_total > 0 ) {
-				$discount = sunshine_round_amount( $discount * $discountable_total / $eligible_total );
-			}
-			return $discount;
-
-		} elseif ( $type == 'percent-product' ) {
-
-			$percent                    = $this->get_amount();
-			$discountable_product_total = array_sum( $product_total );
-			return sunshine_round_amount( $discountable_product_total * ( $percent / 100 ) );
-
-		} elseif ( $type == 'amount-product' ) {
-
-			$amount                   = $this->get_amount();
-			$discountable_product_qty = array_sum( $product_qty );
-			return sunshine_round_amount( $discountable_product_qty * $amount );
-
-		}
-
-		return false;
+		$amount = $tax ? $code['taxed'] : $code['amount'];
+		return ( $amount > 0 ) ? (float) $amount : false;
 
 	}
 

@@ -22,6 +22,9 @@ class SPC_Cart {
 	protected $credits     = 0;
 	protected $total       = 0.00;
 
+	// Works out the money; see SPC_Totals_Calculator.
+	protected $calculator;
+
 	// Checkout variables
 	private $active_section;
 	private $fields = array();
@@ -174,31 +177,7 @@ class SPC_Cart {
 			$this->get_cart_items( true );
 		}
 
-		if ( SPC()->get_option( 'discount_after_tax' ) ) {
-			$this->set_tax();
-			$this->set_discounts();
-		} else {
-			$this->set_discounts();
-			$this->set_tax();
-		}
-
-		// For things that pay part of the order once discounts and tax are known, like gift cards.
-		do_action( 'sunshine_cart_after_discounts_and_tax', $this );
-
-		// Recalculate the payment method fee now that discounts and tax are set.
-		// A percentage fee is based on get_total( array( 'fees' ) ), but set_payment_method()
-		// runs earlier in setup() (before set_discounts()), so without this the fee would be a
-		// percentage of the pre-discount total and gateways would be sent a higher amount.
-		if ( $this->payment_method ) {
-			$fee = $this->payment_method->get_fee();
-			if ( ! empty( $fee ) ) {
-				$this->add_fee( 'payment_method', $fee['amount'], $fee['name'] );
-			} else {
-				$this->remove_fee( 'payment_method' );
-			}
-		}
-
-		$this->get_total();
+		$this->calculate_totals();
 
 		// TODO: Do the rest on checkout page.
 		$this->set_checkout_fields();
@@ -276,6 +255,96 @@ class SPC_Cart {
 		}
 
 		return $requested_section;
+	}
+
+	/**
+	 * Work out the cart's money, always in the same order of steps (see SPC_Totals_Calculator).
+	 * Each step is where the add-on hooks for it run, the same as they always have.
+	 *
+	 * @return string The total.
+	 */
+	public function calculate_totals() {
+
+		// 1. Lines (their line discounts and tax were worked out as each line was built), and
+		// the chosen shipping, which codes covering shipping need to know.
+		$this->start_calculator();
+
+		// 2. Discount codes.
+		$this->set_discounts();
+
+		// 3. Tax on the items and shipping. Codes come off first unless discounts are after tax.
+		$this->set_tax();
+
+		// 4. Things that pay part of the order once discounts and tax are known, like gift cards.
+		do_action( 'sunshine_cart_after_discounts_and_tax', $this );
+
+		// 5. The payment method's fee, on what is still left to pay.
+		$this->set_payment_method_fee();
+
+		// 6. Store credit and the total.
+		return $this->get_total();
+
+	}
+
+	/**
+	 * Start a new calculation from the cart's lines and chosen shipping.
+	 */
+	protected function start_calculator() {
+		$this->calculator = new SPC_Totals_Calculator( $this->get_tax_rate() );
+		$this->calculator->set_lines( $this->is_empty() ? array() : $this->get_cart_items(), $this->get_shipping_for_totals() );
+	}
+
+	/**
+	 * The calculator holding this cart's numbers, started if nothing has worked them out yet.
+	 *
+	 * @return SPC_Totals_Calculator
+	 */
+	public function get_calculator() {
+		if ( empty( $this->calculator ) ) {
+			$this->start_calculator();
+		}
+		return $this->calculator;
+	}
+
+	/**
+	 * The chosen shipping as the calculator needs it.
+	 *
+	 * @return array price, tax and taxable.
+	 */
+	public function get_shipping_for_totals() {
+		return array(
+			'price'   => (float) $this->get_shipping(),
+			'tax'     => (float) $this->get_shipping_tax(),
+			'taxable' => ( $this->shipping_method && $this->shipping_method->is_taxable() ),
+		);
+	}
+
+	/**
+	 * What one of the cart's discount codes took off, or null when it is not one of them.
+	 *
+	 * @param int $discount_id Discount id.
+	 * @return array|null amount and taxed (the part off taxed items and shipping).
+	 */
+	public function get_discount_breakdown( $discount_id ) {
+		return $this->get_calculator()->get_code( $discount_id );
+	}
+
+	/**
+	 * The payment method's fee, added once discounts, gift cards and store credit are known.
+	 * Nothing left to pay means no card payment, so no fee.
+	 */
+	protected function set_payment_method_fee() {
+		$this->remove_fee( 'payment_method' );
+		if ( ! $this->payment_method ) {
+			return;
+		}
+		if ( (float) $this->get_total() <= 0 ) {
+			return;
+		}
+		$fee = $this->payment_method->get_fee();
+		if ( ! empty( $fee ) ) {
+			$this->add_fee( 'payment_method', $fee['amount'], $fee['name'] );
+		}
 	}
 
 	// An alternate name for this to make it easier to understand elsewhere
@@ -708,27 +777,15 @@ class SPC_Cart {
 	}
 
 	public function calculate_discount() {
-		$this->discount               = 0;
-		$this->discount_taxable_total = 0;
+		$items      = $this->get_cart_items();
+		$calculator = $this->get_calculator();
 
-		// Set any line item discounts.
-		$items = $this->get_cart_items();
-		foreach ( $items as $item ) {
-			if ( $item->get_discount_total() ) {
-				// $this->discount += $item->get_discount_total();
-			}
-		}
-
-		if ( ! empty( $this->discounts ) ) {
-			foreach ( $this->discounts as $discount ) {
-				// if ( $discount->is_allowed() ) {
-					$this->discount               += $discount->get_total();
-					$this->discount_taxable_total += $discount->get_total( true );
-				// }
-			}
-		}
+		// Line discounts are already in each line's total; this is the discount codes.
+		$this->discount               = $calculator->calculate_discounts( $this->discounts );
+		$this->discount_taxable_total = $calculator->get( 'discount_taxable_total' );
 
 		$this->discount = apply_filters( 'sunshine_cart_discount', $this->discount, $items );
+		$calculator->set_discount( $this->discount );
 
 		return $this->discount;
 	}
@@ -857,10 +914,15 @@ class SPC_Cart {
 		return number_format( round( $this->discount_tax, 2 ), 2, '.', '' );
 	}
 	public function get_discount_formatted() {
-		// Mirror get_subtotal_formatted()/get_shipping_formatted(): show the gross discount in
-		// with-tax mode and the ex-tax (base) discount in without-tax mode so the column balances.
+		// Mirror get_subtotal_formatted()/get_shipping_formatted(): shown with tax, the discount
+		// includes the tax it took off; shown without tax, it doesn't. When prices include tax the
+		// discount already holds its tax, otherwise the tax comes on top.
 		$discount_tax = (float) $this->get_discount_tax();
-		return '-' . sunshine_get_price_to_display( (float) $this->get_discount() - $discount_tax, $discount_tax );
+		$discount     = (float) $this->get_discount();
+		if ( SPC_Totals_Calculator::prices_include_tax() ) {
+			$discount -= $discount_tax;
+		}
+		return '-' . sunshine_get_price_to_display( $discount, $discount_tax );
 	}
 
 	public function get_tax_rate() {
@@ -1008,82 +1070,19 @@ class SPC_Cart {
 		$this->tax_rate     = $this->get_tax_rate();
 
 		if ( ! $this->tax_rate ) {
+			$this->get_calculator()->set_tax( 0 );
 			return;
 		}
 
-		$price_has_tax = SPC()->get_option( 'price_has_tax' );
-
-		// When prices include tax, calculate tax from the discounted total if applicable.
-		if ( 'yes' === $price_has_tax ) {
-
-			$contents = $this->get_cart_items();
-
-			if ( $this->discount_taxable_total > 0 && $this->tax_rate ) {
-				// Recalculate tax on the discounted total for taxable items.
-				$taxable_items_total = 0;
-				foreach ( $contents as $item ) {
-					if ( $item->is_taxable() ) {
-						$taxable_items_total += $item->get_total() + $item->get_tax_total();
-					}
-				}
-				$discounted      = max( $taxable_items_total - $this->discount_taxable_total, 0 );
-				$discounted_base = sunshine_round_amount( $discounted / ( $this->tax_rate['rate'] + 1 ) );
-				$this->tax       = $discounted - $discounted_base;
-
-				// The discount itself is tax-inclusive, so split out its tax portion.
-				// This lets gateways (PayPal) and ex-tax displays reconcile the breakdown.
-				$discount_base      = sunshine_round_amount( $this->discount_taxable_total / ( $this->tax_rate['rate'] + 1 ) );
-				$this->discount_tax = $this->discount_taxable_total - $discount_base;
-			} else {
-				// No cart-level discount, sum item taxes.
-				foreach ( $contents as $item ) {
-					$this->tax += $item->get_tax_total();
-				}
-			}
-
-			// Add shipping tax.
-			if ( $this->shipping_method && $this->shipping_method->is_taxable() ) {
-				$this->tax += $this->shipping_method->get_tax();
-			}
-		} else {
-			// When prices don't include tax, calculate tax on taxable amounts.
-			$contents      = $this->get_cart_items();
-			$taxable_total = 0;
-
-			foreach ( $contents as $item ) {
-				$this->tax += $item->get_tax_total();
-			}
-
-			// Reduce tax by the discount amount applied to taxable items.
-			if ( $this->discount_taxable_total > 0 ) {
-				$this->tax -= sunshine_round_amount( $this->discount_taxable_total * $this->tax_rate['rate'] );
-				if ( $this->tax < 0 ) {
-					$this->tax = 0;
-				}
-			}
-
-			// Is selected shipping taxable?
-			$this->shipping_tax = 0;
-			if ( $this->shipping_method && $this->shipping_method->is_taxable() ) {
-				$taxable_total += $this->shipping_method->get_price();
-			}
-
-			if ( $taxable_total < 0 ) {
-				$taxable_total = 0;
-			}
-
-			$taxable_total = apply_filters( 'sunshine_cart_taxable_total', $taxable_total, $this->tax_rate );
-
-			if ( $taxable_total ) {
-				$this->tax += $taxable_total * $this->tax_rate['rate'];
-				$this->tax  = sunshine_round_amount( $this->tax );
-			}
-		}
+		$calculator         = $this->get_calculator();
+		$this->tax          = $calculator->calculate_tax();
+		$this->discount_tax = $calculator->get( 'discount_tax' );
 
 		$this->tax = apply_filters( 'sunshine_cart_tax', $this->tax, $this->tax_rate );
 		if ( empty( $this->tax ) ) {
 			$this->tax = 0;
 		}
+		$calculator->set_tax( $this->tax );
 
 		return $this->tax;
 
@@ -1131,13 +1130,8 @@ class SPC_Cart {
 		if ( ! $this->use_credits() ) {
 			return 0;
 		}
-		$total_credits               = SPC()->customer->get_credits();
-		$order_total_without_credits = $this->get_total( array( 'credits' ) );
-		$credits_applied             = $total_credits;
-		if ( $total_credits > $order_total_without_credits ) {
-			$credits_applied = $order_total_without_credits;
-		}
-		$this->credits = $credits_applied;
+		// As much credit as there is, never more than is left to pay.
+		$this->credits = SPC_Totals_Calculator::credits_applied( SPC()->customer->get_credits(), $this->get_total( array( 'credits' ) ) );
 		return $this->credits;
 	}
 	public function get_credits_applied_formatted() {
@@ -1419,78 +1413,12 @@ class SPC_Cart {
 	}
 
 	public function get_total( $exclude = array() ) {
-		$total = 0;
 
-		$totals = array(
-			'subtotal'  => 0,
-			'discounts' => 0,
-			'shipping'  => 0,
-			'tax'       => 0,
-			'fees'      => 0,
-		);
-
-		// When prices include tax, calculate total differently.
-		$price_has_tax = SPC()->get_option( 'price_has_tax' );
-
-		if ( 'yes' === $price_has_tax && ! in_array( 'subtotal', $exclude ) ) {
-			// For prices with tax, sum item totals (which already have line-item discounts applied).
-			$cart_items  = $this->get_cart_items();
-			$items_total = 0;
-
-			if ( ! empty( $cart_items ) ) {
-				foreach ( $cart_items as $item ) {
-					$items_total += $item->get_total() + $item->get_tax_total();
-				}
-			}
-
-			$totals['subtotal'] = $items_total;
-
-			// Apply cart-level discounts (discount codes).
-			// Note: Line-item discounts are already reflected in the subtotal.
-			if ( ! in_array( 'discounts', $exclude ) ) {
-				$cart_level_discounts = (float) $this->get_discount();
-				if ( $cart_level_discounts > 0 ) {
-					$totals['discounts'] = -$cart_level_discounts;
-				}
-			}
-
-			// When prices include tax, add shipping with its tax.
-			if ( ! in_array( 'shipping', $exclude ) ) {
-				$shipping           = (float) $this->get_shipping();
-				$shipping_tax       = (float) $this->get_shipping_tax();
-				$totals['shipping'] = $shipping + $shipping_tax;
-			}
-		} else {
-			// Logic for prices without tax.
-			if ( ! in_array( 'subtotal', $exclude ) ) {
-				$subtotal           = (float) $this->get_subtotal();
-				$totals['subtotal'] = $subtotal;
-			}
-
-			// Apply cart-level discounts (discount codes).
-			// Note: Line-item discounts are already reflected in the subtotal.
-			if ( ! in_array( 'discounts', $exclude ) ) {
-				$cart_level_discounts = (float) $this->get_discount();
-				if ( $cart_level_discounts > 0 ) {
-					$totals['discounts'] = -$cart_level_discounts;
-				}
-			}
-
-			if ( ! in_array( 'tax', $exclude ) ) {
-				$tax           = (float) $this->get_tax();
-				$totals['tax'] = $tax;
-			}
-
-			// When prices don't include tax, add shipping separately.
-			if ( ! in_array( 'shipping', $exclude ) ) {
-				$shipping           = (float) $this->get_shipping();
-				$totals['shipping'] = $shipping;
-			}
-		}
+		// Subtotal, discount codes, shipping and tax, as SPC_Totals_Calculator worked them out.
+		$totals = $this->get_calculator()->get_parts( (array) $exclude );
 
 		if ( ! in_array( 'fees', $exclude ) ) {
-			$fees           = (float) $this->get_fees_total();
-			$totals['fees'] = $fees;
+			$totals['fees'] = (float) $this->get_fees_total();
 		}
 
 		if ( ! in_array( 'credits', $exclude ) ) {
@@ -1500,9 +1428,7 @@ class SPC_Cart {
 			}
 		}
 
-		$total = array_sum( $totals );
-
-		$total = max( $total, 0 );
+		$total = SPC_Totals_Calculator::add_up( $totals );
 
 		$this->total = apply_filters( 'sunshine_get_cart_total', $total, $this );
 		$this->total = number_format( sunshine_round_amount( $this->total ), 2, '.', '' );
@@ -2694,7 +2620,7 @@ class SPC_Cart {
 			}
 		}
 
-		$order->set_cart( $this->get_cart() );
+		$order->set_cart( $this->get_cart_with_line_totals() );
 		$order->set_subtotal( $this->get_subtotal() );
 		$order->set_subtotal_tax( $this->get_subtotal_tax() );
 		$order->set_shipping( $this->get_shipping() );
@@ -2793,6 +2719,38 @@ class SPC_Cart {
 		SPC()->log( 'Failed to initialize order and returning error' );
 
 		wp_send_json_error();
+	}
+
+	/**
+	 * The saved cart with what each line costs, so the order keeps what was charged for each
+	 * line (SPC_Order::add_item()) and a lost line can be put back the same way later.
+	 *
+	 * @return array
+	 */
+	public function get_cart_with_line_totals() {
+		$cart  = $this->get_cart();
+		$lines = array();
+		foreach ( (array) $this->get_cart_items() as $cart_item ) {
+			if ( $cart_item->get_hash() ) {
+				$lines[ $cart_item->get_hash() ] = $cart_item;
+			}
+		}
+		foreach ( (array) $cart as $key => $item ) {
+			if ( empty( $item['hash'] ) || empty( $lines[ $item['hash'] ] ) ) {
+				continue;
+			}
+			$line                        = $lines[ $item['hash'] ];
+			$cart[ $key ]['line_totals'] = array(
+				'price'     => $line->get_price(),
+				'tax'       => $line->get_tax(),
+				'discount'  => $line->get_discount(),
+				'subtotal'  => $line->get_subtotal(),
+				// A line without a line discount costs its subtotal (see SPC_Totals_Calculator::set_lines()).
+				'total'     => ( $line->get_discount() > 0 ) ? $line->get_total() : $line->get_subtotal(),
+				'tax_total' => $line->get_tax_total(),
+			);
+		}
+		return $cart;
 	}
 
 	public function process_order() {
