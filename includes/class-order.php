@@ -539,7 +539,7 @@ class SPC_Order extends Sunshine_Data {
 		return $this->get_meta_value( 'credits' );
 	}
 	public function get_credits_formatted() {
-		return sunshine_price( $this->get_credits() );
+		return '-' . sunshine_price( $this->get_credits() );
 	}
 	public function set_credits( $value ) {
 		$this->update_meta_value( 'credits', floatval( $value ) );
