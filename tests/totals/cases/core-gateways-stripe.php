@@ -107,11 +107,14 @@ $gateways_stripe_run = function ( $callback ) {
 					'customer'      => isset( $body['customer'] ) ? $body['customer'] : null,
 				);
 			} elseif ( preg_match( '#^payment_intents/([^/]+)$#', $path, $match ) ) {
-				$reply = array(
+				// The payment was made for the shopper's Stripe customer. That can be one reused
+				// from an earlier order with the same email, not always cus_spctest.
+				$customer = sunshine_get_payment_method_by_id( 'stripe' )->get_stripe_customer_id();
+				$reply    = array(
 					'id'            => $match[1],
 					'client_secret' => $match[1] . '_secret_spctest',
 					'status'        => 'requires_payment_method',
-					'customer'      => 'cus_spctest',
+					'customer'      => $customer ? $customer : 'cus_spctest',
 				);
 				if ( isset( $body['amount'] ) ) {
 					$reply['amount'] = intval( $body['amount'] );
