@@ -25,6 +25,10 @@ class SPC_Cart {
 	// Works out the money; see SPC_Totals_Calculator.
 	protected $calculator;
 
+	// Whether this setup's totals are worked out. The Free payment method is only saved once
+	// they are: the total read before that leaves out discounts, tax and fees.
+	protected $totals_ready = false;
+
 	// Checkout variables
 	private $active_section;
 	private $fields = array();
@@ -71,6 +75,7 @@ class SPC_Cart {
 
 		$this->discount               = 0;
 		$this->discount_taxable_total = 0;
+		$this->totals_ready           = false;
 
 		// Remember the tax context used by this item build. If resolving checkout state below
 		// changes it, items need one corrective rebuild; repeated setup() calls in the same
@@ -161,6 +166,12 @@ class SPC_Cart {
 		}
 
 		// Set payment method
+		// Free is saved while there is nothing left to pay. Start from the method the customer
+		// chose before that, so it and its fee come back if the total goes up again;
+		// set_checkout_fields() saves Free again if there is still nothing to pay.
+		if ( isset( $this->data['payment_method'] ) && 'free' === $this->data['payment_method'] && SPC()->session->get( 'checkout_payment_method_before_free' ) ) {
+			$this->data['payment_method'] = SPC()->session->get( 'checkout_payment_method_before_free' );
+		}
 		if ( array_key_exists( 'payment_method', $this->data ) && SPC()->payment_methods->is_payment_method_allowed( $this->data['payment_method'] ) ) {
 			$this->set_payment_method( $this->data['payment_method'] );
 			$this->payment_method = sunshine_get_payment_method_by_id( $this->data['payment_method'] );
@@ -280,6 +291,8 @@ class SPC_Cart {
 
 		// 5. The payment method's fee, on what is still left to pay.
 		$this->set_payment_method_fee();
+
+		$this->totals_ready = true;
 
 		// 6. Store credit and the total.
 		return $this->get_total();
@@ -2081,7 +2094,15 @@ class SPC_Cart {
 			$submit_label = sprintf( __( 'Submit Order & Pay %s', 'sunshine-photo-cart' ), '<span class="sunshine-total">' . SPC()->cart->get_total_formatted() . '</span>' );
 		} else {
 			$submit_label = __( 'Submit Order for Free', 'sunshine-photo-cart' );
-			$this->set_checkout_data_item( 'payment_method', 'free' );
+			// Only once the totals are worked out: before that the total can read 0 when it isn't.
+			if ( $this->totals_ready ) {
+				// Remember the customer's own choice so setup() can bring it back.
+				$chosen = (string) $this->get_checkout_data_item( 'payment_method' );
+				if ( 'free' !== $chosen ) {
+					SPC()->session->set( 'checkout_payment_method_before_free', $chosen );
+				}
+				$this->set_checkout_data_item( 'payment_method', 'free' );
+			}
 			if ( $this->credits == 0 ) {
 				$fields['payment']['name'] = '';
 			}
