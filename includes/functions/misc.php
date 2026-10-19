@@ -191,7 +191,8 @@ function sunshine_in_array_r( $needle, $haystack, $strict = false ) {
  *
  * Each pattern can be an exact code (90210), a wildcard prefix (902* matches
  * anything starting with 902, including zip+4 and alphanumeric codes like CB23*),
- * or a numeric range (90210...99000 matches any code between the two numbers).
+ * or a numeric range (90210...99000 matches any code between the two numbers; a US
+ * ZIP+4 such as 90250-1234 is compared by its first 5 digits).
  * Both the postcode and patterns are uppercased and space-stripped before comparing.
  *
  * @since 3.6.12
@@ -208,6 +209,9 @@ function sunshine_postcode_matches( $postcode, $patterns ) {
 
 	$patterns = explode( ',', strtoupper( str_replace( ' ', '', $patterns ) ) );
 
+	// A US ZIP+4 (80250-1234) belongs to its 5 digit ZIP, so ranges compare those 5 digits.
+	$range_postcode = preg_match( '/^(\d{5})-?\d{4}$/', $postcode, $zip ) ? $zip[1] : $postcode;
+
 	foreach ( $patterns as $pattern ) {
 
 		if ( '' === $pattern ) {
@@ -217,8 +221,8 @@ function sunshine_postcode_matches( $postcode, $patterns ) {
 		// Range: 90210...99000 (numeric only).
 		if ( false !== strpos( $pattern, '...' ) ) {
 			$range = explode( '...', $pattern );
-			if ( 2 === count( $range ) && is_numeric( $range[0] ) && is_numeric( $range[1] ) && is_numeric( $postcode )
-				&& (int) $postcode >= (int) $range[0] && (int) $postcode <= (int) $range[1] ) {
+			if ( 2 === count( $range ) && is_numeric( $range[0] ) && is_numeric( $range[1] ) && is_numeric( $range_postcode )
+				&& (int) $range_postcode >= (int) $range[0] && (int) $range_postcode <= (int) $range[1] ) {
 				return true;
 			}
 			continue;
