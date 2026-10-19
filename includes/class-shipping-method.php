@@ -93,22 +93,43 @@ class SPC_Shipping_Method {
 	protected $tax = 0.00;
 
 	/**
+	 * Method classes whose hooks are already added, so each class adds them once.
+	 *
+	 * @var array
+	 */
+	protected static $hooked = array();
+
+	/**
 	 * Constructor for the shipping method class. Registers method and options.
 	 *
 	 * @param integer $instance_id Unique instance ID for this shipping method.
 	 */
 	public function __construct( $instance_id = 0 ) {
 		$this->init();
-		add_filter( 'sunshine_shipping_methods', array( $this, 'register' ) );
-		if ( ! empty( $instance_id ) ) {
-			$this->instance_id = $instance_id;
-			add_filter( 'sunshine_checkout_delivery_options', array( $this, 'delivery_options' ) );
+
+		// A new object is built on every lookup (sunshine_get_shipping_method_by_id), so the
+		// hooks are added only by the first object of each class. Adding them every time piled
+		// up copies that all did the same work and slowed every later lookup.
+		$class = get_class( $this );
+		$admin = is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX );
+		if ( empty( self::$hooked[ $class ] ) ) {
+			self::$hooked[ $class ] = true;
+			add_filter( 'sunshine_shipping_methods', array( $this, 'register' ) );
+			if ( $admin ) {
+				add_filter( 'sunshine_options_shipping_method_' . $this->id, array( $this, 'default_options' ), 1, 2 );
+				add_filter( 'sunshine_options_shipping_method_' . $this->id, array( $this, 'options' ), 10, 2 );
+			}
 		}
 
-		if ( is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-			add_filter( 'sunshine_options_shipping_method_' . $this->id, array( $this, 'default_options' ), 1, 2 );
-			add_filter( 'sunshine_options_shipping_method_' . $this->id, array( $this, 'options' ), 10, 2 );
-		} else {
+		if ( ! empty( $instance_id ) ) {
+			$this->instance_id = $instance_id;
+			if ( empty( self::$hooked[ $class . ':delivery_options' ] ) ) {
+				self::$hooked[ $class . ':delivery_options' ] = true;
+				add_filter( 'sunshine_checkout_delivery_options', array( $this, 'delivery_options' ) );
+			}
+		}
+
+		if ( ! $admin ) {
 			$this->set_price();
 		}
 

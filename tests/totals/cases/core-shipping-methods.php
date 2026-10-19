@@ -589,3 +589,42 @@ $shipmethods_test(
 		$t::money( 60, $cart->get_total(), 'total 50 + 10' );
 	}
 );
+
+// Every cart work-out looks shipping and delivery methods up again, and each lookup builds a new
+// method object. If each new object hooks itself on again, the hook lists grow without end and
+// every later lookup does the same work once more (a long run got twice as slow). Looking methods
+// up many times must leave the hook lists the size they were.
+$shipmethods_test(
+	'Looking up shipping and delivery methods does not add hooks every time',
+	function () use ( $t, $shipmethods_setup, $shipmethods_flat_and_free, $shipmethods_ship_with ) {
+		global $wp_filter;
+		$hooks = array( 'sunshine_shipping_methods', 'sunshine_checkout_delivery_options', 'sunshine_delivery_methods', 'sunshine_options_shipping' );
+		$count = function () use ( $hooks ) {
+			global $wp_filter;
+			$total = 0;
+			foreach ( $hooks as $hook ) {
+				if ( ! empty( $wp_filter[ $hook ] ) ) {
+					foreach ( $wp_filter[ $hook ]->callbacks as $callbacks ) {
+						$total += count( $callbacks );
+					}
+				}
+			}
+			return $total;
+		};
+		$t::add( $t::product( 10, array( 'taxable' => false ) ) );
+		$shipmethods_setup( $shipmethods_flat_and_free );
+		$shipmethods_ship_with( 'spcshipflat' );
+		// Warm up: the first lookup of each class may hook it on once.
+		$t::calculate();
+		sunshine_get_delivery_method_by_id( 'shipping' );
+		$before = $count();
+		for ( $i = 0; $i < 10; $i++ ) {
+			sunshine_get_shipping_method_by_instance( 'spcshipflat' );
+			sunshine_get_shipping_method_by_instance( 'spcshipfree' );
+			sunshine_get_delivery_method_by_id( 'shipping' );
+			$cart = $t::calculate();
+		}
+		$t::same( $before, $count(), 'hooks on the shipping and delivery method filters' );
+		$t::money( 18, $cart->get_total(), 'the flat rate is still charged' );
+	}
+);
