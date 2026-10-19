@@ -920,7 +920,6 @@ class SPC_Admin_Order {
 	}
 
 	public function fix_order_items() {
-		global $wpdb;
 
 		if ( ! isset( $_GET['post'] ) || ! isset( $_GET['fix_order_items'] ) || ! wp_verify_nonce( $_GET['fix_order_items'], 'sunshine_fix_order_items' ) ) {
 			return;
@@ -934,12 +933,29 @@ class SPC_Admin_Order {
 		$items      = $order->get_items();
 		$meta_items = get_post_meta( $order->get_id(), 'cart', true );
 		if ( is_array( $meta_items ) && count( $meta_items ) !== count( $items ) ) {
-			$wpdb->delete(
-				$wpdb->prefix . 'sunshine_order_items',
-				array( 'order_id' => $order->get_id() )
-			);
-
+			// Only put back the lines that are missing. The lines still there hold what was
+			// charged, and so does a missing one when the order saved its line totals. Nothing
+			// is worked out again from today's prices, tax or discount rules.
+			$saved = array();
+			foreach ( $items as $saved_item ) {
+				$row     = $saved_item->get_item_data();
+				$saved[] = array(
+					isset( $row['product_id'] ) ? intval( $row['product_id'] ) : 0,
+					isset( $row['image_id'] ) ? intval( $row['image_id'] ) : 0,
+					isset( $row['qty'] ) ? intval( $row['qty'] ) : 0,
+				);
+			}
 			foreach ( $meta_items as $item ) {
+				$line  = array(
+					isset( $item['product_id'] ) ? intval( $item['product_id'] ) : 0,
+					isset( $item['image_id'] ) ? intval( $item['image_id'] ) : 0,
+					isset( $item['qty'] ) ? intval( $item['qty'] ) : 0,
+				);
+				$found = array_search( $line, $saved, true );
+				if ( false !== $found ) {
+					unset( $saved[ $found ] );
+					continue;
+				}
 				$order->add_item( $item );
 			}
 		}

@@ -606,7 +606,12 @@ class SPC_Order extends Sunshine_Data {
 		// Mirror get_subtotal_formatted()/get_shipping_formatted(): price_formatted() adds the tax
 		// portion back only in with-tax mode, so this shows the gross discount with tax displayed
 		// and the ex-tax (base) discount when prices are shown without tax.
-		return '-' . $this->price_formatted( $this->get_discount() - $this->get_discount_tax(), $this->get_discount_tax() );
+		// When prices include tax the discount already holds its tax, otherwise the tax comes on top.
+		$discount = $this->get_discount();
+		if ( 'yes' === $this->get_meta_value( 'price_has_tax' ) ) {
+			$discount -= $this->get_discount_tax();
+		}
+		return '-' . $this->price_formatted( $discount, $this->get_discount_tax() );
 	}
 	public function set_discount( $value ) {
 		$this->update_meta_value( 'discount', floatval( $value ) );
@@ -1169,6 +1174,18 @@ class SPC_Order extends Sunshine_Data {
 
 		$cart_item = new SPC_Cart_Item( $item );
 
+		// What the customer was charged for this line, when the cart saved it with the line
+		// (see SPC_Cart::get_cart_with_line_totals()). Otherwise it is worked out now.
+		$charged = ( ! empty( $item['line_totals'] ) && is_array( $item['line_totals'] ) ) ? $item['line_totals'] : array(
+			'price'     => $cart_item->get_price(),
+			'tax'       => $cart_item->get_tax(),
+			'discount'  => $cart_item->get_discount(),
+			'subtotal'  => $cart_item->get_subtotal(),
+			'total'     => $cart_item->get_total(),
+			'tax_total' => $cart_item->get_tax_total(),
+		);
+		unset( $item['line_totals'] );
+
 		if ( empty( $item['meta'] ) ) {
 			$item['meta'] = array();
 		}
@@ -1196,7 +1213,7 @@ class SPC_Order extends Sunshine_Data {
 		if ( ! empty( $item['product_id'] ) ) {
 			$product                          = sunshine_get_product( intval( $item['product_id'] ), intval( $item['price_level'] ) );
 			$item['type']                     = $product->get_type();
-			$item['price']                    = $cart_item->get_price();
+			$item['price']                    = isset( $charged['price'] ) ? (float) $charged['price'] : $cart_item->get_price();
 			$item['meta']['product_name']     = $product->get_name();
 			$item['meta']['product_cat_name'] = $product->get_category_name();
 		}
@@ -1234,6 +1251,14 @@ class SPC_Order extends Sunshine_Data {
 			$item['meta']['options'] = $options;
 		}
 
+		// The line's own totals, so the saved line shows what was charged without working it out
+		// again. One item's tax times the quantity can be a cent or more off the line's tax.
+		$item['meta']['line_totals'] = array(
+			'subtotal'  => isset( $charged['subtotal'] ) ? sunshine_round_amount( $charged['subtotal'] ) : 0,
+			'total'     => isset( $charged['total'] ) ? sunshine_round_amount( $charged['total'] ) : 0,
+			'tax_total' => isset( $charged['tax_total'] ) ? sunshine_round_amount( $charged['tax_total'] ) : 0,
+		);
+
 		$item = apply_filters( 'sunshine_cart_item_before_order', $item );
 
 		$insert_result = $wpdb->insert(
@@ -1247,8 +1272,8 @@ class SPC_Order extends Sunshine_Data {
 				'gallery_id'  => ( ! empty( $item['gallery_id'] ) ) ? intval( $item['gallery_id'] ) : '',
 				'price_level' => ( ! empty( $item['price_level'] ) ) ? intval( $item['price_level'] ) : '',
 				'price'       => ( ! empty( $item['price'] ) ) ? floatval( $item['price'] ) : '',
-				'tax'         => $cart_item->get_tax(),
-				'discount'    => $cart_item->get_discount(),
+				'tax'         => isset( $charged['tax'] ) ? (float) $charged['tax'] : 0,
+				'discount'    => isset( $charged['discount'] ) ? (float) $charged['discount'] : 0,
 			)
 		);
 
