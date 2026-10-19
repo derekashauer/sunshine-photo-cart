@@ -253,3 +253,44 @@ function sunshine_order_return_credits( $status, $order ) {
 	$order->add_log( sprintf( __( '%s of store credit given back to the customer', 'sunshine-photo-cart' ), sunshine_price( $credits ) ) );
 }
 add_action( 'sunshine_order_status_change', 'sunshine_order_return_credits', 10, 2 );
+
+/**
+ * Whether an order counts toward sales totals (dashboard, weekly Summary email).
+ *
+ * Paid orders always count. A Refunded order counts too while money is left on it
+ * after its refunds, because some payment methods mark an order Refunded even when
+ * only part of it was given back.
+ *
+ * @param string $status               Order status slug.
+ * @param float  $total_after_refunds  Order total less its refunds.
+ *
+ * @return bool
+ */
+function sunshine_order_counts_in_sales( $status, $total_after_refunds ) {
+	if ( sunshine_order_is_paid( $status ) ) {
+		return true;
+	}
+	return ( 'refunded' === $status && $total_after_refunds > 0 );
+}
+
+/**
+ * The statuses an order can have and still count toward sales totals. Use with
+ * sunshine_order_counts_in_sales() to leave out Refunded orders with nothing left.
+ *
+ * @return string[]
+ */
+function sunshine_order_statuses_sales() {
+	return array_unique( array_merge( sunshine_order_statuses_paid(), array( 'refunded' ) ) );
+}
+
+/**
+ * Forget the dashboard's saved sales numbers, so the next look at the dashboard
+ * works them out again. Runs whenever an order is made, changes status or gets
+ * a refund, wherever that happens (checkout, payment webhooks, admin).
+ */
+function sunshine_clear_dashboard_stats() {
+	delete_transient( 'sunshine-dashboard-sales' );
+}
+add_action( 'sunshine_order_create', 'sunshine_clear_dashboard_stats' );
+add_action( 'sunshine_order_status_change', 'sunshine_clear_dashboard_stats' );
+add_action( 'sunshine_order_refund', 'sunshine_clear_dashboard_stats' );

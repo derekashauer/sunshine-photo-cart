@@ -917,6 +917,8 @@ class SPC_Order extends Sunshine_Data {
 		);
 		$this->update_meta_value( 'refunds', $refunds );
 
+		do_action( 'sunshine_order_refund', $this, $amount, $reason );
+
 		/* translators: %s is the refund amount formatted as price */
 		$this->add_log( sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $amount ) ) );
 
