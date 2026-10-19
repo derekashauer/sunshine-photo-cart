@@ -163,7 +163,8 @@ $apw_test(
 				'discount_amount' => 150,
 			)
 		);
-		$t::same( true, $apw_refused( $status ), 'refused as a bad request (got ' . $status . ')' );
+		$refused        = $apw_refused( $status );
+		$t::same( true, $refused, 'refused as a bad request (got ' . $status . ')' );
 
 		$t::tax( 10 );
 		$t::flat_shipping( 10 );
@@ -171,8 +172,9 @@ $apw_test(
 		$apw_use_code( $code );
 		$cart = $t::calculate();
 		// If saved: at most the 100 of products comes off. Tax on 0 = 0. Shipping 10 is still paid.
+		// If refused: there is no such code, so 100 + 10 tax + 10 shipping = 120.
 		$t::same( true, (float) $cart->get_discount() <= 100, 'discount is not more than the products (got ' . $cart->get_discount() . ')' );
-		$t::money( 10, $cart->get_total(), 'shipping is still paid' );
+		$t::money( $refused ? 120 : 10, $cart->get_total(), $refused ? 'nothing comes off' : 'shipping is still paid' );
 	}
 );
 
