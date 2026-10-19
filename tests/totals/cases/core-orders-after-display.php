@@ -374,3 +374,31 @@ $t::test(
 		}
 	}
 );
+
+// Every Sunshine email is run through the bundled Emogrifier to inline its CSS. Its old way of
+// keeping accented letters and symbols (mb_convert_encoding to 'HTML-ENTITIES') is deprecated
+// on PHP 8.2 and will stop working, so it must not be used, and the letters must still come out.
+$t::test(
+	'Emails: putting the CSS inline keeps accented letters and symbols, with no PHP deprecation',
+	function () use ( $t ) {
+		if ( ! class_exists( 'Sunshine_Emogrifier' ) ) {
+			include_once SUNSHINE_PHOTO_CART_PATH . 'includes/class-emogrifier.php';
+		}
+		$notices = array();
+		set_error_handler(
+			function ( $level, $message, $file, $line ) use ( &$notices ) {
+				$notices[] = $message . ' (' . basename( $file ) . ':' . $line . ')';
+				return true;
+			}
+		);
+		try {
+			$emogrifier = new Sunshine_Emogrifier( '<html><body><p class="note">Café 5,00 € 日本 &amp; 😀</p></body></html>', '.note{color:red}' );
+			$html       = $emogrifier->emogrify();
+		} finally {
+			restore_error_handler();
+		}
+		$t::same( array(), $notices, 'PHP warnings and deprecations' );
+		$t::same( true, false !== strpos( $html, 'style="color: red;"' ), 'CSS put inline' );
+		$t::same( 'Café 5,00 € 日本 & 😀', html_entity_decode( wp_strip_all_tags( $html ), ENT_QUOTES, 'UTF-8' ), 'text reads the same' );
+	}
+);
