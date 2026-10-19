@@ -236,9 +236,17 @@ class SPC_Discount extends Sunshine_Data {
 			}
 		}
 
+		// When prices include tax, the minimum is checked against the subtotal the customer sees,
+		// with its tax, not the amount left after taking the tax out.
 		$min_amount = $this->get_min_amount();
-		if ( $min_amount && SPC()->cart->get_subtotal() < $min_amount ) {
-			return false;
+		if ( $min_amount ) {
+			$subtotal = (float) SPC()->cart->get_subtotal();
+			if ( SPC_Totals_Calculator::prices_include_tax() ) {
+				$subtotal += (float) SPC()->cart->get_subtotal_tax();
+			}
+			if ( $subtotal < $min_amount ) {
+				return false;
+			}
 		}
 
 		$min_quantity = $this->get_min_quantity();
