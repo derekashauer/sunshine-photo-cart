@@ -306,6 +306,32 @@ $shipmethods_test(
 	}
 );
 
+// Pickup gets the same Price Type setting, so a fee set per item has to count the items
+// (a studio charging a packing fee per print), not charge it once.
+$shipmethods_test(
+	'Pickup priced per item',
+	function () use ( $t, $shipmethods_setup ) {
+		$t::require_plugin( 'sunshine_advanced_shipping_options', 'Advanced Shipping add-on' );
+		$t::add( $t::product( 10, array( 'taxable' => false ) ), 2 );
+		$t::add( $t::product( 10, array( 'taxable' => false ) ), 3 );
+		$shipmethods_setup(
+			array(
+				'spcshippickupqty' => array(
+					'id'         => 'pickup',
+					'price'      => '1',
+					'price_type' => 'qty',
+					'location'   => '1 Studio Lane',
+				),
+			)
+		);
+		SPC()->cart->set_delivery_method( 'spcshippickupqty' );
+		$cart = $t::calculate();
+		$t::same( 'pickup', SPC()->cart->get_delivery_method_id(), 'delivery method' );
+		$t::money( 5, $cart->get_shipping(), 'per item: 5 items x 1' );
+		$t::money( 55, $cart->get_total(), 'total 50 + 5' );
+	}
+);
+
 // Pickup: its own fee, and since 3.7.3 no Extra Shipping Cost added.
 $shipmethods_flat_and_pickup = function ( $pickup_price, $pickup_taxable = false ) use ( $shipmethods_setup ) {
 	$shipmethods_setup(

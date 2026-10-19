@@ -339,46 +339,54 @@ class SPC_Shipping_Method {
 
 	public function set_price() {
 
-		if ( ! empty( $this->instance_id ) ) {
-			$this->price = floatval( SPC()->get_option( $this->id . '_price_' . $this->instance_id ) );
+		if ( empty( $this->instance_id ) ) {
+			return;
+		}
 
-			// When prices include tax, extract base price first from the configured price.
-			$price_has_tax = SPC()->get_option( 'price_has_tax' );
-			if ( 'yes' === $price_has_tax && $this->is_taxable() ) {
-				$tax_rate = SPC()->cart->get_tax_rate();
-				if ( $tax_rate ) {
-					// Extract tax from the base flat rate price.
-					$base_price  = round( $this->price / ( $tax_rate['rate'] + 1 ), 2 );
-					$this->tax   = round( $this->price - $base_price, 2 );
-					$this->price = $base_price;
+		// Add up what the customer is charged, as entered (tax included when prices include
+		// tax). The tax is split out once at the end, so rounding each piece first can't make
+		// the total drift from the entered prices.
+		$price      = (float) sunshine_sanitize_amount( (string) SPC()->get_option( $this->id . '_price_' . $this->instance_id ) );
+		$price_type = SPC()->get_option( $this->id . '_price_type_' . $this->instance_id );
+		$cart_items = SPC()->cart->get_cart_items();
+		$total      = ( 'line' === $price_type || 'qty' === $price_type ) ? 0 : $price;
+
+		if ( ! empty( $cart_items ) ) {
+			foreach ( $cart_items as $item ) {
+				// Items that don't ship add nothing to shipping.
+				if ( ! $item->get_product()->needs_shipping() ) {
+					continue;
+				}
+				if ( 'line' === $price_type ) {
+					$total += $price;
+				} elseif ( 'qty' === $price_type ) {
+					$total += $price * $item->get_qty();
+				}
+				if ( $this->adds_product_shipping ) {
+					$total += (float) sunshine_sanitize_amount( (string) $item->product->get_shipping() ) * $item->get_qty();
 				}
 			}
+		}
 
-			// Add product shipping costs.
-			if ( $this->adds_product_shipping && ! SPC()->cart->is_empty() ) {
-				foreach ( SPC()->cart->get_cart_items() as $item ) {
-					$product_shipping = floatval( $item->product->get_shipping() );
-					if ( $product_shipping ) {
-						// If prices include tax, extract base from product shipping too.
-						if ( 'yes' === $price_has_tax && $this->is_taxable() && ! empty( $tax_rate ) ) {
-							$product_shipping_base = round( $product_shipping / ( $tax_rate['rate'] + 1 ), 2 );
-							$product_shipping_tax  = round( $product_shipping - $product_shipping_base, 2 );
-							$this->price          += ( $product_shipping_base * $item->get_qty() );
-							$this->tax            += ( $product_shipping_tax * $item->get_qty() );
-						} else {
-							$this->price += ( $product_shipping * $item->get_qty() );
-						}
-					}
-				}
-			}
+		$this->price = $total;
+		$this->tax   = 0;
 
-			// Calculate tax if prices don't include tax.
-			if ( 'yes' !== $price_has_tax && $this->price && $this->is_taxable() ) {
-				$tax_rate = SPC()->cart->get_tax_rate();
-				if ( $tax_rate ) {
-					$this->tax = round( $this->price * $tax_rate['rate'], 2 );
-				}
-			}
+		if ( ! $this->price || ! $this->is_taxable() ) {
+			return;
+		}
+
+		$tax_rate = SPC()->cart->get_tax_rate();
+		if ( ! $tax_rate ) {
+			return;
+		}
+
+		if ( 'yes' === SPC()->get_option( 'price_has_tax' ) ) {
+			// Split the tax out of the entered total.
+			$base_price  = round( $this->price / ( $tax_rate['rate'] + 1 ), 2 );
+			$this->tax   = round( $this->price - $base_price, 2 );
+			$this->price = $base_price;
+		} else {
+			$this->tax = round( $this->price * $tax_rate['rate'], 2 );
 		}
 
 	}
