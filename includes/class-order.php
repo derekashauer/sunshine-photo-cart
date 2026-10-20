@@ -920,7 +920,7 @@ class SPC_Order extends Sunshine_Data {
 		do_action( 'sunshine_order_refund', $this, $amount, $reason );
 
 		/* translators: %s is the refund amount formatted as price */
-		$this->add_log( sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $amount ) ) );
+		$this->add_log( sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $amount, false, $this->get_currency() ) ) );
 
 		// Update this customer's order stats.
 		$customer = $this->get_customer();

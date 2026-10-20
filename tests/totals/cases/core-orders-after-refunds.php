@@ -335,3 +335,23 @@ $t::test(
 		$t::same( 'refunded', $order->get_status(), 'status' );
 	}
 );
+
+// The order log says how much was refunded in the order's own currency. A yen order stays in yen
+// after the store switches to dollars, so its refund note must say ¥100, not $100.
+$t::test(
+	'Refund note uses the order currency, not the store currency',
+	function () use ( $t ) {
+		$t::add( $t::product( 500 ) );
+		$t::calculate();
+		$order = $t::place_order();
+		$order->set_currency( 'JPY' );
+		$t::option( 'currency', 'USD' );
+
+		$order->add_refund( 100 );
+
+		$log = wp_json_encode( sunshine_get_order( $order->get_id() )->get_log() );
+		$t::same( true, false !== strpos( $log, '&yen;' ) || false !== strpos( $log, '¥' ), 'refund note shows the yen sign' );
+		$t::same( false, false !== strpos( $log, '&#36;' ), 'refund note does not show a dollar sign' );
+		$t::same( '<span class="sunshine-price"><span class="sunshine-currency-symbol">&#36;</span><span class="sunshine-amount">100</span></span>', sunshine_price( 100 ), 'store prices still use the store currency afterwards' );
+	}
+);

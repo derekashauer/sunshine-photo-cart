@@ -18,9 +18,27 @@ function sunshine_decode_text( $text ) {
 }
 
 // TODO: This should return the price but limited to float based on locale settings.
-function sunshine_price( $value, $force_0 = false ) {
+/**
+ * A price as HTML in the store currency, or in $currency when given (an order placed in another
+ * currency before the store's was changed shows its own symbol and decimals).
+ *
+ * @param float  $value    The amount.
+ * @param bool   $force_0  Not used.
+ * @param string $currency Currency code, or '' for the store currency.
+ * @return string
+ */
+function sunshine_price( $value, $force_0 = false, $currency = '' ) {
 	if ( $value == '' ) {
 		$value = 0;
+	}
+	if ( $currency && $currency !== sunshine_get_currency() ) {
+		$use_currency = function () use ( $currency ) {
+			return $currency;
+		};
+		add_filter( 'sunshine_currency', $use_currency, PHP_INT_MAX );
+		$price = '<span class="sunshine-price">' . sunshine_currency_filter( sunshine_format_amount( $value ), $currency ) . '</span>';
+		remove_filter( 'sunshine_currency', $use_currency, PHP_INT_MAX );
+		return $price;
 	}
 	/*
 	$free_label = apply_filters( 'sunshine_price_free_label', __( 'Free', 'sunshine-photo-cart' ) );
@@ -255,9 +273,9 @@ function sunshine_get_currency() {
 	return apply_filters( 'sunshine_currency', $currency );
 }
 
-function sunshine_currency_symbol() {
+function sunshine_currency_symbol( $currency = '' ) {
 
-	switch ( SPC()->get_option( 'currency' ) ) {
+	switch ( $currency ? $currency : SPC()->get_option( 'currency' ) ) {
 		case 'AED':
 			$currency_symbol = 'د.إ';
 			break;

@@ -849,7 +849,7 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 				$this->maybe_mark_refunded( $order );
 			} elseif ( ! empty( $request->status ) && $request->status == 'COMPLETED' ) {
 				/* translators: %s is the refund amount formatted as price */
-				$order->add_log( sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount ) ) );
+				$order->add_log( sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount, false, $order->get_currency() ) ) );
 				/* translators: %s is the refund amount formatted as price */
 				SPC()->notices->add_admin( 'paypal_refund_' . $capture_id, sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount ) ) );
 				$order->add_refund( $refund_amount );
