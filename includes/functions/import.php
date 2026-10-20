@@ -269,12 +269,29 @@ function sunshine_fast_imports_install() {
 		return;
 	}
 
-	if ( false === @file_put_contents( $path, $contents ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents, WordPress.PHP.NoSilencedErrors.Discouraged -- an unwritable folder is expected on some hosts.
+	// Written under another name and then renamed into place, which happens in
+	// one step. Every page on the site loads this file, so a page arriving while
+	// it was half written would otherwise stop with an error. The temporary name
+	// doesn't end in .php, so WordPress never loads it.
+	$temp    = $path . '.tmp-' . wp_generate_password( 8, false );
+	$written = false !== @file_put_contents( $temp, $contents ) && @rename( $temp, $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents, WordPress.PHP.NoSilencedErrors.Discouraged -- an unwritable folder is expected on some hosts.
+
+	if ( ! $written ) {
+		if ( file_exists( $temp ) ) {
+			wp_delete_file( $temp );
+		}
 		// Only say so once, not on every admin page.
 		if ( ! get_transient( 'sunshine_fast_imports_install_failed' ) ) {
 			SPC()->log( 'Fast imports: could not write ' . $path . ', so imports load every plugin' );
 			set_transient( 'sunshine_fast_imports_install_failed', 1, DAY_IN_SECONDS );
 		}
+		return;
+	}
+
+	// Some hosts never check files for changes once PHP has cached them, so an
+	// updated file would keep running its old version until the cache cleared.
+	if ( function_exists( 'opcache_invalidate' ) ) {
+		@opcache_invalidate( $path, true ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- opcache can be restricted on some hosts.
 	}
 }
 
