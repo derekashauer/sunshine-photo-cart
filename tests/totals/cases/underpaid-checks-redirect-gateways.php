@@ -374,6 +374,409 @@ $t::test(
 );
 
 /*
+ * PayFast's API, for when PayFast's ITN never arrives. When the customer comes back to the
+ * return link and the order is still unpaid, the site asks PayFast's transaction history
+ * (GET https://api.payfast.co.za/transactions/history, CSV) whether the order was paid. Only a
+ * received payment PayFast lists for this order, for the whole total, in rand, finishes it.
+ * Coming back to the link is never enough on its own, and anything PayFast can't confirm (an
+ * error, an answer that can't be read, a rejected signature) leaves the order unpaid.
+ */
+
+// PayFast's transaction history: a CSV header row (the columns PayFast's API guide shows), then
+// one line per transaction. Each row is merged into a received card payment made just now.
+$underpaid_payfast_history = function ( $rows ) {
+	$columns = array( 'Date', 'Type', 'Sign', 'Party', 'Name', 'Description', 'Currency', 'Funding Type', 'Gross', 'Fee', 'Net', 'Balance', 'M Payment ID', 'PF Payment ID', 'custom str1', 'custom int1', 'custom str2', 'custom int2', 'custom str3', 'custom str4', 'custom str5', 'custom int3', 'custom int4', 'custom int5' );
+	$now     = new DateTime( 'now', new DateTimeZone( 'Africa/Johannesburg' ) );
+	$handle  = fopen( 'php://temp', 'r+' );
+	fputcsv( $handle, $columns, ',', '"', '\\' );
+	foreach ( $rows as $row ) {
+		$row  = array_merge(
+			array(
+				'Date'          => $now->format( 'Y-m-d H:i:s' ),
+				'Type'          => 'FUNDS_RECEIVED',
+				'Sign'          => 'CREDIT',
+				'Party'         => 'Totals Test',
+				'Name'          => 'Order',
+				'Currency'      => 'ZAR',
+				'Funding Type'  => 'CC',
+				'Fee'           => '-5.29',
+				'Balance'       => '1,000.00',
+				'PF Payment ID' => '2290001',
+			),
+			$row
+		);
+		$line = array();
+		foreach ( $columns as $column ) {
+			$line[] = isset( $row[ $column ] ) ? $row[ $column ] : '';
+		}
+		fputcsv( $handle, $line, ',', '"', '\\' );
+	}
+	rewind( $handle );
+	$csv = stream_get_contents( $handle );
+	fclose( $handle );
+	return $csv;
+};
+
+// A reply for PayFast's API that answers the transaction history with $status and $body.
+$underpaid_payfast_api_reply = function ( $status, $body ) {
+	return function ( $request ) use ( $status, $body ) {
+		return 'api.payfast.co.za' === $request['host'] && '/transactions/history' === $request['path'] ? array( $status, $body ) : null;
+	};
+};
+
+// Run $callback with PayFast's API answered by $reply. Returns what $underpaid_run gives, plus
+// the headers of every request sent.
+$underpaid_payfast_api_run = function ( $callback, $reply, $label ) use ( $underpaid_run ) {
+	$headers = array();
+	$grab    = function ( $pre, $args ) use ( &$headers ) {
+		$headers[] = isset( $args['headers'] ) ? (array) $args['headers'] : array();
+		return $pre;
+	};
+	add_filter( 'pre_http_request', $grab, 10, 2 );
+	try {
+		$run = $underpaid_run( $callback, $reply, $label );
+	} finally {
+		remove_filter( 'pre_http_request', $grab, 10 );
+	}
+	$run['headers'] = $headers;
+	return $run;
+};
+
+// The customer comes back to PayFast's return link, in their own browser.
+$underpaid_payfast_return = function ( $order, $reply ) use ( $underpaid_payfast_api_run ) {
+	$_GET['payfast_success'] = wp_create_nonce( 'payfast_success_' . $order->get_id() );
+	$_GET['order_id']        = (string) $order->get_id();
+	try {
+		return $underpaid_payfast_api_run(
+			function () {
+				sunshine_get_payment_method_by_id( 'payfast' )->success();
+			},
+			$reply,
+			'PayFast return link'
+		);
+	} finally {
+		unset( $_GET['payfast_success'], $_GET['order_id'] );
+	}
+};
+
+// The order's log lines that contain $text.
+$underpaid_payfast_log = function ( $order_id, $text ) {
+	$found = array();
+	foreach ( get_comments(
+		array(
+			'post_id' => $order_id,
+			'type'    => 'sunshine_order_log',
+		)
+	) as $comment ) {
+		if ( false !== strpos( $comment->comment_content, $text ) ) {
+			$found[] = $comment->comment_content;
+		}
+	}
+	return $found;
+};
+
+$underpaid_payfast_confirmed_note = 'Payfast payment confirmed through the PayFast API (payment notice not received)';
+
+$t::test(
+	'PayFast API: a payment PayFast lists for the full total finishes the order once, with a correctly signed request',
+	function () use ( $t, $underpaid_payfast_settings, $underpaid_place, $underpaid_payfast_history, $underpaid_payfast_api_reply, $underpaid_payfast_return, $underpaid_payfast_api_run, $underpaid_fresh, $underpaid_payfast_log, $underpaid_payfast_confirmed_note ) {
+		$underpaid_payfast_settings();
+		$t::tax( 15 );
+		$t::add( $t::product( 200 ) );
+		$order = $underpaid_place( 'payfast', 230 );
+		$csv   = $underpaid_payfast_history(
+			array(
+				array(
+					'M Payment ID' => '999999',
+					'Gross'        => '230.00',
+					'PF Payment ID' => '2290000',
+				),
+				array(
+					'M Payment ID' => (string) $order->get_id(),
+					'Gross'        => '230.00',
+				),
+			)
+		);
+		$run   = $underpaid_payfast_return( $order, $underpaid_payfast_api_reply( 200, $csv ) );
+		$t::same( $order->get_received_permalink(), $run['redirect'], 'customer goes to the receipt' );
+
+		$saved = $underpaid_fresh( $order->get_id() );
+		$t::same( 'new', $saved->get_status(), 'order is paid' );
+		$t::same( true, '' !== (string) $saved->get_meta_value( 'post_processed' ), 'order is finished' );
+		$t::same( '2290001', (string) $saved->get_meta_value( 'payfast_payment_id' ), 'PayFast payment ID saved from the history' );
+		$t::money( 5.29, $saved->get_meta_value( 'payfast_fees' ), 'PayFast fee saved' );
+		$t::same( 1, count( $underpaid_payfast_log( $order->get_id(), $underpaid_payfast_confirmed_note ) ), 'one note says the API confirmed it' );
+
+		// What was sent: PayFast's documented headers, signed the way its API guide says (every
+		// header, query value and the passphrase, sorted by name, urlencoded, joined with &,
+		// md5), with testing=true on the address but left out of the signature.
+		$t::same( 1, count( $run['sent'] ), 'one request to PayFast' );
+		$t::same( 'api.payfast.co.za', $run['sent'][0]['host'], 'sent to PayFast\'s API' );
+		$t::same( 'GET', $run['sent'][0]['method'], 'a GET request' );
+		parse_str( (string) wp_parse_url( $run['sent'][0]['url'], PHP_URL_QUERY ), $query );
+		$t::same( 'true', isset( $query['testing'] ) ? $query['testing'] : '', 'sandbox asked for with testing=true' );
+		$headers = $run['headers'][0];
+		$t::same( '10000100', isset( $headers['merchant-id'] ) ? $headers['merchant-id'] : '', 'merchant-id header' );
+		$t::same( 'v1', isset( $headers['version'] ) ? $headers['version'] : '', 'version header' );
+		$t::same( 1, preg_match( '/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/', isset( $headers['timestamp'] ) ? $headers['timestamp'] : '' ), 'ISO-8601 timestamp header' );
+		$signed = $query;
+		unset( $signed['testing'] );
+		$signed['merchant-id'] = $headers['merchant-id'];
+		$signed['version']     = $headers['version'];
+		$signed['timestamp']   = $headers['timestamp'];
+		$signed['passphrase']  = 'sunshine totals';
+		ksort( $signed );
+		$t::same( md5( http_build_query( $signed ) ), isset( $headers['signature'] ) ? $headers['signature'] : '', 'signature as PayFast\'s API guide builds it' );
+		$t::same( false, isset( $query['passphrase'] ), 'passphrase is never sent' );
+		$t::same( 1, preg_match( '/^\d{4}-\d{2}-\d{2}$/', isset( $query['from'] ) ? $query['from'] : '' ), 'from date' );
+		$t::same( 1, preg_match( '/^\d{4}-\d{2}-\d{2}$/', isset( $query['to'] ) ? $query['to'] : '' ), 'to date' );
+
+		// Asking again (the customer reloads the link, or admin asks) doesn't finish it again.
+		$again = $underpaid_payfast_api_run(
+			function () use ( $saved ) {
+				sunshine_get_payment_method_by_id( 'payfast' )->confirm_payment( $saved );
+			},
+			$underpaid_payfast_api_reply( 200, $csv ),
+			'PayFast API again'
+		);
+		$t::same( 0, count( $again['sent'] ), 'a paid order is not looked up again' );
+		$t::same( 1, count( $underpaid_payfast_log( $order->get_id(), $underpaid_payfast_confirmed_note ) ), 'still one confirmation note' );
+	}
+);
+
+// A payment that was for less than the order (the order grew after the PayFast page opened).
+$t::test(
+	'PayFast API: a payment for a different amount leaves the order unpaid, with a note',
+	function () use ( $t, $underpaid_payfast_settings, $underpaid_place, $underpaid_payfast_history, $underpaid_payfast_api_reply, $underpaid_payfast_return, $underpaid_still_pending, $underpaid_payfast_log ) {
+		$underpaid_payfast_settings();
+		$t::add( $t::product( 230, array( 'taxable' => false ) ) );
+		$order = $underpaid_place( 'payfast', 230 );
+		$csv   = $underpaid_payfast_history(
+			array(
+				array(
+					'M Payment ID' => (string) $order->get_id(),
+					'Gross'        => '229.99',
+				),
+			)
+		);
+		$underpaid_payfast_return( $order, $underpaid_payfast_api_reply( 200, $csv ) );
+		$underpaid_still_pending( $order->get_id() );
+		$t::same( 1, count( $underpaid_payfast_log( $order->get_id(), 'does not match the order total' ) ), 'note says the amount is wrong' );
+	}
+);
+
+$t::test(
+	'PayFast API: a payment in another currency, dated before the order, or refunded leaves the order unpaid',
+	function () use ( $t, $underpaid_payfast_settings, $underpaid_place, $underpaid_payfast_history, $underpaid_payfast_api_reply, $underpaid_payfast_api_run, $underpaid_still_pending, $underpaid_payfast_log ) {
+		$underpaid_payfast_settings();
+		$t::add( $t::product( 230, array( 'taxable' => false ) ) );
+		$order   = $underpaid_place( 'payfast', 230 );
+		$payfast = sunshine_get_payment_method_by_id( 'payfast' );
+		$cases   = array(
+			'another currency'   => array(
+				array(
+					'Currency' => 'USD',
+				),
+				'not ZAR',
+			),
+			// The same order number at another shop on the same PayFast account, paid last year.
+			'dated before order' => array(
+				array(
+					'Date' => '2025-01-15 10:00:00',
+				),
+				'before the order was placed',
+			),
+			'refunded'           => array(
+				array(),
+				'REFUND',
+			),
+		);
+		foreach ( $cases as $label => $case ) {
+			$rows = array( array_merge( array( 'M Payment ID' => (string) $order->get_id(), 'Gross' => '230.00' ), $case[0] ) );
+			if ( 'refunded' === $label ) {
+				$rows[] = array(
+					'M Payment ID' => (string) $order->get_id(),
+					'Type'         => 'REFUND',
+					'Sign'         => 'DEBIT',
+					'Gross'        => '-230.00',
+				);
+			}
+			$result = null;
+			$underpaid_payfast_api_run(
+				function () use ( $payfast, $order, &$result ) {
+					$result = $payfast->confirm_payment( sunshine_get_order( $order->get_id() ) );
+				},
+				$underpaid_payfast_api_reply( 200, $underpaid_payfast_history( $rows ) ),
+				'PayFast API ' . $label
+			);
+			$t::same( 'problem', $result, $label . ': PayFast\'s answer is not accepted' );
+			$underpaid_still_pending( $order->get_id(), $label . ': ' );
+			$t::same( 1, count( $underpaid_payfast_log( $order->get_id(), $case[1] ) ), $label . ': note says why' );
+		}
+	}
+);
+
+// PayFast's history is the store's own account. Asking with another account's ID, or a wrong
+// passphrase, gets "Merchant authorisation failed" or "Merchant not found" and proves nothing.
+$t::test(
+	'PayFast API: rejected credentials, no passphrase, errors and unreadable answers leave the order unpaid',
+	function () use ( $t, $underpaid_payfast_settings, $underpaid_place, $underpaid_payfast_api_reply, $underpaid_payfast_api_run, $underpaid_still_pending, $underpaid_payfast_log ) {
+		$options = $underpaid_payfast_settings();
+		$t::add( $t::product( 230, array( 'taxable' => false ) ) );
+		$order   = $underpaid_place( 'payfast', 230 );
+		$payfast = sunshine_get_payment_method_by_id( 'payfast' );
+		$replies = array(
+			'merchant not found'    => $underpaid_payfast_api_reply(
+				401,
+				array(
+					'code'   => 401,
+					'status' => 'failed',
+					'data'   => array(
+						'response' => false,
+						'message'  => 'Merchant not found',
+					),
+				)
+			),
+			'authorisation failed'  => $underpaid_payfast_api_reply(
+				401,
+				array(
+					'code'   => 401,
+					'status' => 'failed',
+					'data'   => array(
+						'response' => false,
+						'message'  => 'Merchant authorisation failed',
+					),
+				)
+			),
+			'server error'          => $underpaid_payfast_api_reply( 500, 'Application Error' ),
+			'no answer'             => null,
+			'not the history'       => $underpaid_payfast_api_reply( 200, '<html><body>Maintenance</body></html>' ),
+			'JSON instead of CSV'   => $underpaid_payfast_api_reply( 200, array( 'response' => true ) ),
+		);
+		foreach ( $replies as $label => $reply ) {
+			$result = null;
+			$underpaid_payfast_api_run(
+				function () use ( $payfast, $order, &$result ) {
+					$result = $payfast->confirm_payment( sunshine_get_order( $order->get_id() ) );
+				},
+				$reply,
+				'PayFast API ' . $label
+			);
+			$t::same( 'error', $result, $label . ': treated as an error' );
+			$underpaid_still_pending( $order->get_id(), $label . ': ' );
+		}
+		$t::same( 1, count( $underpaid_payfast_log( $order->get_id(), 'Merchant authorisation failed' ) ), 'PayFast\'s reason is on the order' );
+
+		// PayFast's API only works for an account with a passphrase, so without one nothing is sent.
+		$t::option( 'payfast_passphrase_test', '' );
+		$result = null;
+		$run    = $underpaid_payfast_api_run(
+			function () use ( $payfast, $order, &$result ) {
+				$result = $payfast->confirm_payment( sunshine_get_order( $order->get_id() ) );
+			},
+			null,
+			'PayFast API no passphrase'
+		);
+		$t::same( 'error', $result, 'no passphrase: not checked' );
+		$t::same( 0, count( $run['sent'] ), 'no passphrase: nothing sent to PayFast' );
+		$underpaid_still_pending( $order->get_id(), 'no passphrase: ' );
+	}
+);
+
+// PayFast may take a moment to list a payment made seconds ago: the return link asks a second
+// time, then leaves the order waiting for the ITN.
+$t::test(
+	'PayFast API: a payment PayFast doesn\'t list yet leaves the order waiting, after one more try',
+	function () use ( $t, $underpaid_payfast_settings, $underpaid_place, $underpaid_payfast_history, $underpaid_payfast_api_reply, $underpaid_payfast_return, $underpaid_still_pending, $underpaid_payfast_log ) {
+		$underpaid_payfast_settings();
+		$t::add( $t::product( 230, array( 'taxable' => false ) ) );
+		$order = $underpaid_place( 'payfast', 230 );
+		$csv   = $underpaid_payfast_history(
+			array(
+				array(
+					'M Payment ID' => (string) ( $order->get_id() + 1 ),
+					'Gross'        => '230.00',
+				),
+			)
+		);
+		$run   = $underpaid_payfast_return( $order, $underpaid_payfast_api_reply( 200, $csv ) );
+		$t::same( 2, count( $run['sent'] ), 'PayFast asked twice' );
+		$t::same( $order->get_received_permalink(), $run['redirect'], 'customer still goes to the receipt' );
+		$underpaid_still_pending( $order->get_id() );
+		$t::same( array(), $underpaid_payfast_log( $order->get_id(), 'Payfast API' ), 'no note: nothing wrong, just not listed yet' );
+
+		// An empty history (no transactions at all) is the same.
+		$run = $underpaid_payfast_return( $order, $underpaid_payfast_api_reply( 200, '' ) );
+		$underpaid_still_pending( $order->get_id(), 'empty history: ' );
+	}
+);
+
+// The ITN and the API check can both try to finish the order. Whichever comes second must not
+// finish it again.
+$t::test(
+	'PayFast API: the ITN arriving after the API finished the order doesn\'t finish it twice, and an ITN first means no API call',
+	function () use ( $t, $underpaid_payfast_settings, $underpaid_place, $underpaid_next_order, $underpaid_payfast_history, $underpaid_payfast_api_reply, $underpaid_payfast_return, $underpaid_payfast_itn, $underpaid_payfast_notify, $underpaid_fresh, $underpaid_payfast_log, $underpaid_payfast_confirmed_note ) {
+		$options = $underpaid_payfast_settings();
+		$t::add( $t::product( 230, array( 'taxable' => false ) ) );
+		$order = $underpaid_place( 'payfast', 230 );
+		$csv   = $underpaid_payfast_history(
+			array(
+				array(
+					'M Payment ID' => (string) $order->get_id(),
+					'Gross'        => '230.00',
+				),
+			)
+		);
+		$underpaid_payfast_return( $order, $underpaid_payfast_api_reply( 200, $csv ) );
+		$saved     = $underpaid_fresh( $order->get_id() );
+		$processed = (string) $saved->get_meta_value( 'post_processed' );
+		$t::same( 'new', $saved->get_status(), 'API finished the order' );
+
+		$child = $underpaid_payfast_notify( $order, $options, $underpaid_payfast_itn( $order, 230, 'sunshine totals' ) );
+		$saved = $underpaid_fresh( $order->get_id() );
+		$t::same( 'new', $saved->get_status(), 'still paid after the ITN' );
+		$t::same( $processed, (string) $saved->get_meta_value( 'post_processed' ), 'ITN did not finish it again' );
+		$t::same( 1, count( $underpaid_payfast_log( $order->get_id(), 'Checkout is setting status to new' ) ), 'status set to paid once' );
+		$t::same( 1, count( $underpaid_payfast_log( $order->get_id(), $underpaid_payfast_confirmed_note ) ), 'one confirmation note' );
+		$t::same( null, $child['result']['error'], 'ITN handler ran without errors' );
+
+		// ITN first: the customer comes back to an order that is already paid, nothing is asked.
+		$underpaid_next_order();
+		$t::add( $t::product( 230, array( 'taxable' => false ) ) );
+		$second = $underpaid_place( 'payfast', 230 );
+		$underpaid_payfast_notify( $second, $options, $underpaid_payfast_itn( $second, 230, 'sunshine totals' ) );
+		$t::same( true, $underpaid_fresh( $second->get_id() )->is_paid(), 'ITN finished the second order' );
+		$run = $underpaid_payfast_return( $underpaid_fresh( $second->get_id() ), $underpaid_payfast_api_reply( 200, $csv ) );
+		$t::same( 0, count( $run['sent'] ), 'no API call for a paid order' );
+		$t::same( array(), $underpaid_payfast_log( $second->get_id(), $underpaid_payfast_confirmed_note ), 'no API note on the ITN-paid order' );
+	}
+);
+
+// Only PayFast confirming the payment pays the order. The return link with PayFast listing
+// nothing for it (the customer never paid) changes nothing, however often it's opened.
+$t::test(
+	'PayFast API: the return link without PayFast confirming the payment never pays the order',
+	function () use ( $t, $underpaid_payfast_settings, $underpaid_place, $underpaid_payfast_history, $underpaid_payfast_api_reply, $underpaid_payfast_return, $underpaid_still_pending ) {
+		$underpaid_payfast_settings();
+		$t::add( $t::product( 230, array( 'taxable' => false ) ) );
+		$order = $underpaid_place( 'payfast', 230 );
+		// A payment for the full amount, but for another order.
+		$other = $underpaid_payfast_history(
+			array(
+				array(
+					'M Payment ID' => (string) ( $order->get_id() + 7 ),
+					'Gross'        => '230.00',
+				),
+			)
+		);
+		foreach ( array( 'blocked' => null, 'another order\'s payment' => $underpaid_payfast_api_reply( 200, $other ) ) as $label => $reply ) {
+			$underpaid_payfast_return( $order, $reply );
+			$underpaid_still_pending( $order->get_id(), $label . ': ' );
+		}
+	}
+);
+
+/*
  * Systempay. The customer is sent to Systempay with a signed form. Systempay then posts an IPN
  * to the site (ipn()) with the result, signed with the store's key. The IPN ends with exit, so
  * it runs in a separate process. Systempay's guide says to check the IPN signature and the
