@@ -507,3 +507,66 @@ $t::test(
 		$t::same( (string) $order->get_id(), isset( $preference['external_reference'] ) ? (string) $preference['external_reference'] : null, 'order number' );
 	}
 );
+
+// A Mercado Pago account only takes its own country's currency. Asked for BRL by an Argentine
+// account, Mercado Pago switches the payment to ARS at the same number, so a BRL 150 order would
+// be paid with ARS 150. The customer must not be sent to pay that.
+$t::test(
+	'Mercado Pago Pro: an account that switches the currency does not send the customer to pay',
+	function () use ( $t, $addon_gateways_use, $addon_gateways_place, $addon_gateways_run ) {
+		$t::require_plugin( 'sunshine_payment_method_mercadopago', 'Mercado Pago add-on' );
+		$t::option( 'currency', 'BRL' );
+		$t::add( $t::product( 150 ) );
+		$t::option( 'mercadopagopro_access_token_test', 'TEST-spctotals' );
+		$addon_gateways_use( 'mercadopagopro' );
+		$order   = $addon_gateways_place( 'mercadopagopro', 150 );
+		$gateway = sunshine_get_payment_method_by_id( 'mercadopagopro' );
+		$clear   = function () {
+			$errors = new ReflectionProperty( SPC()->cart, 'errors' );
+			$errors->setAccessible( true );
+			$errors->setValue( SPC()->cart, array() );
+		};
+
+		$reply = function ( $currency ) {
+			return function ( $request ) use ( $currency ) {
+				if ( '/checkout/preferences' !== $request['path'] ) {
+					return null;
+				}
+				$sent = json_decode( $request['body'], true );
+				$sent['items'][0]['currency_id'] = $currency;
+				return array(
+					201,
+					array(
+						'id'         => 'pref-spctotals',
+						'init_point' => 'https://www.mercadopago.com/checkout/v1/redirect?pref_id=spctotals',
+						'items'      => $sent['items'],
+					),
+				);
+			};
+		};
+
+		$clear();
+		$run = $addon_gateways_run(
+			function () use ( $gateway, $order ) {
+				$gateway->process_payment( $order );
+			},
+			$reply( 'ARS' )
+		);
+		$t::same( null, $run['redirect'], 'customer is not sent to pay in ARS' );
+		$errors = implode( ' ', (array) SPC()->cart->get_errors() );
+		$t::same( true, false !== strpos( $errors, 'BRL' ), 'customer is told Mercado Pago cannot take BRL (got: ' . $errors . ')' );
+		$log = wp_json_encode( sunshine_get_order( $order->get_id() )->get_log() );
+		$t::same( true, false !== strpos( $log, 'only takes payments in ARS' ), 'order note says which currency the account takes' );
+		$t::same( 'pending', sunshine_get_order( $order->get_id() )->get_status(), 'order stays unpaid' );
+
+		$clear();
+		$run = $addon_gateways_run(
+			function () use ( $gateway, $order ) {
+				$gateway->process_payment( $order );
+			},
+			$reply( 'BRL' )
+		);
+		$t::same( true, ! empty( $run['redirect'] ) && false !== strpos( $run['redirect'], 'mercadopago.com' ), 'same currency still goes to Mercado Pago' );
+		$clear();
+	}
+);
