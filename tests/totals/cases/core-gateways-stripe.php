@@ -672,3 +672,318 @@ $t::test(
 		$gateways_stripe_forget();
 	}
 );
+
+// ---------------------------------------------------------------------------------------------
+// Orders too small for Stripe. Stripe won't take a payment under its minimum for the currency
+// (50 yen, 50 US cents, ...). The customer has to be told why, not left with a card form that
+// never loads.
+// ---------------------------------------------------------------------------------------------
+
+// Run an ajax handler and return its JSON reply.
+$gateways_stripe_ajax = function ( $handler, $nonce_action, $post = array() ) {
+	$die = function () {
+		return function () {
+			throw new SPC_Totals_Test_Done();
+		};
+	};
+	add_filter( 'wp_doing_ajax', '__return_true' );
+	add_filter( 'wp_die_ajax_handler', $die );
+	$_POST             = array_merge( $_POST, $post );
+	$_POST['security'] = wp_create_nonce( $nonce_action );
+	$_REQUEST          = array_merge( $_REQUEST, $_POST );
+	ob_start();
+	try {
+		call_user_func( $handler );
+	} catch ( SPC_Totals_Test_Done $e ) {
+		// Ajax handlers end by sending a JSON response.
+	} finally {
+		$output = ob_get_clean();
+		foreach ( array_merge( array_keys( $post ), array( 'security' ) ) as $key ) {
+			unset( $_POST[ $key ], $_REQUEST[ $key ] );
+		}
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+		remove_filter( 'wp_die_ajax_handler', $die );
+	}
+	return json_decode( $output, true );
+};
+
+// The checkout asks the site for a Stripe payment, with Stripe answering a new payment with
+// $error (Stripe's error object) when one is given. Returns the requests and the JSON reply.
+$gateways_stripe_intent_reply = function ( $error = null ) use ( $gateways_stripe_run, $gateways_stripe_ajax ) {
+	$stripe = sunshine_get_payment_method_by_id( 'stripe' );
+	return $gateways_stripe_run(
+		function () use ( $stripe, $error, $gateways_stripe_ajax ) {
+			$refuse = function ( $pre, $args, $url ) use ( $error ) {
+				if ( $error && false !== strpos( $url, 'api.stripe.com/v1/payment_intents' ) && 'POST' === strtoupper( $args['method'] ) ) {
+					return array(
+						'headers'  => array(),
+						'body'     => wp_json_encode( array( 'error' => $error ) ),
+						'response' => array(
+							'code'    => 400,
+							'message' => 'Bad Request',
+						),
+						'cookies'  => array(),
+						'filename' => null,
+					);
+				}
+				return $pre;
+			};
+			add_filter( 'pre_http_request', $refuse, PHP_INT_MAX, 3 );
+			try {
+				return $gateways_stripe_ajax( array( $stripe, 'create_payment_intent' ), 'sunshine_stripe' );
+			} finally {
+				remove_filter( 'pre_http_request', $refuse, PHP_INT_MAX );
+			}
+		}
+	);
+};
+
+$gateways_stripe_too_small = array(
+	'code'    => 'amount_too_small',
+	'type'    => 'invalid_request_error',
+	'message' => 'Amount must convert to at least 50 cents. ¥60 converts to approximately $0.38.',
+);
+
+$t::test(
+	'Stripe minimum: 40 yen is refused with a clear reason, and nothing is sent to Stripe',
+	function () use ( $t, $gateways_stripe_use, $gateways_stripe_forget, $gateways_stripe_run, $gateways_stripe_ajax, $gateways_stripe_intent_reply, $gateways_stripe_last_payment ) {
+		$gateways_stripe_forget();
+		try {
+			$t::option( 'currency', 'JPY' );
+			$t::option( 'country', 'JP' );
+			$t::add( $t::product( 40, array( 'taxable' => false ) ) );
+			$gateways_stripe_use();
+			$t::calculate();
+			$t::money( 40, SPC()->cart->get_total(), 'cart total' );
+			$expected = 'Stripe can\'t take payments under';
+
+			// Choosing Stripe tells the customer at once.
+			$choose = $gateways_stripe_run(
+				function () use ( $gateways_stripe_ajax ) {
+					return $gateways_stripe_ajax( 'sunshine_checkout_select_payment_method', 'sunshine-checkout-select-payment-method', array( 'payment_method' => 'stripe' ) );
+				}
+			);
+			$error  = isset( $choose['result']['data']['error'] ) ? $choose['result']['data']['error'] : '';
+			$t::same( true, false !== strpos( $error, $expected ), 'choosing Stripe says why (got "' . wp_strip_all_tags( $error ) . '")' );
+			$t::same( true, false !== strpos( wp_strip_all_tags( $error ), '50' ), 'and names the 50 yen minimum' );
+
+			// The card form asks for a payment: the reason comes back, and Stripe is never asked.
+			$reply = $gateways_stripe_intent_reply();
+			$t::same( false, ! empty( $reply['result']['success'] ), 'no payment is set up' );
+			$message = isset( $reply['result']['data']['message'] ) ? $reply['result']['data']['message'] : '';
+			$t::same( true, false !== strpos( $message, $expected ), 'the card form gets the same reason (got "' . wp_strip_all_tags( $message ) . '")' );
+			$t::same( null, $gateways_stripe_last_payment( $reply['calls'] ), 'no payment request went to Stripe' );
+
+			// The payment step itself is refused.
+			SPC()->cart->process_section( 'payment', array( 'payment_method' => 'stripe' ) );
+			$t::same( true, in_array( $error, SPC()->cart->get_errors(), true ), 'the payment step is refused with the reason' );
+
+			// Submitting the order is refused before an order is saved.
+			$placed = null;
+			try {
+				$placed = $t::place_order( 'stripe' );
+			} catch ( Exception $e ) {
+				$placed = false;
+			}
+			$t::same( false, $placed, 'submitting the order is refused' );
+			$t::same( true, in_array( $error, SPC()->cart->get_errors(), true ), 'with the reason' );
+		} finally {
+			$gateways_stripe_forget();
+		}
+	}
+);
+
+$t::test(
+	'Stripe minimum: the last check before payment refuses an order under it',
+	function () use ( $t, $gateways_stripe_use, $gateways_stripe_forget, $gateways_stripe_run ) {
+		$gateways_stripe_forget();
+		$no_minimum = function () {
+			return 0;
+		};
+		try {
+			$t::option( 'currency', 'JPY' );
+			$t::option( 'country', 'JP' );
+			$t::option( 'stripe_checkout_mode', 'hosted' );
+			$t::add( $t::product( 40, array( 'taxable' => false ) ) );
+			$gateways_stripe_use();
+			$t::option( 'stripe_checkout_mode', 'hosted' );
+			$t::calculate();
+			// Save the order with the minimum turned off, as if it changed after the order was made.
+			add_filter( 'sunshine_payment_method_minimum_amount', $no_minimum );
+			$order = $t::place_order( 'stripe' );
+			remove_filter( 'sunshine_payment_method_minimum_amount', $no_minimum );
+
+			$run = $gateways_stripe_run(
+				function () {
+					return SPC()->cart->process_order();
+				}
+			);
+			$t::same( false, $run['result'], 'payment is not started' );
+			$t::same( 0, count( $run['calls'] ), 'nothing was sent to Stripe' );
+			$errors = implode( ' ', SPC()->cart->get_errors() );
+			$t::same( true, false !== strpos( $errors, 'Stripe can\'t take payments under' ), 'the customer is told why (got "' . wp_strip_all_tags( $errors ) . '")' );
+		} finally {
+			remove_filter( 'sunshine_payment_method_minimum_amount', $no_minimum );
+			$gateways_stripe_forget();
+		}
+	}
+);
+
+$t::test(
+	'Stripe minimum: 50 yen is fine',
+	function () use ( $t, $gateways_stripe_use, $gateways_stripe_forget, $gateways_stripe_intent_reply, $gateways_stripe_last_payment ) {
+		$gateways_stripe_forget();
+		try {
+			$t::option( 'currency', 'JPY' );
+			$t::option( 'country', 'JP' );
+			$t::add( $t::product( 50, array( 'taxable' => false ) ) );
+			$gateways_stripe_use();
+			$t::calculate();
+			$t::same( '', SPC()->cart->get_payment_minimum_error( 'stripe', SPC()->cart->get_total() ), 'no minimum error' );
+			$reply   = $gateways_stripe_intent_reply();
+			$payment = $gateways_stripe_last_payment( $reply['calls'] );
+			$t::same( true, ! empty( $reply['result']['success'] ), 'a payment is set up' );
+			$t::same( '50', $payment ? $payment['body']['amount'] : null, 'for 50 yen' );
+			$order = $t::place_order( 'stripe' );
+			$t::money( 50, $order->get_total(), 'the order can be submitted' );
+		} finally {
+			$gateways_stripe_forget();
+		}
+	}
+);
+
+$t::test(
+	'Stripe minimum: a free order is not blocked',
+	function () use ( $t, $gateways_stripe_use, $gateways_stripe_forget ) {
+		$gateways_stripe_forget();
+		try {
+			$t::option( 'currency', 'JPY' );
+			$t::option( 'country', 'JP' );
+			$t::add( $t::product( 0, array( 'taxable' => false ) ) );
+			$gateways_stripe_use();
+			$t::calculate();
+			$t::money( 0, SPC()->cart->get_total(), 'cart total' );
+			$t::same( '', SPC()->cart->get_payment_minimum_error( 'stripe', 0 ), 'no minimum error for nothing to pay' );
+			$order = $t::place_order( 'free' );
+			$t::money( 0, $order->get_total(), 'the free order is saved' );
+		} finally {
+			$gateways_stripe_forget();
+		}
+	}
+);
+
+$t::test(
+	'Stripe minimum: a currency Stripe lists no minimum for is not checked',
+	function () use ( $t ) {
+		$stripe = sunshine_get_payment_method_by_id( 'stripe' );
+		$t::same( 0.0, $stripe->get_minimum_amount( 'KRW' ), 'no minimum for KRW' );
+		$t::same( '', $stripe->get_minimum_amount_error( 1, 'KRW' ), 'so 1 won is not refused here' );
+		$t::same( 0.3, $stripe->get_minimum_amount( 'gbp' ), 'currency case does not matter' );
+		$t::same( 0.5, $stripe->get_minimum_amount( 'USD' ), 'USD minimum' );
+	}
+);
+
+// Stripe checks the minimum after converting to the account's own currency: 60 yen is over the
+// 50 yen minimum, but an account paid out in US dollars refuses it (about $0.38).
+$t::test(
+	'Stripe minimum: Stripe refusing an amount as too small reaches the customer',
+	function () use ( $t, $gateways_stripe_use, $gateways_stripe_forget, $gateways_stripe_intent_reply, $gateways_stripe_too_small ) {
+		$gateways_stripe_forget();
+		try {
+			$t::option( 'currency', 'JPY' );
+			$t::option( 'country', 'JP' );
+			$t::add( $t::product( 60, array( 'taxable' => false ) ) );
+			$gateways_stripe_use();
+			$t::calculate();
+			$t::same( '', SPC()->cart->get_payment_minimum_error( 'stripe', SPC()->cart->get_total() ), 'over the published minimum' );
+			$reply   = $gateways_stripe_intent_reply( $gateways_stripe_too_small );
+			$message = isset( $reply['result']['data']['message'] ) ? $reply['result']['data']['message'] : '';
+			$t::same( false, ! empty( $reply['result']['success'] ), 'no payment is set up' );
+			$t::same( true, false !== strpos( $message, 'Stripe can\'t take a payment this small. Add more to your order or choose another way to pay.' ), 'our sentence (got "' . $message . '")' );
+			$t::same( true, false !== strpos( $message, 'Amount must convert to at least 50 cents.' ), 'and Stripe\'s own reason' );
+		} finally {
+			$gateways_stripe_forget();
+		}
+	}
+);
+
+$t::test(
+	'Stripe setup: any other Stripe error gets a general message, not nothing',
+	function () use ( $t, $gateways_stripe_use, $gateways_stripe_forget, $gateways_stripe_intent_reply ) {
+		$gateways_stripe_forget();
+		try {
+			$t::add( $t::product( 20, array( 'taxable' => false ) ) );
+			$gateways_stripe_use();
+			$t::calculate();
+			$reply   = $gateways_stripe_intent_reply(
+				array(
+					'code'    => 'parameter_invalid_integer',
+					'type'    => 'invalid_request_error',
+					'message' => 'Invalid integer',
+				)
+			);
+			$message = isset( $reply['result']['data']['message'] ) ? $reply['result']['data']['message'] : '';
+			$t::same( false, ! empty( $reply['result']['success'] ), 'no payment is set up' );
+			$t::same( 'Stripe could not be loaded. Please try again or choose another way to pay.', $message, 'general message' );
+		} finally {
+			$gateways_stripe_forget();
+		}
+	}
+);
+
+$t::test(
+	'Stripe hosted: Stripe refusing the Checkout page as too small reaches the customer',
+	function () use ( $t, $gateways_stripe_use, $gateways_stripe_forget, $gateways_stripe_run, $gateways_stripe_too_small ) {
+		$gateways_stripe_forget();
+		$redirect = function () {
+			throw new SPC_Totals_Test_Done();
+		};
+		$refuse   = function ( $pre, $args, $url ) use ( $gateways_stripe_too_small ) {
+			if ( false !== strpos( $url, 'api.stripe.com/v1/checkout/sessions' ) && 'POST' === strtoupper( $args['method'] ) ) {
+				return array(
+					'headers'  => array(),
+					'body'     => wp_json_encode( array( 'error' => $gateways_stripe_too_small ) ),
+					'response' => array(
+						'code'    => 400,
+						'message' => 'Bad Request',
+					),
+					'cookies'  => array(),
+					'filename' => null,
+				);
+			}
+			return $pre;
+		};
+		try {
+			$t::option( 'currency', 'JPY' );
+			$t::option( 'country', 'JP' );
+			$t::add( $t::product( 60, array( 'taxable' => false ) ) );
+			$gateways_stripe_use();
+			$t::option( 'stripe_checkout_mode', 'hosted' );
+			$t::calculate();
+			$order  = $t::place_order( 'stripe' );
+			$stripe = sunshine_get_payment_method_by_id( 'stripe' );
+			$gateways_stripe_run(
+				function () use ( $stripe, $order, $refuse, $redirect ) {
+					add_filter( 'pre_http_request', $refuse, PHP_INT_MAX, 3 );
+					// process_payment_hosted() sends the customer back to checkout and exits.
+					add_filter( 'wp_redirect', $redirect, 0 );
+					try {
+						$stripe->process_payment_hosted( $order );
+					} catch ( SPC_Totals_Test_Done $e ) {
+						// Sent back to checkout.
+					} finally {
+						remove_filter( 'pre_http_request', $refuse, PHP_INT_MAX );
+						remove_filter( 'wp_redirect', $redirect, 0 );
+					}
+				}
+			);
+			$errors = implode( ' ', SPC()->cart->get_errors() );
+			$t::same( true, false !== strpos( $errors, 'Stripe can\'t take a payment this small.' ), 'our sentence (got "' . $errors . '")' );
+			$t::same( true, false !== strpos( $errors, 'Amount must convert to at least 50 cents.' ), 'and Stripe\'s own reason' );
+		} finally {
+			remove_filter( 'pre_http_request', $refuse, PHP_INT_MAX );
+			remove_filter( 'wp_redirect', $redirect, 0 );
+			$gateways_stripe_forget();
+		}
+	}
+);

@@ -90,6 +90,45 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	private $total = 0;
 
 	/**
+	 * Why the last payment setup failed, for the customer. Empty when it worked.
+	 *
+	 * @var string
+	 */
+	private $setup_error = '';
+
+	/**
+	 * Stripe's smallest charge per currency, from https://docs.stripe.com/currencies#minimum-and-maximum-charge-amounts
+	 *
+	 * @var array
+	 */
+	const MINIMUM_AMOUNTS = array(
+		'USD' => 0.50,
+		'AUD' => 0.50,
+		'BRL' => 0.50,
+		'CAD' => 0.50,
+		'CHF' => 0.50,
+		'DKK' => 2.50,
+		'EUR' => 0.50,
+		'GBP' => 0.30,
+		'HKD' => 4.00,
+		'INR' => 0.50,
+		'JPY' => 50,
+		'MXN' => 10,
+		'MYR' => 2,
+		'NOK' => 3,
+		'NZD' => 0.50,
+		'PLN' => 2,
+		'SEK' => 3,
+		'SGD' => 0.50,
+		'THB' => 10,
+		'AED' => 2,
+		'BGN' => 1,
+		'CZK' => 15,
+		'HUF' => 175,
+		'RON' => 2,
+	);
+
+	/**
 	 * Make a Stripe API request
 	 *
 	 * @param string $endpoint The API endpoint
@@ -281,6 +320,34 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	 * @param string $idempotency_key Current idempotency key
 	 * @return array|WP_Error Payment intent data or error
 	 */
+	/**
+	 * Stripe's smallest charge for a currency. 0 for a currency not in the list: no check.
+	 *
+	 * @param string $currency Uppercase currency code.
+	 * @return float
+	 */
+	protected function get_gateway_minimum_amount( $currency ) {
+		return isset( self::MINIMUM_AMOUNTS[ $currency ] ) ? self::MINIMUM_AMOUNTS[ $currency ] : 0;
+	}
+
+	/**
+	 * The message for the customer when Stripe refused an amount as too small, or ''.
+	 *
+	 * Stripe checks the amount after converting it to the account's own currency, so it can
+	 * refuse an amount over the minimum for the store currency.
+	 *
+	 * @param WP_Error $error Error from make_stripe_request().
+	 * @return string
+	 */
+	private function get_amount_too_small_message( $error ) {
+		$data = is_wp_error( $error ) ? $error->get_error_data() : array();
+		if ( empty( $data['code'] ) || 'amount_too_small' !== $data['code'] ) {
+			return '';
+		}
+		/* translators: %s is the payment method name, such as "Stripe" */
+		return sprintf( __( '%s can\'t take a payment this small. Add more to your order or choose another way to pay.', 'sunshine-photo-cart' ), esc_html( $this->get_name() ) ) . ' ' . esc_html( $error->get_error_message() );
+	}
+
 	private function create_payment_intent_with_retry( $args, $idempotency_key ) {
 		$response = $this->make_stripe_request( 'payment_intents', $args, 'POST' );
 
@@ -1663,6 +1730,8 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 					'payment_did_not_succeed'       => __( 'Payment did not succeed', 'sunshine-photo-cart' ),
 					'payment_processing_failed'     => __( 'Payment processing failed:', 'sunshine-photo-cart' ),
 					'payment_still_waiting'         => __( 'Still waiting for your bank to confirm this payment. Please keep this page open.', 'sunshine-photo-cart' ),
+					/* translators: %s is the payment method name, such as "Stripe" */
+					'setup_failed'                  => sprintf( __( '%s could not be loaded. Please try again or choose another way to pay.', 'sunshine-photo-cart' ), $this->get_name() ),
 				),
 			)
 		);
@@ -1689,10 +1758,20 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			SPC()->cart->setup();
 		}
 
+		$this->setup_error = '';
+
 		// Set the cart total in Stripe's smallest currency unit
 		$cart_total = SPC()->cart->get_total();
 		if ( $cart_total <= 0 || SPC()->cart->is_empty() ) {
 			return; // Don't create if there is no amount to charge yet or if the cart is empty.
+		}
+
+		// Stripe would refuse it, so don't ask.
+		$minimum_error = $this->get_minimum_amount_error( $cart_total );
+		if ( $minimum_error ) {
+			SPC()->log( 'Not creating Stripe payment intent: ' . wp_strip_all_tags( $minimum_error ) );
+			$this->setup_error = $minimum_error;
+			return;
 		}
 
 		$this->total = $this->convert_amount_to_stripe( $cart_total );
@@ -1753,6 +1832,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 			if ( is_wp_error( $intent ) ) {
 				SPC()->log( 'Failed creating payment intent: ' . $intent->get_error_message() );
+				$this->setup_error = $this->get_amount_too_small_message( $intent );
 				return;
 			}
 
@@ -1790,6 +1870,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 					if ( is_wp_error( $intent ) ) {
 						SPC()->log( 'Failed creating new payment intent: ' . $intent->get_error_message() );
+						$this->setup_error = $this->get_amount_too_small_message( $intent );
 						return;
 					}
 
@@ -1808,6 +1889,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 			if ( is_wp_error( $intent ) ) {
 				SPC()->log( 'Failed updating payment intent: ' . $intent->get_error_message() );
+				// If Stripe refused the new amount as too small, the payment still has its old
+				// amount, so the customer is told instead of being handed that payment.
+				$this->setup_error = $this->get_amount_too_small_message( $intent );
 				return;
 			}
 
@@ -1855,9 +1939,14 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 		$this->setup();
 		$this->setup_payment_intent();
-		if ( empty( $this->payment_intent_id ) ) {
+		if ( $this->setup_error || empty( $this->payment_intent_id ) ) {
 			SPC()->log( 'Failed creating Stripe payment intent' );
-			wp_send_json_error();
+			$message = $this->setup_error;
+			if ( ! $message ) {
+				/* translators: %s is the payment method name, such as "Stripe" */
+				$message = sprintf( __( '%s could not be loaded. Please try again or choose another way to pay.', 'sunshine-photo-cart' ), esc_html( $this->get_name() ) );
+			}
+			wp_send_json_error( array( 'message' => $message ) );
 		}
 		wp_send_json_success(
 			array(
@@ -2752,7 +2841,8 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$session = $this->create_checkout_session( $order );
 
 		if ( is_wp_error( $session ) ) {
-			SPC()->cart->add_error( $session->get_error_message() );
+			$too_small = $this->get_amount_too_small_message( $session );
+			SPC()->cart->add_error( $too_small ? $too_small : $session->get_error_message() );
 			wp_safe_redirect( sunshine_get_page_url( 'checkout' ) );
 			exit;
 		}

@@ -276,6 +276,54 @@ class SPC_Payment_Method {
 	}
 
 	/**
+	 * The smallest payment this method can take, in the store currency. 0 means no minimum.
+	 *
+	 * Gateways with a minimum override get_gateway_minimum_amount(); this adds the filter
+	 * so a site can change any gateway's minimum.
+	 *
+	 * @param string $currency Currency code. Defaults to the store currency.
+	 * @return float
+	 */
+	public function get_minimum_amount( $currency = '' ) {
+		if ( empty( $currency ) ) {
+			$currency = SPC()->get_option( 'currency' );
+		}
+		$currency = strtoupper( (string) $currency );
+		return (float) apply_filters( 'sunshine_payment_method_minimum_amount', $this->get_gateway_minimum_amount( $currency ), $currency, $this );
+	}
+
+	/**
+	 * The gateway's own minimum payment for a currency. Gateways with one override this.
+	 *
+	 * @param string $currency Uppercase currency code.
+	 * @return float
+	 */
+	protected function get_gateway_minimum_amount( $currency ) {
+		return 0;
+	}
+
+	/**
+	 * The message for the customer when an amount is under this method's minimum, or ''
+	 * when it can be paid. Free orders are never blocked: nothing is charged.
+	 *
+	 * @param float  $amount   The amount to pay.
+	 * @param string $currency Currency code. Defaults to the store currency.
+	 * @return string
+	 */
+	public function get_minimum_amount_error( $amount, $currency = '' ) {
+		$amount = (float) $amount;
+		if ( $amount <= 0 ) {
+			return '';
+		}
+		$minimum = $this->get_minimum_amount( $currency );
+		if ( $minimum <= 0 || round( $amount, 2 ) >= round( $minimum, 2 ) ) {
+			return '';
+		}
+		/* translators: %1$s is the payment method name, such as "Stripe", %2$s is the smallest amount it can take, formatted as a price */
+		return sprintf( __( '%1$s can\'t take payments under %2$s. Add more to your order or choose another way to pay.', 'sunshine-photo-cart' ), esc_html( $this->get_name() ), sunshine_price( $minimum ) );
+	}
+
+	/**
 	 * The application fee percentage this gateway is configured to collect.
 	 *
 	 * @return float

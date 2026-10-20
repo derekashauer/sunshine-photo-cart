@@ -1329,6 +1329,21 @@ class SPC_Cart {
 		return $this->payment_method;
 	}
 
+	/**
+	 * The message for the customer when an amount is under a payment method's minimum, or ''.
+	 *
+	 * @param string $payment_method_id Payment method ID.
+	 * @param float  $amount            The amount to pay.
+	 * @return string
+	 */
+	public function get_payment_minimum_error( $payment_method_id, $amount ) {
+		$payment_method = $payment_method_id ? sunshine_get_payment_method_by_id( $payment_method_id ) : false;
+		if ( ! $payment_method ) {
+			return '';
+		}
+		return $payment_method->get_minimum_amount_error( $amount );
+	}
+
 	public function set_payment_method( $method ) {
 		if ( is_string( $method ) ) {
 			// Let's see if this string is in the available instances
@@ -2438,6 +2453,15 @@ class SPC_Cart {
 			}
 		}
 
+		// A payment method with a minimum can't take an order under it, so say so here rather
+		// than leaving the customer with a payment form that never loads.
+		if ( 'payment' === $this->active_section ) {
+			$minimum_error = $this->get_payment_minimum_error( $this->get_checkout_data_item( 'payment_method' ), $this->get_total() );
+			if ( $minimum_error ) {
+				$this->add_error( $minimum_error );
+			}
+		}
+
 		// This is where other add-ons can hook in to check stuff.
 		do_action( 'sunshine_checkout_validation', $this->active_section, $data );
 
@@ -2645,6 +2669,14 @@ class SPC_Cart {
 			SPC()->log( 'Blocked order init: cart needs an account and nobody is logged in' );
 			$this->uncomplete_checkout_section( 'contact' );
 			$this->add_error( __( 'Please log in or create an account to complete this order', 'sunshine-photo-cart' ) );
+			wp_send_json_error();
+		}
+
+		// Checked before the order is saved or any payment form takes the customer's money.
+		$minimum_error = $this->get_payment_minimum_error( $payment_method, $this->get_total() );
+		if ( $minimum_error ) {
+			SPC()->log( 'Blocked order init: total is under the minimum for ' . sanitize_key( $payment_method ) );
+			$this->add_error( $minimum_error );
 			wp_send_json_error();
 		}
 
@@ -2898,6 +2930,11 @@ class SPC_Cart {
 		// Store credit, gift cards and limited discount codes can be used up by another order
 		// between saving this order and paying for it. Check before any payment is taken.
 		$this->check_order_still_covered( $order );
+		$minimum_error = $this->get_payment_minimum_error( $order->get_payment_method(), $order->get_total() );
+		if ( $minimum_error ) {
+			SPC()->log( 'Blocked payment: order ' . $order->get_id() . ' total is under the minimum for ' . $order->get_payment_method() );
+			$this->add_error( $minimum_error );
+		}
 		do_action( 'sunshine_checkout_before_payment', $order );
 		if ( $this->has_errors() ) {
 			SPC()->log( 'Blocked payment: ' . json_encode( $this->get_errors() ) );
