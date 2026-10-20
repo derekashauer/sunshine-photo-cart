@@ -192,8 +192,9 @@ class SPC_Frontend {
 				$this->current_order = $order;
 				// The customer is back from paying on another site (PayPal, PayFast...). Their next
 				// checkout is a new order, not this one, even when the payment notice that finishes
-				// this order came in on its own and never saw this customer's session.
-				if ( (int) SPC()->session->get( 'checkout_order_id' ) === (int) $order->get_id() ) {
+				// this order came in on its own and never saw this customer's session. A cancelled
+				// or failed payment is the exception: paying again reuses that order.
+				if ( (int) SPC()->session->get( 'checkout_order_id' ) === (int) $order->get_id() && ! in_array( $order->get_status(), array( 'cancelled', 'failed' ), true ) ) {
 					SPC()->session->set( 'checkout_order_id', '' );
 				}
 			} else {
