@@ -521,6 +521,10 @@ function sunshine_doing_upload( $gallery_id ) {
 	// but runs in every context (REST, CLI, cron) since Sunshine_Admin only
 	// loads under is_admin().
 	add_filter( 'intermediate_image_sizes', 'sunshine_upload_image_sizes', 99999 );
+	// List the gallery folder once per request rather than once per photo.
+	add_filter( 'pre_wp_unique_filename_file_list', 'sunshine_import_folder_file_list', 10, 2 );
+	add_filter( 'wp_unique_filename', 'sunshine_import_remember_file_name', 10, 3 );
+	add_filter( 'wp_update_attachment_metadata', 'sunshine_import_remember_size_files', PHP_INT_MAX, 2 );
 	set_time_limit( 600 );
 }
 

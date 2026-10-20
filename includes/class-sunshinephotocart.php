@@ -85,6 +85,7 @@ final class Sunshine_Photo_Cart {
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/product-options.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/gallery.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/image.php';
+		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/import.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/taxes.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/formatting.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/add-to-cart.php';
