@@ -65,6 +65,51 @@ function sunshine_import_batch_has_time( &$batch ) {
 }
 
 /**
+ * Claim an import so only one request works on it at a time.
+ *
+ * When a host or proxy gives up on a slow request, PHP can keep running it while
+ * the browser already sends the next one. Two requests on the same import could
+ * then bring the same photo in twice. The browser is told to wait instead, and
+ * tries again in a few seconds.
+ *
+ * Released at the end of the request, even when it stops with an error. A claim
+ * older than the longest a request may run counts as left over and is taken.
+ *
+ * @param string $key Which import, for example the gallery or import run.
+ * @return bool Whether this request has it.
+ */
+function sunshine_import_lock( $key ) {
+	global $wpdb;
+
+	$option = 'sunshine_import_lock_' . md5( $key );
+
+	// A plain insert either adds the row or finds it there already, in one step,
+	// so two requests can never both win.
+	$claim = function () use ( $wpdb, $option ) {
+		return (bool) $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, %s, 'no')", $option, time() ) );
+	};
+
+	if ( ! $claim() ) {
+		$since = (int) $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $option ) );
+		if ( $since > time() - 10 * MINUTE_IN_SECONDS ) {
+			return false;
+		}
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $option, $since ) );
+		if ( ! $claim() ) {
+			return false;
+		}
+	}
+
+	register_shutdown_function(
+		function () use ( $wpdb, $option ) {
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s", $option ) );
+		}
+	);
+
+	return true;
+}
+
+/**
  * List a gallery folder once per request instead of once per photo.
  *
  * Every time WordPress picks a file name for a new photo it lists every file
@@ -171,14 +216,16 @@ function sunshine_fast_imports_resume() {
  * @return string Contents of the file.
  */
 function sunshine_fast_imports_mu_plugin_contents() {
-	$folder = basename( dirname( SUNSHINE_PHOTO_CART_FILE ) );
+	// var_export() so any folder name makes valid PHP. A broken file here would
+	// stop every page of the site loading.
+	$file = var_export( '/' . basename( dirname( SUNSHINE_PHOTO_CART_FILE ) ) . '/includes/fast-imports.php', true ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- writing PHP, not debugging.
 
 	return "<?php\n"
 		. "/**\n"
 		. " * Plugin Name: Sunshine Photo Cart Fast Imports\n"
 		. " * Description: Added by Sunshine Photo Cart. While photos are being imported, loads only the plugins an import needs, so imports run faster. Every other page is untouched. Removed when Sunshine Photo Cart is deactivated.\n"
 		. " */\n"
-		. "\$sunshine_fast_imports = WP_PLUGIN_DIR . '/" . $folder . "/includes/fast-imports.php';\n"
+		. "\$sunshine_fast_imports = WP_PLUGIN_DIR . " . $file . ";\n"
 		. "if ( file_exists( \$sunshine_fast_imports ) ) {\n"
 		. "\tinclude_once \$sunshine_fast_imports;\n"
 		. "}\n"
@@ -210,8 +257,12 @@ function sunshine_fast_imports_install() {
 	$path     = sunshine_fast_imports_mu_plugin_path();
 	$contents = sunshine_fast_imports_mu_plugin_contents();
 
-	if ( file_exists( $path ) && file_get_contents( $path ) === $contents ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local file.
-		return;
+	if ( file_exists( $path ) ) {
+		$current = (string) file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- local file.
+		// Up to date, or a file of the same name that someone else put there.
+		if ( $current === $contents || false === strpos( $current, 'Plugin Name: Sunshine Photo Cart Fast Imports' ) ) {
+			return;
+		}
 	}
 
 	if ( ! is_dir( WPMU_PLUGIN_DIR ) && ! wp_mkdir_p( WPMU_PLUGIN_DIR ) ) {

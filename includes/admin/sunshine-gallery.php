@@ -882,7 +882,16 @@ function sunshine_meta_gallery_images_display() {
 						$.post( ajaxurl, data, function( response ) {
 							if ( response.success !== true ) {
 								$( '#sunshine-gallery-image-errors' ).append( $( '<li/>' ).text( response.data && response.data.message ? response.data.message : '<?php echo esc_js( __( 'The import stopped.', 'sunshine-photo-cart' ) ); ?>' ) );
-								import_finished();
+								$( '#sunshine-gallery-images-processing div.status' ).text( '<?php echo esc_js( __( 'The import stopped before every photo was brought in.', 'sunshine-photo-cart' ) ); ?>' );
+								$( document ).trigger( 'refresh_images' );
+								return;
+							}
+
+							// An earlier request is still finishing. Give it a moment.
+							if ( response.data.busy ) {
+								setTimeout( function() {
+									import_batch( response.data.next_item );
+								}, 5000 );
 								return;
 							}
 
@@ -1702,6 +1711,19 @@ function sunshine_ajax_gallery_import() {
 	}
 
 	$dir = ltrim( substr( $folder, strlen( wp_normalize_path( sunshine_get_import_directory() ) ) ), '/' );
+
+	// A request the browser gave up on can still be running. Wait for it rather
+	// than working on the same photos at the same time.
+	if ( ! sunshine_import_lock( 'ftp_' . $gallery_id ) ) {
+		wp_send_json_success(
+			array(
+				'results'   => array(),
+				'busy'      => true,
+				'next_item' => $item_number,
+				'done'      => false,
+			)
+		);
+	}
 
 	// File names already in the gallery, so a photo is not brought in twice. Read
 	// in one query: looking each one up separately made every photo in a big
