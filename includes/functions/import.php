@@ -218,7 +218,9 @@ function sunshine_fast_imports_resume() {
 function sunshine_fast_imports_mu_plugin_contents() {
 	// var_export() so any folder name makes valid PHP. A broken file here would
 	// stop every page of the site loading.
-	$file = var_export( '/' . basename( dirname( SUNSHINE_PHOTO_CART_FILE ) ) . '/includes/fast-imports.php', true ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- writing PHP, not debugging.
+	// plugin_basename() gives the folder as WordPress loads it, which for a
+	// linked folder can differ from where the files really are.
+	$file = var_export( '/' . dirname( plugin_basename( SUNSHINE_PHOTO_CART_FILE ) ) . '/includes/fast-imports.php', true ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export -- writing PHP, not debugging.
 
 	return "<?php\n"
 		. "/**\n"
