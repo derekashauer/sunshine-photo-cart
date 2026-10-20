@@ -1701,7 +1701,45 @@ function sunshine_ajax_gallery_import() {
 	$single      = ! empty( $_POST['single'] );
 	$import_run  = isset( $_POST['import_run'] ) ? sanitize_key( wp_unslash( $_POST['import_run'] ) ) : '';
 
+	// Photos this import brought in that the browser may not have heard about.
+	// Each one is kept until the browser asks for a later photo, which shows the
+	// reply listing it arrived. A reply lost on the way (a dropped connection, a
+	// proxy giving up) is then answered again, instead of the photos being
+	// reported as already in the gallery.
+	$unreported_key = 'sunshine_ftp_import_' . $gallery_id . '_' . $import_run;
+	$unreported     = $import_run ? get_transient( $unreported_key ) : array();
+	if ( ! is_array( $unreported ) ) {
+		$unreported = array();
+	}
+	foreach ( $unreported as $name => $entry ) {
+		if ( $entry['index'] < $item_number - 1 ) {
+			unset( $unreported[ $name ] );
+		}
+	}
+
 	$folder = sunshine_validate_import_subdirectory( $dir );
+
+	// The last batch can clear the folder away ("delete images after import") and
+	// still lose its reply. What it brought in is known, so answer with that.
+	if ( false === $folder && ! empty( $unreported ) ) {
+		$results = array();
+		foreach ( $unreported as $name => $entry ) {
+			$results[] = array(
+				'success'    => true,
+				'image_id'   => $entry['id'],
+				'file_name'  => $name,
+				'image_html' => sunshine_admin_gallery_image_thumbnail( $entry['id'], false ),
+			);
+		}
+		wp_send_json_success(
+			array(
+				'results'   => $results,
+				'next_item' => $item_number + count( $results ),
+				'done'      => true,
+			)
+		);
+	}
+
 	if ( false === $folder ) {
 		wp_send_json_error(
 			array(
@@ -1728,12 +1766,15 @@ function sunshine_ajax_gallery_import() {
 	// File names already in the gallery, so a photo is not brought in twice. Read
 	// in one query: looking each one up separately made every photo in a big
 	// gallery slower than the one before it.
+	// Only the names are read, a thousand photos at a time, so a gallery of tens
+	// of thousands doesn't load every photo's saved details into memory.
+	global $wpdb;
 	$existing_file_names = array();
-	$existing_image_ids  = $gallery->get_image_ids();
-	if ( ! empty( $existing_image_ids ) ) {
-		update_meta_cache( 'post', $existing_image_ids );
-		foreach ( $existing_image_ids as $existing_image_id ) {
-			$existing_file_names[ strtolower( (string) get_post_meta( $existing_image_id, 'sunshine_file_name', true ) ) ] = true;
+	$existing_image_ids  = array_filter( array_map( 'intval', (array) $gallery->get_image_ids() ) );
+	foreach ( array_chunk( $existing_image_ids, 1000 ) as $chunk ) {
+		$names = $wpdb->get_col( "SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key = 'sunshine_file_name' AND post_id IN (" . implode( ',', $chunk ) . ')' ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- integers only.
+		foreach ( $names as $name ) {
+			$existing_file_names[ strtolower( (string) $name ) ] = true;
 		}
 	}
 
@@ -1751,37 +1792,26 @@ function sunshine_ajax_gallery_import() {
 	$index   = max( 0, $item_number - 1 );
 	$total   = count( $images );
 
-	// Photos this import brought in that the browser has not heard about yet. A
-	// request that dies part way through a batch never reports its photos, so when
-	// the browser goes back over them they count as imported, not as duplicates.
-	$unreported_key = 'sunshine_ftp_import_' . $gallery_id . '_' . $import_run;
-	$unreported     = $import_run ? get_transient( $unreported_key ) : array();
-	if ( ! is_array( $unreported ) ) {
-		$unreported = array();
-	}
-	$reported       = array();
-
 	while ( $index < $total ) {
 
 		$file_name = basename( $images[ $index ] );
 		if ( isset( $unreported[ $file_name ] ) ) {
-			$image_id  = $unreported[ $file_name ];
+			$image_id  = $unreported[ $file_name ]['id'];
 			$results[] = array(
 				'success'    => true,
 				'image_id'   => $image_id,
 				'file_name'  => $file_name,
 				'image_html' => sunshine_admin_gallery_image_thumbnail( $image_id, false ),
 			);
-			$reported[] = $file_name;
 		} else {
 			$result    = sunshine_gallery_import_file( $images[ $index ], $gallery_id, $watermark, $existing_file_names );
 			$results[] = $result;
-			if ( ! empty( $result['success'] ) ) {
-				$reported[] = $file_name;
-				if ( $import_run ) {
-					$unreported[ $file_name ] = $result['image_id'];
-					set_transient( $unreported_key, $unreported, HOUR_IN_SECONDS );
-				}
+			if ( $import_run && ! empty( $result['success'] ) ) {
+				$unreported[ $file_name ] = array(
+					'id'    => $result['image_id'],
+					'index' => $index,
+				);
+				set_transient( $unreported_key, $unreported, HOUR_IN_SECONDS );
 			}
 		}
 		++$index;
@@ -1791,10 +1821,7 @@ function sunshine_ajax_gallery_import() {
 		}
 	}
 
-	// Everything in this response reaches the browser, so none of it is unreported.
-	foreach ( $reported as $file_name ) {
-		unset( $unreported[ $file_name ] );
-	}
+	// Save the list, now without what the browser has already received.
 	if ( $import_run ) {
 		if ( empty( $unreported ) ) {
 			delete_transient( $unreported_key );

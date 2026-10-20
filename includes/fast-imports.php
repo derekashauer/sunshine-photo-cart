@@ -81,6 +81,11 @@ function sunshine_fast_imports_is_import_request() {
  * @return bool
  */
 function sunshine_fast_imports_keep_plugin( $plugin ) {
+	// Sunshine itself, found by its main file, so a renamed folder still counts.
+	if ( '/sunshine-photo-cart.php' === substr( $plugin, -strlen( '/sunshine-photo-cart.php' ) ) ) {
+		return true;
+	}
+
 	$folder = strtolower( false !== strpos( $plugin, '/' ) ? dirname( $plugin ) : basename( $plugin, '.php' ) );
 
 	if ( false !== strpos( $folder, 'sunshine' ) ) {
