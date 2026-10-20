@@ -830,6 +830,17 @@ function sunshine_meta_gallery_images_display() {
 		/**********
 		IMPORTING FOLDER
 		**********/
+		// Set once lean loading has asked for an import to be sent again with every
+		// plugin. Every later request of the import then asks for every plugin too.
+		var sunshine_import_retried_full = false;
+		var sunshine_import_full_flags = function( data ) {
+			if ( sunshine_import_retried_full ) {
+				data.sunshine_full_load = 1;
+				data.sunshine_full_retry = 1;
+			}
+			return data;
+		};
+
 		$( document ).on( 'click', '#import', function(){
 			var $directoryOption = $( 'select[name="images_directory"] option:selected' );
 			var selected_directory = $directoryOption.val();
@@ -851,8 +862,15 @@ function sunshine_meta_gallery_images_display() {
 				'security': '<?php echo esc_js( wp_create_nonce( 'sunshine_gallery_import' ) ); ?>'
 			};
 
-			$.post( ajaxurl, request_data )
+			$.post( ajaxurl, sunshine_import_full_flags( request_data ) )
 				.done( function( response ) {
+					// Refused with plugins left out: lean loading has paused itself, so
+					// sending it again loads every plugin.
+					if ( response.success !== true && response.data && response.data.retry_full && ! sunshine_import_retried_full ) {
+						sunshine_import_retried_full = true;
+						$( '#import' ).trigger( 'click' );
+						return;
+					}
 					if ( response.success !== true || ! response.data || ! response.data.files || ! response.data.files.length ) {
 						$( '#sunshine-gallery-image-errors' ).append( '<li><?php echo esc_js( __( 'No importable images were found in the selected folder.', 'sunshine-photo-cart' ) ); ?></li>' );
 						$( '#sunshine-gallery-images-processing div.status span.current-file' ).html( 'ERROR' );
@@ -879,7 +897,12 @@ function sunshine_meta_gallery_images_display() {
 							'security': '<?php echo esc_js( wp_create_nonce( 'sunshine_gallery_import' ) ); ?>'
 						};
 
-						$.post( ajaxurl, data, function( response ) {
+						$.post( ajaxurl, sunshine_import_full_flags( data ), function( response ) {
+							if ( response.success !== true && response.data && response.data.retry_full && ! sunshine_import_retried_full ) {
+								sunshine_import_retried_full = true;
+								import_batch( item_number );
+								return;
+							}
 							if ( response.success !== true ) {
 								$( '#sunshine-gallery-image-errors' ).append( $( '<li/>' ).text( response.data && response.data.message ? response.data.message : '<?php echo esc_js( __( 'The import stopped.', 'sunshine-photo-cart' ) ); ?>' ) );
 								$( '#sunshine-gallery-images-processing div.status' ).text( '<?php echo esc_js( __( 'The import stopped before every photo was brought in.', 'sunshine-photo-cart' ) ); ?>' );
@@ -1637,6 +1660,10 @@ function sunshine_ajax_gallery_import_list() {
 	check_ajax_referer( 'sunshine_gallery_import', 'security' );
 
 	if ( ! current_user_can( 'edit_sunshine_galleries' ) ) {
+		// A left-out plugin may be what grants this permission on this site.
+		if ( ! empty( $GLOBALS['sunshine_fast_imports_lean'] ) && function_exists( 'sunshine_fast_imports_needs_full_load' ) ) {
+			sunshine_fast_imports_needs_full_load( 'no permission to import' );
+		}
 		wp_send_json_error(
 			array(
 				'message' => __( 'You do not have permission to import images.', 'sunshine-photo-cart' ),
@@ -1686,6 +1713,10 @@ function sunshine_ajax_gallery_import() {
 	check_ajax_referer( 'sunshine_gallery_import', 'security' );
 
 	if ( ! current_user_can( 'edit_sunshine_galleries' ) ) {
+		// A left-out plugin may be what grants this permission on this site.
+		if ( ! empty( $GLOBALS['sunshine_fast_imports_lean'] ) && function_exists( 'sunshine_fast_imports_needs_full_load' ) ) {
+			sunshine_fast_imports_needs_full_load( 'no permission to import' );
+		}
 		wp_send_json_error(
 			array(
 				'message' => __( 'You do not have permission to import images.', 'sunshine-photo-cart' ),

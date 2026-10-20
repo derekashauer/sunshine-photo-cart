@@ -19,7 +19,9 @@
  * If an import request ever crashes because something it calls belongs to a
  * plugin that was left out (often the theme or a code snippet relying on
  * another plugin), lean loading pauses itself on that site until its plugins
- * or theme change. See sunshine_fast_imports_pause_on_crash().
+ * or theme change. See sunshine_fast_imports_pause_on_crash(). The same goes
+ * for an import refused because a left-out plugin handled sign-in or granted
+ * the permission it needs, see sunshine_fast_imports_needs_full_load().
  *
  * @package SunshinePhotoCart
  */
@@ -187,6 +189,55 @@ function sunshine_fast_imports_pause_on_crash() {
 	}
 }
 
+/**
+ * Ask the browser to send this import request again with every plugin loaded.
+ *
+ * For an import refused for sign-in or permission while plugins were left out.
+ * It may be a left-out plugin that handles those on this site, or the person
+ * may really be signed out. The retry tells which: see
+ * sunshine_fast_imports_check_full_retry().
+ *
+ * @param string $reason Why, for the Sunshine log.
+ */
+function sunshine_fast_imports_needs_full_load( $reason ) {
+	if ( function_exists( 'SPC' ) ) {
+		SPC()->log( 'Fast imports: an import request was refused (' . $reason . ') with plugins left out, asking the browser to send it again with every plugin' );
+	}
+	wp_send_json_error(
+		array(
+			'message'    => 'Trying again with every plugin loaded.',
+			'retry_full' => true,
+		)
+	);
+}
+
+/**
+ * On a retry with every plugin loaded, pause lean loading if that fixed it.
+ *
+ * Signed in and allowed now, but refused a moment ago with plugins left out:
+ * a left-out plugin handles sign-in or permissions here, so later imports load
+ * every plugin until the site's plugins or theme change. Someone who really is
+ * signed out is refused again as usual and changes nothing.
+ */
+function sunshine_fast_imports_check_full_retry() {
+	if ( is_user_logged_in() && current_user_can( 'edit_sunshine_galleries' ) ) {
+		update_option(
+			'sunshine_fast_imports_paused',
+			array(
+				'time'  => time(),
+				'error' => 'an import was refused for sign-in or permission until every plugin was loaded',
+			),
+			false
+		);
+		if ( function_exists( 'SPC' ) ) {
+			SPC()->log( 'Fast imports: paused, because an import only worked with every plugin loaded (sign-in or permission)' );
+		}
+	}
+}
+if ( ! empty( $_REQUEST['sunshine_full_retry'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only routing; the handler checks the nonce.
+	add_action( 'admin_init', 'sunshine_fast_imports_check_full_retry', 0 );
+}
+
 // Nothing to do unless Sunshine itself is on, and lean loading isn't paused.
 $sunshine_fast_imports_active = (array) get_option( 'active_plugins', array() );
 if ( is_multisite() ) {
@@ -204,6 +255,21 @@ unset( $sunshine_fast_imports_active, $sunshine_fast_imports_plugin );
 if ( $sunshine_fast_imports_on && ! get_option( 'sunshine_fast_imports_paused' ) && sunshine_fast_imports_is_import_request() ) {
 
 	register_shutdown_function( 'sunshine_fast_imports_pause_on_crash' );
+
+	$GLOBALS['sunshine_fast_imports_lean'] = true;
+
+	// Signed in as far as the browser is concerned, but WordPress doesn't see
+	// it: a left-out plugin most likely handles sign-in on this site. Requests
+	// with no sign-in cookie at all (bots, scanners) are simply refused as usual.
+	add_action(
+		'admin_init',
+		function () {
+			if ( wp_doing_ajax() && ! is_user_logged_in() && defined( 'LOGGED_IN_COOKIE' ) && ! empty( $_COOKIE[ LOGGED_IN_COOKIE ] ) ) {
+				sunshine_fast_imports_needs_full_load( 'not signed in' );
+			}
+		},
+		0
+	);
 
 	// Read the real lists before filtering, so they can be put back if anything
 	// tries to save them during this request. Saving the shortened list would

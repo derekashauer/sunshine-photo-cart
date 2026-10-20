@@ -83,26 +83,32 @@ function sunshine_import_lock( $key ) {
 
 	$option = 'sunshine_import_lock_' . md5( $key );
 
+	// When it was claimed, and a token only this request knows, so it only ever
+	// lets go of its own claim. A request that ran so long its claim was taken
+	// over must not then release the claim of the request that took it.
+	$value = time() . '|' . wp_generate_password( 20, false );
+
 	// A plain insert either adds the row or finds it there already, in one step,
 	// so two requests can never both win.
-	$claim = function () use ( $wpdb, $option ) {
-		return (bool) $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, %s, 'no')", $option, time() ) );
+	$claim = function () use ( $wpdb, $option, $value ) {
+		return (bool) $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, %s, 'no')", $option, $value ) );
 	};
 
 	if ( ! $claim() ) {
-		$since = (int) $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $option ) );
+		$held  = (string) $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $option ) );
+		$since = (int) strtok( $held, '|' );
 		if ( $since > time() - 10 * MINUTE_IN_SECONDS ) {
 			return false;
 		}
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $option, $since ) );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $option, $held ) );
 		if ( ! $claim() ) {
 			return false;
 		}
 	}
 
 	register_shutdown_function(
-		function () use ( $wpdb, $option ) {
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s", $option ) );
+		function () use ( $wpdb, $option, $value ) {
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $option, $value ) );
 		}
 	);
 
