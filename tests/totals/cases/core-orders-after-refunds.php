@@ -355,3 +355,52 @@ $t::test(
 		$t::same( '<span class="sunshine-price"><span class="sunshine-currency-symbol">&#36;</span><span class="sunshine-amount">100</span></span>', sunshine_price( 100 ), 'store prices still use the store currency afterwards' );
 	}
 );
+
+// A yen order refunded through PayPal after the store switched to dollars: PayPal refuses
+// decimals for yen, so the amount goes in the order's own currency format (5000, not 5000.00).
+// The saved refund amount is rounded to the order currency too.
+$t::test(
+	'PayPal refund of a yen order is sent without decimals while the store is in dollars',
+	function () use ( $t, $orders_after_refunds_offline, $orders_after_refunds_reply ) {
+		$paypal = SPC()->payment_methods->get_payment_method_by_id( 'paypal' );
+		if ( ! $paypal ) {
+			$t::skip( 'PayPal payment method not available' );
+		}
+		$t::option( 'paypal_mode', 'sandbox' );
+		$token = function () {
+			return 'offline-token';
+		};
+		add_filter( 'pre_transient_sunshine_paypal_token_test', $token );
+		add_filter( 'pre_transient_sunshine_paypal_token_live', $token );
+		try {
+			$t::add( $t::product( 15030 ) );
+			$t::calculate();
+			$order = $t::place_order();
+			$order->set_currency( 'JPY' );
+			$t::option( 'currency', 'USD' );
+			$sent = $orders_after_refunds_offline(
+				$orders_after_refunds_reply( 15030 ),
+				function () use ( $order, $paypal ) {
+					$order->set_status( 'new' );
+					$order->update_meta_value( 'payment_method', 'paypal' );
+					$order->update_meta_value( 'paypal_capture_id', 'cap_offline' );
+					$_POST['paypal_refund_amount'] = '5000';
+					$paypal->process_refund( $order->get_id() );
+					unset( $_POST['paypal_refund_amount'] );
+				}
+			);
+		} finally {
+			remove_filter( 'pre_transient_sunshine_paypal_token_test', $token );
+			remove_filter( 'pre_transient_sunshine_paypal_token_live', $token );
+		}
+		$value = null;
+		foreach ( $sent as $request ) {
+			if ( false !== strpos( $request['url'], '/refund' ) && preg_match( '/"value":\s*"?([^",}]+)/', (string) $request['body'], $match ) ) {
+				$value = $match[1];
+			}
+		}
+		$t::same( '5000', $value, 'refund sent to PayPal as' );
+		$refunds = sunshine_get_order( $order->get_id() )->get_refunds();
+		$t::same( true, isset( $refunds[0]['amount'] ) && 5000.0 === (float) $refunds[0]['amount'], 'refund recorded as 5000' );
+	}
+);

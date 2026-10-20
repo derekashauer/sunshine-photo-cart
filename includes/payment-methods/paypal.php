@@ -835,7 +835,7 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 			$body    = array(
 				'amount' =>
 					array(
-						'value'         => $this->format_amount( $refund_amount ),
+						'value'         => $this->format_amount( $refund_amount, $order->get_currency() ),
 						'currency_code' => $order->get_currency(),
 					),
 			);
@@ -858,6 +858,7 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 				SPC()->notices->add_admin( 'paypal_refund_' . $capture_id, __( 'PayPal failed to refund', 'sunshine-photo-cart' ), 'error' );
 				/* translators: %s is the order ID */
 				$order->add_log( sprintf( __( 'Order %s failed refund in PayPal', 'sunshine-photo-cart' ), $order_id ) );
+				SPC()->log( 'PayPal refund failed for order ' . $order_id . ': ' . wp_json_encode( $request ) );
 			}
 		}
 	}
@@ -876,11 +877,12 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 	 * An amount as the text PayPal wants: the currency's decimals and nothing more, so 54.22
 	 * never goes as 54.21999999999999 and yen never goes with a fraction.
 	 *
-	 * @param float $amount The amount.
+	 * @param float  $amount   The amount.
+	 * @param string $currency Currency code, or '' for the store currency.
 	 * @return string
 	 */
-	private function format_amount( $amount ) {
-		$decimals = (int) sunshine_currency_decimal_filter( 2 );
+	private function format_amount( $amount, $currency = '' ) {
+		$decimals = (int) sunshine_currency_decimals( $currency );
 		return number_format( round( (float) $amount, $decimals ), $decimals, '.', '' );
 	}
 

@@ -236,8 +236,20 @@ function sunshine_currency_filter( $price = '', $currency = '' ) {
  * @return int $decimals
  */
 function sunshine_currency_decimal_filter( $decimals = 2 ) {
+	return sunshine_currency_decimals( '', $decimals );
+}
 
-	$currency = sunshine_get_currency();
+/**
+ * How many decimals a currency uses: none for yen and the like, otherwise $default.
+ *
+ * @param string $currency Currency code, or '' for the store currency.
+ * @param int    $default  Decimals for currencies with cents.
+ * @return int
+ */
+function sunshine_currency_decimals( $currency = '', $default = 2 ) {
+
+	$currency = $currency ? $currency : sunshine_get_currency();
+	$decimals = $default;
 
 	switch ( $currency ) {
 		case 'RIAL':

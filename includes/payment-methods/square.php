@@ -1999,7 +1999,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 		if ( ! empty( $refund_app_fee ) ) {
 			/* translators: %s is the refund amount formatted as price */
-			$order->add_log( sprintf( __( 'Sunshine contributed %s towards refund from processing fees', 'sunshine-photo-cart' ), sunshine_price( $refund_app_fee / $this->get_amount_multiplier() ) ) );
+			$order->add_log( sprintf( __( 'Sunshine contributed %s towards refund from processing fees', 'sunshine-photo-cart' ), sunshine_price( $refund_app_fee / $this->get_amount_multiplier(), false, $order->get_currency() ) ) );
 		}
 
 		/* translators: %s is the refund amount formatted as price */

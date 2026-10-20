@@ -912,7 +912,8 @@ class SPC_Order extends Sunshine_Data {
 		}
 		$refunds[] = array(
 			'date'   => current_time( 'timestamp' ),
-			'amount' => $amount,
+			// To the order currency's decimals, so 19.80 is saved as 19.8 and not 19.800000000000001.
+			'amount' => round( (float) $amount, sunshine_currency_decimals( $this->get_currency() ) ),
 			'reason' => $reason,
 		);
 		$this->update_meta_value( 'refunds', $refunds );
