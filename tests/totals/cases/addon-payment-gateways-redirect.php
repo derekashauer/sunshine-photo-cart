@@ -570,3 +570,33 @@ $t::test(
 		$clear();
 	}
 );
+
+// When Mercado Pago can't set up a payment, the order stays (marked Failed, with Mercado Pago's
+// reason) so the store can see the try. Orders are never deleted by a payment step.
+$t::test(
+	'Mercado Pago Pro: a payment it cannot set up keeps the order as Failed',
+	function () use ( $t, $addon_gateways_use, $addon_gateways_place, $addon_gateways_run ) {
+		$t::require_plugin( 'sunshine_payment_method_mercadopago', 'Mercado Pago add-on' );
+		$t::add( $t::product( 40 ) );
+		$t::option( 'mercadopagopro_access_token_test', 'TEST-spctotals' );
+		$addon_gateways_use( 'mercadopagopro' );
+		$order   = $addon_gateways_place( 'mercadopagopro', 40 );
+		$gateway = sunshine_get_payment_method_by_id( 'mercadopagopro' );
+		$run     = $addon_gateways_run(
+			function () use ( $gateway, $order ) {
+				$gateway->process_payment( $order );
+			},
+			function ( $request ) {
+				return '/checkout/preferences' === $request['path'] ? array( 400, array( 'message' => 'invalid access token' ) ) : null;
+			}
+		);
+		$errors = new ReflectionProperty( SPC()->cart, 'errors' );
+		$errors->setAccessible( true );
+		$errors->setValue( SPC()->cart, array() );
+		$saved = get_post( $order->get_id() );
+		$t::same( true, $saved && 'trash' !== $saved->post_status, 'order still exists' );
+		$t::same( 'failed', sunshine_get_order( $order->get_id() )->get_status(), 'order is Failed' );
+		$t::same( true, false !== strpos( wp_json_encode( sunshine_get_order( $order->get_id() )->get_log() ), 'invalid access token' ), 'order note has Mercado Pago\'s reason' );
+		$t::same( null, $run['redirect'], 'customer is not sent anywhere' );
+	}
+);
