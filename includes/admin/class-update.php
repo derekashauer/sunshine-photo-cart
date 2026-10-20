@@ -68,6 +68,9 @@ class SPC_Update {
 		if ( $this->need_update ) {
 			if ( empty( $_GET['page'] ) || $_GET['page'] != 'sunshine-update' ) {
 				maybe_sunshine_create_custom_tables();
+				// Checkout and payments set these statuses, so a store missing one (installed before
+				// it existed, or deleted by hand) gets it back.
+				sunshine_install_order_statuses( array( 'pending', 'new', 'failed', 'cancelled', 'refunded' ) );
 				delete_user_meta( get_current_user_id(), 'sunshine_cart' );
 				wp_redirect( admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-update' ) );
 				exit;
