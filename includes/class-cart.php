@@ -2682,6 +2682,18 @@ class SPC_Cart {
 
 		$order_id = SPC()->session->get( 'checkout_order_id' );
 		if ( $order_id ) {
+			// A pending order can still have a payment open on another site (the customer left
+			// Mollie's page without coming back). Paying with a different method starts a new
+			// order, so that open payment can never pay this order a second time. Changing the
+			// method before any payment was started keeps the order.
+			$saved   = sunshine_get_order( $order_id );
+			$started = ( $saved && $saved->exists() ) ? (string) $saved->get_meta_value( 'payment_started' ) : '';
+			if ( $started && 'pending' === $saved->get_status() && $payment_method && $started !== $payment_method ) {
+				SPC()->log( 'Order ' . $order_id . ' is waiting on a ' . $started . ' payment, starting a new order for ' . sanitize_key( $payment_method ) );
+				$order_id = '';
+			}
+		}
+		if ( $order_id ) {
 			$order = sunshine_get_order( $order_id );
 			if ( $order && $order->exists() && ! $order->is_paid() ) {
 				SPC()->log( 'Order already exists during init order so using existing order to update: ' . $order_id );
@@ -2944,6 +2956,8 @@ class SPC_Cart {
 		// do_action( 'sunshine_checkout_process_payment', $this );
 		if ( $this->get_checkout_data_item( 'payment_method' ) ) {
 			SPC()->log( 'Processing payment action: ' . $this->get_checkout_data_item( 'payment_method' ) );
+			// Remember which service was asked to take this order's payment (see init_order()).
+			$order->update_meta_value( 'payment_started', $this->get_checkout_data_item( 'payment_method' ) );
 			do_action( 'sunshine_checkout_process_payment_' . $this->get_checkout_data_item( 'payment_method' ), $order );
 		} elseif ( $order->get_total() > 0 ) {
 			$this->add_error( __( 'No payment method', 'sunshine-photo-cart' ) );

@@ -583,3 +583,25 @@ $t::test(
 		$t::same( true, $payment_results_exists( $first->get_id() ), 'the first shopper\'s paid order is kept' );
 	}
 );
+
+// A pending order can still have a payment open on another site: the customer left Mollie's page
+// without coming back, then paid for the same cart another way. Reusing that order would let the
+// open Mollie payment pay it a second time, so a different payment method starts a new order.
+// The same method keeps reusing the order (a second try on that service).
+$t::test(
+	'Paying with a different method while an order waits on another payment starts a new order',
+	function () use ( $t ) {
+		$t::add( $t::product( 30 ) );
+		$t::calculate();
+		$first = $t::place_order();
+		// The customer was sent to Mollie to pay this order.
+		$first->update_meta_value( 'payment_started', 'mollie' );
+
+		$second = $t::place_order();
+		$t::same( true, (int) $second->get_id() !== (int) $first->get_id(), 'a new order is made for the other method' );
+		$t::same( 'pending', sunshine_get_order( $first->get_id() )->get_status(), 'the first order is left waiting on its own payment' );
+
+		$third = $t::place_order();
+		$t::same( (int) $second->get_id(), (int) $third->get_id(), 'the same method reuses its order' );
+	}
+);
