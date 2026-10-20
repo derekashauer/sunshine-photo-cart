@@ -233,7 +233,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 	<?php } else { ?>
 
-			<p><a href="https://www.sunshinephotocart.com/?square_connect=1&mode=<?php echo esc_attr( $mode ); ?>&nonce=<?php echo esc_attr( wp_create_nonce( 'sunshine_square_connect' ) ); ?>&return_url=<?php echo rawurlencode( admin_url( 'admin.php' ) ); ?>" class="button"><?php esc_html_e( 'Connect to Square', 'sunshine-photo-cart' ); ?></a></p>
+			<p><a href="https://www.sunshinephotocart.com/?square_connect=1&mode=<?php echo esc_attr( $mode ); ?>&nonce=<?php echo esc_attr( wp_create_nonce( 'sunshine_square_connect' ) ); ?>&return_url=<?php echo rawurlencode( admin_url( 'admin.php' ) ); ?>&v=2" class="button"><?php esc_html_e( 'Connect to Square', 'sunshine-photo-cart' ); ?></a></p>
 
 			<?php
 	}
@@ -246,23 +246,26 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			return false;
 		}
 
-		if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'sunshine_square_connect' ) || empty( $_GET['access_token'] ) || empty( $_GET['refresh_token'] ) ) {
+		// The return address only carries a one-time pickup code. The keys are collected from
+		// sunshinephotocart.com directly, so they never sit in browser history or server logs.
+		$keys = false;
+		if ( ! isset( $_GET['error'] ) && ! empty( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'sunshine_square_connect' ) && ! empty( $_GET['pickup'] ) ) {
+			$keys = sunshine_collect_connect_keys( 'square', sanitize_text_field( wp_unslash( $_GET['pickup'] ) ) );
+		}
+
+		if ( empty( $keys['access_token'] ) || empty( $keys['refresh_token'] ) ) {
 			SPC()->notices->add_admin( 'square_connect_fail', __( 'Square could not be connected', 'sunshine-photo-cart' ), 'error' );
 			wp_redirect( admin_url( 'admin.php?page=sunshine&section=payment_methods&payment_method=square' ) );
 			exit;
 		}
 
-		if ( isset( $_GET['mode'] ) && $_GET['mode'] == 'live' ) {
-			$mode = 'live';
-		} else {
-			$mode = 'test';
-		}
+		$mode = ( isset( $keys['mode'] ) && $keys['mode'] == 'live' ) ? 'live' : 'test';
 
-		$access_token  = $this->secure_token( sanitize_text_field( $_GET['access_token'] ), 'e' );
-		$refresh_token = $this->secure_token( sanitize_text_field( $_GET['refresh_token'] ), 'e' );
+		$access_token  = $this->secure_token( sanitize_text_field( $keys['access_token'] ), 'e' );
+		$refresh_token = $this->secure_token( sanitize_text_field( $keys['refresh_token'] ), 'e' );
 		$this->update_option( 'access_token_' . $mode, $access_token );
 		$this->update_option( 'refresh_token_' . $mode, $refresh_token );
-		$this->update_option( 'merchant_id_' . $mode, sanitize_text_field( $_GET['merchant_id'] ) );
+		$this->update_option( 'merchant_id_' . $mode, sanitize_text_field( $keys['merchant_id'] ) );
 		$this->update_option( 'token_date_' . $mode, current_time( 'timestamp' ) );
 		$this->update_option( 'mode', $mode );
 		SPC()->log( 'Square connected' );
@@ -307,8 +310,10 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		// Disconnect on sunshinephotocart.com
 		$request = array(
 			'body'    => array(
-				'merchant_id' => $this->get_merchant_id(),
-				// 'access_token' => $this->get_access_token(),
+				'merchant_id'  => $this->get_merchant_id(),
+				// Proves this site holds the connection, so nobody else can remove it.
+				'access_token' => $this->get_access_token(),
+				'mode'         => $mode,
 			),
 			'timeout' => 45,
 		);
@@ -576,6 +581,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		$request = array(
 			'body'    => array(
 				'refresh_token' => $this->get_refresh_token(),
+				'mode'          => $this->get_mode_value(),
 			),
 			'timeout' => 45,
 		);

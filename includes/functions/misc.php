@@ -638,6 +638,37 @@ function sunshine_hide_comments_from_feeds( $where ) {
 	return $where . ' AND ' . sunshine_hidden_comments_where_sql();
 }
 
+/**
+ * Collect new Stripe or Square keys from sunshinephotocart.com after a connect. The return
+ * address only carries a one-time pickup code, so the keys never sit in a web address.
+ *
+ * @param string $provider 'stripe' or 'square'.
+ * @param string $code     Pickup code from the return address.
+ * @return array|false The keys, or false when they couldn't be collected.
+ */
+function sunshine_collect_connect_keys( $provider, $code ) {
+	if ( empty( $code ) ) {
+		return false;
+	}
+	$response = wp_remote_post(
+		'https://www.sunshinephotocart.com/?' . $provider . '_connect_pickup=1',
+		array(
+			'body'    => array( 'pickup' => $code ),
+			'timeout' => 30,
+		)
+	);
+	if ( is_wp_error( $response ) ) {
+		SPC()->log( ucfirst( $provider ) . ' keys could not be collected: ' . $response->get_error_message() );
+		return false;
+	}
+	$body = json_decode( wp_remote_retrieve_body( $response ), true );
+	if ( empty( $body['success'] ) || empty( $body['data'] ) || ! is_array( $body['data'] ) ) {
+		SPC()->log( ucfirst( $provider ) . ' keys could not be collected: ' . wp_remote_retrieve_body( $response ) );
+		return false;
+	}
+	return $body['data'];
+}
+
 function sunshine_image_placeholder_url() {
 	return apply_filters( 'sunshine_image_placeholder_url', SUNSHINE_PHOTO_CART_URL . '/assets/images/missing-image.png' );
 }
