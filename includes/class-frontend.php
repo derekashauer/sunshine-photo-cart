@@ -190,11 +190,12 @@ class SPC_Frontend {
 			$order    = new SPC_Order( $order_id );
 			if ( $order->can_access() ) { // Permission check to make sure access to this sensitive data is allowed
 				$this->current_order = $order;
-				// The customer is back from paying on another site (PayPal, PayFast...). Their next
-				// checkout is a new order, not this one, even when the payment notice that finishes
-				// this order came in on its own and never saw this customer's session. A cancelled
-				// or failed payment is the exception: paying again reuses that order.
-				if ( (int) SPC()->session->get( 'checkout_order_id' ) === (int) $order->get_id() && ! in_array( $order->get_status(), array( 'cancelled', 'failed' ), true ) ) {
+				// The customer is back from paying on another site (PayPal, PayFast...) and the
+				// payment notice already finished this order on its own, without this customer's
+				// session. Their next checkout is a new order. Whether an unpaid order is reused is
+				// decided when they place an order again (see SPC_Cart::init_order()), since a
+				// cancel notice can arrive at the same moment as this page.
+				if ( (int) SPC()->session->get( 'checkout_order_id' ) === (int) $order->get_id() && $order->is_paid() ) {
 					SPC()->session->set( 'checkout_order_id', '' );
 				}
 			} else {

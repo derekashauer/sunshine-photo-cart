@@ -2682,14 +2682,15 @@ class SPC_Cart {
 
 		$order_id = SPC()->session->get( 'checkout_order_id' );
 		if ( $order_id ) {
-			// A pending order can still have a payment open on another site (the customer left
-			// Mollie's page without coming back). Paying with a different method starts a new
-			// order, so that open payment can never pay this order a second time. Changing the
-			// method before any payment was started keeps the order.
+			// A pending order whose payment was already started can still have that payment open
+			// on another site (the customer left Mollie's page without coming back, or PayPal's
+			// notice hasn't arrived yet). Placing an order again starts a new one, so that open
+			// payment can never pay this order a second time. A cancelled or failed payment is
+			// reused, and so is a pending order no payment was started for.
 			$saved   = sunshine_get_order( $order_id );
 			$started = ( $saved && $saved->exists() ) ? (string) $saved->get_meta_value( 'payment_started' ) : '';
-			if ( $started && 'pending' === $saved->get_status() && $payment_method && $started !== $payment_method ) {
-				SPC()->log( 'Order ' . $order_id . ' is waiting on a ' . $started . ' payment, starting a new order for ' . sanitize_key( $payment_method ) );
+			if ( $started && 'pending' === $saved->get_status() ) {
+				SPC()->log( 'Order ' . $order_id . ' is waiting on a ' . $started . ' payment, starting a new order' );
 				$order_id = '';
 			}
 		}

@@ -589,7 +589,7 @@ $t::test(
 // open Mollie payment pay it a second time, so a different payment method starts a new order.
 // The same method keeps reusing the order (a second try on that service).
 $t::test(
-	'Paying with a different method while an order waits on another payment starts a new order',
+	'Placing an order again while it waits on a started payment starts a new order; a cancelled one is reused',
 	function () use ( $t ) {
 		$t::add( $t::product( 30 ) );
 		$t::calculate();
@@ -602,6 +602,18 @@ $t::test(
 		$t::same( 'pending', sunshine_get_order( $first->get_id() )->get_status(), 'the first order is left waiting on its own payment' );
 
 		$third = $t::place_order();
-		$t::same( (int) $second->get_id(), (int) $third->get_id(), 'the same method reuses its order' );
+		$t::same( (int) $second->get_id(), (int) $third->get_id(), 'an order no payment was started for is reused' );
+
+		// Same method, payment started and still open: a new order too.
+		$third->update_meta_value( 'payment_started', 'test' );
+		$fourth = $t::place_order();
+		$t::same( true, (int) $fourth->get_id() !== (int) $third->get_id(), 'same method with a started payment gets a new order' );
+
+		// The customer cancelled on the payment page: paying again reuses that order.
+		$fourth->update_meta_value( 'payment_started', 'mollie' );
+		$fourth->set_status( 'cancelled' );
+		$fifth = $t::place_order();
+		$t::same( (int) $fourth->get_id(), (int) $fifth->get_id(), 'a cancelled payment is paid again on the same order' );
+		$t::same( 'pending', sunshine_get_order( $fifth->get_id() )->get_status(), 'and it is waiting for payment again' );
 	}
 );
