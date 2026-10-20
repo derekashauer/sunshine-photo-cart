@@ -3000,6 +3000,8 @@ class SPC_Cart {
 	 * @param SPC_Order $order      The order.
 	 * @param bool      $set_status False when the status was already chosen, like an admin
 	 *                              marking an order paid by hand.
+	 * @return bool True when this call finished the order, false when it had already been
+	 *              finished (by a payment notice running at the same time, for example).
 	 */
 	public function post_process_order( $order, $set_status = true ) {
 		global $wpdb;
@@ -3017,7 +3019,7 @@ class SPC_Cart {
 			if ( $locked ) {
 				$wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock_name ) );
 			}
-			return;
+			return false;
 		}
 
 		SPC()->log( 'Post processing order: ' . $order->get_id() );
@@ -3088,6 +3090,7 @@ class SPC_Cart {
 			$wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock_name ) );
 		}
 
+		return true;
 	}
 
 	/**

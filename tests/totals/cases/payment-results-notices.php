@@ -410,3 +410,72 @@ $t::test(
 		$t::same( 'tr_spcsecondtry', (string) $saved->get_meta_value( 'mollie_payment_id' ), 'the paid Mollie payment is saved on the order' );
 	}
 );
+
+// Coming back from Mollie, the site asks Mollie what happened instead of waiting for its webhook:
+// a paid payment finishes the order right away, a cancelled one sends the customer back to
+// checkout to try again (the order is kept), and one still open waits for Mollie.
+$t::test(
+	'Mollie return: the customer sees the real result without waiting for the webhook',
+	function () use ( $t, $payment_results_mollie_use, $payment_results_place, $payment_results_mollie_client, $payment_results_mollie_payment, $payment_results_visit, $payment_results_fresh, $payment_results_mollie_webhook ) {
+		if ( ! class_exists( 'SPC_Payment_Method_Mollie' ) ) {
+			$t::skip( 'Mollie add-on is not active' );
+		}
+		$return = function ( $order, $payment ) use ( $payment_results_mollie_client, $payment_results_visit ) {
+			list( $mollie ) = $payment_results_mollie_client( $payment );
+			SPC()->frontend->current_order = sunshine_get_order( $order->get_id() );
+			return $payment_results_visit(
+				add_query_arg( 'mollie_complete', 1, $order->get_received_permalink() ),
+				function () use ( $mollie ) {
+					$mollie->return_listener();
+				},
+				null,
+				'Mollie return'
+			);
+		};
+
+		// Paid.
+		$payment_results_mollie_use();
+		$t::add( $t::product( 40 ) );
+		$order = $payment_results_place( 'mollie', 40, 'paid: ' );
+		$order->update_meta_value( 'mollie_payment_id', 'tr_spcreturnpaid' );
+		$payment = $payment_results_mollie_payment( 'tr_spcreturnpaid', $order->get_id(), '40.00' );
+		$run     = $return( $order, $payment );
+		$saved   = $payment_results_fresh( $order->get_id() );
+		$t::same( true, $saved->is_paid(), 'paid: order is paid when the customer lands on the receipt' );
+		$t::same( null, $run['redirect'], 'paid: customer stays on the receipt' );
+		$marker = (string) $saved->get_meta_value( 'post_processed' );
+		$payment_results_mollie_webhook( $payment );
+		$t::same( $marker, (string) $payment_results_fresh( $order->get_id() )->get_meta_value( 'post_processed' ), 'paid: the webhook afterwards does not finish it again' );
+
+		// Wrong amount: never paid.
+		$t::reset();
+		$payment_results_mollie_use();
+		$t::add( $t::product( 40 ) );
+		$order = $payment_results_place( 'mollie', 40, 'short: ' );
+		$order->update_meta_value( 'mollie_payment_id', 'tr_spcreturnshort' );
+		$return( $order, $payment_results_mollie_payment( 'tr_spcreturnshort', $order->get_id(), '4.00' ) );
+		$t::same( false, $payment_results_fresh( $order->get_id() )->is_paid(), 'short: a payment for less does not pay the order' );
+
+		// Cancelled.
+		$t::reset();
+		$payment_results_mollie_use();
+		$t::add( $t::product( 40 ) );
+		$order = $payment_results_place( 'mollie', 40, 'cancelled: ' );
+		$order->update_meta_value( 'mollie_payment_id', 'tr_spcreturncancel' );
+		$run = $return( $order, $payment_results_mollie_payment( 'tr_spcreturncancel', $order->get_id(), '40.00', 'canceled' ) );
+		$t::same( sunshine_get_page_url( 'checkout' ), $run['redirect'], 'cancelled: customer goes back to checkout' );
+		$saved = $payment_results_fresh( $order->get_id() );
+		$t::same( 'cancelled', $saved->get_status(), 'cancelled: order is kept as Cancelled' );
+		$t::same( (int) $order->get_id(), (int) SPC()->session->get( 'checkout_order_id' ), 'cancelled: paying again will reuse this order' );
+
+		// Still open.
+		$t::reset();
+		$payment_results_mollie_use();
+		$t::add( $t::product( 40 ) );
+		$order = $payment_results_place( 'mollie', 40, 'open: ' );
+		$order->update_meta_value( 'mollie_payment_id', 'tr_spcreturnopen' );
+		$run = $return( $order, $payment_results_mollie_payment( 'tr_spcreturnopen', $order->get_id(), '40.00', 'open' ) );
+		$t::same( null, $run['redirect'], 'open: customer stays on the receipt' );
+		$t::same( 'pending', $payment_results_fresh( $order->get_id() )->get_status(), 'open: order waits for Mollie' );
+	}
+);
