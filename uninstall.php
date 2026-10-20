@@ -19,12 +19,7 @@ if ( $uninstall ) {
 		$keep_usermeta .= $wpdb->prepare( ' AND meta_key NOT LIKE %s', $wpdb->esc_like( $keep_prefix ) . '%' );
 	}
 
-	// Remove settings.
-	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( 'sunshine_' ) . '%' ) . $keep_options );
-	// Remove user meta data.
-	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s", $wpdb->esc_like( 'sunshine_' ) . '%' ) . $keep_usermeta );
-
-	// Remove pages
+	// Remove pages. Their IDs are settings, so this has to happen before the settings go.
 	$pages = array(
 		get_option( 'sunshine_page' ),
 		get_option( 'sunshine_page_cart' ),
@@ -37,6 +32,11 @@ if ( $uninstall ) {
 			wp_delete_post( $page_id, true );
 		}
 	}
+
+	// Remove settings.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like( 'sunshine_' ) . '%' ) . $keep_options );
+	// Remove user meta data.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE %s", $wpdb->esc_like( 'sunshine_' ) . '%' ) . $keep_usermeta );
 
 	// Get all galleries for use in deleting attachments.
 	$galleries = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'sunshine-gallery';" );

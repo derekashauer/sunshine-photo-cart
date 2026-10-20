@@ -232,11 +232,8 @@ add_filter( 'aioseo_sitemap_exclude_posts', 'sunshine_aioseo_sitemap_exclude_pos
  * @return bool|string Return false if it is to be excluded, or URL if it is OK
  */
 function sunshine_rank_math_entry( $url, $type, $object ) {
-	if ( 'sunshine-gallery' == $object->post_type ) {
-		$gallery = sunshine_get_gallery( $object );
-		if ( $gallery->get_status() != 'default' || $gallery->get_access_type() == 'url' ) {
-			return false;
-		}
+	if ( 'sunshine-gallery' == $object->post_type && in_array( $object->ID, sunshine_get_seo_sitemap_exclude_ids_cached() ) ) {
+		return false;
 	}
 	return $url;
 }
@@ -251,12 +248,23 @@ add_filter( 'rank_math/sitemap/entry', 'sunshine_rank_math_entry', 10, 3 );
  * @return bool|string Return false if it is to be excluded, or URL if it is OK
  */
 function sunshine_seopress_sitemaps_single_url( $url, $post ) {
-	if ( 'sunshine-gallery' == $post->post_type ) {
-		$gallery = sunshine_get_gallery( $post );
-		if ( 'default' != $gallery->get_status() || 'url' == $gallery->get_access_type() ) {
-			return false;
-		}
+	if ( 'sunshine-gallery' == $post->post_type && in_array( $post->ID, sunshine_get_seo_sitemap_exclude_ids_cached() ) ) {
+		return false;
 	}
 	return $url;
+}
+
+/**
+ * The same galleries the other sitemaps leave out, including children of protected galleries.
+ * Rank Math and SEOPress ask once per sitemap entry, so the list is built once per request.
+ *
+ * @return array Gallery IDs.
+ */
+function sunshine_get_seo_sitemap_exclude_ids_cached() {
+	static $ids = null;
+	if ( null === $ids ) {
+		$ids = (array) sunshine_get_seo_sitemap_exclude_ids();
+	}
+	return $ids;
 }
 add_filter( 'seopress_sitemaps_single_url', 'sunshine_seopress_sitemaps_single_url', 10, 2 );

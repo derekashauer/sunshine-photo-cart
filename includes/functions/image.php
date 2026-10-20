@@ -172,9 +172,14 @@ function sunshine_secure_intermediate_file_names( $metadata, $file_path, $sizes 
 		}
 		$old_file = $size_data['file'];
 		if ( ! isset( $renamed[ $old_file ] ) ) {
-			$renamed[ $old_file ] = str_replace( $random_string, wp_generate_password( 24, false ), $old_file );
-			if ( file_exists( $base_dir . $old_file ) ) {
-				rename( $base_dir . $old_file, $base_dir . $renamed[ $old_file ] );
+			$new_file = str_replace( $random_string, wp_generate_password( 24, false ), $old_file );
+			// Keep the old name unless the file really moved, so the metadata never points at a
+			// file that isn't there.
+			if ( file_exists( $base_dir . $old_file ) && ! file_exists( $base_dir . $new_file ) && rename( $base_dir . $old_file, $base_dir . $new_file ) ) {
+				$renamed[ $old_file ] = $new_file;
+			} else {
+				SPC()->log( 'Could not give ' . $old_file . ' a new file name, keeping the old one' );
+				$renamed[ $old_file ] = $old_file;
 			}
 		}
 		$size_data['file'] = $renamed[ $old_file ];
