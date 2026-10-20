@@ -190,6 +190,12 @@ class SPC_Frontend {
 			$order    = new SPC_Order( $order_id );
 			if ( $order->can_access() ) { // Permission check to make sure access to this sensitive data is allowed
 				$this->current_order = $order;
+				// The customer is back from paying on another site (PayPal, PayFast...). Their next
+				// checkout is a new order, not this one, even when the payment notice that finishes
+				// this order came in on its own and never saw this customer's session.
+				if ( (int) SPC()->session->get( 'checkout_order_id' ) === (int) $order->get_id() ) {
+					SPC()->session->set( 'checkout_order_id', '' );
+				}
 			} else {
 				$this->die();
 			}
