@@ -9,6 +9,7 @@ class SPC_Email {
 	protected $description;
 	protected $template;
 	protected $custom_recipients = false;
+	protected $active_by_default = true; // Turned on when Sunshine is installed or updated.
 	protected $to;
 	protected $to_name;
 	protected $recipients = array();
@@ -98,6 +99,10 @@ class SPC_Email {
 
 	public function is_active() {
 		return SPC()->get_option( 'email_' . $this->id . '_active' );
+	}
+
+	public function is_active_by_default() {
+		return $this->active_by_default;
 	}
 
 	public function allows_custom_recipients() {

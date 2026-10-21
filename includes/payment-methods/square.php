@@ -1464,7 +1464,9 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			$paid = isset( $payment['amount_money']['amount'] ) ? ( $payment['amount_money']['amount'] / $this->get_amount_multiplier() ) . ' ' . $payment['amount_money']['currency'] : 'unknown';
 			SPC()->log( 'Square payment ' . $payment_id . ' (status ' . ( $status ? $status : 'not found' ) . ', ' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ')' );
 			/* translators: 1: Square payment ID, 2: amount paid in Square */
-			$order->add_log( sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid ) );
+			$note = sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid );
+			$order->add_log( $note );
+			sunshine_order_payment_problem( $order, $note, $this->id );
 			SPC()->cart->add_error( __( 'Your payment did not match the order total, please contact the site owner', 'sunshine-photo-cart' ) );
 			return;
 		}
@@ -1746,8 +1748,10 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 				$paid = isset( $payment['amount_money']['amount'] ) ? ( $payment['amount_money']['amount'] / $this->get_amount_multiplier() ) . ' ' . $payment['amount_money']['currency'] : 'unknown';
 				SPC()->log( 'reconcile_order: Square payment ' . $payment_id . ' (' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ')' );
 				/* translators: 1: Square payment ID, 2: amount paid in Square */
-				$order->add_log( sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid ) );
+				$note = sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid );
+				$order->add_log( $note );
 				$order->update_meta_value( 'square_payment_mismatch', 1 );
+				sunshine_order_payment_problem( $order, $note, $this->id );
 			}
 			return array( 'ok' => false, 'action' => 'mismatch' );
 		}

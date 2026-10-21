@@ -356,7 +356,9 @@ class SPC_Payment_Method_PayPal_Legacy extends SPC_Payment_Method {
 				$txn_id = isset( $myPost['txn_id'] ) ? sanitize_text_field( $myPost['txn_id'] ) : '';
 				SPC()->log( 'PayPal IPN payment ' . $txn_id . ' (' . $paid . ' to ' . implode( '/', $paid_to ) . ') does not match ' . $order->get_name() . ' (total ' . $order->get_total() . ')' );
 				/* translators: 1: PayPal transaction ID, 2: amount paid in PayPal */
-				$order->add_log( sprintf( __( 'PayPal payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $txn_id, sanitize_text_field( $paid ) ) );
+				$note = sprintf( __( 'PayPal payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $txn_id, sanitize_text_field( $paid ) );
+				$order->add_log( $note );
+				sunshine_order_payment_problem( $order, $note, $this->id );
 				exit;
 			}
 

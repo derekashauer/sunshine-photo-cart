@@ -157,6 +157,20 @@ function sunshine_order_is_paid( $status ) {
 	return false;
 }
 
+/**
+ * Payment methods call this when they refuse a payment, payment notice or confirmation because
+ * it doesn't pay the order: wrong amount, wrong currency, made for another order, paid to another
+ * account, or it couldn't be confirmed. They add their own order note first; this only tells
+ * anything listening, like the Admin Payment Problem email.
+ *
+ * @param SPC_Order $order             The order.
+ * @param string    $reason            Why the payment was refused, in plain words.
+ * @param string    $payment_method_id The payment method's ID.
+ */
+function sunshine_order_payment_problem( $order, $reason, $payment_method_id = '' ) {
+	do_action( 'sunshine_order_payment_problem', $order, $reason, $payment_method_id );
+}
+
 function sunshine_order_statuses_completed() {
 	return apply_filters( 'sunshine_order_statuses_paid', array( 'pickup', 'shipped' ) );
 }

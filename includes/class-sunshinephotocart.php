@@ -129,6 +129,7 @@ final class Sunshine_Photo_Cart {
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-reset-password.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-customer-receipt.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-admin-receipt.php';
+		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-admin-payment-problem.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-order-status.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-order-comment.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-admin-favorites.php';

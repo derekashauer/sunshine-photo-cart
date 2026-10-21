@@ -710,7 +710,9 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 			$captured_amount = ( ! empty( $captured->amount ) ) ? $captured->amount->value . ' ' . $captured->amount->currency_code : 'unknown';
 			SPC()->log( 'PayPal capture ' . $captured->id . ' amount (' . $captured_amount . ') does not match order total (' . $order->get_total() . ' ' . SPC()->get_option( 'currency' ) . ')' );
 			/* translators: 1: PayPal capture ID, 2: amount captured by PayPal */
-			$order->add_log( sprintf( __( 'PayPal capture %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $captured->id, $captured_amount ) );
+			$note = sprintf( __( 'PayPal capture %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $captured->id, $captured_amount );
+			$order->add_log( $note );
+			sunshine_order_payment_problem( $order, $note, $this->id );
 			SPC()->cart->add_error( __( 'Your payment did not match the order total, please contact the site owner', 'sunshine-photo-cart' ) );
 			return;
 		}

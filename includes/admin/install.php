@@ -365,10 +365,11 @@ function sunshine_base_install() {
 		SPC()->log( 'Creating default upload directory' );
 	}
 
-	// Enable all emails and set default for them, leaving any already saved alone.
+	// Enable all emails and set default for them, leaving any already saved alone. Emails that
+	// start off stay off until the store owner turns them on.
 	$emails = SPC()->emails->get_emails();
 	foreach ( $emails as $id => $email ) {
-		if ( ! array_key_exists( 'email_' . $id . '_active', $options ) ) {
+		if ( ! array_key_exists( 'email_' . $id . '_active', $options ) && $email->is_active_by_default() ) {
 			$options[ 'email_' . $id . '_active' ] = true;
 		}
 		if ( $email->allows_custom_recipients() && ! array_key_exists( 'email_' . $id . '_recipients', $options ) ) {

@@ -1533,7 +1533,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$paid = $this->convert_amount_from_stripe( $received ) . ' ' . strtoupper( $currency );
 		SPC()->log( 'Stripe payment intent ' . $payment_intent['id'] . ' amount (' . $paid . ') does not match order ' . $order->get_id() . ' total (' . $order->get_total() . ' ' . $this->currency . ')' );
 		/* translators: 1: Stripe payment intent ID, 2: amount paid in Stripe */
-		$order->add_log( sprintf( __( 'Stripe payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_intent['id'], $paid ) );
+		$note = sprintf( __( 'Stripe payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_intent['id'], $paid );
+		$order->add_log( $note );
+		sunshine_order_payment_problem( $order, $note, $this->id );
 		return false;
 	}
 
@@ -1577,7 +1579,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			$paid = $this->convert_amount_from_stripe( isset( $session['amount_total'] ) ? $session['amount_total'] : 0 ) . ' ' . strtoupper( $currency );
 			SPC()->log( 'Stripe Checkout Session ' . $session['id'] . ' (' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ' ' . $this->currency . ')' );
 			/* translators: 1: Stripe Checkout Session ID, 2: amount paid in Stripe */
-			$order->add_log( sprintf( __( 'Stripe payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $session['id'], $paid ) );
+			$note = sprintf( __( 'Stripe payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $session['id'], $paid );
+			$order->add_log( $note );
+			sunshine_order_payment_problem( $order, $note, $this->id );
 		}
 
 		return $matches;

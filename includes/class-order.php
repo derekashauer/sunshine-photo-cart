@@ -116,14 +116,15 @@ class SPC_Order extends Sunshine_Data {
 
 	public function set_status( $new_status, $custom_log = '' ) {
 		if ( sunshine_order_status_is_valid( $new_status ) ) {
-			$result = wp_set_object_terms( $this->get_id(), $new_status, 'sunshine-order-status' );
+			// Read the status before changing it, so an order loaded fresh knows what it was.
+			$current_status = $this->get_status();
+			$result         = wp_set_object_terms( $this->get_id(), $new_status, 'sunshine-order-status' );
 			if ( is_wp_error( $result ) ) {
 				SPC()->log( $this->get_name() . ' could not be set to ' . $new_status . ': ' . $result->get_error_message() );
 				return false;
 			}
-			$current_status = $this->get_status();
-			$this->status   = $new_status;
-			do_action( 'sunshine_order_status_change', $new_status, $this );
+			$this->status = $new_status;
+			do_action( 'sunshine_order_status_change', $new_status, $this, $current_status );
 			do_action( 'sunshine_order_status_change_' . $new_status, $this );
 			if ( ! empty( $current_status ) && $current_status != $new_status ) {
 				do_action( 'sunshine_order_status_change_' . $current_status . '_to_' . $new_status, $this );
