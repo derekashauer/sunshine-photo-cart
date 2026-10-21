@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.5
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 3.7.5
+Stable tag: 3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,7 +243,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.8 =
+= 3.8 - October 21, 2026 =
 * Security: Every payment method now confirms with the payment company that an order was really paid, in full, before the order is marked paid
 * Security: Gallery photos, comments and sub-galleries follow the gallery's access settings in more places, including feeds, sitemaps, sharing, favorites and the REST API
 * Security: Visitors never get a photo's original file, whatever image size a theme or plugin asks for
