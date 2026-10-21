@@ -391,24 +391,7 @@ class SPC_Shipping_Method {
 
 		$this->price = $total;
 		$this->tax   = 0;
-
-		if ( ! $this->price || ! $this->is_taxable() ) {
-			return;
-		}
-
-		$tax_rate = SPC()->cart->get_tax_rate();
-		if ( ! $tax_rate ) {
-			return;
-		}
-
-		if ( 'yes' === SPC()->get_option( 'price_has_tax' ) ) {
-			// Split the tax out of the entered total.
-			$base_price  = round( $this->price / ( $tax_rate['rate'] + 1 ), 2 );
-			$this->tax   = round( $this->price - $base_price, 2 );
-			$this->price = $base_price;
-		} else {
-			$this->tax = round( $this->price * $tax_rate['rate'], 2 );
-		}
+		$this->calculate_tax();
 
 	}
 
