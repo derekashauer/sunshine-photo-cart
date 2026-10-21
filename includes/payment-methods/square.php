@@ -1474,7 +1474,11 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			}
 			$order->add_log( $note );
 			sunshine_order_payment_problem( $order, $note, $this->id, $declined ? 'declined' : 'mismatch' );
-			SPC()->cart->add_error( __( 'Your payment did not match the order total, please contact the site owner', 'sunshine-photo-cart' ) );
+			if ( $declined ) {
+				SPC()->cart->add_error( __( 'Your payment was declined. Please try again or use another way to pay.', 'sunshine-photo-cart' ) );
+			} else {
+				SPC()->cart->add_error( __( 'Your payment did not match the order total, please contact the site owner', 'sunshine-photo-cart' ) );
+			}
 			return;
 		}
 

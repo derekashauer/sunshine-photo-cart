@@ -337,6 +337,8 @@ $t::test(
 		$payment                      = $underpaid_square_payment( $order, 11000 );
 		$payment['payment']['status'] = 'FAILED';
 		$underpaid_square_submit( $order, $payment );
+		$errors = implode( ' ', (array) SPC()->cart->get_errors() );
+		$t::same( true, false !== strpos( $errors, 'declined' ) && false === strpos( $errors, 'match' ), 'the customer is told it was declined (got: ' . $errors . ')' );
 		$saved = $underpaid_fresh( $order->get_id() );
 		$t::same( 'pending', $saved->get_status(), 'order still waits for payment' );
 		$t::same( false, $underpaid_finished( $saved ), 'order not finished' );
