@@ -855,9 +855,18 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 				$order->add_refund( $refund_amount );
 				$this->maybe_mark_refunded( $order );
 			} else {
-				SPC()->notices->add_admin( 'paypal_refund_' . $capture_id, __( 'PayPal failed to refund', 'sunshine-photo-cart' ), 'error' );
-				/* translators: %s is the order ID */
-				$order->add_log( sprintf( __( 'Order %s failed refund in PayPal', 'sunshine-photo-cart' ), $order_id ) );
+				// PayPal's own reason, like "You cannot do a refund less than the original capture amount."
+				$reason = '';
+				if ( ! empty( $request->details[0]->description ) ) {
+					$reason = $request->details[0]->description;
+				} elseif ( ! empty( $request->message ) ) {
+					$reason = $request->message;
+				}
+				$reason = sanitize_text_field( $reason );
+				/* translators: %s: PayPal's reason, may be empty */
+				SPC()->notices->add_admin( 'paypal_refund_' . $capture_id, trim( sprintf( __( 'PayPal failed to refund. %s', 'sunshine-photo-cart' ), $reason ) ), 'error' );
+				/* translators: 1: order ID, 2: PayPal's reason, may be empty */
+				$order->add_log( trim( sprintf( __( 'Order %1$s failed refund in PayPal. %2$s', 'sunshine-photo-cart' ), $order_id, $reason ) ) );
 				SPC()->log( 'PayPal refund failed for order ' . $order_id . ': ' . wp_json_encode( $request ) );
 			}
 		}
