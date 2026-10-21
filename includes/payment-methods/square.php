@@ -280,11 +280,14 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			return false;
 		}
 
-		$started = get_transient( 'sunshine_square_connect_' . get_current_user_id() );
-		delete_transient( 'sunshine_square_connect_' . get_current_user_id() );
-
-		$data = false;
-		if ( ! isset( $_GET['error'] ) && ! empty( $_GET['code'] ) && ! empty( $started['verifier'] ) && ! empty( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'sunshine_square_connect' ) ) {
+		// Only a return carrying this admin's security code may use up the pending connect.
+		$data    = false;
+		$started = false;
+		if ( ! empty( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'sunshine_square_connect' ) ) {
+			$started = get_transient( 'sunshine_square_connect_' . get_current_user_id() );
+			delete_transient( 'sunshine_square_connect_' . get_current_user_id() );
+		}
+		if ( ! isset( $_GET['error'] ) && ! empty( $_GET['code'] ) && ! empty( $started['verifier'] ) ) {
 			$mode = $started['mode'];
 			$data = $this->oauth_token_request(
 				$mode,
@@ -666,13 +669,10 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 	 */
 	private function refresh_token_direct() {
 
-		$mode = $this->get_mode_value();
-		$lock = 'sunshine_square_refresh_lock';
-		if ( ! add_option( $lock, time(), '', 'no' ) ) {
-			if ( time() - (int) get_option( $lock ) < MINUTE_IN_SECONDS ) {
-				return false;
-			}
-			update_option( $lock, time(), false );
+		$mode  = $this->get_mode_value();
+		$owner = $this->lock_refresh();
+		if ( ! $owner ) {
+			return false;
 		}
 
 		$data = $this->oauth_token_request(
@@ -685,17 +685,51 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		if ( ! empty( $data['access_token'] ) && ! empty( $data['refresh_token'] ) ) {
 			$this->save_tokens( $mode, $data );
 		}
-		delete_option( $lock );
+		$this->unlock_refresh( $owner );
 
 		if ( empty( $data['access_token'] ) ) {
 			SPC()->log( 'Failed to refresh Square token: ' . ( isset( $data['error'] ) ? $data['error'] : 'no answer from Square' ) );
-			SPC()->notices->add_admin( 'square_failed_refresh', __( 'Square could not renew its connection. If this keeps happening, disconnect and connect Square again.', 'sunshine-photo-cart' ), 'error' );
+			if ( ! empty( $data['refused'] ) ) {
+				// Square answered and won't take this renewal key again. The current access key
+				// keeps working until it expires, so there is time to reconnect.
+				SPC()->notices->add_admin( 'square_failed_refresh', __( 'Square: your connection can no longer renew and will stop taking payments when the current key expires. Disconnect and connect Square again now.', 'sunshine-photo-cart' ), 'error' );
+			} else {
+				SPC()->notices->add_admin( 'square_failed_refresh', __( 'Square: could not reach Square to renew the connection. It will try again. If this message keeps coming back, disconnect and connect Square again.', 'sunshine-photo-cart' ), 'error' );
+			}
 			return false;
 		}
 
 		SPC()->log( 'Square token refreshed' );
 		return true;
 
+	}
+
+	/**
+	 * Only one renewal may run at a time. The lock is a row written straight to the database,
+	 * so two requests can never both take it: WordPress's add_option() overwrites a row that
+	 * already exists instead of failing. A lock older than a minute was left by a request that
+	 * crashed, and is taken over in a single step that only one request can win.
+	 *
+	 * @return string|false This request's lock value, or false when another renewal holds it.
+	 */
+	private function lock_refresh() {
+		global $wpdb;
+		$name  = 'sunshine_square_refresh_lock';
+		$owner = time() . ':' . wp_generate_password( 12, false );
+		if ( $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO {$wpdb->options} ( option_name, option_value, autoload ) VALUES ( %s, %s, 'no' )", $name, $owner ) ) ) {
+			return $owner;
+		}
+		$current = (string) $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $name ) );
+		if ( time() - (int) $current < MINUTE_IN_SECONDS ) {
+			return false;
+		}
+		$taken = $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->options} SET option_value = %s WHERE option_name = %s AND option_value = %s", $owner, $name, $current ) );
+		return $taken ? $owner : false;
+	}
+
+	private function unlock_refresh( $owner ) {
+		global $wpdb;
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", 'sunshine_square_refresh_lock', $owner ) );
 	}
 
 	/**
@@ -732,7 +766,12 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		}
 		$data = json_decode( wp_remote_retrieve_body( $response ), true );
 		if ( empty( $data['access_token'] ) ) {
-			return array( 'error' => ! empty( $data['errors'][0]['detail'] ) ? $data['errors'][0]['detail'] : wp_remote_retrieve_body( $response ) );
+			$code = (int) wp_remote_retrieve_response_code( $response );
+			return array(
+				'error'   => ! empty( $data['errors'][0]['detail'] ) ? $data['errors'][0]['detail'] : wp_remote_retrieve_body( $response ),
+				// Square looked at the request and said no, rather than the request getting lost.
+				'refused' => $code >= 400 && $code < 500,
+			);
 		}
 		return $data;
 
