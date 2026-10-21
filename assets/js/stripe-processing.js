@@ -7,6 +7,7 @@ var sunshine_stripe_elements;
 var sunshine_stripe_payment_element;
 var sunshine_stripe_element_mounted = false;
 var sunshine_stripe_payment_intent_created = false;
+var sunshine_stripe_setup_error = '';
 
 jQuery( document ).on( 'sunshine_checkout_payment_change', async function ( event, payment_method ) {
 
@@ -17,6 +18,8 @@ jQuery( document ).on( 'sunshine_checkout_payment_change', async function ( even
 		// Reset state when Stripe is selected
 		sunshine_stripe_element_mounted = false;
 		sunshine_stripe_payment_intent_created = false;
+		sunshine_stripe_setup_error = '';
+		jQuery( '#sunshine-stripe-payment-errors' ).html( '' );
 		
 		// Setup payment intent.
 		jQuery.ajax({
@@ -28,6 +31,15 @@ jQuery( document ).on( 'sunshine_checkout_payment_change', async function ( even
 			},
 			timeout: 15000, // 15 second timeout for payment intent creation
 		}).then(function(result) {
+
+			// The site could not set up a Stripe payment (an order too small for Stripe, for one).
+			// Say why where the card form would be, instead of leaving it loading.
+			if ( ! result || ! result.success || ! result.data || ! result.data.client_secret ) {
+				sunshine_stripe_setup_error = ( result && result.data && result.data.message ) ? result.data.message : spc_stripe_vars.strings.setup_failed;
+				jQuery( '#sunshine-stripe-payment-loading' ).remove();
+				jQuery( '#sunshine-stripe-payment-errors' ).html( '<div style="background:red;padding:15px;color:#FFF;margin:10px 0;">' + sunshine_stripe_setup_error + '</div>' );
+				return;
+			}
 
 			sunshine_stripe_options.clientSecret = result.data.client_secret;
 			
@@ -125,6 +137,7 @@ jQuery( document ).on( 'sunshine_reload_checkout', function( event, data ) {
 	// Reset Stripe state when checkout is reloaded
 	sunshine_stripe_element_mounted = false;
 	sunshine_stripe_payment_intent_created = false;
+	sunshine_stripe_setup_error = '';
 	
 	// Clear references to old elements
 	if (sunshine_stripe_elements) {
@@ -160,6 +173,14 @@ jQuery( document ).on( 'sunshine_payment_processing', function( event, data ) {
 		}
 
 		// Validate Stripe elements state before proceeding
+		if ( sunshine_stripe_setup_error ) {
+			jQuery( '#sunshine-stripe-payment-errors' ).html( '<div style="background:red;padding:15px;color:#FFF;margin:10px 0;">' + sunshine_stripe_setup_error + '</div>' );
+			sunshine_checkout_updating_done();
+			resetButtonState();
+			reject( new Error( 'Stripe payment could not be set up' ) );
+			return;
+		}
+
 		if (!sunshine_stripe_elements) {
 			jQuery( '#sunshine-stripe-payment-errors' ).html( '<div style="background:red;padding:15px;color:#FFF;margin:10px 0;">' + spc_stripe_vars.strings.elements_not_available + '</div>' );
 			sunshine_checkout_updating_done();

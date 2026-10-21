@@ -114,16 +114,22 @@ class SPC_Order extends Sunshine_Data {
 		return false;
 	}
 
-	public function set_status( $new_status, $custom_log = '' ) {
+	/**
+	 * @param string $new_status The new status.
+	 * @param string $custom_log Order note to add instead of the usual one.
+	 * @param bool   $by_hand    True when an admin changed it by hand (order screen or bulk action).
+	 */
+	public function set_status( $new_status, $custom_log = '', $by_hand = false ) {
 		if ( sunshine_order_status_is_valid( $new_status ) ) {
-			$result = wp_set_object_terms( $this->get_id(), $new_status, 'sunshine-order-status' );
+			// Read the status before changing it, so an order loaded fresh knows what it was.
+			$current_status = $this->get_status();
+			$result         = wp_set_object_terms( $this->get_id(), $new_status, 'sunshine-order-status' );
 			if ( is_wp_error( $result ) ) {
 				SPC()->log( $this->get_name() . ' could not be set to ' . $new_status . ': ' . $result->get_error_message() );
 				return false;
 			}
-			$current_status = $this->get_status();
-			$this->status   = $new_status;
-			do_action( 'sunshine_order_status_change', $new_status, $this );
+			$this->status = $new_status;
+			do_action( 'sunshine_order_status_change', $new_status, $this, $current_status, $by_hand );
 			do_action( 'sunshine_order_status_change_' . $new_status, $this );
 			if ( ! empty( $current_status ) && $current_status != $new_status ) {
 				do_action( 'sunshine_order_status_change_' . $current_status . '_to_' . $new_status, $this );
@@ -539,7 +545,7 @@ class SPC_Order extends Sunshine_Data {
 		return $this->get_meta_value( 'credits' );
 	}
 	public function get_credits_formatted() {
-		return sunshine_price( $this->get_credits() );
+		return '-' . sunshine_price( $this->get_credits() );
 	}
 	public function set_credits( $value ) {
 		$this->update_meta_value( 'credits', floatval( $value ) );
@@ -579,11 +585,10 @@ class SPC_Order extends Sunshine_Data {
 	 * @param array $value Array of discounts, could be classes or codes
 	 */
 	public function set_discounts( $values ) {
-		if ( empty( $values ) ) {
-			return;
-		}
+		// An empty list is saved too: an unpaid order placed again after its code was taken off
+		// must not keep the old code (it would be shown and counted as used).
 		$discounts = array();
-		foreach ( $values as $discount ) {
+		foreach ( (array) $values as $discount ) {
 			if ( is_a( $discount, 'SPC_Discount' ) ) {
 				$discounts[] = $discount->get_code();
 			} elseif ( is_string( $discount ) ) {
@@ -606,7 +611,12 @@ class SPC_Order extends Sunshine_Data {
 		// Mirror get_subtotal_formatted()/get_shipping_formatted(): price_formatted() adds the tax
 		// portion back only in with-tax mode, so this shows the gross discount with tax displayed
 		// and the ex-tax (base) discount when prices are shown without tax.
-		return '-' . $this->price_formatted( $this->get_discount() - $this->get_discount_tax(), $this->get_discount_tax() );
+		// When prices include tax the discount already holds its tax, otherwise the tax comes on top.
+		$discount = $this->get_discount();
+		if ( 'yes' === $this->get_meta_value( 'price_has_tax' ) ) {
+			$discount -= $this->get_discount_tax();
+		}
+		return '-' . $this->price_formatted( $discount, $this->get_discount_tax() );
 	}
 	public function set_discount( $value ) {
 		$this->update_meta_value( 'discount', floatval( $value ) );
@@ -908,13 +918,16 @@ class SPC_Order extends Sunshine_Data {
 		}
 		$refunds[] = array(
 			'date'   => current_time( 'timestamp' ),
-			'amount' => $amount,
+			// To the order currency's decimals, so 19.80 is saved as 19.8 and not 19.800000000000001.
+			'amount' => round( (float) $amount, sunshine_currency_decimals( $this->get_currency() ) ),
 			'reason' => $reason,
 		);
 		$this->update_meta_value( 'refunds', $refunds );
 
+		do_action( 'sunshine_order_refund', $this, $amount, $reason );
+
 		/* translators: %s is the refund amount formatted as price */
-		$this->add_log( sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $amount ) ) );
+		$this->add_log( sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $amount, false, $this->get_currency() ) ) );
 
 		// Update this customer's order stats.
 		$customer = $this->get_customer();
@@ -950,11 +963,25 @@ class SPC_Order extends Sunshine_Data {
 		$items           = $this->get_items();
 		$cost            = 0;
 		$price           = 0;
-		$fees            = floatval( $this->get_fees_total() );
 		$application_fee = $this->get_application_fee();
+		// Fees that are a way to pay, like a gift card (saved as a negative fee), are not money
+		// the store charged or gave off, so they don't change the profit. Add-ons name theirs.
+		$payment_fee_ids = (array) apply_filters( 'sunshine_order_profit_payment_fees', array(), $this );
+		$fees            = 0;
+		if ( ! empty( $this->meta['fees'] ) && is_array( $this->meta['fees'] ) ) {
+			foreach ( $this->meta['fees'] as $fee_id => $fee ) {
+				if ( ! in_array( $fee_id, $payment_fee_ids, true ) ) {
+					$fees += floatval( $fee['amount'] );
+				}
+			}
+		}
 		// Item totals already have any line item discounts taken off. Discount
-		// codes are held separately on the order, so they come off here.
+		// codes are held separately on the order, so they come off here. When prices include
+		// tax the discount holds its tax too, and the items are counted without tax.
 		$discount = floatval( $this->get_discount() );
+		if ( 'yes' === $this->get_meta_value( 'price_has_tax' ) ) {
+			$discount -= $this->get_discount_tax();
+		}
 		if ( ! empty( $items ) ) {
 			foreach ( $items as $item ) {
 				$cost  += floatval( $item->get_meta_value( 'cost' ) ) * intval( $item->get_qty() );
@@ -1141,7 +1168,11 @@ class SPC_Order extends Sunshine_Data {
 		// Get more verbose details on the cart items.
 		// We want this saved to database so it is permanent should products/images be removed in the future.
 
-		// Instead of inserting, we are going to delete and re-insert.
+		// Instead of inserting, we are going to delete and re-insert, line details included.
+		$old_item_ids = $wpdb->get_col( $wpdb->prepare( "SELECT order_item_id FROM {$wpdb->prefix}sunshine_order_items WHERE order_id = %d", $this->get_id() ) );
+		foreach ( $old_item_ids as $old_item_id ) {
+			$wpdb->delete( $wpdb->prefix . 'sunshine_order_itemmeta', array( 'order_item_id' => $old_item_id ) );
+		}
 		$wpdb->delete(
 			$wpdb->prefix . 'sunshine_order_items',
 			array( 'order_id' => $this->get_id() )
@@ -1165,12 +1196,25 @@ class SPC_Order extends Sunshine_Data {
 
 		$cart_item = new SPC_Cart_Item( $item );
 
+		// What the customer was charged for this line, when the cart saved it with the line
+		// (see SPC_Cart::get_cart_with_line_totals()). Otherwise it is worked out now.
+		$charged = ( ! empty( $item['line_totals'] ) && is_array( $item['line_totals'] ) ) ? $item['line_totals'] : array(
+			'price'     => $cart_item->get_price(),
+			'tax'       => $cart_item->get_tax(),
+			'discount'  => $cart_item->get_discount(),
+			'subtotal'  => $cart_item->get_subtotal(),
+			'total'     => $cart_item->get_total(),
+			'tax_total' => $cart_item->get_tax_total(),
+		);
+		unset( $item['line_totals'] );
+
 		if ( empty( $item['meta'] ) ) {
 			$item['meta'] = array();
 		}
 
-		if ( ! empty( $item['image_id'] ) ) {
-			$image = $cart_item->get_image();
+		$image = ! empty( $item['image_id'] ) ? $cart_item->get_image() : false;
+		// A photo deleted while it sat in the cart leaves no name to save, but the order still goes through.
+		if ( $image && $image->exists() ) {
 			// $item['gallery_id']   = $cart_item->get_gallery_id();
 			// $item['price_level']   = $image->gallery->get_price_level();
 			// $item['meta']['gallery_name'] = $cart_item->get_gallery_name();
@@ -1191,7 +1235,7 @@ class SPC_Order extends Sunshine_Data {
 		if ( ! empty( $item['product_id'] ) ) {
 			$product                          = sunshine_get_product( intval( $item['product_id'] ), intval( $item['price_level'] ) );
 			$item['type']                     = $product->get_type();
-			$item['price']                    = $cart_item->get_price();
+			$item['price']                    = isset( $charged['price'] ) ? (float) $charged['price'] : $cart_item->get_price();
 			$item['meta']['product_name']     = $product->get_name();
 			$item['meta']['product_cat_name'] = $product->get_category_name();
 		}
@@ -1229,6 +1273,14 @@ class SPC_Order extends Sunshine_Data {
 			$item['meta']['options'] = $options;
 		}
 
+		// The line's own totals, so the saved line shows what was charged without working it out
+		// again. One item's tax times the quantity can be a cent or more off the line's tax.
+		$item['meta']['line_totals'] = array(
+			'subtotal'  => isset( $charged['subtotal'] ) ? sunshine_round_amount( $charged['subtotal'] ) : 0,
+			'total'     => isset( $charged['total'] ) ? sunshine_round_amount( $charged['total'] ) : 0,
+			'tax_total' => isset( $charged['tax_total'] ) ? sunshine_round_amount( $charged['tax_total'] ) : 0,
+		);
+
 		$item = apply_filters( 'sunshine_cart_item_before_order', $item );
 
 		$insert_result = $wpdb->insert(
@@ -1242,8 +1294,8 @@ class SPC_Order extends Sunshine_Data {
 				'gallery_id'  => ( ! empty( $item['gallery_id'] ) ) ? intval( $item['gallery_id'] ) : '',
 				'price_level' => ( ! empty( $item['price_level'] ) ) ? intval( $item['price_level'] ) : '',
 				'price'       => ( ! empty( $item['price'] ) ) ? floatval( $item['price'] ) : '',
-				'tax'         => $cart_item->get_tax(),
-				'discount'    => $cart_item->get_discount(),
+				'tax'         => isset( $charged['tax'] ) ? (float) $charged['tax'] : 0,
+				'discount'    => isset( $charged['discount'] ) ? (float) $charged['discount'] : 0,
 			)
 		);
 

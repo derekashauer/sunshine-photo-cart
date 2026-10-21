@@ -54,7 +54,7 @@
 		<?php if ( $order->get_credits() > 0 ) { ?>
 		<tr class="sunshine--cart--credits">
 			<th><?php esc_html_e( 'Credits Applied', 'sunshine-photo-cart' ); ?></th>
-			<td><?php echo wp_kses_post( '-' . $order->get_credits_formatted() ); ?></td>
+			<td><?php echo wp_kses_post( $order->get_credits_formatted() ); ?></td>
 		</tr>
 		<?php } ?>
 		<?php if ( $order->get_refunds() ) { ?>

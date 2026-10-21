@@ -892,7 +892,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		if ( empty( SPC()->cart ) ) {
 			SPC()->cart->setup();
 		}
-		$this->total    = floor( $this->get_amount_multiplier() * SPC()->cart->get_total() );
+		$this->total    = $this->to_square_amount( SPC()->cart->get_total() );
 		$this->currency = SPC()->get_option( 'currency' );
 
 	}
@@ -1040,7 +1040,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 		$percentage = floatval( $percentage );
 
-		return round( $this->total * ( $percentage / 100 ) );
+		return intval( round( $this->total * ( $percentage / 100 ) ) );
 
 	}
 
@@ -1078,48 +1078,111 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 	private function build_square_order_args( $order ) {
 
 		$price_has_tax = SPC()->get_option( 'price_has_tax' ) === 'yes';
+
+		// Credits, gift cards (fees below zero) and, with discounts after tax, the discount come
+		// off after tax. Square always takes a discount off before working out tax, so it would
+		// charge less tax than the order has. When any are on the order (and tax is added on top
+		// of prices), the order's own tax is sent as a line item instead of as a Square tax.
+		$fees_below_zero = 0;
+		foreach ( (array) $order->get_fees() as $fee ) {
+			if ( floatval( $fee['amount'] ) < 0 ) {
+				$fees_below_zero -= floatval( $fee['amount'] );
+			}
+		}
+		$after_tax_reduction = floatval( $order->get_credits() ) + $fees_below_zero;
+		if ( SPC()->get_option( 'discount_after_tax' ) ) {
+			$after_tax_reduction += floatval( $order->get_discount() );
+		}
+		$tax_as_line  = ! $price_has_tax && $order->get_tax() > 0 && $after_tax_reduction > 0;
+		$square_taxes = $order->get_tax() > 0 && ! $tax_as_line;
+
+		// One Square tax per rate. Shipping uses the cart's rate; a product can have its own
+		// rate through the sunshine_cart_item_tax_rate filter, the same way the cart taxes it.
 		$cart_tax_rate = SPC()->cart->get_tax_rate();
-		$rate          = ! empty( $cart_tax_rate['rate'] ) ? floatval( $cart_tax_rate['rate'] ) : 0;
+		$tax_rates     = array();
+		$tax_uid_for   = function ( $rate ) use ( &$tax_rates ) {
+			$key = number_format( floatval( $rate ) * 100, 5, '.', '' );
+			if ( ! isset( $tax_rates[ $key ] ) ) {
+				$tax_rates[ $key ] = 'tax-' . ( count( $tax_rates ) + 1 );
+			}
+			return $tax_rates[ $key ];
+		};
+		if ( $square_taxes && ! empty( $cart_tax_rate['rate'] ) ) {
+			$tax_uid_for( $cart_tax_rate['rate'] );
+		}
 
 		$line_items = array();
+		$item_lines = array(); // Product lines by their index in $line_items: taxed by Square, and amount in cents.
 		foreach ( $order->get_items() as $item ) {
-			$qty      = max( 1, intval( $item->get_qty() ) );
-			$discount = floatval( $item->get_discount() );
+			$qty           = max( 1, intval( $item->get_qty() ) );
+			$discount      = floatval( $item->get_discount() );
+			$item_tax_rate = $item->is_taxable() ? apply_filters( 'sunshine_cart_item_tax_rate', $cart_tax_rate, $item ) : array();
 
 			if ( $price_has_tax && $item->is_taxable() ) {
-				// Tax-inclusive mode: send the per-unit price the customer actually sees.
+				// Tax-inclusive mode: send the price the customer actually sees.
 				// Square is told (via the taxes block below) that this tax is INCLUSIVE
 				// so it does not add it again. Per-line discount is also in inclusive currency.
 				$per_unit_inclusive = floatval( $item->get_price() ) + floatval( $item->get_tax() );
-				$line_inclusive     = ( $per_unit_inclusive * $qty ) - $discount;
-				$per_unit_for_square = $line_inclusive / $qty;
+				$line_amount        = ( $per_unit_inclusive * $qty ) - $discount;
 			} else {
-				$per_unit_for_square = $item->get_total() / $qty;
+				$line_amount = $item->get_total();
 			}
 
-			$line_item = array(
-				'name'             => substr( $item->get_name_raw(), 0, 512 ),
-				'quantity'         => (string) $qty,
-				'base_price_money' => array(
-					'amount'   => intval( round( $per_unit_for_square * $this->get_amount_multiplier() ) ),
-					'currency' => $this->currency,
-				),
+			// Square multiplies the price of one by the quantity. When the line total does not
+			// split evenly (7 for 20.98), send it as two lines one cent apart so they add up exactly.
+			$line_cents = $this->to_square_amount( $line_amount );
+			$unit_cents = intdiv( $line_cents, $qty );
+			$extra      = $line_cents - ( $unit_cents * $qty );
+			$parts      = array(
+				array( $qty - $extra, $unit_cents ),
+				array( $extra, $unit_cents + 1 ),
 			);
-			if ( $item->is_taxable() ) {
-				$line_item['applied_taxes'] = array( array( 'tax_uid' => 'tax-1' ) );
+
+			foreach ( $parts as list( $part_qty, $part_cents ) ) {
+				if ( $part_qty <= 0 ) {
+					continue;
+				}
+				$line_item = array(
+					'name'             => substr( $item->get_name_raw(), 0, 512 ),
+					'quantity'         => (string) $part_qty,
+					'base_price_money' => array(
+						'amount'   => $part_cents,
+						'currency' => $this->currency,
+					),
+				);
+				$line_taxed = $square_taxes && $item->is_taxable() && ! empty( $item_tax_rate['rate'] );
+				if ( $line_taxed ) {
+					$line_item['applied_taxes'] = array( array( 'tax_uid' => $tax_uid_for( $item_tax_rate['rate'] ) ) );
+				}
+				$item_lines[ count( $line_items ) ] = array(
+					'taxed' => $line_taxed,
+					'cents' => $part_cents * $part_qty,
+				);
+				$line_items[] = $line_item;
 			}
-			$line_items[] = $line_item;
 		}
 
 		foreach ( (array) $order->get_fees() as $fee ) {
-			if ( empty( $fee['amount'] ) ) {
+			// Square can't take a line item below zero, so gift cards go in the discount below.
+			if ( floatval( $fee['amount'] ) <= 0 ) {
 				continue;
 			}
 			$line_items[] = array(
 				'name'             => substr( $fee['name'], 0, 512 ),
 				'quantity'         => '1',
 				'base_price_money' => array(
-					'amount'   => intval( round( $fee['amount'] * $this->get_amount_multiplier() ) ),
+					'amount'   => $this->to_square_amount( $fee['amount'] ),
+					'currency' => $this->currency,
+				),
+			);
+		}
+
+		if ( $tax_as_line ) {
+			$line_items[] = array(
+				'name'             => substr( $order->get_tax_label(), 0, 512 ),
+				'quantity'         => '1',
+				'base_price_money' => array(
+					'amount'   => $this->to_square_amount( $order->get_tax() ),
 					'currency' => $this->currency,
 				),
 			);
@@ -1144,55 +1207,137 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 				'uid'                => 'shipping',
 				'name'               => substr( $shipping_name, 0, 255 ),
 				'amount_money'       => array(
-					'amount'   => intval( round( $shipping_amount * $this->get_amount_multiplier() ) ),
+					'amount'   => $this->to_square_amount( $shipping_amount ),
 					'currency' => $this->currency,
 				),
 				'calculation_phase'  => 'SUBTOTAL_PHASE',
-				'taxable'            => $shipping_taxable,
+				'taxable'            => $shipping_taxable && $square_taxes && ! empty( $cart_tax_rate['rate'] ),
 			);
-			if ( $shipping_taxable ) {
-				$service_charge['applied_taxes'] = array( array( 'tax_uid' => 'tax-1' ) );
+			if ( $service_charge['taxable'] ) {
+				$service_charge['applied_taxes'] = array( array( 'tax_uid' => $tax_uid_for( $cart_tax_rate['rate'] ) ) );
 			}
 			$order_data['service_charges'] = array( $service_charge );
 		}
 
-		if ( $order->get_tax() > 0 ) {
-			$tax_rate = SPC()->cart->get_tax_rate();
-			if ( ! empty( $tax_rate['rate'] ) ) {
-				$order_data['taxes'] = array(
-					array(
-						'uid'        => 'tax-1',
-						'name'       => $order->get_tax_label(),
-						'percentage' => number_format( $tax_rate['rate'] * 100, 5, '.', '' ),
-						'scope'      => 'LINE_ITEM',
-						'type'       => $price_has_tax ? 'INCLUSIVE' : 'ADDITIVE',
-					),
-				);
-			}
+		foreach ( $tax_rates as $percentage => $tax_uid ) {
+			$order_data['taxes'][] = array(
+				'uid'        => $tax_uid,
+				'name'       => $order->get_tax_label(),
+				'percentage' => (string) $percentage,
+				'scope'      => 'LINE_ITEM',
+				'type'       => $price_has_tax ? 'INCLUSIVE' : 'ADDITIVE',
+			);
 		}
 
-		$discount_total = floatval( $order->get_discount() ) + floatval( $order->get_credits() );
+		$discount_total = floatval( $order->get_discount() ) + floatval( $order->get_credits() ) + $fees_below_zero;
 		if ( $discount_total > 0 ) {
 			$discount_names = $order->get_discount_names();
 			$discount_label = ! empty( $discount_names )
 				/* translators: %s is a comma-separated list of discount codes */
 				? sprintf( __( 'Discount: %s', 'sunshine-photo-cart' ), implode( ', ', (array) $discount_names ) )
 				: __( 'Discount', 'sunshine-photo-cart' );
-			$order_data['discounts'] = array(
-				array(
+
+			$order_data['discounts'] = array();
+			$line_discounts          = $square_taxes ? $this->get_line_discounts( $order, $item_lines ) : array();
+			foreach ( $line_discounts as $uid => $line_discount ) {
+				$order_data['discounts'][] = array(
+					'uid'          => $uid,
+					'name'         => substr( $discount_label, 0, 255 ),
+					'amount_money' => array(
+						'amount'   => $line_discount['cents'],
+						'currency' => $this->currency,
+					),
+					'scope'        => 'LINE_ITEM',
+				);
+				foreach ( $line_discount['lines'] as $index ) {
+					$line_items[ $index ]['applied_discounts'][] = array( 'discount_uid' => $uid );
+				}
+			}
+			if ( ! empty( $line_discounts ) ) {
+				// The codes are on their lines. Credits and gift cards stay an order discount.
+				$discount_total          -= floatval( $order->get_discount() );
+				$order_data['line_items'] = $line_items;
+			}
+
+			if ( empty( $line_discounts ) || $discount_total > 0.005 ) {
+				$order_data['discounts'][] = array(
 					'uid'          => 'discount-1',
 					'name'         => substr( $discount_label, 0, 255 ),
 					'amount_money' => array(
-						'amount'   => intval( round( $discount_total * $this->get_amount_multiplier() ) ),
+						'amount'   => $this->to_square_amount( $discount_total ),
 						'currency' => $this->currency,
 					),
 					'scope'        => 'ORDER',
-				),
-			);
+				);
+			}
 		}
 
 		return array( 'order' => $order_data );
 
+	}
+
+	/**
+	 * Discount codes on the lines they came off, instead of one order discount that Square
+	 * spreads over every line. Square works out tax after discounts, so a code for an untaxed
+	 * product spread onto a taxed one gives less tax than the order has. The part of the codes
+	 * that came off taxed things goes on the taxed lines and the rest on the untaxed ones, the way
+	 * Sunshine worked out its tax. Square shares a line discount over its lines by price.
+	 *
+	 * Only used when the order has both taxed and untaxed product lines; otherwise an order
+	 * discount comes out the same.
+	 *
+	 * @param SPC_Order $order      The order.
+	 * @param array     $item_lines Product lines by index: taxed (bool) and cents.
+	 * @return array Discount uid => cents and lines (indexes), or empty to use an order discount.
+	 */
+	private function get_line_discounts( $order, $item_lines ) {
+		$order_discount = floatval( $order->get_discount() );
+		if ( $order_discount <= 0 || empty( SPC()->cart ) ) {
+			return array();
+		}
+
+		$groups = array(
+			'discount-taxed'   => array( 'cents' => 0, 'room' => 0, 'lines' => array() ),
+			'discount-untaxed' => array( 'cents' => 0, 'room' => 0, 'lines' => array() ),
+		);
+		foreach ( $item_lines as $index => $line ) {
+			$key                         = $line['taxed'] ? 'discount-taxed' : 'discount-untaxed';
+			$groups[ $key ]['room']     += $line['cents'];
+			$groups[ $key ]['lines'][]   = $index;
+		}
+		if ( empty( $groups['discount-taxed']['lines'] ) || empty( $groups['discount-untaxed']['lines'] ) ) {
+			return array();
+		}
+
+		// How much of the discount was on taxed things is only known from the discount codes.
+		$total = 0;
+		$taxed = 0;
+		foreach ( (array) SPC()->cart->get_discounts() as $discount ) {
+			if ( is_a( $discount, 'SPC_Discount' ) ) {
+				$total += floatval( $discount->get_total() );
+				$taxed += floatval( $discount->get_total( true ) );
+			}
+		}
+		if ( $this->to_square_amount( $total ) !== $this->to_square_amount( $order_discount ) ) {
+			return array();
+		}
+
+		$groups['discount-taxed']['cents']   = $this->to_square_amount( $taxed );
+		$groups['discount-untaxed']['cents'] = $this->to_square_amount( $order_discount ) - $groups['discount-taxed']['cents'];
+
+		$line_discounts = array();
+		foreach ( $groups as $uid => $group ) {
+			if ( $group['cents'] < 0 || $group['cents'] > $group['room'] ) {
+				return array();
+			}
+			if ( $group['cents'] > 0 ) {
+				$line_discounts[ $uid ] = array(
+					'cents' => $group['cents'],
+					'lines' => $group['lines'],
+				);
+			}
+		}
+		return $line_discounts;
 	}
 
 	private function cancel_square_order( $square_order_id, $version ) {
@@ -1552,9 +1697,22 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		if ( ! in_array( $status, array( 'COMPLETED', 'APPROVED' ), true ) || ! $this->payment_matches_order( $payment, $order ) ) {
 			$paid = isset( $payment['amount_money']['amount'] ) ? ( $payment['amount_money']['amount'] / $this->get_amount_multiplier() ) . ' ' . $payment['amount_money']['currency'] : 'unknown';
 			SPC()->log( 'Square payment ' . $payment_id . ' (status ' . ( $status ? $status : 'not found' ) . ', ' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ')' );
-			/* translators: 1: Square payment ID, 2: amount paid in Square */
-			$order->add_log( sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid ) );
-			SPC()->cart->add_error( __( 'Your payment did not match the order total, please contact the site owner', 'sunshine-photo-cart' ) );
+			// Square saying the payment failed or was cancelled is a decline, not a mismatch.
+			$declined = in_array( $status, array( 'FAILED', 'CANCELED' ), true );
+			if ( $declined ) {
+				/* translators: 1: Square payment ID, 2: payment status from Square, e.g. FAILED */
+				$note = sprintf( __( 'Square payment %1$s was declined or cancelled (status %2$s), so the order was not marked paid', 'sunshine-photo-cart' ), $payment_id, $status );
+			} else {
+				/* translators: 1: Square payment ID, 2: amount paid in Square */
+				$note = sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid );
+			}
+			$order->add_log( $note );
+			sunshine_order_payment_problem( $order, $note, $this->id, $declined ? 'declined' : 'mismatch' );
+			if ( $declined ) {
+				SPC()->cart->add_error( __( 'Your payment was declined. Please try again or use another way to pay.', 'sunshine-photo-cart' ) );
+			} else {
+				SPC()->cart->add_error( __( 'Your payment did not match the order total, please contact the site owner', 'sunshine-photo-cart' ) );
+			}
 			return;
 		}
 
@@ -1580,9 +1738,20 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		return in_array( SPC()->get_option( 'currency' ), $zero_decimal_currencies, true ) ? 1 : 100;
 	}
 
+	/**
+	 * Turn an amount into Square's smallest unit, rounded to the nearest one. Chopping off the
+	 * decimals instead loses a cent on many totals: 64.32 x 100 is 6431.999... in PHP.
+	 *
+	 * @param float $amount Amount in the store currency.
+	 * @return int
+	 */
+	private function to_square_amount( $amount ) {
+		return intval( round( floatval( $amount ) * $this->get_amount_multiplier() ) );
+	}
+
 	private function payment_matches_order( $payment, $order ) {
 		// Same math as the charge in setup(), so an honest payment always matches.
-		$expected = intval( floor( $this->get_amount_multiplier() * $order->get_total() ) );
+		$expected = $this->to_square_amount( $order->get_total() );
 		return isset( $payment['reference_id'] ) && $payment['reference_id'] === substr( (string) $order->get_order_number(), 0, 40 )
 			&& isset( $payment['amount_money']['amount'], $payment['amount_money']['currency'] )
 			&& intval( $payment['amount_money']['amount'] ) === $expected
@@ -1824,8 +1993,10 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 				$paid = isset( $payment['amount_money']['amount'] ) ? ( $payment['amount_money']['amount'] / $this->get_amount_multiplier() ) . ' ' . $payment['amount_money']['currency'] : 'unknown';
 				SPC()->log( 'reconcile_order: Square payment ' . $payment_id . ' (' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ')' );
 				/* translators: 1: Square payment ID, 2: amount paid in Square */
-				$order->add_log( sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid ) );
+				$note = sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid );
+				$order->add_log( $note );
 				$order->update_meta_value( 'square_payment_mismatch', 1 );
+				sunshine_order_payment_problem( $order, $note, $this->id );
 			}
 			return array( 'ok' => false, 'action' => 'mismatch' );
 		}
@@ -1993,7 +2164,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			$refund_amount = sanitize_text_field( $_POST['square_refund_amount'] );
 		}
 
-		$refund_amount_square = intval( $refund_amount * $this->get_amount_multiplier() ); // Lose decimals because Square
+		$refund_amount_square = $this->to_square_amount( $refund_amount );
 
 		$this->setup( $order->get_mode() );
 
@@ -2024,9 +2195,9 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		$app_fee = $this->get_app_fee( $order );
 		if ( $app_fee ) {
 			$refund_percent        = $refund_amount / $order->get_total_minus_refunds();
-			$refund_app_fee        = ( $app_fee * $refund_percent ) * $this->get_amount_multiplier();
+			$refund_app_fee        = $this->to_square_amount( $app_fee * $refund_percent );
 			$args['app_fee_money'] = array(
-				'amount'   => intval( $refund_app_fee ),
+				'amount'   => $refund_app_fee,
 				'currency' => $order->get_currency(),
 			);
 		}
@@ -2067,17 +2238,21 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			return;
 		}
 
-		$order->set_status( 'refunded' );
+		// No $order->update() here: it would switch a fully refunded order's payment method to Free.
 		$order->add_refund( $refund_amount );
-		$order->update();
+		// Only a refund of everything that was left makes the order Refunded. A part refund
+		// keeps the order's status; the refund is recorded on it and comes off its total.
+		if ( $order->get_total_minus_refunds() < 0.005 ) {
+			$order->set_status( 'refunded' );
+		}
 
 		if ( ! empty( $refund_app_fee ) ) {
 			/* translators: %s is the refund amount formatted as price */
-			$order->add_log( sprintf( __( 'Sunshine contributed %s towards refund from processing fees', 'sunshine-photo-cart' ), sunshine_price( $refund_app_fee / $this->get_amount_multiplier() ) ) );
+			$order->add_log( sprintf( __( 'Sunshine contributed %s towards refund from processing fees', 'sunshine-photo-cart' ), sunshine_price( $refund_app_fee / $this->get_amount_multiplier(), false, $order->get_currency() ) ) );
 		}
 
 		/* translators: %s is the refund amount formatted as price */
-		SPC()->notices->add_admin( 'square_refund_success_' . $payment_id, sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount ) ) );
+		SPC()->notices->add_admin( 'square_refund_success_' . $payment_id, sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount, false, $order->get_currency() ) ) );
 
 		if ( ! empty( $_POST['square_refund_notify'] ) ) {
 			$order->notify( false );

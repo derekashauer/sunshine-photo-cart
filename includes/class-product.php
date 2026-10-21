@@ -5,6 +5,7 @@ class SPC_Product extends Sunshine_Data {
 	protected $price_level; // int
 	protected $price; // float
 	protected $category; // int
+	protected $category_ids;
 	protected $options;
 	protected $meta = array(
 		'type'     => '',
@@ -247,6 +248,19 @@ class SPC_Product extends Sunshine_Data {
 		return $this->category;
 	}
 
+	/**
+	 * Every category the product is in.
+	 *
+	 * @return int[]
+	 */
+	public function get_category_ids() {
+		if ( ! isset( $this->category_ids ) ) {
+			$ids                = wp_get_object_terms( $this->get_id(), 'sunshine-product-category', array( 'fields' => 'ids' ) );
+			$this->category_ids = is_wp_error( $ids ) ? array() : array_map( 'intval', $ids );
+		}
+		return $this->category_ids;
+	}
+
 	public function get_category_name() {
 		if ( empty( $this->category ) ) {
 			$this->get_category();
@@ -337,7 +351,8 @@ class SPC_Product extends Sunshine_Data {
 	}
 
 	public function is_taxable() {
-		return ( ! empty( $this->meta['taxable'] ) ? true : false );
+		$taxable = ( ! empty( $this->meta['taxable'] ) ? true : false );
+		return (bool) apply_filters( 'sunshine_product_is_taxable', $taxable, $this );
 	}
 
 	public function set_taxable( $taxable ) {
@@ -394,6 +409,42 @@ class SPC_Product extends Sunshine_Data {
 
 	}
 
+	/**
+	 * Whether a chosen product option is sold at a price level. An option with no price at a
+	 * level is not offered there, so it must not be added for free.
+	 *
+	 * @param int|string $option_id      The product option ID, as used in a cart line's options.
+	 * @param mixed      $value          The chosen value: an option item ID, or the checkbox or text value.
+	 * @param int        $price_level_id The price level.
+	 * @return bool True when offered, or when the key is not one of this product's own options
+	 *              (add-ons keep other data in a line's options, like a multi-image product's photos).
+	 */
+	public function option_is_offered( $option_id, $value, $price_level_id = '' ) {
+		if ( '' === $value || null === $value || array() === $value ) {
+			return true; // Nothing chosen.
+		}
+		if ( ! is_numeric( $option_id ) ) {
+			return true;
+		}
+		if ( empty( $price_level_id ) ) {
+			$price_level_id = $this->price_level ? $this->price_level : sunshine_get_default_price_level_id();
+		}
+		$options = $this->get_meta_value( 'options' );
+		if ( ! is_array( $options ) || ! array_key_exists( $option_id, $options ) || ! is_array( $options[ $option_id ] ) ) {
+			return true;
+		}
+		$option = $options[ $option_id ];
+		if ( ! empty( $option['items'] ) && is_array( $option['items'] ) ) {
+			foreach ( (array) $value as $item_id ) {
+				if ( ! is_scalar( $item_id ) || ! isset( $option['items'][ $item_id ][ $price_level_id ] ) || '' === $option['items'][ $item_id ][ $price_level_id ] ) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return isset( $option[ $price_level_id ] ) && '' !== $option[ $price_level_id ];
+	}
+
 	public function option_is_required( $option_id ) {
 
 		$options = $this->get_meta_value( 'options' );
@@ -438,16 +489,16 @@ class SPC_Product extends Sunshine_Data {
 
 	public function get_option_item_price( $this_option_id, $this_option_item_id, $this_price_level_id = '' ) {
 
-		if ( empty( $price_level_id ) ) {
-			$price_level_id = $this->price_level;
+		if ( empty( $this_price_level_id ) ) {
+			$this_price_level_id = $this->price_level;
 		}
 
 		$options = $this->get_meta_value( 'options' );
 		if ( ! empty( $options ) && array_key_exists( $this_option_id, $options ) ) {
 			if ( array_key_exists( 'items', $options[ $this_option_id ] ) && array_key_exists( $this_option_item_id, $options[ $this_option_id ]['items'] ) && array_key_exists( $this_price_level_id, $options[ $this_option_id ]['items'][ $this_option_item_id ] ) ) { // Multi
-				return floatval( $options[ $this_option_id ]['items'][ $this_option_item_id ][ $this_price_level_id ] );
-			} elseif ( array_key_exists( $price_level_id, $options[ $this_option_id ] ) ) {
-				return floatval( $options[ $this_option_id ][ $this_price_level_id ] );
+				return (float) sunshine_sanitize_amount( (string) $options[ $this_option_id ]['items'][ $this_option_item_id ][ $this_price_level_id ] );
+			} elseif ( array_key_exists( $this_price_level_id, $options[ $this_option_id ] ) ) {
+				return (float) sunshine_sanitize_amount( (string) $options[ $this_option_id ][ $this_price_level_id ] );
 			}
 		}
 		return 0;

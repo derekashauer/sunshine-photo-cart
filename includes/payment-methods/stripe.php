@@ -90,6 +90,45 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	private $total = 0;
 
 	/**
+	 * Why the last payment setup failed, for the customer. Empty when it worked.
+	 *
+	 * @var string
+	 */
+	private $setup_error = '';
+
+	/**
+	 * Stripe's smallest charge per currency, from https://docs.stripe.com/currencies#minimum-and-maximum-charge-amounts
+	 *
+	 * @var array
+	 */
+	const MINIMUM_AMOUNTS = array(
+		'USD' => 0.50,
+		'AUD' => 0.50,
+		'BRL' => 0.50,
+		'CAD' => 0.50,
+		'CHF' => 0.50,
+		'DKK' => 2.50,
+		'EUR' => 0.50,
+		'GBP' => 0.30,
+		'HKD' => 4.00,
+		'INR' => 0.50,
+		'JPY' => 50,
+		'MXN' => 10,
+		'MYR' => 2,
+		'NOK' => 3,
+		'NZD' => 0.50,
+		'PLN' => 2,
+		'SEK' => 3,
+		'SGD' => 0.50,
+		'THB' => 10,
+		'AED' => 2,
+		'BGN' => 1,
+		'CZK' => 15,
+		'HUF' => 175,
+		'RON' => 2,
+	);
+
+	/**
 	 * Make a Stripe API request
 	 *
 	 * @param string $endpoint The API endpoint
@@ -281,6 +320,34 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	 * @param string $idempotency_key Current idempotency key
 	 * @return array|WP_Error Payment intent data or error
 	 */
+	/**
+	 * Stripe's smallest charge for a currency. 0 for a currency not in the list: no check.
+	 *
+	 * @param string $currency Uppercase currency code.
+	 * @return float
+	 */
+	protected function get_gateway_minimum_amount( $currency ) {
+		return isset( self::MINIMUM_AMOUNTS[ $currency ] ) ? self::MINIMUM_AMOUNTS[ $currency ] : 0;
+	}
+
+	/**
+	 * The message for the customer when Stripe refused an amount as too small, or ''.
+	 *
+	 * Stripe checks the amount after converting it to the account's own currency, so it can
+	 * refuse an amount over the minimum for the store currency.
+	 *
+	 * @param WP_Error $error Error from make_stripe_request().
+	 * @return string
+	 */
+	private function get_amount_too_small_message( $error ) {
+		$data = is_wp_error( $error ) ? $error->get_error_data() : array();
+		if ( empty( $data['code'] ) || 'amount_too_small' !== $data['code'] ) {
+			return '';
+		}
+		/* translators: %s is the payment method name, such as "Stripe" */
+		return sprintf( __( '%s can\'t take a payment this small. Add more to your order or choose another way to pay.', 'sunshine-photo-cart' ), esc_html( $this->get_name() ) ) . ' ' . esc_html( $error->get_error_message() );
+	}
+
 	private function create_payment_intent_with_retry( $args, $idempotency_key ) {
 		$response = $this->make_stripe_request( 'payment_intents', $args, 'POST' );
 
@@ -1485,7 +1552,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$paid = $this->convert_amount_from_stripe( $received ) . ' ' . strtoupper( $currency );
 		SPC()->log( 'Stripe payment intent ' . $payment_intent['id'] . ' amount (' . $paid . ') does not match order ' . $order->get_id() . ' total (' . $order->get_total() . ' ' . $this->currency . ')' );
 		/* translators: 1: Stripe payment intent ID, 2: amount paid in Stripe */
-		$order->add_log( sprintf( __( 'Stripe payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_intent['id'], $paid ) );
+		$note = sprintf( __( 'Stripe payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_intent['id'], $paid );
+		$order->add_log( $note );
+		sunshine_order_payment_problem( $order, $note, $this->id );
 		return false;
 	}
 
@@ -1529,7 +1598,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			$paid = $this->convert_amount_from_stripe( isset( $session['amount_total'] ) ? $session['amount_total'] : 0 ) . ' ' . strtoupper( $currency );
 			SPC()->log( 'Stripe Checkout Session ' . $session['id'] . ' (' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ' ' . $this->currency . ')' );
 			/* translators: 1: Stripe Checkout Session ID, 2: amount paid in Stripe */
-			$order->add_log( sprintf( __( 'Stripe payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $session['id'], $paid ) );
+			$note = sprintf( __( 'Stripe payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $session['id'], $paid );
+			$order->add_log( $note );
+			sunshine_order_payment_problem( $order, $note, $this->id );
 		}
 
 		return $matches;
@@ -1682,6 +1753,8 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 					'payment_did_not_succeed'       => __( 'Payment did not succeed', 'sunshine-photo-cart' ),
 					'payment_processing_failed'     => __( 'Payment processing failed:', 'sunshine-photo-cart' ),
 					'payment_still_waiting'         => __( 'Still waiting for your bank to confirm this payment. Please keep this page open.', 'sunshine-photo-cart' ),
+					/* translators: %s is the payment method name, such as "Stripe" */
+					'setup_failed'                  => sprintf( __( '%s could not be loaded. Please try again or choose another way to pay.', 'sunshine-photo-cart' ), $this->get_name() ),
 				),
 			)
 		);
@@ -1708,10 +1781,20 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			SPC()->cart->setup();
 		}
 
+		$this->setup_error = '';
+
 		// Set the cart total in Stripe's smallest currency unit
 		$cart_total = SPC()->cart->get_total();
 		if ( $cart_total <= 0 || SPC()->cart->is_empty() ) {
 			return; // Don't create if there is no amount to charge yet or if the cart is empty.
+		}
+
+		// Stripe would refuse it, so don't ask.
+		$minimum_error = $this->get_minimum_amount_error( $cart_total );
+		if ( $minimum_error ) {
+			SPC()->log( 'Not creating Stripe payment intent: ' . wp_strip_all_tags( $minimum_error ) );
+			$this->setup_error = $minimum_error;
+			return;
 		}
 
 		$this->total = $this->convert_amount_to_stripe( $cart_total );
@@ -1772,6 +1855,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 			if ( is_wp_error( $intent ) ) {
 				SPC()->log( 'Failed creating payment intent: ' . $intent->get_error_message() );
+				$this->setup_error = $this->get_amount_too_small_message( $intent );
 				return;
 			}
 
@@ -1809,6 +1893,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 					if ( is_wp_error( $intent ) ) {
 						SPC()->log( 'Failed creating new payment intent: ' . $intent->get_error_message() );
+						$this->setup_error = $this->get_amount_too_small_message( $intent );
 						return;
 					}
 
@@ -1827,6 +1912,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 			if ( is_wp_error( $intent ) ) {
 				SPC()->log( 'Failed updating payment intent: ' . $intent->get_error_message() );
+				// If Stripe refused the new amount as too small, the payment still has its old
+				// amount, so the customer is told instead of being handed that payment.
+				$this->setup_error = $this->get_amount_too_small_message( $intent );
 				return;
 			}
 
@@ -1874,9 +1962,14 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 		$this->setup();
 		$this->setup_payment_intent();
-		if ( empty( $this->payment_intent_id ) ) {
+		if ( $this->setup_error || empty( $this->payment_intent_id ) ) {
 			SPC()->log( 'Failed creating Stripe payment intent' );
-			wp_send_json_error();
+			$message = $this->setup_error;
+			if ( ! $message ) {
+				/* translators: %s is the payment method name, such as "Stripe" */
+				$message = sprintf( __( '%s could not be loaded. Please try again or choose another way to pay.', 'sunshine-photo-cart' ), esc_html( $this->get_name() ) );
+			}
+			wp_send_json_error( array( 'message' => $message ) );
 		}
 		wp_send_json_success(
 			array(
@@ -2056,10 +2149,27 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	 * @param bool   $inclusive  Whether prices include tax.
 	 * @return string|false Stripe Tax Rate ID, or false on failure.
 	 */
+	/**
+	 * Total of the order's fees below zero, like a gift card, as a positive amount.
+	 *
+	 * @param SPC_Order $order The order.
+	 * @return float
+	 */
+	private function get_order_fees_below_zero( $order ) {
+		$total = 0;
+		foreach ( (array) $order->get_fees() as $fee ) {
+			if ( floatval( $fee['amount'] ) < 0 ) {
+				$total -= floatval( $fee['amount'] );
+			}
+		}
+		return $total;
+	}
+
 	private function find_or_create_stripe_tax_rate( $percentage, $inclusive ) {
 		$cache = $this->get_option( 'stripe_tax_rate_ids' );
 		$cache = is_array( $cache ) ? $cache : array();
-		$key   = $percentage . '|' . ( $inclusive ? '1' : '0' );
+		// Tax rates belong to one Stripe account and to test or live mode.
+		$key   = $this->get_mode_value() . '|' . $this->get_account_id() . '|' . $percentage . '|' . ( $inclusive ? '1' : '0' );
 
 		if ( ! empty( $cache[ $key ] ) ) {
 			return $cache[ $key ];
@@ -2086,28 +2196,335 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	}
 
 	/**
-	 * Per-unit unit_amount for a Stripe line item, accounting for tax mode and line discounts.
+	 * The lines, shipping charge and coupon to send Stripe Checkout for an order, in Stripe units.
 	 *
-	 * For tax-inclusive pricing + taxable items, returns the per-unit with-tax price
-	 * (so it can be paired with an inclusive Stripe Tax Rate). For other cases,
-	 * returns the per-unit base (post-discount).
+	 * Stripe works out the charge itself: line amounts, less one coupon spread over the lines in
+	 * proportion to their amounts, plus each line's Stripe tax rate worked out per line on what
+	 * is left of it, plus the shipping charge (which a coupon never touches). Sunshine takes a
+	 * discount off only what it is for and rounds tax on the whole order, so one way of sending
+	 * an order does not fit every order. Each mode is one way:
 	 *
-	 * @param SPC_Cart_Item $item          Cart item.
-	 * @param bool          $price_has_tax Whether prices include tax.
-	 * @param float         $rate          Tax rate as decimal (e.g. 0.08).
-	 * @return float Per-unit amount in store currency.
+	 * - rates_coupon: tax as Stripe tax rates on each taxed line, the discount as a coupon.
+	 * - rates_lines:  tax as Stripe tax rates, the discount taken off the lines it is for.
+	 * - tax_line:     tax as its own line, everything that comes off in the coupon. Always adds up.
+	 * - stripe_tax:   prices before tax; Stripe Tax adds the tax once the customer gives an address.
+	 *
+	 * @param SPC_Order $order            The order.
+	 * @param string    $mode             One of the modes above.
+	 * @param bool      $shipping_as_line Send untaxed shipping as a line, so a coupon can come off it.
+	 * @return array|false The plan, or false when this mode can't send this order.
 	 */
-	private function compute_line_unit_amount( $item, $rate, $using_inclusive_tax_rate ) {
-		$qty      = max( 1, intval( $item->get_qty() ) );
-		$discount = floatval( $item->get_discount() );
+	private function build_checkout_plan( $order, $mode, $shipping_as_line = false ) {
+		$price_has_tax   = ( 'yes' === SPC()->get_option( 'price_has_tax' ) );
+		$with_rates      = in_array( $mode, array( 'rates_coupon', 'rates_lines' ), true );
+		$inclusive       = $with_rates && $price_has_tax;
+		$cart_tax_rate   = SPC()->cart->get_tax_rate();
+		$cart_percent    = ! empty( $cart_tax_rate['rate'] ) ? floatval( $cart_tax_rate['rate'] ) * 100 : 0;
+		$fees_below_zero = $this->get_order_fees_below_zero( $order );
+		$reductions      = floatval( $order->get_discount() ) + floatval( $order->get_credits() ) + $fees_below_zero;
 
-		if ( $using_inclusive_tax_rate && $item->is_taxable() && $rate > 0 ) {
-			$per_unit_with_tax            = floatval( $item->get_price() ) + floatval( $item->get_tax() );
-			$line_with_tax_after_discount = ( $per_unit_with_tax * $qty ) - $discount;
-			return $line_with_tax_after_discount / $qty;
+		if ( 'tax_line' === $mode && $reductions > 0 ) {
+			// Everything comes off in one coupon here, which can't come off Stripe's shipping charge.
+			$shipping_as_line = true;
 		}
 
-		return $item->get_total() / $qty;
+		$plan = array(
+			'mode'     => $mode,
+			'lines'    => array(),
+			'shipping' => 0,
+			'coupon'   => 0,
+		);
+
+		foreach ( $order->get_items() as $item ) {
+			$qty  = max( 1, intval( $item->get_qty() ) );
+			$rate = null;
+			if ( $with_rates && $item->is_taxable() ) {
+				// A product can have its own rate through this filter, the same way the cart taxes it.
+				$item_tax_rate = apply_filters( 'sunshine_cart_item_tax_rate', $cart_tax_rate, $item );
+				if ( ! empty( $item_tax_rate['rate'] ) ) {
+					$rate = array(
+						'percent'   => floatval( $item_tax_rate['rate'] ) * 100,
+						'inclusive' => $inclusive,
+					);
+				}
+			}
+			if ( $rate && $inclusive ) {
+				// The price the customer sees, tax inside, after the line's own discount.
+				$amount = ( ( floatval( $item->get_price() ) + floatval( $item->get_tax() ) ) * $qty ) - floatval( $item->get_discount() );
+			} else {
+				$amount = $item->get_total();
+			}
+			$plan['lines'][] = array(
+				'type'   => 'item',
+				'name'   => $item->get_name_raw(),
+				'qty'    => $qty,
+				'amount' => (int) $this->convert_amount_to_stripe( $amount ),
+				'rate'   => $rate,
+			);
+		}
+
+		if ( $order->get_shipping() > 0 ) {
+			$rate = null;
+			if ( $with_rates && $order->get_shipping_tax() > 0 && $cart_percent > 0 ) {
+				$rate = array(
+					'percent'   => $cart_percent,
+					'inclusive' => $inclusive,
+				);
+			}
+			$amount = floatval( $order->get_shipping() );
+			if ( $rate && $inclusive ) {
+				// get_shipping() has the tax taken out; a tax-included rate needs it back in.
+				$amount += floatval( $order->get_shipping_tax() );
+			}
+			$amount = (int) $this->convert_amount_to_stripe( $amount );
+			// Stripe's shipping charge can't carry a tax rate, so taxed shipping is a line.
+			if ( $rate || $shipping_as_line ) {
+				$plan['lines'][] = array(
+					'type'   => 'shipping',
+					'name'   => $order->get_shipping_method_name() ? $order->get_shipping_method_name() : __( 'Shipping', 'sunshine-photo-cart' ),
+					'qty'    => 1,
+					'amount' => $amount,
+					'rate'   => $rate,
+				);
+			} else {
+				$plan['shipping'] = $amount;
+			}
+		}
+
+		// Fees below zero (gift cards) go in the coupon, because Stripe refuses lines below zero.
+		foreach ( (array) $order->get_fees() as $fee ) {
+			if ( floatval( $fee['amount'] ) <= 0 ) {
+				continue;
+			}
+			$plan['lines'][] = array(
+				'type'   => 'fee',
+				'name'   => $fee['name'],
+				'qty'    => 1,
+				'amount' => (int) $this->convert_amount_to_stripe( $fee['amount'] ),
+				'rate'   => null,
+			);
+		}
+
+		if ( 'tax_line' === $mode && $order->get_tax() > 0 ) {
+			$plan['lines'][] = array(
+				'type'   => 'tax',
+				'name'   => $order->get_tax_label(),
+				'qty'    => 1,
+				'amount' => (int) $this->convert_amount_to_stripe( $order->get_tax() ),
+				'rate'   => null,
+			);
+		}
+
+		$lines_total = 0;
+		foreach ( $plan['lines'] as $line ) {
+			$lines_total += $line['amount'];
+		}
+
+		if ( 'tax_line' === $mode ) {
+			// No tax is worked out by Stripe here, so the coupon is simply whatever brings the
+			// lines down to the order total: the discount, gift cards and credit together.
+			$plan['coupon'] = $lines_total + $plan['shipping'] - (int) $this->convert_amount_to_stripe( $order->get_total() );
+			if ( $plan['coupon'] < 0 || $plan['coupon'] > $lines_total ) {
+				return false;
+			}
+		} elseif ( 'rates_lines' === $mode ) {
+			if ( ! $this->take_discount_off_lines( $plan, $order ) ) {
+				return false;
+			}
+		} else {
+			$plan['coupon'] = (int) $this->convert_amount_to_stripe( $reductions );
+			if ( 'stripe_tax' === $mode && $plan['coupon'] > $lines_total ) {
+				// More off than the items cost: the rest comes off the shipping charge.
+				$plan['shipping'] -= $plan['coupon'] - $lines_total;
+				$plan['coupon']    = $lines_total;
+				if ( $plan['shipping'] < 0 ) {
+					return false;
+				}
+			}
+		}
+
+		return $plan;
+	}
+
+	/**
+	 * Take the order's discount off the lines it is for, instead of sending a coupon that Stripe
+	 * would spread over every line. The part of the discount that comes off taxed items goes on
+	 * the taxed lines and the rest on the untaxed ones, the way Sunshine worked out its tax.
+	 *
+	 * @param array     $plan  Plan from build_checkout_plan(), changed in place.
+	 * @param SPC_Order $order The order.
+	 * @return bool False when the discount can't be placed on the lines.
+	 */
+	private function take_discount_off_lines( &$plan, $order ) {
+		// How much of the discount was on taxed items is only known from the discount codes.
+		$total       = 0;
+		$taxed       = 0;
+		$on_shipping = false;
+		foreach ( (array) SPC()->cart->get_discounts() as $discount ) {
+			$total += floatval( $discount->get_total() );
+			$taxed += floatval( $discount->get_total( true ) );
+			if ( $discount->apply_to_shipping() ) {
+				$on_shipping = true;
+			}
+		}
+		if ( round( $total, 2 ) !== round( floatval( $order->get_discount() ), 2 ) || $order->get_credits() > 0 || $this->get_order_fees_below_zero( $order ) > 0 ) {
+			return false;
+		}
+
+		$taxed_units   = (int) $this->convert_amount_to_stripe( $taxed );
+		$untaxed_units = (int) $this->convert_amount_to_stripe( $total ) - $taxed_units;
+		$taxed_lines   = array();
+		$untaxed_lines = array();
+		foreach ( $plan['lines'] as $i => $line ) {
+			if ( 'item' !== $line['type'] && ! ( 'shipping' === $line['type'] && $on_shipping ) ) {
+				continue;
+			}
+			if ( $line['rate'] ) {
+				$taxed_lines[] = $i;
+			} else {
+				$untaxed_lines[] = $i;
+			}
+		}
+
+		return $this->spread_over_lines( $plan['lines'], $taxed_lines, $taxed_units )
+			&& $this->spread_over_lines( $plan['lines'], $untaxed_lines, $untaxed_units );
+	}
+
+	/**
+	 * Take an amount off some lines in proportion to their amounts, in whole Stripe units.
+	 *
+	 * @param array $lines   Plan lines, changed in place.
+	 * @param array $indexes Which lines it comes off.
+	 * @param int   $amount  Amount in Stripe units.
+	 * @return bool False when those lines don't add up to the amount.
+	 */
+	private function spread_over_lines( &$lines, $indexes, $amount ) {
+		if ( $amount <= 0 ) {
+			return 0 === $amount;
+		}
+		$shares = $this->spread_amount( $amount, array_intersect_key( wp_list_pluck( $lines, 'amount' ), array_flip( $indexes ) ) );
+		if ( false === $shares ) {
+			return false;
+		}
+		foreach ( $shares as $i => $share ) {
+			$lines[ $i ]['amount'] -= $share;
+		}
+		return true;
+	}
+
+	/**
+	 * Split an amount over some amounts in proportion to them, in whole units, the largest
+	 * leftover fractions getting the spare units. This is how Stripe spreads a coupon.
+	 *
+	 * @param int   $amount  Amount to split.
+	 * @param array $amounts Amounts to split it over, keyed.
+	 * @return array|false Share of each, keyed the same, or false when they add up to less.
+	 */
+	private function spread_amount( $amount, $amounts ) {
+		$total = array_sum( $amounts );
+		if ( $amount > $total ) {
+			return false;
+		}
+		$shares     = array();
+		$remainders = array();
+		$given      = 0;
+		foreach ( $amounts as $i => $line_amount ) {
+			$exact            = $total > 0 ? $amount * $line_amount / $total : 0;
+			$shares[ $i ]     = (int) floor( $exact );
+			$remainders[ $i ] = $exact - $shares[ $i ];
+			$given           += $shares[ $i ];
+		}
+		arsort( $remainders );
+		foreach ( array_keys( $remainders ) as $i ) {
+			if ( $given >= $amount ) {
+				break;
+			}
+			$shares[ $i ]++;
+			$given++;
+		}
+		return $shares;
+	}
+
+	/**
+	 * What Stripe will charge for a plan, and the tax its tax rates add up to, in Stripe units.
+	 *
+	 * @param array $plan Plan from build_checkout_plan().
+	 * @return array Keys total and tax.
+	 */
+	private function get_checkout_plan_charge( $plan ) {
+		$amounts  = wp_list_pluck( $plan['lines'], 'amount' );
+		$subtotal = array_sum( $amounts );
+		$discount = min( $plan['coupon'], $subtotal );
+		$shares   = $this->spread_amount( $discount, $amounts );
+
+		$tax       = 0;
+		$tax_added = 0;
+		foreach ( $plan['lines'] as $i => $line ) {
+			if ( empty( $line['rate'] ) ) {
+				continue;
+			}
+			$net = $line['amount'] - $shares[ $i ];
+			if ( $line['rate']['inclusive'] ) {
+				$tax += $net - round( $net / ( 1 + $line['rate']['percent'] / 100 ) );
+			} else {
+				$added      = round( $net * $line['rate']['percent'] / 100 );
+				$tax       += $added;
+				$tax_added += $added;
+			}
+		}
+
+		return array(
+			'total' => (int) ( $subtotal - $discount + $plan['shipping'] + $tax_added ),
+			'tax'   => (int) $tax,
+		);
+	}
+
+	/**
+	 * Pick how to send an order to Stripe Checkout: the first way Stripe's own math charges the
+	 * order total and, with Stripe tax rates, also adds up to the order's tax. Stripe tax rates
+	 * are preferred because they show in Stripe's tax reports; the tax line always adds up.
+	 *
+	 * @param SPC_Order $order The order.
+	 * @return array|false The plan, or false when no way adds up.
+	 */
+	private function choose_checkout_plan( $order ) {
+		if ( 'stripe' === $this->get_option( 'tax_mode' ) ) {
+			return $this->build_checkout_plan( $order, 'stripe_tax' );
+		}
+
+		// Credits, gift cards and, with discounts after tax, the discount come off after tax, but
+		// Stripe works out tax after the coupon they go in. Those orders always use the tax line.
+		$after_tax_reduction = floatval( $order->get_credits() ) + $this->get_order_fees_below_zero( $order );
+		if ( SPC()->get_option( 'discount_after_tax' ) ) {
+			$after_tax_reduction += floatval( $order->get_discount() );
+		}
+
+		$modes = array();
+		if ( $order->get_tax() <= 0 || $after_tax_reduction <= 0 ) {
+			$modes[] = array( 'rates_coupon', false );
+			$modes[] = array( 'rates_coupon', true );
+			if ( $order->get_tax() > 0 && $order->get_discount() > 0 ) {
+				$modes[] = array( 'rates_lines', false );
+				$modes[] = array( 'rates_lines', true );
+			}
+		}
+		$modes[] = array( 'tax_line', false );
+
+		$total = (int) $this->convert_amount_to_stripe( $order->get_total() );
+		$tax   = (int) $this->convert_amount_to_stripe( $order->get_tax() );
+		foreach ( $modes as list( $mode, $shipping_as_line ) ) {
+			$plan = $this->build_checkout_plan( $order, $mode, $shipping_as_line );
+			if ( ! $plan ) {
+				continue;
+			}
+			$charge    = $this->get_checkout_plan_charge( $plan );
+			$has_rates = count( array_filter( wp_list_pluck( $plan['lines'], 'rate' ) ) ) > 0;
+			if ( $charge['total'] === $total && ( ! $has_rates || $charge['tax'] === $tax ) ) {
+				return $plan;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -2125,131 +2542,163 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			$stripe_customer_id = $this->create_stripe_customer();
 		}
 
-		$line_items     = array();
-		$tax_mode       = $this->get_option( 'tax_mode' );
-		$use_stripe_tax = ( $tax_mode === 'stripe' );
-		$price_has_tax  = ( SPC()->get_option( 'price_has_tax' ) === 'yes' );
-
-		$sunshine_tax_rate = SPC()->cart->get_tax_rate();
-		$rate              = ! empty( $sunshine_tax_rate['rate'] ) ? floatval( $sunshine_tax_rate['rate'] ) : 0;
-
-		// In manual tax mode, find/create a Stripe Tax Rate matching the order's
-		// configured rate so tax appears in Stripe's tax reports as real tax data
-		// (not as a regular line item).
-		$tax_rate_id = null;
-		if ( ! $use_stripe_tax && $order->get_tax() > 0 && $rate > 0 ) {
-			$percentage  = number_format( $rate * 100, 4, '.', '' );
-			$tax_rate_id = $this->find_or_create_stripe_tax_rate( $percentage, $price_has_tax );
+		$plan = $this->choose_checkout_plan( $order );
+		if ( ! $plan ) {
+			SPC()->log( 'Stripe Checkout: no way to send order ' . $order->get_id() . ' that adds up to its total ' . $order->get_total() );
+			return new WP_Error( 'stripe_checkout_total', __( 'This order could not be sent to Stripe for the right amount, please contact the site owner', 'sunshine-photo-cart' ) );
 		}
 
-		$using_inclusive_tax_rate = ( ! empty( $tax_rate_id ) && $price_has_tax );
+		$response = $this->send_checkout_session( $order, $plan, $stripe_customer_id );
 
-		// Build line items from order
-		foreach ( $order->get_items() as $item ) {
-			$per_unit = $this->compute_line_unit_amount( $item, $rate, $using_inclusive_tax_rate );
+		// Stripe's own total must be the order total. If Stripe worked out the tax rates
+		// differently than expected, try once more with the tax as its own line.
+		if ( ! is_wp_error( $response ) && ! $this->checkout_session_charges_order( $response, $order, $plan ) && in_array( $plan['mode'], array( 'rates_coupon', 'rates_lines' ), true ) ) {
+			$this->expire_checkout_session( $response );
+			$plan = $this->build_checkout_plan( $order, 'tax_line' );
+			if ( ! $plan ) {
+				return new WP_Error( 'stripe_checkout_total', __( 'This order could not be sent to Stripe for the right amount, please contact the site owner', 'sunshine-photo-cart' ) );
+			}
+			$response = $this->send_checkout_session( $order, $plan, $stripe_customer_id );
+		}
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		if ( ! $this->checkout_session_charges_order( $response, $order, $plan ) ) {
+			$this->expire_checkout_session( $response );
+			return new WP_Error( 'stripe_checkout_total', __( 'This order could not be sent to Stripe for the right amount, please contact the site owner', 'sunshine-photo-cart' ) );
+		}
+
+		// Store session ID in order meta
+		$order->update_meta_value( 'stripe_checkout_session_id', $response['id'] );
+		SPC()->log( 'Stripe Checkout Session created: ' . $response['id'] );
+
+		// Remember what this session charges and what the order totaled, so the webhook can
+		// confirm the paid session is this one and the order hasn't changed since. Tax is left
+		// out of the Stripe amount because Stripe Tax only works it out once the customer
+		// enters an address.
+		$order->update_meta_value( 'stripe_checkout_amount', $this->get_checkout_session_amount_before_tax( $response ) );
+		$order->update_meta_value( 'stripe_checkout_order_total', $order->get_total() );
+
+		return $response;
+	}
+
+	/**
+	 * Whether a new Checkout Session charges the order total. With Stripe Tax, the amount before
+	 * Stripe's tax must be the order total. Logs when it doesn't.
+	 *
+	 * @param array     $session Checkout Session from Stripe.
+	 * @param SPC_Order $order   The order.
+	 * @param array     $plan    Plan the session was made from.
+	 * @return bool
+	 */
+	private function checkout_session_charges_order( $session, $order, $plan ) {
+		if ( ! isset( $session['amount_total'] ) ) {
+			return true; // Nothing to check against.
+		}
+		$charged  = ( 'stripe_tax' === $plan['mode'] ) ? $this->get_checkout_session_amount_before_tax( $session ) : intval( $session['amount_total'] );
+		$expected = (int) $this->convert_amount_to_stripe( $order->get_total() );
+		if ( $charged === $expected ) {
+			return true;
+		}
+		SPC()->log( sprintf( 'Stripe Checkout Session %s charges %d but order %d total is %d (sent as %s)', $session['id'], $charged, $order->get_id(), $expected, $plan['mode'] ) );
+		return false;
+	}
+
+	/**
+	 * Close a Checkout Session that won't be used, so it can't be paid.
+	 *
+	 * @param array $session Checkout Session from Stripe.
+	 */
+	private function expire_checkout_session( $session ) {
+		if ( empty( $session['id'] ) ) {
+			return;
+		}
+		$result = $this->make_stripe_request( 'checkout/sessions/' . $session['id'] . '/expire', array(), 'POST' );
+		if ( is_wp_error( $result ) ) {
+			SPC()->log( 'Could not expire Stripe Checkout Session ' . $session['id'] . ': ' . $result->get_error_message() );
+		}
+	}
+
+	/**
+	 * Send a Checkout Session to Stripe for an order, made from a plan.
+	 *
+	 * @param SPC_Order $order              The order.
+	 * @param array     $plan               Plan from build_checkout_plan().
+	 * @param string    $stripe_customer_id Stripe customer ID, if there is one.
+	 * @return array|WP_Error Checkout session data or error
+	 */
+	private function send_checkout_session( $order, $plan, $stripe_customer_id ) {
+		$line_items = array();
+		$rate_ids   = array();
+		foreach ( $plan['lines'] as $line ) {
+			$name = $line['name'];
+			$qty  = $line['qty'];
+			$unit = $line['amount'];
+			if ( $qty > 1 && 0 === $line['amount'] % $qty ) {
+				$unit = intdiv( $line['amount'], $qty );
+			} elseif ( $qty > 1 ) {
+				// Stripe charges a whole number of units for each one. When the line doesn't
+				// split evenly, send the line total once, with the quantity in its name.
+				/* translators: 1: product name, 2: quantity */
+				$name = sprintf( __( '%1$s × %2$d', 'sunshine-photo-cart' ), $name, $qty );
+				$qty  = 1;
+			}
 
 			$line_item = array(
 				'price_data' => array(
 					'currency'     => strtolower( $this->currency ),
 					'product_data' => array(
-						'name' => $item->get_name_raw(),
+						'name' => $name,
 					),
-					'unit_amount'  => $this->convert_amount_to_stripe( $per_unit ),
+					'unit_amount'  => $unit,
 				),
-				'quantity'   => max( 1, intval( $item->get_qty() ) ),
+				'quantity'   => $qty,
 			);
 
-			if ( $use_stripe_tax ) {
+			if ( 'stripe_tax' === $plan['mode'] ) {
 				$line_item['price_data']['tax_behavior'] = 'exclusive';
-			} elseif ( ! empty( $tax_rate_id ) && $item->is_taxable() ) {
-				$line_item['tax_rates'] = array( $tax_rate_id );
+			} elseif ( ! empty( $line['rate'] ) ) {
+				// Tax rates appear in Stripe's tax reports as real tax data.
+				$percentage = number_format( $line['rate']['percent'], 4, '.', '' );
+				$rate_key   = $percentage . '|' . ( $line['rate']['inclusive'] ? '1' : '0' );
+				if ( ! isset( $rate_ids[ $rate_key ] ) ) {
+					$rate_ids[ $rate_key ] = $this->find_or_create_stripe_tax_rate( $percentage, $line['rate']['inclusive'] );
+				}
+				if ( empty( $rate_ids[ $rate_key ] ) ) {
+					// No tax rate could be made, so send the tax as its own line instead.
+					$flat = $this->build_checkout_plan( $order, 'tax_line' );
+					return $flat ? $this->send_checkout_session( $order, $flat, $stripe_customer_id ) : new WP_Error( 'stripe_checkout_total', __( 'This order could not be sent to Stripe for the right amount, please contact the site owner', 'sunshine-photo-cart' ) );
+				}
+				$line_item['tax_rates'] = array( $rate_ids[ $rate_key ] );
 			}
 
 			$line_items[] = $line_item;
 		}
 
-		// Add shipping. Use Stripe's shipping_options (a first-class shipping
-		// concept) unless we'd lose tax visibility by doing so — Stripe's
-		// shipping_options doesn't accept tax_rates, so manual tax mode with
-		// taxable shipping keeps shipping as a line_item to preserve tax
-		// reporting on the shipping portion.
 		$shipping_options = null;
-		if ( $order->get_shipping() > 0 ) {
-			$shipping_name        = $order->get_shipping_method_name() ? $order->get_shipping_method_name() : __( 'Shipping', 'sunshine-photo-cart' );
-			$use_shipping_options = $use_stripe_tax || $order->get_shipping_tax() == 0;
-
-			if ( $use_shipping_options ) {
-				$shipping_rate_data = array(
-					'display_name' => $shipping_name,
-					'type'         => 'fixed_amount',
-					'fixed_amount' => array(
-						'amount'   => $this->convert_amount_to_stripe( $order->get_shipping() ),
-						'currency' => strtolower( $this->currency ),
-					),
-				);
-				if ( $use_stripe_tax ) {
-					$shipping_rate_data['tax_behavior'] = 'exclusive';
-				}
-				$shipping_options = array(
-					array( 'shipping_rate_data' => $shipping_rate_data ),
-				);
-			} else {
-				$shipping_item = array(
-					'price_data' => array(
-						'currency'     => strtolower( $this->currency ),
-						'product_data' => array(
-							'name' => $shipping_name,
-						),
-						'unit_amount'  => $this->convert_amount_to_stripe( $order->get_shipping() ),
-					),
-					'quantity'   => 1,
-				);
-				if ( ! empty( $tax_rate_id ) ) {
-					$shipping_item['tax_rates'] = array( $tax_rate_id );
-				}
-				$line_items[] = $shipping_item;
-			}
-		}
-
-		// Add fees (e.g. payment gateway fee) as line items
-		$fees = $order->get_fees();
-		if ( ! empty( $fees ) ) {
-			foreach ( $fees as $fee ) {
-				$line_items[] = array(
-					'price_data' => array(
-						'currency'     => strtolower( $this->currency ),
-						'product_data' => array(
-							'name' => $fee['name'],
-						),
-						'unit_amount'  => $this->convert_amount_to_stripe( $fee['amount'] ),
-					),
-					'quantity'   => 1,
-				);
-			}
-		}
-
-		// Fallback: if we needed a Stripe Tax Rate but couldn't create one,
-		// add the tax as a regular line item so the session total still
-		// matches the Sunshine order total. Tax won't appear in Stripe's
-		// tax reports in this case but the charge amount is correct.
-		if ( ! $use_stripe_tax && $order->get_tax() > 0 && empty( $tax_rate_id ) ) {
-			$line_items[] = array(
-				'price_data' => array(
-					'currency'     => strtolower( $this->currency ),
-					'product_data' => array(
-						'name' => $order->get_tax_label(),
-					),
-					'unit_amount'  => $this->convert_amount_to_stripe( $order->get_tax() ),
+		if ( $plan['shipping'] > 0 ) {
+			$shipping_rate_data = array(
+				'display_name' => $order->get_shipping_method_name() ? $order->get_shipping_method_name() : __( 'Shipping', 'sunshine-photo-cart' ),
+				'type'         => 'fixed_amount',
+				'fixed_amount' => array(
+					'amount'   => $plan['shipping'],
+					'currency' => strtolower( $this->currency ),
 				),
-				'quantity'   => 1,
+			);
+			if ( 'stripe_tax' === $plan['mode'] ) {
+				$shipping_rate_data['tax_behavior'] = 'exclusive';
+			}
+			$shipping_options = array(
+				array( 'shipping_rate_data' => $shipping_rate_data ),
 			);
 		}
 
-		// Apply cart-level discount + credits via a Stripe coupon. Stripe Checkout
-		// in payment mode rejects negative line items, so the discounts parameter
-		// (with a one-shot Coupon) is the supported path. Coupon ID is deterministic
-		// per order so retries don't duplicate.
-		$coupon_id = $this->get_or_create_order_discount_coupon( $order );
+		// Discount codes, credits and gift cards go in a one-shot Stripe coupon, because Stripe
+		// Checkout in payment mode refuses line items below zero. Its ID is fixed per order so
+		// retries don't make more.
+		$coupon_id = $this->get_or_create_order_discount_coupon( $order, $plan['coupon'] );
 		if ( is_wp_error( $coupon_id ) ) {
 			SPC()->log( 'Stripe Checkout discount coupon failed: ' . $coupon_id->get_error_message() );
 			return $coupon_id;
@@ -2295,7 +2744,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		}
 
 		// Enable Stripe Tax if selected
-		if ( $use_stripe_tax ) {
+		if ( 'stripe_tax' === $plan['mode'] ) {
 			$args['automatic_tax'] = array( 'enabled' => 'true' );
 			// Store that we're using Stripe Tax so webhook knows to update order tax
 			$order->update_meta_value( 'stripe_tax_mode', 'stripe' );
@@ -2332,28 +2781,6 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			return $response;
 		}
 
-		// Store session ID in order meta
-		$order->update_meta_value( 'stripe_checkout_session_id', $response['id'] );
-		SPC()->log( 'Stripe Checkout Session created: ' . $response['id'] );
-
-		// Remember what this session charges and what the order totaled, so the webhook can
-		// confirm the paid session is this one and the order hasn't changed since. Tax is left
-		// out of the Stripe amount because Stripe Tax only works it out once the customer
-		// enters an address.
-		$order->update_meta_value( 'stripe_checkout_amount', $this->get_checkout_session_amount_before_tax( $response ) );
-		$order->update_meta_value( 'stripe_checkout_order_total', $order->get_total() );
-
-		// Sanity-check Stripe's computed total against Sunshine's. Skip for Stripe Tax
-		// mode (Stripe calculates tax from customer location; total isn't known until
-		// the customer enters their address in Checkout).
-		if ( ! $use_stripe_tax && isset( $response['amount_total'] ) ) {
-			$stripe_total   = intval( $response['amount_total'] );
-			$sunshine_total = intval( round( $order->get_total() * 100 ) );
-			if ( $stripe_total !== $sunshine_total ) {
-				SPC()->log( sprintf( 'Stripe Checkout Session total %d does not match Sunshine total %d', $stripe_total, $sunshine_total ) );
-			}
-		}
-
 		return $response;
 	}
 
@@ -2366,16 +2793,16 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	 * matches, the existing coupon is deleted and recreated (Stripe coupons
 	 * are immutable for amount_off).
 	 *
-	 * @param SPC_Order $order The order.
-	 * @return string|null|WP_Error Coupon ID, null if no discount/credits, or WP_Error on failure.
+	 * @param SPC_Order $order      The order.
+	 * @param int       $amount_off Amount off in Stripe units.
+	 * @return string|null|WP_Error Coupon ID, null if nothing comes off, or WP_Error on failure.
 	 */
-	private function get_or_create_order_discount_coupon( $order ) {
-		$discount_total = round( floatval( $order->get_discount() ) + floatval( $order->get_credits() ), 2 );
-		if ( $discount_total <= 0 ) {
+	private function get_or_create_order_discount_coupon( $order, $amount_off ) {
+		$amount_off = intval( $amount_off );
+		if ( $amount_off <= 0 ) {
 			return null;
 		}
 
-		$amount_off = $this->convert_amount_to_stripe( $discount_total );
 		$currency   = strtolower( $this->currency );
 		$coupon_id  = 'sunshine_order_' . $order->get_id();
 
@@ -2437,7 +2864,8 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$session = $this->create_checkout_session( $order );
 
 		if ( is_wp_error( $session ) ) {
-			SPC()->cart->add_error( $session->get_error_message() );
+			$too_small = $this->get_amount_too_small_message( $session );
+			SPC()->cart->add_error( $too_small ? $too_small : $session->get_error_message() );
 			wp_safe_redirect( sunshine_get_page_url( 'checkout' ) );
 			exit;
 		}
@@ -2860,6 +3288,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 				$total_details = $session['total_details'] ?? array();
 				if ( isset( $total_details['amount_tax'] ) ) {
 					$stripe_tax = $this->convert_amount_from_stripe( $total_details['amount_tax'] );
+					// The order total was saved before Stripe added its tax. Swap the old tax for
+					// Stripe's so the total is what the customer paid (and can all be refunded).
+					$order->set_total( round( floatval( $order->get_meta_value( 'total' ) ) - $order->get_tax() + $stripe_tax, 2 ) );
 					$order->set_tax( $stripe_tax );
 					$order->update_meta_value( 'stripe_calculated_tax', $stripe_tax );
 					SPC()->log( 'Stripe Webhook: Updated order tax from Stripe Tax: ' . $stripe_tax );
@@ -3519,10 +3950,14 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			return;
 		}
 
-		$order->set_status( 'refunded' );
 		$order->add_refund( $refund_amount );
+		// Only a refund of everything that was left makes the order Refunded. A part refund
+		// keeps the order's status; the refund is recorded on it and comes off its total.
+		if ( $order->get_total_minus_refunds() < 0.005 ) {
+			$order->set_status( 'refunded' );
+		}
 		/* translators: %s is the refund amount formatted as price */
-		SPC()->notices->add_admin( 'stripe_refund_success_' . $payment_intent_id, sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount ) ) );
+		SPC()->notices->add_admin( 'stripe_refund_success_' . $payment_intent_id, sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount, false, $order->get_currency() ) ) );
 
 		if ( ! empty( $_POST['stripe_refund_notify'] ) ) {
 			$order->notify( false );

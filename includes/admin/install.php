@@ -49,9 +49,9 @@ function maybe_sunshine_create_custom_tables() {
 			`product_id` bigint(20) unsigned NOT NULL,
 			`gallery_id` bigint(20) unsigned NOT NULL,
 			`price_level` bigint(20) unsigned NOT NULL,
-			`price` float unsigned NOT NULL,
-			`tax` float unsigned NOT NULL,
-			`discount` float unsigned NOT NULL,
+			`price` decimal(19,4) unsigned NOT NULL,
+			`tax` decimal(19,4) unsigned NOT NULL,
+			`discount` decimal(19,4) unsigned NOT NULL,
 			PRIMARY KEY (`order_item_id`),
 			KEY `order_id` (`order_id`)
 		) $collate;"
@@ -68,6 +68,13 @@ function maybe_sunshine_create_custom_tables() {
 	$qty_type = $wpdb->get_var( "SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{$wpdb->prefix}sunshine_order_items' AND COLUMN_NAME = 'qty'" );
 	if ( 'tinyint' === $qty_type ) {
 		$wpdb->query( "ALTER TABLE {$wpdb->prefix}sunshine_order_items MODIFY qty int(10) unsigned NOT NULL" );
+	}
+
+	// Existing installs stored price, tax and discount as float, which keeps only about 7 digits,
+	// so a 12,345.67 line was saved as 12,345.70.
+	$price_type = $wpdb->get_var( "SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{$wpdb->prefix}sunshine_order_items' AND COLUMN_NAME = 'price'" );
+	if ( 'float' === $price_type ) {
+		$wpdb->query( "ALTER TABLE {$wpdb->prefix}sunshine_order_items MODIFY price decimal(19,4) unsigned NOT NULL, MODIFY tax decimal(19,4) unsigned NOT NULL, MODIFY discount decimal(19,4) unsigned NOT NULL" );
 	}
 
 	$created = maybe_create_table(
@@ -308,110 +315,7 @@ function sunshine_base_install() {
 		);
 	}
 
-	if ( ! term_exists( 'pending', 'sunshine-order-status' ) ) {
-		wp_insert_term(
-			__( 'Pending Payment', 'sunshine-photo-cart' ),
-			'sunshine-order-status',
-			array(
-				'slug'        => 'pending',
-				'description' => __(
-					'We have received your order but payment is still pending',
-					'sunshine-photo-cart'
-				),
-			)
-		);
-	}
-	if ( ! term_exists( 'new', 'sunshine-order-status' ) ) {
-		wp_insert_term(
-			__( 'New', 'sunshine-photo-cart' ),
-			'sunshine-order-status',
-			array(
-				'slug'        => 'new',
-				'description' => __(
-					'We have received your order and payment',
-					'sunshine-photo-cart'
-				),
-			)
-		);
-	}
-	if ( ! term_exists( 'processing', 'sunshine-order-status' ) ) {
-		wp_insert_term(
-			__( 'Processing', 'sunshine-photo-cart' ),
-			'sunshine-order-status',
-			array(
-				'slug'        => 'processing',
-				'description' => __(
-					'The images in your order are being processed and/or printed',
-					'sunshine-photo-cart'
-				),
-			)
-		);
-	}
-	if ( ! term_exists( 'shipped', 'sunshine-order-status' ) ) {
-		wp_insert_term(
-			__( 'Shipped/Completed', 'sunshine-photo-cart' ),
-			'sunshine-order-status',
-			array(
-				'slug'        => 'shipped',
-				'description' => __(
-					'Your items have shipped (or are available for download)!',
-					'sunshine-photo-cart'
-				),
-			)
-		);
-	}
-	if ( ! term_exists( 'cancelled', 'sunshine-order-status' ) ) {
-		wp_insert_term(
-			__( 'Cancelled', 'sunshine-photo-cart' ),
-			'sunshine-order-status',
-			array(
-				'slug'        => 'cancelled',
-				'description' => __(
-					'Your order was cancelled',
-					'sunshine-photo-cart'
-				),
-			)
-		);
-	}
-	if ( ! term_exists( 'refunded', 'sunshine-order-status' ) ) {
-		wp_insert_term(
-			__( 'Refunded', 'sunshine-photo-cart' ),
-			'sunshine-order-status',
-			array(
-				'slug'        => 'refunded',
-				'description' => __(
-					'Your order was refunded',
-					'sunshine-photo-cart'
-				),
-			)
-		);
-	}
-	if ( ! term_exists( 'pickup', 'sunshine-order-status' ) ) {
-		wp_insert_term(
-			__( 'Ready for pickup', 'sunshine-photo-cart' ),
-			'sunshine-order-status',
-			array(
-				'slug'        => 'pickup',
-				'description' => __(
-					'Your order is ready to be picked up',
-					'sunshine-photo-cart'
-				),
-			)
-		);
-	}
-	if ( ! term_exists( 'failed', 'sunshine-order-status' ) ) {
-		wp_insert_term(
-			__( 'Failed', 'sunshine-photo-cart' ),
-			'sunshine-order-status',
-			array(
-				'slug'        => 'failed',
-				'description' => __(
-					'Payment failed',
-					'sunshine-photo-cart'
-				),
-			)
-		);
-	}
+	sunshine_install_order_statuses();
 
 	$terms = get_terms( 'sunshine-product-price-level', array( 'hide_empty' => 0 ) );
 	if ( empty( $terms ) ) {
@@ -462,10 +366,11 @@ function sunshine_base_install() {
 		SPC()->log( 'Creating default upload directory' );
 	}
 
-	// Enable all emails and set default for them, leaving any already saved alone.
+	// Enable all emails and set default for them, leaving any already saved alone. Emails that
+	// start off stay off until the store owner turns them on.
 	$emails = SPC()->emails->get_emails();
 	foreach ( $emails as $id => $email ) {
-		if ( ! array_key_exists( 'email_' . $id . '_active', $options ) ) {
+		if ( ! array_key_exists( 'email_' . $id . '_active', $options ) && $email->is_active_by_default() ) {
 			$options[ 'email_' . $id . '_active' ] = true;
 		}
 		if ( $email->allows_custom_recipients() && ! array_key_exists( 'email_' . $id . '_recipients', $options ) ) {
@@ -482,6 +387,121 @@ function sunshine_base_install() {
 
 	flush_rewrite_rules();
 
+}
+
+/**
+ * Adds the built-in order statuses that are missing.
+ *
+ * @param array|null $slugs Only these statuses, or all of them when null.
+ */
+function sunshine_install_order_statuses( $slugs = null ) {
+	if ( null === $slugs ) {
+		$slugs = array( 'pending', 'new', 'processing', 'shipped', 'cancelled', 'refunded', 'pickup', 'failed' );
+	}
+	if ( in_array( 'pending', $slugs, true ) && ! term_exists( 'pending', 'sunshine-order-status' ) ) {
+		wp_insert_term(
+			__( 'Pending Payment', 'sunshine-photo-cart' ),
+			'sunshine-order-status',
+			array(
+				'slug'        => 'pending',
+				'description' => __(
+					'We have received your order but payment is still pending',
+					'sunshine-photo-cart'
+				),
+			)
+		);
+	}
+	if ( in_array( 'new', $slugs, true ) && ! term_exists( 'new', 'sunshine-order-status' ) ) {
+		wp_insert_term(
+			__( 'New', 'sunshine-photo-cart' ),
+			'sunshine-order-status',
+			array(
+				'slug'        => 'new',
+				'description' => __(
+					'We have received your order and payment',
+					'sunshine-photo-cart'
+				),
+			)
+		);
+	}
+	if ( in_array( 'processing', $slugs, true ) && ! term_exists( 'processing', 'sunshine-order-status' ) ) {
+		wp_insert_term(
+			__( 'Processing', 'sunshine-photo-cart' ),
+			'sunshine-order-status',
+			array(
+				'slug'        => 'processing',
+				'description' => __(
+					'The images in your order are being processed and/or printed',
+					'sunshine-photo-cart'
+				),
+			)
+		);
+	}
+	if ( in_array( 'shipped', $slugs, true ) && ! term_exists( 'shipped', 'sunshine-order-status' ) ) {
+		wp_insert_term(
+			__( 'Shipped/Completed', 'sunshine-photo-cart' ),
+			'sunshine-order-status',
+			array(
+				'slug'        => 'shipped',
+				'description' => __(
+					'Your items have shipped (or are available for download)!',
+					'sunshine-photo-cart'
+				),
+			)
+		);
+	}
+	if ( in_array( 'cancelled', $slugs, true ) && ! term_exists( 'cancelled', 'sunshine-order-status' ) ) {
+		wp_insert_term(
+			__( 'Cancelled', 'sunshine-photo-cart' ),
+			'sunshine-order-status',
+			array(
+				'slug'        => 'cancelled',
+				'description' => __(
+					'Your order was cancelled',
+					'sunshine-photo-cart'
+				),
+			)
+		);
+	}
+	if ( in_array( 'refunded', $slugs, true ) && ! term_exists( 'refunded', 'sunshine-order-status' ) ) {
+		wp_insert_term(
+			__( 'Refunded', 'sunshine-photo-cart' ),
+			'sunshine-order-status',
+			array(
+				'slug'        => 'refunded',
+				'description' => __(
+					'Your order was refunded',
+					'sunshine-photo-cart'
+				),
+			)
+		);
+	}
+	if ( in_array( 'pickup', $slugs, true ) && ! term_exists( 'pickup', 'sunshine-order-status' ) ) {
+		wp_insert_term(
+			__( 'Ready for pickup', 'sunshine-photo-cart' ),
+			'sunshine-order-status',
+			array(
+				'slug'        => 'pickup',
+				'description' => __(
+					'Your order is ready to be picked up',
+					'sunshine-photo-cart'
+				),
+			)
+		);
+	}
+	if ( in_array( 'failed', $slugs, true ) && ! term_exists( 'failed', 'sunshine-order-status' ) ) {
+		wp_insert_term(
+			__( 'Failed', 'sunshine-photo-cart' ),
+			'sunshine-order-status',
+			array(
+				'slug'        => 'failed',
+				'description' => __(
+					'Payment failed',
+					'sunshine-photo-cart'
+				),
+			)
+		);
+	}
 }
 
 function sunshine_set_roles() {

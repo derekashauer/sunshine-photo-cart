@@ -17,14 +17,17 @@ class SPC_Email_Summary extends SPC_Email {
 
 	public function trigger() {
 
-		// Get order data.
-		$current_after = strtotime( '-7 days' );
+		// The week is the 7 x 24 hours before now, so each order is in exactly one
+		// weekly email. Order and gallery dates are saved in the store's time zone,
+		// customer sign up dates in UTC.
+		$current_after = time() - WEEK_IN_SECONDS;
 		$args          = array(
-			'status' => sunshine_order_statuses_paid(),
-			'after'  => array(
-				'year'  => gmdate( 'Y', $current_after ),
-				'month' => gmdate( 'n', $current_after ),
-				'day'   => gmdate( 'j', $current_after ),
+			'status'     => sunshine_order_statuses_sales(),
+			'date_query' => array(
+				array(
+					'after'     => wp_date( 'Y-m-d H:i:s', $current_after ),
+					'inclusive' => false,
+				),
 			),
 		);
 		$paid_orders   = sunshine_get_orders( $args );
@@ -36,18 +39,21 @@ class SPC_Email_Summary extends SPC_Email {
 		$paid_count = 0;
 		if ( ! empty( $paid_orders ) ) {
 			foreach ( $paid_orders as $order ) {
+				// A Refunded order counts only for what was kept after its refunds.
+				if ( ! sunshine_order_counts_in_sales( $order->get_status(), $order->get_total() ) ) {
+					continue;
+				}
 				$paid_total += $order->get_total();
+				$paid_count++;
 			}
-			$paid_count = count( $paid_orders );
 		}
 
 		// Get customers data.
 		$args      = array(
 			'date_query' => array(
-				'after' => array(
-					'year'  => gmdate( 'Y', $current_after ),
-					'month' => gmdate( 'n', $current_after ),
-					'day'   => gmdate( 'j', $current_after ),
+				array(
+					'after'     => gmdate( 'Y-m-d H:i:s', $current_after ),
+					'inclusive' => false,
 				),
 			),
 		);
@@ -57,10 +63,9 @@ class SPC_Email_Summary extends SPC_Email {
 		$args      = array(
 			'meta_query' => '',
 			'date_query' => array(
-				'after' => array(
-					'year'  => gmdate( 'Y', $current_after ),
-					'month' => gmdate( 'n', $current_after ),
-					'day'   => gmdate( 'j', $current_after ),
+				array(
+					'after'     => wp_date( 'Y-m-d H:i:s', $current_after ),
+					'inclusive' => false,
 				),
 			),
 		);
@@ -92,8 +97,8 @@ class SPC_Email_Summary extends SPC_Email {
 		}
 
 		$args = array(
-			'start_date' => gmdate( get_option( 'date_format' ), $current_after ),
-			'end_date'   => gmdate( get_option( 'date_format' ), time() ),
+			'start_date' => wp_date( get_option( 'date_format' ), $current_after ),
+			'end_date'   => wp_date( get_option( 'date_format' ) ),
 			'paid_total' => $paid_total,
 			'paid_count' => $paid_count,
 			'avg_order'  => ( $paid_total ) ? round( $paid_total / $paid_count, 2 ) : 0,

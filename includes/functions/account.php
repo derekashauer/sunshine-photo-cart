@@ -269,7 +269,7 @@ function sunshine_modal_signup() {
 	$last_name  = ( ! empty( $_POST['sunshine_signup_last_name'] ) ) ? sanitize_text_field( $_POST['sunshine_signup_last_name'] ) : '';
 
 	$args    = array(
-		'user_login' => $email,
+		'user_login' => sunshine_new_customer_username( $email ),
 		'user_email' => $email,
 		'user_pass'  => $password,
 		'role'       => sunshine_get_customer_role(),
@@ -707,4 +707,32 @@ function sunshine_save_addresses() {
 add_action( 'wp_login', 'sunshine_track_user_login', 10, 2 );
 function sunshine_track_user_login( $username, $user ) {
 	update_user_meta( $user->ID, 'sunshine_last_login', current_time( 'timestamp' ) );
+}
+
+/**
+ * The WordPress username for a new customer account.
+ *
+ * The email is used when it can be one. WordPress usernames stop at 60 characters, so a longer
+ * email (or one already taken as someone's username) gets a username made from the part before
+ * the @ instead. Customers log in with their email either way.
+ *
+ * @param string $email The new customer's email address.
+ * @return string
+ */
+function sunshine_new_customer_username( $email ) {
+	if ( mb_strlen( $email ) <= 60 && ! username_exists( $email ) ) {
+		$username = $email;
+	} else {
+		$base = substr( sanitize_user( strstr( $email, '@', true ), true ), 0, 50 );
+		if ( '' === $base ) {
+			$base = 'customer';
+		}
+		$username = $base;
+		$suffix   = 1;
+		while ( username_exists( $username ) ) {
+			$username = $base . '-' . $suffix;
+			$suffix++;
+		}
+	}
+	return apply_filters( 'sunshine_new_customer_username', $username, $email );
 }

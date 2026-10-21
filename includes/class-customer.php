@@ -159,17 +159,25 @@ class SPC_Customer extends WP_User {
 	 * @param float $credits The amount of credits to set.
 	 */
 	public function set_credits( $credits ) {
-		$this->update_meta( 'credits', intval( $credits ) );
+		$credits       = max( 0, (float) sunshine_sanitize_amount( $credits ) );
+		$this->credits = $credits;
+		$this->update_meta( 'credits', $credits );
 		SPC()->log( 'Customer ' . $this->get_id() . ' set credits to ' . $credits );
 	}
 
 	/**
 	 * Get the customer's credits.
 	 *
+	 * Read from the saved value each time: another customer object (a Session Fees hook, an
+	 * admin screen, a second order) may have changed it since this one was loaded.
+	 *
 	 * @return float The customer's current credits.
 	 */
 	public function get_credits() {
-		return intval( $this->credits );
+		if ( $this->ID > 0 ) {
+			$this->credits = $this->get_meta( 'credits' );
+		}
+		return max( 0, (float) sunshine_sanitize_amount( $this->credits ) );
 	}
 
 	/**
@@ -178,10 +186,10 @@ class SPC_Customer extends WP_User {
 	 * @param float $amount The amount to decrease.
 	 */
 	public function decrease_credits( $amount ) {
-		$credits  = $this->get_credits();
-		$credits -= intval( $amount );
+		$amount  = (float) sunshine_sanitize_amount( $amount );
+		$credits = $this->get_credits() - $amount;
 		$this->set_credits( max( $credits, 0 ) );
-		SPC()->log( 'Customer ' . $this->get_id() . ' decreased credits by ' . $amount . ' to ' . $credits );
+		SPC()->log( 'Customer ' . $this->get_id() . ' decreased credits by ' . $amount . ' to ' . $this->credits );
 	}
 
 	/**
@@ -190,11 +198,10 @@ class SPC_Customer extends WP_User {
 	 * @param float $amount The amount to increase.
 	 */
 	public function increase_credits( $amount ) {
-		$amount   = intval( $amount );
-		$credits  = $this->get_credits();
-		$credits += $amount;
+		$amount  = (float) sunshine_sanitize_amount( $amount );
+		$credits = $this->get_credits() + $amount;
 		$this->set_credits( max( $credits, 0 ) );
-		SPC()->log( 'Customer ' . $this->get_id() . ' increased credits by ' . $amount . ' to ' . $credits );
+		SPC()->log( 'Customer ' . $this->get_id() . ' increased credits by ' . $amount . ' to ' . $this->credits );
 	}
 
 	/**
@@ -746,8 +753,11 @@ class SPC_Customer extends WP_User {
 		$order_totals = 0;
 		while ( $query->have_posts() ) :
 			$query->the_post();
-			$order         = new SPC_Order( get_the_ID() );
-			$order_totals += $order->get_total_minus_refunds();
+			$order = new SPC_Order( get_the_ID() );
+			// Only paid orders count toward what the customer has spent; a cancelled or unpaid one was never paid for.
+			if ( $order->is_paid() ) {
+				$order_totals += $order->get_total_minus_refunds();
+			}
 		endwhile;
 		wp_reset_postdata();
 

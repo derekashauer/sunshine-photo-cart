@@ -18,9 +18,27 @@ function sunshine_decode_text( $text ) {
 }
 
 // TODO: This should return the price but limited to float based on locale settings.
-function sunshine_price( $value, $force_0 = false ) {
+/**
+ * A price as HTML in the store currency, or in $currency when given (an order placed in another
+ * currency before the store's was changed shows its own symbol and decimals).
+ *
+ * @param float  $value    The amount.
+ * @param bool   $force_0  Not used.
+ * @param string $currency Currency code, or '' for the store currency.
+ * @return string
+ */
+function sunshine_price( $value, $force_0 = false, $currency = '' ) {
 	if ( $value == '' ) {
 		$value = 0;
+	}
+	if ( $currency && $currency !== sunshine_get_currency() ) {
+		$use_currency = function () use ( $currency ) {
+			return $currency;
+		};
+		add_filter( 'sunshine_currency', $use_currency, PHP_INT_MAX );
+		$price = '<span class="sunshine-price">' . sunshine_currency_filter( sunshine_format_amount( $value ), $currency ) . '</span>';
+		remove_filter( 'sunshine_currency', $use_currency, PHP_INT_MAX );
+		return $price;
 	}
 	/*
 	$free_label = apply_filters( 'sunshine_price_free_label', __( 'Free', 'sunshine-photo-cart' ) );
@@ -62,6 +80,28 @@ function sunshine_sanitize_amount( $amount ) {
 	}
 
 	return apply_filters( 'sunshine_sanitize_amount', $amount );
+}
+
+/**
+ * Prepares a saved amount for an admin text box, written with the store's decimal separator.
+ *
+ * Amounts saved by code (the API, the Price Levels add-on) are plain numbers with a dot, like
+ * 12.5. In a store that writes 12,50, the box's save step takes out the thousands separator,
+ * which is a dot there, so showing 12.5 as is would save it back as 125. A plain number is
+ * shown with the store's decimal separator instead (12,5). Anything else is shown as it was
+ * typed and saved.
+ *
+ * @param mixed $amount Saved amount.
+ * @return string Amount for the text box.
+ */
+function sunshine_format_amount_for_input( $amount ) {
+	if ( is_int( $amount ) || is_float( $amount ) || ( is_string( $amount ) && is_numeric( $amount ) ) ) {
+		$decimal_sep = SPC()->get_option( 'currency_decimal_separator' );
+		if ( $decimal_sep && '.' !== $decimal_sep ) {
+			return str_replace( '.', $decimal_sep, (string) $amount );
+		}
+	}
+	return (string) $amount;
 }
 
 /**
@@ -121,10 +161,12 @@ function sunshine_currency_filter( $price = '', $currency = '' ) {
 	$position  = SPC()->get_option( 'currency_symbol_position' );
 	$show_code = SPC()->get_option( 'currency_show_code' );
 
-	$negative = is_numeric( $price ) && $price < 0;
+	// Look at the leading minus, not is_numeric(): the amount is already formatted text, and
+	// "-25,50" or "-1,250.50" aren't numeric, so the minus would end up after the symbol.
+	$negative = '-' === substr( trim( (string) $price ), 0, 1 );
 
 	if ( $negative ) {
-		$price = substr( $price, 1 ); // Remove proceeding "-" -
+		$price = substr( trim( (string) $price ), 1 ); // Remove proceeding "-" -
 	}
 
 	$symbol_html = '<span class="sunshine-currency-symbol">' . sunshine_currency_symbol( $currency ) . '</span>';
@@ -194,19 +236,46 @@ function sunshine_currency_filter( $price = '', $currency = '' ) {
  * @return int $decimals
  */
 function sunshine_currency_decimal_filter( $decimals = 2 ) {
+	return sunshine_currency_decimals( '', $decimals );
+}
 
-	$currency = sunshine_get_currency();
+/**
+ * How many decimals a currency uses: none for yen and the like, otherwise $default.
+ *
+ * @param string $currency Currency code, or '' for the store currency.
+ * @param int    $default  Decimals for currencies with cents.
+ * @return int
+ */
+function sunshine_currency_decimals( $currency = '', $default = 2 ) {
+
+	$currency = $currency ? $currency : sunshine_get_currency();
+	$decimals = $default;
 
 	switch ( $currency ) {
 		case 'RIAL':
 		case 'JPY':
 		case 'TWD':
 		case 'HUF':
+		case 'KRW':
+		case 'CLP':
+		case 'PYG':
+		case 'VND':
 			$decimals = 0;
 			break;
 	}
 
 	return apply_filters( 'sunshine_currency_decimal_count', $decimals, $currency );
+}
+
+/**
+ * Round an amount of money to the store currency's own decimals: cents for most currencies,
+ * whole units for ones like yen, which payment services can't charge a fraction of.
+ *
+ * @param float $amount The amount.
+ * @return float
+ */
+function sunshine_round_amount( $amount ) {
+	return round( (float) $amount, (int) sunshine_currency_decimal_filter( 2 ) );
 }
 add_filter( 'sunshine_sanitize_amount_decimals', 'sunshine_currency_decimal_filter' );
 add_filter( 'sunshine_format_amount_decimals', 'sunshine_currency_decimal_filter' );
@@ -216,9 +285,9 @@ function sunshine_get_currency() {
 	return apply_filters( 'sunshine_currency', $currency );
 }
 
-function sunshine_currency_symbol() {
+function sunshine_currency_symbol( $currency = '' ) {
 
-	switch ( SPC()->get_option( 'currency' ) ) {
+	switch ( $currency ? $currency : SPC()->get_option( 'currency' ) ) {
 		case 'AED':
 			$currency_symbol = 'د.إ';
 			break;

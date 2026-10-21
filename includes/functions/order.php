@@ -157,6 +157,23 @@ function sunshine_order_is_paid( $status ) {
 	return false;
 }
 
+/**
+ * Payment methods call this when they refuse a payment, payment notice or confirmation because
+ * it doesn't pay the order: wrong amount, wrong currency, made for another order, paid to another
+ * account, or it couldn't be confirmed. They add their own order note first; this only tells
+ * anything listening, like the Admin Payment Problem email.
+ *
+ * @param SPC_Order $order             The order.
+ * @param string    $reason            Why the payment was refused, in plain words.
+ * @param string    $payment_method_id The payment method's ID.
+ * @param string    $type              'mismatch' when a payment didn't match the order (the
+ *                                     customer may have paid), or 'declined' when the payment
+ *                                     service says it was declined, cancelled, failed or expired.
+ */
+function sunshine_order_payment_problem( $order, $reason, $payment_method_id = '', $type = 'mismatch' ) {
+	do_action( 'sunshine_order_payment_problem', $order, $reason, $payment_method_id, $type );
+}
+
 function sunshine_order_statuses_completed() {
 	return apply_filters( 'sunshine_order_statuses_paid', array( 'pickup', 'shipped' ) );
 }
@@ -222,3 +239,99 @@ function sunshine_generate_order_key( $key = '' ) {
 
 	return 'spc_' . apply_filters( 'sunshine_generate_order_key', 'order_' . $key );
 }
+
+/**
+ * Give back the store credit an order used when the order is refunded or cancelled.
+ *
+ * Credit is taken when an order is finished (post_processed), so only finished orders give
+ * any back, and only once, even when the status changes between Refunded and Cancelled.
+ *
+ * @param string    $status The new order status.
+ * @param SPC_Order $order  The order.
+ */
+function sunshine_order_return_credits( $status, $order ) {
+	if ( ! in_array( $status, array( 'refunded', 'cancelled' ), true ) ) {
+		return;
+	}
+	$credits = (float) $order->get_credits();
+	if ( $credits <= 0 || ! $order->get_meta_value( 'post_processed' ) ) {
+		return;
+	}
+	$customer = $order->get_customer();
+	if ( empty( $customer ) ) {
+		return;
+	}
+	// Unique meta: if two requests change the status at once, only one can add it.
+	if ( ! add_post_meta( $order->get_id(), 'credits_returned', current_time( 'timestamp' ), true ) ) {
+		return;
+	}
+	$customer->increase_credits( $credits );
+	/* translators: %s is the store credit amount given back to the customer */
+	$order->add_log( sprintf( __( '%s of store credit given back to the customer', 'sunshine-photo-cart' ), sunshine_price( $credits ) ) );
+}
+add_action( 'sunshine_order_status_change', 'sunshine_order_return_credits', 10, 2 );
+
+/**
+ * Whether an order counts toward sales totals (dashboard, weekly Summary email).
+ *
+ * Paid orders always count. A Refunded order counts too while money is left on it
+ * after its refunds, because some payment methods mark an order Refunded even when
+ * only part of it was given back.
+ *
+ * @param string $status               Order status slug.
+ * @param float  $total_after_refunds  Order total less its refunds.
+ *
+ * @return bool
+ */
+function sunshine_order_counts_in_sales( $status, $total_after_refunds ) {
+	if ( sunshine_order_is_paid( $status ) ) {
+		return true;
+	}
+	return ( 'refunded' === $status && $total_after_refunds > 0 );
+}
+
+/**
+ * The statuses an order can have and still count toward sales totals. Use with
+ * sunshine_order_counts_in_sales() to leave out Refunded orders with nothing left.
+ *
+ * @return string[]
+ */
+function sunshine_order_statuses_sales() {
+	return array_unique( array_merge( sunshine_order_statuses_paid(), array( 'refunded' ) ) );
+}
+
+/**
+ * Forget the dashboard's saved sales numbers, so the next look at the dashboard
+ * works them out again. Runs whenever an order is made, changes status or gets
+ * a refund, wherever that happens (checkout, payment webhooks, admin).
+ */
+function sunshine_clear_dashboard_stats() {
+	delete_transient( 'sunshine-dashboard-sales' );
+}
+add_action( 'sunshine_order_create', 'sunshine_clear_dashboard_stats' );
+add_action( 'sunshine_order_status_change', 'sunshine_clear_dashboard_stats' );
+add_action( 'sunshine_order_refund', 'sunshine_clear_dashboard_stats' );
+
+/**
+ * Remove an order's lines and their meta when the order itself is deleted.
+ *
+ * Runs wherever the order is deleted (admin, payment cancel links, emptying the
+ * trash on a schedule, the REST API), not only in the admin. The line tables have no
+ * foreign keys, so the meta rows have to be removed here too.
+ *
+ * @param int $post_id Post being deleted.
+ */
+function sunshine_delete_order_lines( $post_id ) {
+	global $wpdb;
+	if ( 'sunshine-order' !== get_post_type( $post_id ) ) {
+		return;
+	}
+	$item_ids = $wpdb->get_col( $wpdb->prepare( "SELECT order_item_id FROM {$wpdb->prefix}sunshine_order_items WHERE order_id = %d", $post_id ) );
+	if ( empty( $item_ids ) ) {
+		return;
+	}
+	$placeholders = implode( ',', array_fill( 0, count( $item_ids ), '%d' ) );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}sunshine_order_itemmeta WHERE order_item_id IN ({$placeholders})", $item_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$wpdb->delete( $wpdb->prefix . 'sunshine_order_items', array( 'order_id' => $post_id ), array( '%d' ) );
+}
+add_action( 'before_delete_post', 'sunshine_delete_order_lines' );

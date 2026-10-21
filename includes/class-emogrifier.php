@@ -522,7 +522,9 @@ class Sunshine_Emogrifier {
 		}
 
 		if ( function_exists( 'mb_convert_encoding' ) ) {
-			return mb_convert_encoding( $bodyWithoutUnprocessableTags, 'HTML-ENTITIES', self::ENCODING );
+			// Every character above ASCII as a numeric entity. Same result as the 'HTML-ENTITIES'
+			// target of mb_convert_encoding(), which is deprecated as of PHP 8.2.
+			return mb_encode_numericentity( $bodyWithoutUnprocessableTags, array( 0x80, 0x10FFFF, 0, 0x1FFFFF ), self::ENCODING );
 		} else {
 			return htmlspecialchars_decode( utf8_decode( htmlentities( $bodyWithoutUnprocessableTags, ENT_COMPAT, self::ENCODING, false ) ) );
 		}

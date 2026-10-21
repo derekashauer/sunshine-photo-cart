@@ -56,7 +56,6 @@ class SPC_Admin_Order {
 		// Change customer stats when orders are trashed/changed
 		add_action( 'trashed_post', array( $this, 'trash' ) );
 		add_action( 'untrashed_post', array( $this, 'untrash' ) );
-		add_action( 'before_delete_post', array( $this, 'delete' ) );
 
 		// Fix order items
 		add_action( 'admin_init', array( $this, 'fix_order_items' ) );
@@ -365,13 +364,27 @@ class SPC_Admin_Order {
 
 	}
 
+	/**
+	 * An order marked paid by hand (a cheque, a charge approved after a review, a payment
+	 * notice that never arrived) is finished the same way checkout finishes a paid order, so
+	 * its gift card, store credit and code uses are taken and the receipt is sent. Orders
+	 * finished already are left alone.
+	 */
+	private function finish_if_paid( $order ) {
+		if ( sunshine_order_is_paid( $order->get_status() ) && ! $order->get_meta_value( 'post_processed' ) ) {
+			$order->add_log( __( 'Order finished after being marked paid by hand', 'sunshine-photo-cart' ) );
+			SPC()->cart->post_process_order( $order, false );
+		}
+	}
+
 	function handle_bulk_actions( $redirect_to, $action, $ids ) {
 		$changed = 0;
 		if ( false !== strpos( $action, 'sunshine_order_status_' ) ) {
 			$new_status = str_replace( 'sunshine_order_status_', '', $action );
 			foreach ( $ids as $order_id ) {
 				$order = new SPC_Order( $order_id );
-				$order->set_status( $new_status );
+				$order->set_status( $new_status, '', true );
+				$this->finish_if_paid( $order );
 				do_action( 'sunshine_admin_order_status_update', $order );
 				$changed++;
 			}
@@ -906,7 +919,6 @@ class SPC_Admin_Order {
 	}
 
 	public function fix_order_items() {
-		global $wpdb;
 
 		if ( ! isset( $_GET['post'] ) || ! isset( $_GET['fix_order_items'] ) || ! wp_verify_nonce( $_GET['fix_order_items'], 'sunshine_fix_order_items' ) ) {
 			return;
@@ -920,12 +932,29 @@ class SPC_Admin_Order {
 		$items      = $order->get_items();
 		$meta_items = get_post_meta( $order->get_id(), 'cart', true );
 		if ( is_array( $meta_items ) && count( $meta_items ) !== count( $items ) ) {
-			$wpdb->delete(
-				$wpdb->prefix . 'sunshine_order_items',
-				array( 'order_id' => $order->get_id() )
-			);
-
+			// Only put back the lines that are missing. The lines still there hold what was
+			// charged, and so does a missing one when the order saved its line totals. Nothing
+			// is worked out again from today's prices, tax or discount rules.
+			$saved = array();
+			foreach ( $items as $saved_item ) {
+				$row     = $saved_item->get_item_data();
+				$saved[] = array(
+					isset( $row['product_id'] ) ? intval( $row['product_id'] ) : 0,
+					isset( $row['image_id'] ) ? intval( $row['image_id'] ) : 0,
+					isset( $row['qty'] ) ? intval( $row['qty'] ) : 0,
+				);
+			}
 			foreach ( $meta_items as $item ) {
+				$line  = array(
+					isset( $item['product_id'] ) ? intval( $item['product_id'] ) : 0,
+					isset( $item['image_id'] ) ? intval( $item['image_id'] ) : 0,
+					isset( $item['qty'] ) ? intval( $item['qty'] ) : 0,
+				);
+				$found = array_search( $line, $saved, true );
+				if ( false !== $found ) {
+					unset( $saved[ $found ] );
+					continue;
+				}
 				$order->add_item( $item );
 			}
 		}
@@ -1161,7 +1190,8 @@ class SPC_Admin_Order {
 			$new_order_status     = sanitize_key( $_POST['order_status'] );
 			if ( $current_order_status != $new_order_status ) {
 				$order->add_log( 'Order status changed in admin' );
-				$order->set_status( $new_order_status );
+				$order->set_status( $new_order_status, '', true );
+				$this->finish_if_paid( $order );
 				if ( ! empty( $_POST['order_status_change_notify'] ) && $_POST['order_status_change_notify'] == 'yes' ) {
 					do_action( 'sunshine_admin_order_status_update', $order );
 					// $order->notify( false );
@@ -1255,16 +1285,6 @@ class SPC_Admin_Order {
 			$customer    = new SPC_Customer( $customer_id );
 			$customer->recalculate_stats();
 		}
-	}
-
-	function delete( $post_id ) {
-		global $wpdb;
-		$wpdb->delete(
-			$wpdb->prefix . 'sunshine_order_items',
-			array( 'order_id' => $post_id ),
-			array( '%d' ),
-		);
-		// Data in sunshine_order_itemmeta will automatically be deleted because of foreign key cascade.
 	}
 
 }

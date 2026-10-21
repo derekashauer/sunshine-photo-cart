@@ -10,10 +10,18 @@ class SPC_Delivery_Method {
 	protected $can_be_enabled = false;
 	protected $taxed_at_store = false;
 
+	// Method classes whose hooks are already added. A new object is built on every lookup
+	// (sunshine_get_delivery_method_by_id), so only the first one of each class adds them.
+	protected static $hooked = array();
+
 	public function __construct() {
 		$this->init();
-		add_filter( 'sunshine_delivery_methods', array( $this, 'register' ) );
-		add_filter( 'sunshine_options_shipping', array( $this, 'options' ) );
+		$class = get_class( $this );
+		if ( empty( self::$hooked[ $class ] ) ) {
+			self::$hooked[ $class ] = true;
+			add_filter( 'sunshine_delivery_methods', array( $this, 'register' ) );
+			add_filter( 'sunshine_options_shipping', array( $this, 'options' ) );
+		}
 	}
 
 	public function init() { }

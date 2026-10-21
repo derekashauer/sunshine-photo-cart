@@ -130,6 +130,7 @@ final class Sunshine_Photo_Cart {
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-reset-password.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-customer-receipt.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-admin-receipt.php';
+		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-admin-payment-problem.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-order-status.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-order-comment.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/emails/class-email-admin-favorites.php';
@@ -149,6 +150,7 @@ final class Sunshine_Photo_Cart {
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/class-product-option.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/class-image.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/class-gallery.php';
+		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/class-totals-calculator.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/class-cart.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/class-cart-item.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/class-order.php';

@@ -190,6 +190,22 @@ class SPC_Frontend {
 			$order    = new SPC_Order( $order_id );
 			if ( $order->can_access() ) { // Permission check to make sure access to this sensitive data is allowed
 				$this->current_order = $order;
+				// The customer is back from paying on another site (PayPal, PayFast...) and the
+				// payment notice already finished this order on its own, without this customer's
+				// session. Their next checkout is a new order. Whether an unpaid order is reused is
+				// decided when they place an order again (see SPC_Cart::init_order()), since a
+				// cancel notice can arrive at the same moment as this page.
+				$is_checkout_order = (int) SPC()->session->get( 'checkout_order_id' ) === (int) $order->get_id();
+				// Back from a payment that was cancelled or failed: a receipt for an unpaid order
+				// only confuses, so go back to checkout to try again (paying again reuses this order).
+				if ( $is_checkout_order && in_array( $order->get_status(), array( 'cancelled', 'failed' ), true ) ) {
+					SPC()->notices->add( __( 'Your payment was not completed. You can try again below.', 'sunshine-photo-cart' ), 'error' );
+					wp_safe_redirect( sunshine_get_page_url( 'checkout' ) );
+					exit;
+				}
+				if ( $is_checkout_order && $order->is_paid() ) {
+					SPC()->session->set( 'checkout_order_id', '' );
+				}
 			} else {
 				$this->die();
 			}

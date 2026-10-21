@@ -117,23 +117,50 @@ class SPC_Payment_Method_PayPal_Legacy extends SPC_Payment_Method {
 			$amount_key                   = 'amount_' . $i;
 			$paypal_args[ $name_key ]     = $item->get_name_raw();
 			$paypal_args[ $quantity_key ] = $item->get_qty();
-			$paypal_args[ $amount_key ]   = $item->get_price() - $item->get_discount_per_item();
+			$paypal_args[ $amount_key ]   = round( $item->get_price() - $item->get_discount_per_item(), 2 );
 			$i++;
 		}
 		if ( $order->get_shipping() > 0 ) {
 			$paypal_args[ 'item_name_' . $i ] = $order->get_shipping_method_name();
 			$paypal_args[ 'quantity_' . $i ]  = 1;
 			$paypal_args[ 'amount_' . $i ]    = round( $order->get_shipping(), 2 );
+			$i++;
+		}
+		// Fees like a payment method fee are their own lines. PayPal does not take lines below
+		// zero, so fees that take money off (gift cards) end up in the discount below.
+		foreach ( (array) $order->get_fees() as $fee ) {
+			if ( round( floatval( $fee['amount'] ), 2 ) <= 0 ) {
+				continue;
+			}
+			$paypal_args[ 'item_name_' . $i ] = $fee['name'];
+			$paypal_args[ 'quantity_' . $i ]  = 1;
+			$paypal_args[ 'amount_' . $i ]    = round( $fee['amount'], 2 );
+			$i++;
 		}
 		$paypal_args['tax_cart'] = round( $order->get_tax(), 2 );
-		$discount_total          = 0;
-		if ( $order->get_discount() ) {
-			$discount_total = $order->get_discount();
+
+		// PayPal charges the lines plus tax minus the discount. The discount is whatever makes
+		// that come to the order total, so it covers discount codes, credits and gift cards.
+		$lines_total = 0;
+		for ( $line = 1; isset( $paypal_args[ 'amount_' . $line ] ); $line++ ) {
+			$lines_total += $paypal_args[ 'amount_' . $line ] * intval( $paypal_args[ 'quantity_' . $line ] );
 		}
-		if ( $order->get_credits() > 0 ) {
-			$discount_total += $order->get_credits();
+		$order_total    = round( $order->get_total(), 2 );
+		$discount_total = round( $lines_total + $paypal_args['tax_cart'] - $order_total, 2 );
+		if ( $discount_total < 0 ) {
+			// Rounding each item's price pushed the lines below the order total. Send the order
+			// as one line instead, so PayPal is still asked for the exact total.
+			SPC()->log( 'PayPal Legacy lines add up to less than ' . $order->get_name() . ' total, sending it as one line' );
+			for ( $line = 1; isset( $paypal_args[ 'amount_' . $line ] ); $line++ ) {
+				unset( $paypal_args[ 'item_name_' . $line ], $paypal_args[ 'quantity_' . $line ], $paypal_args[ 'amount_' . $line ] );
+			}
+			$paypal_args['item_name_1'] = $order->get_name();
+			$paypal_args['quantity_1']  = 1;
+			$paypal_args['amount_1']    = $order_total;
+			$paypal_args['tax_cart']    = 0;
+			$discount_total             = 0;
 		}
-		$paypal_args['discount_amount_cart'] = round( $discount_total, 2 );
+		$paypal_args['discount_amount_cart'] = $discount_total;
 
 		// Business Info
 		$paypal_args['business']      = $this->get_email();
@@ -174,15 +201,9 @@ class SPC_Payment_Method_PayPal_Legacy extends SPC_Payment_Method {
 
 		$paypal_args = apply_filters( 'sunshine_paypal_args', $paypal_args );
 
-		// Remember what PayPal was asked to charge, and the order total at that moment, so the
-		// IPN can check the payment against them. PayPal adds up the lines itself, so this can
-		// differ from the order total by rounding.
-		$paypal_total = 0;
-		for ( $line = 1; isset( $paypal_args[ 'amount_' . $line ] ); $line++ ) {
-			$paypal_total += round( $paypal_args[ 'amount_' . $line ], 2 ) * intval( $paypal_args[ 'quantity_' . $line ] );
-		}
-		$paypal_total += round( $paypal_args['tax_cart'], 2 ) - round( $paypal_args['discount_amount_cart'], 2 );
-		$order->update_meta_value( 'paypal_legacy_expected_total', round( $paypal_total, 2 ) );
+		// Remember the order total PayPal was asked for, so the IPN can check the payment
+		// against it, and notice if the order changed after the customer left for PayPal.
+		$order->update_meta_value( 'paypal_legacy_expected_total', $order_total );
 		$order->update_meta_value( 'paypal_legacy_order_total', $order->get_total() );
 
 		foreach ( $paypal_args as $key => $value ) {
@@ -264,23 +285,15 @@ class SPC_Payment_Method_PayPal_Legacy extends SPC_Payment_Method {
 				}
 			}
 
-			// Only handle new order IPNs
-			if ( ! in_array( $myPost['txn_type'], array( 'cart', 'express_checkout' ) ) ) {
+			// Only handle new order IPNs. Refund and reversal notices have no txn_type.
+			if ( ! isset( $myPost['txn_type'] ) || ! in_array( $myPost['txn_type'], array( 'cart', 'express_checkout' ), true ) ) {
 				exit;
 			}
 
 			// read the IPN message sent from PayPal and prepend 'cmd=_notify-validate'
 			$req = 'cmd=_notify-validate';
-			if ( function_exists( 'get_magic_quotes_gpc' ) ) {
-				$get_magic_quotes_exists = true;
-			}
 			foreach ( $myPost as $key => $value ) {
-				if ( $get_magic_quotes_exists == true && get_magic_quotes_gpc() == 1 ) {
-					$value = urlencode( stripslashes( $value ) );
-				} else {
-					$value = urlencode( $value );
-				}
-				$req .= "&$key=$value";
+				$req .= '&' . $key . '=' . urlencode( $value );
 			}
 
 			$paypal_url = ( $this->get_mode_value() != 'live' ) ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr';
@@ -343,7 +356,9 @@ class SPC_Payment_Method_PayPal_Legacy extends SPC_Payment_Method {
 				$txn_id = isset( $myPost['txn_id'] ) ? sanitize_text_field( $myPost['txn_id'] ) : '';
 				SPC()->log( 'PayPal IPN payment ' . $txn_id . ' (' . $paid . ' to ' . implode( '/', $paid_to ) . ') does not match ' . $order->get_name() . ' (total ' . $order->get_total() . ')' );
 				/* translators: 1: PayPal transaction ID, 2: amount paid in PayPal */
-				$order->add_log( sprintf( __( 'PayPal payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $txn_id, sanitize_text_field( $paid ) ) );
+				$note = sprintf( __( 'PayPal payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $txn_id, sanitize_text_field( $paid ) );
+				$order->add_log( $note );
+				sunshine_order_payment_problem( $order, $note, $this->id );
 				exit;
 			}
 

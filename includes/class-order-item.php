@@ -31,23 +31,36 @@ class SPC_Order_Item extends SPC_Cart_Item {
 			}
 		}
 
-		// Override with saved order data.
-		if ( ! empty( $item['price'] ) ) {
-			$this->price = floatval( $item['price'] );
-		}
+		$this->set_saved_line( $item );
 
-		if ( ! empty( $item['tax'] ) ) {
-			$this->tax = floatval( $item['tax'] );
-		}
+	}
 
-		if ( ! empty( $item['discount'] ) ) {
-			$this->discount = floatval( $item['discount'] );
+	/**
+	 * Saved order lines keep what was charged, so nothing is worked out again from today's
+	 * prices, tax or discount rules. See set_saved_line().
+	 *
+	 * @param array $item The saved line.
+	 */
+	protected function calculate_line( $item ) {
+	}
+
+	/**
+	 * Use the line as it was saved. The order lines table keeps one item's price and tax and the
+	 * line's discount, and a saved 0 is a real 0. The line's own totals are kept in line_totals;
+	 * only orders saved before that existed work them out from the rest.
+	 *
+	 * @param array $item The saved line.
+	 */
+	protected function set_saved_line( $item ) {
+
+		if ( isset( $item['price'] ) ) {
+			$this->price = sunshine_round_amount( $item['price'] );
 		}
+		$this->tax      = isset( $item['tax'] ) ? sunshine_round_amount( $item['tax'] ) : 0;
+		$this->discount = isset( $item['discount'] ) ? sunshine_round_amount( $item['discount'] ) : 0;
 
 		// Calculate discount per item for consistent display.
-		if ( $this->discount > 0 && $this->qty > 0 ) {
-			$this->discount_per_item = $this->discount / $this->qty;
-		}
+		$this->discount_per_item = ( $this->discount > 0 && $this->qty > 0 ) ? $this->discount / $this->qty : 0;
 
 		// Set options total from saved meta data.
 		if ( ! empty( $this->meta['options'] ) ) {
@@ -61,20 +74,49 @@ class SPC_Order_Item extends SPC_Cart_Item {
 		}
 		$this->options_total = (float) $this->options_total;
 
+		$qty = (float) $this->qty;
+
 		// Calculate subtotal before discount.
-		$this->subtotal = max( 0, ( (float) $this->price + (float) $this->options_total ) * (float) $this->qty );
+		$this->subtotal = max( 0, sunshine_round_amount( ( (float) $this->price + (float) $this->options_total ) * $qty ) );
 
 		// Store original values before discount for display.
 		$this->original_subtotal  = $this->subtotal;
-		$this->original_tax_total = $this->tax * $this->qty;
+		$this->original_tax_total = sunshine_round_amount( $this->tax * $qty );
 
-		// Calculate tax total.
-		$this->tax_total = $this->tax * $this->qty;
+		$saved = isset( $this->meta['line_totals'] ) ? $this->meta['line_totals'] : null;
+		if ( is_array( $saved ) && isset( $saved['total'], $saved['tax_total'] ) ) {
+			if ( isset( $saved['subtotal'] ) ) {
+				$this->subtotal = (float) $saved['subtotal'];
+			}
+			$this->tax_total = (float) $saved['tax_total'];
+			$this->total     = (float) $saved['total'];
+		} else {
+			// Saved before line totals were kept: the line's tax is one item's tax times the quantity.
+			$this->tax_total = $this->original_tax_total;
+			$this->total     = max( 0, sunshine_round_amount( $this->subtotal - $this->discount ) );
 
-		// Calculate taxable total and total after discount.
-		$this->taxable_total = max( 0, $this->subtotal - $this->discount );
-		$this->total         = $this->taxable_total;
+			// With prices that include tax, a line discount includes tax too, so take the tax out
+			// of what was paid instead of taking the whole discount off the price before tax.
+			if ( $this->discount > 0 && $this->price > 0 && $this->tax > 0 && $this->order_prices_include_tax() ) {
+				$rate            = $this->tax / $this->price;
+				$paid            = max( 0, sunshine_round_amount( $this->subtotal + $this->tax_total - $this->discount ) );
+				$this->total     = sunshine_round_amount( $paid / ( 1 + $rate ) );
+				$this->tax_total = sunshine_round_amount( $paid - $this->total );
+			}
+		}
 
+		$this->taxable_total = $this->total;
+
+	}
+
+	/**
+	 * Whether the order this line is on was placed with prices that include tax.
+	 *
+	 * @return bool
+	 */
+	protected function order_prices_include_tax() {
+		$order_id = ! empty( $this->item['order_id'] ) ? intval( $this->item['order_id'] ) : 0;
+		return $order_id && 'yes' === get_post_meta( $order_id, 'price_has_tax', true );
 	}
 
 	public function get_id() {

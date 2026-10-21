@@ -35,7 +35,7 @@ if ( ! empty( $message ) ) {
 					<div class="order-item--extra"><?php echo wp_kses_post( $cart_item->get_extra() ); ?></div>
 				</td>
 				<td class="order-item--total">
-					<?php echo wp_kses_post( $cart_item->get_total_formatted() ); ?>
+					<?php echo wp_kses_post( $cart_item->get_subtotal_formatted() ); ?>
 				</td>
 			</tr>
 		<?php } ?>

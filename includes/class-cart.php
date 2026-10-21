@@ -22,6 +22,13 @@ class SPC_Cart {
 	protected $credits     = 0;
 	protected $total       = 0.00;
 
+	// Works out the money; see SPC_Totals_Calculator.
+	protected $calculator;
+
+	// Whether this setup's totals are worked out. The Free payment method is only saved once
+	// they are: the total read before that leaves out discounts, tax and fees.
+	protected $totals_ready = false;
+
 	// Checkout variables
 	private $active_section;
 	private $fields = array();
@@ -66,7 +73,9 @@ class SPC_Cart {
 			return; // if in admin but not doing ajax, don't bother
 		}
 
-		$this->discount = 0;
+		$this->discount               = 0;
+		$this->discount_taxable_total = 0;
+		$this->totals_ready           = false;
 
 		// Remember the tax context used by this item build. If resolving checkout state below
 		// changes it, items need one corrective rebuild; repeated setup() calls in the same
@@ -157,6 +166,12 @@ class SPC_Cart {
 		}
 
 		// Set payment method
+		// Free is saved while there is nothing left to pay. Start from the method the customer
+		// chose before that, so it and its fee come back if the total goes up again;
+		// set_checkout_fields() saves Free again if there is still nothing to pay.
+		if ( isset( $this->data['payment_method'] ) && 'free' === $this->data['payment_method'] && SPC()->session->get( 'checkout_payment_method_before_free' ) ) {
+			$this->data['payment_method'] = SPC()->session->get( 'checkout_payment_method_before_free' );
+		}
 		if ( array_key_exists( 'payment_method', $this->data ) && SPC()->payment_methods->is_payment_method_allowed( $this->data['payment_method'] ) ) {
 			$this->set_payment_method( $this->data['payment_method'] );
 			$this->payment_method = sunshine_get_payment_method_by_id( $this->data['payment_method'] );
@@ -173,28 +188,7 @@ class SPC_Cart {
 			$this->get_cart_items( true );
 		}
 
-		if ( SPC()->get_option( 'discount_after_tax' ) ) {
-			$this->set_tax();
-			$this->set_discounts();
-		} else {
-			$this->set_discounts();
-			$this->set_tax();
-		}
-
-		// Recalculate the payment method fee now that discounts and tax are set.
-		// A percentage fee is based on get_total( array( 'fees' ) ), but set_payment_method()
-		// runs earlier in setup() (before set_discounts()), so without this the fee would be a
-		// percentage of the pre-discount total and gateways would be sent a higher amount.
-		if ( $this->payment_method ) {
-			$fee = $this->payment_method->get_fee();
-			if ( ! empty( $fee ) ) {
-				$this->add_fee( 'payment_method', $fee['amount'], $fee['name'] );
-			} else {
-				$this->remove_fee( 'payment_method' );
-			}
-		}
-
-		$this->get_total();
+		$this->calculate_totals();
 
 		// TODO: Do the rest on checkout page.
 		$this->set_checkout_fields();
@@ -274,6 +268,98 @@ class SPC_Cart {
 		return $requested_section;
 	}
 
+	/**
+	 * Work out the cart's money, always in the same order of steps (see SPC_Totals_Calculator).
+	 * Each step is where the add-on hooks for it run, the same as they always have.
+	 *
+	 * @return string The total.
+	 */
+	public function calculate_totals() {
+
+		// 1. Lines (their line discounts and tax were worked out as each line was built), and
+		// the chosen shipping, which codes covering shipping need to know.
+		$this->start_calculator();
+
+		// 2. Discount codes.
+		$this->set_discounts();
+
+		// 3. Tax on the items and shipping. Codes come off first unless discounts are after tax.
+		$this->set_tax();
+
+		// 4. Things that pay part of the order once discounts and tax are known, like gift cards.
+		do_action( 'sunshine_cart_after_discounts_and_tax', $this );
+
+		// 5. The payment method's fee, on what is still left to pay.
+		$this->set_payment_method_fee();
+
+		$this->totals_ready = true;
+
+		// 6. Store credit and the total.
+		return $this->get_total();
+
+	}
+
+	/**
+	 * Start a new calculation from the cart's lines and chosen shipping.
+	 */
+	protected function start_calculator() {
+		$this->calculator = new SPC_Totals_Calculator( $this->get_tax_rate() );
+		$this->calculator->set_lines( $this->is_empty() ? array() : $this->get_cart_items(), $this->get_shipping_for_totals() );
+	}
+
+	/**
+	 * The calculator holding this cart's numbers, started if nothing has worked them out yet.
+	 *
+	 * @return SPC_Totals_Calculator
+	 */
+	public function get_calculator() {
+		if ( empty( $this->calculator ) ) {
+			$this->start_calculator();
+		}
+		return $this->calculator;
+	}
+
+	/**
+	 * The chosen shipping as the calculator needs it.
+	 *
+	 * @return array price, tax and taxable.
+	 */
+	public function get_shipping_for_totals() {
+		return array(
+			'price'   => (float) $this->get_shipping(),
+			'tax'     => (float) $this->get_shipping_tax(),
+			'taxable' => ( $this->shipping_method && $this->shipping_method->is_taxable() ),
+		);
+	}
+
+	/**
+	 * What one of the cart's discount codes took off, or null when it is not one of them.
+	 *
+	 * @param int $discount_id Discount id.
+	 * @return array|null amount and taxed (the part off taxed items and shipping).
+	 */
+	public function get_discount_breakdown( $discount_id ) {
+		return $this->get_calculator()->get_code( $discount_id );
+	}
+
+	/**
+	 * The payment method's fee, added once discounts, gift cards and store credit are known.
+	 * Nothing left to pay means no card payment, so no fee.
+	 */
+	protected function set_payment_method_fee() {
+		$this->remove_fee( 'payment_method' );
+		if ( ! $this->payment_method ) {
+			return;
+		}
+		if ( (float) $this->get_total() <= 0 ) {
+			return;
+		}
+		$fee = $this->payment_method->get_fee();
+		if ( ! empty( $fee ) ) {
+			$this->add_fee( 'payment_method', $fee['amount'], $fee['name'] );
+		}
+	}
+
 	// An alternate name for this to make it easier to understand elsewhere
 	public function update() {
 		// SPC()->session->set( 'checkout_data', $this->data );
@@ -298,6 +384,21 @@ class SPC_Cart {
 		}
 		if ( ! empty( $cart ) ) {
 			$this->cart = $cart;
+
+			// Carts saved before hashes were unique can have lines that share one. Lines are
+			// found by hash, so give each repeat its own and save the cart.
+			$hashes      = array();
+			$made_unique = false;
+			foreach ( $this->cart as $key => $item ) {
+				if ( empty( $item['hash'] ) || isset( $hashes[ $item['hash'] ] ) ) {
+					$this->cart[ $key ]['hash'] = md5( uniqid( '', true ) . $item['product_id'] . $item['qty'] );
+					$made_unique                = true;
+				}
+				$hashes[ $this->cart[ $key ]['hash'] ] = true;
+			}
+			if ( $made_unique ) {
+				$this->update_cart();
+			}
 		}
 		return $this->cart;
 	}
@@ -322,6 +423,10 @@ class SPC_Cart {
 				unset( $this->cart[ $key ] );
 				$this->update_cart();
 				SPC()->notices->add( __( 'An item has been removed from your cart because it no longer exists', 'sunshine-photo-cart' ) );
+			} elseif ( ! $cart_item->options_are_offered() ) {
+				unset( $this->cart[ $key ] );
+				$this->update_cart();
+				SPC()->notices->add( __( 'An item has been removed from your cart because one of its options is no longer available', 'sunshine-photo-cart' ) );
 			} else {
 				$final_contents[] = $cart_item;
 			}
@@ -382,6 +487,32 @@ class SPC_Cart {
 			}
 		}
 
+		// The product window sends every text field, typed in or not. An option left empty was not
+		// chosen, so it is not saved on the line (and is not charged for).
+		if ( is_array( $options ) ) {
+			foreach ( $options as $option_id => $option_value ) {
+				if ( '' === $option_value || null === $option_value || array() === $option_value ) {
+					unset( $options[ $option_id ] );
+				}
+			}
+		}
+
+		// Every chosen option has to be sold at this price level. One with no price here is not
+		// offered, and would otherwise be added for free.
+		if ( is_array( $options ) ) {
+			foreach ( $options as $option_id => $option_value ) {
+				if ( ! $product->option_is_offered( $option_id, $option_value, $price_level ) ) {
+					SPC()->log( 'Item not added to cart because option ' . $option_id . ' is not sold at price level ' . $price_level . ' for product ' . $product_id );
+					return false;
+				}
+			}
+		}
+
+		// A photo's line always uses the photo's own gallery, never the one named in the request.
+		if ( $image ) {
+			$gallery_id = $gallery ? $gallery->get_id() : '';
+		}
+
 		$this->get_cart();
 
 		$item = array(
@@ -402,7 +533,8 @@ class SPC_Cart {
 			'discount'    => 0,
 			'comments'    => $comments,
 			'meta'        => $meta,
-			'hash'        => md5( time() . $product_id . $qty ),
+			// Unique per line: two of the same product added in the same second are still two lines.
+			'hash'        => md5( uniqid( '', true ) . $product_id . $qty ),
 		);
 
 		// $item = wp_parse_args( $options, $options_default );
@@ -604,8 +736,9 @@ class SPC_Cart {
 				if ( $discount && $discount->exists() && $discount->is_valid() ) {
 					if ( $discount->is_solo() ) {
 						// If solo discount, unset all others, set this one, and then stop looping.
-						$this->discounts   = array();
-						$this->discounts[] = $discount;
+						$this->discounts      = array();
+						$this->discounts[]    = $discount;
+						$this->discount_names = array( $discount->get_name() );
 						break;
 					}
 					$this->discounts[ $discount->get_id() ] = $discount;
@@ -668,27 +801,15 @@ class SPC_Cart {
 	}
 
 	public function calculate_discount() {
-		$this->discount               = 0;
-		$this->discount_taxable_total = 0;
+		$items      = $this->get_cart_items();
+		$calculator = $this->get_calculator();
 
-		// Set any line item discounts.
-		$items = $this->get_cart_items();
-		foreach ( $items as $item ) {
-			if ( $item->get_discount_total() ) {
-				// $this->discount += $item->get_discount_total();
-			}
-		}
-
-		if ( ! empty( $this->discounts ) ) {
-			foreach ( $this->discounts as $discount ) {
-				// if ( $discount->is_allowed() ) {
-					$this->discount               += $discount->get_total();
-					$this->discount_taxable_total += $discount->get_total( true );
-				// }
-			}
-		}
+		// Line discounts are already in each line's total; this is the discount codes.
+		$this->discount               = $calculator->calculate_discounts( $this->discounts );
+		$this->discount_taxable_total = $calculator->get( 'discount_taxable_total' );
 
 		$this->discount = apply_filters( 'sunshine_cart_discount', $this->discount, $items );
+		$calculator->set_discount( $this->discount );
 
 		return $this->discount;
 	}
@@ -817,10 +938,15 @@ class SPC_Cart {
 		return number_format( round( $this->discount_tax, 2 ), 2, '.', '' );
 	}
 	public function get_discount_formatted() {
-		// Mirror get_subtotal_formatted()/get_shipping_formatted(): show the gross discount in
-		// with-tax mode and the ex-tax (base) discount in without-tax mode so the column balances.
+		// Mirror get_subtotal_formatted()/get_shipping_formatted(): shown with tax, the discount
+		// includes the tax it took off; shown without tax, it doesn't. When prices include tax the
+		// discount already holds its tax, otherwise the tax comes on top.
 		$discount_tax = (float) $this->get_discount_tax();
-		return '-' . sunshine_get_price_to_display( (float) $this->get_discount() - $discount_tax, $discount_tax );
+		$discount     = (float) $this->get_discount();
+		if ( SPC_Totals_Calculator::prices_include_tax() ) {
+			$discount -= $discount_tax;
+		}
+		return '-' . sunshine_get_price_to_display( $discount, $discount_tax );
 	}
 
 	public function get_tax_rate() {
@@ -838,8 +964,10 @@ class SPC_Cart {
 		}
 		*/
 
+		// An empty cart still gets a rate: product prices shown with tax use it, and an empty cart
+		// has nothing to tax anyway.
 		$taxes_enabled = SPC()->get_option( 'taxes_enabled' );
-		if ( $this->is_empty() || ! $taxes_enabled ) {
+		if ( ! $taxes_enabled ) {
 			$this->tax_rate = false;
 			return false;
 		}
@@ -866,16 +994,20 @@ class SPC_Cart {
 		//
 		// Deliberately reads the delivery method rather than calling needs_shipping(): shipping
 		// methods work out their price by asking for the tax rate, so calling anything here
-		// that loads shipping methods would call straight back into this method.
+		// that loads shipping methods would call straight back into this method. For the same
+		// reason the products are read from the raw cart, not the cart items. When nothing left
+		// in the cart is shipped (the print was removed, a download remains), the shipping
+		// address still in the checkout session no longer counts. An empty cart keeps using the
+		// shipping address for the prices it shows.
 		$checkout_data    = $this->get_checkout_data();
-		$is_being_shipped = empty( $this->delivery_method ) || $this->delivery_method->needs_shipping();
+		$is_being_shipped = ( empty( $this->delivery_method ) || $this->delivery_method->needs_shipping() ) && ( $this->is_empty() || $this->has_shipped_products() );
 
 		if ( ! empty( $this->delivery_method ) && $this->delivery_method->is_taxed_at_store() ) {
 
 			// Collected in person: the goods never move, so the sale happens at the store and
 			// the store's own rate applies wherever the customer happens to live.
 			$customer_country  = SPC()->get_option( 'country' );
-			$customer_state    = SPC()->get_option( 'state' );
+			$customer_state    = $this->get_store_state_code();
 			$customer_postcode = SPC()->get_option( 'postcode' );
 
 		} else {
@@ -896,7 +1028,7 @@ class SPC_Cart {
 
 		if ( empty( $customer_country ) && empty( $customer_state ) && empty( $customer_postcode ) && 'store' == SPC()->get_option( 'tax_default_location' ) ) {
 			$customer_country  = SPC()->get_option( 'country' );
-			$customer_state    = SPC()->get_option( 'state' );
+			$customer_state    = $this->get_store_state_code();
 			$customer_postcode = SPC()->get_option( 'postcode' );
 		}
 
@@ -916,7 +1048,8 @@ class SPC_Cart {
 
 		foreach ( $tax_rates as $tax_rate ) {
 
-			if ( empty( $tax_rate['rate'] ) ) {
+			// Only a rate box left blank is skipped. A 0% row is a real rate that exempts a place.
+			if ( ! isset( $tax_rate['rate'] ) || '' === trim( (string) $tax_rate['rate'] ) ) {
 				continue;
 			}
 
@@ -928,8 +1061,10 @@ class SPC_Cart {
 			} else
 			*/
 			if ( ! empty( $tax_rate['postcode'] ) ) {
+				// A blank state is "Any state", which is also how countries without states
+				// (the UK and others) save their postcode rates.
 				if ( sunshine_postcode_matches( $customer_postcode, $tax_rate['postcode'] ) ) {
-					if ( ! empty( $tax_rate['state'] ) && $customer_state == $tax_rate['state'] ) {
+					if ( empty( $tax_rate['state'] ) || $customer_state == $tax_rate['state'] ) {
 						if ( ! empty( $tax_rate['country'] ) && $customer_country == $tax_rate['country'] ) {
 							$this->tax_rate = $tax_rate;
 							break;
@@ -961,6 +1096,50 @@ class SPC_Cart {
 
 	}
 
+	/**
+	 * Whether anything in the cart is a product that gets shipped (not a download, a gift card...).
+	 *
+	 * Reads the saved cart lines rather than the cart items, because building cart items asks
+	 * for the tax rate.
+	 *
+	 * @return bool
+	 */
+	protected function has_shipped_products() {
+		foreach ( (array) $this->cart as $item ) {
+			if ( empty( $item['product_id'] ) || empty( $item['qty'] ) ) {
+				continue;
+			}
+			$product = sunshine_get_product( $item['product_id'], ! empty( $item['price_level'] ) ? $item['price_level'] : '' );
+			if ( $product && $product->exists() && $product->needs_shipping() ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * The store's state from Sunshine > Settings > General as a state code.
+	 *
+	 * That setting is a free text box, so owners often type the name ("Colorado") while tax
+	 * rates save the code ("CO"). A name found in the country's state list becomes its code;
+	 * anything else is used as typed.
+	 *
+	 * @return string
+	 */
+	protected function get_store_state_code() {
+		$state  = trim( (string) SPC()->get_option( 'state' ) );
+		$states = SPC()->countries->get_states( SPC()->get_option( 'country' ) );
+		if ( '' === $state || empty( $states ) || isset( $states[ $state ] ) ) {
+			return $state;
+		}
+		foreach ( $states as $code => $name ) {
+			if ( 0 === strcasecmp( $state, $name ) || 0 === strcasecmp( $state, (string) $code ) ) {
+				return $code;
+			}
+		}
+		return $state;
+	}
+
 	public function set_tax() {
 
 		$this->tax          = 0;
@@ -968,94 +1147,27 @@ class SPC_Cart {
 		$this->tax_rate     = $this->get_tax_rate();
 
 		if ( ! $this->tax_rate ) {
+			$this->get_calculator()->set_tax( 0 );
 			return;
 		}
 
-		$price_has_tax = SPC()->get_option( 'price_has_tax' );
-
-		// When prices include tax, calculate tax from the discounted total if applicable.
-		if ( 'yes' === $price_has_tax ) {
-
-			$contents = $this->get_cart_items();
-
-			if ( $this->discount_taxable_total > 0 && $this->tax_rate ) {
-				// Recalculate tax on the discounted total for taxable items.
-				$taxable_items_total = 0;
-				foreach ( $contents as $item ) {
-					if ( $item->is_taxable() ) {
-						$taxable_items_total += $item->get_total() + $item->get_tax_total();
-					}
-				}
-				$discounted      = max( $taxable_items_total - $this->discount_taxable_total, 0 );
-				$discounted_base = round( $discounted / ( $this->tax_rate['rate'] + 1 ), 2 );
-				$this->tax       = $discounted - $discounted_base;
-
-				// The discount itself is tax-inclusive, so split out its tax portion.
-				// This lets gateways (PayPal) and ex-tax displays reconcile the breakdown.
-				$discount_base      = round( $this->discount_taxable_total / ( $this->tax_rate['rate'] + 1 ), 2 );
-				$this->discount_tax = $this->discount_taxable_total - $discount_base;
-			} else {
-				// No cart-level discount, sum item taxes.
-				foreach ( $contents as $item ) {
-					$this->tax += $item->get_tax_total();
-				}
-			}
-
-			// Add shipping tax.
-			if ( $this->shipping_method && $this->shipping_method->is_taxable() ) {
-				$this->tax += $this->shipping_method->get_tax();
-			}
-		} else {
-			// When prices don't include tax, calculate tax on taxable amounts.
-			$contents      = $this->get_cart_items();
-			$taxable_total = 0;
-
-			foreach ( $contents as $item ) {
-				$this->tax += $item->get_tax_total();
-			}
-
-			// Reduce tax by the discount amount applied to taxable items.
-			if ( $this->discount_taxable_total > 0 ) {
-				$this->tax -= round( $this->discount_taxable_total * $this->tax_rate['rate'], 2 );
-				if ( $this->tax < 0 ) {
-					$this->tax = 0;
-				}
-			}
-
-			// Is selected shipping taxable?
-			$this->shipping_tax = 0;
-			if ( $this->shipping_method && $this->shipping_method->is_taxable() ) {
-				$taxable_total += $this->shipping_method->get_price();
-			}
-
-			if ( $this->discount ) {
-				$taxable_total -= $this->discount_taxable_total;
-			}
-
-			if ( $taxable_total < 0 ) {
-				$taxable_total = 0;
-			}
-
-			$taxable_total = apply_filters( 'sunshine_cart_taxable_total', $taxable_total, $this->tax_rate );
-
-			if ( $taxable_total ) {
-				$this->tax += $taxable_total * $this->tax_rate['rate'];
-				$this->tax  = round( $this->tax, 2 );
-			}
-		}
+		$calculator         = $this->get_calculator();
+		$this->tax          = $calculator->calculate_tax();
+		$this->discount_tax = $calculator->get( 'discount_tax' );
 
 		$this->tax = apply_filters( 'sunshine_cart_tax', $this->tax, $this->tax_rate );
 		if ( empty( $this->tax ) ) {
 			$this->tax = 0;
 		}
+		$calculator->set_tax( $this->tax );
 
 		return $this->tax;
 
 	}
 
 	public function get_tax() {
-		if ( $this->tax > 0.01 ) {
-			return number_format( round( $this->tax, 2 ), 2, '.', '' );
+		if ( sunshine_round_amount( $this->tax ) > 0 ) {
+			return number_format( sunshine_round_amount( $this->tax ), 2, '.', '' );
 		}
 		return 0;
 	}
@@ -1095,13 +1207,8 @@ class SPC_Cart {
 		if ( ! $this->use_credits() ) {
 			return 0;
 		}
-		$total_credits               = SPC()->customer->get_credits();
-		$order_total_without_credits = $this->get_total( array( 'credits' ) );
-		$credits_applied             = $total_credits;
-		if ( $total_credits > $order_total_without_credits ) {
-			$credits_applied = $order_total_without_credits;
-		}
-		$this->credits = $credits_applied;
+		// As much credit as there is, never more than is left to pay.
+		$this->credits = SPC_Totals_Calculator::credits_applied( SPC()->customer->get_credits(), $this->get_total( array( 'credits' ) ) );
 		return $this->credits;
 	}
 	public function get_credits_applied_formatted() {
@@ -1220,6 +1327,21 @@ class SPC_Cart {
 
 	public function get_payment_method() {
 		return $this->payment_method;
+	}
+
+	/**
+	 * The message for the customer when an amount is under a payment method's minimum, or ''.
+	 *
+	 * @param string $payment_method_id Payment method ID.
+	 * @param float  $amount            The amount to pay.
+	 * @return string
+	 */
+	public function get_payment_minimum_error( $payment_method_id, $amount ) {
+		$payment_method = $payment_method_id ? sunshine_get_payment_method_by_id( $payment_method_id ) : false;
+		if ( ! $payment_method ) {
+			return '';
+		}
+		return $payment_method->get_minimum_amount_error( $amount );
 	}
 
 	public function set_payment_method( $method ) {
@@ -1383,78 +1505,12 @@ class SPC_Cart {
 	}
 
 	public function get_total( $exclude = array() ) {
-		$total = 0;
 
-		$totals = array(
-			'subtotal'  => 0,
-			'discounts' => 0,
-			'shipping'  => 0,
-			'tax'       => 0,
-			'fees'      => 0,
-		);
-
-		// When prices include tax, calculate total differently.
-		$price_has_tax = SPC()->get_option( 'price_has_tax' );
-
-		if ( 'yes' === $price_has_tax && ! in_array( 'subtotal', $exclude ) ) {
-			// For prices with tax, sum item totals (which already have line-item discounts applied).
-			$cart_items  = $this->get_cart_items();
-			$items_total = 0;
-
-			if ( ! empty( $cart_items ) ) {
-				foreach ( $cart_items as $item ) {
-					$items_total += $item->get_total() + $item->get_tax_total();
-				}
-			}
-
-			$totals['subtotal'] = $items_total;
-
-			// Apply cart-level discounts (discount codes).
-			// Note: Line-item discounts are already reflected in the subtotal.
-			if ( ! in_array( 'discounts', $exclude ) ) {
-				$cart_level_discounts = (float) $this->get_discount();
-				if ( $cart_level_discounts > 0 ) {
-					$totals['discounts'] = -$cart_level_discounts;
-				}
-			}
-
-			// When prices include tax, add shipping with its tax.
-			if ( ! in_array( 'shipping', $exclude ) ) {
-				$shipping           = (float) $this->get_shipping();
-				$shipping_tax       = (float) $this->get_shipping_tax();
-				$totals['shipping'] = $shipping + $shipping_tax;
-			}
-		} else {
-			// Logic for prices without tax.
-			if ( ! in_array( 'subtotal', $exclude ) ) {
-				$subtotal           = (float) $this->get_subtotal();
-				$totals['subtotal'] = $subtotal;
-			}
-
-			// Apply cart-level discounts (discount codes).
-			// Note: Line-item discounts are already reflected in the subtotal.
-			if ( ! in_array( 'discounts', $exclude ) ) {
-				$cart_level_discounts = (float) $this->get_discount();
-				if ( $cart_level_discounts > 0 ) {
-					$totals['discounts'] = -$cart_level_discounts;
-				}
-			}
-
-			if ( ! in_array( 'tax', $exclude ) ) {
-				$tax           = (float) $this->get_tax();
-				$totals['tax'] = $tax;
-			}
-
-			// When prices don't include tax, add shipping separately.
-			if ( ! in_array( 'shipping', $exclude ) ) {
-				$shipping           = (float) $this->get_shipping();
-				$totals['shipping'] = $shipping;
-			}
-		}
+		// Subtotal, discount codes, shipping and tax, as SPC_Totals_Calculator worked them out.
+		$totals = $this->get_calculator()->get_parts( (array) $exclude );
 
 		if ( ! in_array( 'fees', $exclude ) ) {
-			$fees           = (float) $this->get_fees_total();
-			$totals['fees'] = $fees;
+			$totals['fees'] = (float) $this->get_fees_total();
 		}
 
 		if ( ! in_array( 'credits', $exclude ) ) {
@@ -1464,12 +1520,10 @@ class SPC_Cart {
 			}
 		}
 
-		$total = array_sum( $totals );
-
-		$total = max( $total, 0 );
+		$total = SPC_Totals_Calculator::add_up( $totals );
 
 		$this->total = apply_filters( 'sunshine_get_cart_total', $total, $this );
-		$this->total = number_format( round( $this->total, 2 ), 2, '.', '' );
+		$this->total = number_format( sunshine_round_amount( $this->total ), 2, '.', '' );
 
 		return $this->total;
 	}
@@ -2055,7 +2109,15 @@ class SPC_Cart {
 			$submit_label = sprintf( __( 'Submit Order & Pay %s', 'sunshine-photo-cart' ), '<span class="sunshine-total">' . SPC()->cart->get_total_formatted() . '</span>' );
 		} else {
 			$submit_label = __( 'Submit Order for Free', 'sunshine-photo-cart' );
-			$this->set_checkout_data_item( 'payment_method', 'free' );
+			// Only once the totals are worked out: before that the total can read 0 when it isn't.
+			if ( $this->totals_ready ) {
+				// Remember the customer's own choice so setup() can bring it back.
+				$chosen = (string) $this->get_checkout_data_item( 'payment_method' );
+				if ( 'free' !== $chosen ) {
+					SPC()->session->set( 'checkout_payment_method_before_free', $chosen );
+				}
+				$this->set_checkout_data_item( 'payment_method', 'free' );
+			}
 			if ( $this->credits == 0 ) {
 				$fields['payment']['name'] = '';
 			}
@@ -2327,6 +2389,12 @@ class SPC_Cart {
 				$value = '';
 			}
 
+			// Only keep a payment method this cart is offered; a request can name any method.
+			if ( 'payment_method' === $field['id'] && '' !== $value && ! array_key_exists( $value, (array) sunshine_get_allowed_payment_methods() ) ) {
+				SPC()->log( 'Checkout ignored a payment method that is not allowed: ' . sanitize_key( $value ) );
+				$value = '';
+			}
+
 			// Save this value to checkout session data (even if invalid, so when we reload form it can prepopulate still)
 			if ( $field['type'] != 'password' ) {
 				$this->set_checkout_data_item( $field['id'], $value );
@@ -2382,6 +2450,15 @@ class SPC_Cart {
 			}
 			if ( ! $has_ship_option ) {
 				$this->add_error( __( 'Sorry, shipping is not available to the address you entered. Please double check the address or try a different shipping address.', 'sunshine-photo-cart' ) );
+			}
+		}
+
+		// A payment method with a minimum can't take an order under it, so say so here rather
+		// than leaving the customer with a payment form that never loads.
+		if ( 'payment' === $this->active_section ) {
+			$minimum_error = $this->get_payment_minimum_error( $this->get_checkout_data_item( 'payment_method' ), $this->get_total() );
+			if ( $minimum_error ) {
+				$this->add_error( $minimum_error );
 			}
 		}
 
@@ -2585,11 +2662,54 @@ class SPC_Cart {
 			wp_send_json_error();
 		}
 
+		// A cart that needs an account (a session fee's credit and free prints are kept on one)
+		// can't be paid for by a guest, or what was paid for goes to nobody. Send the customer
+		// back to the Contact step to make an account or log in.
+		if ( ! is_user_logged_in() && $this->needs_account() ) {
+			SPC()->log( 'Blocked order init: cart needs an account and nobody is logged in' );
+			$this->uncomplete_checkout_section( 'contact' );
+			$this->add_error( __( 'Please log in or create an account to complete this order', 'sunshine-photo-cart' ) );
+			wp_send_json_error();
+		}
+
+		// Checked before the order is saved or any payment form takes the customer's money.
+		$minimum_error = $this->get_payment_minimum_error( $payment_method, $this->get_total() );
+		if ( $minimum_error ) {
+			SPC()->log( 'Blocked order init: total is under the minimum for ' . sanitize_key( $payment_method ) );
+			$this->add_error( $minimum_error );
+			wp_send_json_error();
+		}
+
 		$order_id = SPC()->session->get( 'checkout_order_id' );
+		if ( $order_id ) {
+			// A pending order whose payment was already started can still have that payment open
+			// on another site (the customer left Mollie's page without coming back, or PayPal's
+			// notice hasn't arrived yet). Placing an order again starts a new one, so that open
+			// payment can never pay this order a second time. A cancelled or failed payment is
+			// reused, and so is a pending order no payment was started for.
+			$saved   = sunshine_get_order( $order_id );
+			$started = ( $saved && $saved->exists() ) ? (string) $saved->get_meta_value( 'payment_started' ) : '';
+			if ( $started && 'pending' === $saved->get_status() ) {
+				SPC()->log( 'Order ' . $order_id . ' is waiting on a ' . $started . ' payment, starting a new order' );
+				$order_id = '';
+			}
+		}
 		if ( $order_id ) {
 			$order = sunshine_get_order( $order_id );
 			if ( $order && $order->exists() && ! $order->is_paid() ) {
 				SPC()->log( 'Order already exists during init order so using existing order to update: ' . $order_id );
+				// A second try after a declined or cancelled payment starts the order over: waiting
+				// for payment again, and dated now rather than when the first try was made.
+				if ( in_array( $order->get_status(), array( 'failed', 'cancelled' ), true ) ) {
+					$order->set_status( 'pending', __( 'Customer is trying to pay again', 'sunshine-photo-cart' ) );
+				}
+				wp_update_post(
+					array(
+						'ID'            => $order->get_id(),
+						'post_date'     => current_time( 'mysql' ),
+						'post_date_gmt' => current_time( 'mysql', 1 ),
+					)
+				);
 			} elseif ( $order && $order->exists() && $order->get_status() != 'pending' ) {
 				SPC()->log( 'Order is not the expected status of pending so something went wrong during checkout process: ' . $order->get_status() );
 				$url = $order->get_received_permalink();
@@ -2640,7 +2760,7 @@ class SPC_Cart {
 			}
 		}
 
-		$order->set_cart( $this->get_cart() );
+		$order->set_cart( $this->get_cart_with_line_totals() );
 		$order->set_subtotal( $this->get_subtotal() );
 		$order->set_subtotal_tax( $this->get_subtotal_tax() );
 		$order->set_shipping( $this->get_shipping() );
@@ -2678,6 +2798,10 @@ class SPC_Cart {
 		}
 		if ( ! empty( $this->shipping_method ) ) {
 			$order->set_shipping_method( $this->shipping_method->get_instance_id() );
+		} else {
+			// Saving the order again with nothing left to ship drops the first try's method.
+			$order->update_meta_value( 'shipping_method', '' );
+			$order->update_meta_value( 'shipping_method_name', '' );
 		}
 		if ( ! empty( $this->payment_method ) ) {
 			$order->set_payment_method( $this->payment_method->get_id() );
@@ -2737,6 +2861,38 @@ class SPC_Cart {
 		wp_send_json_error();
 	}
 
+	/**
+	 * The saved cart with what each line costs, so the order keeps what was charged for each
+	 * line (SPC_Order::add_item()) and a lost line can be put back the same way later.
+	 *
+	 * @return array
+	 */
+	public function get_cart_with_line_totals() {
+		$cart  = $this->get_cart();
+		$lines = array();
+		foreach ( (array) $this->get_cart_items() as $cart_item ) {
+			if ( $cart_item->get_hash() ) {
+				$lines[ $cart_item->get_hash() ] = $cart_item;
+			}
+		}
+		foreach ( (array) $cart as $key => $item ) {
+			if ( empty( $item['hash'] ) || empty( $lines[ $item['hash'] ] ) ) {
+				continue;
+			}
+			$line                        = $lines[ $item['hash'] ];
+			$cart[ $key ]['line_totals'] = array(
+				'price'     => $line->get_price(),
+				'tax'       => $line->get_tax(),
+				'discount'  => $line->get_discount(),
+				'subtotal'  => $line->get_subtotal(),
+				// A line without a line discount costs its subtotal (see SPC_Totals_Calculator::set_lines()).
+				'total'     => ( $line->get_discount() > 0 ) ? $line->get_total() : $line->get_subtotal(),
+				'tax_total' => $line->get_tax_total(),
+			);
+		}
+		return $cart;
+	}
+
 	public function process_order() {
 
 		$order_id = SPC()->session->get( 'checkout_order_id' );
@@ -2776,9 +2932,33 @@ class SPC_Cart {
 			return false;
 		}
 
+		// A method this cart isn't offered (one turned off, limited to admins, or only for free
+		// orders) can still be named in a crafted request, so check the order's method here.
+		if ( $order->get_total() > 0 && ! array_key_exists( $order->get_payment_method(), (array) sunshine_get_allowed_payment_methods() ) ) {
+			SPC()->log( 'Blocked payment: payment method ' . $order->get_payment_method() . ' is not allowed for order ' . $order->get_id() );
+			$this->add_error( __( 'Please select a payment method before completing your order.', 'sunshine-photo-cart' ) );
+			return false;
+		}
+
+		// Store credit, gift cards and limited discount codes can be used up by another order
+		// between saving this order and paying for it. Check before any payment is taken.
+		$this->check_order_still_covered( $order );
+		$minimum_error = $this->get_payment_minimum_error( $order->get_payment_method(), $order->get_total() );
+		if ( $minimum_error ) {
+			SPC()->log( 'Blocked payment: order ' . $order->get_id() . ' total is under the minimum for ' . $order->get_payment_method() );
+			$this->add_error( $minimum_error );
+		}
+		do_action( 'sunshine_checkout_before_payment', $order );
+		if ( $this->has_errors() ) {
+			SPC()->log( 'Blocked payment: ' . json_encode( $this->get_errors() ) );
+			return false;
+		}
+
 		// do_action( 'sunshine_checkout_process_payment', $this );
 		if ( $this->get_checkout_data_item( 'payment_method' ) ) {
 			SPC()->log( 'Processing payment action: ' . $this->get_checkout_data_item( 'payment_method' ) );
+			// Remember which service was asked to take this order's payment (see init_order()).
+			$order->update_meta_value( 'payment_started', $this->get_checkout_data_item( 'payment_method' ) );
 			do_action( 'sunshine_checkout_process_payment_' . $this->get_checkout_data_item( 'payment_method' ), $order );
 		} elseif ( $order->get_total() > 0 ) {
 			$this->add_error( __( 'No payment method', 'sunshine-photo-cart' ) );
@@ -2798,9 +2978,6 @@ class SPC_Cart {
 			SPC()->log( 'Not doing post process in process_order' );
 		}
 
-		SPC()->log( 'Doing sunshine_checkout_create_order' );
-		do_action( 'sunshine_checkout_create_order', $order, $data );
-
 		if ( apply_filters( 'sunshine_order_clear_cart', true, $order ) ) {
 			// Clear checkout data from session data.
 			SPC()->session->set( 'checkout_data', '' );
@@ -2816,7 +2993,17 @@ class SPC_Cart {
 
 	}
 
-	public function post_process_order( $order ) {
+	/**
+	 * Finish an order once it is paid: status, store credit, code counts, the order created
+	 * step (gift cards, bookings, stock) and the receipt. Runs once per order.
+	 *
+	 * @param SPC_Order $order      The order.
+	 * @param bool      $set_status False when the status was already chosen, like an admin
+	 *                              marking an order paid by hand.
+	 * @return bool True when this call finished the order, false when it had already been
+	 *              finished (by a payment notice running at the same time, for example).
+	 */
+	public function post_process_order( $order, $set_status = true ) {
 		global $wpdb;
 
 		// Checkout and a payment webhook can both try to finish the same order, sometimes at the
@@ -2832,24 +3019,39 @@ class SPC_Cart {
 			if ( $locked ) {
 				$wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock_name ) );
 			}
-			return;
+			return false;
 		}
 
 		SPC()->log( 'Post processing order: ' . $order->get_id() );
 
 		// Set order status.
 		$order_status = '';
-		$order_status = apply_filters( 'sunshine_create_order_status', $order_status, $order );
+		if ( $set_status ) {
+			$order_status = apply_filters( 'sunshine_create_order_status', $order_status, $order );
+		}
 		if ( ! empty( $order_status ) ) {
 			$order->set_status( $order_status, 'Checkout is setting status to ' . $order_status );
 		}
 
-		if ( $order->get_credits() > 0 ) {
-			SPC()->customer->decrease_credits( $order->get_credits() );
-			SPC()->log( 'Decreasing customer credits by ' . $order->get_credits() );
+		// The order's own customer, not whoever is making this request: a payment service's
+		// notice finishes orders with nobody logged in, and an admin can finish one too.
+		$customer = $order->get_customer();
+
+		if ( $order->get_credits() > 0 && $customer ) {
+			// Spent elsewhere while this order was being paid on another site: the payment is
+			// already taken, so say plainly on the order how much store credit was missing.
+			$credits_taken = min( (float) $order->get_credits(), $customer->get_credits() );
+			if ( $credits_taken < (float) $order->get_credits() ) {
+				/* translators: 1: store credit the order used, 2: store credit the customer had left */
+				$order->add_log( sprintf( __( 'This order used %1$s of store credit, but the customer only had %2$s left when it was paid. The difference was not collected.', 'sunshine-photo-cart' ), sunshine_price( $order->get_credits() ), sunshine_price( $credits_taken ) ) );
+				// The order says what really came off the account, so a refund or cancel gives
+				// back only that.
+				$order->set_credits( $credits_taken );
+			}
+			$customer->decrease_credits( $credits_taken );
+			SPC()->log( 'Decreasing customer ' . $customer->get_id() . ' credits by ' . $credits_taken );
 		}
 
-		$customer = $order->get_customer();
 		if ( $customer ) {
 			SPC()->log( 'Recalculating customer stats' );
 			$customer->recalculate_stats();
@@ -2860,13 +3062,21 @@ class SPC_Cart {
 			SPC()->log( 'Processing discount usage from order: ' . $order->get_id() );
 			foreach ( $order->get_discounts() as $discount_code ) {
 				$discount = sunshine_get_discount_by_code( $discount_code );
+				// The code can be deleted while the customer pays. The order is still paid, so
+				// finish it and skip counting a code that no longer exists.
+				if ( empty( $discount ) || ! $discount->exists() ) {
+					SPC()->log( 'Discount ' . $discount_code . ' on order ' . $order->get_id() . ' no longer exists, use not counted' );
+					continue;
+				}
 				$discount->increment_use_count();
 				$discount->increment_use_count_by( $order->get_email() );
-				if ( is_user_logged_in() ) {
-					$discount->increment_use_count_by( get_current_user_id() );
+				if ( $order->get_customer_id() ) {
+					$discount->increment_use_count_by( $order->get_customer_id() );
 				}
 			}
 		}
+
+		$this->order_created( $order );
 
 		if ( apply_filters( 'sunshine_checkout_allow_order_notify', true, $order ) ) {
 			SPC()->log( 'Notifying order: ' . $order->get_id() );
@@ -2880,6 +3090,50 @@ class SPC_Cart {
 			$wpdb->query( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock_name ) );
 		}
 
+		return true;
+	}
+
+	/**
+	 * Run sunshine_checkout_create_order for an order, once.
+	 *
+	 * Add-ons use it to take gift card balances, make bought gift cards, book sessions and lower
+	 * stock. It runs when the order is finished, which for payments made on another site is a
+	 * later request with no checkout session, so the order's saved checkout data is passed then.
+	 */
+	public function order_created( $order ) {
+		if ( $order->get_meta_value( 'order_created_done' ) ) {
+			return;
+		}
+		$order->update_meta_value( 'order_created_done', current_time( 'timestamp' ) );
+		$data = ( (int) SPC()->session->get( 'checkout_order_id' ) === (int) $order->get_id() ) ? $this->get_checkout_data() : array();
+		if ( empty( $data ) ) {
+			$data = (array) $order->get_meta_data();
+		}
+		SPC()->log( 'Doing sunshine_checkout_create_order for order ' . $order->get_id() );
+		do_action( 'sunshine_checkout_create_order', $order, $data );
+	}
+
+	/**
+	 * Add an error when store credit or a discount code on the order has been used up since
+	 * the order was saved, for example by an order placed in another browser tab.
+	 */
+	private function check_order_still_covered( $order ) {
+		$credits = (float) $order->get_credits();
+		if ( $credits > 0 ) {
+			$customer = $order->get_customer();
+			if ( ! $customer || $customer->get_credits() < $credits ) {
+				SPC()->log( 'Blocked payment: order ' . $order->get_id() . ' uses ' . $credits . ' credits the customer no longer has' );
+				$this->add_error( __( 'Your store credit has changed. Please review your order and try again.', 'sunshine-photo-cart' ) );
+			}
+		}
+		foreach ( array_filter( (array) $order->get_discounts() ) as $discount_code ) {
+			$discount = function_exists( 'sunshine_get_discount_by_code' ) ? sunshine_get_discount_by_code( $discount_code ) : false;
+			if ( $discount && $discount->exists() && $discount->get_max_uses() && $discount->get_use_count() >= $discount->get_max_uses() ) {
+				SPC()->log( 'Blocked payment: discount ' . $discount_code . ' has no uses left for order ' . $order->get_id() );
+				/* translators: %s is the discount code */
+				$this->add_error( sprintf( __( 'Discount "%s" can no longer be used. Please review your order and try again.', 'sunshine-photo-cart' ), $discount_code ) );
+			}
+		}
 	}
 
 	public function get_active_section() {
@@ -2897,6 +3151,7 @@ class SPC_Cart {
 				SPC()->log( 'Checkout account check skipped - too many attempts with emails that already have an account' );
 				if ( ! SPC()->get_option( 'allow_guest_checkout' ) ) {
 					$this->add_error( __( 'Too many signup attempts, please try again later', 'sunshine-photo-cart' ) );
+					$this->uncomplete_checkout_section( 'contact' );
 					wp_send_json_error();
 				}
 				return;
@@ -2908,6 +3163,7 @@ class SPC_Cart {
 				sunshine_add_rate_limit_attempt( 'signup_existing_email', HOUR_IN_SECONDS );
 				SPC()->log( 'User account already exists with that email address' );
 				$this->add_error( __( 'User account already exists with that email address - please login to continue', 'sunshine-photo-cart' ) );
+				$this->uncomplete_checkout_section( 'contact' );
 				wp_send_json_error();
 			}
 
@@ -2917,7 +3173,7 @@ class SPC_Cart {
 				SPC()->log( 'Creating customer at checkout' );
 
 				$args    = array(
-					'user_login' => $data['email'],
+					'user_login' => sunshine_new_customer_username( $data['email'] ),
 					'user_email' => $data['email'],
 					'user_pass'  => $data['password'],
 					'first_name' => $data['first_name'],
@@ -2928,6 +3184,7 @@ class SPC_Cart {
 				if ( is_wp_error( $user_id ) ) {
 					SPC()->log( 'Error creating user: ' . $user_id->get_error_message() );
 					$this->add_error( $user_id->get_error_message() );
+					$this->uncomplete_checkout_section( 'contact' );
 					wp_send_json_error();
 				}
 
@@ -2940,6 +3197,7 @@ class SPC_Cart {
 				if ( is_wp_error( $login ) ) {
 					SPC()->log( 'Error logging in user: ' . $login->get_error_message() );
 					$this->add_error( $login->get_error_message() );
+					$this->uncomplete_checkout_section( 'contact' );
 					wp_send_json_error();
 				}
 

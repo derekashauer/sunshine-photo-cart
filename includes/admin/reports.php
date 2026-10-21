@@ -10,7 +10,7 @@ function sunshine_reports_page() {
 			'order'          => 'ASC',
 		),
 	);
-	$init_date  = ( ! empty( $init_order ) ) ? $init_order[0]->get_date( 'Y-m-d' ) : date( 'Y-m-d', SPC()->get_option( 'install_time' ) );
+	$init_date  = ( ! empty( $init_order ) ) ? $init_order[0]->get_date( 'Y-m-d' ) : wp_date( 'Y-m-d', SPC()->get_option( 'install_time' ) );
 
 	$available_reports = array(
 		'orders'    => __( 'Orders', 'sunshine-photo-cart' ),
@@ -31,34 +31,36 @@ function sunshine_reports_page() {
 		}
 	}
 
+	// Order dates are saved in the store's time zone, so the date buttons use the store's today.
+	$today            = current_time( 'Y-m-d' );
 	$durations        = apply_filters(
 		'sunshine_reports_date_formats',
 		array(
 			'day'   => array(
 				'label'  => __( 'Day', 'sunshine-photo-cart' ),
-				'after'  => date( 'Y-m-d' ),
-				'before' => date( 'Y-m-d' ),
+				'after'  => $today,
+				'before' => $today,
 			),
 			'week'  => array(
 				'label'  => __( 'Week', 'sunshine-photo-cart' ),
-				'after'  => date( 'Y-m-d', strtotime( '-7 days' ) ),
-				'before' => date( 'Y-m-d' ),
+				'after'  => wp_date( 'Y-m-d', strtotime( '-7 days' ) ),
+				'before' => $today,
 			),
 			'month' => array(
 				'label'  => __( 'Month', 'sunshine-photo-cart' ),
-				'after'  => date( 'Y-m-d', strtotime( '-1 months' ) ),
-				'before' => date( 'Y-m-d' ),
+				'after'  => wp_date( 'Y-m-d', strtotime( '-1 months' ) ),
+				'before' => $today,
 			),
 			'year'  => array(
 				'label'  => __( 'Year', 'sunshine-photo-cart' ),
 				'active' => '',
-				'after'  => date( 'Y-m-d', strtotime( '-1 years' ) ),
-				'before' => date( 'Y-m-d' ),
+				'after'  => wp_date( 'Y-m-d', strtotime( '-1 years' ) ),
+				'before' => $today,
 			),
 			'all'   => array(
 				'label'  => __( 'All time', 'sunshine-photo-cart' ),
 				'after'  => $init_date,
-				'before' => date( 'Y-m-d' ),
+				'before' => $today,
 			),
 		)
 	);
@@ -94,8 +96,8 @@ function sunshine_reports_page() {
 						<input type="hidden" name="page" value="sunshine-reports" />
 						<input type="hidden" name="report" value="<?php echo esc_attr( $report ); ?>" />
 						<input type="hidden" name="duration" value="custom" />
-							<input type="date" name="after" value="<?php echo esc_attr( date( 'Y-m-d', strtotime( $current_after ) ) ); ?>" min="<?php echo esc_attr( $init_date ); ?>" max="<?php echo esc_attr( date( 'Y-m-d' ) ); ?>" />
-						<input type="date" name="before" value="<?php echo esc_attr( date( 'Y-m-d', strtotime( $current_before ) ) ); ?>" min="<?php echo esc_attr( $init_date ); ?>" max="<?php echo esc_attr( date( 'Y-m-d' ) ); ?>" />
+							<input type="date" name="after" value="<?php echo esc_attr( date( 'Y-m-d', strtotime( $current_after ) ) ); ?>" min="<?php echo esc_attr( $init_date ); ?>" max="<?php echo esc_attr( $today ); ?>" />
+						<input type="date" name="before" value="<?php echo esc_attr( date( 'Y-m-d', strtotime( $current_before ) ) ); ?>" min="<?php echo esc_attr( $init_date ); ?>" max="<?php echo esc_attr( $today ); ?>" />
 						<input type="submit" value="<?php esc_attr_e( 'Filter', 'sunshine-photo-cart' ); ?>" class="button" />
 					</form>
 				</div>
@@ -203,7 +205,12 @@ function sunshine_report_orders_display( $current_duration, $current_after, $cur
 				break;
 		}
 
-		$period = new DatePeriod( new DateTime( $current_after ), $interval, new DateTime( $current_before ) );
+		$period_start = new DateTime( $current_after );
+		if ( 'Y-m' === $key_format ) {
+			// One point a month: step from the 1st, so every month up to the last one is there.
+			$period_start->modify( 'first day of this month' );
+		}
+		$period = new DatePeriod( $period_start, $interval, new DateTime( $current_before ) );
 		foreach ( $period as $dt ) {
 			$paid_labels[ $dt->format( $key_format ) ] = $dt->format( $display_format );
 			$paid_values[ $dt->format( $key_format ) ] = 0;

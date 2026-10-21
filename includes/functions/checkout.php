@@ -284,6 +284,7 @@ function sunshine_checkout_scripts() {
 			var sunshine_selected_payment_method = $( 'input[name="payment_method"]:checked' ).val();
 			sunshine_checkout_updating();
 			$( '.sunshine--checkout--payment-method--extra' ).hide();
+			$( '#sunshine--checkout--payment-method--error' ).remove();
 			$.ajax({
 				type: 'POST',
 				url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
@@ -294,10 +295,16 @@ function sunshine_checkout_scripts() {
 				},
 				success: function( result, textStatus, XMLHttpRequest ) {
 
-					if ( result.success ) {
+					if ( result.success && result.data && result.data.error ) {
+						// This way to pay can't take an order this small, so show why instead of its payment form.
+						$( '#sunshine--form--field--payment_method' ).after( $( '<div id="sunshine--checkout--payment-method--error" class="sunshine-notice error"></div>' ).html( result.data.error ) );
+					} else if ( result.success ) {
 						$( '#sunshine--checkout--payment-method--extra--' + sunshine_selected_payment_method ).show();
 						$( '#sunshine--checkout input, #sunshine--checkout select' ).trigger( 'conditional' );
 						$( document ).trigger( 'sunshine_checkout_payment_change', [ sunshine_selected_payment_method ] );
+					}
+
+					if ( result.success ) {
 
 						if ( result.data && result.data.summary ) {
 							$( '#sunshine--checkout--summary' ).html( result.data.summary );
@@ -980,6 +987,10 @@ function sunshine_checkout_select_payment_method() {
 		$submit_label = $payment_method->get_submit_label();
 		if ( $submit_label ) {
 			$result['submit_label'] = $submit_label;
+		}
+		$minimum_error = SPC()->cart->get_payment_minimum_error( $payment_method->get_id(), SPC()->cart->get_total() );
+		if ( $minimum_error ) {
+			$result['error'] = $minimum_error;
 		}
 		do_action( 'sunshine_checkout_update_payment_method', $payment_method );
 		wp_send_json_success( $result );
