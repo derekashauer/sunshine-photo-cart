@@ -23,7 +23,10 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		$this->fee_addon_name        = __( 'Square Pro', 'sunshine-photo-cart' );
 
 		add_action( 'sunshine_square_connect_display', array( $this, 'square_connect_display' ) );
+		add_action( 'admin_init', array( $this, 'square_connect_start' ) );
 		add_action( 'admin_init', array( $this, 'square_connect_return' ) );
+		add_action( 'admin_init', array( $this, 'maybe_refresh_token' ) );
+		add_action( 'admin_init', array( $this, 'connection_notices' ) );
 		add_action( 'admin_init', array( $this, 'square_disconnect' ) );
 		add_action( 'admin_init', array( $this, 'square_refresh_locations' ) );
 		add_action( 'admin_init', array( $this, 'square_refresh_token' ) );
@@ -233,10 +236,41 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 	<?php } else { ?>
 
-			<p><a href="https://www.sunshinephotocart.com/?square_connect=1&mode=<?php echo esc_attr( $mode ); ?>&nonce=<?php echo esc_attr( wp_create_nonce( 'sunshine_square_connect' ) ); ?>&return_url=<?php echo rawurlencode( admin_url( 'admin.php' ) ); ?>&v=2" class="button"><?php esc_html_e( 'Connect to Square', 'sunshine-photo-cart' ); ?></a></p>
+			<p><a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?sunshine_square_connect_start=1&mode=' . $mode ), 'sunshine_square_connect_start' ) ); ?>" class="button"><?php esc_html_e( 'Connect to Square', 'sunshine-photo-cart' ); ?></a></p>
 
 			<?php
 	}
+
+	}
+
+	/**
+	 * Start a connect. The store makes a one-time secret and keeps it, and sends only its
+	 * scrambled form. Square's answer can then only be turned into keys here, so
+	 * sunshinephotocart.com never sees this store's keys.
+	 */
+	function square_connect_start() {
+
+		if ( ! isset( $_GET['sunshine_square_connect_start'] ) || ! current_user_can( 'sunshine_manage_options' ) || ! check_admin_referer( 'sunshine_square_connect_start' ) ) {
+			return;
+		}
+
+		$mode     = ( isset( $_GET['mode'] ) && 'test' === $_GET['mode'] ) ? 'test' : 'live';
+		$verifier = rtrim( strtr( base64_encode( random_bytes( 64 ) ), '+/', '-_' ), '=' );
+		set_transient( 'sunshine_square_connect_' . get_current_user_id(), array( 'verifier' => $verifier, 'mode' => $mode ), 15 * MINUTE_IN_SECONDS );
+
+		$url = add_query_arg(
+			array(
+				'square_connect' => 1,
+				'mode'           => $mode,
+				'nonce'          => wp_create_nonce( 'sunshine_square_connect' ),
+				'return_url'     => rawurlencode( admin_url( 'admin.php' ) ),
+				'v'              => 3,
+				'code_challenge' => rtrim( strtr( base64_encode( hash( 'sha256', $verifier, true ) ), '+/', '-_' ), '=' ),
+			),
+			'https://www.sunshinephotocart.com/'
+		);
+		wp_redirect( $url );
+		exit;
 
 	}
 
@@ -246,28 +280,31 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			return false;
 		}
 
-		// The return address only carries a one-time pickup code. The keys are collected from
-		// sunshinephotocart.com directly, so they never sit in browser history or server logs.
-		$keys = false;
-		if ( ! isset( $_GET['error'] ) && ! empty( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'sunshine_square_connect' ) && ! empty( $_GET['pickup'] ) ) {
-			$keys = sunshine_collect_connect_keys( 'square', sanitize_text_field( wp_unslash( $_GET['pickup'] ) ) );
+		$started = get_transient( 'sunshine_square_connect_' . get_current_user_id() );
+		delete_transient( 'sunshine_square_connect_' . get_current_user_id() );
+
+		$data = false;
+		if ( ! isset( $_GET['error'] ) && ! empty( $_GET['code'] ) && ! empty( $started['verifier'] ) && ! empty( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'sunshine_square_connect' ) ) {
+			$mode = $started['mode'];
+			$data = $this->oauth_token_request(
+				$mode,
+				array(
+					'grant_type'    => 'authorization_code',
+					'code'          => sanitize_text_field( wp_unslash( $_GET['code'] ) ),
+					'code_verifier' => $started['verifier'],
+				)
+			);
 		}
 
-		if ( empty( $keys['access_token'] ) || empty( $keys['refresh_token'] ) ) {
+		if ( empty( $data['access_token'] ) || empty( $data['refresh_token'] ) ) {
 			SPC()->notices->add_admin( 'square_connect_fail', __( 'Square could not be connected', 'sunshine-photo-cart' ), 'error' );
 			wp_redirect( admin_url( 'admin.php?page=sunshine&section=payment_methods&payment_method=square' ) );
 			exit;
 		}
 
-		$mode = ( isset( $keys['mode'] ) && $keys['mode'] == 'live' ) ? 'live' : 'test';
-
-		$access_token  = $this->secure_token( sanitize_text_field( $keys['access_token'] ), 'e' );
-		$refresh_token = $this->secure_token( sanitize_text_field( $keys['refresh_token'] ), 'e' );
-		$this->update_option( 'access_token_' . $mode, $access_token );
-		$this->update_option( 'refresh_token_' . $mode, $refresh_token );
-		$this->update_option( 'merchant_id_' . $mode, sanitize_text_field( $keys['merchant_id'] ) );
-		$this->update_option( 'token_date_' . $mode, current_time( 'timestamp' ) );
+		$this->save_tokens( $mode, $data );
 		$this->update_option( 'mode', $mode );
+		SPC()->notices->delete_admin( 'square_reconnect' );
 		SPC()->log( 'Square connected' );
 
 		$this->get_locations( $mode );
@@ -340,6 +377,8 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		$this->update_option( 'locations_' . $mode, '' );
 		$this->update_option( 'location_id_' . $mode, '' );
 		$this->update_option( 'token_date_' . $mode, '' );
+		$this->update_option( 'oauth_flow_' . $mode, '' );
+		$this->update_option( 'refresh_expires_' . $mode, '' );
 		SPC()->log( 'Square disconnected' );
 
 		wp_clear_scheduled_hook( 'sunshine_square_access_token_refresh' );
@@ -404,7 +443,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 	function square_refresh_token() {
 
-		if ( ! isset( $_GET['sunshine_square_refresh_token'] ) || ! check_admin_referer( 'sunshine_square_refresh_token' ) ) {
+		if ( ! isset( $_GET['sunshine_square_refresh_token'] ) || ! current_user_can( 'sunshine_manage_options' ) || ! check_admin_referer( 'sunshine_square_refresh_token' ) ) {
 			return;
 		}
 
@@ -578,6 +617,10 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 
 	public function refresh_token() {
 
+		if ( 'pkce' === $this->get_option( 'oauth_flow_' . $this->get_mode_value() ) ) {
+			return $this->refresh_token_direct();
+		}
+
 		$request = array(
 			'body'    => array(
 				'refresh_token' => $this->get_refresh_token(),
@@ -614,6 +657,152 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			SPC()->notices->add_admin( 'square_token_refresh', __( 'Square token successfully refreshed', 'sunshine-photo-cart' ), 'success' );
 		}
 
+	}
+
+	/**
+	 * Renew a connection made the new way, straight with Square. Each renewal key works once,
+	 * so only one renewal may run at a time: a second one would use up the key and break the
+	 * connection.
+	 */
+	private function refresh_token_direct() {
+
+		$mode = $this->get_mode_value();
+		$lock = 'sunshine_square_refresh_lock';
+		if ( ! add_option( $lock, time(), '', 'no' ) ) {
+			if ( time() - (int) get_option( $lock ) < MINUTE_IN_SECONDS ) {
+				return false;
+			}
+			update_option( $lock, time(), false );
+		}
+
+		$data = $this->oauth_token_request(
+			$mode,
+			array(
+				'grant_type'    => 'refresh_token',
+				'refresh_token' => $this->get_refresh_token( $mode ),
+			)
+		);
+		if ( ! empty( $data['access_token'] ) && ! empty( $data['refresh_token'] ) ) {
+			$this->save_tokens( $mode, $data );
+		}
+		delete_option( $lock );
+
+		if ( empty( $data['access_token'] ) ) {
+			SPC()->log( 'Failed to refresh Square token: ' . ( isset( $data['error'] ) ? $data['error'] : 'no answer from Square' ) );
+			SPC()->notices->add_admin( 'square_failed_refresh', __( 'Square could not renew its connection. If this keeps happening, disconnect and connect Square again.', 'sunshine-photo-cart' ), 'error' );
+			return false;
+		}
+
+		SPC()->log( 'Square token refreshed' );
+		return true;
+
+	}
+
+	/**
+	 * Ask Square for keys: with Square's answer and the one-time secret after connecting, or
+	 * with the renewal key. Neither needs the app secret, so it goes straight to Square.
+	 *
+	 * @param string $mode 'live' or 'test'.
+	 * @param array  $body Grant type and its fields.
+	 * @return array Square's answer, or array with 'error'.
+	 */
+	private function oauth_token_request( $mode, $body ) {
+
+		$body = array_merge(
+			array(
+				'client_id'    => $this->get_oauth_client_id( $mode ),
+				'redirect_uri' => 'https://www.sunshinephotocart.com/?square_connect_return=1',
+			),
+			$body
+		);
+
+		$response = wp_remote_post(
+			( 'live' === $mode ? 'https://connect.squareup.com' : 'https://connect.squareupsandbox.com' ) . '/oauth2/token',
+			array(
+				'headers' => array(
+					'Content-Type'   => 'application/json',
+					'Square-Version' => '2024-10-17',
+				),
+				'body'    => wp_json_encode( $body ),
+				'timeout' => 30,
+			)
+		);
+		if ( is_wp_error( $response ) ) {
+			return array( 'error' => $response->get_error_message() );
+		}
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( empty( $data['access_token'] ) ) {
+			return array( 'error' => ! empty( $data['errors'][0]['detail'] ) ? $data['errors'][0]['detail'] : wp_remote_retrieve_body( $response ) );
+		}
+		return $data;
+
+	}
+
+	/**
+	 * The Sunshine Photo Cart app's public ID at Square.
+	 */
+	private function get_oauth_client_id( $mode ) {
+		return apply_filters( 'sunshine_square_oauth_client_id', ( 'live' === $mode ) ? 'sq0idp-19QAyk7l68V7ymxc2Fl9EQ' : 'sandbox-sq0idb-aNDJReIdhctf2o3OZA0FTA', $mode );
+	}
+
+	/**
+	 * Save keys from a new-style connect or renewal.
+	 */
+	private function save_tokens( $mode, $data ) {
+		$this->update_option( 'access_token_' . $mode, $this->secure_token( sanitize_text_field( $data['access_token'] ), 'e' ) );
+		$this->update_option( 'refresh_token_' . $mode, $this->secure_token( sanitize_text_field( $data['refresh_token'] ), 'e' ) );
+		$this->update_option( 'merchant_id_' . $mode, sanitize_text_field( $data['merchant_id'] ) );
+		$this->update_option( 'token_date_' . $mode, current_time( 'timestamp' ) );
+		$this->update_option( 'oauth_flow_' . $mode, 'pkce' );
+		$this->update_option( 'refresh_expires_' . $mode, ! empty( $data['refresh_token_expires_at'] ) ? strtotime( $data['refresh_token_expires_at'] ) : '' );
+	}
+
+	/**
+	 * New-style connections stop working if they go 90 days without a renewal, for example
+	 * when a site's scheduled tasks don't run. Renew on any admin page once a week as well.
+	 */
+	public function maybe_refresh_token() {
+		if ( wp_doing_ajax() || ! current_user_can( 'sunshine_manage_options' ) ) {
+			return;
+		}
+		$mode = $this->get_mode_value();
+		if ( 'pkce' !== $this->get_option( 'oauth_flow_' . $mode ) ) {
+			return;
+		}
+		if ( current_time( 'timestamp' ) - (int) $this->get_option( 'token_date_' . $mode ) > WEEK_IN_SECONDS ) {
+			$this->refresh_token_direct();
+		}
+	}
+
+	/**
+	 * Warn when a connection is about to stop renewing, and ask stores connected the old way
+	 * to connect again so their keys stop passing through sunshinephotocart.com.
+	 */
+	public function connection_notices() {
+		if ( ! current_user_can( 'sunshine_manage_options' ) ) {
+			return;
+		}
+		$mode = $this->get_mode_value();
+		if ( 'live' !== $mode || ! $this->get_option( 'refresh_token_live' ) ) {
+			return;
+		}
+		if ( 'pkce' !== $this->get_option( 'oauth_flow_live' ) ) {
+			SPC()->notices->add_admin(
+				'square_reconnect',
+				sprintf(
+					/* translators: %s: link to the Square settings */
+					__( 'Square: <a href="%s">disconnect and connect Square again</a> to use the more secure connection, where only your site holds your Square keys.', 'sunshine-photo-cart' ),
+					esc_url( admin_url( 'admin.php?page=sunshine&section=payment_methods&payment_method=square' ) )
+				),
+				'warning',
+				true
+			);
+			return;
+		}
+		$expires = (int) $this->get_option( 'refresh_expires_live' );
+		if ( $expires && $expires - time() < 14 * DAY_IN_SECONDS ) {
+			SPC()->notices->add_admin( 'square_expiring', __( 'Square: your connection has not renewed lately and will stop working soon. Disconnect and connect Square again to keep taking payments.', 'sunshine-photo-cart' ), 'error' );
+		}
 	}
 
 	private function secure_token( $string, $method = 'e' ) {
@@ -682,7 +871,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			$mode = $this->get_mode_value();
 		}
 		$access_token = $this->get_option( 'access_token_' . $mode );
-		if ( $mode == 'live' ) {
+		if ( $mode == 'live' || $this->get_option( 'oauth_flow_' . $mode ) ) {
 			$access_token = $this->secure_token( $access_token, 'd' );
 		}
 		return $access_token;
