@@ -178,11 +178,13 @@ class SPC_Gallery extends Sunshine_Data {
 	}
 
 	public function featured_image_size_info( $size = 'sunshine-thumbnail' ) {
+		// A size can be recorded with no width or height (0), which would give the
+		// gallery tile no shape at all, so treat that the same as no size.
 		$size_info = image_get_intermediate_size( $this->get_featured_image_id(), $size );
-		if ( empty( $size_info ) ) {
+		if ( empty( $size_info['width'] ) || empty( $size_info['height'] ) ) {
 			$size_info = image_get_intermediate_size( $this->get_featured_image_id(), 'full' );
 		}
-		if ( empty( $size_info ) ) {
+		if ( empty( $size_info['width'] ) || empty( $size_info['height'] ) ) {
 			$size_info = array(
 				'width'  => sunshine_get_thumbnail_dimension( 'w' ),
 				'height' => sunshine_get_thumbnail_dimension( 'h' ),

@@ -830,6 +830,17 @@ function sunshine_meta_gallery_images_display() {
 		/**********
 		IMPORTING FOLDER
 		**********/
+		// Set once lean loading has asked for an import to be sent again with every
+		// plugin. Every later request of the import then asks for every plugin too.
+		var sunshine_import_retried_full = false;
+		var sunshine_import_full_flags = function( data ) {
+			if ( sunshine_import_retried_full ) {
+				data.sunshine_full_load = 1;
+				data.sunshine_full_retry = 1;
+			}
+			return data;
+		};
+
 		$( document ).on( 'click', '#import', function(){
 			var $directoryOption = $( 'select[name="images_directory"] option:selected' );
 			var selected_directory = $directoryOption.val();
@@ -851,8 +862,15 @@ function sunshine_meta_gallery_images_display() {
 				'security': '<?php echo esc_js( wp_create_nonce( 'sunshine_gallery_import' ) ); ?>'
 			};
 
-			$.post( ajaxurl, request_data )
+			$.post( ajaxurl, sunshine_import_full_flags( request_data ) )
 				.done( function( response ) {
+					// Refused with plugins left out: lean loading has paused itself, so
+					// sending it again loads every plugin.
+					if ( response.success !== true && response.data && response.data.retry_full && ! sunshine_import_retried_full ) {
+						sunshine_import_retried_full = true;
+						$( '#import' ).trigger( 'click' );
+						return;
+					}
 					if ( response.success !== true || ! response.data || ! response.data.files || ! response.data.files.length ) {
 						$( '#sunshine-gallery-image-errors' ).append( '<li><?php echo esc_js( __( 'No importable images were found in the selected folder.', 'sunshine-photo-cart' ) ); ?></li>' );
 						$( '#sunshine-gallery-images-processing div.status span.current-file' ).html( 'ERROR' );
@@ -863,37 +881,81 @@ function sunshine_meta_gallery_images_display() {
 					var images_to_upload = import_files.length;
 					$( '#sunshine-gallery-images-processing div.status span.total-files' ).html( images_to_upload );
 
-					for ( let import_index = 0; import_index < import_files.length; import_index++ ) {
-						const item_number = import_index + 1;
-						const file_name = import_files[ import_index ];
+					// Each request brings in as many photos as it can, then says
+					// where the next one should pick up.
+					var one_at_a_time = false;
+					var import_run = Date.now().toString( 36 ) + Math.random().toString( 36 ).slice( 2, 8 );
+					var import_batch = function( item_number ) {
 						var data = {
 							'action': 'sunshine_gallery_import',
 							'gallery_id': <?php echo esc_js( $post->ID ); ?>,
 							'dir': selected_directory,
 							'item_number': item_number,
+							'single': one_at_a_time ? 1 : 0,
+							'import_run': import_run,
 							'watermark': ( watermark ) ? 1 : 0,
 							'security': '<?php echo esc_js( wp_create_nonce( 'sunshine_gallery_import' ) ); ?>'
 						};
 
-						$.postq( 'sunshinegalleryimport', ajaxurl, data, function( response ) {
-							if ( response.success === true ) {
-								$( '#sunshine-gallery-images-processing div.status span.current-file' ).html( response.data.file_name + ' uploaded' );
-								if ( response.data.image_html ) {
-									$( '#sunshine-gallery-image-list' ).append( response.data.image_html );
+						$.post( ajaxurl, sunshine_import_full_flags( data ), function( response ) {
+							if ( response.success !== true && response.data && response.data.retry_full && ! sunshine_import_retried_full ) {
+								sunshine_import_retried_full = true;
+								import_batch( item_number );
+								return;
+							}
+							if ( response.success !== true ) {
+								$( '#sunshine-gallery-image-errors' ).append( $( '<li/>' ).text( response.data && response.data.message ? response.data.message : '<?php echo esc_js( __( 'The import stopped.', 'sunshine-photo-cart' ) ); ?>' ) );
+								$( '#sunshine-gallery-images-processing div.status' ).text( '<?php echo esc_js( __( 'The import stopped before every photo was brought in.', 'sunshine-photo-cart' ) ); ?>' );
+								$( document ).trigger( 'refresh_images' );
+								return;
+							}
+
+							// An earlier request is still finishing. Give it a moment.
+							if ( response.data.busy ) {
+								setTimeout( function() {
+									import_batch( response.data.next_item );
+								}, 5000 );
+								return;
+							}
+
+							$.each( response.data.results, function( i, result ) {
+								if ( result.success === true ) {
+									$( '#sunshine-gallery-images-processing div.status span.current-file' ).html( result.file_name + ' uploaded' );
+									if ( result.image_html ) {
+										$( '#sunshine-gallery-image-list' ).append( result.image_html );
+									} else {
+										$( '#sunshine-gallery-images ul#files' ).append(
+											$('<li/>', {
+												'id': 'image-' + result.image_id,
+												html: result.file_name
+											})
+										);
+									}
+									total_images++;
 								} else {
-									$( '#sunshine-gallery-images ul#files' ).append(
-										$('<li/>', {
-											'id': 'image-' + response.data.image_id,
-											html: response.data.file_name
-										})
-									);
+									$( '#sunshine-gallery-image-errors' ).append( '<li>' + result.file + ' could not be imported: ' + result.error + '</li>' );
+									$( '#sunshine-gallery-images-processing div.status span.current-file' ).html( result.file + ' not imported: ' + result.error );
 								}
-								total_images++;
+								processed_images++;
+							});
+
+							$( '#sunshine-gallery-images-processing span.processed' ).html( processed_images );
+							$( document ).trigger( 'refresh_images' );
+
+							if ( response.data.done ) {
+								import_finished();
 							} else {
-								$( '#sunshine-gallery-image-errors' ).append( '<li>' + response.data.file + ' could not be imported: ' + response.data.error + '</li>' );
-								$( '#sunshine-gallery-images-processing div.status span.current-file' ).html( response.data.file + ' not imported: ' + response.data.error );
+								import_batch( response.data.next_item );
 							}
 						}).fail( function( jqXHR ) {
+							// A batch stopped part way, so it is not known which photo
+							// caused it. Go back over it one photo at a time.
+							if ( ! one_at_a_time ) {
+								one_at_a_time = true;
+								import_batch( item_number );
+								return;
+							}
+							var file_name = import_files[ item_number - 1 ];
 							var $error_item = $( '<li/>' );
 							$error_item.append( $( '<strong/>' ).text( file_name ) );
 							if ( jqXHR.status === 500 || jqXHR.status === 0 ) {
@@ -903,18 +965,24 @@ function sunshine_meta_gallery_images_display() {
 							}
 							$( '#sunshine-gallery-image-errors' ).append( $error_item );
 							$( '#sunshine-gallery-images-processing div.status span.current-file' ).html( file_name + ' failed' );
-						}).always(function(){
 							processed_images++;
 							$( '#sunshine-gallery-images-processing span.processed' ).html( processed_images );
-							if ( processed_images >= images_to_upload ) {
-								// When done
-								$( '#sunshine-ftp-new-images' ).hide();
-								$( '#sunshine-gallery-images-processing div.status' ).html( 'Image import complete!' );
-								$( '#sunshine-gallery-images-processing' ).addClass( 'success' ).delay( 2000 ).fadeOut( 400 );
+							if ( item_number < import_files.length ) {
+								import_batch( item_number + 1 );
+							} else {
+								import_finished();
 							}
-							$( document ).trigger( 'refresh_images' );
 						});
-					}
+					};
+
+					var import_finished = function() {
+						$( '#sunshine-ftp-new-images' ).hide();
+						$( '#sunshine-gallery-images-processing div.status' ).html( 'Image import complete!' );
+						$( '#sunshine-gallery-images-processing' ).addClass( 'success' ).delay( 2000 ).fadeOut( 400 );
+						$( document ).trigger( 'refresh_images' );
+					};
+
+					import_batch( 1 );
 				} )
 				.fail( function() {
 					$( '#sunshine-gallery-image-errors' ).append( '<li><?php echo esc_js( __( 'Unable to inspect the selected directory before import. Please try again.', 'sunshine-photo-cart' ) ); ?></li>' );
@@ -1592,6 +1660,10 @@ function sunshine_ajax_gallery_import_list() {
 	check_ajax_referer( 'sunshine_gallery_import', 'security' );
 
 	if ( ! current_user_can( 'edit_sunshine_galleries' ) ) {
+		// A left-out plugin may be what grants this permission on this site.
+		if ( ! empty( $GLOBALS['sunshine_fast_imports_lean'] ) && function_exists( 'sunshine_fast_imports_needs_full_load' ) ) {
+			sunshine_fast_imports_needs_full_load( 'no permission to import' );
+		}
 		wp_send_json_error(
 			array(
 				'message' => __( 'You do not have permission to import images.', 'sunshine-photo-cart' ),
@@ -1641,6 +1713,10 @@ function sunshine_ajax_gallery_import() {
 	check_ajax_referer( 'sunshine_gallery_import', 'security' );
 
 	if ( ! current_user_can( 'edit_sunshine_galleries' ) ) {
+		// A left-out plugin may be what grants this permission on this site.
+		if ( ! empty( $GLOBALS['sunshine_fast_imports_lean'] ) && function_exists( 'sunshine_fast_imports_needs_full_load' ) ) {
+			sunshine_fast_imports_needs_full_load( 'no permission to import' );
+		}
 		wp_send_json_error(
 			array(
 				'message' => __( 'You do not have permission to import images.', 'sunshine-photo-cart' ),
@@ -1653,8 +1729,62 @@ function sunshine_ajax_gallery_import() {
 	$item_number = intval( $_POST['item_number'] );
 	$dir         = isset( $_POST['dir'] ) ? sanitize_text_field( wp_unslash( $_POST['dir'] ) ) : '';
 	$watermark   = ! empty( $_POST['watermark'] ) ? 1 : 0;
+	$single      = ! empty( $_POST['single'] );
+	$import_run  = isset( $_POST['import_run'] ) ? sanitize_key( wp_unslash( $_POST['import_run'] ) ) : '';
+
+	// A request the browser gave up on can still be running. Wait for it rather
+	// than working on the same photos at the same time. Claimed before anything
+	// else is read, so what follows is never from before that request finished.
+	if ( ! sunshine_import_lock( 'ftp_' . $gallery_id ) ) {
+		wp_send_json_success(
+			array(
+				'results'   => array(),
+				'busy'      => true,
+				'next_item' => $item_number,
+				'done'      => false,
+			)
+		);
+	}
+
+	// Photos this import brought in that the browser may not have heard about.
+	// Each one is kept until the browser asks for a later photo, which shows the
+	// reply listing it arrived. A reply lost on the way (a dropped connection, a
+	// proxy giving up) is then answered again, instead of the photos being
+	// reported as already in the gallery.
+	$unreported_key = 'sunshine_ftp_import_' . $gallery_id . '_' . $import_run;
+	$unreported     = $import_run ? get_transient( $unreported_key ) : array();
+	if ( ! is_array( $unreported ) ) {
+		$unreported = array();
+	}
+	foreach ( $unreported as $name => $entry ) {
+		if ( $entry['index'] < $item_number - 1 ) {
+			unset( $unreported[ $name ] );
+		}
+	}
 
 	$folder = sunshine_validate_import_subdirectory( $dir );
+
+	// The last batch can clear the folder away ("delete images after import") and
+	// still lose its reply. What it brought in is known, so answer with that.
+	if ( false === $folder && ! empty( $unreported ) ) {
+		$results = array();
+		foreach ( $unreported as $name => $entry ) {
+			$results[] = array(
+				'success'    => true,
+				'image_id'   => $entry['id'],
+				'file_name'  => $name,
+				'image_html' => sunshine_admin_gallery_image_thumbnail( $entry['id'], false ),
+			);
+		}
+		wp_send_json_success(
+			array(
+				'results'   => $results,
+				'next_item' => $item_number + count( $results ),
+				'done'      => true,
+			)
+		);
+	}
+
 	if ( false === $folder ) {
 		wp_send_json_error(
 			array(
@@ -1665,58 +1795,78 @@ function sunshine_ajax_gallery_import() {
 
 	$dir = ltrim( substr( $folder, strlen( wp_normalize_path( sunshine_get_import_directory() ) ) ), '/' );
 
-	// Check if the image already exists in the gallery
+	// File names already in the gallery, so a photo is not brought in twice. Read
+	// in one query: looking each one up separately made every photo in a big
+	// gallery slower than the one before it.
+	// Only the names are read, a thousand photos at a time, so a gallery of tens
+	// of thousands doesn't load every photo's saved details into memory.
+	global $wpdb;
 	$existing_file_names = array();
-	$existing_image_ids  = $gallery->get_image_ids();
-	if ( ! empty( $existing_image_ids ) ) {
-		foreach ( $existing_image_ids as $existing_image_id ) {
-			$existing_file_names[] = strtolower( get_post_meta( $existing_image_id, 'sunshine_file_name', true ) );
+	$existing_image_ids  = array_filter( array_map( 'intval', (array) $gallery->get_image_ids() ) );
+	foreach ( array_chunk( $existing_image_ids, 1000 ) as $chunk ) {
+		$names = $wpdb->get_col( "SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key = 'sunshine_file_name' AND post_id IN (" . implode( ',', $chunk ) . ')' ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- integers only.
+		foreach ( $names as $name ) {
+			$existing_file_names[ strtolower( (string) $name ) ] = true;
 		}
 	}
 
-	$images = sunshine_get_images_in_folder( $folder );
-
-	$file_path = $images[ $item_number - 1 ];
-	$file_name = basename( $file_path );
-
-	if ( is_array( $existing_file_names ) && in_array( strtolower( $file_name ), $existing_file_names ) ) {
-		wp_send_json_error(
-			array(
-				'file'  => $file_name,
-				'error' => __( 'Already uploaded to gallery', 'sunshine-photo-cart' ),
-			)
-		);
-	}
+	// Same order and numbering as the list the browser was given.
+	$images = array_values( (array) sunshine_get_images_in_folder( $folder ) );
 
 	sunshine_doing_upload( $gallery_id );
 
 	update_post_meta( $gallery_id, 'images_directory', $dir );
 
-	// Make sure we have a unique file name in the directory we are moving it to
-	$upload_dir    = wp_upload_dir();
-	$new_file_name = wp_unique_filename( $upload_dir['path'], $file_name );
+	// Bring in as many photos as fit in this request, starting at item_number.
+	// After a request has failed, the browser asks for one at a time instead.
+	$results = array();
+	$batch   = sunshine_import_batch_start();
+	$index   = max( 0, $item_number - 1 );
+	$total   = count( $images );
 
-	// copy the file to the uploads dir
-	$new_file_path = $upload_dir['path'] . '/' . $new_file_name;
-	if ( false === @copy( $file_path, $new_file_path ) ) {
-		wp_send_json_error(
-			array(
-				'file'  => $file_name,
-				/* translators: %s is the upload directory */
-				'error' => new WP_Error( 'upload_error', sprintf( __( 'The selected file could not be copied to %s.', 'sunshine-photo-cart' ), $upload_dir['path'] ) ),
-			)
-		);
+	while ( $index < $total ) {
+
+		$file_name = basename( $images[ $index ] );
+		if ( isset( $unreported[ $file_name ] ) ) {
+			$image_id  = $unreported[ $file_name ]['id'];
+			$results[] = array(
+				'success'    => true,
+				'image_id'   => $image_id,
+				'file_name'  => $file_name,
+				'image_html' => sunshine_admin_gallery_image_thumbnail( $image_id, false ),
+			);
+		} else {
+			$result    = sunshine_gallery_import_file( $images[ $index ], $gallery_id, $watermark, $existing_file_names );
+			$results[] = $result;
+			if ( $import_run && ! empty( $result['success'] ) ) {
+				$unreported[ $file_name ] = array(
+					'id'    => $result['image_id'],
+					'index' => $index,
+				);
+				set_transient( $unreported_key, $unreported, HOUR_IN_SECONDS );
+			}
+		}
+		++$index;
+
+		if ( $single || ! sunshine_import_batch_has_time( $batch ) ) {
+			break;
+		}
 	}
 
-	// Set correct file permissions
-	$stat  = stat( dirname( $new_file_path ) );
-	$perms = $stat['mode'] & 0000666;
-	@ chmod( $new_file_path, $perms );
-	$url = $upload_dir['url'] . '/' . $new_file_name;
+	// Save the list, now without what the browser has already received.
+	if ( $import_run ) {
+		if ( empty( $unreported ) ) {
+			delete_transient( $unreported_key );
+		} else {
+			set_transient( $unreported_key, $unreported, HOUR_IN_SECONDS );
+		}
+	}
 
-	$data = sunshine_insert_gallery_image( $new_file_path, $gallery_id, 'data', $watermark );
+	$done = ( $index >= $total );
+	$last = end( $results );
 
-	if ( ! empty( $data ) && SPC()->get_option( 'delete_images_folder' ) && $file_path === end( $images ) ) {
+	// Only clear the folder once the last photo made it in, as it always has.
+	if ( $done && ! empty( $last['success'] ) && SPC()->get_option( 'delete_images_folder' ) ) {
 
 		foreach ( $images as $image_file_path ) {
 			@unlink( $image_file_path ); // Delete the file
@@ -1730,8 +1880,70 @@ function sunshine_ajax_gallery_import() {
 		}
 	}
 
-	wp_send_json_success( $data );
+	wp_send_json_success(
+		array(
+			'results'   => $results,
+			'next_item' => $index + 1,
+			'done'      => $done,
+		)
+	);
 
+}
+
+/**
+ * Copy one photo from the FTP folder into a gallery.
+ *
+ * @param string $file_path           Photo in the FTP folder.
+ * @param int    $gallery_id          Gallery to add it to.
+ * @param int    $watermark           Whether to watermark it.
+ * @param array  $existing_file_names Lowercased names already in the gallery, as keys. Updated in place.
+ * @return array Result for the browser: success, then the image details or file and error.
+ */
+function sunshine_gallery_import_file( $file_path, $gallery_id, $watermark, &$existing_file_names ) {
+
+	$file_name = basename( $file_path );
+
+	if ( isset( $existing_file_names[ strtolower( $file_name ) ] ) ) {
+		return array(
+			'success' => false,
+			'file'    => $file_name,
+			'error'   => __( 'Already uploaded to gallery', 'sunshine-photo-cart' ),
+		);
+	}
+
+	// Make sure we have a unique file name in the directory we are moving it to
+	$upload_dir    = wp_upload_dir();
+	$new_file_name = wp_unique_filename( $upload_dir['path'], $file_name );
+
+	// copy the file to the uploads dir
+	$new_file_path = $upload_dir['path'] . '/' . $new_file_name;
+	if ( false === @copy( $file_path, $new_file_path ) ) {
+		return array(
+			'success' => false,
+			'file'    => $file_name,
+			/* translators: %s is the upload directory */
+			'error'   => sprintf( __( 'The selected file could not be copied to %s.', 'sunshine-photo-cart' ), $upload_dir['path'] ),
+		);
+	}
+
+	// Set correct file permissions
+	$stat  = stat( dirname( $new_file_path ) );
+	$perms = $stat['mode'] & 0000666;
+	@ chmod( $new_file_path, $perms );
+
+	$data = sunshine_insert_gallery_image( $new_file_path, $gallery_id, 'data', $watermark );
+
+	if ( empty( $data ) ) {
+		return array(
+			'success' => false,
+			'file'    => $file_name,
+			'error'   => __( 'Could not be added to the gallery', 'sunshine-photo-cart' ),
+		);
+	}
+
+	$existing_file_names[ strtolower( $file_name ) ] = true;
+
+	return array_merge( array( 'success' => true ), $data );
 }
 
 add_action( 'sunshine_meta_gallery_emails_display', 'sunshine_meta_gallery_emails_display' );

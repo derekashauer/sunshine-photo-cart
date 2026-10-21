@@ -247,6 +247,10 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Security: PayPal, Stripe and Square payments are now checked against the order total before an order is marked paid, so a payment for a smaller amount, or no payment at all, can't complete an order
 * The Sunshine log now notes when an order status can't be set, like when that status has been deleted
 * Tools > Install process no longer turns your emails back on or resets who receives the admin emails
+* New: Importing from an FTP folder now brings in as many photos as it can in each request instead of one at a time, which makes large imports several times faster
+* New: While photos are being imported, Sunshine loads only itself, its add-ons and the plugins an import needs (cloud storage and code snippet plugins), so other plugins don't slow down every photo. The rest of your site loads normally. This is done by a small file Sunshine adds to your must-use plugins, which is removed if Sunshine is deactivated. If an import ever stops because it needed one of the plugins it left out, imports go back to loading every plugin until your plugins or theme change
+* Fix: Importing into a gallery that already has thousands of photos no longer gets slower with every photo added
+* Fix: A gallery whose cover photo has no recorded size now shows a normal tile in the justified layout instead of a broken one
 
 = 3.7.5 - October 13, 2026 =
 * Security: Visitors can no longer see photos from a gallery they don't have access to, like a password-protected or private gallery, through the share, add to cart, or product options windows
