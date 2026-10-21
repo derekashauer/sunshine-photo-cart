@@ -1720,13 +1720,6 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 	}
 
 	/**
-	 * Check that a Square payment was made for this order, for its full total, in the store currency
-	 *
-	 * @param array     $payment Payment from the Square API.
-	 * @param SPC_Order $order   The order.
-	 * @return bool
-	 */
-	/**
 	 * Square takes amounts in the currency's smallest unit: cents for most currencies, but whole
 	 * units for currencies with no cents, like Japanese yen. Multiplying those by 100 would charge
 	 * 100 times too much.
@@ -1749,6 +1742,13 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		return intval( round( floatval( $amount ) * $this->get_amount_multiplier() ) );
 	}
 
+	/**
+	 * Check that a Square payment was made for this order, for its full total, in the store currency
+	 *
+	 * @param array     $payment Payment from the Square API.
+	 * @param SPC_Order $order   The order.
+	 * @return bool
+	 */
 	private function payment_matches_order( $payment, $order ) {
 		// Same math as the charge in setup(), so an honest payment always matches.
 		$expected = $this->to_square_amount( $order->get_total() );

@@ -314,13 +314,6 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	}
 
 	/**
-	 * Handle idempotency key conflicts with retry logic
-	 *
-	 * @param array  $args Payment intent arguments
-	 * @param string $idempotency_key Current idempotency key
-	 * @return array|WP_Error Payment intent data or error
-	 */
-	/**
 	 * Stripe's smallest charge for a currency. 0 for a currency not in the list: no check.
 	 *
 	 * @param string $currency Uppercase currency code.
@@ -348,6 +341,13 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		return sprintf( __( '%s can\'t take a payment this small. Add more to your order or choose another way to pay.', 'sunshine-photo-cart' ), esc_html( $this->get_name() ) ) . ' ' . esc_html( $error->get_error_message() );
 	}
 
+	/**
+	 * Handle idempotency key conflicts with retry logic
+	 *
+	 * @param array  $args Payment intent arguments
+	 * @param string $idempotency_key Current idempotency key
+	 * @return array|WP_Error Payment intent data or error
+	 */
 	private function create_payment_intent_with_retry( $args, $idempotency_key ) {
 		$response = $this->make_stripe_request( 'payment_intents', $args, 'POST' );
 
@@ -2142,14 +2142,6 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	}
 
 	/**
-	 * Find an existing Stripe Tax Rate by percentage/inclusive flag, or create one.
-	 * IDs are cached in the gateway option so repeat checkouts at the same rate reuse them.
-	 *
-	 * @param string $percentage Percentage as a decimal string (e.g. "8.0000").
-	 * @param bool   $inclusive  Whether prices include tax.
-	 * @return string|false Stripe Tax Rate ID, or false on failure.
-	 */
-	/**
 	 * Total of the order's fees below zero, like a gift card, as a positive amount.
 	 *
 	 * @param SPC_Order $order The order.
@@ -2165,6 +2157,14 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		return $total;
 	}
 
+	/**
+	 * Find an existing Stripe Tax Rate by percentage/inclusive flag, or create one.
+	 * IDs are cached in the gateway option so repeat checkouts at the same rate reuse them.
+	 *
+	 * @param string $percentage Percentage as a decimal string (e.g. "8.0000").
+	 * @param bool   $inclusive  Whether prices include tax.
+	 * @return string|false Stripe Tax Rate ID, or false on failure.
+	 */
 	private function find_or_create_stripe_tax_rate( $percentage, $inclusive ) {
 		$cache = $this->get_option( 'stripe_tax_rate_ids' );
 		$cache = is_array( $cache ) ? $cache : array();
