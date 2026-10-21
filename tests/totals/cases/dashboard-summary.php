@@ -809,6 +809,27 @@ $dashboard_summary_test(
 	}
 );
 
+// Same as the dashboard test: a fully refunded order brought in nothing, whether it was marked
+// Refunded or kept its paid status. 40 + 4 tax = 44, all 44 refunded, twice over. Another 55.
+// The Refunded one is left out; the one still marked paid counts as an order of 0.
+// Total Received 55 from 2 orders.
+$dashboard_summary_test(
+	'Summary email: a fully refunded order adds nothing',
+	function () use ( $t, $dashboard_summary_order, $dashboard_summary_buy, $dashboard_summary_email, $dashboard_summary_ago, $dashboard_summary_refund_through_payment_method ) {
+		$t::tax( 10 );
+		$day = $dashboard_summary_ago( 3 );
+		$a   = $dashboard_summary_order( $day, 'new', $dashboard_summary_buy( 40 ) );
+		$dashboard_summary_refund_through_payment_method( $a, 44 );
+		$b = $dashboard_summary_order( $day, 'shipped', $dashboard_summary_buy( 40 ) );
+		$b->add_refund( 44, 'Refunded in full' );
+		$dashboard_summary_order( $day, 'new', $dashboard_summary_buy( 50 ) );
+
+		$email = $dashboard_summary_email();
+		$t::money( 55, $email['total'], 'Total Received (0 + 0 + 55)' );
+		$t::same( 2, $email['count'], 'Orders (the Refunded one is left out)' );
+	}
+);
+
 // The email goes out once a week and covers the week before it. Every order should be in
 // exactly one weekly email, so this week's email covers the 7 x 24 hours before it is sent.
 // No tax.

@@ -435,6 +435,32 @@ $t::test(
 	}
 );
 
+// An order marked Refunded with only part of it refunded (an add-on gateway, older orders, or
+// the photographer setting the status by hand). The dashboard and the weekly Summary email count
+// what was kept, so the Reports screen must too, or the three show different sales.
+// 100 + 10 tax = 110, 21 refunded, status Refunded: 89 kept. 40 + 4 tax = 44 refunded in full,
+// status Refunded: nothing kept, left out. Another order 55.
+// 89 + 55 = 144 received from 2 orders. Tax Collected 10 + 5 = 15 from 2 orders.
+$t::test(
+	'Reports: a Refunded order with part refunded counts what was kept, like the dashboard',
+	function () use ( $t, $order_reports_new_day, $order_reports_order, $order_reports_buy, $order_reports_run ) {
+		$t::tax( 10 );
+		$day   = $order_reports_new_day();
+		$order = $order_reports_order( $day, 'refunded', $order_reports_buy( 100 ) );
+		$order->add_refund( 21, 'One print was damaged' );
+		$full = $order_reports_order( $day, 'refunded', $order_reports_buy( 40 ) );
+		$full->add_refund( 44, 'Refunded in full' );
+		$order_reports_order( $day, 'new', $order_reports_buy( 50 ) );
+
+		$orders = $order_reports_run( 'orders', 'custom', $day, $day );
+		$t::money( 144, $orders['data']['paid_total'], 'Total Received (110 - 21 + 55)' );
+		$t::same( 2, $orders['data']['paid_count'], 'Completed Orders (the fully refunded one is left out)' );
+		$tax = $order_reports_run( 'tax', 'custom', $day, $day );
+		$t::money( 15, $tax['data']['tax'], 'Tax Collected' );
+		$t::same( 2, $tax['data']['order_count'], 'Completed Orders on the tax report' );
+	}
+);
+
 // The photographer refunds 10.10 of a 64.32 order with the "Refund payment in Stripe" action
 // (Full refund unticked). The customer still paid 54.22 for prints they keep, and the tax on
 // that sale was collected. Stripe's refund marks the order Refunded (as the Stripe guide says),

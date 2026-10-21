@@ -150,7 +150,7 @@ function sunshine_report_orders_display( $current_duration, $current_after, $cur
 	if ( ! $data || isset( $_GET['refresh'] ) ) {
 
 		$args        = array(
-			'status' => sunshine_order_statuses_paid(),
+			'status' => sunshine_order_statuses_sales(),
 			'after'  => array(
 				'year'  => date( 'Y', strtotime( $current_after ) ),
 				'month' => date( 'n', strtotime( $current_after ) ),
@@ -219,11 +219,15 @@ function sunshine_report_orders_display( $current_duration, $current_after, $cur
 		if ( ! empty( $paid_orders ) ) {
 
 			foreach ( $paid_orders as $order ) {
-				$paid_values[ $order->get_date( $key_format ) ] += $order->get_total();
-				$paid_total                                     += $order->get_total();
+				// get_total() is already less its refunds, so a Refunded order counts only for what was kept.
+				$total = $order->get_total();
+				if ( ! sunshine_order_counts_in_sales( $order->get_status(), $total ) ) {
+					continue;
+				}
+				$paid_values[ $order->get_date( $key_format ) ] += $total;
+				$paid_total                                     += $total;
+				$paid_count++;
 			}
-
-			$paid_count = count( $paid_orders );
 
 			ksort( $paid_labels );
 			ksort( $paid_values );
@@ -371,7 +375,7 @@ function sunshine_report_tax_display( $current_duration, $current_after, $curren
 	if ( ! $data || isset( $_GET['refresh'] ) ) {
 
 		$args        = array(
-			'status' => sunshine_order_statuses_paid(),
+			'status' => sunshine_order_statuses_sales(),
 			'after'  => array(
 				'year'  => date( 'Y', strtotime( $current_after ) ),
 				'month' => date( 'n', strtotime( $current_after ) ),
@@ -385,15 +389,21 @@ function sunshine_report_tax_display( $current_duration, $current_after, $curren
 		);
 		$paid_orders = sunshine_get_orders( $args );
 
-		$tax = 0;
+		$tax         = 0;
+		$order_count = 0;
 		if ( ! empty( $paid_orders ) ) {
 			foreach ( $paid_orders as $order ) {
+				// A Refunded order counts only when something was kept after its refunds.
+				if ( ! sunshine_order_counts_in_sales( $order->get_status(), $order->get_total() ) ) {
+					continue;
+				}
 				$tax += $order->get_tax();
+				$order_count++;
 			}
 		}
 
 		$data = array(
-			'order_count' => count( $paid_orders ),
+			'order_count' => $order_count,
 			'tax'         => $tax,
 		);
 

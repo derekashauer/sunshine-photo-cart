@@ -39,7 +39,7 @@ class SPC_Email_Summary extends SPC_Email {
 		$paid_count = 0;
 		if ( ! empty( $paid_orders ) ) {
 			foreach ( $paid_orders as $order ) {
-				// A Refunded order counts only for what was kept after its refunds.
+				// get_total() is already less its refunds, so a Refunded order counts only for what was kept.
 				if ( ! sunshine_order_counts_in_sales( $order->get_status(), $order->get_total() ) ) {
 					continue;
 				}
