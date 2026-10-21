@@ -2926,7 +2926,9 @@ class SPC_Cart {
 		// step that runs here has to be that same method. "Free" skips payment, so it is only
 		// allowed when there is nothing to pay.
 		$checkout_payment_method = $this->get_checkout_data_item( 'payment_method' );
-		if ( 'free' === $checkout_payment_method ? $order->get_total() > 0 : ( $checkout_payment_method && $checkout_payment_method !== $order->get_payment_method() ) ) {
+		$free_but_owes           = ( 'free' === $checkout_payment_method && $order->get_total() > 0 );
+		$wrong_method            = ( 'free' !== $checkout_payment_method && $checkout_payment_method && $checkout_payment_method !== $order->get_payment_method() );
+		if ( $free_but_owes || $wrong_method ) {
 			SPC()->log( 'Blocked payment: checkout payment method ' . $checkout_payment_method . ' does not fit order ' . $order->get_id() . ' (payment method ' . $order->get_payment_method() . ', total ' . $order->get_total() . ')' );
 			$this->add_error( __( 'Please select a payment method before completing your order.', 'sunshine-photo-cart' ) );
 			return false;
@@ -3127,7 +3129,7 @@ class SPC_Cart {
 			}
 		}
 		foreach ( array_filter( (array) $order->get_discounts() ) as $discount_code ) {
-			$discount = function_exists( 'sunshine_get_discount_by_code' ) ? sunshine_get_discount_by_code( $discount_code ) : false;
+			$discount = sunshine_get_discount_by_code( $discount_code );
 			if ( $discount && $discount->exists() && $discount->get_max_uses() && $discount->get_use_count() >= $discount->get_max_uses() ) {
 				SPC()->log( 'Blocked payment: discount ' . $discount_code . ' has no uses left for order ' . $order->get_id() );
 				/* translators: %s is the discount code */

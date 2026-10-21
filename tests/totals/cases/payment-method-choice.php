@@ -211,6 +211,23 @@ $pmc_test(
 	}
 );
 
+// The match check only applies when the checkout has a method saved. With none saved, this
+// gate lets the order through and the later "No payment method" check refuses it instead.
+$pmc_test(
+	'With no checkout method saved, the method check steps aside for the No payment method check',
+	function () use ( $t ) {
+		$t::customer();
+		$t::add( $t::product( 50, array( 'taxable' => false ) ) );
+		$t::place_order( 'test' );
+		SPC()->cart->set_checkout_data_item( 'payment_method', '' );
+		$result = SPC()->cart->process_order();
+		$errors = (array) SPC()->cart->get_errors();
+		$t::same( false, (bool) $result, 'an order with money owed and no method is not finished' );
+		$t::same( false, in_array( 'Please select a payment method before completing your order.', $errors, true ), 'the method check did not refuse it' );
+		$t::same( true, in_array( 'No payment method', $errors, true ), 'the No payment method check refused it' );
+	}
+);
+
 // ---------------------------------------------------------------------------------------------
 // Methods a customer may legitimately use, so the refusals above are not just "refuse everything".
 // ---------------------------------------------------------------------------------------------
