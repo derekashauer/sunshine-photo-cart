@@ -243,7 +243,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.7.6 =
+= 3.8 =
 * Security: Every payment method now confirms with the payment company that an order was really paid, in full, before the order is marked paid
 * Security: Gallery photos, comments and sub-galleries follow the gallery's access settings in more places, including feeds, sitemaps, sharing, favorites and the REST API
 * Security: Visitors never get a photo's original file, whatever image size a theme or plugin asks for
