@@ -2003,7 +2003,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		}
 
 		/* translators: %s is the refund amount formatted as price */
-		SPC()->notices->add_admin( 'square_refund_success_' . $payment_id, sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount ) ) );
+		SPC()->notices->add_admin( 'square_refund_success_' . $payment_id, sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount, false, $order->get_currency() ) ) );
 
 		if ( ! empty( $_POST['square_refund_notify'] ) ) {
 			$order->notify( false );

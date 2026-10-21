@@ -3934,7 +3934,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			$order->set_status( 'refunded' );
 		}
 		/* translators: %s is the refund amount formatted as price */
-		SPC()->notices->add_admin( 'stripe_refund_success_' . $payment_intent_id, sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount ) ) );
+		SPC()->notices->add_admin( 'stripe_refund_success_' . $payment_intent_id, sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount, false, $order->get_currency() ) ) );
 
 		if ( ! empty( $_POST['stripe_refund_notify'] ) ) {
 			$order->notify( false );

@@ -849,9 +849,7 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 				$this->maybe_mark_refunded( $order );
 			} elseif ( ! empty( $request->status ) && $request->status == 'COMPLETED' ) {
 				/* translators: %s is the refund amount formatted as price */
-				$order->add_log( sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount, false, $order->get_currency() ) ) );
-				/* translators: %s is the refund amount formatted as price */
-				SPC()->notices->add_admin( 'paypal_refund_' . $capture_id, sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount ) ) );
+				SPC()->notices->add_admin( 'paypal_refund_' . $capture_id, sprintf( __( 'Refund has been processed for %s', 'sunshine-photo-cart' ), sunshine_price( $refund_amount, false, $order->get_currency() ) ) );
 				$order->add_refund( $refund_amount );
 				$this->maybe_mark_refunded( $order );
 			} else {
@@ -867,7 +865,7 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 				SPC()->notices->add_admin( 'paypal_refund_' . $capture_id, trim( sprintf( __( 'PayPal failed to refund. %s', 'sunshine-photo-cart' ), $reason ) ), 'error' );
 				/* translators: 1: order ID, 2: PayPal's reason, may be empty */
 				$order->add_log( trim( sprintf( __( 'Order %1$s failed refund in PayPal. %2$s', 'sunshine-photo-cart' ), $order_id, $reason ) ) );
-				SPC()->log( 'PayPal refund failed for order ' . $order_id . ': ' . wp_json_encode( $request ) );
+				SPC()->log( 'PayPal refund failed for order ' . $order_id . ' (sent ' . wp_json_encode( $body ) . ', full refund box: ' . ( empty( $_POST['paypal_refund_full'] ) ? 'off' : 'on' ) . '): ' . wp_json_encode( $request ) );
 			}
 		}
 	}
