@@ -250,7 +250,13 @@ $whcc_forget = function () use ( $whcc_add_to_cart_object ) {
 		$cache->setValue( null, null );
 	}
 	SPC()->session->set( 'whcc_cart_split', '' );
+	SPC()->session->set( 'whcc_cart_split_failed', '' );
 	SPC()->session->set( 'whcc_editor_ids', '' );
+	if ( class_exists( 'SPC_WHCC_Shipping' ) && property_exists( 'SPC_WHCC_Shipping', 'split_lookups' ) ) {
+		$lookups = new ReflectionProperty( 'SPC_WHCC_Shipping', 'split_lookups' );
+		$lookups->setAccessible( true );
+		$lookups->setValue( null, array() );
+	}
 };
 
 // Every shipping method object the cart builds hooks itself onto these filters again and is

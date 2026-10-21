@@ -121,6 +121,57 @@ $whcc_test(
 	}
 );
 
+// Shipping is priced on every cart and checkout page, and needs WHCC's package split. When WHCC
+// is slow or down, the site waits a short time once, then stops asking for that same cart.
+$whcc_test(
+	'if WHCC cannot be reached for the package split, later pages don\'t wait on it again',
+	function () use ( $t, &$whcc_lab, $whcc_product, $whcc_editor, $whcc_add_from_editor, $whcc_sent ) {
+		$product = $whcc_product( 'card', null, false );
+		$editor  = $whcc_editor( $product, 2, 3.00, 1.50 );
+		$whcc_add_from_editor( $editor );
+		SPC()->session->set( 'whcc_cart_split', '' );
+		$whcc_lab['fail_export'] = true;
+
+		$timeouts = array();
+		$grab     = function ( $pre, $args, $url ) use ( &$timeouts ) {
+			if ( false !== strpos( $url, 'oas/editors/export' ) ) {
+				$timeouts[] = isset( $args['timeout'] ) ? $args['timeout'] : null;
+			}
+			return $pre;
+		};
+		// A new page load: what the add-on remembers for one page load is gone.
+		$next_page = function () {
+			$lookups = new ReflectionProperty( 'SPC_WHCC_Shipping', 'split_lookups' );
+			$lookups->setAccessible( true );
+			$lookups->setValue( null, array() );
+		};
+		add_filter( 'pre_http_request', $grab, 10, 3 );
+		try {
+			$before = count( $whcc_sent( 'PUT', 'oas/editors/export' ) );
+			$groups = SPC_WHCC_Shipping::get_cart_sub_order_groups();
+			$t::same( array( 'everything_else' ), $groups, 'falls back to the product groups' );
+			$t::same( $before + 1, count( $whcc_sent( 'PUT', 'oas/editors/export' ) ), 'WHCC asked once' );
+			$t::same( array( 10 ), $timeouts, 'waits 10 seconds at most' );
+
+			$next_page();
+			SPC_WHCC_Shipping::get_cart_sub_order_groups();
+			$t::same( $before + 1, count( $whcc_sent( 'PUT', 'oas/editors/export' ) ), 'not asked again on the next page for the same cart' );
+
+			// The cart changes, so WHCC is asked about the new one.
+			foreach ( (array) SPC()->cart->get_cart() as $key => $item ) {
+				SPC()->cart->update_item_quantity( $key, 3 );
+			}
+			$whcc_lab['fail_export'] = false;
+			$t::new_request();
+			$next_page();
+			SPC_WHCC_Shipping::get_cart_sub_order_groups();
+			$t::same( $before + 2, count( $whcc_sent( 'PUT', 'oas/editors/export' ) ), 'asked again once the cart changed' );
+		} finally {
+			remove_filter( 'pre_http_request', $grab, 10 );
+		}
+	}
+);
+
 /*
  * Markup per price level. The markup is sent to WHCC when the editor opens, so it decides
  * the price the customer pays. A gallery's photos are sold at the gallery's price level.
