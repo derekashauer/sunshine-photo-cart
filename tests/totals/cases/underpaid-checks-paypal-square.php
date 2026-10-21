@@ -754,3 +754,36 @@ $t::test(
 		$t::same( true, $underpaid_fresh( $order->get_id() )->is_paid(), 'order is paid' );
 	}
 );
+
+// A yen store: yen has no fractions, and PayPal refuses a yen amount with decimals. Three 1000
+// yen prints with 1000 yen off the line (a line discount from an add-on) cost 2000. Each print
+// is 666.67 after its share of the discount, so the form must round to whole yen like the rest
+// of the store (667 each, then 1 yen off as the discount) and still ask for 2000.
+$t::test(
+	'PayPal Legacy: a yen order with a line discount sends only whole yen',
+	function () use ( $t, $underpaid_legacy_settings, $underpaid_place, $underpaid_legacy_form, $underpaid_legacy_form_total ) {
+		$options             = $underpaid_legacy_settings();
+		$options['currency'] = 'JPY';
+		$t::option( 'currency', 'JPY' );
+		$line_discount = function () {
+			return 1000;
+		};
+		add_filter( 'sunshine_cart_item_discount', $line_discount );
+		try {
+			$t::add( $t::product( 1000, array( 'taxable' => false ) ), 3 );
+			$order = $underpaid_place( 'paypal-legacy', 2000 );
+		} finally {
+			remove_filter( 'sunshine_cart_item_discount', $line_discount );
+		}
+		$fields = $underpaid_legacy_form( $order, $options );
+		$t::same( true, isset( $fields['amount_1'] ), 'the form has an item line' );
+		$amounts = array( 'discount_amount_cart' => isset( $fields['discount_amount_cart'] ) ? $fields['discount_amount_cart'] : 0 );
+		for ( $line = 1; isset( $fields[ 'amount_' . $line ] ); $line++ ) {
+			$amounts[ 'amount_' . $line ] = $fields[ 'amount_' . $line ];
+		}
+		foreach ( $amounts as $key => $value ) {
+			$t::same( true, (float) $value === round( (float) $value ), $key . ' is whole yen (got ' . $value . ')' );
+		}
+		$t::money( 2000, $underpaid_legacy_form_total( $fields ), 'PayPal is asked for the order total' );
+	}
+);

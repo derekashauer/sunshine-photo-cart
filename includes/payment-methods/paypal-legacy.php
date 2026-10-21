@@ -117,27 +117,27 @@ class SPC_Payment_Method_PayPal_Legacy extends SPC_Payment_Method {
 			$amount_key                   = 'amount_' . $i;
 			$paypal_args[ $name_key ]     = $item->get_name_raw();
 			$paypal_args[ $quantity_key ] = $item->get_qty();
-			$paypal_args[ $amount_key ]   = round( $item->get_price() - $item->get_discount_per_item(), 2 );
+			$paypal_args[ $amount_key ]   = sunshine_round_amount( $item->get_price() - $item->get_discount_per_item() );
 			$i++;
 		}
 		if ( $order->get_shipping() > 0 ) {
 			$paypal_args[ 'item_name_' . $i ] = $order->get_shipping_method_name();
 			$paypal_args[ 'quantity_' . $i ]  = 1;
-			$paypal_args[ 'amount_' . $i ]    = round( $order->get_shipping(), 2 );
+			$paypal_args[ 'amount_' . $i ]    = sunshine_round_amount( $order->get_shipping() );
 			$i++;
 		}
 		// Fees like a payment method fee are their own lines. PayPal does not take lines below
 		// zero, so fees that take money off (gift cards) end up in the discount below.
 		foreach ( (array) $order->get_fees() as $fee ) {
-			if ( round( floatval( $fee['amount'] ), 2 ) <= 0 ) {
+			if ( sunshine_round_amount( floatval( $fee['amount'] ) ) <= 0 ) {
 				continue;
 			}
 			$paypal_args[ 'item_name_' . $i ] = $fee['name'];
 			$paypal_args[ 'quantity_' . $i ]  = 1;
-			$paypal_args[ 'amount_' . $i ]    = round( $fee['amount'], 2 );
+			$paypal_args[ 'amount_' . $i ]    = sunshine_round_amount( $fee['amount'] );
 			$i++;
 		}
-		$paypal_args['tax_cart'] = round( $order->get_tax(), 2 );
+		$paypal_args['tax_cart'] = sunshine_round_amount( $order->get_tax() );
 
 		// PayPal charges the lines plus tax minus the discount. The discount is whatever makes
 		// that come to the order total, so it covers discount codes, credits and gift cards.
@@ -145,8 +145,8 @@ class SPC_Payment_Method_PayPal_Legacy extends SPC_Payment_Method {
 		for ( $line = 1; isset( $paypal_args[ 'amount_' . $line ] ); $line++ ) {
 			$lines_total += $paypal_args[ 'amount_' . $line ] * intval( $paypal_args[ 'quantity_' . $line ] );
 		}
-		$order_total    = round( $order->get_total(), 2 );
-		$discount_total = round( $lines_total + $paypal_args['tax_cart'] - $order_total, 2 );
+		$order_total    = sunshine_round_amount( $order->get_total() );
+		$discount_total = sunshine_round_amount( $lines_total + $paypal_args['tax_cart'] - $order_total );
 		if ( $discount_total < 0 ) {
 			// Rounding each item's price pushed the lines below the order total. Send the order
 			// as one line instead, so PayPal is still asked for the exact total.
