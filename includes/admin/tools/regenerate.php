@@ -284,6 +284,21 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 					wp_delete_file( $extra_image );
 				}
 			}
+
+			// Sizes with secure file names have their own random part, so the pattern above
+			// misses them. Remove the ones this photo's metadata points to.
+			$old_metadata = wp_get_attachment_metadata( $image_id );
+			if ( ! empty( $old_metadata['sizes'] ) && is_array( $old_metadata['sizes'] ) ) {
+				foreach ( $old_metadata['sizes'] as $old_size ) {
+					if ( empty( $old_size['file'] ) || wp_basename( $old_size['file'] ) === wp_basename( $file_path ) ) {
+						continue;
+					}
+					$old_size_path = $directory . '/' . wp_basename( $old_size['file'] );
+					if ( file_exists( $old_size_path ) ) {
+						wp_delete_file( $old_size_path );
+					}
+				}
+			}
 		}
 
 		if ( $downloaded_from_cloud ) {
