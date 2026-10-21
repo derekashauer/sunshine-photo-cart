@@ -1732,6 +1732,20 @@ function sunshine_ajax_gallery_import() {
 	$single      = ! empty( $_POST['single'] );
 	$import_run  = isset( $_POST['import_run'] ) ? sanitize_key( wp_unslash( $_POST['import_run'] ) ) : '';
 
+	// A request the browser gave up on can still be running. Wait for it rather
+	// than working on the same photos at the same time. Claimed before anything
+	// else is read, so what follows is never from before that request finished.
+	if ( ! sunshine_import_lock( 'ftp_' . $gallery_id ) ) {
+		wp_send_json_success(
+			array(
+				'results'   => array(),
+				'busy'      => true,
+				'next_item' => $item_number,
+				'done'      => false,
+			)
+		);
+	}
+
 	// Photos this import brought in that the browser may not have heard about.
 	// Each one is kept until the browser asks for a later photo, which shows the
 	// reply listing it arrived. A reply lost on the way (a dropped connection, a
@@ -1780,19 +1794,6 @@ function sunshine_ajax_gallery_import() {
 	}
 
 	$dir = ltrim( substr( $folder, strlen( wp_normalize_path( sunshine_get_import_directory() ) ) ), '/' );
-
-	// A request the browser gave up on can still be running. Wait for it rather
-	// than working on the same photos at the same time.
-	if ( ! sunshine_import_lock( 'ftp_' . $gallery_id ) ) {
-		wp_send_json_success(
-			array(
-				'results'   => array(),
-				'busy'      => true,
-				'next_item' => $item_number,
-				'done'      => false,
-			)
-		);
-	}
 
 	// File names already in the gallery, so a photo is not brought in twice. Read
 	// in one query: looking each one up separately made every photo in a big
