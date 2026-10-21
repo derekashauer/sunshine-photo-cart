@@ -141,6 +141,74 @@ function sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $file_pa
 }
 
 /**
+ * Give each intermediate size its own random file name.
+ *
+ * With secure file names on, the original is saved as name-{24 random chars}.ext
+ * and WordPress names the sizes after it (name-{same chars}-400x500.ext). This
+ * swaps the shared string in each size for a fresh one and renames the files to
+ * match, so no two files share a name.
+ *
+ * Upload, background processing and regeneration all run through here, so a
+ * regenerated image also gets new addresses and nobody is shown a cached copy
+ * of the old files.
+ *
+ * Call it after the sizes exist on disk and before saving the metadata.
+ *
+ * @param array  $metadata  The attachment metadata.
+ * @param string $file_path The full path to the main image file.
+ * @return array The metadata with the new size file names.
+ */
+function sunshine_secure_size_filenames( $metadata, $file_path ) {
+	if ( function_exists( 'as3cf_get_attachment_url' ) || ! SPC()->get_option( 'use_secure_file_names' ) ) {
+		return $metadata;
+	}
+
+	if ( empty( $metadata['sizes'] ) || ! is_array( $metadata['sizes'] ) ) {
+		return $metadata;
+	}
+
+	if ( ! preg_match( '/-([a-zA-Z0-9]{24})\./', basename( $file_path ), $matches ) ) {
+		return $metadata;
+	}
+	$random_string = $matches[1];
+
+	SPC()->log( 'Appending image sizes with random strings' );
+
+	$base_dir = trailingslashit( dirname( $file_path ) );
+	$renamed  = array();
+	foreach ( $metadata['sizes'] as $size => &$size_data ) {
+		if ( false === strpos( $size_data['file'], $random_string ) ) {
+			continue;
+		}
+
+		// Two sizes with the same dimensions share one file.
+		if ( isset( $renamed[ $size_data['file'] ] ) ) {
+			$size_data['file'] = $renamed[ $size_data['file'] ];
+			continue;
+		}
+
+		$old_file = $size_data['file'];
+		$new_file = str_replace( $random_string, wp_generate_password( 24, false ), $old_file );
+
+		if ( ! file_exists( $base_dir . $old_file ) ) {
+			SPC()->log( 'File does not exist for renaming: ' . $base_dir . $old_file );
+			continue;
+		}
+
+		// Only point the metadata at the new name once the file is really there.
+		SPC()->log( 'Renaming: ' . $base_dir . $old_file );
+		if ( rename( $base_dir . $old_file, $base_dir . $new_file ) ) {
+			$size_data['file']    = $new_file;
+			$renamed[ $old_file ] = $new_file;
+			SPC()->log( $size . ' file renamed from ' . $old_file . ' to ' . $new_file );
+		}
+	}
+	unset( $size_data );
+
+	return $metadata;
+}
+
+/**
  * Save the parts of a photo's embedded metadata that Sunshine uses.
  *
  * The title and caption become the attachment title and excerpt, the capture

@@ -1291,34 +1291,9 @@ function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json
 			$attachment_image_meta = sunshine_ensure_intermediate_sizes( $attachment_id, $attachment_image_meta, $file_path );
 		}
 
-		// Don't do this when offloading is enabled.
-		if ( ! function_exists( 'as3cf_get_attachment_url' ) && SPC()->get_option( 'use_secure_file_names' ) && ! $delay_processing ) {
-
-			SPC()->log( 'Appending image sizes with random strings' );
-
-			// Modify the filenames in metadata for each intermediate size
-			if ( ! empty( $attachment_image_meta['sizes'] ) ) {
-				foreach ( $attachment_image_meta['sizes'] as $size => &$size_data ) {
-					// Use the same random string for all intermediate sizes
-					$size_info          = pathinfo( $size_data['file'] );
-					$size_random_string = wp_generate_password( 24, false );
-					$size_data['file']  = str_replace( $random_string, $size_random_string, $size_data['file'] );
-
-					// Rename the intermediate file on the server
-					$upload_dir         = wp_upload_dir();
-					$original_size_path = trailingslashit( $upload_dir['path'] ) . $size_info['basename'];
-					$new_size_path      = trailingslashit( $upload_dir['path'] ) . $size_data['file'];
-					if ( file_exists( $original_size_path ) ) {
-						SPC()->log( 'Renaming: ' . $original_size_path );
-						$rename_result = rename( $original_size_path, $new_size_path );
-						if ( $rename_result ) {
-							SPC()->log( $size . ' file renamed from ' . basename( $original_size_path ) . ' to ' . basename( $new_size_path ) );
-						}
-					} else {
-						SPC()->log( 'File does not exist for renaming: ' . $original_size_path );
-					}
-				}
-			}
+		// Background processing names the sizes once it has made them.
+		if ( ! $delay_processing ) {
+			$attachment_image_meta = sunshine_secure_size_filenames( $attachment_image_meta, $file_path );
 		}
 
 		$attachment_image_meta = sunshine_apply_image_meta( $attachment_id, $attachment_image_meta['image_meta'], $attachment_image_meta );

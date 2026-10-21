@@ -196,6 +196,10 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 
 		SPC()->log( 'Regenerating image: ' . $image_id );
 
+		// The sizes this image has now. Upload gives them random names that the
+		// clean-up further down can't match by pattern, so they're removed by name.
+		$old_metadata = wp_get_attachment_metadata( $image_id );
+
 		$upload_info              = wp_upload_dir();
 		$upload_dir               = $upload_info['basedir'];
 		$downloaded_from_cloud    = false;
@@ -286,6 +290,18 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			}
 		}
 
+		if ( ! empty( $old_metadata['sizes'] ) && is_array( $old_metadata['sizes'] ) ) {
+			$directory = trailingslashit( dirname( $file_path ) );
+			foreach ( $old_metadata['sizes'] as $old_size ) {
+				if ( empty( $old_size['file'] ) || basename( $old_size['file'] ) === basename( $file_path ) ) {
+					continue;
+				}
+				if ( file_exists( $directory . basename( $old_size['file'] ) ) ) {
+					wp_delete_file( $directory . basename( $old_size['file'] ) );
+				}
+			}
+		}
+
 		if ( $downloaded_from_cloud ) {
 			update_attached_file( $image_id, $file_path );
 		}
@@ -305,9 +321,23 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			}
 		}
 
+		// Use the Image Quality setting, the same as an upload does. Covers the sizes
+		// made here and the watermarked thumbnail saved during the hooks below.
+		$image_quality = (int) SPC()->get_option( 'image_quality' );
+		$set_quality   = function( $quality ) use ( $image_quality ) {
+			return $image_quality;
+		};
+		if ( $image_quality ) {
+			add_filter( 'jpeg_quality', $set_quality, 999 );
+		}
+
 		$new_metadata = wp_generate_attachment_metadata( $image_id, $file_path );
 
 		$new_metadata = sunshine_ensure_intermediate_sizes( $image_id, $new_metadata, $file_path );
+
+		// New random names, the same as an upload gets. This also gives every rebuilt
+		// size a new address, so browsers and caches can't keep showing the old copy.
+		$new_metadata = sunshine_secure_size_filenames( $new_metadata, $file_path );
 
 		$image_meta   = isset( $new_metadata['image_meta'] ) ? $new_metadata['image_meta'] : array();
 		if ( empty( $created_timestamp ) && ! empty( $image_meta['created_timestamp'] ) ) {
@@ -340,6 +370,8 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 
 		do_action( 'sunshine_regenerate_image', $image_id );
 		do_action( 'sunshine_after_image_process', $image_id, $file_path, $watermark );
+
+		remove_filter( 'jpeg_quality', $set_quality, 999 );
 
 		return array(
 			'ok'       => true,

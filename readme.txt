@@ -251,6 +251,9 @@ Security is important to us. Please report security bugs through the [Patchstack
 * New: While photos are being imported, Sunshine loads only itself, its add-ons and the plugins an import needs (cloud storage and code snippet plugins), so other plugins don't slow down every photo. The rest of your site loads normally. This is done by a small file Sunshine adds to your must-use plugins, which is removed if Sunshine is deactivated. If an import ever stops because it needed one of the plugins it left out, imports go back to loading every plugin until your plugins or theme change
 * Fix: Importing into a gallery that already has thousands of photos no longer gets slower with every photo added
 * Fix: A gallery whose cover photo has no recorded size now shows a normal tile in the justified layout instead of a broken one
+* Fix: Regenerating images now gives each new thumbnail and large image its own new file name, the same as an upload. Browsers could keep showing the old copy because the address never changed
+* Fix: Regenerating images now removes the old thumbnail and large image files instead of leaving them behind on the server
+* Fix: Regenerating images now uses your Image Quality setting for every size, not just the watermarked large image
 
 = 3.7.5 - October 13, 2026 =
 * Security: Visitors can no longer see photos from a gallery they don't have access to, like a password-protected or private gallery, through the share, add to cart, or product options windows
