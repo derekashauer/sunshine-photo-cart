@@ -608,10 +608,9 @@ class SPC_Order extends Sunshine_Data {
 		$this->update_meta_value( 'discount_tax', floatval( $value ) );
 	}
 	public function get_discount_formatted() {
-		// Mirror get_subtotal_formatted()/get_shipping_formatted(): price_formatted() adds the tax
-		// portion back only in with-tax mode, so this shows the gross discount with tax displayed
-		// and the ex-tax (base) discount when prices are shown without tax.
-		// When prices include tax the discount already holds its tax, otherwise the tax comes on top.
+		// Mirror get_subtotal_formatted()/get_shipping_formatted(): shown with tax, the discount
+		// includes the tax it took off; shown without tax, it doesn't. When prices include tax the
+		// discount already holds its tax, otherwise the tax comes on top.
 		$discount = $this->get_discount();
 		if ( 'yes' === $this->get_meta_value( 'price_has_tax' ) ) {
 			$discount -= $this->get_discount_tax();
@@ -1112,8 +1111,6 @@ class SPC_Order extends Sunshine_Data {
 	}
 
 	public function update() {
-		global $wpdb;
-
 		// Set payment method to free if order total is 0
 		if ( $this->get_total() == 0 ) {
 			$this->set_payment_method( 'free' );
@@ -1169,14 +1166,7 @@ class SPC_Order extends Sunshine_Data {
 		// We want this saved to database so it is permanent should products/images be removed in the future.
 
 		// Instead of inserting, we are going to delete and re-insert, line details included.
-		$old_item_ids = $wpdb->get_col( $wpdb->prepare( "SELECT order_item_id FROM {$wpdb->prefix}sunshine_order_items WHERE order_id = %d", $this->get_id() ) );
-		foreach ( $old_item_ids as $old_item_id ) {
-			$wpdb->delete( $wpdb->prefix . 'sunshine_order_itemmeta', array( 'order_item_id' => $old_item_id ) );
-		}
-		$wpdb->delete(
-			$wpdb->prefix . 'sunshine_order_items',
-			array( 'order_id' => $this->get_id() )
-		);
+		sunshine_delete_order_lines( $this->get_id() );
 
 		foreach ( $this->cart as &$item ) {
 			// TODO: Need to open this up to more than just images.
