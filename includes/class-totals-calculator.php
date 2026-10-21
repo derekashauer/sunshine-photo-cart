@@ -449,10 +449,6 @@ class SPC_Totals_Calculator {
 		return isset( $this->codes[ $discount_id ] ) ? $this->codes[ $discount_id ] : null;
 	}
 
-	public function has_lines() {
-		return ! empty( $this->lines );
-	}
-
 	/**
 	 * Set the order discount when an add-on changed it (sunshine_cart_discount).
 	 */
@@ -648,15 +644,7 @@ class SPC_Totals_Calculator {
 		return max( 0, self::round( array_sum( $parts ) ) );
 	}
 
-	public function get_totals() {
-		return $this->totals;
-	}
-
 	public function get( $key ) {
 		return isset( $this->totals[ $key ] ) ? $this->totals[ $key ] : 0.0;
-	}
-
-	public function get_tax_rate() {
-		return $this->tax_rate;
 	}
 }
