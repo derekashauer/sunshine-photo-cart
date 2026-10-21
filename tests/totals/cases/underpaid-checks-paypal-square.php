@@ -326,6 +326,24 @@ $t::test(
 	}
 );
 
+// Square says the card payment failed (declined), for the full amount.
+$t::test(
+	'Square: a failed payment leaves the order unpaid and the note says declined',
+	function () use ( $t, $underpaid_square_use, $underpaid_place, $underpaid_square_submit, $underpaid_square_payment, $underpaid_fresh, $underpaid_finished, $underpaid_declined_note ) {
+		$underpaid_square_use();
+		$t::tax( 10 );
+		$t::add( $t::product( 100 ) );
+		$order                        = $underpaid_place( 'square', 110 );
+		$payment                      = $underpaid_square_payment( $order, 11000 );
+		$payment['payment']['status'] = 'FAILED';
+		$underpaid_square_submit( $order, $payment );
+		$saved = $underpaid_fresh( $order->get_id() );
+		$t::same( 'pending', $saved->get_status(), 'order still waits for payment' );
+		$t::same( false, $underpaid_finished( $saved ), 'order not finished' );
+		$underpaid_declined_note( $order->get_id() );
+	}
+);
+
 $t::test(
 	'Square: a payment in another currency leaves the order unpaid',
 	function () use ( $t, $underpaid_square_use, $underpaid_place, $underpaid_square_submit, $underpaid_square_payment, $underpaid_fresh, $underpaid_finished ) {

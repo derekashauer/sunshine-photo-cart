@@ -1463,11 +1463,17 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		if ( ! in_array( $status, array( 'COMPLETED', 'APPROVED' ), true ) || ! $this->payment_matches_order( $payment, $order ) ) {
 			$paid = isset( $payment['amount_money']['amount'] ) ? ( $payment['amount_money']['amount'] / $this->get_amount_multiplier() ) . ' ' . $payment['amount_money']['currency'] : 'unknown';
 			SPC()->log( 'Square payment ' . $payment_id . ' (status ' . ( $status ? $status : 'not found' ) . ', ' . $paid . ') does not match order ' . $order->get_id() . ' (total ' . $order->get_total() . ')' );
-			/* translators: 1: Square payment ID, 2: amount paid in Square */
-			$note = sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid );
-			$order->add_log( $note );
 			// Square saying the payment failed or was cancelled is a decline, not a mismatch.
-			sunshine_order_payment_problem( $order, $note, $this->id, in_array( $status, array( 'FAILED', 'CANCELED' ), true ) ? 'declined' : 'mismatch' );
+			$declined = in_array( $status, array( 'FAILED', 'CANCELED' ), true );
+			if ( $declined ) {
+				/* translators: 1: Square payment ID, 2: payment status from Square, e.g. FAILED */
+				$note = sprintf( __( 'Square payment %1$s was declined or cancelled (status %2$s), so the order was not marked paid', 'sunshine-photo-cart' ), $payment_id, $status );
+			} else {
+				/* translators: 1: Square payment ID, 2: amount paid in Square */
+				$note = sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid );
+			}
+			$order->add_log( $note );
+			sunshine_order_payment_problem( $order, $note, $this->id, $declined ? 'declined' : 'mismatch' );
 			SPC()->cart->add_error( __( 'Your payment did not match the order total, please contact the site owner', 'sunshine-photo-cart' ) );
 			return;
 		}

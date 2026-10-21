@@ -308,12 +308,13 @@ $t::test(
 // PayFast also sends an ITN when a payment is cancelled.
 $t::test(
 	'PayFast: an ITN for a cancelled payment leaves the order unpaid',
-	function () use ( $t, $underpaid_payfast_settings, $underpaid_place, $underpaid_payfast_itn, $underpaid_payfast_notify, $underpaid_still_pending ) {
+	function () use ( $t, $underpaid_payfast_settings, $underpaid_place, $underpaid_payfast_itn, $underpaid_payfast_notify, $underpaid_still_pending, $underpaid_declined_note ) {
 		$options = $underpaid_payfast_settings();
 		$t::add( $t::product( 230, array( 'taxable' => false ) ) );
 		$order = $underpaid_place( 'payfast', 230 );
 		$underpaid_payfast_notify( $order, $options, $underpaid_payfast_itn( $order, 230, 'sunshine totals', array( 'payment_status' => 'CANCELLED' ) ) );
 		$underpaid_still_pending( $order->get_id() );
+		$underpaid_declined_note( $order->get_id() );
 	}
 );
 
@@ -892,7 +893,7 @@ $t::test(
 // Systempay sends an IPN for a refused card too, with vads_trans_status REFUSED.
 $t::test(
 	'Systempay: an IPN for a refused payment leaves the order unpaid',
-	function () use ( $t, $underpaid_systempay_settings, $underpaid_place, $underpaid_systempay_form, $underpaid_systempay_ipn, $underpaid_systempay_notify, $underpaid_still_pending ) {
+	function () use ( $t, $underpaid_systempay_settings, $underpaid_place, $underpaid_systempay_form, $underpaid_systempay_ipn, $underpaid_systempay_notify, $underpaid_still_pending, $underpaid_declined_note ) {
 		$options = $underpaid_systempay_settings();
 		$t::add( $t::product( 60, array( 'taxable' => false ) ) );
 		$order = $underpaid_place( 'systempay', 60 );
@@ -911,6 +912,7 @@ $t::test(
 			)
 		);
 		$underpaid_still_pending( $order->get_id() );
+		$underpaid_declined_note( $order->get_id() );
 	}
 );
 
@@ -1076,6 +1078,21 @@ $t::test(
 	}
 );
 
+// The customer comes back, but QuickPay has not accepted the payment (the card was declined).
+$t::test(
+	'QuickPay: a payment QuickPay did not accept leaves the order unpaid and the note says declined',
+	function () use ( $t, $underpaid_quickpay_use, $underpaid_place, $underpaid_quickpay_start, $underpaid_quickpay_return, $underpaid_still_pending, $underpaid_declined_note ) {
+		$underpaid_quickpay_use();
+		$t::tax( 10 );
+		$t::add( $t::product( 100 ) );
+		$order    = $underpaid_place( 'quickpay', 110 );
+		$continue = $underpaid_quickpay_start( $order );
+		$underpaid_quickpay_return( $order, $continue, 11000, 'USD', false );
+		$underpaid_still_pending( $order->get_id() );
+		$underpaid_declined_note( $order->get_id() );
+	}
+);
+
 // QuickPay also calls the site in the background (callback()), signed with the private key.
 // It ends with exit, so it runs in a separate process.
 $t::test(
@@ -1166,8 +1183,9 @@ $underpaid_paystack_start = function ( $order ) use ( $underpaid_run, $underpaid
 };
 
 // The customer comes back on the order's return link with transaction $reference, which
-// Paystack reports as a successful payment of $amount (smallest unit) in $currency.
-$underpaid_paystack_return = function ( $callback_url, $reference, $amount, $currency = 'USD' ) use ( $underpaid_run ) {
+// Paystack reports as a payment of $amount (smallest unit) in $currency with $status
+// (success, unless a test says failed or abandoned).
+$underpaid_paystack_return = function ( $callback_url, $reference, $amount, $currency = 'USD', $status = 'success' ) use ( $underpaid_run ) {
 	parse_str( (string) wp_parse_url( $callback_url, PHP_URL_QUERY ), $query );
 	$query['trxref']    = $reference;
 	$query['reference'] = $reference;
@@ -1181,7 +1199,7 @@ $underpaid_paystack_return = function ( $callback_url, $reference, $amount, $cur
 			function () use ( $paystack ) {
 				$paystack->success();
 			},
-			function ( $request ) use ( $reference, $amount, $currency ) {
+			function ( $request ) use ( $reference, $amount, $currency, $status ) {
 				if ( '/transaction/verify/' . $reference !== $request['path'] ) {
 					return null;
 				}
@@ -1192,7 +1210,7 @@ $underpaid_paystack_return = function ( $callback_url, $reference, $amount, $cur
 						'message' => 'Verification successful',
 						'data'    => array(
 							'id'        => 4099260516,
-							'status'    => 'success',
+							'status'    => $status,
 							'reference' => $reference,
 							'amount'    => $amount,
 							'currency'  => $currency,
@@ -1248,6 +1266,21 @@ $t::test(
 	}
 );
 
+// Paystack says the card payment failed.
+$t::test(
+	'Paystack: a failed transaction leaves the order unpaid and the note says declined',
+	function () use ( $t, $underpaid_paystack_use, $underpaid_place, $underpaid_paystack_start, $underpaid_paystack_return, $underpaid_still_pending, $underpaid_declined_note ) {
+		$underpaid_paystack_use();
+		$t::tax( 10 );
+		$t::add( $t::product( 100 ) );
+		$order = $underpaid_place( 'paystack', 110 );
+		$back  = $underpaid_paystack_start( $order );
+		$underpaid_paystack_return( $back, 'spcref' . $order->get_id(), 11000, 'USD', 'failed' );
+		$underpaid_still_pending( $order->get_id() );
+		$underpaid_declined_note( $order->get_id() );
+	}
+);
+
 // The customer paid an earlier order. On a new order's return link they put the earlier
 // order's transaction reference instead of paying again.
 $t::test(
@@ -1287,13 +1320,13 @@ $underpaid_mercadopago_use = function () use ( $t, $underpaid_settings ) {
 	);
 };
 
-// Submit the order with Mercado Pago payment 5550001, which Mercado Pago reports as approved
-// for $paid in $currency.
-$underpaid_mercadopago_submit = function ( $paid, $currency = 'USD' ) use ( $underpaid_submit ) {
+// Submit the order with Mercado Pago payment 5550001, which Mercado Pago reports as $status
+// (approved, unless a test says rejected) for $paid in $currency.
+$underpaid_mercadopago_submit = function ( $paid, $currency = 'USD', $status = 'approved' ) use ( $underpaid_submit ) {
 	$_GET['mercadopago_payment_id'] = '5550001';
 	try {
 		return $underpaid_submit(
-			function ( $request ) use ( $paid, $currency ) {
+			function ( $request ) use ( $paid, $currency, $status ) {
 				if ( '/v1/payments/5550001' !== $request['path'] ) {
 					return null;
 				}
@@ -1301,7 +1334,7 @@ $underpaid_mercadopago_submit = function ( $paid, $currency = 'USD' ) use ( $und
 					200,
 					array(
 						'id'                 => 5550001,
-						'status'             => 'approved',
+						'status'             => $status,
 						'transaction_amount' => $paid,
 						'currency_id'        => $currency,
 						'fee_details'        => array(),
@@ -1330,6 +1363,25 @@ $t::test(
 			SPC()->session->set( 'mercadopago_payment_id', '' );
 		}
 		$underpaid_still_pending( $order->get_id() );
+	}
+);
+
+// Mercado Pago rejected the card.
+$t::test(
+	'Mercado Pago: a rejected card payment leaves the order unpaid and the note says declined',
+	function () use ( $t, $underpaid_mercadopago_use, $underpaid_place, $underpaid_mercadopago_submit, $underpaid_still_pending, $underpaid_declined_note ) {
+		$underpaid_mercadopago_use();
+		$t::tax( 10 );
+		$t::add( $t::product( 100 ) );
+		$order = $underpaid_place( 'mercadopago', 110 );
+		SPC()->session->set( 'mercadopago_payment_id', 5550001 );
+		try {
+			$underpaid_mercadopago_submit( 110, 'USD', 'rejected' );
+		} finally {
+			SPC()->session->set( 'mercadopago_payment_id', '' );
+		}
+		$underpaid_still_pending( $order->get_id() );
+		$underpaid_declined_note( $order->get_id() );
 	}
 );
 

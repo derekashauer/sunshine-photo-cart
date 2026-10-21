@@ -479,3 +479,19 @@ $underpaid_next_order = function () {
 $underpaid_finished = function ( $order ) {
 	return $order->is_paid() || '' !== (string) $order->get_meta_value( 'post_processed' );
 };
+
+// A payment the service declined or cancelled is not a payment that "does not match": the
+// order note (which is also the reason in the Admin Payment Problem email) says it was declined.
+$underpaid_declined_note = function ( $order_id, $label = '' ) use ( $t ) {
+	$notes = wp_list_pluck(
+		get_comments(
+			array(
+				'post_id' => $order_id,
+				'type'    => 'sunshine_order_log',
+			)
+		),
+		'comment_content'
+	);
+	$t::same( 1, count( preg_grep( '/was declined or/', $notes ) ), $label . 'one note says the payment was declined: ' . wp_json_encode( $notes ) );
+	$t::same( array(), array_values( preg_grep( '/match/i', $notes ) ), $label . 'no note says the payment does not match' );
+};
