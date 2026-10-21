@@ -981,6 +981,22 @@ $woo_test(
 	}
 );
 
+// That product has no price in the normal shop, so it can't be bought there for nothing. In a
+// gallery's cart it stays when WooCommerce loads the cart again on the next page.
+$woo_test(
+	'WooCommerce: a product priced only at a level stays in a gallery cart, not in the shop',
+	function () use ( $t, $woo_level, $woo_product, $woo_forget_cached_prices ) {
+		$level   = $woo_level( 'Wedding' );
+		$product = wc_get_product( $woo_product( '', array( 'level_prices' => array( $level => '25' ) ) ) );
+		$woo_forget_cached_prices();
+		$t::same( false, $product->is_purchasable(), 'not for sale in the normal shop' );
+		$gallery_item = array( 'sunshine' => array( 'price_level' => $level ) );
+		$t::same( true, apply_filters( 'woocommerce_cart_item_is_purchasable', $product->is_purchasable(), 'key', $gallery_item, $product ), 'kept in a gallery cart' );
+		$t::same( false, apply_filters( 'woocommerce_cart_item_is_purchasable', $product->is_purchasable(), 'key', array(), $product ), 'not kept in a shop cart' );
+		$t::same( false, $product->is_purchasable(), 'still not for sale in the shop afterwards' );
+	}
+);
+
 $woo_test(
 	'WooCommerce: large quantity at a level price with cents',
 	function () use ( $t, $woo_level, $woo_product, $woo_gallery, $woo_add, $woo_calculate ) {
