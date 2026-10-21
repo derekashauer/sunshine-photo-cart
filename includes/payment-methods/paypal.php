@@ -517,7 +517,7 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 		$items      = array();
 		$item_total = 0;
 		foreach ( SPC()->cart->get_cart_items() as $cart_item ) {
-			$unit_amount = $this->round_amount( $cart_item->get_price() );
+			$unit_amount = sunshine_round_amount( $cart_item->get_price() );
 			$item_total += $unit_amount * $cart_item->get_qty();
 			$items[]     = array(
 				'name'        => $cart_item->get_name_raw(),
@@ -532,7 +532,7 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 		$fees = SPC()->cart->get_fees();
 		if ( ! empty( $fees ) ) {
 			foreach ( $fees as $fee ) {
-				$unit_amount = $this->round_amount( $fee['amount'] );
+				$unit_amount = sunshine_round_amount( $fee['amount'] );
 				// PayPal does not allow items below zero. A fee that takes money off (a gift card)
 				// is left out here and ends up in the discount below, which balances the breakdown.
 				if ( $unit_amount <= 0 ) {
@@ -557,7 +557,7 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 		// already, so the discount line is whatever balances the equation. With the cart's discount
 		// tax/base split now correct, this equals the real ex-tax discount (cart + line-item + credits).
 		// Every amount is sent with the currency's own decimals (none for yen); PayPal refuses more.
-		$item_total = $this->round_amount( $item_total );
+		$item_total = sunshine_round_amount( $item_total );
 		$tax_total  = (float) SPC()->cart->get_tax();
 
 		// When prices include tax, each line's tax is taken out of the whole line, but PayPal
@@ -567,16 +567,16 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 		if ( 'yes' === SPC()->get_option( 'price_has_tax' ) ) {
 			foreach ( SPC()->cart->get_cart_items() as $cart_item ) {
 				if ( $cart_item->get_tax_rate() ) {
-					$tax_total -= $this->round_amount( $cart_item->get_price() ) * $cart_item->get_qty() - (float) $cart_item->get_subtotal();
+					$tax_total -= sunshine_round_amount( $cart_item->get_price() ) * $cart_item->get_qty() - (float) $cart_item->get_subtotal();
 				}
 			}
 			$tax_total = max( 0, $tax_total );
 		}
 
-		$tax_total       = $this->round_amount( $tax_total );
-		$shipping_amount = $this->round_amount( SPC()->cart->get_shipping() );
+		$tax_total       = sunshine_round_amount( $tax_total );
+		$shipping_amount = sunshine_round_amount( SPC()->cart->get_shipping() );
 		$amount          = (float) SPC()->cart->get_total();
-		$discount        = $this->round_amount( $item_total + $tax_total + $shipping_amount - $amount );
+		$discount        = sunshine_round_amount( $item_total + $tax_total + $shipping_amount - $amount );
 		if ( $discount < 0 ) {
 			// Should never happen; would indicate an upstream total/breakdown bug.
 			SPC()->log( 'PayPal breakdown produced a negative discount (' . $discount . '); clamping to 0. item_total=' . $item_total . ' tax=' . $tax_total . ' shipping=' . $shipping_amount . ' amount=' . $amount );
@@ -870,16 +870,6 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 				SPC()->log( 'PayPal refund failed for order ' . $order_id . ' (sent ' . wp_json_encode( $body ) . ', full refund box: ' . ( empty( $_POST['paypal_refund_full'] ) ? 'off' : 'on' ) . '): ' . wp_json_encode( $request ) );
 			}
 		}
-	}
-
-	/**
-	 * An amount rounded to the store currency's decimals (none for yen).
-	 *
-	 * @param float $amount The amount.
-	 * @return float
-	 */
-	private function round_amount( $amount ) {
-		return round( (float) $amount, (int) sunshine_currency_decimal_filter( 2 ) );
 	}
 
 	/**
