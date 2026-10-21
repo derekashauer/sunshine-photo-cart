@@ -30,6 +30,7 @@ class SPC_Totals_Test {
 	public static function test( $name, $callback ) {
 		self::$current = $name;
 		self::reset();
+		$orders_before = count( self::$created_orders );
 		try {
 			$callback();
 		} catch ( SPC_Totals_Test_Skip $e ) {
@@ -38,6 +39,11 @@ class SPC_Totals_Test {
 			self::$failed[] = $name . ': threw ' . get_class( $e ) . ': ' . $e->getMessage() . ' (' . basename( $e->getFile() ) . ':' . $e->getLine() . ')';
 		}
 		self::reset();
+		// The orders this test placed are deleted now, not at the end of the run. A later test
+		// that uses the same made-up payment ID (Stripe, Mercado Pago, ...) would otherwise find
+		// this test's order holding it, and the payment method rightly refuses a payment that is
+		// already on another order.
+		self::delete_orders( array_splice( self::$created_orders, $orders_before ) );
 	}
 
 	public static function skip( $reason ) {
@@ -365,10 +371,9 @@ class SPC_Totals_Test {
 		return sunshine_get_order( $response['data']['order_id'] );
 	}
 
-	public static function cleanup() {
+	private static function delete_orders( $ids ) {
 		global $wpdb;
-		self::reset();
-		foreach ( self::$created_orders as $id ) {
+		foreach ( $ids as $id ) {
 			$item_ids = $wpdb->get_col( $wpdb->prepare( "SELECT order_item_id FROM {$wpdb->prefix}sunshine_order_items WHERE order_id = %d", $id ) );
 			foreach ( $item_ids as $item_id ) {
 				$wpdb->delete( $wpdb->prefix . 'sunshine_order_itemmeta', array( 'order_item_id' => $item_id ) );
@@ -376,6 +381,11 @@ class SPC_Totals_Test {
 			$wpdb->delete( $wpdb->prefix . 'sunshine_order_items', array( 'order_id' => $id ) );
 			wp_delete_post( $id, true );
 		}
+	}
+
+	public static function cleanup() {
+		self::reset();
+		self::delete_orders( self::$created_orders );
 		self::$created_orders = array();
 		foreach ( self::$created_terms as $term ) {
 			wp_delete_term( $term[0], $term[1] );
