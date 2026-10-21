@@ -30,13 +30,16 @@ $store_email_catch = function ( $callback ) {
 	return $mail;
 };
 
-// The store owner turned the email on. The admin order receipt goes to one address.
+// The store owner turned the email on and gave it its own address. The admin order receipt goes
+// somewhere else, which this email must not use.
 $store_email_on = function () use ( $t ) {
 	$t::option( 'email_admin-payment-problem_active', 1 );
-	$t::option( 'email_admin-receipt_recipients', 'owner@example.com' );
+	$t::option( 'email_admin-payment-problem_recipients', 'owner@example.com' );
+	$t::option( 'email_admin-receipt_recipients', 'orders@example.com' );
 	return array(
-		'email_admin-payment-problem_active' => 1,
-		'email_admin-receipt_recipients'     => 'owner@example.com',
+		'email_admin-payment-problem_active'     => 1,
+		'email_admin-payment-problem_recipients' => 'owner@example.com',
+		'email_admin-receipt_recipients'         => 'orders@example.com',
 	);
 };
 
@@ -214,5 +217,41 @@ $t::test(
 		);
 		$t::same( 1, count( $on ), 'on: one email' );
 		$t::same( false, false !== strpos( isset( $on[0]['subject'] ) ? $on[0]['subject'] : '', 'test mode' ), 'no test mode in a live order subject' );
+	}
+);
+
+// Who gets it: the addresses typed for this email, never the admin order receipt's. Left empty,
+// the site admin email gets it so a turned-on email is never sent to nobody.
+$t::test(
+	'Payment problem email: goes to its own recipients, or the site admin email when none are set',
+	function () use ( $t, $store_email_catch, $store_email_on ) {
+		$store_email_on();
+		$t::add( $t::product( 30 ) );
+		$t::calculate();
+		$order = $t::place_order();
+		$to    = function ( $mail ) {
+			$list = array();
+			foreach ( $mail as $one ) {
+				$list = array_merge( $list, (array) $one['to'] );
+			}
+			return implode( ',', $list );
+		};
+
+		$mail = $store_email_catch(
+			function () use ( $order ) {
+				sunshine_order_payment_problem( $order, 'First reason.', 'test' );
+			}
+		);
+		$t::same( 'owner@example.com', $to( $mail ), 'sent to the address set for this email only' );
+
+		$t::option( 'email_admin-payment-problem_recipients', '' );
+		$mail = $store_email_catch(
+			function () use ( $order ) {
+				sunshine_order_payment_problem( $order, 'Second reason.', 'test' );
+			}
+		);
+		$t::same( get_bloginfo( 'admin_email' ), $to( $mail ), 'no address set: the site admin email' );
+
+		$t::same( true, SPC()->emails->get_email_by_id( 'admin-payment-problem' )->allows_custom_recipients(), 'the settings show a Recipient(s) box' );
 	}
 );

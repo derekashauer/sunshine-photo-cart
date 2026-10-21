@@ -1,7 +1,8 @@
 <?php
 /**
  * Tells the store owner when a payment can't be accepted for an order, or an order is marked
- * Failed. Off until the store owner turns it on. Goes to the Admin Order Receipt recipients.
+ * Failed. Off until the store owner turns it on. Goes to its own recipients, or the site admin
+ * email when none are set.
  */
 class SPC_Email_Admin_Payment_Problem extends SPC_Email {
 
@@ -10,10 +11,10 @@ class SPC_Email_Admin_Payment_Problem extends SPC_Email {
 		$this->id          = 'admin-payment-problem';
 		$this->class       = get_class( $this );
 		$this->name        = __( 'Admin Payment Problem', 'sunshine-photo-cart' );
-		$this->description = __( 'Email sent to admins when a payment can\'t be accepted for an order or an order is marked Failed. Goes to the Admin Order Receipt recipients.', 'sunshine-photo-cart' );
+		$this->description = __( 'Email sent to admins when a payment can\'t be accepted for an order or an order is marked Failed. Sent to the recipients below, or the site admin email when left empty.', 'sunshine-photo-cart' );
 		/* translators: %1$s is the order name, %2$s is the site name */
 		$this->subject           = sprintf( __( 'Payment problem with %1$s from %2$s', 'sunshine-photo-cart' ), '[order_name]', '[sitename]' );
-		$this->custom_recipients = false;
+		$this->custom_recipients = true;
 		$this->active_by_default = false;
 
 		$this->add_search_replace(
@@ -75,16 +76,12 @@ class SPC_Email_Admin_Payment_Problem extends SPC_Email {
 			}
 		}
 
-		// Same people as the admin order receipt.
-		$recipients    = array();
-		$receipt_email = SPC()->emails->get_email_by_id( 'admin-receipt' );
-		if ( $receipt_email ) {
-			$recipients = $receipt_email->get_default_recipients();
+		// The recipients set for this email are added when it sends. With none set, the site
+		// admin email gets it, so turning it on never sends to nobody.
+		$this->clear_recipients();
+		if ( empty( $this->get_default_recipients() ) ) {
+			$this->set_recipients( get_bloginfo( 'admin_email' ) );
 		}
-		if ( empty( $recipients ) ) {
-			$recipients = get_bloginfo( 'admin_email' );
-		}
-		$this->set_recipients( $recipients );
 
 		$default_subject = $this->subject;
 		$subject         = $this->get_subject();
