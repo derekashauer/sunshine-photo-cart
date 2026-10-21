@@ -900,7 +900,8 @@ $t::test(
 			$message = isset( $reply['result']['data']['message'] ) ? $reply['result']['data']['message'] : '';
 			$t::same( false, ! empty( $reply['result']['success'] ), 'no payment is set up' );
 			$t::same( true, false !== strpos( $message, 'Stripe can\'t take a payment this small. Add more to your order or choose another way to pay.' ), 'our sentence (got "' . $message . '")' );
-			$t::same( true, false !== strpos( $message, 'Amount must convert to at least 50 cents.' ), 'and Stripe\'s own reason' );
+			// Stripe's own reason is technical and always English, so it goes to the log, not the customer.
+			$t::same( false, false !== strpos( $message, 'Amount must convert to at least 50 cents.' ), 'Stripe\'s English reason is not shown' );
 		} finally {
 			$gateways_stripe_forget();
 		}
@@ -979,7 +980,7 @@ $t::test(
 			);
 			$errors = implode( ' ', SPC()->cart->get_errors() );
 			$t::same( true, false !== strpos( $errors, 'Stripe can\'t take a payment this small.' ), 'our sentence (got "' . $errors . '")' );
-			$t::same( true, false !== strpos( $errors, 'Amount must convert to at least 50 cents.' ), 'and Stripe\'s own reason' );
+			$t::same( false, false !== strpos( $errors, 'Amount must convert to at least 50 cents.' ), 'Stripe\'s English reason is not shown' );
 		} finally {
 			remove_filter( 'pre_http_request', $refuse, PHP_INT_MAX );
 			remove_filter( 'wp_redirect', $redirect, 0 );

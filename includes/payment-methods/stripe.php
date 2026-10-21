@@ -338,7 +338,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			return '';
 		}
 		/* translators: %s is the payment method name, such as "Stripe" */
-		return sprintf( __( '%s can\'t take a payment this small. Add more to your order or choose another way to pay.', 'sunshine-photo-cart' ), esc_html( $this->get_name() ) ) . ' ' . esc_html( $error->get_error_message() );
+		return sprintf( __( '%s can\'t take a payment this small. Add more to your order or choose another way to pay.', 'sunshine-photo-cart' ), esc_html( $this->get_name() ) );
 	}
 
 	/**
