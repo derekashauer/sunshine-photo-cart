@@ -244,28 +244,62 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.7.6 =
-* Security: PayPal, Stripe and Square payments are now checked against the order total before an order is marked paid, so a payment for a smaller amount, or no payment at all, can't complete an order
-* The Sunshine log now notes when an order status can't be set, like when that status has been deleted
-* Tools > Install process no longer turns your emails back on or resets who receives the admin emails
+* Security: Every payment method now confirms with the payment company that an order was really paid, in full, before the order is marked paid
+* Security: Gallery photos, comments and sub-galleries follow the gallery's access settings in more places, including feeds, sitemaps, sharing, favorites and the REST API
+* Security: Visitors never get a photo's original file, whatever image size a theme or plugin asks for
+* Security: More checks on admin actions, settings and account changes, and limits on repeated login, gallery password, sharing and signup attempts
+* Security: Connecting Stripe or Square no longer passes your keys through the browser. Square stores now keep and renew their own connection, and stores connected to Square the old way see a notice asking them to reconnect
+* New: Admin Payment Problem email that tells you when a payment is declined, fails, or doesn't match the order, or when an order is marked Failed. It's off by default. Turn it on in the email settings, add who should get it, and pick which of those events send it
+* New: Checkout tells the customer when an order is below the smallest amount a payment method accepts, like Stripe's per-currency minimums, instead of failing at payment
+* New: When a customer cancels or fails a payment on the payment company's site, they come back to checkout to try again instead of a receipt page. Trying again reuses the same order
+* New: Marking an unpaid order paid by hand now finishes it the same way checkout does: store credit, discount code uses, gift cards, stock and the receipt email
 * New: Importing from an FTP folder now brings in as many photos as it can in each request instead of one at a time, which makes large imports several times faster
 * New: While photos are being imported, Sunshine loads only itself, its add-ons and the plugins an import needs (cloud storage and code snippet plugins), so other plugins don't slow down every photo. The rest of your site loads normally. This is done by a small file Sunshine adds to your must-use plugins, which is removed if Sunshine is deactivated. If an import ever stops because it needed one of the plugins it left out, imports go back to loading every plugin until your plugins or theme change
+* Change: Cart, checkout and saved orders now work out every total in one place, so discounts, tax, fees, gift cards, store credit and shipping add up the same everywhere
+* Change: Saved orders keep exactly what was charged for each line, even if prices or tax rates change later
+* Fix: Orders paid on another site (Mollie, PayFast, Paystack, QuickPay, Systempay, Mercado Pago, PayPal Standard, Stripe's hosted page) now finish fully, including gift card balances, bought gift cards, session bookings and stock
+* Fix: Paying another way while a payment on another site is still open makes a new order, so the first payment can't pay twice for the same order
+* Fix: A discount code no longer lowers the tax twice when shipping is taxed, so the right tax is charged
+* Fix: With discounts applied after tax, the discount no longer also lowers the tax when the order is placed
+* Fix: A fixed amount discount can't be worth more than the order, and lowers the tax only by its share on taxed items
+* Fix: A discount that includes shipping no longer lowers the tax when shipping isn't taxed
+* Fix: A percent discount on the order and shipping still comes off shipping when the items cost nothing
+* Fix: A discount code limited to a number of each product no longer takes off more than that number
+* Fix: Discount codes no longer take money off gift card purchases, and gift cards are never taxed
+* Fix: A discount code's minimum order amount counts the tax inside prices that include tax
+* Fix: A tax of exactly one cent is now charged instead of dropped
+* Fix: Tax rates set by ZIP or postcode now match with any state, a ZIP+4 code matches a ZIP range, 0% rates are kept, and the billing address is used once nothing is being shipped
+* Fix: Store credit keeps its cents, is given back once when an order is refunded or cancelled, and shows as money off on invoices and emails
+* Fix: A percent payment method fee is now worked out on what's left to pay after a gift card
+* Fix: Shipping prices and Extra Shipping Cost read decimal commas correctly (4,95 no longer charges 4.00), the Price Type setting works for Local Delivery and Pickup, and items that don't ship add no Extra Shipping Cost
+* Fix: Product prices saved with a decimal comma no longer turn into a much larger price when the product is saved again, and Bulk Edit only changes the price levels you typed in
+* Fix: Negative amounts put the minus before the currency sign
+* Fix: Stripe's hosted checkout page now charges exactly the order total, including with gift cards, store credit, discounts after tax and taxed shipping, and works after switching Stripe accounts or between test and live mode
+* Fix: Returning from Stripe's hosted checkout page with the cancel link now cancels the payment
+* Fix: Square and PayPal now charge and refund the exact order total, including currencies without cents, and show gift cards as a discount
+* Fix: Refunds and refund notes use the order's own currency, and a failed PayPal refund shows PayPal's reason
+* Fix: A partial refund through Stripe, Square or PayPal no longer marks the order Refunded, and no longer puts back gift cards, store credit or stock
+* Fix: The Dashboard, Reports, summary email and customer "total spent" count refunds and partly refunded orders the same way
+* Fix: Report date buttons use the store's time zone, and the All time chart shows every month
+* Fix: An order that needs an account can't be placed as a guest
+* Fix: The guest cart now carries over on every login form, not only the login popup
+* Fix: A text product option left empty is no longer saved or charged
+* Fix: Saving an order no longer stops on a photo that was deleted while it sat in the cart
+* Fix: Changing the quantity of one cart item no longer changes a matching item added at the same moment
+* Fix: Order status emails show each line's full tax
+* Fix: The default price level is the one marked default, not the first by name
+* Fix: Updating Sunshine adds back any order status your store is missing that checkout and payments need
+* Fix: Order lines can have quantities over 255, and loading an order's items is faster on large stores
+* Fix: Account-only galleries and galleries inside protected galleries are left out of Rank Math and SEOPress sitemaps
+* Fix: Add-on downloads and license checks work on sites with "localhost" in the address
+* Fix: Emails no longer show a PHP 8.2 deprecation notice
 * Fix: Importing into a gallery that already has thousands of photos no longer gets slower with every photo added
 * Fix: A gallery whose cover photo has no recorded size now shows a normal tile in the justified layout instead of a broken one
 * Fix: Regenerating images now gives each new thumbnail and large image its own new file name, the same as an upload. Browsers could keep showing the old copy because the address never changed
 * Fix: Regenerating images now removes the old thumbnail and large image files instead of leaving them behind on the server
 * Fix: Regenerating images now uses your Image Quality setting for every size, not just the watermarked large image
-* Fix: A discount code no longer lowers the tax twice when shipping is taxed, so the right tax is charged
-* Fix: With discounts applied after tax, the discount no longer also lowers the tax when the order is placed
-* Fix: A tax of exactly one cent is now charged instead of dropped
-* Fix: Changing the quantity of one cart item no longer changes a matching item added at the same moment
-* Fix: When a gift card pays part of an order, PayPal is sent the gift card as a discount instead of an item below zero
-* Fix: A discount code limited to a number of each product no longer takes off more than that number
-* Fix: A fixed amount discount can't be worth more than the order, and lowers the tax only by its share on taxed items
-* Fix: A discount that includes shipping no longer lowers the tax when shipping isn't taxed
-* Fix: A percent payment method fee is now worked out on what's left to pay after a gift card
-* Fix: Stripe's hosted checkout page now works when a gift card pays part of the order
-* Fix: Stripe's hosted checkout page now charges the order's tax when store credit is used or discounts apply after tax
-* Fix: Stripe's hosted checkout page no longer fails on taxed orders after switching between test and live mode or to a different Stripe account
+* Fix: Tools > Install process no longer turns your emails back on or resets who receives the admin emails
+* Fix: The Sunshine log now notes when an order status can't be set, like when that status has been deleted
 
 = 3.7.5 - October 13, 2026 =
 * Security: Visitors can no longer see photos from a gallery they don't have access to, like a password-protected or private gallery, through the share, add to cart, or product options windows
