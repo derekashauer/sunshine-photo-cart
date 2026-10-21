@@ -52,7 +52,6 @@ function sunshine_addon_activation( $file, $name, $item_id ) {
 		SUNSHINE_PHOTO_CART_STORE_URL,
 		array(
 			'timeout'   => 15,
-			'sslverify' => false,
 			'body'      => $api_params,
 		)
 	);
@@ -120,7 +119,6 @@ function sunshine_addon_deactivation( $file, $name, $item_id ) {
 		SUNSHINE_PHOTO_CART_STORE_URL,
 		array(
 			'timeout'   => 15,
-			'sslverify' => false,
 			'body'      => $api_params,
 		)
 	);
@@ -158,8 +156,9 @@ function sunshine_addon_get_license_key( $name ) {
 	return $pro_license_key;
 
 	// Get license data from sunshine website
-	$url     = SUNSHINE_PHOTO_CART_STORE_URL . '/?sunshine_get_license&referrer=' . $_SERVER['SERVER_NAME'] . '&plugin=' . $name . '&license_key=' . $pro_license_key;
-	$feed    = wp_remote_get( esc_url_raw( $url ), array( 'sslverify' => false ) );
+	// No referrer: the server does not use it, and its firewall refuses any address containing "localhost".
+	$url     = SUNSHINE_PHOTO_CART_STORE_URL . '/?sunshine_get_license&plugin=' . $name . '&license_key=' . $pro_license_key;
+	$feed    = wp_remote_get( esc_url_raw( $url ) );
 	$license = '';
 
 	if ( ! is_wp_error( $feed ) ) {
@@ -354,6 +353,16 @@ function sunshine_addon_toggle() {
 	// Not on the site yet, so download and install it first.
 	if ( is_wp_error( validate_plugin( $plugin ) ) ) {
 
+		// Installing puts new code on the site, so it needs the same permission WordPress asks for.
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			wp_send_json_error(
+				array(
+					'status' => 'failed',
+					'reason' => __( 'You do not have permission to install plugins on this site. Ask an administrator to install this add-on.', 'sunshine-photo-cart' ),
+				)
+			);
+		}
+
 		$addon_item  = false;
 		$addons_data = sunshine_get_addon_data( true );
 		if ( ! empty( $addons_data ) ) {
@@ -454,14 +463,15 @@ function sunshine_get_addon_data( $force = false ) {
 	$addons = get_transient( 'sunshine_addons_data' );
 
 	if ( $force || empty( $addons ) ) {
-		$url = SUNSHINE_PHOTO_CART_STORE_URL . '/?sunshine_addons_feed&referrer=' . $_SERVER['SERVER_NAME'] . '&time=' . time();
+		// No referrer: the server does not use it, and its firewall refuses any address containing "localhost".
+		$url = SUNSHINE_PHOTO_CART_STORE_URL . '/?sunshine_addons_feed&time=' . time();
 		if ( ! empty( SPC()->plan ) ) {
 			$license_key = SPC()->plan->get_license_key();
 			if ( ! empty( $license_key ) ) {
 				$url = add_query_arg( 'license_key', $license_key, $url );
 			}
 		}
-		$feed = wp_remote_get( esc_url_raw( $url ), array( 'sslverify' => false ) );
+		$feed = wp_remote_get( esc_url_raw( $url ) );
 
 		if ( ! is_wp_error( $feed ) ) {
 			if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {

@@ -577,7 +577,7 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 						$url      = wp_nonce_url( $base_url, 'sunshine_addon_deactivate_' . $field['addon'], 'sunshine_addon_deactivate', );
 						$url      = add_query_arg( 'addon', $field['addon'], $url );
 						$html    .= '<a href="' . esc_url( $url ) . '" class="button">' . esc_html__( 'Deactivate', 'sunshine-photo-cart' ) . '</a>';
-						$url      = add_query_arg( 'check_license', $field['addon'], $base_url );
+						$url      = wp_nonce_url( add_query_arg( 'check_license', $field['addon'], $base_url ), 'sunshine_check_license_' . $field['addon'], 'sunshine_check_license' );
 						$html    .= ' <a href="' . esc_url( $url ) . '" class="button">' . esc_html__( 'Refresh license', 'sunshine-photo-cart' ) . '</a>';
 					} else {
 						$html .= '<button class="button">' . esc_html__( 'Activate', 'sunshine-photo-cart' ) . '</button>';

@@ -157,7 +157,7 @@ function sunshine_shipping_methods_display() {
 add_action( 'wp_ajax_sunshine_add_shipping_method', 'sunshine_add_shipping_method' );
 function sunshine_add_shipping_method() {
 
-	if ( ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-add-shipping-method' ) ) {
+	if ( ! current_user_can( 'sunshine_manage_options' ) || ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-add-shipping-method' ) ) {
 		return false;
 	}
 
@@ -185,7 +185,7 @@ function sunshine_add_shipping_method() {
 add_action( 'wp_ajax_sunshine_sort_shipping_methods', 'sunshine_sort_shipping_methods' );
 function sunshine_sort_shipping_methods() {
 
-	if ( ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-sort-shipping-methods' ) ) {
+	if ( ! current_user_can( 'sunshine_manage_options' ) || ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-sort-shipping-methods' ) ) {
 		return false;
 	}
 
@@ -207,11 +207,19 @@ add_action( 'wp_ajax_sunshine_delete_shipping_method', 'sunshine_delete_shipping
 function sunshine_delete_shipping_method() {
 	global $wpdb;
 
-	if ( ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-delete-shipping-method' ) ) {
+	if ( ! current_user_can( 'sunshine_manage_options' ) || ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-delete-shipping-method' ) ) {
 		return false;
 	}
 
-	$instance_id      = sanitize_text_field( $_REQUEST['instance_id'] );
+	$instance_id = sanitize_text_field( $_REQUEST['instance_id'] );
+
+	// Only a shipping method that really exists, so the delete below can't reach any other setting.
+	$saved_shipping_methods = (array) SPC()->get_option( 'shipping_methods' );
+	if ( '' === $instance_id || empty( $saved_shipping_methods[ $instance_id ]['id'] ) ) {
+		exit;
+	}
+	$shipping_method_id = $saved_shipping_methods[ $instance_id ]['id'];
+
 	$shipping_methods = sunshine_get_available_shipping_methods();
 	if ( array_key_exists( $instance_id, $shipping_methods ) ) {
 		// Remove this from the available methods array
@@ -221,8 +229,8 @@ function sunshine_delete_shipping_method() {
 	// Update the shipping methods settings
 	SPC()->update_option( 'shipping_methods', $shipping_methods );
 
-	// Delete all settings related to this shipping method
-	$wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '%{$instance_id}'" );
+	// Delete all settings related to this shipping method, which are named sunshine_{method}_{setting}_{instance}.
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", 'sunshine\\_' . $wpdb->esc_like( $shipping_method_id ) . '\\_%\\_' . $wpdb->esc_like( $instance_id ) ) );
 
 	echo true;
 	exit;
@@ -232,7 +240,7 @@ function sunshine_delete_shipping_method() {
 add_action( 'wp_ajax_sunshine_active_shipping_methods', 'sunshine_active_shipping_methods' );
 function sunshine_active_shipping_methods() {
 
-	if ( ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-active-shipping-methods' ) ) {
+	if ( ! current_user_can( 'sunshine_manage_options' ) || ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-active-shipping-methods' ) ) {
 		return false;
 	}
 

@@ -143,6 +143,12 @@ function sunshine_filter_gallery_ids_by_visibility( $gallery_ids, $conditional_m
 
 	$visibility_meta = $use_optimized_query ? sunshine_get_gallery_visibility_meta( $gallery_ids ) : array();
 
+	// can_access() also checks each gallery's parents, which needs every gallery's post row.
+	// Load them all in one query rather than one per gallery (no meta or terms, those stay light).
+	if ( $conditional_method === 'access' ) {
+		_prime_post_caches( $gallery_ids, false, false );
+	}
+
 	$visible = array();
 	foreach ( $gallery_ids as $gallery_id ) {
 		if ( $use_optimized_query ) {

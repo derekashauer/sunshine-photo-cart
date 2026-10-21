@@ -142,8 +142,9 @@ function sunshine_get_seo_sitemap_exclude_ids() {
 				'compare' => '!=',
 			),
 			array(
-				'key'   => 'access_type',
-				'value' => 'url',
+				'key'     => 'access_type',
+				'value'   => array( 'url', 'account' ),
+				'compare' => 'IN',
 			),
 		),
 	);
@@ -159,8 +160,41 @@ function sunshine_get_seo_sitemap_exclude_ids() {
 	if ( ! empty( $gallery_ids ) ) {
 		$exclude_galleries = array_map( 'intval', $gallery_ids );
 	}
+
+	// Galleries inside a hidden gallery are hidden too.
+	$parent_ids = $exclude_galleries;
+	while ( ! empty( $parent_ids ) ) {
+		$child_ids         = get_posts(
+			array(
+				'post_type'       => 'sunshine-gallery',
+				'post_status'     => 'any',
+				'post_parent__in' => $parent_ids,
+				'post__not_in'    => $exclude_galleries,
+				'fields'          => 'ids',
+				'numberposts'     => -1,
+			)
+		);
+		$parent_ids        = array_map( 'intval', $child_ids );
+		$exclude_galleries = array_merge( $exclude_galleries, $parent_ids );
+	}
+
 	return $exclude_galleries;
 }
+
+/**
+ * Hide necessary galleries from the sitemap built into WordPress
+ *
+ * @param array  $args      WP_Query arguments for the sitemap.
+ * @param string $post_type Post type the sitemap is for.
+ * @return array
+ */
+function sunshine_wp_sitemaps_exclude_galleries( $args, $post_type ) {
+	if ( 'sunshine-gallery' === $post_type ) {
+		$args['post__not_in'] = array_merge( isset( $args['post__not_in'] ) ? (array) $args['post__not_in'] : array(), sunshine_get_seo_sitemap_exclude_ids() );
+	}
+	return $args;
+}
+add_filter( 'wp_sitemaps_posts_query_args', 'sunshine_wp_sitemaps_exclude_galleries', 10, 2 );
 
 
 /**
@@ -198,11 +232,8 @@ add_filter( 'aioseo_sitemap_exclude_posts', 'sunshine_aioseo_sitemap_exclude_pos
  * @return bool|string Return false if it is to be excluded, or URL if it is OK
  */
 function sunshine_rank_math_entry( $url, $type, $object ) {
-	if ( 'sunshine-gallery' == $object->post_type ) {
-		$gallery = sunshine_get_gallery( $object );
-		if ( $gallery->get_status() != 'default' || $gallery->get_access_type() == 'url' ) {
-			return false;
-		}
+	if ( 'sunshine-gallery' == $object->post_type && in_array( $object->ID, sunshine_get_seo_sitemap_exclude_ids_cached() ) ) {
+		return false;
 	}
 	return $url;
 }
@@ -217,12 +248,23 @@ add_filter( 'rank_math/sitemap/entry', 'sunshine_rank_math_entry', 10, 3 );
  * @return bool|string Return false if it is to be excluded, or URL if it is OK
  */
 function sunshine_seopress_sitemaps_single_url( $url, $post ) {
-	if ( 'sunshine-gallery' == $post->post_type ) {
-		$gallery = sunshine_get_gallery( $post );
-		if ( 'default' != $gallery->get_status() || 'url' == $gallery->get_access_type() ) {
-			return false;
-		}
+	if ( 'sunshine-gallery' == $post->post_type && in_array( $post->ID, sunshine_get_seo_sitemap_exclude_ids_cached() ) ) {
+		return false;
 	}
 	return $url;
+}
+
+/**
+ * The same galleries the other sitemaps leave out, including children of protected galleries.
+ * Rank Math and SEOPress ask once per sitemap entry, so the list is built once per request.
+ *
+ * @return array Gallery IDs.
+ */
+function sunshine_get_seo_sitemap_exclude_ids_cached() {
+	static $ids = null;
+	if ( null === $ids ) {
+		$ids = (array) sunshine_get_seo_sitemap_exclude_ids();
+	}
+	return $ids;
 }
 add_filter( 'seopress_sitemaps_single_url', 'sunshine_seopress_sitemaps_single_url', 10, 2 );

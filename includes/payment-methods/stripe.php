@@ -325,7 +325,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		add_action( 'sunshine_stripe_webhook_display', array( $this, 'stripe_webhook_display' ) );
 		add_action( 'sunshine_stripe_payment_methods_display', array( $this, 'stripe_payment_methods_display' ) );
 		add_action( 'admin_init', array( $this, 'stripe_connect_return' ) );
-		add_action( 'admin_init', array( $this, 'stripe_disconnect_return' ) );
+		add_action( 'admin_init', array( $this, 'stripe_disconnect' ) );
 		add_action( 'admin_init', array( $this, 'setup_payment_domain_manual' ) );
 		add_action( 'wp_ajax_sunshine_stripe_sync_payment_methods', array( $this, 'sync_payment_methods_ajax' ) );
 		add_action( 'wp_ajax_sunshine_stripe_toggle_payment_method', array( $this, 'toggle_payment_method_ajax' ) );
@@ -402,7 +402,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	 * @return void
 	 */
 	public function log_payment() {
-		if ( ! isset( $_POST['result'] ) ) {
+		if ( ! isset( $_POST['result'] ) || ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['security'] ) ), 'sunshine_stripe' ) ) {
 			return;
 		}
 		$result   = wp_unslash( $_POST['result'] );
@@ -437,14 +437,15 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 		$mode    = $this->get_mode_value();
 		$webhook = SPC()->get_option( 'stripe_webhook_' . $mode );
-		if ( empty( $webhook_id ) ) {
-			SPC()->notices->add_admin( 'stripe_webhook_not_setup', __( 'Stripe webhook is not setup', 'sunshine-photo-cart' ), 'error' ) . ' <a href="' . admin_url( 'admin.php?page=sunshine&section=payment_methods&payment_method=stripe' ) . '">' . __( 'Configure here', 'sunshine-photo-cart' ) . '</a>';
+		if ( empty( $webhook ) ) {
+			SPC()->notices->add_admin( 'stripe_webhook_not_setup', __( 'Stripe webhook is not setup', 'sunshine-photo-cart' ) . ' <a href="' . esc_url( admin_url( 'admin.php?page=sunshine&section=payment_methods&payment_method=stripe' ) ) . '">' . __( 'Configure here', 'sunshine-photo-cart' ) . '</a>', 'error' );
 		}
 
 	}
 
+	// Troubleshooting aid for store managers only.
 	public function set_payment_intent_manually() {
-		if ( isset( $_GET['stripe_payment_intent_id'] ) ) {
+		if ( isset( $_GET['stripe_payment_intent_id'] ) && current_user_can( 'sunshine_manage_options' ) ) {
 			SPC()->session->set( 'stripe_payment_intent_id', sanitize_text_field( $_GET['stripe_payment_intent_id'] ) );
 			SPC()->log( 'Set payment intent manually: ' . SPC()->session->get( 'stripe_payment_intent_id' ) );
 		}
@@ -750,13 +751,13 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 					</div>
 				<?php endif; ?>
 				<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
-					<a href="https://www.sunshinephotocart.com/?stripe_disconnect=1&account_id=<?php echo esc_attr( $account_id ); ?>&mode=<?php echo esc_html( $mode ); ?>&nonce=<?php echo esc_html( wp_create_nonce( 'sunshine_stripe_disconnect' ) ); ?>&return_url=<?php echo rawurlencode( admin_url( 'admin.php?sunshine_stripe_disconnect_return' ) ); ?>" style="color: #dc3545; text-decoration: none; font-size: 12px;"><?php esc_html_e( 'Disconnect Stripe account', 'sunshine-photo-cart' ); ?></a>
+					<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin.php?sunshine_stripe_disconnect=1&mode=' . $mode ), 'sunshine_stripe_disconnect' ) ); ?>" style="color: #dc3545; text-decoration: none; font-size: 12px;"><?php esc_html_e( 'Disconnect Stripe account', 'sunshine-photo-cart' ); ?></a>
 				</div>
 			</div>
 
 		<?php } else { ?>
 
-			<p><a href="https://www.sunshinephotocart.com/?stripe_connect=1&nonce=<?php echo esc_attr( wp_create_nonce( 'sunshine_stripe_connect' ) ); ?>&return_url=<?php echo rawurlencode( admin_url( 'admin.php?sunshine_stripe_connect_return' ) ); ?>&mode=<?php echo esc_attr( $mode ); ?>" class="sunshine-stripe-connect"><span><?php esc_html_e( 'Connect to', 'sunshine-photo-cart' ); ?></span> <span class="stripe">Stripe</span></a></p>
+			<p><a href="https://www.sunshinephotocart.com/?stripe_connect=1&nonce=<?php echo esc_attr( wp_create_nonce( 'sunshine_stripe_connect' ) ); ?>&return_url=<?php echo rawurlencode( admin_url( 'admin.php?sunshine_stripe_connect_return' ) ); ?>&mode=<?php echo esc_attr( $mode ); ?>&v=2" class="sunshine-stripe-connect"><span><?php esc_html_e( 'Connect to', 'sunshine-photo-cart' ); ?></span> <span class="stripe">Stripe</span></a></p>
 
 			<?php
 		}
@@ -1270,22 +1271,25 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 			return false;
 		}
 
-		if ( isset( $_GET['error'] ) || empty( $_GET['account_id'] ) || empty( $_GET['publishable_key'] ) || empty( $_GET['secret_key'] ) || ! wp_verify_nonce( $_GET['nonce'], 'sunshine_stripe_connect' ) ) {
+		// The return address only carries a one-time pickup code. The keys are collected from
+		// sunshinephotocart.com directly, so they never sit in browser history or server logs.
+		$keys = false;
+		if ( ! isset( $_GET['error'] ) && ! empty( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'sunshine_stripe_connect' ) && ! empty( $_GET['pickup'] ) ) {
+			$keys = sunshine_collect_connect_keys( 'stripe', sanitize_text_field( wp_unslash( $_GET['pickup'] ) ) );
+		}
+
+		if ( empty( $keys['account_id'] ) || empty( $keys['publishable_key'] ) || empty( $keys['secret_key'] ) ) {
 			SPC()->notices->add_admin( 'stripe_connect_fail', __( 'Stripe could not be connected', 'sunshine-photo-cart' ), 'error' );
 			wp_redirect( admin_url( 'admin.php?page=sunshine&section=payment_methods&payment_method=stripe' ) );
 			exit;
 		}
 
-		if ( isset( $_GET['mode'] ) && $_GET['mode'] == 'live' ) {
-			$mode = 'live';
-		} else {
-			$mode = 'test';
-		}
+		$mode = ( isset( $keys['mode'] ) && $keys['mode'] == 'live' ) ? 'live' : 'test';
 
 		// Set some return values from Stripe Connect
-		SPC()->update_option( 'stripe_account_id_' . $mode, sanitize_text_field( $_GET['account_id'] ) );
-		SPC()->update_option( 'stripe_publishable_key_' . $mode, sanitize_text_field( $_GET['publishable_key'] ) );
-		SPC()->update_option( 'stripe_secret_key_' . $mode, sanitize_text_field( $_GET['secret_key'] ) );
+		SPC()->update_option( 'stripe_account_id_' . $mode, sanitize_text_field( $keys['account_id'] ) );
+		SPC()->update_option( 'stripe_publishable_key_' . $mode, sanitize_text_field( $keys['publishable_key'] ) );
+		SPC()->update_option( 'stripe_secret_key_' . $mode, sanitize_text_field( $keys['secret_key'] ) );
 		SPC()->update_option( 'stripe_mode', $mode );
 
 		// Clear any cached payment method configuration from a previous account.
@@ -1301,22 +1305,38 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 	}
 
-	function stripe_disconnect_return() {
+	function stripe_disconnect() {
 
-		if ( ! isset( $_GET['sunshine_stripe_disconnect_return'] ) || ! current_user_can( 'sunshine_manage_options' ) ) {
+		if ( ! isset( $_GET['sunshine_stripe_disconnect'] ) || ! current_user_can( 'sunshine_manage_options' ) ) {
 			return;
 		}
 
-		if ( empty( $_GET['status'] ) || empty( $_GET['nonce'] ) || ! wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'sunshine_stripe_disconnect' ) ) {
+		if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'sunshine_stripe_disconnect' ) ) {
 			SPC()->notices->add_admin( 'stripe_disconnect_fail', __( 'Stripe could not be disconnected', 'sunshine-photo-cart' ), 'error' );
 			wp_safe_redirect( admin_url( 'admin.php?page=sunshine&section=payment_methods&payment_method=stripe' ) );
 			exit;
 		}
 
-		if ( isset( $_GET['mode'] ) && $_GET['mode'] == 'live' ) {
-			$mode = 'live';
-		} else {
-			$mode = 'test';
+		$mode = ( isset( $_GET['mode'] ) && $_GET['mode'] == 'live' ) ? 'live' : 'test';
+
+		// Remove the connection in Stripe. sunshinephotocart.com only does this for a site that
+		// shows it holds the account's key, so nobody else can disconnect a store.
+		$response = wp_remote_post(
+			'https://www.sunshinephotocart.com/?stripe_disconnect=1',
+			array(
+				'body'    => array(
+					'account_id' => SPC()->get_option( 'stripe_account_id_' . $mode ),
+					'secret_key' => SPC()->get_option( 'stripe_secret_key_' . $mode ),
+					'mode'       => $mode,
+				),
+				'timeout' => 30,
+			)
+		);
+		$body = is_wp_error( $response ) ? array() : json_decode( wp_remote_retrieve_body( $response ), true );
+		if ( empty( $body['success'] ) ) {
+			// The keys are still removed from this site below. The photographer can remove the
+			// connection in their Stripe dashboard.
+			SPC()->log( 'Stripe connection could not be removed on sunshinephotocart.com: ' . ( is_wp_error( $response ) ? $response->get_error_message() : wp_remote_retrieve_body( $response ) ) );
 		}
 
 		SPC()->update_option( 'stripe_account_id_' . $mode, '' );
@@ -2238,10 +2258,14 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 		$args = array(
 			'mode'                => 'payment',
 			'success_url'         => add_query_arg( 'stripe_checkout_complete', '1', $order->get_received_permalink() ),
-			'cancel_url'          => wp_nonce_url(
-				add_query_arg( 'order_id', $order->get_id(), sunshine_get_page_url( 'checkout' ) ),
-				'stripe_cancel',
-				'stripe_cancel'
+			// Built with add_query_arg(), not wp_nonce_url(): that one escapes & for HTML, and
+			// Stripe sends the visitor to the URL as given, so the cancel was never seen.
+			'cancel_url'          => add_query_arg(
+				array(
+					'order_id'      => $order->get_id(),
+					'stripe_cancel' => wp_create_nonce( 'stripe_cancel_' . $order->get_id() ),
+				),
+				sunshine_get_page_url( 'checkout' )
 			),
 			'line_items'          => $line_items,
 			'metadata'            => array(
@@ -2679,16 +2703,26 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 	 * @return void
 	 */
 	public function stripe_checkout_cancel() {
-		if ( ! isset( $_GET['stripe_cancel'] ) || ! wp_verify_nonce( $_GET['stripe_cancel'], 'stripe_cancel' ) ) {
-			return;
-		}
-
-		if ( ! isset( $_GET['order_id'] ) ) {
+		if ( ! isset( $_GET['stripe_cancel'] ) || ! isset( $_GET['order_id'] ) ) {
 			return;
 		}
 
 		$order_id = intval( $_GET['order_id'] );
-		$order    = sunshine_get_order( $order_id );
+		if ( ! wp_verify_nonce( $_GET['stripe_cancel'], 'stripe_cancel_' . $order_id ) ) {
+			return;
+		}
+
+		// Only the order this visitor is checking out with, and only while it still waits for payment.
+		if ( ! $order_id || intval( SPC()->session->get( 'checkout_order_id' ) ) !== $order_id ) {
+			SPC()->log( 'Stripe hosted checkout cancel ignored, order ' . $order_id . ' is not this checkout session\'s order' );
+			return;
+		}
+
+		$order = sunshine_get_order( $order_id );
+		if ( ! $order->exists() || ! in_array( $order->get_status(), sunshine_order_statuses_needs_payment(), true ) ) {
+			SPC()->log( 'Stripe hosted checkout cancel ignored, order ' . $order_id . ' is not waiting for payment' );
+			return;
+		}
 
 		SPC()->log( 'Stripe hosted checkout cancelled for order: ' . $order_id );
 
@@ -2703,8 +2737,9 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 				}
 			}
 
-			// Delete the order
-			$order->delete( true );
+			// Keep the order on record as cancelled, and start a new one if they check out again.
+			$order->set_status( 'cancelled', __( 'Customer cancelled the Stripe payment', 'sunshine-photo-cart' ) );
+			SPC()->session->set( 'checkout_order_id', '' );
 		}
 
 		SPC()->cart->add_error( __( 'Stripe payment has been cancelled', 'sunshine-photo-cart' ) );
@@ -3491,7 +3526,7 @@ class SPC_Payment_Method_Stripe extends SPC_Payment_Method {
 
 		if ( ! empty( $_POST['stripe_refund_notify'] ) ) {
 			$order->notify( false );
-			SPC()->notices->add_admin( 'stripe_refund_notify_' . $payment_id, __( 'Customer sent email about refund', 'sunshine-photo-cart' ) );
+			SPC()->notices->add_admin( 'stripe_refund_notify_' . $payment_intent_id, __( 'Customer sent email about refund', 'sunshine-photo-cart' ) );
 		}
 
 	}

@@ -196,10 +196,6 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 
 		SPC()->log( 'Regenerating image: ' . $image_id );
 
-		// The sizes this image has now. Upload gives them random names that the
-		// clean-up further down can't match by pattern, so they're removed by name.
-		$old_metadata = wp_get_attachment_metadata( $image_id );
-
 		$upload_info              = wp_upload_dir();
 		$upload_dir               = $upload_info['basedir'];
 		$downloaded_from_cloud    = false;
@@ -288,16 +284,19 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 					wp_delete_file( $extra_image );
 				}
 			}
-		}
 
-		if ( ! empty( $old_metadata['sizes'] ) && is_array( $old_metadata['sizes'] ) ) {
-			$directory = trailingslashit( dirname( $file_path ) );
-			foreach ( $old_metadata['sizes'] as $old_size ) {
-				if ( empty( $old_size['file'] ) || basename( $old_size['file'] ) === basename( $file_path ) ) {
-					continue;
-				}
-				if ( file_exists( $directory . basename( $old_size['file'] ) ) ) {
-					wp_delete_file( $directory . basename( $old_size['file'] ) );
+			// Sizes with secure file names have their own random part, so the pattern above
+			// misses them. Remove the ones this photo's metadata points to.
+			$old_metadata = wp_get_attachment_metadata( $image_id );
+			if ( ! empty( $old_metadata['sizes'] ) && is_array( $old_metadata['sizes'] ) ) {
+				foreach ( $old_metadata['sizes'] as $old_size ) {
+					if ( empty( $old_size['file'] ) || wp_basename( $old_size['file'] ) === wp_basename( $file_path ) ) {
+						continue;
+					}
+					$old_size_path = $directory . '/' . wp_basename( $old_size['file'] );
+					if ( file_exists( $old_size_path ) ) {
+						wp_delete_file( $old_size_path );
+					}
 				}
 			}
 		}
@@ -337,7 +336,7 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 
 		// New random names, the same as an upload gets. This also gives every rebuilt
 		// size a new address, so browsers and caches can't keep showing the old copy.
-		$new_metadata = sunshine_secure_size_filenames( $new_metadata, $file_path );
+		$new_metadata = sunshine_secure_intermediate_file_names( $new_metadata, $file_path );
 
 		$image_meta   = isset( $new_metadata['image_meta'] ) ? $new_metadata['image_meta'] : array();
 		if ( empty( $created_timestamp ) && ! empty( $image_meta['created_timestamp'] ) ) {

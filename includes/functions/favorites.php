@@ -22,6 +22,19 @@ function sunshine_add_session_favorite( $image_id ) {
 	return count( $favorites );
 }
 
+/**
+ * Whether the current visitor may keep this image as a favorite: it exists and they can access its gallery.
+ *
+ * @param int|SPC_Image $image Image ID or object.
+ * @return bool
+ */
+function sunshine_can_favorite_image( $image ) {
+	if ( ! is_object( $image ) ) {
+		$image = sunshine_get_image( intval( $image ) );
+	}
+	return ! empty( $image ) && $image->exists() && $image->can_access();
+}
+
 function sunshine_delete_session_favorite( $image_id ) {
 	$favorites = sunshine_get_session_favorite_ids();
 	$key       = array_search( intval( $image_id ), $favorites, true );
@@ -58,14 +71,14 @@ add_action( 'sunshine_after_signup', 'sunshine_after_login_add_to_favorites' );
 function sunshine_after_login_add_to_favorites( $data = null ) {
 	// Single pending favorite (from modal flow).
 	$image_id = SPC()->session->get( 'add_to_favorites' );
-	if ( $image_id ) {
+	if ( $image_id && sunshine_can_favorite_image( $image_id ) ) {
 		SPC()->customer->add_favorite( intval( $image_id ) );
 		SPC()->session->delete( 'add_to_favorites' );
 	}
 
 	// Also check for pending favorite from guest choice flow.
 	$pending = SPC()->session->get( 'pending_favorite' );
-	if ( $pending ) {
+	if ( $pending && sunshine_can_favorite_image( $pending ) ) {
 		SPC()->customer->add_favorite( intval( $pending ) );
 		SPC()->session->delete( 'pending_favorite' );
 	}
@@ -74,7 +87,9 @@ function sunshine_after_login_add_to_favorites( $data = null ) {
 	$session_favorites = sunshine_get_session_favorite_ids();
 	if ( ! empty( $session_favorites ) ) {
 		foreach ( $session_favorites as $fav_id ) {
-			SPC()->customer->add_favorite( $fav_id );
+			if ( sunshine_can_favorite_image( $fav_id ) ) {
+				SPC()->customer->add_favorite( $fav_id );
+			}
 		}
 		sunshine_clear_session_favorites();
 		SPC()->session->delete( 'guest_favorites_mode' );
@@ -96,7 +111,9 @@ function sunshine_merge_favorites_on_wp_login( $user_login, $user ) {
 	}
 
 	foreach ( $session_favorites as $fav_id ) {
-		SPC()->customer->add_favorite( $fav_id );
+		if ( sunshine_can_favorite_image( $fav_id ) ) {
+			SPC()->customer->add_favorite( $fav_id );
+		}
 	}
 	sunshine_clear_session_favorites();
 	SPC()->session->delete( 'guest_favorites_mode' );
@@ -105,7 +122,7 @@ function sunshine_merge_favorites_on_wp_login( $user_login, $user ) {
 
 add_action( 'sunshine_modal_display_guest_favorites', 'sunshine_modal_display_guest_favorites' );
 function sunshine_modal_display_guest_favorites() {
-	if ( ! empty( $_POST['image_id'] ) ) {
+	if ( ! empty( $_POST['image_id'] ) && sunshine_can_favorite_image( intval( $_POST['image_id'] ) ) ) {
 		SPC()->session->set( 'pending_favorite', intval( $_POST['image_id'] ) );
 	}
 	$result = array( 'html' => sunshine_get_template_html( 'favorites/guest-choice' ) );
@@ -195,9 +212,11 @@ function sunshine_guest_favorites_mode() {
 	$image_id = 0;
 
 	if ( $pending ) {
-		$image_id = intval( $pending );
-		$count    = sunshine_add_session_favorite( $image_id );
-		$src      = wp_get_attachment_image_url( $image_id, 'sunshine-thumbnail' );
+		if ( sunshine_can_favorite_image( $pending ) ) {
+			$image_id = intval( $pending );
+			$count    = sunshine_add_session_favorite( $image_id );
+			$src      = wp_get_attachment_image_url( $image_id, 'sunshine-thumbnail' );
+		}
 		SPC()->session->delete( 'pending_favorite' );
 	}
 
@@ -347,6 +366,46 @@ function sunshine_modal_favorites_share_process() {
 	sunshine_modal_check_security( 'sunshine_favorites_share' );
 
 	$post_data = wp_unslash( $_POST );
+
+	// There has to be something to share.
+	$favorites = array_filter( (array) SPC()->customer->get_favorites(), 'sunshine_can_favorite_image' );
+	if ( empty( $favorites ) ) {
+		wp_send_json_error( __( 'You do not have any favorites to share', 'sunshine-photo-cart' ) );
+	}
+
+	// Custom recipients: valid email addresses only, and only a few, so this can't be used to send mail in bulk.
+	if ( ! empty( $post_data['recipients'] ) && in_array( 'custom', (array) $post_data['recipients'], true ) ) {
+		$emails = array_filter( array_map( 'trim', explode( ',', isset( $post_data['email'] ) ? $post_data['email'] : '' ) ) );
+		$max    = apply_filters( 'sunshine_favorites_share_max_recipients', 3 );
+		if ( empty( $emails ) ) {
+			wp_send_json_error( __( 'Please enter at least one email address', 'sunshine-photo-cart' ) );
+		}
+		if ( count( $emails ) > $max ) {
+			/* translators: %d is the maximum number of email addresses */
+			wp_send_json_error( sprintf( _n( 'You can share your favorites with up to %d email address at a time', 'You can share your favorites with up to %d email addresses at a time', $max, 'sunshine-photo-cart' ), $max ) );
+		}
+		foreach ( $emails as $email ) {
+			if ( ! is_email( $email ) ) {
+				/* translators: %s is the email address that was entered */
+				wp_send_json_error( sprintf( __( '%s is not a valid email address', 'sunshine-photo-cart' ), esc_html( $email ) ) );
+			}
+		}
+		$post_data['email'] = implode( ',', $emails );
+	}
+
+	// Allow 3rd party validation (e.g., captcha).
+	$validation_error = apply_filters( 'sunshine_favorites_share_validation', '', $post_data );
+	if ( ! empty( $validation_error ) ) {
+		SPC()->log( 'Favorites share blocked - validation failed: ' . $validation_error );
+		wp_send_json_error( $validation_error );
+	}
+
+	// Limit how often one visitor can share.
+	if ( sunshine_is_rate_limited( 'favorites_share', 5 ) ) {
+		SPC()->log( 'Favorites share blocked - too many shares' );
+		wp_send_json_error( __( 'You have shared your favorites too many times, please try again later', 'sunshine-photo-cart' ) );
+	}
+	sunshine_add_rate_limit_attempt( 'favorites_share', HOUR_IN_SECONDS );
 
 	// For guests, attach sender info from the share form.
 	if ( ! is_user_logged_in() ) {

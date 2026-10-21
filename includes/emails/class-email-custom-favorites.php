@@ -30,7 +30,13 @@ class SPC_Email_Custom_Favorites extends SPC_Email {
 		}
 
 		$this->set_template( $this->id );
-		$this->set_subject( $this->get_subject() );
+		if ( SPC()->customer->is_guest() ) {
+			// A guest's name is whatever they typed into the share form, so it stays out of the subject line.
+			/* translators: %s is the site name */
+			$this->set_subject( sprintf( __( 'Favorited images have been shared with you on %s', 'sunshine-photo-cart' ), '[sitename]' ) );
+		} else {
+			$this->set_subject( $this->get_subject() );
+		}
 
 		// Generate favorites URL — use transient key for guests, user meta key for logged-in.
 		if ( SPC()->customer->is_guest() ) {

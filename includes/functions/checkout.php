@@ -968,7 +968,8 @@ function sunshine_checkout_select_payment_method() {
 	}
 
 	$selected_payment_method = sanitize_text_field( $_REQUEST['payment_method'] );
-	$active_payment_methods  = sunshine_get_active_payment_methods();
+	// Allowed, not just active: a method can be on but not open to this customer (Test is admin only).
+	$active_payment_methods = sunshine_get_allowed_payment_methods();
 	if ( array_key_exists( $selected_payment_method, $active_payment_methods ) ) {
 		SPC()->cart->set_payment_method( $selected_payment_method );
 		$payment_method = SPC()->cart->get_payment_method();

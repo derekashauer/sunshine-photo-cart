@@ -242,7 +242,7 @@ class SPC_Background_Process_Images extends SPC_Background_Process {
 		$metadata = sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $file_path );
 
 		// Handle secure file names if enabled
-		$metadata = sunshine_secure_size_filenames( $metadata, $file_path );
+		$metadata = sunshine_secure_intermediate_file_names( $metadata, $file_path );
 
 		// Update attachment metadata BEFORE watermarking so watermark function can find the files
 		wp_update_attachment_metadata( $attachment_id, $metadata );

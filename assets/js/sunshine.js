@@ -423,6 +423,7 @@ jQuery( document ).ready(function($){
             let gallery_id = $( this ).data( 'gallery-id' );
             let product_id = $( this ).data( 'product-id' );
             let price_level = $( this ).data( 'price-level' );
+            let price_level_token = $( this ).data( 'price-level-token' );
             let qty = parseInt( $( '#sunshine--modal--content .sunshine--qty' ).val() );
 			let comments;
 			let bulk_mode = $( '#sunshine--image--add-to-cart' ).data( 'bulk-mode' );
@@ -463,6 +464,7 @@ jQuery( document ).ready(function($){
 				gallery_id: gallery_id,
 				product_id: product_id,
 				price_level: price_level,
+				price_level_token: price_level_token,
 				options: options,
 				comments: comments,
 				qty: qty,

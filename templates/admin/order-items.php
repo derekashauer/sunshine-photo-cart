@@ -117,7 +117,7 @@
 					<tr class="sunshine-cart-item <?php echo esc_attr( $cart_item->classes() ); ?>">
 						<td class="sunshine-cart-check"><?php if ( ! $is_digital ) { ?><span class="sunshine-check-box"></span><?php } ?></td>
 						<td class="sunshine-cart-image">
-							<?php echo wp_kses_post( $cart_item->get_image_html( '', '', array( 'width' => '50' ) ) ); ?>
+							<?php echo wp_kses_post( $cart_item->get_image_html( 'sunshine-thumbnail', '', array( 'width' => '50' ) ) ); ?>
 						</td>
 						<td class="sunshine-cart-name">
 							<div class="sunshine-cart-item-name-image"><?php echo wp_kses_post( $cart_item->get_image_name() ); ?></div>

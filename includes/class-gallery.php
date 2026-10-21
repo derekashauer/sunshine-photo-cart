@@ -79,6 +79,22 @@ class SPC_Gallery extends Sunshine_Data {
 			return false;
 		}
 
+		if ( ! $this->is_unlocked( $parent, $ignore_email_gate ) ) {
+			return false;
+		}
+
+		// A sub-gallery is only as open as every gallery above it.
+		if ( $this->get_locked_ancestor( $ignore_email_gate ) ) {
+			return false;
+		}
+
+		return true;
+
+	}
+
+	// This gallery's own access settings, without looking at the galleries above it.
+	public function is_unlocked( $parent = false, $ignore_email_gate = false ) {
+
 		if ( ! $this->can_view( $parent ) ) {
 			return false;
 		}
@@ -101,6 +117,18 @@ class SPC_Gallery extends Sunshine_Data {
 
 		return true;
 
+	}
+
+	// The nearest gallery above this one that the current visitor has not unlocked, or false.
+	public function get_locked_ancestor( $ignore_email_gate = false ) {
+		$ancestors = get_ancestors( $this->get_id(), 'sunshine-gallery', 'post_type' );
+		foreach ( $ancestors as $ancestor_id ) {
+			$ancestor = sunshine_get_gallery( $ancestor_id );
+			if ( $ancestor && $ancestor->get_id() && ! $ancestor->is_unlocked( false, $ignore_email_gate ) ) {
+				return $ancestor;
+			}
+		}
+		return false;
 	}
 
 	public function get_private_users( $parent = false ) {

@@ -141,67 +141,48 @@ function sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $file_pa
 }
 
 /**
- * Give each intermediate size its own random file name.
+ * Give each resized copy of a photo its own random file name when secure file names are on.
  *
- * With secure file names on, the original is saved as name-{24 random chars}.ext
- * and WordPress names the sizes after it (name-{same chars}-400x500.ext). This
- * swaps the shared string in each size for a fresh one and renames the files to
- * match, so no two files share a name.
+ * WordPress names resized copies after the original plus "-WxH". With secure file names the
+ * original's name holds a random string, so a copy named after it would let anyone work out the
+ * original's URL by removing the size from a copy's URL.
  *
- * Upload, background processing and regeneration all run through here, so a
- * regenerated image also gets new addresses and nobody is shown a cached copy
- * of the old files.
- *
- * Call it after the sizes exist on disk and before saving the metadata.
- *
- * @param array  $metadata  The attachment metadata.
- * @param string $file_path The full path to the main image file.
- * @return array The metadata with the new size file names.
+ * @param array  $metadata  The attachment metadata, with the sizes made so far.
+ * @param string $file_path The full path to the original image file.
+ * @param array  $sizes     Only rename these sizes. Every size when empty.
+ * @return array The metadata with the new file names.
  */
-function sunshine_secure_size_filenames( $metadata, $file_path ) {
-	if ( function_exists( 'as3cf_get_attachment_url' ) || ! SPC()->get_option( 'use_secure_file_names' ) ) {
+function sunshine_secure_intermediate_file_names( $metadata, $file_path, $sizes = array() ) {
+	if ( function_exists( 'as3cf_get_attachment_url' ) || ! SPC()->get_option( 'use_secure_file_names' ) || empty( $metadata['sizes'] ) ) {
 		return $metadata;
 	}
 
-	if ( empty( $metadata['sizes'] ) || ! is_array( $metadata['sizes'] ) ) {
-		return $metadata;
-	}
-
+	// Get the random string from the main file name if it exists.
 	if ( ! preg_match( '/-([a-zA-Z0-9]{24})\./', basename( $file_path ), $matches ) ) {
 		return $metadata;
 	}
 	$random_string = $matches[1];
+	$base_dir      = trailingslashit( dirname( $file_path ) );
 
-	SPC()->log( 'Appending image sizes with random strings' );
-
-	$base_dir = trailingslashit( dirname( $file_path ) );
-	$renamed  = array();
+	// Two sizes can share one file, so a file is only renamed once and both point to the new name.
+	$renamed = array();
 	foreach ( $metadata['sizes'] as $size => &$size_data ) {
-		if ( false === strpos( $size_data['file'], $random_string ) ) {
+		if ( ( ! empty( $sizes ) && ! in_array( $size, $sizes, true ) ) || empty( $size_data['file'] ) || false === strpos( $size_data['file'], $random_string ) ) {
 			continue;
 		}
-
-		// Two sizes with the same dimensions share one file.
-		if ( isset( $renamed[ $size_data['file'] ] ) ) {
-			$size_data['file'] = $renamed[ $size_data['file'] ];
-			continue;
-		}
-
 		$old_file = $size_data['file'];
-		$new_file = str_replace( $random_string, wp_generate_password( 24, false ), $old_file );
-
-		if ( ! file_exists( $base_dir . $old_file ) ) {
-			SPC()->log( 'File does not exist for renaming: ' . $base_dir . $old_file );
-			continue;
+		if ( ! isset( $renamed[ $old_file ] ) ) {
+			$new_file = str_replace( $random_string, wp_generate_password( 24, false ), $old_file );
+			// Keep the old name unless the file really moved, so the metadata never points at a
+			// file that isn't there.
+			if ( file_exists( $base_dir . $old_file ) && ! file_exists( $base_dir . $new_file ) && rename( $base_dir . $old_file, $base_dir . $new_file ) ) {
+				$renamed[ $old_file ] = $new_file;
+			} else {
+				SPC()->log( 'Could not give ' . $old_file . ' a new file name, keeping the old one' );
+				$renamed[ $old_file ] = $old_file;
+			}
 		}
-
-		// Only point the metadata at the new name once the file is really there.
-		SPC()->log( 'Renaming: ' . $base_dir . $old_file );
-		if ( rename( $base_dir . $old_file, $base_dir . $new_file ) ) {
-			$size_data['file']    = $new_file;
-			$renamed[ $old_file ] = $new_file;
-			SPC()->log( $size . ' file renamed from ' . $old_file . ' to ' . $new_file );
-		}
+		$size_data['file'] = $renamed[ $old_file ];
 	}
 	unset( $size_data );
 
@@ -780,4 +761,63 @@ function sunshine_downsize_unprocessed_image( $out, $attachment_id, $size ) {
 	list( $width, $height ) = sunshine_unprocessed_image_dimensions( $attachment_id, $size );
 
 	return array( sunshine_image_placeholder_url(), $width, $height, true );
+}
+
+/**
+ * Whether the current visitor should only ever get resized copies of this image, never the
+ * original file: a gallery photo, seen by someone who can't edit that gallery.
+ *
+ * @param int $attachment_id Attachment ID.
+ * @return bool
+ */
+function sunshine_hide_original_image( $attachment_id ) {
+	$parent_id = wp_get_post_parent_id( $attachment_id );
+	return $parent_id && 'sunshine-gallery' === get_post_type( $parent_id ) && ! current_user_can( 'edit_post', $parent_id );
+}
+
+/**
+ * Never hand a visitor a gallery photo's original file, whatever size a theme or plugin asks for.
+ *
+ * Sunshine only makes its own sizes, and WordPress falls back to the original for any size that
+ * was never made (thumbnail, medium, woocommerce_single...) and for 'full'. Those requests get the
+ * large size instead, which is the one Sunshine watermarks. People who can edit the gallery
+ * still get the real thing.
+ */
+add_filter( 'image_downsize', 'sunshine_downsize_hide_original', 6, 3 );
+function sunshine_downsize_hide_original( $out, $attachment_id, $size ) {
+	if ( false !== $out || 'sunshine-large' === $size || ! sunshine_hide_original_image( $attachment_id ) ) {
+		return $out;
+	}
+
+	// A resized copy of the size asked for exists, so WordPress will use that, not the original.
+	$metadata = wp_get_attachment_metadata( $attachment_id );
+	if ( is_string( $size ) && 'full' !== $size && ! empty( $metadata['sizes'][ $size ]['file'] ) ) {
+		return $out;
+	}
+	if ( is_array( $size ) && image_get_intermediate_size( $attachment_id, $size ) ) {
+		return $out;
+	}
+
+	if ( empty( $metadata['sizes']['sunshine-large']['file'] ) ) {
+		return $out;
+	}
+
+	return image_downsize( $attachment_id, 'sunshine-large' );
+}
+
+/**
+ * Leave the original file out of the choices WordPress gives browsers (srcset), for the same visitors.
+ */
+add_filter( 'wp_calculate_image_srcset', 'sunshine_srcset_hide_original', 10, 5 );
+function sunshine_srcset_hide_original( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
+	if ( empty( $sources ) || empty( $image_meta['file'] ) || ! sunshine_hide_original_image( $attachment_id ) ) {
+		return $sources;
+	}
+	$original = wp_basename( $image_meta['file'] );
+	foreach ( $sources as $width => $source ) {
+		if ( wp_basename( $source['url'] ) === $original ) {
+			unset( $sources[ $width ] );
+		}
+	}
+	return $sources;
 }

@@ -16,6 +16,10 @@ function sunshine_modal_display_share() {
 		wp_send_json_error( array( 'reason' => __( 'Access denied', 'sunshine-photo-cart' ) ) );
 	}
 
+	if ( ! $image->allow_image_sharing() ) {
+		wp_send_json_error( array( 'reason' => __( 'Sharing is not allowed for this image', 'sunshine-photo-cart' ) ) );
+	}
+
 	do_action( 'sunshine_image_share', $image );
 
 	$result = array( 'html' => sunshine_get_template_html( 'image/share', array( 'image' => $image ) ) );

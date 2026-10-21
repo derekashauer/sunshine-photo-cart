@@ -204,7 +204,7 @@ function sunshine_taxes_display() {
 add_action( 'wp_ajax_sunshine_sort_tax_rates', 'sunshine_sort_tax_rates' );
 function sunshine_sort_tax_rates() {
 
-	if ( ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-sort-tax-rates' ) ) {
+	if ( ! current_user_can( 'sunshine_manage_options' ) || ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-sort-tax-rates' ) ) {
 		return false;
 	}
 
@@ -226,7 +226,7 @@ add_action( 'wp_ajax_sunshine_delete_tax_rate', 'sunshine_delete_tax_rate' );
 function sunshine_delete_tax_rate() {
 	global $wpdb;
 
-	if ( ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-delete-tax-rate' ) ) {
+	if ( ! current_user_can( 'sunshine_manage_options' ) || ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-delete-tax-rate' ) ) {
 		return false;
 	}
 
@@ -247,7 +247,7 @@ function sunshine_delete_tax_rate() {
 add_action( 'wp_ajax_sunshine_show_tax_states', 'sunshine_show_tax_states' );
 function sunshine_show_tax_states() {
 
-	if ( ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-show-tax-states' ) ) {
+	if ( ! current_user_can( 'sunshine_manage_options' ) || ! wp_verify_nonce( $_REQUEST['security'], 'sunshine-show-tax-states' ) ) {
 		return false;
 	}
 

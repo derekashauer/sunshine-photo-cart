@@ -151,6 +151,10 @@ class SPC_Frontend {
 					if ( ! $this->current_image->can_view() ) {
 						$this->die();
 					}
+					// Photos in a trashed or unpublished gallery stay hidden, like the gallery itself.
+					if ( 'publish' !== $parent->post_status && ! current_user_can( 'edit_post', $parent->ID ) ) {
+						$this->die();
+					}
 					do_action( 'sunshine_view_image', $this->current_image );
 				}
 			}
@@ -417,6 +421,9 @@ class SPC_Frontend {
 			// Build favorites data for the tray widget.
 			$favorites_data = array();
 			foreach ( SPC()->customer->get_favorite_ids() as $fav_id ) {
+				if ( ! sunshine_can_favorite_image( $fav_id ) ) {
+					continue;
+				}
 				$src = wp_get_attachment_image_url( $fav_id, 'sunshine-thumbnail' );
 				if ( $src ) {
 					$favorites_data[] = array(
@@ -831,9 +838,10 @@ class SPC_Frontend {
 
 		// TODO: Is this required now that we are using default attachment URL by WordPress? Can SEO plugins handle this?
 		// Image page
-		if ( $this->is_image() && ! $this->current_gallery->password_required() ) {
+		// Only for photos the visitor can open, and never the full-size original.
+		if ( $this->is_image() && $this->current_image->can_access() ) {
 
-			$image           = wp_get_attachment_image_src( $this->current_image->get_id(), apply_filters( 'sunshine_image_size', 'full' ) );
+			$image           = wp_get_attachment_image_src( $this->current_image->get_id(), apply_filters( 'sunshine_image_size', 'sunshine-large' ) );
 			$image_mime_type = get_post_mime_type( $this->current_image->get_id() );
 
 				/* translators: %1$s is the image name, %2$s is the site name */
@@ -856,11 +864,11 @@ class SPC_Frontend {
 			echo '<meta property="og:image:height" content="' . esc_attr( $image[2] ) . '"/>';
 			echo '<meta property="og:image:width" content="' . esc_attr( $image[1] ) . '"/>';
 
-		} elseif ( $this->is_gallery() ) {
+		} elseif ( $this->is_gallery() && $this->current_gallery->can_access() ) {
 
 			$image_id = $this->current_gallery->get_featured_image_id();
 			if ( $image_id ) {
-				$image = wp_get_attachment_image_src( $image_id, apply_filters( 'sunshine_image_size', 'full' ) );
+				$image = wp_get_attachment_image_src( $image_id, apply_filters( 'sunshine_image_size', 'sunshine-large' ) );
 				if ( $image ) {
 					$image_mime_type = get_post_mime_type( $image_id );
 					echo '<meta property="og:title" content="' . esc_attr( apply_filters( 'sunshine_open_graph_gallery_title', $this->current_gallery->get_name() . ' by ' . get_bloginfo( 'name' ) ) ) . '"/>';
@@ -1081,8 +1089,15 @@ class SPC_Frontend {
 			return false;
 		}
 
-		$password  = sanitize_text_field( $_POST['sunshine_password'] );
-		$galleries = sunshine_get_galleries(
+		$password = sanitize_text_field( $_POST['sunshine_password'] );
+
+		if ( sunshine_is_rate_limited( 'gallery_password', 10 ) ) {
+			SPC()->notices->add( __( 'Too many incorrect attempts, please try again later', 'sunshine-photo-cart' ), 'error' );
+			wp_safe_redirect( add_query_arg( 'access', time(), sanitize_url( $_POST['_wp_http_referer'] ) ) );
+			exit;
+		}
+
+		$galleries = ( '' === $password ) ? array() : sunshine_get_galleries(
 			array(
 				'meta_query' => array(
 					array(
@@ -1093,14 +1108,17 @@ class SPC_Frontend {
 			),
 			'all'
 		);
-		if ( ! empty( $galleries ) ) {
-			$gallery            = array_shift( $galleries );
+		// The database match ignores letter case, so confirm the password exactly.
+		$gallery = ! empty( $galleries ) ? array_shift( $galleries ) : false;
+		if ( $gallery && hash_equals( (string) $gallery->get_password(), $password ) ) {
 			$password_galleries = SPC()->session->get( 'gallery_passwords' );
 			if ( is_array( $password_galleries ) ) {
 				$password_galleries[] = $gallery->get_id();
 			} else {
 				$password_galleries = array( $gallery->get_id() );
 			}
+			// New session ID once a password unlocks something, so an ID known beforehand is worth nothing.
+			SPC()->session->regenerate_id( true );
 			SPC()->session->set( 'gallery_passwords', $password_galleries );
 			SPC()->log( 'Password access granted for ' . $gallery->get_name() );
 			$redirect_url = $gallery->get_permalink();
@@ -1108,6 +1126,7 @@ class SPC_Frontend {
 			wp_safe_redirect( $redirect_url );
 			exit;
 		} else {
+			sunshine_add_rate_limit_attempt( 'gallery_password', 15 * MINUTE_IN_SECONDS );
 			SPC()->notices->add( __( 'No gallery found with that password', 'sunshine-photo-cart' ), 'error' );
 			$redirect_url = sanitize_url( $_POST['_wp_http_referer'] );
 			$redirect_url = add_query_arg( 'access', time(), $redirect_url );
@@ -1143,8 +1162,17 @@ class SPC_Frontend {
 				return;
 			}
 
-			// Throw error if it does not match
-			if ( $gallery->get_password() != stripslashes( $_POST['sunshine_gallery_password'] ) ) {
+			if ( sunshine_is_rate_limited( 'gallery_password', 10 ) ) {
+				SPC()->notices->add( __( 'Too many incorrect attempts, please try again later', 'sunshine-photo-cart' ), 'error' );
+				SPC()->log( 'Gallery password submission blocked for ' . $gallery->get_name() . ': too many attempts' );
+				return;
+			}
+
+			// Throw error if it does not match. An empty password never matches.
+			$gallery_password   = (string) $gallery->get_password();
+			$submitted_password = (string) wp_unslash( $_POST['sunshine_gallery_password'] );
+			if ( '' === $gallery_password || '' === $submitted_password || ! hash_equals( $gallery_password, $submitted_password ) ) {
+				sunshine_add_rate_limit_attempt( 'gallery_password', 15 * MINUTE_IN_SECONDS );
 				SPC()->notices->add( __( 'Gallery access code is incorrect, please try again', 'sunshine-photo-cart' ), 'error' );
 				SPC()->log( 'Invalid gallery password submission for ' . $gallery->get_name() . ': wrong password' );
 				return;
@@ -1157,6 +1185,8 @@ class SPC_Frontend {
 			} else {
 				$password_galleries = array( $gallery_id );
 			}
+			// New session ID once a password unlocks something, so an ID known beforehand is worth nothing.
+			SPC()->session->regenerate_id( true );
 			SPC()->session->set( 'gallery_passwords', $password_galleries );
 			SPC()->log( 'Password access granted for ' . $gallery->get_name() );
 			$redirect = true;

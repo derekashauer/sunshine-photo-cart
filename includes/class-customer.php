@@ -224,7 +224,7 @@ class SPC_Customer extends WP_User {
 			$favorites = array();
 			foreach ( $favorite_ids as $favorite_id ) {
 				$image = sunshine_get_image( $favorite_id );
-				if ( $image && $image->exists() && $image->can_view() ) {
+				if ( $image && sunshine_can_favorite_image( $image ) ) {
 					$favorites[] = $image;
 				}
 			}
@@ -232,7 +232,7 @@ class SPC_Customer extends WP_User {
 		}
 
 		if ( ! empty( $this->favorites ) ) {
-			return $this->favorites;
+			return $this->filter_accessible_favorites( $this->favorites );
 		}
 		if ( ! empty( $this->favorite_ids ) ) {
 			foreach ( $this->favorite_ids as $favorite_id ) {
@@ -243,9 +243,23 @@ class SPC_Customer extends WP_User {
 					$this->delete_favorite( $favorite_id );
 				}
 			}
-			return $this->favorites;
+			return $this->filter_accessible_favorites( $this->favorites );
 		}
 		return false;
+	}
+
+	/**
+	 * When showing customers their own favorites, leave out photos from galleries they can't open.
+	 * Everyone else (an admin looking at a customer, for example) sees the full list.
+	 *
+	 * @param array $favorites Favorite image objects.
+	 * @return array
+	 */
+	private function filter_accessible_favorites( $favorites ) {
+		if ( empty( $favorites ) || (int) $this->get_id() !== get_current_user_id() ) {
+			return $favorites;
+		}
+		return array_values( array_filter( $favorites, 'sunshine_can_favorite_image' ) );
 	}
 
 	/**

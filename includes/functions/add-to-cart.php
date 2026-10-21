@@ -229,9 +229,8 @@ function sunshine_modal_add_item_to_cart() {
 
 	// Only applies to products with no gallery or image, like gift cards and store products.
 	// Anything tied to a gallery or image gets the price level assigned to it below instead.
-	if ( ! empty( $_POST['price_level'] ) ) {
-		$price_level = intval( $_POST['price_level'] );
-	}
+	// It has to be a level the page was allowed to offer, see sunshine_get_requested_price_level().
+	$price_level = sunshine_get_requested_price_level( $_POST );
 
 	if ( ! empty( $gallery_id ) ) {
 		$gallery = sunshine_get_gallery( $gallery_id );
@@ -441,7 +440,7 @@ function sunshine_add_to_cart_url() {
 			}
 
 			if ( ! empty( $_GET['price_level'] ) ) {
-				$price_level = intval( $_GET['price_level'] );
+				$price_level = sunshine_get_requested_price_level( $_GET );
 			}
 
 			if ( ! empty( $_GET['image_id'] ) ) {
