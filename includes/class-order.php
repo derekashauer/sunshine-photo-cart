@@ -114,7 +114,12 @@ class SPC_Order extends Sunshine_Data {
 		return false;
 	}
 
-	public function set_status( $new_status, $custom_log = '' ) {
+	/**
+	 * @param string $new_status The new status.
+	 * @param string $custom_log Order note to add instead of the usual one.
+	 * @param bool   $by_hand    True when an admin changed it by hand (order screen or bulk action).
+	 */
+	public function set_status( $new_status, $custom_log = '', $by_hand = false ) {
 		if ( sunshine_order_status_is_valid( $new_status ) ) {
 			// Read the status before changing it, so an order loaded fresh knows what it was.
 			$current_status = $this->get_status();
@@ -124,7 +129,7 @@ class SPC_Order extends Sunshine_Data {
 				return false;
 			}
 			$this->status = $new_status;
-			do_action( 'sunshine_order_status_change', $new_status, $this, $current_status );
+			do_action( 'sunshine_order_status_change', $new_status, $this, $current_status, $by_hand );
 			do_action( 'sunshine_order_status_change_' . $new_status, $this );
 			if ( ! empty( $current_status ) && $current_status != $new_status ) {
 				do_action( 'sunshine_order_status_change_' . $current_status . '_to_' . $new_status, $this );

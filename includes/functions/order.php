@@ -166,9 +166,12 @@ function sunshine_order_is_paid( $status ) {
  * @param SPC_Order $order             The order.
  * @param string    $reason            Why the payment was refused, in plain words.
  * @param string    $payment_method_id The payment method's ID.
+ * @param string    $type              'mismatch' when a payment didn't match the order (the
+ *                                     customer may have paid), or 'declined' when the payment
+ *                                     service says it was declined, cancelled, failed or expired.
  */
-function sunshine_order_payment_problem( $order, $reason, $payment_method_id = '' ) {
-	do_action( 'sunshine_order_payment_problem', $order, $reason, $payment_method_id );
+function sunshine_order_payment_problem( $order, $reason, $payment_method_id = '', $type = 'mismatch' ) {
+	do_action( 'sunshine_order_payment_problem', $order, $reason, $payment_method_id, $type );
 }
 
 function sunshine_order_statuses_completed() {

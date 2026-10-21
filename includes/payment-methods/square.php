@@ -1466,7 +1466,8 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 			/* translators: 1: Square payment ID, 2: amount paid in Square */
 			$note = sprintf( __( 'Square payment %1$s for %2$s does not match the order total, order was not completed', 'sunshine-photo-cart' ), $payment_id, $paid );
 			$order->add_log( $note );
-			sunshine_order_payment_problem( $order, $note, $this->id );
+			// Square saying the payment failed or was cancelled is a decline, not a mismatch.
+			sunshine_order_payment_problem( $order, $note, $this->id, in_array( $status, array( 'FAILED', 'CANCELED' ), true ) ? 'declined' : 'mismatch' );
 			SPC()->cart->add_error( __( 'Your payment did not match the order total, please contact the site owner', 'sunshine-photo-cart' ) );
 			return;
 		}

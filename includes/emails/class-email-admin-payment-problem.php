@@ -6,6 +6,9 @@
  */
 class SPC_Email_Admin_Payment_Problem extends SPC_Email {
 
+	// What "Send when" is set to until the store owner saves it.
+	protected $default_events = array( 'mismatch', 'failed' );
+
 	function init() {
 
 		$this->id          = 'admin-payment-problem';
@@ -29,17 +32,52 @@ class SPC_Email_Admin_Payment_Problem extends SPC_Email {
 			)
 		);
 
-		add_action( 'sunshine_order_payment_problem', array( $this, 'payment_problem' ), 10, 3 );
-		add_action( 'sunshine_order_status_change', array( $this, 'status_change' ), 10, 3 );
+		add_action( 'sunshine_order_payment_problem', array( $this, 'payment_problem' ), 10, 4 );
+		add_action( 'sunshine_order_status_change', array( $this, 'status_change' ), 10, 4 );
 
+	}
+
+	public function default_options( $fields ) {
+		$fields = parent::default_options( $fields );
+
+		$fields['1150'] = array(
+			'name'    => __( 'Send when', 'sunshine-photo-cart' ),
+			'id'      => 'email_' . $this->id . '_events',
+			'type'    => 'checkbox_multi',
+			'options' => array(
+				'mismatch' => __( 'A payment didn\'t match the order (wrong amount, currency or account, or paid for another order). The customer may have paid, but the order stayed unpaid.', 'sunshine-photo-cart' ),
+				'declined' => __( 'A payment was declined or cancelled at the payment service', 'sunshine-photo-cart' ),
+				'failed'   => __( 'A payment service marked the order Failed', 'sunshine-photo-cart' ),
+				'manual'   => __( 'An admin marked the order Failed by hand', 'sunshine-photo-cart' ),
+			),
+		);
+		// Ticked the same as what is sent until it is saved. Once saved, even with none ticked,
+		// the saved choice is shown.
+		if ( false === SPC()->get_option( 'email_' . $this->id . '_events' ) ) {
+			$fields['1150']['default'] = $this->default_events;
+		}
+
+		return $fields;
+	}
+
+	/**
+	 * Whether "Send when" includes this kind of problem: 'mismatch', 'declined', 'failed' or
+	 * 'manual'. Never saved means the defaults; saved with none ticked means none.
+	 */
+	public function sends_for( $event ) {
+		$events = SPC()->get_option( 'email_' . $this->id . '_events' );
+		if ( false === $events ) {
+			$events = $this->default_events;
+		}
+		return in_array( $event, (array) $events, true );
 	}
 
 	/**
 	 * A payment method refused a payment for the order. Gateways can send the same notice more
 	 * than once (webhook retries, scheduled checks), so each reason is only emailed once per order.
 	 */
-	public function payment_problem( $order, $reason, $payment_method_id = '' ) {
-		if ( ! $this->is_active() || empty( $order ) ) {
+	public function payment_problem( $order, $reason, $payment_method_id = '', $type = 'mismatch' ) {
+		if ( ! $this->is_active() || empty( $order ) || ! $this->sends_for( $type ) ) {
 			return;
 		}
 		$sent = (array) $order->get_meta_value( 'payment_problem_emailed' );
@@ -54,10 +92,10 @@ class SPC_Email_Admin_Payment_Problem extends SPC_Email {
 	}
 
 	/**
-	 * The order's status changed to Failed.
+	 * The order's status changed to Failed, by a payment service or by an admin by hand.
 	 */
-	public function status_change( $new_status, $order, $old_status = '' ) {
-		if ( 'failed' !== $new_status || 'failed' === $old_status || ! $this->is_active() ) {
+	public function status_change( $new_status, $order, $old_status = '', $by_hand = false ) {
+		if ( 'failed' !== $new_status || 'failed' === $old_status || ! $this->is_active() || ! $this->sends_for( $by_hand ? 'manual' : 'failed' ) ) {
 			return;
 		}
 		$this->trigger( $order, __( 'The order was marked Failed.', 'sunshine-photo-cart' ) );
