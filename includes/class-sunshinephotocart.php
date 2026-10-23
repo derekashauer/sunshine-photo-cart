@@ -171,6 +171,7 @@ final class Sunshine_Photo_Cart {
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/class-background.php';
 
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/class-addon-update.php';
+		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/class-addon-update-verify.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/class-license.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/tracking.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/class-privacy.php';

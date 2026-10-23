@@ -40,6 +40,9 @@ class SPC_License {
 		if ( $file ) {
 			$plugin_base_name = plugin_basename( $file );
 			add_action( 'in_plugin_update_message-' . $plugin_base_name, array( $this, 'update_message' ), 10, 2 );
+
+			// Here, not in init(): init() skips WP-CLI, and its updates must be checked too.
+			SPC_Addon_Update_Verify::watch( $file, $version, $name );
 		}
 
 	}
