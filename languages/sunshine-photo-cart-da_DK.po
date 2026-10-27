@@ -1892,7 +1892,7 @@ msgstr "Galleri Ordre"
 #: includes/admin/settings-fields.php:493
 #: includes/admin/settings-fields.php:504
 msgid "Custom ordering"
-msgstr "Brugerdefineret bestilling"
+msgstr "Brugerdefineret rækkefølge"
 
 #: includes/admin/settings-fields.php:494
 msgid "Gallery Creation Date (New to Old)"
@@ -1913,11 +1913,11 @@ msgstr "Billedrækkefølge"
 
 #: includes/admin/settings-fields.php:505
 msgid "Order images shot (New to Old)"
-msgstr "Bestil billeder (nye til gamle)"
+msgstr "Optagelsestidspunkt (nyt til gammelt)"
 
 #: includes/admin/settings-fields.php:506
 msgid "Order images shot (Old to New)"
-msgstr "Bestil billeder (gamle til nye)"
+msgstr "Optagelsestidspunkt (gammelt til nyt)"
 
 #: includes/admin/settings-fields.php:507
 msgid "Image Upload Date (New to Old)"
@@ -13376,7 +13376,7 @@ msgstr "Alle ordrer"
 
 #: includes/class-sunshinephotocart.php:545
 msgid "View Orders"
-msgstr "Se bestilling"
+msgstr "Se ordrer"
 
 #: includes/class-sunshinephotocart.php:546
 msgid "Search Orders"
@@ -13432,7 +13432,7 @@ msgstr "Hent din ordre på et angivet sted"
 
 #: includes/delivery-methods/shipping.php:10
 msgid "Order items shipped or delivered to your provided address"
-msgstr "Bestil varer, der sendes eller leveres til din angivne adresse"
+msgstr "Ordrens varer sendes eller leveres til den adresse, du har angivet"
 
 #: includes/emails/class-email-admin-favorites.php:8
 msgid "Favorites (Admin)"
@@ -13509,7 +13509,7 @@ msgstr "E-mailkvittering sendt til administratorer efter vellykket bestilling"
 #: includes/emails/class-email-admin-receipt.php:11
 #, php-format
 msgid "New order: %1$s from %2$s"
-msgstr "Ny rækkefølge: %1$s fra %2$s"
+msgstr "Ny ordre: %1$s fra %2$s"
 
 #: includes/emails/class-email-admin-signup.php:8
 msgid "Sign Up (Admin)"
@@ -16415,7 +16415,7 @@ msgstr "Se artikler om produkthjælp"
 
 #: templates/admin/order-items.php:5
 msgid "Order item list"
-msgstr "Bestil vareliste"
+msgstr "Vareliste for ordre"
 
 #: templates/admin/order-items.php:77 templates/order/details.php:27
 msgid "Delivery"
@@ -18296,7 +18296,7 @@ msgstr ""
 
 #: admin/orders.php:6
 msgid "Order Files"
-msgstr "Bestil filer"
+msgstr "Ordrefiler"
 
 #: admin/orders.php:31
 msgid ""
