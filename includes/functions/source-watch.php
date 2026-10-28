@@ -357,7 +357,8 @@ function sunshine_source_watch_file_key( $file, $source ) {
 	if ( 'cloud' === $source ) {
 		return ltrim( preg_replace( '#^[a-z0-9._-]+://#i', '', (string) $file ), '/' );
 	}
-	return strtolower( basename( (string) $file ) );
+	// Stored the way WordPress names the copy, so "photo 1.jpg" matches the photo-1.jpg it became.
+	return strtolower( sanitize_file_name( basename( (string) $file ) ) );
 }
 
 /**
@@ -417,7 +418,7 @@ function sunshine_source_watch_is_held( $key, $source, $held ) {
 	if ( 'cloud' === $source && ! empty( $held['sources'] ) ) {
 		return isset( $held['sources'][ $key ] );
 	}
-	return isset( $held['names'][ strtolower( basename( $key ) ) ] );
+	return isset( $held['names'][ sunshine_source_watch_file_key( $key, 'ftp' ) ] );
 }
 
 /**
@@ -469,13 +470,15 @@ function sunshine_source_watch_check_gallery( $gallery_id, $files, $source, $gal
 	$seen = get_post_meta( $gallery_id, 'sunshine_source_seen', true );
 
 	if ( ! is_array( $seen ) ) {
-		$since = (int) get_option( 'sunshine_source_watch_since' );
-		if ( $gallery['created'] < $since ) {
-			// First look at a gallery from before watching started: take it as it is.
-			update_post_meta( $gallery_id, 'sunshine_source_seen', array_values( array_unique( $keys ) ) );
-			return true;
-		}
 		$seen = array();
+	}
+
+	// First look at a gallery from before watching started: take it as it is. Its
+	// own marker, because photos deleted from it before now are already on the list.
+	if ( $gallery['created'] < (int) get_option( 'sunshine_source_watch_since' ) && ! get_post_meta( $gallery_id, 'sunshine_source_baseline', true ) ) {
+		update_post_meta( $gallery_id, 'sunshine_source_seen', array_values( array_unique( array_merge( $seen, array_values( $keys ) ) ) ) );
+		update_post_meta( $gallery_id, 'sunshine_source_baseline', time() );
+		return true;
 	}
 
 	$seen    = array_fill_keys( $seen, true );
@@ -633,15 +636,22 @@ function sunshine_source_watch_import_queue( &$batch ) {
 	$handled = array();
 	$added   = array();
 
+	// Keep full size photos as they are, like every other import into a gallery.
+	add_filter( 'big_image_size_threshold', '__return_false', 999 );
+
 	foreach ( $queue as $queue_key => $item ) {
 		unset( $queue[ $queue_key ] );
 
-		$gallery_id               = (int) $item['gallery_id'];
-		$handled[ $gallery_id ][] = $item['key'];
+		$gallery_id = (int) $item['gallery_id'];
 
-		if ( 'sunshine-gallery' !== get_post_type( $gallery_id ) ) {
+		// The gallery may have been trashed or expired since its photos were queued.
+		// Not remembered, so they are found again if it comes back.
+		$end_date = get_post_meta( $gallery_id, 'end_date', true );
+		if ( 'sunshine-gallery' !== get_post_type( $gallery_id ) || 'trash' === get_post_status( $gallery_id ) || ( is_numeric( $end_date ) && $end_date < current_time( 'timestamp' ) ) ) {
 			continue;
 		}
+
+		$handled[ $gallery_id ][] = $item['key'];
 
 		// Looked at again just before bringing it in, in case an import put it in
 		// the gallery since it was queued.
@@ -662,7 +672,7 @@ function sunshine_source_watch_import_queue( &$batch ) {
 			$message = is_wp_error( $image_id ) ? $image_id->get_error_message() : 'unknown error';
 			SPC()->log( 'Source watch: could not add ' . $item['file'] . ' to gallery ' . $gallery_id . ': ' . $message );
 		} else {
-			$held[ $gallery_id ]['names'][ strtolower( basename( $item['key'] ) ) ] = true;
+			$held[ $gallery_id ]['names'][ sunshine_source_watch_file_key( $item['key'], 'ftp' ) ] = true;
 			if ( 'cloud' === $item['source'] ) {
 				$held[ $gallery_id ]['sources'][ $item['key'] ] = true;
 			}
@@ -673,6 +683,8 @@ function sunshine_source_watch_import_queue( &$batch ) {
 			break;
 		}
 	}
+
+	remove_filter( 'big_image_size_threshold', '__return_false', 999 );
 
 	// Saved once at the end. If this request dies part way, the photos it already
 	// brought in are found in their gallery next time and skipped.
