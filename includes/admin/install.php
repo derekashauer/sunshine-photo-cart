@@ -43,7 +43,7 @@ function maybe_sunshine_create_custom_tables() {
 		"CREATE TABLE `{$wpdb->prefix}sunshine_order_items` (
 			`order_item_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			`order_id` bigint(20) unsigned NOT NULL,
-			`type` varchar(50) COLLATE utf8mb4_unicode_520_ci NOT NULL,
+			`type` varchar(50) NOT NULL,
 			`image_id` bigint(20) NOT NULL,
 			`qty` int(10) unsigned NOT NULL,
 			`product_id` bigint(20) unsigned NOT NULL,
@@ -82,8 +82,8 @@ function maybe_sunshine_create_custom_tables() {
 		"CREATE TABLE `{$wpdb->prefix}sunshine_order_itemmeta` (
 			`order_itemmeta_id` bigint(20) NOT NULL AUTO_INCREMENT,
 			  `order_item_id` bigint(20) NOT NULL,
-			  `meta_key` varchar(190) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci DEFAULT NULL,
-			  `meta_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci,
+			  `meta_key` varchar(190) DEFAULT NULL,
+			  `meta_value` longtext,
 			  PRIMARY KEY (`order_itemmeta_id`),
 			  KEY `order_item_id` (`order_item_id`),
 			  KEY `meta_key` (`meta_key`)

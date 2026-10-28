@@ -246,6 +246,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 = 3.8.1 =
 * New: Regenerating images for a gallery with sub-galleries asks whether to do the sub-galleries too
 * New: Regenerate Images in the Bulk actions menu on the Galleries list, to regenerate several galleries at once
+* Fix: Orders saved without their items on older databases (MySQL or MariaDB 5.5), which left the order screen, invoice and packing list empty
 
 = 3.8 - October 21, 2026 =
 * Security: Every payment method now confirms with the payment company that an order was really paid, in full, before the order is marked paid

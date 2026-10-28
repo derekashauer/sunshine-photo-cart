@@ -1307,6 +1307,8 @@ class SPC_Order extends Sunshine_Data {
 					);
 				}
 			}
+		} else {
+			SPC()->log( 'Could not save item to ' . $this->get_name() . ': ' . $wpdb->last_error );
 		}
 
 	}
