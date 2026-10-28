@@ -633,6 +633,7 @@ function sunshine_source_watch_import_queue( &$batch ) {
 	require_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/sunshine-gallery.php';
 
 	$held    = array();
+	$seen    = array();
 	$handled = array();
 	$added   = array();
 
@@ -664,15 +665,16 @@ function sunshine_source_watch_import_queue( &$batch ) {
 		$handled[ $gallery_id ][] = $item['key'];
 
 		// Looked at again just before bringing it in, in case an import put it in
-		// the gallery since it was queued.
+		// the gallery, or it was deleted from there, since it was queued.
 		if ( ! isset( $held[ $gallery_id ] ) ) {
 			$index               = sunshine_source_existing_files( array( $gallery_id ) );
 			$held[ $gallery_id ] = isset( $index[ $gallery_id ] ) ? $index[ $gallery_id ] : array(
 				'sources' => array(),
 				'names'   => array(),
 			);
+			$seen[ $gallery_id ] = array_fill_keys( (array) get_post_meta( $gallery_id, 'sunshine_source_seen', true ), true );
 		}
-		if ( sunshine_source_watch_is_held( $item['key'], $item['source'], $held[ $gallery_id ] ) ) {
+		if ( isset( $seen[ $gallery_id ][ $item['key'] ] ) || sunshine_source_watch_is_held( $item['key'], $item['source'], $held[ $gallery_id ] ) ) {
 			continue;
 		}
 
