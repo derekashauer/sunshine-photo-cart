@@ -30,6 +30,52 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 		add_filter( 'post_row_actions', array( $this, 'regenerate_gallery_images_link_row' ), 10, 2 );
 		add_filter( 'page_row_actions', array( $this, 'regenerate_gallery_images_link_row' ), 10, 2 );
 
+		add_filter( 'bulk_actions-edit-sunshine-gallery', array( $this, 'bulk_actions' ) );
+		add_filter( 'handle_bulk_actions-edit-sunshine-gallery', array( $this, 'handle_bulk_actions' ), 10, 3 );
+
+	}
+
+	function bulk_actions( $actions ) {
+		$actions['sunshine_regenerate_images'] = __( 'Regenerate Images', 'sunshine-photo-cart' );
+		return $actions;
+	}
+
+	/**
+	 * Send the picked galleries to the tool screen, which asks about
+	 * sub-galleries and watermarks before it starts.
+	 */
+	function handle_bulk_actions( $redirect_to, $action, $ids ) {
+		if ( 'sunshine_regenerate_images' !== $action || empty( $ids ) ) {
+			return $redirect_to;
+		}
+		$url = admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-tools&tool=regenerate-images&sunshine_gallery=' . implode( ',', array_map( 'intval', $ids ) ) );
+		// Not wp_nonce_url(): that encodes & as &amp;, which breaks a redirect.
+		return add_query_arg( '_wpnonce', wp_create_nonce( 'sunshine_tool_' . $this->get_key() ), $url );
+	}
+
+	/**
+	 * Turn a gallery ID, a comma list of IDs or an array of IDs into a clean
+	 * array of IDs, adding every sub-gallery (all levels) when asked.
+	 */
+	private function parse_gallery_ids( $galleries, $include_children = false ) {
+		if ( ! is_array( $galleries ) ) {
+			$galleries = explode( ',', (string) $galleries );
+		}
+		$gallery_ids = array_values( array_unique( array_filter( array_map( 'intval', $galleries ) ) ) );
+		if ( $include_children ) {
+			foreach ( $gallery_ids as $gallery_id ) {
+				$gallery_ids = array_merge( $gallery_ids, sunshine_get_gallery_descendant_ids( $gallery_id, 'any' ) );
+			}
+			$gallery_ids = array_values( array_unique( array_map( 'intval', $gallery_ids ) ) );
+		}
+		return $gallery_ids;
+	}
+
+	/**
+	 * How many sub-galleries the picked galleries have that were not picked themselves.
+	 */
+	private function count_child_galleries( $gallery_ids ) {
+		return count( array_diff( $this->parse_gallery_ids( $gallery_ids, true ), $gallery_ids ) );
 	}
 
 	function regenerate_gallery_images_link_row( $actions, $post ) {
@@ -42,13 +88,12 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 	/**
 	 * REST-API path: total images that need regenerating.
 	 *
-	 * Optional $gallery_id narrows to a single gallery; without it, every
-	 * Sunshine-uploaded attachment is counted.
+	 * Optional $gallery_id (one ID or a list) narrows to those galleries;
+	 * without it, every Sunshine-uploaded attachment is counted.
 	 */
 	public function count_remaining( $gallery_id = 0 ) {
 		if ( ! empty( $gallery_id ) ) {
-			$gallery = sunshine_get_gallery( intval( $gallery_id ) );
-			return $gallery ? (int) $gallery->get_image_count() : 0;
+			return count( $this->get_gallery_image_ids( $this->parse_gallery_ids( $gallery_id ) ) );
 		}
 		$args  = array(
 			'post_type'      => 'attachment',
@@ -71,13 +116,16 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 	 *
 	 * Optional $params:
 	 *   gallery_id       int    Restrict to a single gallery.
+	 *   gallery_ids      array  Restrict to several galleries.
+	 *   include_children '0|1'  Also do every sub-gallery of those galleries.
 	 *   apply_watermark  '0|1'  Force-on watermark for previously skipped images.
 	 *   offset           int    Index into the work queue to start from.
 	 */
 	public function process_batch( $size = null, $params = array() ) {
 		$size            = min( $this->get_batch_size(), max( 1, (int) ( $size ?: $this->get_batch_size() ) ) );
 		$offset          = isset( $params['offset'] ) ? max( 0, (int) $params['offset'] ) : 0;
-		$gallery_id      = isset( $params['gallery_id'] ) ? intval( $params['gallery_id'] ) : 0;
+		$gallery_id      = isset( $params['gallery_ids'] ) ? $params['gallery_ids'] : ( isset( $params['gallery_id'] ) ? $params['gallery_id'] : 0 );
+		$gallery_id      = $this->parse_gallery_ids( $gallery_id, ! empty( $params['include_children'] ) );
 		$apply_watermark = isset( $params['apply_watermark'] ) ? sanitize_text_field( $params['apply_watermark'] ) : '';
 
 		$image_ids = $this->collect_image_ids( $gallery_id, $offset, $size );
@@ -116,21 +164,32 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 	}
 
 	/**
-	 * Resolve the slice of image IDs at [offset, offset+size) — either from
-	 * a specific gallery's image list or from the global Sunshine attachment
-	 * query.
+	 * Every image in the given galleries, in gallery order, each image once.
 	 */
-	private function collect_image_ids( $gallery_id, $offset, $size ) {
-		if ( ! empty( $gallery_id ) ) {
+	private function get_gallery_image_ids( $gallery_ids ) {
+		$all = array();
+		foreach ( $gallery_ids as $gallery_id ) {
 			$gallery = sunshine_get_gallery( $gallery_id );
 			if ( ! $gallery ) {
-				return array();
+				continue;
 			}
-			$all = $gallery->get_image_ids();
-			if ( ! is_array( $all ) ) {
-				return array();
+			$image_ids = $gallery->get_image_ids();
+			if ( is_array( $image_ids ) ) {
+				$all = array_merge( $all, $image_ids );
 			}
-			return array_slice( $all, $offset, $size );
+		}
+		return array_values( array_unique( array_map( 'intval', $all ) ) );
+	}
+
+	/**
+	 * Resolve the slice of image IDs at [offset, offset+size) — either from
+	 * the given galleries' image lists or from the global Sunshine attachment
+	 * query.
+	 */
+	private function collect_image_ids( $gallery_ids, $offset, $size ) {
+		$gallery_ids = $this->parse_gallery_ids( $gallery_ids );
+		if ( ! empty( $gallery_ids ) ) {
+			return array_slice( $this->get_gallery_image_ids( $gallery_ids ), $offset, $size );
 		}
 		// Order explicitly by ID. The queue is walked one offset at a time over
 		// what can be hours, and the default ordering (post_date, no tiebreaker)
@@ -383,17 +442,28 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 	protected function do_process() {
 		global $wpdb;
 
-		$gallery_id               = ( isset( $_GET['sunshine_gallery'] ) ) ? intval( wp_unslash( $_GET['sunshine_gallery'] ) ) : '';
+		$picked_gallery_ids       = isset( $_GET['sunshine_gallery'] ) ? $this->parse_gallery_ids( sanitize_text_field( wp_unslash( $_GET['sunshine_gallery'] ) ) ) : array();
+		$include_children         = isset( $_GET['include_children'] ) ? sanitize_text_field( wp_unslash( $_GET['include_children'] ) ) : null;
 		$watermark_image          = SPC()->get_option( 'watermark_image' );
 		$apply_watermark          = isset( $_GET['apply_watermark'] ) ? sanitize_text_field( wp_unslash( $_GET['apply_watermark'] ) ) : null;
 		$images_without_watermark = 0;
 
+		// Sub-gallery prompt: ask once when any picked gallery has sub-galleries.
+		if ( ! empty( $picked_gallery_ids ) && null === $include_children ) {
+			$child_count = $this->count_child_galleries( $picked_gallery_ids );
+			if ( $child_count > 0 ) {
+				$this->show_children_options( $child_count, $picked_gallery_ids );
+				return;
+			}
+		}
+
+		$gallery_ids = $this->parse_gallery_ids( $picked_gallery_ids, '1' === $include_children );
+
 		// Watermark prompt: count images that have watermark explicitly disabled.
 		if ( ! empty( $watermark_image ) && null === $apply_watermark ) {
-			if ( ! empty( $gallery_id ) ) {
-				$gallery   = sunshine_get_gallery( $gallery_id );
-				$image_ids = $gallery->get_image_ids();
-				if ( ! empty( $image_ids ) && is_array( $image_ids ) ) {
+			if ( ! empty( $gallery_ids ) ) {
+				$image_ids = $this->get_gallery_image_ids( $gallery_ids );
+				if ( ! empty( $image_ids ) ) {
 					foreach ( $image_ids as $image_id ) {
 						$watermark_meta = get_post_meta( $image_id, 'sunshine_watermark', true );
 						if ( 0 === $watermark_meta || '0' === $watermark_meta || false === $watermark_meta ) {
@@ -425,15 +495,21 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 		}
 
 		if ( ! empty( $watermark_image ) && null === $apply_watermark && $images_without_watermark > 0 ) {
-			$this->show_watermark_options( $images_without_watermark, $gallery_id );
+			$this->show_watermark_options( $images_without_watermark, $picked_gallery_ids, $include_children );
 			return;
 		}
 
-		if ( ! empty( $gallery_id ) ) {
-			$gallery = sunshine_get_gallery( $gallery_id );
+		$gallery_id = implode( ',', $gallery_ids );
+
+		if ( 1 === count( $gallery_ids ) && sunshine_get_gallery( $gallery_ids[0] ) ) {
+			$gallery = sunshine_get_gallery( $gallery_ids[0] );
 			/* translators: %s is the gallery title */
 			$title = sprintf( __( 'Regenerating images for "%s"', 'sunshine-photo-cart' ), $gallery->get_name() );
-			$count = $gallery->get_image_count();
+			$count = count( $this->get_gallery_image_ids( $gallery_ids ) );
+		} elseif ( ! empty( $gallery_ids ) ) {
+			/* translators: %d is the number of galleries */
+			$title = sprintf( _n( 'Regenerating images for %d gallery', 'Regenerating images for %d galleries', count( $gallery_ids ), 'sunshine-photo-cart' ), count( $gallery_ids ) );
+			$count = count( $this->get_gallery_image_ids( $gallery_ids ) );
 		} else {
 			$title = __( 'Regenerating images', 'sunshine-photo-cart' );
 			$count = $this->count_remaining();
@@ -485,6 +561,13 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 					$( '#sunshine-percentage' ).css( 'width', percent + '%' );
 				});
 			}
+			// Nothing to do (a parent gallery holds no photos of its own): finish now.
+			if ( total < 1 ) {
+				$( '#abort' ).hide();
+				$( '#sunshine-progress-bar' ).addClass( 'done' );
+				$( '#sunshine-percentage' ).css( 'width', '100%' );
+				$( '#sunshine-processed' ).html( '<?php echo esc_js( __( 'Done!', 'sunshine-photo-cart' ) ); ?>' );
+			}
 			for (i = 0; i < total; i++) {
 				sunshine_regenerate_image( i );
 			}
@@ -496,15 +579,61 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 	}
 
 	/**
-	 * Show watermark options before regeneration.
+	 * Tool URL that keeps the picked galleries and the answers given so far.
 	 */
-	private function show_watermark_options( $images_without_watermark, $gallery_id = '' ) {
+	private function get_step_url( $gallery_ids, $args = array() ) {
 		$base_url = admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-tools&tool=regenerate-images' );
 		$base_url = wp_nonce_url( $base_url, 'sunshine_tool_' . $this->get_key() );
-
-		if ( ! empty( $gallery_id ) ) {
-			$base_url = add_query_arg( 'sunshine_gallery', $gallery_id, $base_url );
+		if ( ! empty( $gallery_ids ) ) {
+			$args['sunshine_gallery'] = implode( ',', $gallery_ids );
 		}
+		return add_query_arg( $args, $base_url );
+	}
+
+	/**
+	 * Ask whether to also regenerate the sub-galleries of the picked galleries.
+	 */
+	private function show_children_options( $child_count, $gallery_ids ) {
+		?>
+		<div class="sunshine-watermark-notice" style="background: #fff; border: 1px solid #c3c4c7; border-left: 4px solid #dba617; padding: 12px; margin: 20px 0;">
+			<h3 style="margin-top: 0;"><?php esc_html_e( 'Sub-galleries Found', 'sunshine-photo-cart' ); ?></h3>
+			<p>
+				<?php
+				echo esc_html(
+					sprintf(
+						/* translators: %d is the number of sub-galleries */
+						_n(
+							'There is %d sub-gallery inside the galleries you picked. Do you want to regenerate its images too?',
+							'There are %d sub-galleries inside the galleries you picked. Do you want to regenerate their images too?',
+							$child_count,
+							'sunshine-photo-cart'
+						),
+						$child_count
+					)
+				);
+				?>
+			</p>
+			<p>
+				<a href="<?php echo esc_url( $this->get_step_url( $gallery_ids, array( 'include_children' => '1' ) ) ); ?>" class="button button-primary">
+					<?php esc_html_e( 'Yes, include sub-galleries', 'sunshine-photo-cart' ); ?>
+				</a>
+				<a href="<?php echo esc_url( $this->get_step_url( $gallery_ids, array( 'include_children' => '0' ) ) ); ?>" class="button">
+					<?php esc_html_e( 'No, only the galleries I picked', 'sunshine-photo-cart' ); ?>
+				</a>
+			</p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Show watermark options before regeneration.
+	 */
+	private function show_watermark_options( $images_without_watermark, $gallery_ids = array(), $include_children = null ) {
+		$args = array();
+		if ( null !== $include_children ) {
+			$args['include_children'] = $include_children;
+		}
+		$base_url = $this->get_step_url( $gallery_ids, $args );
 
 		$apply_watermark_url = add_query_arg( 'apply_watermark', '1', $base_url );
 		$keep_settings_url   = add_query_arg( 'apply_watermark', '0', $base_url );
@@ -556,7 +685,8 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 		$item_number     = intval( $_POST['item_number'] );
 		$apply_watermark = isset( $_POST['apply_watermark'] ) ? sanitize_text_field( wp_unslash( $_POST['apply_watermark'] ) ) : '';
 
-		$gallery_id = ( ! empty( $_POST['gallery'] ) ) ? intval( wp_unslash( $_POST['gallery'] ) ) : 0;
+		// One gallery ID or a comma list. Sub-galleries were already added on the tool screen.
+		$gallery_id = ( ! empty( $_POST['gallery'] ) ) ? $this->parse_gallery_ids( sanitize_text_field( wp_unslash( $_POST['gallery'] ) ) ) : 0;
 
 		// Resolve through the shared collector rather than a second query of its
 		// own. This path used to ask for post_status 'inherit' while the total

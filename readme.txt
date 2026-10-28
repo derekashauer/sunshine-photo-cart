@@ -243,6 +243,10 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.8.1 =
+* New: Regenerating images for a gallery with sub-galleries asks whether to do the sub-galleries too
+* New: Regenerate Images in the Bulk actions menu on the Galleries list, to regenerate several galleries at once
+
 = 3.8 - October 21, 2026 =
 * Security: Every payment method now confirms with the payment company that an order was really paid, in full, before the order is marked paid
 * Security: Gallery photos, comments and sub-galleries follow the gallery's access settings in more places, including feeds, sitemaps, sharing, favorites and the REST API
