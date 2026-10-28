@@ -636,8 +636,16 @@ function sunshine_source_watch_import_queue( &$batch ) {
 	$handled = array();
 	$added   = array();
 
-	// Keep full size photos as they are, like every other import into a gallery.
+	// Keep full size photos as they are and use the Image Quality setting, like
+	// every other import into a gallery.
 	add_filter( 'big_image_size_threshold', '__return_false', 999 );
+	$image_quality = (int) SPC()->get_option( 'image_quality' );
+	$set_quality   = function( $quality ) use ( $image_quality ) {
+		return $image_quality;
+	};
+	if ( $image_quality ) {
+		add_filter( 'jpeg_quality', $set_quality, 999 );
+	}
 
 	foreach ( $queue as $queue_key => $item ) {
 		unset( $queue[ $queue_key ] );
@@ -645,9 +653,11 @@ function sunshine_source_watch_import_queue( &$batch ) {
 		$gallery_id = (int) $item['gallery_id'];
 
 		// The gallery may have been trashed or expired since its photos were queued.
-		// Not remembered, so they are found again if it comes back.
+		// Not remembered, and its folder is looked at in full again, so they are found
+		// if it comes back.
 		$end_date = get_post_meta( $gallery_id, 'end_date', true );
 		if ( 'sunshine-gallery' !== get_post_type( $gallery_id ) || 'trash' === get_post_status( $gallery_id ) || ( is_numeric( $end_date ) && $end_date < current_time( 'timestamp' ) ) ) {
+			delete_post_meta( $gallery_id, 'sunshine_source_watch' );
 			continue;
 		}
 
@@ -685,6 +695,7 @@ function sunshine_source_watch_import_queue( &$batch ) {
 	}
 
 	remove_filter( 'big_image_size_threshold', '__return_false', 999 );
+	remove_filter( 'jpeg_quality', $set_quality, 999 );
 
 	// Saved once at the end. If this request dies part way, the photos it already
 	// brought in are found in their gallery next time and skipped.
