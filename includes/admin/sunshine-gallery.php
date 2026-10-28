@@ -363,6 +363,25 @@ function sunshine_meta_gallery_images_display() {
 					</select>
 					<button class="button" id="import"><?php echo esc_html( $import_label ); ?></button> <a href="https://www.sunshinephotocart.com/docs/how-to-create-a-new-gallery-via-ftp/" target="_blank" class="dashicons dashicons-editor-help"></a>
 				</p>
+				<?php
+				if ( $selected_dir && sunshine_source_watch_frequency() ) {
+					$watch_added = get_post_meta( $gallery->get_id(), 'sunshine_source_watch_added', true );
+					echo '<p class="import-info">';
+					if ( ! empty( $watch_added['count'] ) ) {
+						echo esc_html(
+							sprintf(
+								/* translators: 1: number of photos, 2: date and time of the last one */
+								_n( 'Sunshine checks this gallery\'s folder for new photos. It has added %1$d photo, last on %2$s.', 'Sunshine checks this gallery\'s folder for new photos. It has added %1$d photos, last on %2$s.', (int) $watch_added['count'], 'sunshine-photo-cart' ),
+								(int) $watch_added['count'],
+								wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), (int) $watch_added['last'] )
+							)
+						);
+					} else {
+						esc_html_e( 'Sunshine checks this gallery\'s folder for new photos.', 'sunshine-photo-cart' );
+					}
+					echo '</p>';
+				}
+				?>
 				<!-- JUST SO MANY ISSUES:
 				1) Cannot have multiple URLs for a single image thus cannot be in multiple galleries
 				2) If pulled in from outside a Sunshine gallery, we need to regenerate image for various sizes but don't want to remove outside image sizes so they still work wherever else the image is being used

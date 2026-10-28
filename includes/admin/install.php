@@ -138,6 +138,8 @@ function sunshine_deactivation() {
 	wp_clear_scheduled_hook( 'sunshine_send_summary' );
 	wp_clear_scheduled_hook( 'sunshine_license_check' );
 	wp_clear_scheduled_hook( 'sunshine_tracking_send' );
+	wp_clear_scheduled_hook( 'sunshine_source_watch' );
+	wp_clear_scheduled_hook( 'sunshine_source_watch_continue' );
 	sunshine_fast_imports_uninstall();
 }
 
