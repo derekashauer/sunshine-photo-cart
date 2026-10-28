@@ -388,6 +388,18 @@ function sunshine_get_settings_fields() {
 		'type'        => 'checkbox',
 		'description' => __( 'This will remove the folder and images added via FTP, if this was used to create the gallery', 'sunshine-photo-cart' ),
 	);
+	$galleries_fields['1250'] = array(
+		'name'        => __( 'Check folders for new photos', 'sunshine-photo-cart' ),
+		'id'          => 'source_watch',
+		'type'        => 'select',
+		'options'     => array(
+			''           => __( 'Off', 'sunshine-photo-cart' ),
+			'hourly'     => __( 'Every hour', 'sunshine-photo-cart' ),
+			'twicedaily' => __( 'Twice a day', 'sunshine-photo-cart' ),
+			'daily'      => __( 'Once a day', 'sunshine-photo-cart' ),
+		),
+		'description' => __( 'Galleries made from an FTP or cloud folder get any photos added to that folder later. Photos are only ever added: one removed from the folder stays in the gallery, and one you delete from the gallery is not brought back. Galleries that existed before you turn this on only get photos added to their folder after that. Each check of a cloud folder reads the list of files in your bucket, so checking every hour means more requests to your storage service.', 'sunshine-photo-cart' ),
+	);
 	$galleries_fields['1300'] = array(
 		'name'        => __( 'Show images in Media Library', 'sunshine-photo-cart' ),
 		'id'          => 'show_media_library',

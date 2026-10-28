@@ -244,6 +244,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.8.1 =
+* New: Sunshine can check the folders your galleries were imported from for new photos, every hour, twice a day or once a day (Settings > Galleries > Check folders for new photos). Photos added later to a gallery's FTP folder, or its cloud folder with the Cloud Storage add-on, are brought in by themselves. Photos are only ever added: one removed from the folder stays in the gallery, and one you delete from the gallery is not brought back
 * New: Regenerating images for a gallery with sub-galleries asks whether to do the sub-galleries too
 * New: Regenerate Images in the Bulk actions menu on the Galleries list, to regenerate several galleries at once
 * Fix: Orders saved without their items on older databases (MySQL or MariaDB 5.5), which left the order screen, invoice and packing list empty
