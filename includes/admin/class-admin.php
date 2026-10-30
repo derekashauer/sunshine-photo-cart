@@ -456,7 +456,9 @@ class Sunshine_Admin {
 		// Check if we're in a background processing context (cron or async request)
 		$is_cron               = defined( 'DOING_CRON' ) && DOING_CRON;
 		$is_async_request      = ( $request_action === 'spc_process_images' );
-		$is_background_process = ( $is_cron || $is_async_request ) && ! $is_initial_upload;
+		// Regenerate Images rebuilds sizes right away, so it needs them even when uploads delay them
+		$is_regenerate         = ( $request_action === 'sunshine_regenerate_image' );
+		$is_background_process = ( $is_cron || $is_async_request || $is_regenerate ) && ! $is_initial_upload;
 
 		// If delay processing is enabled, prevent sizes UNLESS we're in a separate background processing request
 		if ( $delay_processing ) {

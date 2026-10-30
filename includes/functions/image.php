@@ -83,7 +83,8 @@ function sunshine_fix_image_orientation( $file_path ) {
  * When an uploaded image is smaller than a registered Sunshine size (e.g., sunshine-large),
  * WordPress won't create an intermediate file for that size. This function creates a copy
  * of the original file to serve as the intermediate, so watermarks are applied to the copy
- * instead of the original.
+ * instead of the original. If a size is missing even though the original is bigger than it,
+ * the size is made at its real dimensions instead, so it never ends up as a full-size copy.
  *
  * @param int    $attachment_id The attachment ID.
  * @param array  $metadata      The attachment metadata array (modified in place).
@@ -109,9 +110,22 @@ function sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $file_pa
 	$file_type = wp_check_filetype( $file_path );
 	$dir       = trailingslashit( $file_info['dirname'] );
 
+	$registered_sizes = wp_get_registered_image_subsizes();
+
 	foreach ( $sizes_to_check as $size_name ) {
 		if ( ! empty( $metadata['sizes'][ $size_name ] ) ) {
 			continue;
+		}
+
+		// Returns false when the original is already within the size, which falls through to the copy below.
+		if ( ! empty( $registered_sizes[ $size_name ] ) ) {
+			$size    = $registered_sizes[ $size_name ];
+			$resized = image_make_intermediate_size( $file_path, $size['width'], $size['height'], $size['crop'] );
+			if ( $resized ) {
+				SPC()->log( 'Created missing size ' . $size_name . ': ' . $resized['file'] );
+				$metadata['sizes'][ $size_name ] = $resized;
+				continue;
+			}
 		}
 
 		$image_width  = $metadata['width'];
