@@ -40,6 +40,15 @@ if ( function_exists( 'pll_get_post' ) ) {
 		}
 		return array_values( array_unique( $ids ) );
 	}
+
+	// With Polylang's media translation on, each uploaded photo gets a language and
+	// Polylang hides photos that don't match the visitor's. Galleries aren't translated,
+	// so a gallery always shows all of its photos, whatever language each one has.
+	add_filter( 'sunshine_gallery_get_images_args', 'sunshine_polylang_gallery_images_all_languages' );
+	function sunshine_polylang_gallery_images_all_languages( $args ) {
+		$args['lang'] = '';
+		return $args;
+	}
 }
 
 // WPML — same idea as Polylang, using the wpml_object_id filter API.

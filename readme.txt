@@ -250,6 +250,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: Orders saved without their items on older databases (MySQL or MariaDB 5.5), which left the order screen, invoice and packing list empty
 * Fix: Regenerate Images made full-size copies instead of the thumbnail and large sizes when Delay image processing was on, which made the watermark look small and centered
 * Fix: A whole-gallery purchase can be added to the cart from a main gallery whose photos are all in its sub-galleries
+* Fix: With Polylang's media translation on, galleries showed only the photos set to the visitor's language and Load more stopped working. Galleries now show all their photos in every language
 
 = 3.8 - October 21, 2026 =
 * Security: Every payment method now confirms with the payment company that an order was really paid, in full, before the order is marked paid
