@@ -179,6 +179,59 @@ $dl_test(
 	}
 );
 
+// A wedding split into one sub-gallery per part of the day leaves the main gallery with no photos
+// of its own. "Include sub galleries" exists so the client buys all of it once from the main
+// gallery, instead of paying again in every sub-gallery.
+$dl_test(
+	'Gallery download: a main gallery with only sub-galleries can be bought whole',
+	function () use ( $t, $dl_gallery, $dl_gallery_product, $dl_add_gallery, $dl_lines ) {
+		$parent = $dl_gallery( 0 );
+		foreach ( array( 1, 2 ) as $n ) {
+			$child = $dl_gallery( 2 );
+			wp_update_post(
+				array(
+					'ID'          => $child['id'],
+					'post_parent' => $parent['id'],
+				)
+			);
+		}
+		$with_children    = $dl_gallery_product( 150, array( 'taxable' => '', 'subgalleries' => '1' ) );
+		$without_children = $dl_gallery_product( 90, array( 'taxable' => '' ) );
+
+		$frontend                  = SPC()->frontend;
+		$saved_gallery             = $frontend->current_gallery;
+		$saved_image               = $frontend->current_image;
+		$frontend->current_gallery = sunshine_get_gallery( $parent['id'] );
+		$frontend->current_image   = '';
+		$menu                      = sunshine_download_action_menu( array() );
+		$frontend->current_gallery = $saved_gallery;
+		$frontend->current_image   = $saved_image;
+		$names                     = wp_list_pluck( $menu, 'name' );
+		$t::same( true, in_array( sunshine_get_product( $with_children )->get_name(), $names, true ), 'the main gallery offers the product that includes sub-galleries' );
+		$t::same( 1, count( $menu ), 'and not the one that leaves them out, which would be an empty zip' );
+
+		$dl_add_gallery( $with_children, $parent['id'] );
+		$cart  = $t::new_request();
+		$lines = $dl_lines();
+		$t::same( 1, count( $lines ), 'it goes in the cart' );
+		if ( $lines ) {
+			$t::same( (int) $parent['id'], (int) $lines[0]->get_gallery_id(), 'for the main gallery' );
+		}
+		$t::money( 150, $cart->get_total(), 'one price for every sub-gallery' );
+	}
+);
+
+// A gallery with no photos and no sub-galleries has nothing to sell.
+$dl_test(
+	'Gallery download: an empty gallery with no sub-galleries cannot be bought',
+	function () use ( $t, $dl_gallery, $dl_gallery_product, $dl_add_gallery, $dl_lines ) {
+		$empty = $dl_gallery( 0 );
+		$dl_add_gallery( $dl_gallery_product( 150, array( 'subgalleries' => '1' ) ), $empty['id'] );
+		$t::new_request();
+		$t::same( 0, count( $dl_lines() ), 'nothing goes in the cart' );
+	}
+);
+
 // Changelog 3.1.2: "Don't allow gallery download to be added more than 1 time for a gallery."
 // The window hides its button once the gallery is in the cart, but a second click that is
 // already on its way (a double click, or the gallery open in two tabs) must not charge again.

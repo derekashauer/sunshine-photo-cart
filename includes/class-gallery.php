@@ -44,8 +44,10 @@ class SPC_Gallery extends Sunshine_Data {
 		return $this->get_meta_value( 'images_directory' );
 	}
 
-	public function can_purchase( $ignore_email_gate = false ) {
-		if ( $this->products_disabled() || $this->is_expired() || SPC()->get_option( 'proofing' ) || ! $this->has_images() || ! $this->can_access( false, $ignore_email_gate ) ) {
+	// $allow_children: a purchase of the whole gallery (not one photo) is fine when the photos are all in sub-galleries.
+	public function can_purchase( $ignore_email_gate = false, $allow_children = false ) {
+		$has_images = $this->has_images() || ( $allow_children && $this->has_children_galleries() );
+		if ( $this->products_disabled() || $this->is_expired() || SPC()->get_option( 'proofing' ) || ! $has_images || ! $this->can_access( false, $ignore_email_gate ) ) {
 			return false;
 		}
 		return true;
