@@ -218,6 +218,42 @@ $dl_test(
 			$t::same( (int) $parent['id'], (int) $lines[0]->get_gallery_id(), 'for the main gallery' );
 		}
 		$t::money( 150, $cart->get_total(), 'one price for every sub-gallery' );
+
+		// The menu hides the product that leaves sub-galleries out. A request sent without the menu
+		// must not get it either, or the customer pays for an empty zip.
+		SPC()->cart->empty_cart();
+		$dl_add_gallery( $without_children, $parent['id'] );
+		$t::new_request();
+		$t::same( 0, count( $dl_lines() ), 'the product without sub-galleries is refused' );
+	}
+);
+
+// Sub-galleries with no photos yet would sell an empty zip.
+$dl_test(
+	'Gallery download: a main gallery whose sub-galleries are all empty cannot be bought',
+	function () use ( $t, $dl_gallery, $dl_gallery_product, $dl_add_gallery, $dl_lines ) {
+		$parent = $dl_gallery( 0 );
+		$child  = $dl_gallery( 0 );
+		wp_update_post(
+			array(
+				'ID'          => $child['id'],
+				'post_parent' => $parent['id'],
+			)
+		);
+		$dl_add_gallery( $dl_gallery_product( 150, array( 'subgalleries' => '1' ) ), $parent['id'] );
+		$t::new_request();
+		$t::same( 0, count( $dl_lines() ), 'nothing goes in the cart' );
+	}
+);
+
+// The gallery download window only sells whole gallery downloads.
+$dl_test(
+	'Gallery download: the gallery download request will not add another kind of product',
+	function () use ( $t, $dl_gallery, $dl_product, $dl_add_gallery, $dl_lines ) {
+		$gallery = $dl_gallery( 2 );
+		$dl_add_gallery( $dl_product( 5 ), $gallery['id'] );
+		$t::new_request();
+		$t::same( 0, count( $dl_lines() ), 'a single photo download is refused' );
 	}
 );
 
