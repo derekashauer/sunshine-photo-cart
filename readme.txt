@@ -3,7 +3,7 @@ Author URI: https://www.sunshinephotocart.com
 Plugin URI: https://www.sunshinephotocart.com
 Contributors: wpsunshine, sccr410
 Tags: client photo gallery, photo proofing, client proofing, sell photos, client galleries
-Requires at least: 5.5
+Requires at least: 5.9
 Requires PHP: 7.4
 Tested up to: 7.1
 Stable tag: 3.8
@@ -244,6 +244,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.8.1 =
+* Change: Sunshine now needs WordPress 5.9 or newer. Image uploads did not work on older WordPress versions running PHP 7
 * New: Sunshine can check the folders your galleries were imported from for new photos, every hour, twice a day or once a day (Settings > Galleries > Check folders for new photos). Photos added later to a gallery's FTP folder, or its cloud folder with the Cloud Storage add-on, are brought in by themselves. Photos are only ever added: one removed from the folder stays in the gallery, and one you delete from the gallery is not brought back
 * New: Regenerating images for a gallery with sub-galleries asks whether to do the sub-galleries too
 * New: Regenerate Images in the Bulk actions menu on the Galleries list, to regenerate several galleries at once
