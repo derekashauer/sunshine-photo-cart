@@ -6,6 +6,7 @@
  * Author: WP Sunshine
  * Author URI: https://www.wpsunshine.com
  * Version: 3.8
+ * Requires at least: 5.9
  * Text Domain: sunshine-photo-cart
  * Domain Path: /languages
  * License: GPLv2 or later
