@@ -114,6 +114,8 @@ class SPC_Background_Process_Images extends SPC_Background_Process {
 
 		$result = $this->process_item( $item );
 
+		sunshine_done_upload();
+
 		// A non-false return means the item stays queued for another pass.
 		if ( false !== $result ) {
 			return $result;

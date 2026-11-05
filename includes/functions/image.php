@@ -796,12 +796,13 @@ function sunshine_hide_original_image( $attachment_id ) {
  *
  * Sunshine only makes its own sizes, and WordPress falls back to the original for any size that
  * was never made (thumbnail, medium, woocommerce_single...) and for 'full'. Those requests get the
- * large size instead, which is the one Sunshine watermarks. People who can edit the gallery
- * still get the real thing.
+ * large size instead, which is the one Sunshine watermarks. With no large size, the thumbnail
+ * or a placeholder is shown, because the original has no watermark. People who can edit the
+ * gallery still get the real thing.
  */
 add_filter( 'image_downsize', 'sunshine_downsize_hide_original', 6, 3 );
 function sunshine_downsize_hide_original( $out, $attachment_id, $size ) {
-	if ( false !== $out || 'sunshine-large' === $size || ! sunshine_hide_original_image( $attachment_id ) ) {
+	if ( false !== $out || ! sunshine_hide_original_image( $attachment_id ) ) {
 		return $out;
 	}
 
@@ -814,11 +815,17 @@ function sunshine_downsize_hide_original( $out, $attachment_id, $size ) {
 		return $out;
 	}
 
-	if ( empty( $metadata['sizes']['sunshine-large']['file'] ) ) {
-		return $out;
+	if ( ! empty( $metadata['sizes']['sunshine-large']['file'] ) ) {
+		return image_downsize( $attachment_id, 'sunshine-large' );
 	}
 
-	return image_downsize( $attachment_id, 'sunshine-large' );
+	if ( ! empty( $metadata['sizes']['sunshine-thumbnail']['file'] ) ) {
+		return image_downsize( $attachment_id, 'sunshine-thumbnail' );
+	}
+
+	list( $width, $height ) = sunshine_unprocessed_image_dimensions( $attachment_id, $size );
+
+	return array( sunshine_image_placeholder_url(), $width, $height, true );
 }
 
 /**

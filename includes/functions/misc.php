@@ -533,6 +533,21 @@ function sunshine_doing_upload( $gallery_id ) {
 }
 
 /**
+ * Undo sunshine_doing_upload().
+ *
+ * WP-Cron runs every due task in one request, so a task that adds photos has to call
+ * this or the tasks after it write their files into the gallery's folder.
+ */
+function sunshine_done_upload() {
+	unset( $GLOBALS['sunshine_upload_gallery_id'] );
+	remove_filter( 'upload_dir', 'sunshine_custom_upload_dir' );
+	remove_filter( 'intermediate_image_sizes', 'sunshine_upload_image_sizes', 99999 );
+	remove_filter( 'pre_wp_unique_filename_file_list', 'sunshine_import_folder_file_list', 10 );
+	remove_filter( 'wp_unique_filename', 'sunshine_import_remember_file_name', 10 );
+	remove_filter( 'wp_update_attachment_metadata', 'sunshine_import_remember_size_files', PHP_INT_MAX );
+}
+
+/**
  * Whitelist of intermediate sizes generated during a Sunshine upload.
  * Add-ons can extend the list via the `sunshine_image_sizes` filter (the
  * existing extension point used by the admin path).

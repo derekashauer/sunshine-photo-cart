@@ -30,6 +30,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * How many times a photo is tried, an hour apart, before it is left out for good.
+ */
+define( 'SUNSHINE_SOURCE_WATCH_TRIES', 3 );
+
+/**
  * How often folders are checked, or empty when it is turned off.
  *
  * @return string A WordPress schedule name, or ''.
@@ -54,6 +59,11 @@ function sunshine_source_watch_schedule() {
 			wp_clear_scheduled_hook( 'sunshine_source_watch' );
 		}
 		wp_clear_scheduled_hook( 'sunshine_source_watch_continue' );
+
+		// Turning it back on later counts as a new start for galleries made in between.
+		if ( get_option( 'sunshine_source_watch_since' ) ) {
+			delete_option( 'sunshine_source_watch_since' );
+		}
 		return;
 	}
 
@@ -91,14 +101,20 @@ function sunshine_source_watch_run() {
 	$batch = sunshine_import_batch_start();
 
 	// Only the scheduled check starts looking through every folder again. A run
-	// that carries on a minute later just finishes what is under way.
-	$start = ( 'sunshine_source_watch' === current_action() );
+	// that carries on a minute later just finishes what is under way. Saved, because
+	// a scheduled run that spends its time on the queue leaves the looking for later.
+	if ( 'sunshine_source_watch' === current_action() ) {
+		update_option( 'sunshine_source_watch_start', 1, false );
+	}
 
 	// Photos already found come first. Looking for more is only worth it once
 	// they are in.
 	$more = sunshine_source_watch_import_queue( $batch );
 
 	if ( ! $more ) {
+		$start = (bool) get_option( 'sunshine_source_watch_start' );
+		delete_option( 'sunshine_source_watch_start' );
+
 		$more = ! sunshine_source_watch_check_ftp( $batch, $start );
 
 		/**
@@ -116,7 +132,7 @@ function sunshine_source_watch_run() {
 		// Photos found in this run start coming in straight away.
 		if ( sunshine_import_batch_has_time( $batch ) ) {
 			$more = sunshine_source_watch_import_queue( $batch ) || $more;
-		} elseif ( get_option( 'sunshine_source_watch_queue' ) ) {
+		} elseif ( sunshine_source_watch_ready_items( get_option( 'sunshine_source_watch_queue' ) ) ) {
 			$more = true;
 		}
 	}
@@ -277,34 +293,6 @@ function sunshine_source_watch_ftp_folder( $directory ) {
 }
 
 /**
- * Photos sitting directly in a folder.
- *
- * @param string $folder Folder.
- * @return array Full paths.
- */
-function sunshine_source_watch_folder_files( $folder ) {
-	$names = @scandir( $folder ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- a folder removed between checks is expected.
-	if ( empty( $names ) ) {
-		return array();
-	}
-
-	$extensions = array_map( 'strtolower', sunshine_allowed_file_extensions() );
-	$files      = array();
-
-	foreach ( $names as $name ) {
-		// Hidden files include the ._ copies Macs leave next to every photo.
-		if ( '.' === $name[0] ) {
-			continue;
-		}
-		if ( in_array( strtolower( pathinfo( $name, PATHINFO_EXTENSION ) ), $extensions, true ) ) {
-			$files[] = $folder . '/' . $name;
-		}
-	}
-
-	return $files;
-}
-
-/**
  * Check one gallery's FTP folder.
  *
  * @param int   $gallery_id Gallery.
@@ -333,7 +321,8 @@ function sunshine_source_watch_check_ftp_gallery( $gallery_id, $gallery ) {
 		return;
 	}
 
-	$files = sunshine_source_watch_folder_files( $folder );
+	// The same photos the gallery's import screen would list for this folder.
+	$files = (array) sunshine_get_images_in_folder( $folder );
 
 	// The time only counts whole seconds. A photo added later in the same second
 	// it was read would leave it unchanged, so a time from that second isn't
@@ -475,7 +464,8 @@ function sunshine_source_watch_check_gallery( $gallery_id, $files, $source, $gal
 
 	// First look at a gallery from before watching started: take it as it is. Its
 	// own marker, because photos deleted from it before now are already on the list.
-	if ( $gallery['created'] < (int) get_option( 'sunshine_source_watch_since' ) && ! get_post_meta( $gallery_id, 'sunshine_source_baseline', true ) ) {
+	$since = (int) get_option( 'sunshine_source_watch_since' );
+	if ( $gallery['created'] < $since && (int) get_post_meta( $gallery_id, 'sunshine_source_baseline', true ) < $since ) {
 		update_post_meta( $gallery_id, 'sunshine_source_seen', array_values( array_unique( array_merge( $seen, array_values( $keys ) ) ) ) );
 		update_post_meta( $gallery_id, 'sunshine_source_baseline', time() );
 		return true;
@@ -648,9 +638,7 @@ function sunshine_source_watch_import_queue( &$batch ) {
 		add_filter( 'jpeg_quality', $set_quality, 999 );
 	}
 
-	foreach ( $queue as $queue_key => $item ) {
-		unset( $queue[ $queue_key ] );
-
+	foreach ( sunshine_source_watch_ready_items( $queue ) as $queue_key => $item ) {
 		$gallery_id = (int) $item['gallery_id'];
 
 		// The gallery may have been trashed or expired since its photos were queued.
@@ -658,11 +646,10 @@ function sunshine_source_watch_import_queue( &$batch ) {
 		// if it comes back.
 		$end_date = get_post_meta( $gallery_id, 'end_date', true );
 		if ( 'sunshine-gallery' !== get_post_type( $gallery_id ) || 'trash' === get_post_status( $gallery_id ) || ( is_numeric( $end_date ) && $end_date < current_time( 'timestamp' ) ) ) {
+			unset( $queue[ $queue_key ] );
 			delete_post_meta( $gallery_id, 'sunshine_source_watch' );
 			continue;
 		}
-
-		$handled[ $gallery_id ][] = $item['key'];
 
 		// Looked at again just before bringing it in, in case an import put it in
 		// the gallery, or it was deleted from there, since it was queued.
@@ -675,8 +662,24 @@ function sunshine_source_watch_import_queue( &$batch ) {
 			$seen[ $gallery_id ] = array_fill_keys( (array) get_post_meta( $gallery_id, 'sunshine_source_seen', true ), true );
 		}
 		if ( isset( $seen[ $gallery_id ][ $item['key'] ] ) || sunshine_source_watch_is_held( $item['key'], $item['source'], $held[ $gallery_id ] ) ) {
+			unset( $queue[ $queue_key ] );
+			$handled[ $gallery_id ][] = $item['key'];
 			continue;
 		}
+
+		$tries = isset( $item['tries'] ) ? (int) $item['tries'] : 0;
+		if ( $tries >= SUNSHINE_SOURCE_WATCH_TRIES ) {
+			unset( $queue[ $queue_key ] );
+			$handled[ $gallery_id ][] = $item['key'];
+			SPC()->log( 'Source watch: giving up on ' . $item['file'] . ' for gallery ' . $gallery_id . ' after ' . $tries . ' tries' );
+			continue;
+		}
+
+		// Counted before trying, so a photo that crashes the request can't block the
+		// photos behind it. A brief problem, like a full disk, gets another chance later.
+		$queue[ $queue_key ]['tries']       = $tries + 1;
+		$queue[ $queue_key ]['retry_after'] = time() + HOUR_IN_SECONDS;
+		update_option( 'sunshine_source_watch_queue', $queue, false );
 
 		$image_id = sunshine_source_watch_import_item( $item );
 
@@ -684,6 +687,8 @@ function sunshine_source_watch_import_queue( &$batch ) {
 			$message = is_wp_error( $image_id ) ? $image_id->get_error_message() : 'unknown error';
 			SPC()->log( 'Source watch: could not add ' . $item['file'] . ' to gallery ' . $gallery_id . ': ' . $message );
 		} else {
+			unset( $queue[ $queue_key ] );
+			$handled[ $gallery_id ][] = $item['key'];
 			$held[ $gallery_id ]['names'][ sunshine_source_watch_file_key( $item['key'], 'ftp' ) ] = true;
 			if ( 'cloud' === $item['source'] ) {
 				$held[ $gallery_id ]['sources'][ $item['key'] ] = true;
@@ -698,13 +703,11 @@ function sunshine_source_watch_import_queue( &$batch ) {
 
 	remove_filter( 'big_image_size_threshold', '__return_false', 999 );
 	remove_filter( 'jpeg_quality', $set_quality, 999 );
+	sunshine_done_upload();
 
-	// Saved once at the end. If this request dies part way, the photos it already
-	// brought in are found in their gallery next time and skipped.
 	update_option( 'sunshine_source_watch_queue', $queue, false );
 
-	// A photo is remembered whether it made it in or not, so one that can't be
-	// added isn't tried on every check.
+	// A photo that was given up on is remembered too, so it isn't queued again.
 	foreach ( $handled as $gallery_id => $keys ) {
 		sunshine_source_watch_remember( $gallery_id, $keys );
 	}
@@ -723,7 +726,44 @@ function sunshine_source_watch_import_queue( &$batch ) {
 		SPC()->log( 'Source watch: added ' . $count . ' photo(s) to gallery ' . $gallery_id );
 	}
 
-	return ! empty( $queue );
+	return ! empty( sunshine_source_watch_ready_items( $queue ) );
+}
+
+/**
+ * Queued photos that can be tried now, leaving out any waiting to try again.
+ *
+ * @param array $queue The queue.
+ * @return array
+ */
+function sunshine_source_watch_ready_items( $queue ) {
+	$now = time();
+
+	return array_filter(
+		(array) $queue,
+		function ( $item ) use ( $now ) {
+			return empty( $item['retry_after'] ) || $item['retry_after'] <= $now;
+		}
+	);
+}
+
+/**
+ * Whether a watched gallery's new photos get the watermark.
+ *
+ * The import screen's Watermark choice isn't stored for the gallery, but it is stored
+ * for each photo, so new photos follow the one added before them.
+ *
+ * @param int $gallery_id Gallery.
+ * @return int 1 or 0.
+ */
+function sunshine_source_watch_watermark( $gallery_id ) {
+	$image_ids = sunshine_get_gallery( $gallery_id )->get_image_ids();
+	if ( empty( $image_ids ) ) {
+		return 1;
+	}
+
+	$watermark = get_post_meta( max( $image_ids ), 'sunshine_watermark', true );
+
+	return '' === $watermark ? 1 : (int) $watermark;
 }
 
 /**
@@ -737,11 +777,13 @@ function sunshine_source_watch_import_item( $item ) {
 
 	sunshine_doing_upload( $gallery_id );
 
+	$item['watermark'] = sunshine_source_watch_watermark( $gallery_id );
+
 	/**
 	 * Bring in a photo Sunshine can't copy itself, such as one in a cloud bucket.
 	 *
 	 * @param int|WP_Error|null $image_id Null to leave it to Sunshine, otherwise the new image id or an error.
-	 * @param array             $item     Queued item: gallery_id, file, source, key, and maybe sizes.
+	 * @param array             $item     Queued item: gallery_id, file, source, key, watermark, and maybe sizes.
 	 */
 	$image_id = apply_filters( 'sunshine_source_watch_import', null, $item );
 
@@ -754,7 +796,7 @@ function sunshine_source_watch_import_item( $item ) {
 		}
 
 		$names  = array();
-		$result = sunshine_gallery_import_file( $item['file'], $gallery_id, 1, $names );
+		$result = sunshine_gallery_import_file( $item['file'], $gallery_id, $item['watermark'], $names );
 		if ( empty( $result['success'] ) ) {
 			return new WP_Error( 'import_failed', isset( $result['error'] ) ? $result['error'] : '' );
 		}
