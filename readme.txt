@@ -250,6 +250,8 @@ Security is important to us. Please report security bugs through the [Patchstack
 * New: Regenerate Images in the Bulk actions menu on the Galleries list, to regenerate several galleries at once
 * Fix: Orders saved without their items on older databases (MySQL or MariaDB 5.5), which left the order screen, invoice and packing list empty
 * Fix: Regenerate Images made full-size copies instead of the thumbnail and large sizes when Delay image processing was on, which made the watermark look small and centered
+* Fix: A missing thumbnail or large size is made at its real size now instead of as a full-size copy of the original
+* Fix: The watermark could land on a photo's original file when its large size was missing. The original is never watermarked now
 * Fix: A whole-gallery purchase can be added to the cart from a main gallery whose photos are all in its sub-galleries
 * Fix: With Polylang's media translation on, galleries showed only the photos set to the visitor's language and Load more stopped working. Galleries now show all their photos in every language
 
