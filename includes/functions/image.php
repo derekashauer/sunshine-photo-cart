@@ -110,9 +110,9 @@ function sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $file_pa
 	$file_type = wp_check_filetype( $file_path );
 	$dir       = trailingslashit( $file_info['dirname'] );
 
-	// Read the sizes as registered, not through the intermediate_image_sizes filter, which
+	// Added sizes are read as registered too, because the intermediate_image_sizes filter
 	// hides every size during requests that delay image processing.
-	$registered_sizes = wp_get_additional_image_sizes();
+	$registered_sizes = array_merge( wp_get_registered_image_subsizes(), wp_get_additional_image_sizes() );
 
 	foreach ( $sizes_to_check as $size_name ) {
 		if ( ! empty( $metadata['sizes'][ $size_name ] ) ) {
