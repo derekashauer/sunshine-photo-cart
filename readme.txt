@@ -252,7 +252,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: Regenerate Images made full-size copies instead of the thumbnail and large sizes when Delay image processing was on, which made the watermark look small and centered
 * Fix: A missing thumbnail or large size is made at its real size now instead of as a full-size copy of the original
 * Fix: The watermark could land on a photo's original file when its large size was missing. The original is never watermarked now
-* Fix: Regenerate Images uses the original from cloud storage when the local copy was changed, such as by a watermark, so photos aren't stamped twice. Needs Cloud Storage 3.1.10
+* Fix: Regenerate Images uses the original from cloud storage when the local copy was changed, such as by a watermark, so photos aren't stamped twice
 * Fix: A whole-gallery purchase can be added to the cart from a main gallery whose photos are all in its sub-galleries
 * Fix: With Polylang's media translation on, galleries showed only the photos set to the visitor's language and Load more stopped working. Galleries now show all their photos in every language
 
