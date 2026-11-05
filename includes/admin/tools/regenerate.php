@@ -476,7 +476,8 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 		$local_size = (int) filesize( $file_path );
 
 		// Most providers report a size, which saves downloading photos that match.
-		if ( (int) $client->get_remote_size( $cloud_storage_key ) === $local_size ) {
+		$remote_size = $client->get_remote_size( $cloud_storage_key );
+		if ( (int) $remote_size === $local_size ) {
 			return true;
 		}
 
@@ -495,8 +496,9 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			wp_delete_file( $temp_file );
 			SPC()->log( 'Cloud Storage: Failed to download original to check local file: ' . $cloud_storage_key );
 
-			// Nothing shows this photo changed, and it can still be put right on a later run.
-			return $local_size === $recorded_size;
+			// With no size from the cloud, nothing shows this photo changed. It can still be
+			// put right on a later run.
+			return ! is_int( $remote_size ) && $local_size === $recorded_size;
 		}
 
 		clearstatcache( true, $temp_file );
