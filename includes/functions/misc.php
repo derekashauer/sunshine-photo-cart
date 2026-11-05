@@ -441,19 +441,21 @@ function sunshine_get_currencies() {
  * @return array of file names
  */
 function sunshine_get_images_in_folder( $folder ) {
-	$images = glob( $folder . '/*.[jJ][pP][gG]' );
-	$images = apply_filters( 'sunshine_images_in_folder', $images, $folder );
-	$i      = 0;
-	if ( $images ) {
-		// ProPhoto hack because they regenerate the Featured Image every time a new PP Theme is activated and save it in our folder
-		foreach ( $images as &$image ) {
-			if ( strpos( $image, '(pp_' ) !== false ) {
-				unset( $images[ $i ] );
-			}
-			$i++;
+	$names  = @scandir( $folder ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- a folder removed between checks is expected.
+	$images = array();
+
+	foreach ( (array) $names as $name ) {
+		// Hidden files include the ._ copies Macs leave next to every photo. ProPhoto saves
+		// its Featured Image in our folder every time a new PP Theme is activated.
+		if ( ! $name || '.' === $name[0] || false !== strpos( $name, '(pp_' ) ) {
+			continue;
+		}
+		if ( in_array( strtolower( pathinfo( $name, PATHINFO_EXTENSION ) ), array( 'jpg', 'jpeg', 'png' ), true ) ) {
+			$images[] = $folder . '/' . $name;
 		}
 	}
-	return $images;
+
+	return apply_filters( 'sunshine_images_in_folder', $images, $folder );
 }
 
 /**

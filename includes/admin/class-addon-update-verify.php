@@ -118,7 +118,7 @@ class SPC_Addon_Update_Verify {
 
 		// Core has the add-ons' name pattern too, but it comes from WordPress.org, unsigned.
 		$file = WP_PLUGIN_DIR . '/' . $plugin;
-		if ( 0 === strpos( $plugin, 'sunshine-photo-cart/' ) || ! is_readable( $file ) ) {
+		if ( plugin_basename( SUNSHINE_PHOTO_CART_FILE ) === $plugin || ! is_readable( $file ) ) {
 			return false;
 		}
 
@@ -127,7 +127,7 @@ class SPC_Addon_Update_Verify {
 		}
 
 		$data = get_plugin_data( $file, false, false );
-		if ( 0 !== strpos( $data['Name'], 'Sunshine Photo Cart - ' ) ) {
+		if ( 0 !== strpos( $data['Name'], 'Sunshine Photo Cart - ' ) || ! in_array( $data['Author'], array( 'WP Sunshine', 'Sunshine Photo Cart' ), true ) ) {
 			return false;
 		}
 

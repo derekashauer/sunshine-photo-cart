@@ -819,6 +819,11 @@ function sunshine_downsize_hide_original( $out, $attachment_id, $size ) {
 		return image_downsize( $attachment_id, 'sunshine-large' );
 	}
 
+	// Nothing to protect: not a photo, or one meant to show without a watermark.
+	if ( ! wp_attachment_is_image( $attachment_id ) || ! SPC()->get_option( 'watermark_image' ) || '0' === (string) get_post_meta( $attachment_id, 'sunshine_watermark', true ) ) {
+		return $out;
+	}
+
 	if ( ! empty( $metadata['sizes']['sunshine-thumbnail']['file'] ) ) {
 		return image_downsize( $attachment_id, 'sunshine-thumbnail' );
 	}

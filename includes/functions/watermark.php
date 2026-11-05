@@ -26,8 +26,11 @@ function sunshine_watermark_image( $attachment_id, $metadata = array(), $passed_
 
 			// A size that was never made gets one more try, so there is a copy to stamp.
 			if ( $image_size != 'full' && ! empty( $metadata ) && empty( $metadata['sizes'][ $image_size ]['file'] ) ) {
-				$metadata = sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $image );
-				wp_update_attachment_metadata( $attachment_id, $metadata );
+				$remade = sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $image );
+				if ( ! empty( $remade['sizes'][ $image_size ]['file'] ) ) {
+					$metadata = sunshine_secure_intermediate_file_names( $remade, $image );
+					wp_update_attachment_metadata( $attachment_id, $metadata );
+				}
 			}
 
 			if ( $image_size != 'full' && ! empty( $image ) && ! empty( $metadata ) && ! empty( $metadata['sizes'][ $image_size ]['file'] ) ) {

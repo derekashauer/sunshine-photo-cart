@@ -253,6 +253,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: A missing thumbnail or large size is made at its real size now instead of as a full-size copy of the original
 * Fix: The watermark could land on a photo's original file when its large size was missing. The original is never watermarked now
 * Fix: Regenerate Images uses the original from cloud storage when the local copy was changed, such as by a watermark, so photos aren't stamped twice
+* Change: Import from FTP folder also finds .jpeg and .png photos, the same as browser uploads, and works with folder names that have brackets
 * Fix: A gallery photo with no large size shows its thumbnail or a placeholder to visitors, never its unwatermarked original
 * Fix: Files saved by other scheduled tasks could land in a gallery's folder after background image processing
 * Fix: Regenerate Images run through the API makes only Sunshine's watermarked sizes and keeps large photos at full size

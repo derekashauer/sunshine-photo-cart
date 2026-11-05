@@ -60,9 +60,10 @@ function sunshine_source_watch_schedule() {
 		}
 		wp_clear_scheduled_hook( 'sunshine_source_watch_continue' );
 
-		// Turning it back on later counts as a new start for galleries made in between.
+		// Turning it back on later is a new start, for every gallery.
 		if ( get_option( 'sunshine_source_watch_since' ) ) {
 			delete_option( 'sunshine_source_watch_since' );
+			delete_post_meta_by_key( 'sunshine_source_watch' );
 		}
 		return;
 	}
@@ -132,14 +133,20 @@ function sunshine_source_watch_run() {
 		// Photos found in this run start coming in straight away.
 		if ( sunshine_import_batch_has_time( $batch ) ) {
 			$more = sunshine_source_watch_import_queue( $batch ) || $more;
-		} elseif ( sunshine_source_watch_ready_items( get_option( 'sunshine_source_watch_queue' ) ) ) {
+		} elseif ( sunshine_source_watch_ready_items( get_option( 'sunshine_source_watch_queue', array() ) ) ) {
 			$more = true;
 		}
 	}
 
 	// Carry on in a minute rather than waiting for the next scheduled check.
-	if ( $more && ! wp_next_scheduled( 'sunshine_source_watch_continue' ) ) {
-		wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'sunshine_source_watch_continue' );
+	$tries = get_option( 'sunshine_source_watch_tries', array() );
+	if ( ! wp_next_scheduled( 'sunshine_source_watch_continue' ) ) {
+		if ( $more ) {
+			wp_schedule_single_event( time() + MINUTE_IN_SECONDS, 'sunshine_source_watch_continue' );
+		} elseif ( $tries ) {
+			// Only photos waiting for another try are left, and the schedule could be a day away.
+			wp_schedule_single_event( min( wp_list_pluck( $tries, 'retry_after' ) ), 'sunshine_source_watch_continue' );
+		}
 	}
 }
 
@@ -626,6 +633,7 @@ function sunshine_source_watch_import_queue( &$batch ) {
 	$seen    = array();
 	$handled = array();
 	$added   = array();
+	$tries   = get_option( 'sunshine_source_watch_tries', array() );
 
 	// Keep full size photos as they are and use the Image Quality setting, like
 	// every other import into a gallery.
@@ -667,19 +675,22 @@ function sunshine_source_watch_import_queue( &$batch ) {
 			continue;
 		}
 
-		$tries = isset( $item['tries'] ) ? (int) $item['tries'] : 0;
-		if ( $tries >= SUNSHINE_SOURCE_WATCH_TRIES ) {
+		$tried = isset( $tries[ $queue_key ] ) ? (int) $tries[ $queue_key ]['tries'] : 0;
+		if ( $tried >= SUNSHINE_SOURCE_WATCH_TRIES ) {
 			unset( $queue[ $queue_key ] );
 			$handled[ $gallery_id ][] = $item['key'];
-			SPC()->log( 'Source watch: giving up on ' . $item['file'] . ' for gallery ' . $gallery_id . ' after ' . $tries . ' tries' );
+			SPC()->log( 'Source watch: giving up on ' . $item['file'] . ' for gallery ' . $gallery_id . ' after ' . $tried . ' tries' );
 			continue;
 		}
 
 		// Counted before trying, so a photo that crashes the request can't block the
 		// photos behind it. A brief problem, like a full disk, gets another chance later.
-		$queue[ $queue_key ]['tries']       = $tries + 1;
-		$queue[ $queue_key ]['retry_after'] = time() + HOUR_IN_SECONDS;
-		update_option( 'sunshine_source_watch_queue', $queue, false );
+		// Kept apart from the queue, which is too big to save for every photo.
+		$tries[ $queue_key ] = array(
+			'tries'       => $tried + 1,
+			'retry_after' => time() + HOUR_IN_SECONDS,
+		);
+		update_option( 'sunshine_source_watch_tries', $tries, false );
 
 		$image_id = sunshine_source_watch_import_item( $item );
 
@@ -705,12 +716,16 @@ function sunshine_source_watch_import_queue( &$batch ) {
 	remove_filter( 'jpeg_quality', $set_quality, 999 );
 	sunshine_done_upload();
 
+	// Saved once at the end. If this request dies part way, the photos it already
+	// brought in are found in their gallery next time and skipped.
 	update_option( 'sunshine_source_watch_queue', $queue, false );
 
 	// A photo that was given up on is remembered too, so it isn't queued again.
 	foreach ( $handled as $gallery_id => $keys ) {
 		sunshine_source_watch_remember( $gallery_id, $keys );
 	}
+
+	update_option( 'sunshine_source_watch_tries', array_intersect_key( $tries, $queue ), false );
 
 	foreach ( $added as $gallery_id => $count ) {
 		$stats = get_post_meta( $gallery_id, 'sunshine_source_watch_added', true );
@@ -736,34 +751,32 @@ function sunshine_source_watch_import_queue( &$batch ) {
  * @return array
  */
 function sunshine_source_watch_ready_items( $queue ) {
-	$now = time();
+	$now   = time();
+	$tries = get_option( 'sunshine_source_watch_tries', array() );
 
 	return array_filter(
-		(array) $queue,
-		function ( $item ) use ( $now ) {
-			return empty( $item['retry_after'] ) || $item['retry_after'] <= $now;
-		}
+		$queue,
+		function ( $queue_key ) use ( $now, $tries ) {
+			return ! isset( $tries[ $queue_key ] ) || $tries[ $queue_key ]['retry_after'] <= $now;
+		},
+		ARRAY_FILTER_USE_KEY
 	);
 }
 
 /**
  * Whether a watched gallery's new photos get the watermark.
  *
- * The import screen's Watermark choice isn't stored for the gallery, but it is stored
- * for each photo, so new photos follow the one added before them.
+ * Follows the choice made when the gallery was imported. Without one they are stamped:
+ * a photo's own setting can't stand in, because photos with pre-made sizes are saved
+ * as not watermarked whatever was chosen.
  *
  * @param int $gallery_id Gallery.
  * @return int 1 or 0.
  */
 function sunshine_source_watch_watermark( $gallery_id ) {
-	$image_ids = sunshine_get_gallery( $gallery_id )->get_image_ids();
-	if ( empty( $image_ids ) ) {
-		return 1;
-	}
+	$choice = get_post_meta( $gallery_id, 'sunshine_import_watermark', true );
 
-	$watermark = get_post_meta( max( $image_ids ), 'sunshine_watermark', true );
-
-	return '' === $watermark ? 1 : (int) $watermark;
+	return '' === $choice ? 1 : (int) $choice;
 }
 
 /**
