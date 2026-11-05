@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-10-21T20:25:22+00:00\n"
+"POT-Creation-Date: 2026-11-05T22:34:27+00:00\n"
 "PO-Revision-Date: 2026-02-27 15:48-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -76,19 +76,19 @@ msgstr ""
 "Vaše licence nemohly být aktivovány, protože se serveru nepodařilo připojit "
 "k SunshinePhotoCart.com: %s"
 
-#: includes/admin/addons.php:76 includes/admin/class-license.php:279
-#: includes/admin/class-license.php:446 class-paystack.php:196
+#: includes/admin/addons.php:76 includes/admin/class-license.php:282
+#: includes/admin/class-license.php:449 class-paystack.php:196
 msgid "Unknown error occured"
 msgstr "Vyskytla se neznámá chyba"
 
 #. translators: %1$s is the addon name, %2$s is the error message
 #. translators: %1$s is the product name, %2$s is the error message
-#: includes/admin/addons.php:80 includes/admin/class-license.php:284
+#: includes/admin/addons.php:80 includes/admin/class-license.php:287
 #, php-format
 msgid "License for %1$s failed to be activated: %2$s"
 msgstr "Licenci pro %1$s se nepodařilo aktivovat: %2$s"
 
-#: includes/admin/addons.php:132 includes/admin/class-license.php:344
+#: includes/admin/addons.php:132 includes/admin/class-license.php:347
 msgid "An error occurred, please try again."
 msgstr "Došlo k chybě. Opakujte akci."
 
@@ -106,7 +106,9 @@ msgstr "Tvoje relace vypršela. Načti stránku znovu a zkus to znovu."
 msgid ""
 "You do not have permission to install plugins on this site. Ask an "
 "administrator to install this add-on."
-msgstr "Nemáš oprávnění instalovat pluginy na tomto webu. Požádej administrátora, aby tento doplněk nainstaloval."
+msgstr ""
+"Nemáš oprávnění instalovat pluginy na tomto webu. Požádej administrátora, "
+"aby tento doplněk nainstaloval."
 
 #: includes/admin/addons.php:382
 msgid ""
@@ -129,6 +131,59 @@ msgstr ""
 #: includes/admin/addons.php:408
 msgid "This add-on could not be installed."
 msgstr "Tento doplněk se nepodařilo nainstalovat."
+
+#. translators: 1: add-on name, 2: why the update was refused
+#: includes/admin/class-addon-update-verify.php:100
+#, php-format
+msgid ""
+"%1$s refused this update because it could not confirm it came from Sunshine "
+"Photo Cart: %2$s Your current version was left in place."
+msgstr "%1$s odmítl tuto aktualizaci, protože se nepodařilo potvrdit, že pochází od Sunshine Photo Cart: %2$s Tvoje současná verze zůstala zachována."
+
+#: includes/admin/class-addon-update-verify.php:155
+msgid "the update has no signature."
+msgstr "aktualizace nemá podpis."
+
+#: includes/admin/class-addon-update-verify.php:160
+msgid "the signature file is damaged."
+msgstr "soubor s podpisem je poškozený."
+
+#: includes/admin/class-addon-update-verify.php:164
+msgid "the signature does not match."
+msgstr "podpis nesouhlasí."
+
+#: includes/admin/class-addon-update-verify.php:169
+msgid "the signed file list is damaged."
+msgstr "podepsaný seznam souborů je poškozený."
+
+#: includes/admin/class-addon-update-verify.php:173
+msgid "the signature is for a different plugin."
+msgstr "podpis patří jinému pluginu."
+
+#. translators: 1: signed version, 2: installed version
+#: includes/admin/class-addon-update-verify.php:179
+#, php-format
+msgid ""
+"the signed version (%1$s) is not newer than the installed version (%2$s)."
+msgstr "podepsaná verze (%1$s) není novější než nainstalovaná verze (%2$s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:191
+#, php-format
+msgid "the update has a file that was not signed (%s)."
+msgstr "aktualizace obsahuje soubor, který nebyl podepsán (%s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:195
+#, php-format
+msgid "a file was changed after it was signed (%s)."
+msgstr "soubor byl po podepsání změněn (%s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:202
+#, php-format
+msgid "a signed file is missing (%s)."
+msgstr "chybí podepsaný soubor (%s)."
 
 #. translators: the plugin name.
 #: includes/admin/class-addon-update.php:257
@@ -276,7 +331,7 @@ msgstr "Upravit na celé obrazovce."
 msgid "Write a Review"
 msgstr "Napište recenzi"
 
-#: includes/admin/class-admin.php:264 includes/admin/class-admin.php:1035
+#: includes/admin/class-admin.php:264 includes/admin/class-admin.php:1037
 msgid "Upgrade"
 msgstr "Upgrade"
 
@@ -341,11 +396,11 @@ msgstr ""
 "Cart</a>! Prosím, <a href=\"%2$s\" target=\"_blank\">ohodnoťte nás</a> na <a "
 "href=\"%2$s\" target=\"_blank\">WordPress.org</a>"
 
-#: includes/admin/class-admin.php:538
+#: includes/admin/class-admin.php:540
 msgid "View Sunshine Galleries"
 msgstr "Zobrazit galerie Sunshine"
 
-#: includes/admin/class-admin.php:570
+#: includes/admin/class-admin.php:572
 msgid ""
 "The slug for core order statuses is not editable as it could break Sunshine "
 "functionality"
@@ -353,26 +408,26 @@ msgstr ""
 "Slug pro základní stavy objednávek není upravitelný, protože by mohl narušit "
 "funkčnost Sunshine"
 
-#: includes/admin/class-admin.php:584
+#: includes/admin/class-admin.php:586
 msgid "Order Updated"
 msgstr "Objednávka aktualizována"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:586
+#: includes/admin/class-admin.php:588
 #, php-format
 msgid "<strong>Gallery updated</strong>, <a href=\"%s\">view gallery</a>"
 msgstr ""
 "<strong>Galerie aktualizována</strong>, <a href=\"%s\">zobrazit galerii</a>"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:588
+#: includes/admin/class-admin.php:590
 #, php-format
 msgid "<strong>Gallery created</strong>, <a href=\"%s\">view gallery</a>"
 msgstr ""
 "<strong>Vytvořená galerie</strong>, <a href=\"%s\">zobrazit galerii</a>"
 
 #. translators: %s is the URL to settings page
-#: includes/admin/class-admin.php:595
+#: includes/admin/class-admin.php:597
 #, php-format
 msgid ""
 "Sunshine logging is enabled. <a href=\"%s\">Please disable when no longer in "
@@ -382,7 +437,7 @@ msgstr ""
 "nepoužívá, vypněte jej.</a>"
 
 #. translators: %s is the URL to the Galleries settings page
-#: includes/admin/class-admin.php:624
+#: includes/admin/class-admin.php:626
 #, php-format
 msgid ""
 "Your watermark image file could not be found on this server, so new images "
@@ -394,7 +449,7 @@ msgstr ""
 "a>."
 
 #. translators: 1: number of images waiting, 2: URL to the Site Health info page
-#: includes/admin/class-admin.php:691
+#: includes/admin/class-admin.php:693
 #, php-format
 msgid ""
 "%1$d image is waiting to be processed, but WordPress could not save the "
@@ -413,7 +468,7 @@ msgstr[2] ""
 "pozadí, která je zpracovává. <a href=\"%2$s\">Zkontroluj stav webu</a>."
 
 #. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
-#: includes/admin/class-admin.php:708
+#: includes/admin/class-admin.php:710
 #, php-format
 msgid ""
 "%1$d image is waiting to be processed, but WordPress cron has not run for "
@@ -436,7 +491,7 @@ msgstr[2] ""
 "href=\"%3$s\">Zkontroluj stav webu</a> nebo se podívej, <a href=\"%4$s\" "
 "target=\"_blank\">jak nastavit spolehlivý serverový cron</a>."
 
-#: includes/admin/class-admin.php:721
+#: includes/admin/class-admin.php:723
 msgid ""
 "This site has WP-Cron turned off, so a server cron job has to call wp-"
 "cron.php for anything to run."
@@ -445,7 +500,7 @@ msgstr ""
 "cron.php, aby se vůbec něco spustilo."
 
 #. translators: %s is the URL to installation page
-#: includes/admin/class-admin.php:730
+#: includes/admin/class-admin.php:732
 #, php-format
 msgid ""
 "Sunshine installation process was skipped. <a href=\"%s\">Please complete "
@@ -455,7 +510,7 @@ msgstr ""
 "prosím proces instalace.</a>"
 
 #. translators: %1$d is the number of orders, %2$s is the number of orders in plural
-#: includes/admin/class-admin.php:1013
+#: includes/admin/class-admin.php:1015
 #, php-format
 msgid "%s order"
 msgid_plural "%s orders"
@@ -463,72 +518,72 @@ msgstr[0] "%s objednávka"
 msgstr[1] "%s objednávky"
 msgstr[2] "%s objednávek"
 
-#: includes/admin/class-admin.php:1021 includes/admin/customers.php:13
+#: includes/admin/class-admin.php:1023 includes/admin/customers.php:13
 #: includes/admin/customers.php:34 includes/admin/reports.php:20 reports.php:7
 msgid "Customers"
 msgstr "Zákazníci"
 
-#: includes/admin/class-admin.php:1022 includes/admin/reports.php:90
+#: includes/admin/class-admin.php:1024 includes/admin/reports.php:90
 msgid "Reports"
 msgstr "Reporty"
 
-#: includes/admin/class-admin.php:1023 includes/admin/tools.php:36
+#: includes/admin/class-admin.php:1025 includes/admin/tools.php:36
 #: includes/admin/tools.php:42
 msgid "Tools"
 msgstr "Nástroje"
 
-#: includes/admin/class-admin.php:1024
+#: includes/admin/class-admin.php:1026
 msgid "Add-ons"
 msgstr "Doplňky"
 
-#: includes/admin/class-admin.php:1027
+#: includes/admin/class-admin.php:1029
 msgid "Setup Guide"
 msgstr "Průvodce nastavením"
 
-#: includes/admin/class-admin.php:1032
+#: includes/admin/class-admin.php:1034
 msgid "Get Help"
 msgstr "Nápověda"
 
-#: includes/admin/class-admin.php:1063
+#: includes/admin/class-admin.php:1065
 msgid "Keywords"
 msgstr "Klíčová slova"
 
-#: includes/admin/class-admin.php:1075
+#: includes/admin/class-admin.php:1077
 msgid "Use gallery price level"
 msgstr "Použijte cenovou úroveň galerie"
 
-#: includes/admin/class-admin.php:1083 includes/admin/sunshine-gallery.php:218
-#: includes/class-sunshinephotocart.php:505
-#: includes/class-sunshinephotocart.php:518 class-export-galleries.php:22
+#: includes/admin/class-admin.php:1085 includes/admin/sunshine-gallery.php:218
+#: includes/class-sunshinephotocart.php:507
+#: includes/class-sunshinephotocart.php:520 class-export-galleries.php:22
 msgid "Price Level"
 msgstr "Cenová úroveň"
 
-#: includes/admin/class-admin.php:1094
+#: includes/admin/class-admin.php:1096
 msgid "Disable Purchasing"
 msgstr "Zakázat nákup"
 
-#: includes/admin/class-admin.php:1100 includes/admin/settings-fields.php:702
+#: includes/admin/class-admin.php:1102 includes/admin/settings-fields.php:714
 #: admin/products.php:45
 msgid "Watermark"
 msgstr "Vodoznak"
 
-#: includes/admin/class-admin.php:1145
+#: includes/admin/class-admin.php:1147
 msgid "Metadata"
 msgstr "Metadata"
 
-#: includes/admin/class-admin.php:1232
+#: includes/admin/class-admin.php:1234
 msgid "Log file has been cleared"
 msgstr "Soubor protokolu byl vymazán"
 
-#: includes/admin/class-admin.php:1288
+#: includes/admin/class-admin.php:1290
 msgid "Error log file has been cleared"
 msgstr "Soubor protokolu chyb byl vymazán."
 
-#: includes/admin/class-admin.php:1294 includes/admin/class-admin.php:1302
+#: includes/admin/class-admin.php:1296 includes/admin/class-admin.php:1304
 msgid "You do not have permission to access this file."
 msgstr "Nemáte oprávnění k přístupu k tomuto souboru."
 
-#: includes/admin/class-admin.php:1310
+#: includes/admin/class-admin.php:1312
 msgid "Log file not found."
 msgstr "Soubor protokolu nebyl nalezen."
 
@@ -543,8 +598,8 @@ msgid "Name"
 msgstr "Jméno"
 
 #: includes/admin/class-customers-table.php:43
-#: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1720 includes/functions/account.php:595
+#: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1444
+#: includes/class-cart.php:1721 includes/functions/account.php:595
 #: includes/payment-methods/paypal-legacy.php:50
 #: includes/payment-methods/paypal-legacy.php:63
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
@@ -554,7 +609,7 @@ msgid "Email"
 msgstr "Email"
 
 #: includes/admin/class-customers-table.php:44 includes/admin/customers.php:187
-#: includes/admin/install.php:307 includes/admin/settings-fields.php:245
+#: includes/admin/install.php:309 includes/admin/settings-fields.php:245
 #: includes/admin/sunshine-gallery.php:170 includes/class-frontend.php:956
 #: templates/multi-image-select/select-images.php:37
 msgid "Favorites"
@@ -562,9 +617,9 @@ msgstr "Oblíbené"
 
 #: includes/admin/class-customers-table.php:45 includes/admin/customers.php:137
 #: includes/admin/reports.php:16 includes/admin/settings-fields.php:297
-#: includes/admin/settings-fields.php:946
-#: includes/class-sunshinephotocart.php:538
-#: includes/class-sunshinephotocart.php:550 includes/functions/account.php:429
+#: includes/admin/settings-fields.php:958
+#: includes/class-sunshinephotocart.php:540
+#: includes/class-sunshinephotocart.php:552 includes/functions/account.php:429
 #: templates/email/summary.php:30 class-reports-customers-table.php:35
 #: class-reports-galleries-table.php:37 class-reports-products-table.php:35
 #: gallery.php:271 gallery.php:298 templates/account/downloads.php:19
@@ -597,25 +652,25 @@ msgid "Dismiss this notice."
 msgstr "Odebrat tuto poznámku."
 
 #. translators: the license key expiration date
-#: includes/admin/class-license.php:96
+#: includes/admin/class-license.php:99
 #, php-format
 msgid "Your license key expired on %s."
 msgstr "Platnost licenčního klíče vypršela %s."
 
-#: includes/admin/class-license.php:103
+#: includes/admin/class-license.php:106
 msgid "Your license key has been disabled"
 msgstr "Váš licenční klíč byl zablokován"
 
-#: includes/admin/class-license.php:107
+#: includes/admin/class-license.php:110
 msgid "Invalid license"
 msgstr "Neplatná licence"
 
-#: includes/admin/class-license.php:111
+#: includes/admin/class-license.php:114
 msgid "Invalid license key"
 msgstr "Neplatný licenční klíč"
 
 #. translators: %1$s is the previous site URL, %2$s is the current site URL, %3$s is the URL to the sunshinephotocart.com account licenses page
-#: includes/admin/class-license.php:122
+#: includes/admin/class-license.php:125
 #, php-format
 msgid ""
 "Your license was activated on %1$s but this site is now %2$s. To use the "
@@ -629,7 +684,7 @@ msgstr ""
 "deaktivuj starou adresu, pak se sem vrať a klikni znovu na Aktivovat."
 
 #. translators: %s is the URL to the sunshinephotocart.com account licenses page
-#: includes/admin/class-license.php:130
+#: includes/admin/class-license.php:133
 #, php-format
 msgid ""
 "This license appears to be activated on a different site. <a href=\"%s\" "
@@ -642,22 +697,22 @@ msgstr ""
 "Sites</strong> vedle této licence, deaktivuj starou adresu, pak se sem vrať "
 "a klikni znovu na Aktivovat."
 
-#: includes/admin/class-license.php:137
+#: includes/admin/class-license.php:140
 msgid "This appears to be an invalid license key"
 msgstr "Zdá se, že se jedná o neplatný licenční klíč"
 
-#: includes/admin/class-license.php:142
+#: includes/admin/class-license.php:145
 msgid "You have a special lifetime license that never expires!"
 msgstr "Máte speciální doživotní licenci, která nikdy nevyprší!"
 
 #. translators: the license key expiration date
-#: includes/admin/class-license.php:146
+#: includes/admin/class-license.php:149
 #, php-format
 msgid "Expires on %s"
 msgstr "Platnost vyprší %s"
 
 #. translators: %1$s is the product name, %2$s is the URL to the licenses page
-#: includes/admin/class-license.php:243
+#: includes/admin/class-license.php:246
 #, php-format
 msgid ""
 "You do not have an active license for %1$s, please enter and activate your "
@@ -667,19 +722,19 @@ msgstr ""
 "na <a href=\"%2$s\">stránce Licence</a>"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:303
+#: includes/admin/class-license.php:306
 #, php-format
 msgid "License for %s has been activated"
 msgstr "Licence pro %s byla aktivována"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:365
+#: includes/admin/class-license.php:368
 #, php-format
 msgid "License for %s has been deactivated"
 msgstr "Licence pro %s byla deaktivována"
 
 #. translators: %1$s is the product name, %2$s is the URL to support
-#: includes/admin/class-license.php:368
+#: includes/admin/class-license.php:371
 #, php-format
 msgid ""
 "License for %1$s could not be deactivated, please <a href=\"%2$s\" "
@@ -690,7 +745,7 @@ msgstr ""
 "target=\"_blank\">podporu</a>"
 
 #. translators: %1$s is the URL to licenses page, %2$s is the URL to account on SunshinePhotoCart.com
-#: includes/admin/class-license.php:382
+#: includes/admin/class-license.php:385
 #, php-format
 msgid ""
 "To enable updates, please enter your license key on the <a "
@@ -702,13 +757,13 @@ msgstr ""
 "target=\"_blank\">svého účtu na SunshinePhotoCart.com</a>."
 
 #. translators: %1$s is the product name, %2$s is the error message
-#: includes/admin/class-license.php:452
+#: includes/admin/class-license.php:455
 #, php-format
 msgid "License for %1$s failed to be updated: %2$s"
 msgstr "Licenci pro %1$s se nepodařilo aktualizovat: %2$s"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:460
+#: includes/admin/class-license.php:463
 #, php-format
 msgid "License for %s has been updated"
 msgstr "Licence pro %s byla aktualizována"
@@ -781,15 +836,15 @@ msgstr ""
 "ochrany osobních údajů."
 
 #: includes/admin/class-privacy.php:190 includes/admin/class-privacy.php:257
-#: includes/admin/settings-fields.php:976
-#: includes/admin/settings-fields.php:986 includes/class-cart.php:1747
+#: includes/admin/settings-fields.php:988
+#: includes/admin/settings-fields.php:998 includes/class-cart.php:1748
 #: templates/invoice/admin.php:165 templates/order/details.php:13
 #: class-export-orders.php:525
 msgid "Phone"
 msgstr "Telefon"
 
-#: includes/admin/class-privacy.php:191 includes/admin/settings-fields.php:978
-#: includes/admin/settings-fields.php:988
+#: includes/admin/class-privacy.php:191 includes/admin/settings-fields.php:990
+#: includes/admin/settings-fields.php:1000
 msgid "VAT Number"
 msgstr "IČO"
 
@@ -876,7 +931,7 @@ msgid "Billing Name"
 msgstr "Fakturační jméno"
 
 #: includes/admin/class-privacy.php:259 includes/admin/customers.php:106
-#: includes/class-cart.php:2033 templates/invoice/admin.php:195
+#: includes/class-cart.php:2034 templates/invoice/admin.php:195
 msgid "Billing Address"
 msgstr "Fakturační adresa"
 
@@ -885,7 +940,7 @@ msgid "Shipping Name"
 msgstr "Název zásilky"
 
 #: includes/admin/class-privacy.php:268 includes/admin/customers.php:99
-#: includes/class-cart.php:1887 includes/template-hooks.php:460
+#: includes/class-cart.php:1888 includes/template-hooks.php:460
 #: templates/invoice/admin.php:192
 msgid "Shipping Address"
 msgstr "Dodací adresa"
@@ -918,7 +973,7 @@ msgid "Personal data removed."
 msgstr "Osobní údaje byly odstraněny."
 
 #: includes/admin/class-tool.php:152 includes/admin/gallery-navigator.php:79
-#: gallery.php:27 frontend.php:1163
+#: gallery.php:27 frontend.php:1169
 msgid "Security check failed"
 msgstr "Kontrola zabezpečení se nezdařila"
 
@@ -951,7 +1006,7 @@ msgstr "Doprava"
 msgid "Insufficient permissions."
 msgstr "Nedostatečná oprávnění."
 
-#: includes/admin/class-update.php:633 includes/admin/install.php:294
+#: includes/admin/class-update.php:633 includes/admin/install.php:296
 #: includes/admin/settings-fields.php:250
 msgid "Terms & Conditions"
 msgstr "Všeobecné obchodní podmínky"
@@ -1070,7 +1125,7 @@ msgid "Permission denied"
 msgstr "Přístup zamítnut"
 
 #: includes/admin/gallery-navigator.php:116
-#: includes/class-sunshinephotocart.php:386
+#: includes/class-sunshinephotocart.php:388
 msgid "No galleries found."
 msgstr "Nebyly nalezeny žádné galerie."
 
@@ -1082,13 +1137,13 @@ msgstr "Přetažením změníte uspořádání"
 #: includes/admin/gallery-navigator.php:159
 #: includes/admin/gallery-navigator.php:323
 #: includes/admin/sunshine-gallery.php:55
-#: includes/admin/sunshine-gallery.php:2011
+#: includes/admin/sunshine-gallery.php:2033
 msgid "Password Protected"
 msgstr "Chráněno heslem"
 
 #: includes/admin/gallery-navigator.php:161
 #: includes/admin/gallery-navigator.php:325
-#: includes/admin/sunshine-gallery.php:2013
+#: includes/admin/sunshine-gallery.php:2035
 msgid "Private"
 msgstr "Soukromé"
 
@@ -1105,7 +1160,7 @@ msgstr "Expirovaný"
 
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:340
-#: includes/admin/sunshine-gallery.php:1608
+#: includes/admin/sunshine-gallery.php:1627
 #: includes/class-cloud-storage-import.php:994
 msgid "images"
 msgstr "obrázků"
@@ -1120,7 +1175,7 @@ msgstr[2] "podgalerií"
 
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
-#: includes/admin/gallery-navigator.php:348 includes/class-cart.php:2177
+#: includes/admin/gallery-navigator.php:348 includes/class-cart.php:2178
 msgid "Edit"
 msgstr "Upravit"
 
@@ -1149,114 +1204,114 @@ msgstr[2] "%1$d galerií nalezeno pro „%2$s“"
 msgid "You do not have permission to perform this action."
 msgstr "K provedení této akce nemáte práva."
 
-#: includes/admin/install.php:243
+#: includes/admin/install.php:245
 msgid "Client Galleries"
 msgstr "Galerie klientů"
 
-#: includes/admin/install.php:255 includes/admin/settings-fields.php:240
+#: includes/admin/install.php:257 includes/admin/settings-fields.php:240
 msgid "Account"
 msgstr "Účet"
 
-#: includes/admin/install.php:268 includes/admin/settings-fields.php:230
+#: includes/admin/install.php:270 includes/admin/settings-fields.php:230
 #: templates/cart/mini-cart.php:6
 msgid "Cart"
 msgstr "Košík"
 
-#: includes/admin/install.php:281 includes/admin/settings-fields.php:235
-#: includes/admin/settings-fields.php:1003
+#: includes/admin/install.php:283 includes/admin/settings-fields.php:235
+#: includes/admin/settings-fields.php:1015
 #: includes/payment-methods/paypal.php:179
 msgid "Checkout"
 msgstr "Pokladna"
 
-#: includes/admin/install.php:322 includes/admin/sunshine-gallery.php:54
+#: includes/admin/install.php:324 includes/admin/sunshine-gallery.php:54
 #: includes/admin/sunshine-gallery.php:114
 msgid "Default"
 msgstr "Výchozí"
 
-#: includes/admin/install.php:331
+#: includes/admin/install.php:333
 msgid "Prints"
 msgstr "Tisky"
 
-#: includes/admin/install.php:403
+#: includes/admin/install.php:405
 msgid "Pending Payment"
 msgstr "Čeká na platbu"
 
-#: includes/admin/install.php:407
+#: includes/admin/install.php:409
 msgid "We have received your order but payment is still pending"
 msgstr "Vaši objednávku jsme obdrželi, ale na platbu stále čekáme"
 
-#: includes/admin/install.php:416 hooks.php:599
+#: includes/admin/install.php:418 hooks.php:599
 msgid "New"
 msgstr "Nový"
 
-#: includes/admin/install.php:420
+#: includes/admin/install.php:422
 msgid "We have received your order and payment"
 msgstr "Obdrželi jsme vaši objednávku a platbu"
 
-#: includes/admin/install.php:429 includes/admin/sunshine-gallery.php:1031
+#: includes/admin/install.php:431 includes/admin/sunshine-gallery.php:1050
 msgid "Processing"
 msgstr "Zpracovává se"
 
-#: includes/admin/install.php:433
+#: includes/admin/install.php:435
 msgid "The images in your order are being processed and/or printed"
 msgstr "Obrázky ve vaší objednávce se zpracovávají a/nebo tisknou"
 
-#: includes/admin/install.php:442
+#: includes/admin/install.php:444
 msgid "Shipped/Completed"
 msgstr "Odesláno/ukončeno"
 
-#: includes/admin/install.php:446
+#: includes/admin/install.php:448
 msgid "Your items have shipped (or are available for download)!"
 msgstr "Vaše položky byly odeslány (nebo jsou k dispozici ke stažení)!"
 
-#: includes/admin/install.php:455
+#: includes/admin/install.php:457
 msgid "Cancelled"
 msgstr "Zrušeno"
 
-#: includes/admin/install.php:459
+#: includes/admin/install.php:461
 msgid "Your order was cancelled"
 msgstr "Vaše objednávka byla zrušena"
 
-#: includes/admin/install.php:468
+#: includes/admin/install.php:470
 msgid "Refunded"
 msgstr "Vráceno"
 
-#: includes/admin/install.php:472
+#: includes/admin/install.php:474
 msgid "Your order was refunded"
 msgstr "Vaše objednávka byla vrácena"
 
-#: includes/admin/install.php:481
+#: includes/admin/install.php:483
 msgid "Ready for pickup"
 msgstr "Připraveno k vyzvednutí"
 
-#: includes/admin/install.php:485
+#: includes/admin/install.php:487
 msgid "Your order is ready to be picked up"
 msgstr "Vaše objednávka je připravena k vyzvednutí"
 
-#: includes/admin/install.php:494
+#: includes/admin/install.php:496
 msgid "Failed"
 msgstr "Selhalo"
 
-#: includes/admin/install.php:498 includes/functions/checkout.php:1069
+#: includes/admin/install.php:500 includes/functions/checkout.php:1069
 msgid "Payment failed"
 msgstr "Neúspěšná platba"
 
-#: includes/admin/install.php:689
+#: includes/admin/install.php:691
 msgid "Could not activate license key"
 msgstr "Nelze aktivovat licenční klíč"
 
-#: includes/admin/install.php:720
+#: includes/admin/install.php:722
 msgid "Could not subscribe to email list"
 msgstr "Nelze se přihlásit k odběru e-mailového seznamu"
 
 #. translators: %s is the plugin version number
-#: includes/admin/install.php:730
+#: includes/admin/install.php:732
 #, php-format
 msgid "Welcome to Sunshine Photo Cart %s"
 msgstr "Vítejte v Sunshine Photo Cart %s"
 
 #. translators: %1$s is the plugin version number
-#: includes/admin/install.php:734
+#: includes/admin/install.php:736
 #, php-format
 msgid ""
 "<strong>Thank you for updating to the latest version!</strong> Sunshine %1$s "
@@ -1267,11 +1322,11 @@ msgstr ""
 "je nejkomplexnější zásuvný modul pro klientskou korekturu a košík s "
 "fotografiemi pro WordPress. Přejeme vám větší prodejní úspěch!"
 
-#: includes/admin/install.php:754 templates/admin/updates/update.php:35
+#: includes/admin/install.php:756 templates/admin/updates/update.php:35
 msgid "Recent Improvements"
 msgstr "Nedávná vylepšení"
 
-#: includes/admin/install.php:756 templates/admin/updates/update.php:37
+#: includes/admin/install.php:758 templates/admin/updates/update.php:37
 msgid "See the full Changelog"
 msgstr "Podívejte se na úplný seznam změn"
 
@@ -1386,15 +1441,15 @@ msgstr "Cloudové úložiště"
 
 #: includes/admin/reports.php:17 includes/admin/sunshine-gallery.php:196
 #: includes/admin/sunshine-product-category.php:169
-#: includes/class-sunshinephotocart.php:426
-#: includes/class-sunshinephotocart.php:438 hooks.php:43 reports.php:4
+#: includes/class-sunshinephotocart.php:428
+#: includes/class-sunshinephotocart.php:440 hooks.php:43 reports.php:4
 #: price-levels.php:48 admin/products.php:54
 msgid "Products"
 msgstr "Produkty"
 
 #: includes/admin/reports.php:18 includes/admin/settings-fields.php:321
-#: includes/admin/settings-fields.php:804 includes/admin/sunshine-order.php:440
-#: includes/class-sunshinephotocart.php:374 includes/functions/account.php:434
+#: includes/admin/settings-fields.php:816 includes/admin/sunshine-order.php:440
+#: includes/class-sunshinephotocart.php:376 includes/functions/account.php:434
 #: reports.php:5 class-admin-automated-emails.php:64 hooks.php:677
 #: templates/account/downloads.php:30 class-export-galleries.php:10
 #: class-export-orders.php:552
@@ -1671,8 +1726,8 @@ msgid "URLs"
 msgstr "URLs"
 
 #: includes/admin/settings-fields.php:261
-#: includes/class-sunshinephotocart.php:375
 #: includes/class-sunshinephotocart.php:377
+#: includes/class-sunshinephotocart.php:379
 #: class-reports-galleries-table.php:36 gallery.php:277
 #: class-export-orders.php:631 messaging.php:148
 msgid "Gallery"
@@ -1762,10 +1817,41 @@ msgstr ""
 "vytvoření galerie"
 
 #: includes/admin/settings-fields.php:392
+msgid "Check folders for new photos"
+msgstr "Kontrolovat nové fotky ve složkách"
+
+#: includes/admin/settings-fields.php:396
+msgid "Off"
+msgstr "Vypnuto"
+
+#: includes/admin/settings-fields.php:397
+msgid "Every hour"
+msgstr "Každou hodinu"
+
+#: includes/admin/settings-fields.php:398
+msgid "Twice a day"
+msgstr "Dvakrát denně"
+
+#: includes/admin/settings-fields.php:399
+msgid "Once a day"
+msgstr "Jednou denně"
+
+#: includes/admin/settings-fields.php:401
+msgid ""
+"Galleries made from an FTP or cloud folder get any photos added to that "
+"folder later. Photos are only ever added: one removed from the folder stays "
+"in the gallery, and one you delete from the gallery is not brought back. "
+"Galleries that existed before you turn this on only get photos added to "
+"their folder after that. Each check of a cloud folder reads the list of "
+"files in your bucket, so checking every hour means more requests to your "
+"storage service."
+msgstr "Galerie vytvořené ze složky FTP nebo cloudu dostanou všechny fotky, které do této složky později přibudou. Fotky se pouze přidávají: fotka odebraná ze složky v galerii zůstane a fotka, kterou z galerie smažeš, se nevrátí. Galerie, které existovaly před zapnutím této možnosti, dostanou jen fotky přidané do své složky potom. Každá kontrola cloudové složky načte seznam souborů ve tvém bucketu, takže kontrola každou hodinu znamená více požadavků na tvoji službu úložiště."
+
+#: includes/admin/settings-fields.php:404
 msgid "Show images in Media Library"
 msgstr "Zobrazit obrázky v knihovně médií"
 
-#: includes/admin/settings-fields.php:395
+#: includes/admin/settings-fields.php:407
 msgid ""
 "By default Sunshine hides images uploaded to Sunshine galleries in the Media "
 "Library, enabling this option will show them instead. Use at your own risk."
@@ -1774,11 +1860,11 @@ msgstr ""
 "Knihovně médií, po zapnutí této možnosti se místo toho zobrazí. Použití na "
 "vlastní nebezpečí."
 
-#: includes/admin/settings-fields.php:398
+#: includes/admin/settings-fields.php:410
 msgid "Delay image processing"
 msgstr "Zpoždění zpracování obrazu"
 
-#: includes/admin/settings-fields.php:401
+#: includes/admin/settings-fields.php:413
 msgid ""
 "When enabled, intermediate image sizes (thumbnails and large) and watermarks "
 "will be generated in the background after upload, allowing faster initial "
@@ -1790,15 +1876,15 @@ msgstr ""
 "umožní rychlejší počáteční nahrávání. Obrázky nemusí být okamžitě k "
 "dispozici ve všech velikostech, dokud nebude zpracování dokončeno."
 
-#: includes/admin/settings-fields.php:416
+#: includes/admin/settings-fields.php:428
 msgid "Features"
 msgstr "Vlastnosti"
 
-#: includes/admin/settings-fields.php:420
+#: includes/admin/settings-fields.php:432
 msgid "Image Theft Prevention"
 msgstr "Prevence krádeží obrázků"
 
-#: includes/admin/settings-fields.php:423
+#: includes/admin/settings-fields.php:435
 msgid ""
 "Enabling this option will disable the right click menu and also not allow "
 "images to be dragged/dropped to the desktop. NOT a 100% effective method, "
@@ -1808,11 +1894,11 @@ msgstr ""
 "přetahování obrázků na plochu. NEJDE o 100% efektivní metodu, ale měla by "
 "zastavit většinu lidí. NEpoužívá se pro uživatele s oprávněním správce."
 
-#: includes/admin/settings-fields.php:428
+#: includes/admin/settings-fields.php:440
 msgid "Proofing Only"
 msgstr "Pouze proofing"
 
-#: includes/admin/settings-fields.php:431
+#: includes/admin/settings-fields.php:443
 msgid ""
 "This will remove all aspects of purchasing abilities throughout the site, "
 "leaving just image viewing and adding to favorites"
@@ -1820,19 +1906,19 @@ msgstr ""
 "Tím se odstraní všechny aspekty možností nákupu na celém webu a zůstane jen "
 "prohlížení obrázků a přidávání do oblíbených položek"
 
-#: includes/admin/settings-fields.php:436
+#: includes/admin/settings-fields.php:448
 msgid "Allow product comments"
 msgstr "Povolit komentáře k produktu"
 
-#: includes/admin/settings-fields.php:439
+#: includes/admin/settings-fields.php:451
 msgid "Allow users to enter comments when adding an item to cart"
 msgstr "Umožnit uživatelům zadávat komentáře při přidávání položky do košíku"
 
-#: includes/admin/settings-fields.php:443
+#: includes/admin/settings-fields.php:455
 msgid "Allow Store"
 msgstr "Povolit obchod"
 
-#: includes/admin/settings-fields.php:446
+#: includes/admin/settings-fields.php:458
 msgid ""
 "Galleries come with a Store where products are shown first and customers add "
 "images to cart."
@@ -1840,36 +1926,36 @@ msgstr ""
 "Galerie jsou vybaveny obchodem, kde se nejprve zobrazují produkty a "
 "zákazníci přidávají obrázky do košíku."
 
-#: includes/admin/settings-fields.php:451
+#: includes/admin/settings-fields.php:463
 msgid "Allow Gallery Sharing"
 msgstr "Povolit sdílení galerie"
 
-#: includes/admin/settings-fields.php:454
+#: includes/admin/settings-fields.php:466
 msgid "Allow users to share galleries"
 msgstr "Umožnit uživatelům sdílet galerie"
 
-#: includes/admin/settings-fields.php:457
+#: includes/admin/settings-fields.php:469
 msgid "Allow Image Sharing"
 msgstr "Povolit sdílení obrázků"
 
-#: includes/admin/settings-fields.php:460
+#: includes/admin/settings-fields.php:472
 msgid "Allow users to share images within a gallery and favorites"
 msgstr "Umožnit uživatelům sdílet obrázky v galerii a oblíbených položkách"
 
-#: includes/admin/settings-fields.php:463
+#: includes/admin/settings-fields.php:475
 msgid "Use Secure File Names"
 msgstr "Používejte bezpečné názvy souborů"
 
-#: includes/admin/settings-fields.php:466
+#: includes/admin/settings-fields.php:478
 msgid "Add random strings to image file names for added security"
 msgstr ""
 "Pro větší bezpečnost přidejte náhodné řetězce k názvům obrazových souborů."
 
-#: includes/admin/settings-fields.php:470
+#: includes/admin/settings-fields.php:482
 msgid "Enable Open Graph"
 msgstr "Povolit otevřený graf"
 
-#: includes/admin/settings-fields.php:473
+#: includes/admin/settings-fields.php:485
 msgid ""
 "Add Open Graph meta tags to the site for galleries and image pages (your SEO "
 "plugin may already be doing this)"
@@ -1877,11 +1963,11 @@ msgstr ""
 "Přidejte na web meta tagy Open Graph pro galerie a stránky s obrázky (možná "
 "to již dělá váš plugin SEO)"
 
-#: includes/admin/settings-fields.php:476
+#: includes/admin/settings-fields.php:488
 msgid "Hide galleries from search engines"
 msgstr "Skrýt galerie před vyhledávači"
 
-#: includes/admin/settings-fields.php:479
+#: includes/admin/settings-fields.php:491
 msgid ""
 "Enabling this option will attempt to block search engine bots from crawling "
 "and indexing galleries and images"
@@ -1889,67 +1975,67 @@ msgstr ""
 "Povolením této možnosti se pokusíte zablokovat roboty vyhledávačů při "
 "procházení a indexování galerií a obrázků"
 
-#: includes/admin/settings-fields.php:484
+#: includes/admin/settings-fields.php:496
 msgid "Display Options"
 msgstr "Nastavení zobrazení"
 
-#: includes/admin/settings-fields.php:488
+#: includes/admin/settings-fields.php:500
 msgid "Gallery Order"
 msgstr "Objednávka galerie"
 
-#: includes/admin/settings-fields.php:493
-#: includes/admin/settings-fields.php:504
+#: includes/admin/settings-fields.php:505
+#: includes/admin/settings-fields.php:516
 msgid "Custom ordering"
 msgstr "Vlastní řazení"
 
-#: includes/admin/settings-fields.php:494
+#: includes/admin/settings-fields.php:506
 msgid "Gallery Creation Date (New to Old)"
 msgstr "Datum vytvoření galerie (od nové po starou)"
 
-#: includes/admin/settings-fields.php:495
+#: includes/admin/settings-fields.php:507
 msgid "Gallery Creation Date (Old to New)"
 msgstr "Datum vytvoření galerie (ze staré na novou)"
 
-#: includes/admin/settings-fields.php:496
-#: includes/admin/settings-fields.php:509
+#: includes/admin/settings-fields.php:508
+#: includes/admin/settings-fields.php:521
 msgid "Alphabetical"
 msgstr "Abecedně"
 
-#: includes/admin/settings-fields.php:500
+#: includes/admin/settings-fields.php:512
 msgid "Image Order"
 msgstr "Obrázek Objednávka"
 
-#: includes/admin/settings-fields.php:505
+#: includes/admin/settings-fields.php:517
 msgid "Order images shot (New to Old)"
 msgstr "Objednat snímky (od nového ke starému)"
 
-#: includes/admin/settings-fields.php:506
+#: includes/admin/settings-fields.php:518
 msgid "Order images shot (Old to New)"
 msgstr "Objednávka snímků (od starého k novému)"
 
-#: includes/admin/settings-fields.php:507
+#: includes/admin/settings-fields.php:519
 msgid "Image Upload Date (New to Old)"
 msgstr "Datum nahrání obrázku (od nového ke starému)"
 
-#: includes/admin/settings-fields.php:508
+#: includes/admin/settings-fields.php:520
 msgid "Image Upload Date (Old to New)"
 msgstr "Datum nahrání obrázku (ze starého na nový)"
 
-#: includes/admin/settings-fields.php:511
+#: includes/admin/settings-fields.php:523
 msgid "If selecting \"Order images shot\" images must have proper metadata"
 msgstr ""
 "Pokud vyberete možnost \"Objednat pořízené snímky\", musí mít snímky správná "
 "metadata"
 
-#: includes/admin/settings-fields.php:511
+#: includes/admin/settings-fields.php:523
 msgid "learn more"
 msgstr "zjistit více"
 
-#: includes/admin/settings-fields.php:515
+#: includes/admin/settings-fields.php:527
 msgid "Fallback Featured Image"
 msgstr "Náhradní doporučený obrázek"
 
-#: includes/admin/settings-fields.php:518
+#: includes/admin/settings-fields.php:530
 msgid ""
 "Upload a custom thumbnail image to be used when no specific featured image "
 "is set"
@@ -1957,11 +2043,11 @@ msgstr ""
 "Nahrání vlastního miniaturního obrázku, který se použije, pokud není "
 "nastaven žádný konkrétní doporučený obrázek"
 
-#: includes/admin/settings-fields.php:522
+#: includes/admin/settings-fields.php:534
 msgid "Password Protected Featured Image"
 msgstr "Obrázek chráněný heslem"
 
-#: includes/admin/settings-fields.php:525
+#: includes/admin/settings-fields.php:537
 msgid ""
 "Upload a custom thumbnail image to be used when a gallery is password "
 "protected"
@@ -1969,114 +2055,114 @@ msgstr ""
 "Nahrání vlastního obrázku miniatury, který se použije, když je galerie "
 "chráněna heslem"
 
-#: includes/admin/settings-fields.php:531
+#: includes/admin/settings-fields.php:543
 msgid "Galleries List Display"
 msgstr "Seznam galerií Zobrazit"
 
-#: includes/admin/settings-fields.php:536
+#: includes/admin/settings-fields.php:548
 msgid "Galleries Layout"
 msgstr "Rozložení galerií"
 
-#: includes/admin/settings-fields.php:539
-#: includes/admin/settings-fields.php:595
+#: includes/admin/settings-fields.php:551
+#: includes/admin/settings-fields.php:607
 msgid "Cropping option not recommended for justified or masonry"
 msgstr "Možnost ořezu se nedoporučuje pro odůvodněné nebo zděné plochy"
 
-#: includes/admin/settings-fields.php:542
-#: includes/admin/settings-fields.php:598
+#: includes/admin/settings-fields.php:554
+#: includes/admin/settings-fields.php:610
 msgid "Standard"
 msgstr "Standardní"
 
-#: includes/admin/settings-fields.php:546
-#: includes/admin/settings-fields.php:602
+#: includes/admin/settings-fields.php:558
+#: includes/admin/settings-fields.php:614
 msgid "Justified"
 msgstr "Do bloku"
 
-#: includes/admin/settings-fields.php:550
-#: includes/admin/settings-fields.php:606
+#: includes/admin/settings-fields.php:562
+#: includes/admin/settings-fields.php:618
 msgid "Masonry"
 msgstr "Dlaždice"
 
-#: includes/admin/settings-fields.php:556
+#: includes/admin/settings-fields.php:568
 msgid "Galleries Columns"
 msgstr "Galerie Sloupky"
 
-#: includes/admin/settings-fields.php:567
+#: includes/admin/settings-fields.php:579
 msgid "Galleries Per Page"
 msgstr "Galerie na stránce"
 
-#: includes/admin/settings-fields.php:571
+#: includes/admin/settings-fields.php:583
 msgid "Set to 0 for unlimited galleries (no pagination)"
 msgstr "Nastavte na 0 pro neomezený počet galerií (bez stránkování)"
 
-#: includes/admin/settings-fields.php:575
+#: includes/admin/settings-fields.php:587
 msgid "Galleries Pagination Style"
 msgstr "Styl stránkování galerií"
 
-#: includes/admin/settings-fields.php:579
-#: includes/admin/settings-fields.php:633
+#: includes/admin/settings-fields.php:591
+#: includes/admin/settings-fields.php:645
 msgid "Numbered pagination"
 msgstr "Číslování stránek"
 
-#: includes/admin/settings-fields.php:580
-#: includes/admin/settings-fields.php:634
+#: includes/admin/settings-fields.php:592
+#: includes/admin/settings-fields.php:646
 msgid "Load more button"
 msgstr "Načíst více"
 
-#: includes/admin/settings-fields.php:581
-#: includes/admin/settings-fields.php:635
+#: includes/admin/settings-fields.php:593
+#: includes/admin/settings-fields.php:647
 msgid "Automatic infinite scrolling"
 msgstr "Automatické nekonečné rolování"
 
-#: includes/admin/settings-fields.php:587
+#: includes/admin/settings-fields.php:599
 msgid "Images Display"
 msgstr "Zobrazení obrázků"
 
-#: includes/admin/settings-fields.php:592
+#: includes/admin/settings-fields.php:604
 msgid "Images Layout"
 msgstr "Rozložení obrázků"
 
-#: includes/admin/settings-fields.php:612
+#: includes/admin/settings-fields.php:624
 msgid "Images Columns"
 msgstr "Obrázky Sloupce"
 
-#: includes/admin/settings-fields.php:623
+#: includes/admin/settings-fields.php:635
 msgid "Images Per Page"
 msgstr "Počet obrázků na stránku"
 
-#: includes/admin/settings-fields.php:629
+#: includes/admin/settings-fields.php:641
 msgid "Images Pagination Style"
 msgstr "Styl stránkování obrázků"
 
-#: includes/admin/settings-fields.php:639
+#: includes/admin/settings-fields.php:651
 msgid "Thumbnail Content"
 msgstr "Obsah miniatury"
 
-#: includes/admin/settings-fields.php:641
+#: includes/admin/settings-fields.php:653
 msgid "What to show below image thumbnails"
 msgstr "Co se má zobrazit pod miniaturami obrázků"
 
-#: includes/admin/settings-fields.php:644
+#: includes/admin/settings-fields.php:656
 msgid "Nothing"
 msgstr "Nic"
 
-#: includes/admin/settings-fields.php:645 templates/admin/order-items.php:103
+#: includes/admin/settings-fields.php:657 templates/admin/order-items.php:103
 msgid "Filename"
 msgstr "Název souboru"
 
-#: includes/admin/settings-fields.php:646
+#: includes/admin/settings-fields.php:658
 msgid "Title (Images MUST have EXIF field \"Title\")"
 msgstr "Název (Snímky MUSÍ mít pole EXIF \"Název\")"
 
-#: includes/admin/settings-fields.php:647
+#: includes/admin/settings-fields.php:659
 msgid "Caption"
 msgstr "Rozšířený popis"
 
-#: includes/admin/settings-fields.php:651
+#: includes/admin/settings-fields.php:663
 msgid "Single Image Caption"
 msgstr "Popisek k jednotlivému obrázku"
 
-#: includes/admin/settings-fields.php:654
+#: includes/admin/settings-fields.php:666
 msgid ""
 "Show the image caption (from EXIF metadata) below the image on single image "
 "pages"
@@ -2084,12 +2170,12 @@ msgstr ""
 "Zobrazit popisek obrázku (z metadat EXIF) pod obrázkem na stránkách s jedním "
 "obrázkem"
 
-#: includes/admin/settings-fields.php:659
+#: includes/admin/settings-fields.php:671
 msgid "Image Sizing"
 msgstr "Velikost obrázku"
 
 #. translators: %s is the URL to help documentation
-#: includes/admin/settings-fields.php:662
+#: includes/admin/settings-fields.php:674
 #, php-format
 msgid ""
 "Making changes to your image sizes does not immediately affect your "
@@ -2100,15 +2186,15 @@ msgstr ""
 "třeba přegenerovat. <a href=\"%s\" target=\"_blank\">Podívejte se prosím na "
 "tento článek nápovědy</a>"
 
-#: includes/admin/settings-fields.php:666
+#: includes/admin/settings-fields.php:678
 msgid "Thumbnail Size"
 msgstr "Velikost náhledu"
 
-#: includes/admin/settings-fields.php:671
+#: includes/admin/settings-fields.php:683
 msgid "Thumbnail Crop"
 msgstr "Oříznutí miniatury"
 
-#: includes/admin/settings-fields.php:673
+#: includes/admin/settings-fields.php:685
 msgid ""
 "Crop image to this exact size. Note: Cropped images not recommended for "
 "Justified or Masonry layouts"
@@ -2116,27 +2202,27 @@ msgstr ""
 "Ořízněte obrázek přesně na tuto velikost. Poznámka: Oříznuté obrázky se "
 "nedoporučují pro rozvržení Justified nebo Masonry"
 
-#: includes/admin/settings-fields.php:674
+#: includes/admin/settings-fields.php:686
 msgid ""
 "Should images be cropped to the exact dimensions of your thumbnail width / "
 "height"
 msgstr "Měly by být obrázky oříznuty na přesné rozměry šířky/výšky miniatury"
 
-#: includes/admin/settings-fields.php:679
+#: includes/admin/settings-fields.php:691
 msgid "Large Size"
 msgstr "Velká velikost"
 
-#: includes/admin/settings-fields.php:687
+#: includes/admin/settings-fields.php:699
 msgid "Large size must be larger than thumbnail size (both width and height)"
 msgstr ""
 "Velký rozměr musí být větší než rozměr miniatury (jak na šířku, tak na "
 "výšku)."
 
-#: includes/admin/settings-fields.php:692
+#: includes/admin/settings-fields.php:704
 msgid "Image Quality"
 msgstr "Kvalita obrázku"
 
-#: includes/admin/settings-fields.php:694
+#: includes/admin/settings-fields.php:706
 msgid ""
 "Quality that generated images are saved from 1-100. The higher the quality "
 "the larger the file size. If left empty, the default is 82."
@@ -2145,76 +2231,76 @@ msgstr ""
 "Čím vyšší kvalita, tím větší velikost souboru. Pokud zůstane prázdná, je "
 "výchozí hodnota 82."
 
-#: includes/admin/settings-fields.php:707
+#: includes/admin/settings-fields.php:719
 msgid "Watermark Image"
 msgstr "Obrázek vodoznaku"
 
-#: includes/admin/settings-fields.php:710
+#: includes/admin/settings-fields.php:722
 msgid "Must be a PNG image, ideally with transparency"
 msgstr "Musí to být obrázek PNG, ideálně průhledný"
 
-#: includes/admin/settings-fields.php:714
+#: includes/admin/settings-fields.php:726
 msgid "Max Size"
 msgstr "Maximální velikost"
 
-#: includes/admin/settings-fields.php:719
+#: includes/admin/settings-fields.php:731
 msgid "From 1-100, a max percent size of the image"
 msgstr "Od 1 do 100, maximální procentuální velikost obrázku"
 
-#: includes/admin/settings-fields.php:722
-#: includes/admin/settings-fields.php:780
+#: includes/admin/settings-fields.php:734
+#: includes/admin/settings-fields.php:792
 msgid "Position"
 msgstr "Pozice"
 
-#: includes/admin/settings-fields.php:726
+#: includes/admin/settings-fields.php:738
 msgid "Center"
 msgstr "Uprostřed"
 
-#: includes/admin/settings-fields.php:727
+#: includes/admin/settings-fields.php:739
 msgid "Repeat"
 msgstr "Opakovat"
 
-#: includes/admin/settings-fields.php:728
+#: includes/admin/settings-fields.php:740
 msgid "Top Left"
 msgstr "Vlevo nahoře"
 
-#: includes/admin/settings-fields.php:729
+#: includes/admin/settings-fields.php:741
 msgid "Top Right"
 msgstr "Vpravo nahoře"
 
-#: includes/admin/settings-fields.php:730
+#: includes/admin/settings-fields.php:742
 msgid "Bottom Left"
 msgstr "Vlevo dole"
 
-#: includes/admin/settings-fields.php:731
+#: includes/admin/settings-fields.php:743
 msgid "Bottom Right"
 msgstr "Vpravo dole"
 
-#: includes/admin/settings-fields.php:735
+#: includes/admin/settings-fields.php:747
 msgid "Margin from edge"
 msgstr "Okraj od okraje"
 
-#: includes/admin/settings-fields.php:741
+#: includes/admin/settings-fields.php:753
 msgid "Watermark Thumbnails"
 msgstr "Miniatury vodoznaků"
 
-#: includes/admin/settings-fields.php:748
+#: includes/admin/settings-fields.php:760
 msgid "Favorites / Selections"
 msgstr "Oblíbené / Výběr"
 
-#: includes/admin/settings-fields.php:753
+#: includes/admin/settings-fields.php:765
 msgid "Enable Favorites"
 msgstr "Povolit oblíbené položky"
 
-#: includes/admin/settings-fields.php:756
+#: includes/admin/settings-fields.php:768
 msgid "Allow users to save images to their favorites"
 msgstr "Umožnit uživatelům ukládat obrázky do oblíbených položek"
 
-#: includes/admin/settings-fields.php:759
+#: includes/admin/settings-fields.php:771
 msgid "Enable Guest Favorites"
 msgstr "Povolit oblíbené pro hosty"
 
-#: includes/admin/settings-fields.php:762
+#: includes/admin/settings-fields.php:774
 msgid ""
 "Allow visitors who are not logged in to save favorites for their browser "
 "session"
@@ -2222,11 +2308,11 @@ msgstr ""
 "Umožni návštěvníkům, kteří nejsou přihlášení, ukládat si oblíbené po dobu "
 "relace prohlížeče"
 
-#: includes/admin/settings-fields.php:773
+#: includes/admin/settings-fields.php:785
 msgid "Enable Selection Tray"
 msgstr "Povolit výběrovou lištu"
 
-#: includes/admin/settings-fields.php:776
+#: includes/admin/settings-fields.php:788
 msgid ""
 "Show users their selected favorites in a persistent popup while viewing "
 "galleries"
@@ -2234,27 +2320,27 @@ msgstr ""
 "Zobrazit uživatelům jejich vybrané oblíbené položky v trvalém vyskakovacím "
 "okně při prohlížení galerií"
 
-#: includes/admin/settings-fields.php:784
+#: includes/admin/settings-fields.php:796
 msgid "Float bottom right"
 msgstr "Plovoucí vpravo dole"
 
-#: includes/admin/settings-fields.php:785
+#: includes/admin/settings-fields.php:797
 msgid "Float bottom left"
 msgstr "Plovoucí levý dolní roh"
 
-#: includes/admin/settings-fields.php:795
+#: includes/admin/settings-fields.php:807
 msgid "Choose where the selection tray appears on the page"
 msgstr "Vyberte, kde se na stránce zobrazí výběrová lišta"
 
-#: includes/admin/settings-fields.php:812
+#: includes/admin/settings-fields.php:824
 msgid "Enable Taxes"
 msgstr "Povolit daně"
 
-#: includes/admin/settings-fields.php:818
+#: includes/admin/settings-fields.php:830
 msgid "Tax Rates"
 msgstr "Sazby daně"
 
-#: includes/admin/settings-fields.php:820
+#: includes/admin/settings-fields.php:832
 msgid ""
 "Be as specific as you need. Order for most priority. You can include "
 "multiple zip/postal codes with commas."
@@ -2262,11 +2348,11 @@ msgstr ""
 "Buďte tak konkrétní, jak potřebujete. Objednávejte s nejvyšší prioritou. "
 "Můžete uvést více poštovních směrovacích čísel s čárkami."
 
-#: includes/admin/settings-fields.php:832
+#: includes/admin/settings-fields.php:844
 msgid "Default customer location"
 msgstr "Výchozí umístění zákazníka"
 
-#: includes/admin/settings-fields.php:833
+#: includes/admin/settings-fields.php:845
 msgid ""
 "If customer does not have address entered yet, what location is used to "
 "determine the default location"
@@ -2274,58 +2360,58 @@ msgstr ""
 "Pokud zákazník ještě nemá zadanou adresu, jaká lokalita se použije pro "
 "určení výchozí lokality"
 
-#: includes/admin/settings-fields.php:836
+#: includes/admin/settings-fields.php:848
 msgid "No location by default"
 msgstr "Ve výchozím nastavení není žádné umístění"
 
-#: includes/admin/settings-fields.php:837
+#: includes/admin/settings-fields.php:849
 msgid "My business location"
 msgstr "Místo mého podnikání"
 
-#: includes/admin/settings-fields.php:869
+#: includes/admin/settings-fields.php:881
 msgid "Display prices"
 msgstr "Zobrazení cen"
 
-#: includes/admin/settings-fields.php:878
+#: includes/admin/settings-fields.php:890
 msgid "Prices entered with tax"
 msgstr "Ceny jsou uvedeny s daní"
 
-#: includes/admin/settings-fields.php:887
+#: includes/admin/settings-fields.php:899
 msgid "Price display suffix"
 msgstr "Přípona u zobrazení ceny"
 
-#: includes/admin/settings-fields.php:890
+#: includes/admin/settings-fields.php:902
 msgid "This shows after a price"
 msgstr "To se projeví po stanovení ceny"
 
-#: includes/admin/settings-fields.php:899
+#: includes/admin/settings-fields.php:911
 msgid "Taxes"
 msgstr "Daně"
 
-#: includes/admin/settings-fields.php:906
+#: includes/admin/settings-fields.php:918
 msgid "Distraction Free Checkout"
 msgstr "Pokladna bez rozptylování"
 
-#: includes/admin/settings-fields.php:909
+#: includes/admin/settings-fields.php:921
 msgid ""
 "Remove site header/footer and let user focus only on the checkout experience"
 msgstr ""
 "Odstranění záhlaví/zápatí webu a umožnění uživateli soustředit se pouze na "
 "pokladnu"
 
-#: includes/admin/settings-fields.php:914
+#: includes/admin/settings-fields.php:926
 msgid "Allow Guest Checkout"
 msgstr "Povolit odhlášení hosta"
 
-#: includes/admin/settings-fields.php:917
+#: includes/admin/settings-fields.php:929
 msgid "Allow users to checkout as a guest (do not require a user account)"
 msgstr "Umožnit uživatelům odhlášení jako host (nevyžadovat uživatelský účet)"
 
-#: includes/admin/settings-fields.php:920
+#: includes/admin/settings-fields.php:932
 msgid "Always collect a billing address"
 msgstr "Vždy vyžadovat fakturační adresu"
 
-#: includes/admin/settings-fields.php:923
+#: includes/admin/settings-fields.php:935
 msgid ""
 "Collect the address of the person paying on every order, even when nothing "
 "is being shipped. Invoices need the buyer's address, and the buyer is not "
@@ -2340,11 +2426,11 @@ msgstr ""
 "metody, například Square, sbírají fakturační adresu vždy, bez ohledu na toto "
 "nastavení."
 
-#: includes/admin/settings-fields.php:927
+#: includes/admin/settings-fields.php:939
 msgid "Allowed Countries"
 msgstr "Povolené země"
 
-#: includes/admin/settings-fields.php:928
+#: includes/admin/settings-fields.php:940
 msgid ""
 "Which countries users can select at checkout. If empty, all countries are "
 "allowed."
@@ -2352,12 +2438,12 @@ msgstr ""
 "Které země si mohou uživatelé vybrat při placení. Pokud je pole prázdné, "
 "jsou povoleny všechny země."
 
-#: includes/admin/settings-fields.php:936
+#: includes/admin/settings-fields.php:948
 msgid "Google Maps API Key"
 msgstr "API klíč pro Google Mapy"
 
 #. translators: %s is the URL to help documentation
-#: includes/admin/settings-fields.php:940
+#: includes/admin/settings-fields.php:952
 #, php-format
 msgid ""
 "Enter a Google API key to enable address autocomplete at checkout, <a "
@@ -2366,11 +2452,11 @@ msgstr ""
 "Zadejte klíč Google API a povolte automatické dokončování adresy u pokladny, "
 "<a href=\"%s\" target=\"_blank\">více informací zde</a>"
 
-#: includes/admin/settings-fields.php:951
+#: includes/admin/settings-fields.php:963
 msgid "Next Order Number"
 msgstr "Další číslo objednávky"
 
-#: includes/admin/settings-fields.php:954
+#: includes/admin/settings-fields.php:966
 msgid ""
 "Leave blank to use default order numbering, otherwise set the next order "
 "number to be used"
@@ -2378,87 +2464,87 @@ msgstr ""
 "Pro použití výchozího číslování objednávek ponechte prázdné, jinak nastavte "
 "další číslo objednávky, které se má použít"
 
-#: includes/admin/settings-fields.php:958
+#: includes/admin/settings-fields.php:970
 msgid "Disable Invoice"
 msgstr "Zakázat fakturu"
 
-#: includes/admin/settings-fields.php:961
+#: includes/admin/settings-fields.php:973
 msgid "Disable invoices with orders"
 msgstr "Zakázat faktury s objednávkami"
 
-#: includes/admin/settings-fields.php:967
+#: includes/admin/settings-fields.php:979
 msgid "Display Fields"
 msgstr "Zobrazit pole"
 
-#: includes/admin/settings-fields.php:972
+#: includes/admin/settings-fields.php:984
 msgid "Other Fields"
 msgstr "Jiná pole"
 
-#: includes/admin/settings-fields.php:977
-#: includes/admin/settings-fields.php:987 includes/admin/sunshine-order.php:745
-#: includes/class-cart.php:2064 templates/email/admin-receipt.php:145
+#: includes/admin/settings-fields.php:989
+#: includes/admin/settings-fields.php:999 includes/admin/sunshine-order.php:745
+#: includes/class-cart.php:2065 templates/email/admin-receipt.php:145
 #: templates/email/customer-receipt.php:149
 #: templates/email/order-status.php:117 templates/order/details.php:59
 msgid "Notes"
 msgstr "Poznámky"
 
-#: includes/admin/settings-fields.php:982
+#: includes/admin/settings-fields.php:994
 msgid "Required Other Fields"
 msgstr "Povinná další pole"
 
-#: includes/admin/settings-fields.php:992
+#: includes/admin/settings-fields.php:1004
 msgid "VAT Label"
 msgstr "Označení DPH"
 
-#: includes/admin/settings-fields.php:1042
+#: includes/admin/settings-fields.php:1054
 msgid "Payments"
 msgstr "Platby"
 
-#: includes/admin/settings-fields.php:1083
+#: includes/admin/settings-fields.php:1095
 msgid "Delivery & Shipping"
 msgstr "Dodání a přeprava"
 
-#: includes/admin/settings-fields.php:1090
+#: includes/admin/settings-fields.php:1102
 msgid "Design Elements"
 msgstr "Prvky designu"
 
-#: includes/admin/settings-fields.php:1095
+#: includes/admin/settings-fields.php:1107
 msgid "Pages Theme"
 msgstr "Téma stránek"
 
-#: includes/admin/settings-fields.php:1099
 #: includes/admin/settings-fields.php:1111
+#: includes/admin/settings-fields.php:1123
 msgid "My WordPress Theme"
 msgstr "Můj motiv WordPressu"
 
-#: includes/admin/settings-fields.php:1100
 #: includes/admin/settings-fields.php:1112
+#: includes/admin/settings-fields.php:1124
 msgid "Classic"
 msgstr "Klasický"
 
-#: includes/admin/settings-fields.php:1101
 #: includes/admin/settings-fields.php:1113
+#: includes/admin/settings-fields.php:1125
 msgid "Cover"
 msgstr "Obal"
 
-#: includes/admin/settings-fields.php:1103
+#: includes/admin/settings-fields.php:1115
 msgid "What should be used for your general theme when viewing Sunshine pages"
 msgstr ""
 "Co by mělo být použito pro vaše obecné téma při prohlížení stránek Sunshine"
 
-#: includes/admin/settings-fields.php:1107
+#: includes/admin/settings-fields.php:1119
 msgid "Gallery Theme"
 msgstr "Motiv galerie"
 
-#: includes/admin/settings-fields.php:1115
+#: includes/admin/settings-fields.php:1127
 msgid "Allow galleries to use a different theme layout from the main pages"
 msgstr "Umožnit galeriím používat jiné rozvržení motivu než hlavní stránky"
 
-#: includes/admin/settings-fields.php:1119
+#: includes/admin/settings-fields.php:1131
 msgid "Alternate integration"
 msgstr "Alternativní integrace"
 
-#: includes/admin/settings-fields.php:1122
+#: includes/admin/settings-fields.php:1134
 msgid ""
 "Sunshine tries to blend into your theme seamlessly. If you are seeing weird "
 "layout issues, try this as an alternate method if integrating."
@@ -2467,61 +2553,61 @@ msgstr ""
 "podivné problémy s rozvržením, zkuste tuto alternativní metodu, pokud se "
 "integruje."
 
-#: includes/admin/settings-fields.php:1125
-#: includes/admin/settings-fields.php:1327
+#: includes/admin/settings-fields.php:1137
+#: includes/admin/settings-fields.php:1339
 msgid "Logo"
 msgstr "Logo"
 
-#: includes/admin/settings-fields.php:1132
+#: includes/admin/settings-fields.php:1144
 msgid "Classic Theme Options"
 msgstr "Klasické možnosti motivu"
 
-#: includes/admin/settings-fields.php:1151 themes/cover/functions.php:11
+#: includes/admin/settings-fields.php:1163 themes/cover/functions.php:11
 msgid "Menu Background"
 msgstr "Pozadí menu"
 
-#: includes/admin/settings-fields.php:1170 themes/cover/functions.php:16
+#: includes/admin/settings-fields.php:1182 themes/cover/functions.php:16
 msgid "Menu Links"
 msgstr "Odkazy na menu"
 
-#: includes/admin/settings-fields.php:1189 themes/cover/functions.php:21
+#: includes/admin/settings-fields.php:1201 themes/cover/functions.php:21
 msgid "Main Background"
 msgstr "Hlavní pozadí"
 
-#: includes/admin/settings-fields.php:1208
+#: includes/admin/settings-fields.php:1220
 msgid "Main Text"
 msgstr "Hlavní text"
 
-#: includes/admin/settings-fields.php:1227
+#: includes/admin/settings-fields.php:1239
 msgid "Main Links"
 msgstr "Hlavní odkazy"
 
-#: includes/admin/settings-fields.php:1246
+#: includes/admin/settings-fields.php:1258
 msgid "Gallery Password Box"
 msgstr "Rámeček s heslem do galerie"
 
-#: includes/admin/settings-fields.php:1259
+#: includes/admin/settings-fields.php:1271
 msgid "Gallery Search Box"
 msgstr "Vyhledávací pole galerie"
 
-#: includes/admin/settings-fields.php:1272
+#: includes/admin/settings-fields.php:1284
 msgid "Miscellaneous Elements"
 msgstr "Různé prvky"
 
-#: includes/admin/settings-fields.php:1277
+#: includes/admin/settings-fields.php:1289
 msgid "Auto-include Sunshine main menu"
 msgstr "Automatické zařazení hlavní nabídky Sunshine"
 
-#: includes/admin/settings-fields.php:1280
+#: includes/admin/settings-fields.php:1292
 msgid ""
 "Automatically have the Sunshine Main Menu appear above the Sunshine content"
 msgstr "Automatické zobrazení hlavní nabídky Sunshine nad obsahem Sunshine"
 
-#: includes/admin/settings-fields.php:1284
+#: includes/admin/settings-fields.php:1296
 msgid "Hide link to main galleries page"
 msgstr "Skrýt odkaz na hlavní stránku galerií"
 
-#: includes/admin/settings-fields.php:1287
+#: includes/admin/settings-fields.php:1299
 msgid ""
 "Hide the link to your main galleries page in any Sunshine menus. Helpful if "
 "you want users to stick to just a single gallery."
@@ -2529,59 +2615,59 @@ msgstr ""
 "Skryjte odkaz na hlavní stránku galerií v nabídkách Sunshine. To je "
 "užitečné, pokud chcete, aby se uživatelé drželi pouze jedné galerie."
 
-#: includes/admin/settings-fields.php:1291
+#: includes/admin/settings-fields.php:1303
 msgid "Customizations"
 msgstr "Přizpůsobení"
 
-#: includes/admin/settings-fields.php:1296
+#: includes/admin/settings-fields.php:1308
 msgid "Custom CSS for frontend"
 msgstr "Vlastní CSS pro frontend"
 
-#: includes/admin/settings-fields.php:1302
+#: includes/admin/settings-fields.php:1314
 msgid "Custom CSS for emails"
 msgstr "Vlastní CSS pro e-maily"
 
-#: includes/admin/settings-fields.php:1307
+#: includes/admin/settings-fields.php:1319
 msgid "Before Sunshine"
 msgstr "Před slunečním svitem"
 
-#: includes/admin/settings-fields.php:1310
+#: includes/admin/settings-fields.php:1322
 msgid "Shown before every Sunshine associated page"
 msgstr "Zobrazeno před každou přidruženou stránkou Sunshine"
 
-#: includes/admin/settings-fields.php:1313
+#: includes/admin/settings-fields.php:1325
 msgid "After Sunshine"
 msgstr "Po slunečním svitu"
 
-#: includes/admin/settings-fields.php:1316
+#: includes/admin/settings-fields.php:1328
 msgid "Shown after every Sunshine associated page"
 msgstr "Zobrazuje se po každé přidružené stránce Sunshine"
 
-#: includes/admin/settings-fields.php:1320
+#: includes/admin/settings-fields.php:1332
 msgid "Invoices"
 msgstr "Faktury"
 
-#: includes/admin/settings-fields.php:1330
+#: includes/admin/settings-fields.php:1342
 msgid "Will be shown on a white background"
 msgstr "Zobrazí se na bílém pozadí"
 
-#: includes/admin/settings-fields.php:1333
+#: includes/admin/settings-fields.php:1345
 msgid "Extra Content"
 msgstr "Obsah navíc"
 
-#: includes/admin/settings-fields.php:1336
+#: includes/admin/settings-fields.php:1348
 msgid "Extra content to be shown on all invoices"
 msgstr "Další obsah, který se zobrazuje na všech fakturách"
 
-#: includes/admin/settings-fields.php:1345
+#: includes/admin/settings-fields.php:1357
 msgid "Design"
 msgstr "Design"
 
-#: includes/admin/settings-fields.php:1358
+#: includes/admin/settings-fields.php:1370
 msgid "Email Notifications"
 msgstr "E-mailové notifikace"
 
-#: includes/admin/settings-fields.php:1361
+#: includes/admin/settings-fields.php:1373
 msgid ""
 "Email notifications sent from Sunshine Photo Cart are listed below. Click on "
 "an email to configure it."
@@ -2589,68 +2675,68 @@ msgstr ""
 "Níže jsou uvedena e-mailová oznámení odeslaná z Košíku Sunshine Photo. "
 "Kliknutím na e-mail jej nakonfigurujete."
 
-#: includes/admin/settings-fields.php:1370
+#: includes/admin/settings-fields.php:1382
 msgid "Email Sender"
 msgstr "Odesílatel e-mailů"
 
-#: includes/admin/settings-fields.php:1376
+#: includes/admin/settings-fields.php:1388
 msgid "From Name"
 msgstr "Jméno odesílatele"
 
-#: includes/admin/settings-fields.php:1377
+#: includes/admin/settings-fields.php:1389
 msgid "When emails are sent to customers, what name should they come from"
 msgstr "Z jakého jména by měly e-maily zasílané zákazníkům pocházet?"
 
-#: includes/admin/settings-fields.php:1383
+#: includes/admin/settings-fields.php:1395
 msgid "From Email"
 msgstr "Odesilatel emailu"
 
-#: includes/admin/settings-fields.php:1384
+#: includes/admin/settings-fields.php:1396
 msgid ""
 "When emails are sent to customers, what email address should they come from"
 msgstr "Z jaké e-mailové adresy mají být e-maily odesílány zákazníkům?"
 
-#: includes/admin/settings-fields.php:1390
+#: includes/admin/settings-fields.php:1402
 msgid "Email Template"
 msgstr "Šablona emailu"
 
-#: includes/admin/settings-fields.php:1396
+#: includes/admin/settings-fields.php:1408
 msgid "Email logo"
 msgstr "E-mailové logo"
 
-#: includes/admin/settings-fields.php:1397
+#: includes/admin/settings-fields.php:1409
 msgid "Logo to use in header of email"
 msgstr "Logo pro použití v záhlaví e-mailu"
 
-#: includes/admin/settings-fields.php:1403
+#: includes/admin/settings-fields.php:1415
 msgid "Signature"
 msgstr "Podpis"
 
-#: includes/admin/settings-fields.php:1404
+#: includes/admin/settings-fields.php:1416
 msgid "Included in footer of every email"
 msgstr "Zahrnuto v zápatí každého e-mailu"
 
-#: includes/admin/settings-fields.php:1463
+#: includes/admin/settings-fields.php:1475
 msgid "Integrations"
 msgstr "Integrace"
 
-#: includes/admin/settings-fields.php:1489
+#: includes/admin/settings-fields.php:1501
 msgid "Please enter your license key in order to enable your add-ons"
 msgstr "Zadejte prosím svůj licenční klíč, abyste mohli povolit doplňky"
 
-#: includes/admin/settings-fields.php:1493
+#: includes/admin/settings-fields.php:1505
 msgid "Licenses"
 msgstr "Licence"
 
-#: includes/admin/settings-fields.php:1523
+#: includes/admin/settings-fields.php:1535
 msgid "Account Erasure Requests"
 msgstr "Žádosti o vymazání účtu"
 
-#: includes/admin/settings-fields.php:1529
+#: includes/admin/settings-fields.php:1541
 msgid "Remove personal data from orders"
 msgstr "Odstranit osobní údaje z objednávek"
 
-#: includes/admin/settings-fields.php:1531
+#: includes/admin/settings-fields.php:1543
 msgid ""
 "When handling an account erasure request, should personal data within orders "
 "be removed? If disabled, order personal data will be retained."
@@ -2659,15 +2745,15 @@ msgstr ""
 "obsažené v objednávkách? Pokud je tato možnost deaktivována, osobní údaje "
 "obsažené v objednávkách zůstanou zachovány."
 
-#: includes/admin/settings-fields.php:1536
+#: includes/admin/settings-fields.php:1548
 msgid "Personal Data Removal"
 msgstr "Odstranění osobních údajů"
 
-#: includes/admin/settings-fields.php:1541
+#: includes/admin/settings-fields.php:1553
 msgid "Allow bulk removal of personal data"
 msgstr "Povolit hromadné odstranění osobních údajů"
 
-#: includes/admin/settings-fields.php:1543
+#: includes/admin/settings-fields.php:1555
 msgid ""
 "Adds an option to the orders screen for removing personal data in bulk. Note "
 "that removing personal data cannot be undone."
@@ -2675,11 +2761,11 @@ msgstr ""
 "Přidává možnost hromadného odstranění osobních údajů na obrazovce "
 "objednávek. Upozorňujeme, že odstranění osobních údajů nelze vrátit zpět."
 
-#: includes/admin/settings-fields.php:1548
+#: includes/admin/settings-fields.php:1560
 msgid "Personal Data Retention"
 msgstr "Uchovávání osobních údajů"
 
-#: includes/admin/settings-fields.php:1550
+#: includes/admin/settings-fields.php:1562
 msgid ""
 "Choose how long to retain personal data when it's no longer needed for "
 "processing. Leave the following options blank to retain this data "
@@ -2689,19 +2775,19 @@ msgstr ""
 "zpracování. Následující volby ponechte prázdné, abyste tyto údaje uchovali "
 "neomezeně."
 
-#: includes/admin/settings-fields.php:1555
+#: includes/admin/settings-fields.php:1567
 msgid "Retain inactive customer accounts"
 msgstr "Zachovat neaktivní zákaznické účty"
 
-#: includes/admin/settings-fields.php:1560
+#: includes/admin/settings-fields.php:1572
 msgid "Retain completed orders"
 msgstr "Uchovat dokončené objednávky"
 
-#: includes/admin/settings-fields.php:1565
+#: includes/admin/settings-fields.php:1577
 msgid "Delete expired galleries after"
 msgstr "Smazat expirované galerie po"
 
-#: includes/admin/settings-fields.php:1569
+#: includes/admin/settings-fields.php:1581
 msgid ""
 "days — Galleries will be permanently deleted this many days after their "
 "expiration date. Leave blank to keep expired galleries indefinitely."
@@ -2709,59 +2795,59 @@ msgstr ""
 "dní — Galerie budou trvale smazány tolik dní po datu jejich vypršení. Nech "
 "prázdné, pokud chceš vypršené galerie ponechat navždy."
 
-#: includes/admin/settings-fields.php:1578
+#: includes/admin/settings-fields.php:1590
 msgid "Privacy & Data"
 msgstr "Soukromí a data"
 
-#: includes/admin/settings-fields.php:1587
+#: includes/admin/settings-fields.php:1599
 msgid "Allow Tracking"
 msgstr "Povolit sledování"
 
-#: includes/admin/settings-fields.php:1592
+#: includes/admin/settings-fields.php:1604
 msgid "Types of Photography"
 msgstr "Typy fotografií"
 
-#: includes/admin/settings-fields.php:1595
+#: includes/admin/settings-fields.php:1607
 msgid "Family"
 msgstr "Rodina"
 
-#: includes/admin/settings-fields.php:1596
+#: includes/admin/settings-fields.php:1608
 msgid "Newborn"
 msgstr "Novorozenci"
 
-#: includes/admin/settings-fields.php:1597
+#: includes/admin/settings-fields.php:1609
 msgid "Wedding"
 msgstr "Svatba"
 
-#: includes/admin/settings-fields.php:1598
+#: includes/admin/settings-fields.php:1610
 msgid "School"
 msgstr "Škola"
 
-#: includes/admin/settings-fields.php:1599
+#: includes/admin/settings-fields.php:1611
 msgid "Sports"
 msgstr "Sporty"
 
-#: includes/admin/settings-fields.php:1600
+#: includes/admin/settings-fields.php:1612
 msgid "Portraits"
 msgstr "Portréty"
 
-#: includes/admin/settings-fields.php:1601
+#: includes/admin/settings-fields.php:1613
 msgid "Animals"
 msgstr "Zvířata"
 
-#: includes/admin/settings-fields.php:1602
+#: includes/admin/settings-fields.php:1614
 msgid "Events"
 msgstr "Události"
 
-#: includes/admin/settings-fields.php:1603
+#: includes/admin/settings-fields.php:1615
 msgid "Real Estate"
 msgstr "Reality"
 
-#: includes/admin/settings-fields.php:1609
+#: includes/admin/settings-fields.php:1621
 msgid "Usage Tracking"
 msgstr "Sledování používání"
 
-#: includes/admin/settings-fields.php:1611
+#: includes/admin/settings-fields.php:1623
 msgid ""
 "This data can help provide useful information to Sunshine Photo Cart and "
 "help guide new features and growth strategies. Your participation is "
@@ -2925,80 +3011,97 @@ msgstr "Složky FTP"
 msgid "Select folder"
 msgstr "Vybrat složku"
 
-#: includes/admin/sunshine-gallery.php:372
+#. translators: 1: number of photos, 2: date and time of the last one
+#: includes/admin/sunshine-gallery.php:374
+#, php-format
+msgid ""
+"Sunshine checks this gallery's folder for new photos. It has added %1$d "
+"photo, last on %2$s."
+msgid_plural ""
+"Sunshine checks this gallery's folder for new photos. It has added %1$d "
+"photos, last on %2$s."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: includes/admin/sunshine-gallery.php:380
+msgid "Sunshine checks this gallery's folder for new photos."
+msgstr "Sunshine kontroluje nové fotky ve složce této galerie."
+
+#: includes/admin/sunshine-gallery.php:391
 msgid "Choose from Media Library"
 msgstr "Výběr z knihovny médií"
 
-#: includes/admin/sunshine-gallery.php:391
-#: includes/admin/sunshine-gallery.php:555
+#: includes/admin/sunshine-gallery.php:410
+#: includes/admin/sunshine-gallery.php:574
 msgid "Select all images"
 msgstr "Výběr všech obrázků"
 
-#: includes/admin/sunshine-gallery.php:392
+#: includes/admin/sunshine-gallery.php:411
 msgid "Regenerate all gallery images"
 msgstr "Regenerovat všechny obrázky v galerii"
 
-#: includes/admin/sunshine-gallery.php:393
+#: includes/admin/sunshine-gallery.php:412
 msgid "Refresh photo details"
 msgstr "Obnovit údaje fotek"
 
-#: includes/admin/sunshine-gallery.php:394
+#: includes/admin/sunshine-gallery.php:413
 msgid "Delete selected images"
 msgstr "Odstranění vybraných obrázků"
 
 #. translators: %1$s is the number of images currently loaded, %2$s is the total number of images
-#: includes/admin/sunshine-gallery.php:399
+#: includes/admin/sunshine-gallery.php:418
 #, php-format
 msgid "Showing %1$s of %2$s images"
 msgstr "Zobrazeno %1$s z %2$s obrázků"
 
 #. translators: %s is a select dropdown with options for number of images to load
-#: includes/admin/sunshine-gallery.php:402
+#: includes/admin/sunshine-gallery.php:421
 #, php-format
 msgid "Load %s more images"
 msgstr "Načíst %s další obrázky"
 
-#: includes/admin/sunshine-gallery.php:403
+#: includes/admin/sunshine-gallery.php:422
 msgid "GO"
 msgstr "Vá!"
 
-#: includes/admin/sunshine-gallery.php:418
+#: includes/admin/sunshine-gallery.php:437
 msgid "Loading"
 msgstr "Načítání"
 
-#: includes/admin/sunshine-gallery.php:445
+#: includes/admin/sunshine-gallery.php:464
 msgid "Saving image order..."
 msgstr "Uložení pořadí obrázků..."
 
-#: includes/admin/sunshine-gallery.php:489
+#: includes/admin/sunshine-gallery.php:508
 msgid "Sorry, the image could not be deleted for some reason"
 msgstr "Omlouváme se, ale obrázek z nějakého důvodu nešel smazat"
 
-#: includes/admin/sunshine-gallery.php:521
+#: includes/admin/sunshine-gallery.php:540
 msgid "Sorry, the image could not be set as featured"
 msgstr "Omlouváme se, ale obrázek nelze nastavit jako doporučený"
 
-#: includes/admin/sunshine-gallery.php:549
+#: includes/admin/sunshine-gallery.php:568
 msgid "Select no images"
 msgstr "Nevybrat žádné obrázky"
 
-#: includes/admin/sunshine-gallery.php:608
+#: includes/admin/sunshine-gallery.php:627
 msgid "Allowed Files"
 msgstr "Povolené soubory"
 
-#: includes/admin/sunshine-gallery.php:875
+#: includes/admin/sunshine-gallery.php:894
 msgid "No importable images were found in the selected folder."
 msgstr "Ve vybrané složce nebyly nalezeny žádné importovatelné obrázky."
 
-#: includes/admin/sunshine-gallery.php:907
+#: includes/admin/sunshine-gallery.php:926
 msgid "The import stopped."
 msgstr "Import se zastavil."
 
-#: includes/admin/sunshine-gallery.php:908
+#: includes/admin/sunshine-gallery.php:927
 msgid "The import stopped before every photo was brought in."
 msgstr "Import se zastavil dřív, než byly přeneseny všechny fotky."
 
-#: includes/admin/sunshine-gallery.php:962
+#: includes/admin/sunshine-gallery.php:981
 msgid ""
 "The image did not fully upload because it is too large for your server to "
 "handle. Thumbnails and watermarks may not have been applied."
@@ -3006,68 +3109,68 @@ msgstr ""
 "Obrázek se nepodařilo nahrát celý, protože je příliš velký a váš server jej "
 "nedokáže zpracovat. Miniatury a vodoznaky nemusí být použity."
 
-#: includes/admin/sunshine-gallery.php:988
+#: includes/admin/sunshine-gallery.php:1007
 msgid ""
 "Unable to inspect the selected directory before import. Please try again."
 msgstr "Nelze zkontrolovat vybraný adresář před importem. Zkuste to znovu."
 
-#: includes/admin/sunshine-gallery.php:1031
+#: includes/admin/sunshine-gallery.php:1050
 msgid "Processing failed"
 msgstr "Zpracování selhalo"
 
-#: includes/admin/sunshine-gallery.php:1061
+#: includes/admin/sunshine-gallery.php:1080
 msgid "You do not have permission to edit this gallery"
 msgstr "Nemáš oprávnění upravovat tuto galerii"
 
-#: includes/admin/sunshine-gallery.php:1084
+#: includes/admin/sunshine-gallery.php:1103
 msgid "No file was uploaded"
 msgstr "Nebyly nahrány žádné soubory."
 
-#: includes/admin/sunshine-gallery.php:1117
+#: includes/admin/sunshine-gallery.php:1136
 msgid "Invalid file type"
 msgstr "Neplatný typ souboru"
 
-#: includes/admin/sunshine-gallery.php:1125
+#: includes/admin/sunshine-gallery.php:1144
 msgid "You do not have permission to upload files"
 msgstr "Nemáš oprávnění nahrávat soubory"
 
-#: includes/admin/sunshine-gallery.php:1136
+#: includes/admin/sunshine-gallery.php:1155
 msgid "Upload directory is not writable"
 msgstr "Do adresáře Upload nelze zapisovat"
 
-#: includes/admin/sunshine-gallery.php:1633
-#: includes/admin/sunshine-gallery.php:1686
+#: includes/admin/sunshine-gallery.php:1652
+#: includes/admin/sunshine-gallery.php:1705
 msgid "You do not have permission to import images."
 msgstr "Nemáte oprávnění importovat obrázky."
 
-#: includes/admin/sunshine-gallery.php:1642
+#: includes/admin/sunshine-gallery.php:1661
 msgid "A directory must be selected before importing."
 msgstr "Před importem je nutné vybrat adresář."
 
-#: includes/admin/sunshine-gallery.php:1651
-#: includes/admin/sunshine-gallery.php:1755
+#: includes/admin/sunshine-gallery.php:1670
+#: includes/admin/sunshine-gallery.php:1777
 msgid "The selected directory is not available."
 msgstr "Vybraný adresář není k dispozici."
 
-#: includes/admin/sunshine-gallery.php:1874
+#: includes/admin/sunshine-gallery.php:1896
 msgid "Already uploaded to gallery"
 msgstr "Již nahráno do galerie"
 
 #. translators: %s is the upload directory
-#: includes/admin/sunshine-gallery.php:1889
+#: includes/admin/sunshine-gallery.php:1911
 #, php-format
 msgid "The selected file could not be copied to %s."
 msgstr "Vybraný soubor se nepodařilo zkopírovat do %s."
 
-#: includes/admin/sunshine-gallery.php:1904
+#: includes/admin/sunshine-gallery.php:1926
 msgid "Could not be added to the gallery"
 msgstr "Nepodařilo se přidat do galerie"
 
-#: includes/admin/sunshine-gallery.php:1921
+#: includes/admin/sunshine-gallery.php:1943
 msgid "No emails collected yet"
 msgstr "Zatím nebyly shromážděny žádné e-maily"
 
-#: includes/admin/sunshine-gallery.php:1995
+#: includes/admin/sunshine-gallery.php:2017
 msgid "Add gallery name"
 msgstr "Přidání názvu galerie"
 
@@ -3131,7 +3234,7 @@ msgid "Select All"
 msgstr "Vybrat vše"
 
 #: includes/admin/sunshine-order.php:434 includes/class-order.php:1058
-#: includes/class-sunshinephotocart.php:539 gallery.php:272 admin.php:237
+#: includes/class-sunshinephotocart.php:541 gallery.php:272 admin.php:237
 #: admin/customers.php:20 admin/customers.php:42 class-admin-gift-cards.php:189
 msgid "Order"
 msgstr "Objednávka"
@@ -3221,8 +3324,8 @@ msgid "Delivery/Shipping Method"
 msgstr "Způsob dodání/zásilky"
 
 #: includes/admin/sunshine-order.php:683
-#: includes/class-sunshinephotocart.php:588
-#: includes/class-sunshinephotocart.php:599 class-export-orders.php:514
+#: includes/class-sunshinephotocart.php:590
+#: includes/class-sunshinephotocart.php:601 class-export-orders.php:514
 #: class-export-orders.php:609
 msgid "Order Status"
 msgstr "Stav objednávky"
@@ -3299,7 +3402,7 @@ msgid "Image Data"
 msgstr "Obrazová data"
 
 #: includes/admin/sunshine-order.php:807 includes/admin/sunshine-order.php:844
-#: includes/class-sunshinephotocart.php:427 templates/admin/order-items.php:104
+#: includes/class-sunshinephotocart.php:429 templates/admin/order-items.php:104
 #: templates/cart/item.php:5 templates/cart/items.php:5
 #: templates/checkout/summary.php:12 templates/invoice/admin.php:214
 #: templates/invoice/admin.php:226 templates/order/item.php:5
@@ -3604,7 +3707,7 @@ msgstr "Žádní sirotci se nenašli!"
 
 #: includes/admin/tools/orphans.php:162
 #: includes/admin/tools/refresh-photo-details.php:221
-#: includes/admin/tools/regenerate.php:450
+#: includes/admin/tools/regenerate.php:637
 #: includes/admin/tools/square-reconcile.php:184
 #: includes/admin/tools/unused-image-sizes.php:153 hooks.php:693
 msgid "Abort"
@@ -3665,7 +3768,8 @@ msgstr "Obnovování údajů fotek pro „%s“"
 
 #: includes/admin/tools/refresh-photo-details.php:231
 #: includes/admin/tools/refresh-photo-details.php:256
-#: includes/admin/tools/regenerate.php:480
+#: includes/admin/tools/regenerate.php:667
+#: includes/admin/tools/regenerate.php:680
 msgid "Done!"
 msgstr "Hotovo!"
 
@@ -3679,7 +3783,8 @@ msgstr ""
 
 #: includes/admin/tools/regenerate.php:22
 #: includes/admin/tools/regenerate.php:25
-#: includes/admin/tools/regenerate.php:37
+#: includes/admin/tools/regenerate.php:39
+#: includes/admin/tools/regenerate.php:83
 msgid "Regenerate Images"
 msgstr "Regenerace obrázků"
 
@@ -3691,36 +3796,49 @@ msgstr ""
 "Pokud jste změnili velikost miniatur, velikost digitálního souboru ke "
 "stažení nebo nastavení vodoznaku, je třeba obrázky přegenerovat."
 
-#: includes/admin/tools/regenerate.php:193
+#: includes/admin/tools/regenerate.php:252
 msgid "Could not find original file to regenerate from"
 msgstr "Nepodařilo se najít původní soubor, z něhož by se dalo regenerovat"
 
-#: includes/admin/tools/regenerate.php:231
+#: includes/admin/tools/regenerate.php:290
 msgid "Could not download file from cloud storage for regeneration"
 msgstr "Nelze stáhnout soubor z cloudového úložiště pro regeneraci"
 
-#: includes/admin/tools/regenerate.php:240
+#: includes/admin/tools/regenerate.php:299
 msgid "Cloud Storage addon is required to regenerate this offloaded image"
 msgstr ""
 "K regeneraci tohoto odloženého obrazu je vyžadován doplněk Cloud Storage."
 
-#: includes/admin/tools/regenerate.php:269
+#: includes/admin/tools/regenerate.php:321
+msgid "Could not restore the original file from cloud storage"
+msgstr "Původní soubor se nepodařilo obnovit z cloudového úložiště"
+
+#: includes/admin/tools/regenerate.php:335
 msgid "Original file is missing locally and no cloud-storage key is set."
 msgstr ""
 "Originální soubor chybí lokálně a není nastaven žádný klíč cloudového "
 "úložiště."
 
 #. translators: %s is the gallery title
-#: includes/admin/tools/regenerate.php:435
+#: includes/admin/tools/regenerate.php:618
 #, php-format
 msgid "Regenerating images for \"%s\""
 msgstr "Regenerace obrázků pro \"%s\""
 
-#: includes/admin/tools/regenerate.php:438
+#. translators: %d is the number of galleries
+#: includes/admin/tools/regenerate.php:622
+#, fuzzy, php-format
+msgid "Regenerating images for %d gallery"
+msgid_plural "Regenerating images for %d galleries"
+msgstr[0] "Regenerace obrázků pro \"%s\""
+msgstr[1] "Regenerace obrázků pro \"%s\""
+msgstr[2] "Regenerace obrázků pro \"%s\""
+
+#: includes/admin/tools/regenerate.php:625
 msgid "Regenerating images"
 msgstr "Regenerace obrázků"
 
-#: includes/admin/tools/regenerate.php:473
+#: includes/admin/tools/regenerate.php:660
 msgid ""
 "Image did not fully upload because it is too large for your server to "
 "handle. Thumbnails and watermarks may not have been applied. Recommend "
@@ -3730,12 +3848,37 @@ msgstr ""
 "že nebyly použity miniatury a vodoznaky. Doporučujeme zvětšit dostupnou "
 "paměť."
 
-#: includes/admin/tools/regenerate.php:514
+#: includes/admin/tools/regenerate.php:710
+msgid "Sub-galleries Found"
+msgstr "Nalezeny podgalerie"
+
+#. translators: %d is the number of sub-galleries
+#: includes/admin/tools/regenerate.php:716
+#, php-format
+msgid ""
+"There is %d sub-gallery inside the galleries you picked. Do you want to "
+"regenerate its images too?"
+msgid_plural ""
+"There are %d sub-galleries inside the galleries you picked. Do you want to "
+"regenerate their images too?"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: includes/admin/tools/regenerate.php:729
+msgid "Yes, include sub-galleries"
+msgstr "Ano, zahrnout podgalerie"
+
+#: includes/admin/tools/regenerate.php:732
+msgid "No, only the galleries I picked"
+msgstr "Ne, jen galerie, které jsem vybral(a)"
+
+#: includes/admin/tools/regenerate.php:754
 msgid "Watermark Settings Detected"
 msgstr "Nastavení vodoznaku detekováno"
 
 #. translators: %d is the number of images without watermark
-#: includes/admin/tools/regenerate.php:520
+#: includes/admin/tools/regenerate.php:760
 #, php-format
 msgid ""
 "You have %d image that does not have watermark enabled, but you have a "
@@ -3753,19 +3896,19 @@ msgstr[2] ""
 "Máš %d obrázků, u kterých není zapnutý vodoznak, ale v obecném nastavení "
 "vodoznak nastavený máš."
 
-#: includes/admin/tools/regenerate.php:531
+#: includes/admin/tools/regenerate.php:771
 msgid "How would you like to proceed?"
 msgstr "Jak byste chtěli postupovat?"
 
-#: includes/admin/tools/regenerate.php:534
+#: includes/admin/tools/regenerate.php:774
 msgid "Apply watermark to all images"
 msgstr "Použít vodoznak na všechny obrázky"
 
-#: includes/admin/tools/regenerate.php:537
+#: includes/admin/tools/regenerate.php:777
 msgid "Keep current image watermark settings"
 msgstr "Zachovat aktuální nastavení vodoznaku obrázku"
 
-#: includes/admin/tools/regenerate.php:574
+#: includes/admin/tools/regenerate.php:815
 msgid ""
 "No image found at this position. It may have been deleted since this run "
 "started."
@@ -3918,56 +4061,58 @@ msgstr "Položka byla odstraněna z vašeho košíku, protože již neexistuje"
 msgid ""
 "An item has been removed from your cart because one of its options is no "
 "longer available"
-msgstr "Položka byla odebrána z tvého košíku, protože jedna z jejích možností už není dostupná"
+msgstr ""
+"Položka byla odebrána z tvého košíku, protože jedna z jejích možností už "
+"není dostupná"
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:750
+#: includes/class-cart.php:751
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr "Sleva \"%s\" odstraněna, protože již není platná"
 
-#: includes/class-cart.php:1697
+#: includes/class-cart.php:1698
 msgid "Contact Information"
 msgstr "Kontaktní informace"
 
-#: includes/class-cart.php:1702 includes/class-countries.php:3424
+#: includes/class-cart.php:1703 includes/class-countries.php:3424
 #: includes/functions/account.php:579 templates/account/signup.php:20
 #: class-export-orders.php:522
 msgid "First Name"
 msgstr "Jméno"
 
-#: includes/class-cart.php:1711 includes/class-countries.php:3433
+#: includes/class-cart.php:1712 includes/class-countries.php:3433
 #: includes/functions/account.php:587 templates/account/signup.php:27
 #: class-export-orders.php:523
 msgid "Last Name"
 msgstr "Příjmení"
 
-#: includes/class-cart.php:1737 templates/account/login.php:18
+#: includes/class-cart.php:1738 templates/account/login.php:18
 #: templates/account/signup.php:9 templates/shortcodes/password.php:4
 msgid "Password"
 msgstr "Heslo"
 
-#: includes/class-cart.php:1739
+#: includes/class-cart.php:1740
 msgid "Optionally set a password"
 msgstr "Volitelné nastavení hesla"
 
-#: includes/class-cart.php:1756 templates/email/admin-receipt.php:198
+#: includes/class-cart.php:1757 templates/email/admin-receipt.php:198
 #: templates/email/customer-receipt.php:184
 #: templates/email/order-status.php:152 templates/invoice/admin.php:185
 #: templates/order/details.php:39 class-export-orders.php:526
 msgid "EU VAT Number"
 msgstr "Číslo DPH EU"
 
-#: includes/class-cart.php:1858
+#: includes/class-cart.php:1859
 msgid "Delivery Method"
 msgstr "Způsob dopravy"
 
-#: includes/class-cart.php:1918 includes/class-cart.php:1935
+#: includes/class-cart.php:1919 includes/class-cart.php:1936
 #: templates/invoice/admin.php:174 class-export-orders.php:520
 msgid "Shipping Method"
 msgstr "Způsob dopravy"
 
-#: includes/class-cart.php:1940 includes/class-cart.php:2452
+#: includes/class-cart.php:1941 includes/class-cart.php:2453
 msgid ""
 "Sorry, shipping is not available to the address you entered. Please double "
 "check the address or try a different shipping address."
@@ -3975,36 +4120,36 @@ msgstr ""
 "Doprava na adresu, kterou jsi zadal, bohužel není možná. Zkontroluj adresu "
 "ještě jednou nebo zkus jinou doručovací adresu."
 
-#: includes/class-cart.php:2001
+#: includes/class-cart.php:2002
 msgid "Use shipping address as billing address"
 msgstr "Použít dodací adresu jako fakturační adresu"
 
-#: includes/class-cart.php:2039
+#: includes/class-cart.php:2040
 msgid "Same as shipping address"
 msgstr "Stejná jako dodací adresa"
 
-#: includes/class-cart.php:2091
+#: includes/class-cart.php:2092
 msgid "Payment"
 msgstr "Platba"
 
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:2101
+#: includes/class-cart.php:2102
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr "Použijte mé kredity (%s k dispozici)"
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:2109 includes/class-payment-method.php:242
+#: includes/class-cart.php:2110 includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr "Odeslat objednávku a zaplatit %s"
 
-#: includes/class-cart.php:2111
+#: includes/class-cart.php:2112
 msgid "Submit Order for Free"
 msgstr "Odeslat objednávku zdarma"
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:2136
+#: includes/class-cart.php:2137
 #, php-format
 msgid ""
 "By submitting this order, you agree to our <a href=\"%1$s\" "
@@ -4014,57 +4159,57 @@ msgstr ""
 "target=\"_blank\">%2$s</a>"
 
 #. translators: %s is the section name
-#: includes/class-cart.php:2177
+#: includes/class-cart.php:2178
 #, php-format
 msgid "Edit %s"
 msgstr "Upravit %s"
 
-#: includes/class-cart.php:2195
+#: includes/class-cart.php:2196
 msgid "Next Step"
 msgstr "Další krok"
 
-#: includes/class-cart.php:2372
+#: includes/class-cart.php:2373
 msgid "Invalid checkout section"
 msgstr "Neplatný oddíl pokladny"
 
-#: includes/class-cart.php:2388
+#: includes/class-cart.php:2389
 msgid "Field contains invalid data"
 msgstr "Pole obsahuje neplatné údaje"
 
 #. translators: %s is the field name
-#: includes/class-cart.php:2411
+#: includes/class-cart.php:2412
 #, php-format
 msgid "%s is required"
 msgstr "%s je povinné pole"
 
-#: includes/class-cart.php:2423 frontend.php:173
+#: includes/class-cart.php:2424 frontend.php:173
 msgid "Invalid email"
 msgstr "Neplatný e-mail"
 
-#: includes/class-cart.php:2528 includes/class-cart.php:2933
-#: includes/class-cart.php:2941
+#: includes/class-cart.php:2529 includes/class-cart.php:2934
+#: includes/class-cart.php:2942
 msgid "Please select a payment method before completing your order."
 msgstr "Před dokončením objednávky vyber způsob platby."
 
-#: includes/class-cart.php:2540 includes/class-cart.php:2792
+#: includes/class-cart.php:2541 includes/class-cart.php:2793
 msgid "Please select a shipping method before completing your order."
 msgstr "Než dokončíš objednávku, vyber způsob dopravy."
 
 #. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
-#: includes/class-cart.php:2661
+#: includes/class-cart.php:2662
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
 msgstr "Než odešleš objednávku, vyplň následující: %s"
 
-#: includes/class-cart.php:2671
+#: includes/class-cart.php:2672
 msgid "Please log in or create an account to complete this order"
 msgstr "Pro dokončení této objednávky se přihlas nebo si vytvoř účet"
 
-#: includes/class-cart.php:2704
+#: includes/class-cart.php:2705
 msgid "Customer is trying to pay again"
 msgstr "Zákazník se pokouší zaplatit znovu"
 
-#: includes/class-cart.php:2717
+#: includes/class-cart.php:2718
 msgid ""
 "Error encountered during checkout process and your order has already been "
 "marked as paid."
@@ -4072,19 +4217,19 @@ msgstr ""
 "Během procesu objednávky došlo k chybě a vaše objednávka již byla označena "
 "jako zaplacená."
 
-#: includes/class-cart.php:2717 includes/class-cart.php:3238
+#: includes/class-cart.php:2718 includes/class-cart.php:3239
 msgid "View the order"
 msgstr "Zobrazit objednávku"
 
-#: includes/class-cart.php:2729
+#: includes/class-cart.php:2730
 msgid "No payment method selected"
 msgstr "Nebyl zvolen žádný způsob platby"
 
-#: includes/class-cart.php:2858
+#: includes/class-cart.php:2859
 msgid "Failed to initialize order"
 msgstr "Inicializace objednávky se nezdařila"
 
-#: includes/class-cart.php:2901
+#: includes/class-cart.php:2902
 msgid ""
 "Something happened while trying to process your order. Please contact the "
 "site owner for more details."
@@ -4092,35 +4237,38 @@ msgstr ""
 "Při pokusu o zpracování vaší objednávky se něco stalo. Pro více informací se "
 "prosím obraťte na majitele stránek."
 
-#: includes/class-cart.php:2966
+#: includes/class-cart.php:2967
 msgid "No payment method"
 msgstr "Žádný způsob platby"
 
 #. translators: 1: store credit the order used, 2: store credit the customer had left
-#: includes/class-cart.php:3048
+#: includes/class-cart.php:3049
 #, php-format
 msgid ""
 "This order used %1$s of store credit, but the customer only had %2$s left "
 "when it was paid. The difference was not collected."
-msgstr "Tato objednávka použila %1$s z kreditu obchodu, ale zákazníkovi zbývalo v době platby jen %2$s. Rozdíl nebyl vybrán."
+msgstr ""
+"Tato objednávka použila %1$s z kreditu obchodu, ale zákazníkovi zbývalo v "
+"době platby jen %2$s. Rozdíl nebyl vybrán."
 
-#: includes/class-cart.php:3128
+#: includes/class-cart.php:3129
 msgid "Your store credit has changed. Please review your order and try again."
-msgstr "Tvůj kredit v obchodě se změnil. Zkontroluj objednávku a zkus to znovu."
+msgstr ""
+"Tvůj kredit v obchodě se změnil. Zkontroluj objednávku a zkus to znovu."
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:3136
+#: includes/class-cart.php:3137
 #, php-format
 msgid ""
 "Discount \"%s\" can no longer be used. Please review your order and try "
 "again."
 msgstr "Slevu \"%s\" už nelze použít. Zkontroluj objednávku a zkus to znovu."
 
-#: includes/class-cart.php:3155 includes/functions/account.php:250
+#: includes/class-cart.php:3156 includes/functions/account.php:250
 msgid "Too many signup attempts, please try again later"
 msgstr "Příliš mnoho pokusů o registraci, zkus to později"
 
-#: includes/class-cart.php:3167
+#: includes/class-cart.php:3168
 msgid ""
 "User account already exists with that email address - please login to "
 "continue"
@@ -4128,7 +4276,7 @@ msgstr ""
 "Uživatelský účet s touto e-mailovou adresou již existuje - pro pokračování "
 "se prosím přihlaste"
 
-#: includes/class-cart.php:3238
+#: includes/class-cart.php:3239
 msgid "It appears your previous checkout has already been processed."
 msgstr "Zdá se, že vaše předchozí objednávka již byla zpracována."
 
@@ -13000,7 +13148,7 @@ msgstr "Omlouváme se, ale tento obrázek nemůžete zobrazit"
 
 #: includes/class-frontend.php:989 includes/functions/add-to-cart.php:17
 #: includes/functions/comments.php:16 includes/functions/comments.php:63
-#: includes/functions/image.php:380 includes/functions/share.php:16
+#: includes/functions/image.php:396 includes/functions/share.php:16
 #: includes/functions/store.php:11 includes/functions/store.php:137
 #: includes/functions/store.php:192 includes/functions/template.php:373
 #: frontend.php:668 frontend.php:956
@@ -13122,7 +13270,9 @@ msgstr "Poplatek %s"
 msgid ""
 "%1$s can't take payments under %2$s. Add more to your order or choose "
 "another way to pay."
-msgstr "%1$s nepřijímá platby nižší než %2$s. Přidej do objednávky víc nebo vyber jiný způsob platby."
+msgstr ""
+"%1$s nepřijímá platby nižší než %2$s. Přidej do objednávky víc nebo vyber "
+"jiný způsob platby."
 
 #. translators: %s is the add-on name, such as "Stripe Pro"
 #: includes/class-payment-method.php:402
@@ -13165,270 +13315,270 @@ msgstr "ID instance: %s"
 msgid "Shipping or delivery"
 msgstr "Přeprava nebo dodání"
 
-#: includes/class-sunshinephotocart.php:378
-#: includes/class-sunshinephotocart.php:540 common.php:7 common.php:47
+#: includes/class-sunshinephotocart.php:380
+#: includes/class-sunshinephotocart.php:542 common.php:7 common.php:47
 #: discounts.php:36 gift-cards.php:98
 msgid "Add New"
 msgstr "Přidat nový"
 
-#: includes/class-sunshinephotocart.php:379
+#: includes/class-sunshinephotocart.php:381
 msgid "Add New Gallery"
 msgstr "Přidat novou galerii"
 
-#: includes/class-sunshinephotocart.php:380
+#: includes/class-sunshinephotocart.php:382
 msgid "New Gallery"
 msgstr "Nová Galerie"
 
-#: includes/class-sunshinephotocart.php:381 includes/functions/misc.php:497
+#: includes/class-sunshinephotocart.php:383 includes/functions/misc.php:499
 msgid "Edit Gallery"
 msgstr "Upravit Galerii"
 
-#: includes/class-sunshinephotocart.php:382
+#: includes/class-sunshinephotocart.php:384
 msgid "View Gallery"
 msgstr "Zobrazit galerii"
 
-#: includes/class-sunshinephotocart.php:383
+#: includes/class-sunshinephotocart.php:385
 msgid "All Galleries"
 msgstr "Všechny Galerie"
 
-#: includes/class-sunshinephotocart.php:384
+#: includes/class-sunshinephotocart.php:386
 msgid "Search Galleries"
 msgstr "Vyhledat Galerie"
 
-#: includes/class-sunshinephotocart.php:385
+#: includes/class-sunshinephotocart.php:387
 msgid "Parent Gallery:"
 msgstr "Galerie pro rodiče:"
 
-#: includes/class-sunshinephotocart.php:387
+#: includes/class-sunshinephotocart.php:389
 msgid "No galleries found in Trash"
 msgstr "V koši nebyly nalezeny žádné galerie"
 
-#: includes/class-sunshinephotocart.php:388
+#: includes/class-sunshinephotocart.php:390
 msgid "Gallery Featured Image"
 msgstr "Galerie Doporučený obrázek"
 
-#: includes/class-sunshinephotocart.php:389
+#: includes/class-sunshinephotocart.php:391
 msgid "Set featured image image"
 msgstr "Nastavení doporučeného obrázku"
 
-#: includes/class-sunshinephotocart.php:390
+#: includes/class-sunshinephotocart.php:392
 msgid "Remove featured image"
 msgstr "Odstranit náhledový obrázek"
 
-#: includes/class-sunshinephotocart.php:391
+#: includes/class-sunshinephotocart.php:393
 msgid "Use as featured image"
 msgstr "Použít jako náhledový obrázek"
 
-#: includes/class-sunshinephotocart.php:392
+#: includes/class-sunshinephotocart.php:394
 msgid "Gallery archives"
 msgstr "Archiv galerie"
 
-#: includes/class-sunshinephotocart.php:393
+#: includes/class-sunshinephotocart.php:395
 msgid "Insert into gallery"
 msgstr "Vložení do galerie"
 
-#: includes/class-sunshinephotocart.php:394
+#: includes/class-sunshinephotocart.php:396
 msgid "Uploaded to this gallery"
 msgstr "Nahráno do této galerie"
 
-#: includes/class-sunshinephotocart.php:395
+#: includes/class-sunshinephotocart.php:397
 msgid "Filter galleries list"
 msgstr "Seznam filtrovaných galerií"
 
-#: includes/class-sunshinephotocart.php:396
+#: includes/class-sunshinephotocart.php:398
 msgid "Galleries list navigation"
 msgstr "Navigace v seznamu galerií"
 
-#: includes/class-sunshinephotocart.php:397
+#: includes/class-sunshinephotocart.php:399
 msgid "Galleries list"
 msgstr "Seznam galerií"
 
-#: includes/class-sunshinephotocart.php:428
+#: includes/class-sunshinephotocart.php:430
 msgid "Add Product"
 msgstr "Přidat produkt"
 
-#: includes/class-sunshinephotocart.php:429
+#: includes/class-sunshinephotocart.php:431
 msgid "Add New Product"
 msgstr "Přidat nový produkt"
 
-#: includes/class-sunshinephotocart.php:430
+#: includes/class-sunshinephotocart.php:432
 msgid "Edit Product"
 msgstr "Upravit produkt"
 
-#: includes/class-sunshinephotocart.php:431
+#: includes/class-sunshinephotocart.php:433
 msgid "New Product"
 msgstr "Nový produkt"
 
-#: includes/class-sunshinephotocart.php:432
+#: includes/class-sunshinephotocart.php:434
 msgid "All Products"
 msgstr "Všechno zboží"
 
-#: includes/class-sunshinephotocart.php:433
+#: includes/class-sunshinephotocart.php:435
 msgid "View Products"
 msgstr "Zobrazit produkty"
 
-#: includes/class-sunshinephotocart.php:434
+#: includes/class-sunshinephotocart.php:436
 msgid "Search Products"
 msgstr "Hledat produkty"
 
-#: includes/class-sunshinephotocart.php:435
+#: includes/class-sunshinephotocart.php:437
 msgid "No products found"
 msgstr "Nebyly nalezeny žádné produkty"
 
-#: includes/class-sunshinephotocart.php:436
+#: includes/class-sunshinephotocart.php:438
 msgid "No products found in trash"
 msgstr "V košíku nebyly nalezeny žádné položky"
 
-#: includes/class-sunshinephotocart.php:462
+#: includes/class-sunshinephotocart.php:464
 msgid "Product Categories"
 msgstr "Kategorie produktů"
 
-#: includes/class-sunshinephotocart.php:463
-#: includes/class-sunshinephotocart.php:479
+#: includes/class-sunshinephotocart.php:465
+#: includes/class-sunshinephotocart.php:481
 msgid "Product Category"
 msgstr "Kategorie produktů"
 
-#: includes/class-sunshinephotocart.php:464
+#: includes/class-sunshinephotocart.php:466
 msgid "Search Product Categories"
 msgstr "Vyhledat kategorie produktů"
 
-#: includes/class-sunshinephotocart.php:465
+#: includes/class-sunshinephotocart.php:467
 msgid "All Product Categories"
 msgstr "Všechny kategorie produktů"
 
-#: includes/class-sunshinephotocart.php:466
+#: includes/class-sunshinephotocart.php:468
 msgid "Parent Product Category"
 msgstr "Nadřazená kategorie e-knihy"
 
-#: includes/class-sunshinephotocart.php:467
+#: includes/class-sunshinephotocart.php:469
 msgid "Parent Product Category:"
 msgstr "Nadřazená kategorie e-knihy:"
 
-#: includes/class-sunshinephotocart.php:468
+#: includes/class-sunshinephotocart.php:470
 msgid "Edit Product Category"
 msgstr "Upravit kategorii e-knihy"
 
-#: includes/class-sunshinephotocart.php:469
+#: includes/class-sunshinephotocart.php:471
 msgid "Update Product Category"
 msgstr "Aktualizovat kategorii e-knih"
 
-#: includes/class-sunshinephotocart.php:470
+#: includes/class-sunshinephotocart.php:472
 msgid "Add New Product Category"
 msgstr "Přidat novou kategorii produktu"
 
-#: includes/class-sunshinephotocart.php:471
+#: includes/class-sunshinephotocart.php:473
 msgid "New Product Category Name"
 msgstr "Název nové kategorie e-knih"
 
-#: includes/class-sunshinephotocart.php:472
+#: includes/class-sunshinephotocart.php:474
 msgid "Separate categories with commas"
 msgstr "Kategorie oddělte čárkami"
 
-#: includes/class-sunshinephotocart.php:473
+#: includes/class-sunshinephotocart.php:475
 msgid "Choose from the most used categories"
 msgstr "Vyberte si z nejpoužívanějších kategorií"
 
-#: includes/class-sunshinephotocart.php:504 class-admin-automated-emails.php:93
+#: includes/class-sunshinephotocart.php:506 class-admin-automated-emails.php:93
 msgid "Price Levels"
 msgstr "Cenové úrovně"
 
-#: includes/class-sunshinephotocart.php:506
+#: includes/class-sunshinephotocart.php:508
 msgid "Search Price Levels"
 msgstr "Vyhledávání cenových úrovní"
 
-#: includes/class-sunshinephotocart.php:507
+#: includes/class-sunshinephotocart.php:509
 msgid "All Price Levels"
 msgstr "Všechny cenové úrovně"
 
-#: includes/class-sunshinephotocart.php:508
+#: includes/class-sunshinephotocart.php:510
 msgid "Parent Price Level"
 msgstr "Mateřská cenová úroveň"
 
-#: includes/class-sunshinephotocart.php:509
+#: includes/class-sunshinephotocart.php:511
 msgid "Parent Price Level:"
 msgstr "Cenová úroveň rodičů:"
 
-#: includes/class-sunshinephotocart.php:510
+#: includes/class-sunshinephotocart.php:512
 msgid "Edit Price Level"
 msgstr "Úprava cenové úrovně"
 
-#: includes/class-sunshinephotocart.php:511
+#: includes/class-sunshinephotocart.php:513
 msgid "Update Price Level"
 msgstr "Aktualizace cenové úrovně"
 
-#: includes/class-sunshinephotocart.php:512
+#: includes/class-sunshinephotocart.php:514
 msgid "Add New Price Level"
 msgstr "Přidání nové cenové úrovně"
 
-#: includes/class-sunshinephotocart.php:513
+#: includes/class-sunshinephotocart.php:515
 msgid "New Price Level"
 msgstr "Nová cenová úroveň"
 
-#: includes/class-sunshinephotocart.php:541
+#: includes/class-sunshinephotocart.php:543
 msgid "Add New Order"
 msgstr "Přidat novou objednávku"
 
-#: includes/class-sunshinephotocart.php:542
+#: includes/class-sunshinephotocart.php:544
 msgid "Edit Order"
 msgstr "Upravit objednávku"
 
-#: includes/class-sunshinephotocart.php:543
+#: includes/class-sunshinephotocart.php:545
 msgid "New Order"
 msgstr "Nová objednávka"
 
-#: includes/class-sunshinephotocart.php:544
+#: includes/class-sunshinephotocart.php:546
 msgid "All Orders"
 msgstr "Všechny objednávky"
 
-#: includes/class-sunshinephotocart.php:545
+#: includes/class-sunshinephotocart.php:547
 msgid "View Orders"
 msgstr "Zobrazit Objednávky"
 
-#: includes/class-sunshinephotocart.php:546
+#: includes/class-sunshinephotocart.php:548
 msgid "Search Orders"
 msgstr "Hledej objednávky"
 
-#: includes/class-sunshinephotocart.php:547
+#: includes/class-sunshinephotocart.php:549
 msgid "No orders found"
 msgstr "Nebyly nalezeny žádné objednávky"
 
-#: includes/class-sunshinephotocart.php:548
+#: includes/class-sunshinephotocart.php:550
 msgid "No orders found in trash"
 msgstr "V koši nebyly nalezeny žádné objednávky"
 
-#: includes/class-sunshinephotocart.php:587
+#: includes/class-sunshinephotocart.php:589
 msgid "Order Statuses"
 msgstr "Statusy"
 
-#: includes/class-sunshinephotocart.php:589
+#: includes/class-sunshinephotocart.php:591
 msgid "Search Order Status"
 msgstr "Vyhledávání stavu objednávky"
 
-#: includes/class-sunshinephotocart.php:590
+#: includes/class-sunshinephotocart.php:592
 msgid "All Order Status"
 msgstr "Stav všech objednávek"
 
-#: includes/class-sunshinephotocart.php:591
+#: includes/class-sunshinephotocart.php:593
 msgid "Parent Order Status"
 msgstr "Stav rodičovské objednávky"
 
-#: includes/class-sunshinephotocart.php:592
+#: includes/class-sunshinephotocart.php:594
 msgid "Parent Order Status:"
 msgstr "Stav rodičovského příkazu:"
 
-#: includes/class-sunshinephotocart.php:593
+#: includes/class-sunshinephotocart.php:595
 msgid "Edit Order Status"
 msgstr "Upravit status"
 
-#: includes/class-sunshinephotocart.php:594
+#: includes/class-sunshinephotocart.php:596
 msgid "Update Order Status"
 msgstr "Aktualizace stavu objednávky"
 
-#: includes/class-sunshinephotocart.php:595
+#: includes/class-sunshinephotocart.php:597
 msgid "Add New Order Status"
 msgstr "Přidat nový status"
 
-#: includes/class-sunshinephotocart.php:596
+#: includes/class-sunshinephotocart.php:598
 msgid "New Order Status"
 msgstr "Stav nové objednávky"
 
@@ -13463,7 +13613,10 @@ msgid ""
 "Email sent to admins when a payment can't be accepted for an order or an "
 "order is marked Failed. Sent to the recipients below, or the site admin "
 "email when left empty."
-msgstr "E-mail odesílaný administrátorům, když platbu za objednávku nelze přijmout nebo když je objednávka označena jako Selhala. Odesílá se níže uvedeným příjemcům, nebo na e-mail administrátora webu, pokud pole zůstane prázdné."
+msgstr ""
+"E-mail odesílaný administrátorům, když platbu za objednávku nelze přijmout "
+"nebo když je objednávka označena jako Selhala. Odesílá se níže uvedeným "
+"příjemcům, nebo na e-mail administrátora webu, pokud pole zůstane prázdné."
 
 #. translators: %1$s is the order name, %2$s is the site name
 #: includes/emails/class-email-admin-payment-problem.php:19
@@ -13479,7 +13632,10 @@ msgstr "Odeslat, když"
 msgid ""
 "A payment didn't match the order (wrong amount, currency or account, or paid "
 "for another order). The customer may have paid, but the order stayed unpaid."
-msgstr "Platba neodpovídala objednávce (špatná částka, měna nebo účet, nebo zaplaceno za jinou objednávku). Zákazník možná zaplatil, ale objednávka zůstala nezaplacená."
+msgstr ""
+"Platba neodpovídala objednávce (špatná částka, měna nebo účet, nebo "
+"zaplaceno za jinou objednávku). Zákazník možná zaplatil, ale objednávka "
+"zůstala nezaplacená."
 
 #: includes/emails/class-email-admin-payment-problem.php:49
 msgid "A payment was declined or cancelled at the payment service"
@@ -13688,7 +13844,9 @@ msgstr "Neplatná emailová adresa"
 msgid ""
 "An account could not be created with that email address. If you already have "
 "one, log in or reset your password."
-msgstr "S touto e-mailovou adresou se nepodařilo vytvořit účet. Pokud už účet máš, přihlas se nebo si obnov heslo."
+msgstr ""
+"S touto e-mailovou adresou se nepodařilo vytvořit účet. Pokud už účet máš, "
+"přihlas se nebo si obnov heslo."
 
 #. translators: %s: User email address
 #: includes/functions/account.php:301
@@ -13710,7 +13868,9 @@ msgstr "Neplatný pokus o resetování hesla"
 msgid ""
 "If there is an account for %s, an email has been sent to it with information "
 "on resetting your password"
-msgstr "Pokud existuje účet pro %s, byl na něj odeslán e-mail s informacemi o obnovení hesla"
+msgstr ""
+"Pokud existuje účet pro %s, byl na něj odeslán e-mail s informacemi o "
+"obnovení hesla"
 
 #: includes/functions/account.php:400
 msgid "Passwords do not match"
@@ -14839,7 +14999,9 @@ msgstr "Transakční poplatky"
 msgid ""
 "PayPal payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "Platba PayPal %1$s na %2$s neodpovídá celkové částce objednávky, objednávka nebyla dokončena"
+msgstr ""
+"Platba PayPal %1$s na %2$s neodpovídá celkové částce objednávky, objednávka "
+"nebyla dokončena"
 
 #: includes/payment-methods/paypal-legacy.php:415
 msgid "Customer cancelled the PayPal payment"
@@ -15088,14 +15250,18 @@ msgstr "Nepodařilo se zachytit platbu PayPal"
 msgid ""
 "PayPal capture %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "Stržení platby PayPal %1$s na %2$s neodpovídá celkové částce objednávky, objednávka nebyla dokončena"
+msgstr ""
+"Stržení platby PayPal %1$s na %2$s neodpovídá celkové částce objednávky, "
+"objednávka nebyla dokončena"
 
 #: includes/payment-methods/paypal.php:716
 #: includes/payment-methods/square.php:1714
 #: includes/payment-methods/stripe.php:2962
 msgid ""
 "Your payment did not match the order total, please contact the site owner"
-msgstr "Tvoje platba neodpovídala celkové částce objednávky, kontaktuj prosím majitele webu"
+msgstr ""
+"Tvoje platba neodpovídala celkové částce objednávky, kontaktuj prosím "
+"majitele webu"
 
 #. translators: %s is the payment method name
 #: includes/payment-methods/paypal.php:725
@@ -15319,13 +15485,17 @@ msgstr "Token Square byl úspěšně obnoven"
 msgid ""
 "Square: your connection can no longer renew and will stop taking payments "
 "when the current key expires. Disconnect and connect Square again now."
-msgstr "Square: tvoje připojení už nelze obnovit a po vypršení současného klíče přestane přijímat platby. Odpoj a znovu připoj Square hned teď."
+msgstr ""
+"Square: tvoje připojení už nelze obnovit a po vypršení současného klíče "
+"přestane přijímat platby. Odpoj a znovu připoj Square hned teď."
 
 #: includes/payment-methods/square.php:697
 msgid ""
 "Square: could not reach Square to renew the connection. It will try again. "
 "If this message keeps coming back, disconnect and connect Square again."
-msgstr "Square: nepodařilo se spojit se Square kvůli obnovení připojení. Zkusí se to znovu. Pokud se tato zpráva stále vrací, odpoj a znovu připoj Square."
+msgstr ""
+"Square: nepodařilo se spojit se Square kvůli obnovení připojení. Zkusí se to "
+"znovu. Pokud se tato zpráva stále vrací, odpoj a znovu připoj Square."
 
 #. translators: %s: link to the Square settings
 #: includes/payment-methods/square.php:833
@@ -15333,13 +15503,17 @@ msgstr "Square: nepodařilo se spojit se Square kvůli obnovení připojení. Zk
 msgid ""
 "Square: <a href=\"%s\">disconnect and connect Square again</a> to use the "
 "more secure connection, where only your site holds your Square keys."
-msgstr "Square: <a href=\"%s\">odpoj a znovu připoj Square</a>, abys mohl používat bezpečnější připojení, kde tvoje klíče Square má jen tvůj web."
+msgstr ""
+"Square: <a href=\"%s\">odpoj a znovu připoj Square</a>, abys mohl používat "
+"bezpečnější připojení, kde tvoje klíče Square má jen tvůj web."
 
 #: includes/payment-methods/square.php:843
 msgid ""
 "Square: your connection has not renewed lately and will stop working soon. "
 "Disconnect and connect Square again to keep taking payments."
-msgstr "Square: tvoje připojení se v poslední době neobnovilo a brzy přestane fungovat. Odpoj a znovu připoj Square, abys mohl dál přijímat platby."
+msgstr ""
+"Square: tvoje připojení se v poslední době neobnovilo a brzy přestane "
+"fungovat. Odpoj a znovu připoj Square, abys mohl dál přijímat platby."
 
 #. translators: %s is a comma-separated list of discount codes
 #: includes/payment-methods/square.php:1237
@@ -15400,7 +15574,9 @@ msgstr ""
 msgid ""
 "Square payment %1$s was declined or cancelled (status %2$s), so the order "
 "was not marked paid"
-msgstr "Platba Square %1$s byla zamítnuta nebo zrušena (stav %2$s), takže objednávka nebyla označena jako zaplacená"
+msgstr ""
+"Platba Square %1$s byla zamítnuta nebo zrušena (stav %2$s), takže objednávka "
+"nebyla označena jako zaplacená"
 
 #. translators: 1: Square payment ID, 2: amount paid in Square
 #: includes/payment-methods/square.php:1707
@@ -15409,11 +15585,14 @@ msgstr "Platba Square %1$s byla zamítnuta nebo zrušena (stav %2$s), takže obj
 msgid ""
 "Square payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "Platba Square %1$s na %2$s neodpovídá celkové částce objednávky, objednávka nebyla dokončena"
+msgstr ""
+"Platba Square %1$s na %2$s neodpovídá celkové částce objednávky, objednávka "
+"nebyla dokončena"
 
 #: includes/payment-methods/square.php:1712
 msgid "Your payment was declined. Please try again or use another way to pay."
-msgstr "Tvoje platba byla zamítnuta. Zkus to znovu nebo vyber jiný způsob platby."
+msgstr ""
+"Tvoje platba byla zamítnuta. Zkus to znovu nebo vyber jiný způsob platby."
 
 #: includes/payment-methods/square.php:1849
 msgid "Every 15 minutes"
@@ -15547,7 +15726,9 @@ msgstr "Tuto platbu se nepodařilo znovu zkontrolovat: %s"
 msgid ""
 "%s can't take a payment this small. Add more to your order or choose another "
 "way to pay."
-msgstr "%s nepřijímá takto malou platbu. Přidej do objednávky víc nebo vyber jiný způsob platby."
+msgstr ""
+"%s nepřijímá takto malou platbu. Přidej do objednávky víc nebo vyber jiný "
+"způsob platby."
 
 #: includes/payment-methods/stripe.php:382
 #: includes/payment-methods/stripe.php:3838
@@ -15946,7 +16127,9 @@ msgstr "Služba Stripe byla úspěšně odpojena"
 msgid ""
 "Stripe payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "Platba Stripe %1$s na %2$s neodpovídá celkové částce objednávky, objednávka nebyla dokončena"
+msgstr ""
+"Platba Stripe %1$s na %2$s neodpovídá celkové částce objednávky, objednávka "
+"nebyla dokončena"
 
 #: includes/payment-methods/stripe.php:1748
 #: includes/payment-methods/stripe.php:1749
@@ -16005,7 +16188,9 @@ msgstr "Daň z prodeje"
 msgid ""
 "This order could not be sent to Stripe for the right amount, please contact "
 "the site owner"
-msgstr "Tuto objednávku se nepodařilo odeslat do Stripe se správnou částkou, kontaktuj prosím majitele webu"
+msgstr ""
+"Tuto objednávku se nepodařilo odeslat do Stripe se správnou částkou, "
+"kontaktuj prosím majitele webu"
 
 #. translators: 1: product name, 2: quantity
 #: includes/payment-methods/stripe.php:2645
@@ -16121,13 +16306,17 @@ msgstr "Pro zpracování testovacích objednávek"
 msgid ""
 "The Test payment method is on and every customer can use it, so orders can "
 "be placed without paying. Turn it off when you are done testing."
-msgstr "Testovací způsob platby je zapnutý a může ho použít každý zákazník, takže objednávky jde zadat bez placení. Až dotestuješ, vypni ho."
+msgstr ""
+"Testovací způsob platby je zapnutý a může ho použít každý zákazník, takže "
+"objednávky jde zadat bez placení. Až dotestuješ, vypni ho."
 
 #: includes/payment-methods/test.php:24
 msgid ""
 "The Test payment method is on. Only admins can use it at checkout. Turn it "
 "off when you are done testing."
-msgstr "Testovací způsob platby je zapnutý. V pokladně ho můžou použít jen administrátoři. Až dotestuješ, vypni ho."
+msgstr ""
+"Testovací způsob platby je zapnutý. V pokladně ho můžou použít jen "
+"administrátoři. Až dotestuješ, vypni ho."
 
 #: includes/payment-methods/test.php:27
 msgid "Payment method settings"
@@ -16141,7 +16330,10 @@ msgstr "Povolit zákazníkům"
 msgid ""
 "Let customers who are not admins use this payment method. Their orders are "
 "marked paid without any payment, so only turn this on while testing."
-msgstr "Povol tento způsob platby i zákazníkům, kteří nejsou administrátoři. Jejich objednávky se označí jako zaplacené bez jakékoli platby, takže to zapínej jen při testování."
+msgstr ""
+"Povol tento způsob platby i zákazníkům, kteří nejsou administrátoři. Jejich "
+"objednávky se označí jako zaplacené bez jakékoli platby, takže to zapínej "
+"jen při testování."
 
 #: includes/shipping-methods/flat-rate.php:7
 msgid "Flat Rate"
@@ -16529,13 +16721,17 @@ msgstr "Stav objednávky"
 msgid ""
 "Check this payment in %s's dashboard before refunding or marking the order "
 "paid."
-msgstr "Než vrátíš peníze nebo označíš objednávku jako zaplacenou, zkontroluj tuto platbu v nástěnce %s."
+msgstr ""
+"Než vrátíš peníze nebo označíš objednávku jako zaplacenou, zkontroluj tuto "
+"platbu v nástěnce %s."
 
 #: templates/email/admin-payment-problem.php:36
 msgid ""
 "Check this payment in your payment processor's dashboard before refunding or "
 "marking the order paid."
-msgstr "Než vrátíš peníze nebo označíš objednávku jako zaplacenou, zkontroluj tuto platbu v nástěnce svého platebního zprostředkovatele."
+msgstr ""
+"Než vrátíš peníze nebo označíš objednávku jako zaplacenou, zkontroluj tuto "
+"platbu v nástěnce svého platebního zprostředkovatele."
 
 #: templates/email/admin-receipt.php:13
 msgid "View Invoice"
@@ -16953,7 +17149,9 @@ msgstr "Maximální částka objednávky"
 msgid ""
 "Only make this shipping option available when cart contains at least one of "
 "the selected products. Leave empty for all products."
-msgstr "Zpřístupni tuto možnost dopravy jen tehdy, když košík obsahuje alespoň jeden z vybraných produktů. Nech prázdné pro všechny produkty."
+msgstr ""
+"Zpřístupni tuto možnost dopravy jen tehdy, když košík obsahuje alespoň jeden "
+"z vybraných produktů. Nech prázdné pro všechny produkty."
 
 #: hooks.php:52
 msgid "Include Galleries"
@@ -17397,7 +17595,9 @@ msgstr "Žádná odpověď od zpracovatele kreditní karty"
 msgid ""
 "Authorize.net approved only %1$s of the %2$s total on a prepaid card. The "
 "order was not paid and the partial charge was cancelled."
-msgstr "Authorize.net schválil na předplacené kartě jen %1$s z celkové částky %2$s. Objednávka nebyla zaplacena a částečné stržení bylo zrušeno."
+msgstr ""
+"Authorize.net schválil na předplacené kartě jen %1$s z celkové částky %2$s. "
+"Objednávka nebyla zaplacena a částečné stržení bylo zrušeno."
 
 #. translators: %s: Authorize.net transaction ID
 #: class-authorizenet.php:335
@@ -17405,19 +17605,25 @@ msgstr "Authorize.net schválil na předplacené kartě jen %1$s z celkové čá
 msgid ""
 "Could not cancel the partial Authorize.net charge %s. Void it in your "
 "Authorize.net account."
-msgstr "Částečné stržení Authorize.net %s se nepodařilo zrušit. Stornuj ho ve svém účtu Authorize.net."
+msgstr ""
+"Částečné stržení Authorize.net %s se nepodařilo zrušit. Stornuj ho ve svém "
+"účtu Authorize.net."
 
 #: class-authorizenet.php:342
 msgid ""
 "Your card does not have enough on it to pay the full order total, so it was "
 "not charged. Please use another card."
-msgstr "Na tvé kartě není dost peněz na zaplacení celé objednávky, takže nebyla stržena žádná částka. Použij jinou kartu."
+msgstr ""
+"Na tvé kartě není dost peněz na zaplacení celé objednávky, takže nebyla "
+"stržena žádná částka. Použij jinou kartu."
 
 #: class-authorizenet.php:353
 msgid ""
 "Authorize.net authorized the card but did not charge it yet. Capture the "
 "payment in your Authorize.net account."
-msgstr "Authorize.net kartu autorizoval, ale ještě z ní nestrhl platbu. Strhni platbu ve svém účtu Authorize.net."
+msgstr ""
+"Authorize.net kartu autorizoval, ale ještě z ní nestrhl platbu. Strhni "
+"platbu ve svém účtu Authorize.net."
 
 #. translators: 1: Authorize.net transaction ID, 2: Authorize.net reason code
 #: class-authorizenet.php:367
@@ -17426,7 +17632,10 @@ msgid ""
 "Authorize.net is holding payment %1$s for review (reason %2$s). The order "
 "stays Pending. Approve or decline it in your Authorize.net account, then "
 "update this order."
-msgstr "Authorize.net drží platbu %1$s ke kontrole (důvod %2$s). Objednávka zůstává Čekající. Schval nebo zamítni ji ve svém účtu Authorize.net a pak tuto objednávku aktualizuj."
+msgstr ""
+"Authorize.net drží platbu %1$s ke kontrole (důvod %2$s). Objednávka zůstává "
+"Čekající. Schval nebo zamítni ji ve svém účtu Authorize.net a pak tuto "
+"objednávku aktualizuj."
 
 #. translators: %1$s: error message, %2$s: error code
 #: class-authorizenet.php:374 class-authorizenet.php:377
@@ -18241,8 +18450,8 @@ msgstr "Ke stažení Credits"
 msgid "Save download credits"
 msgstr "Uložit kredity ke stažení"
 
-#: admin/galleries.php:7 admin/settings.php:102 frontend.php:1050
-#: frontend.php:1060 reports/class-reports-image-downloads.php:38
+#: admin/galleries.php:7 admin/settings.php:102 frontend.php:1056
+#: frontend.php:1066 reports/class-reports-image-downloads.php:38
 #: reports/class-reports-image-downloads.php:157
 msgid "Downloads"
 msgstr "Stahování"
@@ -18325,53 +18534,54 @@ msgstr ""
 msgid "File could not be deleted"
 msgstr "Soubor nelze odstranit"
 
-#: admin/orders.php:276 admin/orders.php:478 frontend.php:60 frontend.php:151
-#: frontend.php:237 frontend.php:349 frontend.php:462 frontend.php:662
-#: frontend.php:950 order.php:396 order.php:591 order.php:736 order.php:1009
+#: admin/orders.php:276 admin/orders.php:286 admin/orders.php:484
+#: frontend.php:60 frontend.php:151 frontend.php:237 frontend.php:349
+#: frontend.php:462 frontend.php:662 frontend.php:950 order.php:396
+#: order.php:591 order.php:736 order.php:1009 exports.php:305 exports.php:315
 #: add-to-cart.php:36 cart.php:123 cart.php:144 shortcodes.php:79
 msgid "Invalid request"
 msgstr "Neplatná žádost"
 
-#: admin/orders.php:351 frontend.php:340 frontend.php:453 frontend.php:549
+#: admin/orders.php:357 frontend.php:340 frontend.php:453 frontend.php:549
 #: frontend.php:941
 msgid "Sorry, you do not have permission to download"
 msgstr "Omlouváme se, ale nemáte oprávnění ke stažení"
 
-#: admin/orders.php:365
+#: admin/orders.php:371
 msgid "Notify user of files added to order"
 msgstr "Upozornit uživatele na soubory přidané do objednávky"
 
-#: admin/orders.php:469
+#: admin/orders.php:475
 msgid "Download all originals"
 msgstr "Stáhnout všechny originály"
 
-#: admin/orders.php:482
+#: admin/orders.php:488
 msgid "You do not have permission to download these files"
 msgstr "Nemáte oprávnění ke stažení těchto souborů."
 
-#: admin/orders.php:487
+#: admin/orders.php:493
 msgid "Order not found"
 msgstr "Objednávka nenalezena"
 
-#: admin/orders.php:493
+#: admin/orders.php:499
 msgid "No images found in this order"
 msgstr "V této objednávce nebyly nalezeny žádné obrázky."
 
-#: admin/orders.php:496 class-rest-downloads-controller.php:142
+#: admin/orders.php:502 class-rest-downloads-controller.php:142
 msgid "Originals"
 msgstr "Originály"
 
-#: admin/orders.php:502
+#: admin/orders.php:508
 msgid "Admin downloaded all original images"
 msgstr "Správce stáhl všechny původní obrázky"
 
-#: admin/orders.php:513
+#: admin/orders.php:519
 msgid "Customer was notified via email about new files available for download"
 msgstr ""
 "Zákazník byl e-mailem informován o nových souborech, které jsou k dispozici "
 "ke stažení"
 
-#: admin/orders.php:515
+#: admin/orders.php:521
 msgid "No files were attached to this order"
 msgstr "K této objednávce nebyly přiloženy žádné soubory"
 
@@ -18549,20 +18759,20 @@ msgstr "Stáhněte si položky objednávky"
 msgid "Digital Download"
 msgstr "Digitální stažení"
 
-#: class-download.php:752
+#: class-download.php:838
 msgid "Unable to process download. The requested file may not be available."
 msgstr "Nelze zpracovat stahování. Požadovaný soubor nemusí být k dispozici."
 
-#: class-download.php:753 class-download.php:799 class-download.php:875
-#: class-download.php:937 class-download.php:957 class-download.php:1439
-#: frontend.php:292 frontend.php:821 frontend.php:829
+#: class-download.php:839 class-download.php:886 class-download.php:964
+#: class-download.php:1028 class-download.php:1048 class-download.php:1535
+#: class-download.php:1585 frontend.php:292 frontend.php:821 frontend.php:829
 #: includes/download-handler.php:99 includes/download-handler.php:107
 #: includes/download-handler.php:162 includes/download-handler.php:177
 #: includes/download-handler.php:184 includes/download-handler.php:210
 msgid "Download Error"
 msgstr "Chyba stahování"
 
-#: class-download.php:798 class-download.php:2061
+#: class-download.php:885 class-download.php:1966
 msgid ""
 "Sorry, the requested file could not be found. Please try again or contact "
 "support."
@@ -18570,7 +18780,7 @@ msgstr ""
 "Omlouváme se, požadovaný soubor nebyl nalezen. Zkuste to znovu nebo "
 "kontaktujte podporu."
 
-#: class-download.php:874
+#: class-download.php:963
 msgid ""
 "Sorry, some of the files in this download could not be retrieved. Please try "
 "again or contact support."
@@ -18578,7 +18788,7 @@ msgstr ""
 "Některé soubory v tomto stažení se bohužel nepodařilo získat. Zkus to znovu "
 "nebo se ozvi podpoře."
 
-#: class-download.php:936
+#: class-download.php:1027
 msgid ""
 "Sorry, this download could not be prepared. Please try again or contact "
 "support."
@@ -18586,7 +18796,7 @@ msgstr ""
 "Toto stažení se bohužel nepodařilo připravit. Zkus to znovu nebo se ozvi "
 "podpoře."
 
-#: class-download.php:956
+#: class-download.php:1047 class-download.php:1584
 msgid ""
 "Sorry, some of the files in this download could not be read. Please try "
 "again or contact support."
@@ -18594,7 +18804,7 @@ msgstr ""
 "Některé soubory v tomto stažení se bohužel nepodařilo přečíst. Zkus to znovu "
 "nebo se ozvi podpoře."
 
-#: class-download.php:1438
+#: class-download.php:1534
 msgid ""
 "Sorry, some of the files in this download could not be found. Please try "
 "again or contact support."
@@ -18602,11 +18812,11 @@ msgstr ""
 "Některé soubory v tomto stažení se bohužel nepodařilo najít. Zkus to znovu "
 "nebo se ozvi podpoře."
 
-#: class-download.php:2136
+#: class-download.php:2041
 msgid "Sorry, the file could not be downloaded. Please try again."
 msgstr "Omlouváme se, soubor se nepodařilo stáhnout. Zkuste to prosím znovu."
 
-#: class-download.php:2400
+#: class-download.php:2334
 msgid "original"
 msgstr "původní"
 
@@ -18718,15 +18928,15 @@ msgstr "Galerie ke stažení"
 msgid "You do not have permission to download this file"
 msgstr "Nemáte oprávnění ke stažení tohoto souboru."
 
-#: frontend.php:1148
+#: frontend.php:1154
 msgid "You have no available downloads"
 msgstr "Nemáte žádné dostupné soubory ke stažení"
 
-#: frontend.php:1173
+#: frontend.php:1179
 msgid "Please provide a valid email address"
 msgstr "Zadejte platnou e-mailovou adresu"
 
-#: frontend.php:1178
+#: frontend.php:1184
 msgid "Invalid request type"
 msgstr "Neplatný typ požadavku"
 
@@ -19470,15 +19680,15 @@ msgstr "Jakákoli galerie"
 msgid "Will include all child galleries as well"
 msgstr "Zahrnuje také všechny dětské galerie"
 
-#: class-export.php:200
+#: class-export.php:201
 msgid "File Format"
 msgstr "Formát souboru"
 
-#: class-export.php:204
+#: class-export.php:205
 msgid "CSV"
 msgstr "CSV"
 
-#: class-export.php:209
+#: class-export.php:210
 msgid "XML"
 msgstr "XML"
 
@@ -19505,6 +19715,11 @@ msgstr "Exporty"
 #: exports.php:117
 msgid "Past Exports"
 msgstr "Minulé vývozy"
+
+#: exports.php:299
+#, fuzzy
+msgid "You are not allowed to run exports"
+msgstr "Omlouváme se, ale tento obrázek nemůžete zobrazit"
 
 #. Plugin Name of the plugin
 #: light-blue.php
@@ -19957,7 +20172,9 @@ msgstr "Test Secret Key"
 msgid ""
 "Mollie payment %1$s was not accepted for this order: %2$s The order was left "
 "unpaid."
-msgstr "Platba Mollie %1$s nebyla pro tuto objednávku přijata: %2$s Objednávka zůstala nezaplacená."
+msgstr ""
+"Platba Mollie %1$s nebyla pro tuto objednávku přijata: %2$s Objednávka "
+"zůstala nezaplacená."
 
 #: class-mollie.php:350 class-quickpay.php:433
 msgid "it was made for a different order."
@@ -20468,7 +20685,9 @@ msgstr "Nelze připravit platbu"
 msgid ""
 "Mercado Pago payment not started: this Mercado Pago account only takes "
 "payments in %1$s, and the store charges in %2$s"
-msgstr "Platba Mercado Pago nebyla zahájena: tento účet Mercado Pago přijímá platby jen v %1$s a obchod účtuje v %2$s"
+msgstr ""
+"Platba Mercado Pago nebyla zahájena: tento účet Mercado Pago přijímá platby "
+"jen v %1$s a obchod účtuje v %2$s"
 
 #. translators: %s: Mercado Pago's reason
 #: class-mercadopago-pro.php:255
@@ -20518,7 +20737,9 @@ msgstr "Platbu se nepodařilo zpracovat, zkuste to prosím znovu"
 msgid ""
 "Mercado Pago can't take payments in %s for this store. Please choose another "
 "way to pay."
-msgstr "Mercado Pago nemůže pro tento obchod přijímat platby v %s. Vyber jiný způsob platby."
+msgstr ""
+"Mercado Pago nemůže pro tento obchod přijímat platby v %s. Vyber jiný způsob "
+"platby."
 
 #. translators: %s: payment status from Mercado Pago, e.g. rejected
 #: trait-mercadopago-common.php:86
@@ -20562,7 +20783,9 @@ msgstr "částka je %1$s, celková částka objednávky je %2$s"
 msgid ""
 "Mercado Pago payment %1$s was declined or cancelled (status %2$s), so the "
 "order was not marked paid"
-msgstr "Platba Mercado Pago %1$s byla zamítnuta nebo zrušena (stav %2$s), takže objednávka nebyla označena jako zaplacená"
+msgstr ""
+"Platba Mercado Pago %1$s byla zamítnuta nebo zrušena (stav %2$s), takže "
+"objednávka nebyla označena jako zaplacená"
 
 #. translators: 1: Mercado Pago payment ID, 2: reason, e.g. "amount is 1, order total is 110"
 #: trait-mercadopago-common.php:119
@@ -20570,7 +20793,9 @@ msgstr "Platba Mercado Pago %1$s byla zamítnuta nebo zrušena (stav %2$s), tak�
 msgid ""
 "Mercado Pago payment %1$s did not match this order, so the order was not "
 "marked paid (%2$s)"
-msgstr "Platba Mercado Pago %1$s neodpovídala této objednávce, takže objednávka nebyla označena jako zaplacená (%2$s)"
+msgstr ""
+"Platba Mercado Pago %1$s neodpovídala této objednávce, takže objednávka "
+"nebyla označena jako zaplacená (%2$s)"
 
 #: trait-mercadopago-common.php:205
 msgid "Could not refund payment: this order has no Mercado Pago payment"
@@ -20635,7 +20860,9 @@ msgstr "Odeslat platbu prostřednictvím %s"
 msgid ""
 "Thank you! Your payment is being confirmed by Payfast. Your order will show "
 "as paid once Payfast confirms it."
-msgstr "Díky! Payfast tvoji platbu potvrzuje. Jakmile ji Payfast potvrdí, objednávka se zobrazí jako zaplacená."
+msgstr ""
+"Díky! Payfast tvoji platbu potvrzuje. Jakmile ji Payfast potvrdí, objednávka "
+"se zobrazí jako zaplacená."
 
 #: class-payfast.php:379
 msgid "Customer cancelled the Payfast payment"
@@ -20647,7 +20874,9 @@ msgstr "Zákazník zrušil platbu Payfast"
 msgid ""
 "Payfast sent a payment notice, but the order was not finished because its "
 "status is %s"
-msgstr "Payfast poslal oznámení o platbě, ale objednávka nebyla dokončena, protože její stav je %s"
+msgstr ""
+"Payfast poslal oznámení o platbě, ale objednávka nebyla dokončena, protože "
+"její stav je %s"
 
 #. translators: %s: payment status from Payfast, e.g. CANCELLED
 #: class-payfast.php:443
@@ -20655,13 +20884,16 @@ msgstr "Payfast poslal oznámení o platbě, ale objednávka nebyla dokončena, 
 msgid ""
 "Payfast says the payment was declined or cancelled (status %s), so the order "
 "was not marked paid"
-msgstr "Payfast uvádí, že platba byla zamítnuta nebo zrušena (stav %s), takže objednávka nebyla označena jako zaplacená"
+msgstr ""
+"Payfast uvádí, že platba byla zamítnuta nebo zrušena (stav %s), takže "
+"objednávka nebyla označena jako zaplacená"
 
 #. translators: %s: why the payment was not accepted
 #: class-payfast.php:446
 #, php-format
 msgid "Payfast payment notice not accepted, order left unpaid: %s"
-msgstr "Oznámení o platbě Payfast nebylo přijato, objednávka zůstala nezaplacená: %s"
+msgstr ""
+"Oznámení o platbě Payfast nebylo přijato, objednávka zůstala nezaplacená: %s"
 
 #. translators: %s: merchant ID in the payment notice
 #: class-payfast.php:488
@@ -20686,13 +20918,17 @@ msgstr "zaplacená částka (%1$s) neodpovídá celkové částce objednávky (%
 #, php-format
 msgid ""
 "Payfast API lists a payment for this order, but the order was left unpaid: %s"
-msgstr "Payfast API uvádí platbu za tuto objednávku, ale objednávka zůstala nezaplacená: %s"
+msgstr ""
+"Payfast API uvádí platbu za tuto objednávku, ale objednávka zůstala "
+"nezaplacená: %s"
 
 #. translators: %s: what went wrong
 #: class-payfast.php:545
 #, php-format
 msgid "Could not check the payment with the Payfast API, order left unpaid: %s"
-msgstr "Platbu se nepodařilo ověřit přes Payfast API, objednávka zůstala nezaplacená: %s"
+msgstr ""
+"Platbu se nepodařilo ověřit přes Payfast API, objednávka zůstala "
+"nezaplacená: %s"
 
 #: class-payfast.php:570
 msgid ""
@@ -20725,7 +20961,8 @@ msgstr "Payfast neuvedl ID platby"
 #: class-payfast.php:685 class-payfast.php:861
 msgid ""
 "the Payfast API needs the merchant ID and passphrase in the Payfast settings"
-msgstr "Payfast API potřebuje ID obchodníka a heslovou frázi v nastavení Payfast"
+msgstr ""
+"Payfast API potřebuje ID obchodníka a heslovou frázi v nastavení Payfast"
 
 #. translators: %s: error message
 #: class-payfast.php:704 class-payfast.php:884
@@ -20757,7 +20994,9 @@ msgstr "Platbu se nepodařilo vrátit v Payfast: %s"
 msgid ""
 "This order has no Payfast payment ID, so it can't be refunded from here. You "
 "can refund it in your Payfast dashboard."
-msgstr "Tato objednávka nemá ID platby Payfast, takže ji odsud nelze vrátit. Vrátit ji můžeš ve své nástěnce Payfast."
+msgstr ""
+"Tato objednávka nemá ID platby Payfast, takže ji odsud nelze vrátit. Vrátit "
+"ji můžeš ve své nástěnce Payfast."
 
 #: class-payfast.php:1016
 msgid "there is nothing left to refund on this order"
@@ -20785,7 +21024,9 @@ msgstr "Payfast může z této platby vrátit už jen %s"
 msgid ""
 "Payfast can only pay this refund into the customer's bank account, which "
 "needs their bank details. You can do this refund in your Payfast dashboard."
-msgstr "Payfast může tyto peníze vrátit jen na bankovní účet zákazníka, k čemuž potřebuje jeho bankovní údaje. Vrácení můžeš provést ve své nástěnce Payfast."
+msgstr ""
+"Payfast může tyto peníze vrátit jen na bankovní účet zákazníka, k čemuž "
+"potřebuje jeho bankovní údaje. Vrácení můžeš provést ve své nástěnce Payfast."
 
 #. translators: %s: refund method from Payfast
 #: class-payfast.php:1065
@@ -20820,7 +21061,9 @@ msgstr "Nepodporovaná měna"
 msgid ""
 "Paystack return link had a payment reference from a different order, so the "
 "order was left unpaid"
-msgstr "Návratový odkaz Paystack obsahoval referenci platby z jiné objednávky, takže objednávka zůstala nezaplacená"
+msgstr ""
+"Návratový odkaz Paystack obsahoval referenci platby z jiné objednávky, takže "
+"objednávka zůstala nezaplacená"
 
 #: class-paystack.php:254 class-paystack.php:260 class-quickpay.php:214
 msgid "Could not verify payment status"
@@ -20846,7 +21089,9 @@ msgstr "Paystack vrátil platbu pro jinou referenci"
 msgid ""
 "the amount paid (%1$s) does not match the order total (%2$s), both in the "
 "smallest unit of the currency"
-msgstr "zaplacená částka (%1$s) neodpovídá celkové částce objednávky (%2$s), obojí v nejmenší jednotce měny"
+msgstr ""
+"zaplacená částka (%1$s) neodpovídá celkové částce objednávky (%2$s), obojí v "
+"nejmenší jednotce měny"
 
 #. translators: 1: currency paid in, 2: order currency
 #: class-paystack.php:296
@@ -20860,7 +21105,9 @@ msgstr "platba byla v %1$s, ale objednávka je v %2$s"
 msgid ""
 "Paystack payment %1$s was declined or cancelled (status %2$s), so the order "
 "was not marked paid"
-msgstr "Platba Paystack %1$s byla zamítnuta nebo zrušena (stav %2$s), takže objednávka nebyla označena jako zaplacená"
+msgstr ""
+"Platba Paystack %1$s byla zamítnuta nebo zrušena (stav %2$s), takže "
+"objednávka nebyla označena jako zaplacená"
 
 #. translators: %s: why the payment was not accepted
 #: class-paystack.php:313
@@ -20911,7 +21158,9 @@ msgstr "Platba není přijímána"
 msgid ""
 "QuickPay payment %1$s was declined or not finished (state %2$s), so the "
 "order was not marked paid."
-msgstr "Platba QuickPay %1$s byla zamítnuta nebo nebyla dokončena (stav %2$s), takže objednávka nebyla označena jako zaplacená."
+msgstr ""
+"Platba QuickPay %1$s byla zamítnuta nebo nebyla dokončena (stav %2$s), takže "
+"objednávka nebyla označena jako zaplacená."
 
 #. translators: 1: QuickPay payment ID, 2: reason the payment was not accepted
 #: class-quickpay.php:228 class-quickpay.php:339
@@ -20919,7 +21168,9 @@ msgstr "Platba QuickPay %1$s byla zamítnuta nebo nebyla dokončena (stav %2$s),
 msgid ""
 "QuickPay payment %1$s was not accepted for this order: %2$s The order was "
 "left unpaid."
-msgstr "Platba QuickPay %1$s nebyla pro tuto objednávku přijata: %2$s Objednávka zůstala nezaplacená."
+msgstr ""
+"Platba QuickPay %1$s nebyla pro tuto objednávku přijata: %2$s Objednávka "
+"zůstala nezaplacená."
 
 #: class-quickpay.php:292
 msgid "Customer cancelled the QuickPay payment"
@@ -22855,7 +23106,7 @@ msgstr "zatím aktualizováno..."
 msgid "Unknown choice"
 msgstr "Neznámá volba"
 
-#: cloud-storage.php:109
+#: cloud-storage.php:115
 msgid "Every 5 minutes"
 msgstr "Každých 5 minut"
 
@@ -22988,12 +23239,12 @@ msgid "Connection successful! All tests passed."
 msgstr "Připojení úspěšné! Všechny testy byly úspěšné."
 
 #: includes/class-cloud-storage-client-gcs.php:31
-#: includes/class-cloud-storage-client-gcs.php:574
+#: includes/class-cloud-storage-client-gcs.php:630
 msgid "Google Cloud Storage JSON key is required"
 msgstr "Je vyžadován klíč JSON pro úložiště Google Cloud Storage."
 
 #: includes/class-cloud-storage-client-gcs.php:39
-#: includes/class-cloud-storage-client-gcs.php:581
+#: includes/class-cloud-storage-client-gcs.php:637
 msgid "Invalid JSON key file. Please check your service account JSON."
 msgstr ""
 "Neplatný soubor klíče JSON. Zkontrolujte prosím svůj servisní účet JSON."
@@ -23178,23 +23429,23 @@ msgstr "Žádné podsložky"
 msgid "Error loading folders"
 msgstr "Chyba při načítání složek"
 
-#: includes/class-cloud-storage-manager.php:2398
+#: includes/class-cloud-storage-manager.php:2415
 msgid "No objects found in WP Offload Media data"
 msgstr "V datech WP Offload Media nebyly nalezeny žádné objekty."
 
-#: includes/class-cloud-storage-manager.php:2458
+#: includes/class-cloud-storage-manager.php:2475
 msgid "Could not build URLs from WP Offload Media data"
 msgstr "Nelze vytvořit URL adresy z dat WP Offload Media"
 
-#: includes/class-cloud-storage-manager.php:2546
+#: includes/class-cloud-storage-manager.php:2563
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr "Nelze načíst URL adresy z WP Offload Media"
 
-#: includes/hooks.php:430 includes/hooks.php:464
+#: includes/hooks.php:436 includes/hooks.php:470
 msgid "Sunshine Cloud Storage:"
 msgstr "Úložiště Sunshine Cloud:"
 
-#: includes/hooks.php:431
+#: includes/hooks.php:437
 msgid ""
 "WP Offload Media plugin is currently active. These two plugins should not be "
 "active at the same time as they will conflict. Please deactivate WP Offload "
@@ -23204,7 +23455,7 @@ msgstr ""
 "být aktivní současně, protože dochází ke konfliktu. Před použitím Sunshine "
 "Cloud Storage prosím deaktivujte plugin WP Offload Media."
 
-#: includes/hooks.php:433
+#: includes/hooks.php:439
 msgid ""
 "<strong>Good news:</strong> Sunshine can take over your previously offloaded "
 "items. After deactivating WP Offload Media, run the WP Offload Media "
@@ -23214,7 +23465,7 @@ msgstr ""
 "přenesl. Po deaktivaci WP Offload Media spusť nástroj Migrace z WP Offload "
 "Media a přesuň ta data do vlastního úložiště Sunshine."
 
-#: includes/hooks.php:438
+#: includes/hooks.php:444
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media plugin is active. "
 "You have Cloud Storage set to \"Entire WordPress site\" which may conflict. "
@@ -23226,7 +23477,7 @@ msgstr ""
 "konflikt. Zvažte nastavení na „Pouze galerie Sunshine“ nebo deaktivaci "
 "jednoho z pluginů."
 
-#: includes/hooks.php:465
+#: includes/hooks.php:471
 msgid ""
 "Your cloud storage bucket does not support per-object ACLs (Access Control "
 "Lists). This means Sunshine cannot set individual files as public or "
@@ -23238,7 +23489,7 @@ msgstr ""
 "veřejné nebo soukromé, což může způsobit, že se miniatury nezobrazí nebo že "
 "obrázky v plném rozlišení budou veřejně přístupné."
 
-#: includes/hooks.php:469
+#: includes/hooks.php:475
 msgid ""
 "<strong>How to fix:</strong> Go to Google Cloud Console &rarr; Cloud Storage "
 "&rarr; Your Bucket &rarr; Permissions &rarr; Access Control &rarr; Switch "
@@ -23248,7 +23499,7 @@ msgstr ""
 "Storage → Váš bucket → Oprávnění → Řízení přístupu → Přepněte z „Uniform“ na "
 "„Fine-grained“."
 
-#: includes/hooks.php:471
+#: includes/hooks.php:477
 msgid ""
 "<strong>How to fix:</strong> Go to S3 Console &rarr; Your Bucket &rarr; "
 "Permissions &rarr; Object Ownership &rarr; Edit &rarr; Select \"ACLs "
@@ -23258,7 +23509,7 @@ msgstr ""
 "Oprávnění → Vlastnictví objektu → Upravit → Vyberte „ACL povoleno“ s "
 "„Upřednostnit vlastníka bucketu“."
 
-#: includes/hooks.php:473
+#: includes/hooks.php:479
 msgid ""
 "<strong>How to fix:</strong> Check your storage provider's documentation for "
 "enabling per-object ACLs on your bucket."
@@ -23266,7 +23517,7 @@ msgstr ""
 "<strong>Jak opravit:</strong> V dokumentaci poskytovatele úložiště "
 "zkontrolujte, jak povolit ACL pro jednotlivé objekty ve vašem úložišti."
 
-#: includes/hooks.php:477
+#: includes/hooks.php:483
 msgid ""
 "After making changes, go to Sunshine Settings &rarr; Cloud Storage and click "
 "\"Test Connection\" to verify."
@@ -23275,7 +23526,7 @@ msgstr ""
 "klikněte na „Test Connection“ (Otestovat připojení) pro ověření."
 
 #. translators: 1: link opening tag, 2: link closing tag
-#: includes/hooks.php:533
+#: includes/hooks.php:539
 #, php-format
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media data was found on "
@@ -23537,7 +23788,9 @@ msgstr "Pouze karty se zůstatkem > 0."
 msgid ""
 "A gift card on this order no longer has enough balance. Please review your "
 "order and try again."
-msgstr "Dárková karta v této objednávce už nemá dostatečný zůstatek. Zkontroluj objednávku a zkus to znovu."
+msgstr ""
+"Dárková karta v této objednávce už nemá dostatečný zůstatek. Zkontroluj "
+"objednávku a zkus to znovu."
 
 #. translators: 1: gift card code, 2: amount the order used, 3: amount left on the card
 #: order-integration.php:214
@@ -23545,7 +23798,9 @@ msgstr "Dárková karta v této objednávce už nemá dostatečný zůstatek. Zk
 msgid ""
 "Gift card %1$s was used for %2$s on this order, but only %3$s was left on it "
 "when the order was paid. The difference was not collected."
-msgstr "Dárková karta %1$s byla v této objednávce použita na %2$s, ale v době zaplacení objednávky na ní zbývalo jen %3$s. Rozdíl nebyl vybrán."
+msgstr ""
+"Dárková karta %1$s byla v této objednávce použita na %2$s, ale v době "
+"zaplacení objednávky na ní zbývalo jen %3$s. Rozdíl nebyl vybrán."
 
 #. translators: 1: gift card code, 2: amount applied to the order, 3: remaining balance on the card
 #: order-integration.php:220
@@ -23559,7 +23814,9 @@ msgstr "Dárková karta %1$s uplatněna: %2$s použito, %3$s zbývá"
 msgid ""
 "Gift card %1$s was used for %2$s on this order, but only %3$s was left on it "
 "when the order was reopened. The difference was not collected."
-msgstr "Dárková karta %1$s byla v této objednávce použita na %2$s, ale v době znovuotevření objednávky na ní zbývalo jen %3$s. Rozdíl nebyl vybrán."
+msgstr ""
+"Dárková karta %1$s byla v této objednávce použita na %2$s, ale v době "
+"znovuotevření objednávky na ní zbývalo jen %3$s. Rozdíl nebyl vybrán."
 
 #. translators: 1: gift card code, 2: amount given back to the card, 3: new balance on the card
 #: order-integration.php:359
@@ -23579,7 +23836,9 @@ msgstr "Dárková karta %1$s: znovu strženo %2$s, zůstatek je nyní %3$s"
 msgid ""
 "Gift card %1$s bought on this order can no longer be used. %2$s had already "
 "been spent from it."
-msgstr "Dárkovou kartu %1$s zakoupenou v této objednávce už nelze použít. Bylo z ní už utraceno %2$s."
+msgstr ""
+"Dárkovou kartu %1$s zakoupenou v této objednávce už nelze použít. Bylo z ní "
+"už utraceno %2$s."
 
 #: product-integration.php:42
 msgid "Custom"
@@ -24376,10 +24635,6 @@ msgstr "Přidat do košíku"
 #, fuzzy
 #~ msgid "Test event sent."
 #~ msgstr "Test Secret Key"
-
-#, fuzzy
-#~ msgid "You are not allowed to manage webhooks."
-#~ msgstr "Omlouváme se, ale tento obrázek nemůžete zobrazit"
 
 #, fuzzy, php-format
 #~ msgid "You do not have permission to %1$s %2$s via the API."

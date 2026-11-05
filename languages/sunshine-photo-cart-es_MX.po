@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-10-21T20:25:22+00:00\n"
+"POT-Creation-Date: 2026-11-05T22:34:27+00:00\n"
 "PO-Revision-Date: 2026-02-27 15:49-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -76,19 +76,19 @@ msgstr ""
 "Sus licencias no pudieron ser activadas porque su servidor no pudo "
 "conectarse a SunshinePhotoCart.com: %s"
 
-#: includes/admin/addons.php:76 includes/admin/class-license.php:279
-#: includes/admin/class-license.php:446 class-paystack.php:196
+#: includes/admin/addons.php:76 includes/admin/class-license.php:282
+#: includes/admin/class-license.php:449 class-paystack.php:196
 msgid "Unknown error occured"
 msgstr "Se ha producido un error desconocido"
 
 #. translators: %1$s is the addon name, %2$s is the error message
 #. translators: %1$s is the product name, %2$s is the error message
-#: includes/admin/addons.php:80 includes/admin/class-license.php:284
+#: includes/admin/addons.php:80 includes/admin/class-license.php:287
 #, php-format
 msgid "License for %1$s failed to be activated: %2$s"
 msgstr "No se ha podido activar la licencia para %1$s: %2$s"
 
-#: includes/admin/addons.php:132 includes/admin/class-license.php:344
+#: includes/admin/addons.php:132 includes/admin/class-license.php:347
 msgid "An error occurred, please try again."
 msgstr "Ha ocurrido un error. Por favor intente de nuevo."
 
@@ -106,7 +106,9 @@ msgstr "Tu sesión expiró. Recarga esta página y vuelve a intentarlo."
 msgid ""
 "You do not have permission to install plugins on this site. Ask an "
 "administrator to install this add-on."
-msgstr "No tienes permiso para instalar plugins en este sitio. Pide a un administrador que instale este complemento."
+msgstr ""
+"No tienes permiso para instalar plugins en este sitio. Pide a un "
+"administrador que instale este complemento."
 
 #: includes/admin/addons.php:382
 msgid ""
@@ -130,6 +132,59 @@ msgstr ""
 #: includes/admin/addons.php:408
 msgid "This add-on could not be installed."
 msgstr "No se pudo instalar este complemento."
+
+#. translators: 1: add-on name, 2: why the update was refused
+#: includes/admin/class-addon-update-verify.php:100
+#, php-format
+msgid ""
+"%1$s refused this update because it could not confirm it came from Sunshine "
+"Photo Cart: %2$s Your current version was left in place."
+msgstr "%1$s rechazó esta actualización porque no pudo confirmar que venga de Sunshine Photo Cart: %2$s Tu versión actual se mantuvo."
+
+#: includes/admin/class-addon-update-verify.php:155
+msgid "the update has no signature."
+msgstr "la actualización no tiene firma."
+
+#: includes/admin/class-addon-update-verify.php:160
+msgid "the signature file is damaged."
+msgstr "el archivo de firma está dañado."
+
+#: includes/admin/class-addon-update-verify.php:164
+msgid "the signature does not match."
+msgstr "la firma no coincide."
+
+#: includes/admin/class-addon-update-verify.php:169
+msgid "the signed file list is damaged."
+msgstr "la lista de archivos firmada está dañada."
+
+#: includes/admin/class-addon-update-verify.php:173
+msgid "the signature is for a different plugin."
+msgstr "la firma es de otro plugin."
+
+#. translators: 1: signed version, 2: installed version
+#: includes/admin/class-addon-update-verify.php:179
+#, php-format
+msgid ""
+"the signed version (%1$s) is not newer than the installed version (%2$s)."
+msgstr "la versión firmada (%1$s) no es más reciente que la versión instalada (%2$s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:191
+#, php-format
+msgid "the update has a file that was not signed (%s)."
+msgstr "la actualización tiene un archivo que no se firmó (%s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:195
+#, php-format
+msgid "a file was changed after it was signed (%s)."
+msgstr "se cambió un archivo después de firmarlo (%s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:202
+#, php-format
+msgid "a signed file is missing (%s)."
+msgstr "falta un archivo firmado (%s)."
 
 #. translators: the plugin name.
 #: includes/admin/class-addon-update.php:257
@@ -279,7 +334,7 @@ msgstr "Edítalo en la pantalla completa."
 msgid "Write a Review"
 msgstr "Escribe una opinión"
 
-#: includes/admin/class-admin.php:264 includes/admin/class-admin.php:1035
+#: includes/admin/class-admin.php:264 includes/admin/class-admin.php:1037
 msgid "Upgrade"
 msgstr "Actulizar"
 
@@ -344,11 +399,11 @@ msgstr ""
 "a>! Por favor, <a href=\"%2$s\" target=\"_blank\">califíquenos</a> en <a "
 "href=\"%2$s\" target=\"_blank\">WordPress.org</a>"
 
-#: includes/admin/class-admin.php:538
+#: includes/admin/class-admin.php:540
 msgid "View Sunshine Galleries"
 msgstr "Ver las galerías Sunshine"
 
-#: includes/admin/class-admin.php:570
+#: includes/admin/class-admin.php:572
 msgid ""
 "The slug for core order statuses is not editable as it could break Sunshine "
 "functionality"
@@ -356,24 +411,24 @@ msgstr ""
 "El slug para los estados de los pedidos principales no es editable, ya que "
 "podría romper la funcionalidad de Sunshine"
 
-#: includes/admin/class-admin.php:584
+#: includes/admin/class-admin.php:586
 msgid "Order Updated"
 msgstr "Cotización actualizado"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:586
+#: includes/admin/class-admin.php:588
 #, php-format
 msgid "<strong>Gallery updated</strong>, <a href=\"%s\">view gallery</a>"
 msgstr "Galería <strong>actualizada</strong>, <a href=\"%s\">ver galería</a>"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:588
+#: includes/admin/class-admin.php:590
 #, php-format
 msgid "<strong>Gallery created</strong>, <a href=\"%s\">view gallery</a>"
 msgstr "<strong>Galería creada</strong>, <a href=\"%s\">ver galería</a>"
 
 #. translators: %s is the URL to settings page
-#: includes/admin/class-admin.php:595
+#: includes/admin/class-admin.php:597
 #, php-format
 msgid ""
 "Sunshine logging is enabled. <a href=\"%s\">Please disable when no longer in "
@@ -383,7 +438,7 @@ msgstr ""
 "lo utilice.</a>"
 
 #. translators: %s is the URL to the Galleries settings page
-#: includes/admin/class-admin.php:624
+#: includes/admin/class-admin.php:626
 #, php-format
 msgid ""
 "Your watermark image file could not be found on this server, so new images "
@@ -395,7 +450,7 @@ msgstr ""
 "nuevo la imagen de marca de agua</a>."
 
 #. translators: 1: number of images waiting, 2: URL to the Site Health info page
-#: includes/admin/class-admin.php:691
+#: includes/admin/class-admin.php:693
 #, php-format
 msgid ""
 "%1$d image is waiting to be processed, but WordPress could not save the "
@@ -413,7 +468,7 @@ msgstr[1] ""
 "la salud del sitio</a>."
 
 #. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
-#: includes/admin/class-admin.php:708
+#: includes/admin/class-admin.php:710
 #, php-format
 msgid ""
 "%1$d image is waiting to be processed, but WordPress cron has not run for "
@@ -434,7 +489,7 @@ msgstr[1] ""
 "a> o mira <a href=\"%4$s\" target=\"_blank\">cómo configurar un cron de "
 "servidor confiable</a>."
 
-#: includes/admin/class-admin.php:721
+#: includes/admin/class-admin.php:723
 msgid ""
 "This site has WP-Cron turned off, so a server cron job has to call wp-"
 "cron.php for anything to run."
@@ -443,7 +498,7 @@ msgstr ""
 "llamar a wp-cron.php para que algo se ejecute."
 
 #. translators: %s is the URL to installation page
-#: includes/admin/class-admin.php:730
+#: includes/admin/class-admin.php:732
 #, php-format
 msgid ""
 "Sunshine installation process was skipped. <a href=\"%s\">Please complete "
@@ -453,79 +508,79 @@ msgstr ""
 "favor, complete el proceso de instalación.</a>"
 
 #. translators: %1$d is the number of orders, %2$s is the number of orders in plural
-#: includes/admin/class-admin.php:1013
+#: includes/admin/class-admin.php:1015
 #, php-format
 msgid "%s order"
 msgid_plural "%s orders"
 msgstr[0] "%s pedido"
 msgstr[1] "%s pedidos"
 
-#: includes/admin/class-admin.php:1021 includes/admin/customers.php:13
+#: includes/admin/class-admin.php:1023 includes/admin/customers.php:13
 #: includes/admin/customers.php:34 includes/admin/reports.php:20 reports.php:7
 msgid "Customers"
 msgstr "Clientes"
 
-#: includes/admin/class-admin.php:1022 includes/admin/reports.php:90
+#: includes/admin/class-admin.php:1024 includes/admin/reports.php:90
 msgid "Reports"
 msgstr "Reportes"
 
-#: includes/admin/class-admin.php:1023 includes/admin/tools.php:36
+#: includes/admin/class-admin.php:1025 includes/admin/tools.php:36
 #: includes/admin/tools.php:42
 msgid "Tools"
 msgstr "Herramientas"
 
-#: includes/admin/class-admin.php:1024
+#: includes/admin/class-admin.php:1026
 msgid "Add-ons"
 msgstr "Complementos"
 
-#: includes/admin/class-admin.php:1027
+#: includes/admin/class-admin.php:1029
 msgid "Setup Guide"
 msgstr "Guía de configuración"
 
-#: includes/admin/class-admin.php:1032
+#: includes/admin/class-admin.php:1034
 msgid "Get Help"
 msgstr "Obtener Ayuda"
 
-#: includes/admin/class-admin.php:1063
+#: includes/admin/class-admin.php:1065
 msgid "Keywords"
 msgstr "Palabras Clave"
 
-#: includes/admin/class-admin.php:1075
+#: includes/admin/class-admin.php:1077
 msgid "Use gallery price level"
 msgstr "Utilizar el nivel de precios de la galería"
 
-#: includes/admin/class-admin.php:1083 includes/admin/sunshine-gallery.php:218
-#: includes/class-sunshinephotocart.php:505
-#: includes/class-sunshinephotocart.php:518 class-export-galleries.php:22
+#: includes/admin/class-admin.php:1085 includes/admin/sunshine-gallery.php:218
+#: includes/class-sunshinephotocart.php:507
+#: includes/class-sunshinephotocart.php:520 class-export-galleries.php:22
 msgid "Price Level"
 msgstr "Nivel de precios"
 
-#: includes/admin/class-admin.php:1094
+#: includes/admin/class-admin.php:1096
 msgid "Disable Purchasing"
 msgstr "Desactivar Compras"
 
-#: includes/admin/class-admin.php:1100 includes/admin/settings-fields.php:702
+#: includes/admin/class-admin.php:1102 includes/admin/settings-fields.php:714
 #: admin/products.php:45
 msgid "Watermark"
 msgstr "Watermark"
 
-#: includes/admin/class-admin.php:1145
+#: includes/admin/class-admin.php:1147
 msgid "Metadata"
 msgstr "Metadatos"
 
-#: includes/admin/class-admin.php:1232
+#: includes/admin/class-admin.php:1234
 msgid "Log file has been cleared"
 msgstr "Se ha borrado el archivo de registro"
 
-#: includes/admin/class-admin.php:1288
+#: includes/admin/class-admin.php:1290
 msgid "Error log file has been cleared"
 msgstr "Se ha borrado el archivo de registro de errores."
 
-#: includes/admin/class-admin.php:1294 includes/admin/class-admin.php:1302
+#: includes/admin/class-admin.php:1296 includes/admin/class-admin.php:1304
 msgid "You do not have permission to access this file."
 msgstr "No tienes permiso para acceder a este archivo."
 
-#: includes/admin/class-admin.php:1310
+#: includes/admin/class-admin.php:1312
 msgid "Log file not found."
 msgstr "No se encontró el archivo de registro."
 
@@ -540,8 +595,8 @@ msgid "Name"
 msgstr "Nombre"
 
 #: includes/admin/class-customers-table.php:43
-#: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1720 includes/functions/account.php:595
+#: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1444
+#: includes/class-cart.php:1721 includes/functions/account.php:595
 #: includes/payment-methods/paypal-legacy.php:50
 #: includes/payment-methods/paypal-legacy.php:63
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
@@ -551,7 +606,7 @@ msgid "Email"
 msgstr "Email"
 
 #: includes/admin/class-customers-table.php:44 includes/admin/customers.php:187
-#: includes/admin/install.php:307 includes/admin/settings-fields.php:245
+#: includes/admin/install.php:309 includes/admin/settings-fields.php:245
 #: includes/admin/sunshine-gallery.php:170 includes/class-frontend.php:956
 #: templates/multi-image-select/select-images.php:37
 msgid "Favorites"
@@ -559,9 +614,9 @@ msgstr "Favoritos"
 
 #: includes/admin/class-customers-table.php:45 includes/admin/customers.php:137
 #: includes/admin/reports.php:16 includes/admin/settings-fields.php:297
-#: includes/admin/settings-fields.php:946
-#: includes/class-sunshinephotocart.php:538
-#: includes/class-sunshinephotocart.php:550 includes/functions/account.php:429
+#: includes/admin/settings-fields.php:958
+#: includes/class-sunshinephotocart.php:540
+#: includes/class-sunshinephotocart.php:552 includes/functions/account.php:429
 #: templates/email/summary.php:30 class-reports-customers-table.php:35
 #: class-reports-galleries-table.php:37 class-reports-products-table.php:35
 #: gallery.php:271 gallery.php:298 templates/account/downloads.php:19
@@ -594,25 +649,25 @@ msgid "Dismiss this notice."
 msgstr "Descartar este aviso."
 
 #. translators: the license key expiration date
-#: includes/admin/class-license.php:96
+#: includes/admin/class-license.php:99
 #, php-format
 msgid "Your license key expired on %s."
 msgstr "Su clave de licencia expiró el %s."
 
-#: includes/admin/class-license.php:103
+#: includes/admin/class-license.php:106
 msgid "Your license key has been disabled"
 msgstr "Su clave de licencia ha sido desactivada"
 
-#: includes/admin/class-license.php:107
+#: includes/admin/class-license.php:110
 msgid "Invalid license"
 msgstr "Licencia no válida"
 
-#: includes/admin/class-license.php:111
+#: includes/admin/class-license.php:114
 msgid "Invalid license key"
 msgstr "Clave de licencia no válida"
 
 #. translators: %1$s is the previous site URL, %2$s is the current site URL, %3$s is the URL to the sunshinephotocart.com account licenses page
-#: includes/admin/class-license.php:122
+#: includes/admin/class-license.php:125
 #, php-format
 msgid ""
 "Your license was activated on %1$s but this site is now %2$s. To use the "
@@ -627,7 +682,7 @@ msgstr ""
 "nuevamente."
 
 #. translators: %s is the URL to the sunshinephotocart.com account licenses page
-#: includes/admin/class-license.php:130
+#: includes/admin/class-license.php:133
 #, php-format
 msgid ""
 "This license appears to be activated on a different site. <a href=\"%s\" "
@@ -640,22 +695,22 @@ msgstr ""
 "Sites</strong> junto a esta licencia, desactiva la URL anterior y regresa "
 "aquí para hacer clic en Activar nuevamente."
 
-#: includes/admin/class-license.php:137
+#: includes/admin/class-license.php:140
 msgid "This appears to be an invalid license key"
 msgstr "Esto parece ser una clave de licencia no válida"
 
-#: includes/admin/class-license.php:142
+#: includes/admin/class-license.php:145
 msgid "You have a special lifetime license that never expires!"
 msgstr "Tienes una licencia especial de por vida que nunca caduca"
 
 #. translators: the license key expiration date
-#: includes/admin/class-license.php:146
+#: includes/admin/class-license.php:149
 #, php-format
 msgid "Expires on %s"
 msgstr "Expira el %s"
 
 #. translators: %1$s is the product name, %2$s is the URL to the licenses page
-#: includes/admin/class-license.php:243
+#: includes/admin/class-license.php:246
 #, php-format
 msgid ""
 "You do not have an active license for %1$s, please enter and activate your "
@@ -665,19 +720,19 @@ msgstr ""
 "su licencia actual en la <a href=\"%2$s\">página de Licencias</a>"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:303
+#: includes/admin/class-license.php:306
 #, php-format
 msgid "License for %s has been activated"
 msgstr "Se ha activado la licencia para %s"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:365
+#: includes/admin/class-license.php:368
 #, php-format
 msgid "License for %s has been deactivated"
 msgstr "La licencia para %s ha sido desactivada"
 
 #. translators: %1$s is the product name, %2$s is the URL to support
-#: includes/admin/class-license.php:368
+#: includes/admin/class-license.php:371
 #, php-format
 msgid ""
 "License for %1$s could not be deactivated, please <a href=\"%2$s\" "
@@ -687,7 +742,7 @@ msgstr ""
 "target=\"_blank\">Póngase en contacto con el servicio de asistencia</a>"
 
 #. translators: %1$s is the URL to licenses page, %2$s is the URL to account on SunshinePhotoCart.com
-#: includes/admin/class-license.php:382
+#: includes/admin/class-license.php:385
 #, php-format
 msgid ""
 "To enable updates, please enter your license key on the <a "
@@ -700,13 +755,13 @@ msgstr ""
 "a>."
 
 #. translators: %1$s is the product name, %2$s is the error message
-#: includes/admin/class-license.php:452
+#: includes/admin/class-license.php:455
 #, php-format
 msgid "License for %1$s failed to be updated: %2$s"
 msgstr "No se ha podido actualizar la licencia de %1$s: %2$s"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:460
+#: includes/admin/class-license.php:463
 #, php-format
 msgid "License for %s has been updated"
 msgstr "Se ha actualizado la licencia de %s"
@@ -779,15 +834,15 @@ msgstr ""
 "configuración de privacidad."
 
 #: includes/admin/class-privacy.php:190 includes/admin/class-privacy.php:257
-#: includes/admin/settings-fields.php:976
-#: includes/admin/settings-fields.php:986 includes/class-cart.php:1747
+#: includes/admin/settings-fields.php:988
+#: includes/admin/settings-fields.php:998 includes/class-cart.php:1748
 #: templates/invoice/admin.php:165 templates/order/details.php:13
 #: class-export-orders.php:525
 msgid "Phone"
 msgstr "Teléfono"
 
-#: includes/admin/class-privacy.php:191 includes/admin/settings-fields.php:978
-#: includes/admin/settings-fields.php:988
+#: includes/admin/class-privacy.php:191 includes/admin/settings-fields.php:990
+#: includes/admin/settings-fields.php:1000
 msgid "VAT Number"
 msgstr "Registro Fiscal"
 
@@ -874,7 +929,7 @@ msgid "Billing Name"
 msgstr "Nombre de facturación"
 
 #: includes/admin/class-privacy.php:259 includes/admin/customers.php:106
-#: includes/class-cart.php:2033 templates/invoice/admin.php:195
+#: includes/class-cart.php:2034 templates/invoice/admin.php:195
 msgid "Billing Address"
 msgstr "Dirección de Facturación"
 
@@ -883,7 +938,7 @@ msgid "Shipping Name"
 msgstr "Nombre para envío"
 
 #: includes/admin/class-privacy.php:268 includes/admin/customers.php:99
-#: includes/class-cart.php:1887 includes/template-hooks.php:460
+#: includes/class-cart.php:1888 includes/template-hooks.php:460
 #: templates/invoice/admin.php:192
 msgid "Shipping Address"
 msgstr "Dirección de Envío"
@@ -916,7 +971,7 @@ msgid "Personal data removed."
 msgstr "Datos personales eliminados."
 
 #: includes/admin/class-tool.php:152 includes/admin/gallery-navigator.php:79
-#: gallery.php:27 frontend.php:1163
+#: gallery.php:27 frontend.php:1169
 msgid "Security check failed"
 msgstr "El chequeo de seguridad ha fallado"
 
@@ -949,7 +1004,7 @@ msgstr "Nave"
 msgid "Insufficient permissions."
 msgstr "Permisos insuficientes."
 
-#: includes/admin/class-update.php:633 includes/admin/install.php:294
+#: includes/admin/class-update.php:633 includes/admin/install.php:296
 #: includes/admin/settings-fields.php:250
 msgid "Terms & Conditions"
 msgstr "Términos y condiciones"
@@ -1068,7 +1123,7 @@ msgid "Permission denied"
 msgstr "Permiso denegado"
 
 #: includes/admin/gallery-navigator.php:116
-#: includes/class-sunshinephotocart.php:386
+#: includes/class-sunshinephotocart.php:388
 msgid "No galleries found."
 msgstr "No se han encontrado galerías."
 
@@ -1080,13 +1135,13 @@ msgstr "Arrastre para reordenar"
 #: includes/admin/gallery-navigator.php:159
 #: includes/admin/gallery-navigator.php:323
 #: includes/admin/sunshine-gallery.php:55
-#: includes/admin/sunshine-gallery.php:2011
+#: includes/admin/sunshine-gallery.php:2033
 msgid "Password Protected"
 msgstr "Protegido con contraseña"
 
 #: includes/admin/gallery-navigator.php:161
 #: includes/admin/gallery-navigator.php:325
-#: includes/admin/sunshine-gallery.php:2013
+#: includes/admin/sunshine-gallery.php:2035
 msgid "Private"
 msgstr "Privado"
 
@@ -1103,7 +1158,7 @@ msgstr "Expirado"
 
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:340
-#: includes/admin/sunshine-gallery.php:1608
+#: includes/admin/sunshine-gallery.php:1627
 #: includes/class-cloud-storage-import.php:994
 msgid "images"
 msgstr "imágenes"
@@ -1117,7 +1172,7 @@ msgstr[1] "subgalerías"
 
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
-#: includes/admin/gallery-navigator.php:348 includes/class-cart.php:2177
+#: includes/admin/gallery-navigator.php:348 includes/class-cart.php:2178
 msgid "Edit"
 msgstr "Editar"
 
@@ -1145,114 +1200,114 @@ msgstr[1] "%1$d galerías encontradas para «%2$s»"
 msgid "You do not have permission to perform this action."
 msgstr "No tiene permiso para realizar esta acción."
 
-#: includes/admin/install.php:243
+#: includes/admin/install.php:245
 msgid "Client Galleries"
 msgstr "Galerías de clientes"
 
-#: includes/admin/install.php:255 includes/admin/settings-fields.php:240
+#: includes/admin/install.php:257 includes/admin/settings-fields.php:240
 msgid "Account"
 msgstr "Cuenta"
 
-#: includes/admin/install.php:268 includes/admin/settings-fields.php:230
+#: includes/admin/install.php:270 includes/admin/settings-fields.php:230
 #: templates/cart/mini-cart.php:6
 msgid "Cart"
 msgstr "Carrito"
 
-#: includes/admin/install.php:281 includes/admin/settings-fields.php:235
-#: includes/admin/settings-fields.php:1003
+#: includes/admin/install.php:283 includes/admin/settings-fields.php:235
+#: includes/admin/settings-fields.php:1015
 #: includes/payment-methods/paypal.php:179
 msgid "Checkout"
 msgstr "Pagar"
 
-#: includes/admin/install.php:322 includes/admin/sunshine-gallery.php:54
+#: includes/admin/install.php:324 includes/admin/sunshine-gallery.php:54
 #: includes/admin/sunshine-gallery.php:114
 msgid "Default"
 msgstr "Por defecto"
 
-#: includes/admin/install.php:331
+#: includes/admin/install.php:333
 msgid "Prints"
 msgstr "Imprime"
 
-#: includes/admin/install.php:403
+#: includes/admin/install.php:405
 msgid "Pending Payment"
 msgstr "Pago Pendiente"
 
-#: includes/admin/install.php:407
+#: includes/admin/install.php:409
 msgid "We have received your order but payment is still pending"
 msgstr "Hemos recibido su pedido pero el pago sigue pendiente"
 
-#: includes/admin/install.php:416 hooks.php:599
+#: includes/admin/install.php:418 hooks.php:599
 msgid "New"
 msgstr "Nuevo"
 
-#: includes/admin/install.php:420
+#: includes/admin/install.php:422
 msgid "We have received your order and payment"
 msgstr "Hemos recibido su pedido y el pago"
 
-#: includes/admin/install.php:429 includes/admin/sunshine-gallery.php:1031
+#: includes/admin/install.php:431 includes/admin/sunshine-gallery.php:1050
 msgid "Processing"
 msgstr "Procesando"
 
-#: includes/admin/install.php:433
+#: includes/admin/install.php:435
 msgid "The images in your order are being processed and/or printed"
 msgstr "Las imágenes de su pedido se están procesando y/o imprimiendo"
 
-#: includes/admin/install.php:442
+#: includes/admin/install.php:444
 msgid "Shipped/Completed"
 msgstr "Enviado/Completado"
 
-#: includes/admin/install.php:446
+#: includes/admin/install.php:448
 msgid "Your items have shipped (or are available for download)!"
 msgstr "Tus artículos han sido enviados (o están disponibles para su descarga)"
 
-#: includes/admin/install.php:455
+#: includes/admin/install.php:457
 msgid "Cancelled"
 msgstr "Cancelado"
 
-#: includes/admin/install.php:459
+#: includes/admin/install.php:461
 msgid "Your order was cancelled"
 msgstr "Su pedido ha sido cancelado"
 
-#: includes/admin/install.php:468
+#: includes/admin/install.php:470
 msgid "Refunded"
 msgstr "Dinero devuelto"
 
-#: includes/admin/install.php:472
+#: includes/admin/install.php:474
 msgid "Your order was refunded"
 msgstr "Su pedido ha sido reembolsado"
 
-#: includes/admin/install.php:481
+#: includes/admin/install.php:483
 msgid "Ready for pickup"
 msgstr "Listo para ser recogido"
 
-#: includes/admin/install.php:485
+#: includes/admin/install.php:487
 msgid "Your order is ready to be picked up"
 msgstr "Su pedido está listo para ser recogido"
 
-#: includes/admin/install.php:494
+#: includes/admin/install.php:496
 msgid "Failed"
 msgstr "Falló"
 
-#: includes/admin/install.php:498 includes/functions/checkout.php:1069
+#: includes/admin/install.php:500 includes/functions/checkout.php:1069
 msgid "Payment failed"
 msgstr "Pago falló"
 
-#: includes/admin/install.php:689
+#: includes/admin/install.php:691
 msgid "Could not activate license key"
 msgstr "No se ha podido activar la clave de licencia"
 
-#: includes/admin/install.php:720
+#: includes/admin/install.php:722
 msgid "Could not subscribe to email list"
 msgstr "No se ha podido suscribir a la lista de correo electrónico"
 
 #. translators: %s is the plugin version number
-#: includes/admin/install.php:730
+#: includes/admin/install.php:732
 #, php-format
 msgid "Welcome to Sunshine Photo Cart %s"
 msgstr "Bienvenido a Sunshine Photo Cart %s"
 
 #. translators: %1$s is the plugin version number
-#: includes/admin/install.php:734
+#: includes/admin/install.php:736
 #, php-format
 msgid ""
 "<strong>Thank you for updating to the latest version!</strong> Sunshine %1$s "
@@ -1263,11 +1318,11 @@ msgstr ""
 "es el plugin más completo de pruebas de clientes y carrito de fotos para "
 "WordPress. ¡Esperamos que disfrute de un mayor éxito de ventas!"
 
-#: includes/admin/install.php:754 templates/admin/updates/update.php:35
+#: includes/admin/install.php:756 templates/admin/updates/update.php:35
 msgid "Recent Improvements"
 msgstr "Mejoras recientes"
 
-#: includes/admin/install.php:756 templates/admin/updates/update.php:37
+#: includes/admin/install.php:758 templates/admin/updates/update.php:37
 msgid "See the full Changelog"
 msgstr "Ver todos los cambios"
 
@@ -1383,15 +1438,15 @@ msgstr "Almacenamiento en la nube"
 
 #: includes/admin/reports.php:17 includes/admin/sunshine-gallery.php:196
 #: includes/admin/sunshine-product-category.php:169
-#: includes/class-sunshinephotocart.php:426
-#: includes/class-sunshinephotocart.php:438 hooks.php:43 reports.php:4
+#: includes/class-sunshinephotocart.php:428
+#: includes/class-sunshinephotocart.php:440 hooks.php:43 reports.php:4
 #: price-levels.php:48 admin/products.php:54
 msgid "Products"
 msgstr "Productos"
 
 #: includes/admin/reports.php:18 includes/admin/settings-fields.php:321
-#: includes/admin/settings-fields.php:804 includes/admin/sunshine-order.php:440
-#: includes/class-sunshinephotocart.php:374 includes/functions/account.php:434
+#: includes/admin/settings-fields.php:816 includes/admin/sunshine-order.php:440
+#: includes/class-sunshinephotocart.php:376 includes/functions/account.php:434
 #: reports.php:5 class-admin-automated-emails.php:64 hooks.php:677
 #: templates/account/downloads.php:30 class-export-galleries.php:10
 #: class-export-orders.php:552
@@ -1671,8 +1726,8 @@ msgid "URLs"
 msgstr "URLs"
 
 #: includes/admin/settings-fields.php:261
-#: includes/class-sunshinephotocart.php:375
 #: includes/class-sunshinephotocart.php:377
+#: includes/class-sunshinephotocart.php:379
 #: class-reports-galleries-table.php:36 gallery.php:277
 #: class-export-orders.php:631 messaging.php:148
 msgid "Gallery"
@@ -1762,10 +1817,41 @@ msgstr ""
 "se utilizó para crear la galería"
 
 #: includes/admin/settings-fields.php:392
+msgid "Check folders for new photos"
+msgstr "Revisar si hay fotos nuevas en las carpetas"
+
+#: includes/admin/settings-fields.php:396
+msgid "Off"
+msgstr "Desactivado"
+
+#: includes/admin/settings-fields.php:397
+msgid "Every hour"
+msgstr "Cada hora"
+
+#: includes/admin/settings-fields.php:398
+msgid "Twice a day"
+msgstr "Dos veces al día"
+
+#: includes/admin/settings-fields.php:399
+msgid "Once a day"
+msgstr "Una vez al día"
+
+#: includes/admin/settings-fields.php:401
+msgid ""
+"Galleries made from an FTP or cloud folder get any photos added to that "
+"folder later. Photos are only ever added: one removed from the folder stays "
+"in the gallery, and one you delete from the gallery is not brought back. "
+"Galleries that existed before you turn this on only get photos added to "
+"their folder after that. Each check of a cloud folder reads the list of "
+"files in your bucket, so checking every hour means more requests to your "
+"storage service."
+msgstr "Las galerías creadas desde una carpeta FTP o en la nube reciben las fotos que se agreguen después a esa carpeta. Las fotos solo se agregan: una foto que quites de la carpeta se queda en la galería, y una que borres de la galería no regresa. Las galerías que ya existían antes de activar esto solo reciben las fotos agregadas a su carpeta a partir de entonces. Cada revisión de una carpeta en la nube lee la lista de archivos de tu bucket, así que revisar cada hora significa más solicitudes a tu servicio de almacenamiento."
+
+#: includes/admin/settings-fields.php:404
 msgid "Show images in Media Library"
 msgstr "Mostrar imágenes en la mediateca"
 
-#: includes/admin/settings-fields.php:395
+#: includes/admin/settings-fields.php:407
 msgid ""
 "By default Sunshine hides images uploaded to Sunshine galleries in the Media "
 "Library, enabling this option will show them instead. Use at your own risk."
@@ -1774,11 +1860,11 @@ msgstr ""
 "la Biblioteca Multimedia, habilitando esta opción se mostrarán en su lugar. "
 "Utilícela bajo su propia responsabilidad."
 
-#: includes/admin/settings-fields.php:398
+#: includes/admin/settings-fields.php:410
 msgid "Delay image processing"
 msgstr "Retraso en el procesamiento de imágenes"
 
-#: includes/admin/settings-fields.php:401
+#: includes/admin/settings-fields.php:413
 msgid ""
 "When enabled, intermediate image sizes (thumbnails and large) and watermarks "
 "will be generated in the background after upload, allowing faster initial "
@@ -1791,15 +1877,15 @@ msgstr ""
 "imágenes no estén disponibles inmediatamente en todos los tamaños hasta que "
 "se complete el procesamiento."
 
-#: includes/admin/settings-fields.php:416
+#: includes/admin/settings-fields.php:428
 msgid "Features"
 msgstr "Características"
 
-#: includes/admin/settings-fields.php:420
+#: includes/admin/settings-fields.php:432
 msgid "Image Theft Prevention"
 msgstr "Prevención del robo de imágenes"
 
-#: includes/admin/settings-fields.php:423
+#: includes/admin/settings-fields.php:435
 msgid ""
 "Enabling this option will disable the right click menu and also not allow "
 "images to be dragged/dropped to the desktop. NOT a 100% effective method, "
@@ -1810,11 +1896,11 @@ msgstr ""
 "efectivo, pero debería detener a la mayoría de la gente. NO se utiliza para "
 "usuarios administradores."
 
-#: includes/admin/settings-fields.php:428
+#: includes/admin/settings-fields.php:440
 msgid "Proofing Only"
 msgstr "Sólo pruebas"
 
-#: includes/admin/settings-fields.php:431
+#: includes/admin/settings-fields.php:443
 msgid ""
 "This will remove all aspects of purchasing abilities throughout the site, "
 "leaving just image viewing and adding to favorites"
@@ -1822,21 +1908,21 @@ msgstr ""
 "Esto eliminará todos los aspectos de la capacidad de compra en todo el "
 "sitio, dejando sólo la visualización de imágenes y añadir a favoritos"
 
-#: includes/admin/settings-fields.php:436
+#: includes/admin/settings-fields.php:448
 msgid "Allow product comments"
 msgstr "Permitir comentarios sobre los productos"
 
-#: includes/admin/settings-fields.php:439
+#: includes/admin/settings-fields.php:451
 msgid "Allow users to enter comments when adding an item to cart"
 msgstr ""
 "Permitir a los usuarios introducir comentarios al añadir un artículo al "
 "carrito"
 
-#: includes/admin/settings-fields.php:443
+#: includes/admin/settings-fields.php:455
 msgid "Allow Store"
 msgstr "Permitir tienda"
 
-#: includes/admin/settings-fields.php:446
+#: includes/admin/settings-fields.php:458
 msgid ""
 "Galleries come with a Store where products are shown first and customers add "
 "images to cart."
@@ -1844,38 +1930,38 @@ msgstr ""
 "Las galerías incluyen una tienda donde se muestran primero los productos y "
 "los clientes añaden imágenes al carrito."
 
-#: includes/admin/settings-fields.php:451
+#: includes/admin/settings-fields.php:463
 msgid "Allow Gallery Sharing"
 msgstr "Permitir compartir galería"
 
-#: includes/admin/settings-fields.php:454
+#: includes/admin/settings-fields.php:466
 msgid "Allow users to share galleries"
 msgstr "Permitir a los usuarios compartir galerías"
 
-#: includes/admin/settings-fields.php:457
+#: includes/admin/settings-fields.php:469
 msgid "Allow Image Sharing"
 msgstr "Permitir compartir imágenes"
 
-#: includes/admin/settings-fields.php:460
+#: includes/admin/settings-fields.php:472
 msgid "Allow users to share images within a gallery and favorites"
 msgstr ""
 "Permitir a los usuarios compartir imágenes dentro de una galería y favoritos."
 
-#: includes/admin/settings-fields.php:463
+#: includes/admin/settings-fields.php:475
 msgid "Use Secure File Names"
 msgstr "Utilice nombres de archivo seguros"
 
-#: includes/admin/settings-fields.php:466
+#: includes/admin/settings-fields.php:478
 msgid "Add random strings to image file names for added security"
 msgstr ""
 "Agregue cadenas aleatorias a los nombres de los archivos de imagen para "
 "mayor seguridad."
 
-#: includes/admin/settings-fields.php:470
+#: includes/admin/settings-fields.php:482
 msgid "Enable Open Graph"
 msgstr "Habilitar open graph"
 
-#: includes/admin/settings-fields.php:473
+#: includes/admin/settings-fields.php:485
 msgid ""
 "Add Open Graph meta tags to the site for galleries and image pages (your SEO "
 "plugin may already be doing this)"
@@ -1883,11 +1969,11 @@ msgstr ""
 "Añada metaetiquetas Open Graph al sitio para galerías y páginas de imágenes "
 "(es posible que su plugin SEO ya lo esté haciendo)"
 
-#: includes/admin/settings-fields.php:476
+#: includes/admin/settings-fields.php:488
 msgid "Hide galleries from search engines"
 msgstr "Ocultar galerías de los motores de búsqueda"
 
-#: includes/admin/settings-fields.php:479
+#: includes/admin/settings-fields.php:491
 msgid ""
 "Enabling this option will attempt to block search engine bots from crawling "
 "and indexing galleries and images"
@@ -1895,67 +1981,67 @@ msgstr ""
 "Al activar esta opción, se intentará bloquear el rastreo y la indexación de "
 "galerías e imágenes por parte de los robots de los motores de búsqueda"
 
-#: includes/admin/settings-fields.php:484
+#: includes/admin/settings-fields.php:496
 msgid "Display Options"
 msgstr "Opciones de pantalla"
 
-#: includes/admin/settings-fields.php:488
+#: includes/admin/settings-fields.php:500
 msgid "Gallery Order"
 msgstr "Galería de pedidos"
 
-#: includes/admin/settings-fields.php:493
-#: includes/admin/settings-fields.php:504
+#: includes/admin/settings-fields.php:505
+#: includes/admin/settings-fields.php:516
 msgid "Custom ordering"
 msgstr "Ordenado personalizado"
 
-#: includes/admin/settings-fields.php:494
+#: includes/admin/settings-fields.php:506
 msgid "Gallery Creation Date (New to Old)"
 msgstr "Fecha de creación de la galería (de nueva a antigua)"
 
-#: includes/admin/settings-fields.php:495
+#: includes/admin/settings-fields.php:507
 msgid "Gallery Creation Date (Old to New)"
 msgstr "Fecha de creación de la galería (de antigua a nueva)"
 
-#: includes/admin/settings-fields.php:496
-#: includes/admin/settings-fields.php:509
+#: includes/admin/settings-fields.php:508
+#: includes/admin/settings-fields.php:521
 msgid "Alphabetical"
 msgstr "Alfabéticamente"
 
-#: includes/admin/settings-fields.php:500
+#: includes/admin/settings-fields.php:512
 msgid "Image Order"
 msgstr "Pedido de imágenes"
 
-#: includes/admin/settings-fields.php:505
+#: includes/admin/settings-fields.php:517
 msgid "Order images shot (New to Old)"
 msgstr "Ordenar toma de imágenes (De nuevo a antiguo)"
 
-#: includes/admin/settings-fields.php:506
+#: includes/admin/settings-fields.php:518
 msgid "Order images shot (Old to New)"
 msgstr "Ordenar toma de imágenes (de antiguo a nuevo)"
 
-#: includes/admin/settings-fields.php:507
+#: includes/admin/settings-fields.php:519
 msgid "Image Upload Date (New to Old)"
 msgstr "Fecha de carga de la imagen (nueva a antigua)"
 
-#: includes/admin/settings-fields.php:508
+#: includes/admin/settings-fields.php:520
 msgid "Image Upload Date (Old to New)"
 msgstr "Fecha de carga de la imagen (antigua a nueva)"
 
-#: includes/admin/settings-fields.php:511
+#: includes/admin/settings-fields.php:523
 msgid "If selecting \"Order images shot\" images must have proper metadata"
 msgstr ""
 "Si selecciona \"Encargar imágenes tomadas\", las imágenes deben tener los "
 "metadatos adecuados"
 
-#: includes/admin/settings-fields.php:511
+#: includes/admin/settings-fields.php:523
 msgid "learn more"
 msgstr "leer más"
 
-#: includes/admin/settings-fields.php:515
+#: includes/admin/settings-fields.php:527
 msgid "Fallback Featured Image"
 msgstr "Imagen destacada de reserva"
 
-#: includes/admin/settings-fields.php:518
+#: includes/admin/settings-fields.php:530
 msgid ""
 "Upload a custom thumbnail image to be used when no specific featured image "
 "is set"
@@ -1963,11 +2049,11 @@ msgstr ""
 "Cargar una imagen en miniatura personalizada que se utilizará cuando no se "
 "establezca una imagen destacada específica"
 
-#: includes/admin/settings-fields.php:522
+#: includes/admin/settings-fields.php:534
 msgid "Password Protected Featured Image"
 msgstr "Imagen destacada protegida por contraseña"
 
-#: includes/admin/settings-fields.php:525
+#: includes/admin/settings-fields.php:537
 msgid ""
 "Upload a custom thumbnail image to be used when a gallery is password "
 "protected"
@@ -1975,114 +2061,114 @@ msgstr ""
 "Cargar una imagen en miniatura personalizada que se utilizará cuando una "
 "galería esté protegida por contraseña"
 
-#: includes/admin/settings-fields.php:531
+#: includes/admin/settings-fields.php:543
 msgid "Galleries List Display"
 msgstr "Lista de galerías"
 
-#: includes/admin/settings-fields.php:536
+#: includes/admin/settings-fields.php:548
 msgid "Galleries Layout"
 msgstr "Diseño de galerías"
 
-#: includes/admin/settings-fields.php:539
-#: includes/admin/settings-fields.php:595
+#: includes/admin/settings-fields.php:551
+#: includes/admin/settings-fields.php:607
 msgid "Cropping option not recommended for justified or masonry"
 msgstr "Opción de recorte no recomendada para justificados o mampostería"
 
-#: includes/admin/settings-fields.php:542
-#: includes/admin/settings-fields.php:598
+#: includes/admin/settings-fields.php:554
+#: includes/admin/settings-fields.php:610
 msgid "Standard"
 msgstr "Estándar"
 
-#: includes/admin/settings-fields.php:546
-#: includes/admin/settings-fields.php:602
+#: includes/admin/settings-fields.php:558
+#: includes/admin/settings-fields.php:614
 msgid "Justified"
 msgstr "Justificado"
 
-#: includes/admin/settings-fields.php:550
-#: includes/admin/settings-fields.php:606
+#: includes/admin/settings-fields.php:562
+#: includes/admin/settings-fields.php:618
 msgid "Masonry"
 msgstr "Masonry"
 
-#: includes/admin/settings-fields.php:556
+#: includes/admin/settings-fields.php:568
 msgid "Galleries Columns"
 msgstr "Galerías Columnas"
 
-#: includes/admin/settings-fields.php:567
+#: includes/admin/settings-fields.php:579
 msgid "Galleries Per Page"
 msgstr "Galerías por página"
 
-#: includes/admin/settings-fields.php:571
+#: includes/admin/settings-fields.php:583
 msgid "Set to 0 for unlimited galleries (no pagination)"
 msgstr "Establecer en 0 para galerías ilimitadas (sin paginación)."
 
-#: includes/admin/settings-fields.php:575
+#: includes/admin/settings-fields.php:587
 msgid "Galleries Pagination Style"
 msgstr "Estilo de paginación de galerías"
 
-#: includes/admin/settings-fields.php:579
-#: includes/admin/settings-fields.php:633
+#: includes/admin/settings-fields.php:591
+#: includes/admin/settings-fields.php:645
 msgid "Numbered pagination"
 msgstr "Paginación numerada"
 
-#: includes/admin/settings-fields.php:580
-#: includes/admin/settings-fields.php:634
+#: includes/admin/settings-fields.php:592
+#: includes/admin/settings-fields.php:646
 msgid "Load more button"
 msgstr "Botón de cargar más"
 
-#: includes/admin/settings-fields.php:581
-#: includes/admin/settings-fields.php:635
+#: includes/admin/settings-fields.php:593
+#: includes/admin/settings-fields.php:647
 msgid "Automatic infinite scrolling"
 msgstr "Desplazamiento automático infinito"
 
-#: includes/admin/settings-fields.php:587
+#: includes/admin/settings-fields.php:599
 msgid "Images Display"
 msgstr "Visualización de imágenes"
 
-#: includes/admin/settings-fields.php:592
+#: includes/admin/settings-fields.php:604
 msgid "Images Layout"
 msgstr "Diseño de imágenes"
 
-#: includes/admin/settings-fields.php:612
+#: includes/admin/settings-fields.php:624
 msgid "Images Columns"
 msgstr "Imágenes Columnas"
 
-#: includes/admin/settings-fields.php:623
+#: includes/admin/settings-fields.php:635
 msgid "Images Per Page"
 msgstr "Imágenes por página"
 
-#: includes/admin/settings-fields.php:629
+#: includes/admin/settings-fields.php:641
 msgid "Images Pagination Style"
 msgstr "Estilo de paginación de imágenes"
 
-#: includes/admin/settings-fields.php:639
+#: includes/admin/settings-fields.php:651
 msgid "Thumbnail Content"
 msgstr "Contenido de la miniatura"
 
-#: includes/admin/settings-fields.php:641
+#: includes/admin/settings-fields.php:653
 msgid "What to show below image thumbnails"
 msgstr "Qué mostrar debajo de las miniaturas de las imágenes"
 
-#: includes/admin/settings-fields.php:644
+#: includes/admin/settings-fields.php:656
 msgid "Nothing"
 msgstr "No hacer nada"
 
-#: includes/admin/settings-fields.php:645 templates/admin/order-items.php:103
+#: includes/admin/settings-fields.php:657 templates/admin/order-items.php:103
 msgid "Filename"
 msgstr "Nombre de archivo"
 
-#: includes/admin/settings-fields.php:646
+#: includes/admin/settings-fields.php:658
 msgid "Title (Images MUST have EXIF field \"Title\")"
 msgstr "Título (Las imágenes DEBEN tener el campo EXIF \"Título\")"
 
-#: includes/admin/settings-fields.php:647
+#: includes/admin/settings-fields.php:659
 msgid "Caption"
 msgstr "Subtítulo"
 
-#: includes/admin/settings-fields.php:651
+#: includes/admin/settings-fields.php:663
 msgid "Single Image Caption"
 msgstr "Pie de foto de una sola imagen"
 
-#: includes/admin/settings-fields.php:654
+#: includes/admin/settings-fields.php:666
 msgid ""
 "Show the image caption (from EXIF metadata) below the image on single image "
 "pages"
@@ -2090,12 +2176,12 @@ msgstr ""
 "Mostrar el pie de foto (de los metadatos EXIF) debajo de la imagen en las "
 "páginas de una sola imagen."
 
-#: includes/admin/settings-fields.php:659
+#: includes/admin/settings-fields.php:671
 msgid "Image Sizing"
 msgstr "Tamaño de la imagen"
 
 #. translators: %s is the URL to help documentation
-#: includes/admin/settings-fields.php:662
+#: includes/admin/settings-fields.php:674
 #, php-format
 msgid ""
 "Making changes to your image sizes does not immediately affect your "
@@ -2106,15 +2192,15 @@ msgstr ""
 "galerías, por lo que deberá regenerar todas las imágenes. <a href=\"%s\" "
 "target=\"_blank\">Consulte este artículo de ayuda</a>"
 
-#: includes/admin/settings-fields.php:666
+#: includes/admin/settings-fields.php:678
 msgid "Thumbnail Size"
 msgstr "Tamaño de miniatura"
 
-#: includes/admin/settings-fields.php:671
+#: includes/admin/settings-fields.php:683
 msgid "Thumbnail Crop"
 msgstr "Recorte de miniaturas"
 
-#: includes/admin/settings-fields.php:673
+#: includes/admin/settings-fields.php:685
 msgid ""
 "Crop image to this exact size. Note: Cropped images not recommended for "
 "Justified or Masonry layouts"
@@ -2122,7 +2208,7 @@ msgstr ""
 "Recorte la imagen a este tamaño exacto. Nota: Las imágenes recortadas no se "
 "recomiendan para diseños justificados o de mampostería"
 
-#: includes/admin/settings-fields.php:674
+#: includes/admin/settings-fields.php:686
 msgid ""
 "Should images be cropped to the exact dimensions of your thumbnail width / "
 "height"
@@ -2130,21 +2216,21 @@ msgstr ""
 "Las imágenes deben recortarse a las dimensiones exactas de su miniatura de "
 "ancho / alto"
 
-#: includes/admin/settings-fields.php:679
+#: includes/admin/settings-fields.php:691
 msgid "Large Size"
 msgstr "Tamaño grande"
 
-#: includes/admin/settings-fields.php:687
+#: includes/admin/settings-fields.php:699
 msgid "Large size must be larger than thumbnail size (both width and height)"
 msgstr ""
 "El tamaño grande debe ser mayor que el tamaño de la miniatura (tanto en "
 "anchura como en altura)."
 
-#: includes/admin/settings-fields.php:692
+#: includes/admin/settings-fields.php:704
 msgid "Image Quality"
 msgstr "Calidad de imagen"
 
-#: includes/admin/settings-fields.php:694
+#: includes/admin/settings-fields.php:706
 msgid ""
 "Quality that generated images are saved from 1-100. The higher the quality "
 "the larger the file size. If left empty, the default is 82."
@@ -2153,76 +2239,76 @@ msgstr ""
 "mayor sea la calidad, mayor será el tamaño del archivo. Si se deja vacío, el "
 "valor por defecto es 82."
 
-#: includes/admin/settings-fields.php:707
+#: includes/admin/settings-fields.php:719
 msgid "Watermark Image"
 msgstr "Imagen de marca de agua"
 
-#: includes/admin/settings-fields.php:710
+#: includes/admin/settings-fields.php:722
 msgid "Must be a PNG image, ideally with transparency"
 msgstr "Debe ser una imagen PNG, idealmente con transparencia"
 
-#: includes/admin/settings-fields.php:714
+#: includes/admin/settings-fields.php:726
 msgid "Max Size"
 msgstr "Tamaño máximo"
 
-#: includes/admin/settings-fields.php:719
+#: includes/admin/settings-fields.php:731
 msgid "From 1-100, a max percent size of the image"
 msgstr "De 1 a 100, un porcentaje máximo del tamaño de la imagen"
 
-#: includes/admin/settings-fields.php:722
-#: includes/admin/settings-fields.php:780
+#: includes/admin/settings-fields.php:734
+#: includes/admin/settings-fields.php:792
 msgid "Position"
 msgstr "Posición"
 
-#: includes/admin/settings-fields.php:726
+#: includes/admin/settings-fields.php:738
 msgid "Center"
 msgstr "Centrar"
 
-#: includes/admin/settings-fields.php:727
+#: includes/admin/settings-fields.php:739
 msgid "Repeat"
 msgstr "Repetir"
 
-#: includes/admin/settings-fields.php:728
+#: includes/admin/settings-fields.php:740
 msgid "Top Left"
 msgstr "Arriba a la izquierda"
 
-#: includes/admin/settings-fields.php:729
+#: includes/admin/settings-fields.php:741
 msgid "Top Right"
 msgstr "Arriba a la derecha"
 
-#: includes/admin/settings-fields.php:730
+#: includes/admin/settings-fields.php:742
 msgid "Bottom Left"
 msgstr "Abajo a la izquierda"
 
-#: includes/admin/settings-fields.php:731
+#: includes/admin/settings-fields.php:743
 msgid "Bottom Right"
 msgstr "Abajo a la derecha"
 
-#: includes/admin/settings-fields.php:735
+#: includes/admin/settings-fields.php:747
 msgid "Margin from edge"
 msgstr "Margen desde el borde"
 
-#: includes/admin/settings-fields.php:741
+#: includes/admin/settings-fields.php:753
 msgid "Watermark Thumbnails"
 msgstr "Marcas de agua en miniatura"
 
-#: includes/admin/settings-fields.php:748
+#: includes/admin/settings-fields.php:760
 msgid "Favorites / Selections"
 msgstr "Favoritos / Selecciones"
 
-#: includes/admin/settings-fields.php:753
+#: includes/admin/settings-fields.php:765
 msgid "Enable Favorites"
 msgstr "Habilitar favoritos"
 
-#: includes/admin/settings-fields.php:756
+#: includes/admin/settings-fields.php:768
 msgid "Allow users to save images to their favorites"
 msgstr "Permitir a los usuarios guardar imágenes en sus favoritos."
 
-#: includes/admin/settings-fields.php:759
+#: includes/admin/settings-fields.php:771
 msgid "Enable Guest Favorites"
 msgstr "Activar los favoritos de invitados"
 
-#: includes/admin/settings-fields.php:762
+#: includes/admin/settings-fields.php:774
 msgid ""
 "Allow visitors who are not logged in to save favorites for their browser "
 "session"
@@ -2230,11 +2316,11 @@ msgstr ""
 "Permitir que los visitantes que no iniciaron sesión guarden favoritos "
 "durante su sesión del navegador"
 
-#: includes/admin/settings-fields.php:773
+#: includes/admin/settings-fields.php:785
 msgid "Enable Selection Tray"
 msgstr "Habilitar bandeja de selección"
 
-#: includes/admin/settings-fields.php:776
+#: includes/admin/settings-fields.php:788
 msgid ""
 "Show users their selected favorites in a persistent popup while viewing "
 "galleries"
@@ -2242,27 +2328,27 @@ msgstr ""
 "Mostrar a los usuarios sus favoritos seleccionados en una ventana emergente "
 "persistente mientras ven las galerías."
 
-#: includes/admin/settings-fields.php:784
+#: includes/admin/settings-fields.php:796
 msgid "Float bottom right"
 msgstr "Flotar abajo a la derecha"
 
-#: includes/admin/settings-fields.php:785
+#: includes/admin/settings-fields.php:797
 msgid "Float bottom left"
 msgstr "Flotar abajo a la izquierda"
 
-#: includes/admin/settings-fields.php:795
+#: includes/admin/settings-fields.php:807
 msgid "Choose where the selection tray appears on the page"
 msgstr "Elige dónde aparecerá la bandeja de selección en la página."
 
-#: includes/admin/settings-fields.php:812
+#: includes/admin/settings-fields.php:824
 msgid "Enable Taxes"
 msgstr "Habilitar Impuestos"
 
-#: includes/admin/settings-fields.php:818
+#: includes/admin/settings-fields.php:830
 msgid "Tax Rates"
 msgstr "Tasas impositivas"
 
-#: includes/admin/settings-fields.php:820
+#: includes/admin/settings-fields.php:832
 msgid ""
 "Be as specific as you need. Order for most priority. You can include "
 "multiple zip/postal codes with commas."
@@ -2270,11 +2356,11 @@ msgstr ""
 "Sea tan específico como necesite. Ordene por prioridad. Puede incluir varios "
 "códigos postales con comas."
 
-#: includes/admin/settings-fields.php:832
+#: includes/admin/settings-fields.php:844
 msgid "Default customer location"
 msgstr "Ubicación predeterminada del cliente"
 
-#: includes/admin/settings-fields.php:833
+#: includes/admin/settings-fields.php:845
 msgid ""
 "If customer does not have address entered yet, what location is used to "
 "determine the default location"
@@ -2282,60 +2368,60 @@ msgstr ""
 "Si el cliente aún no ha introducido la dirección, ¿qué ubicación se utiliza "
 "para determinar la ubicación por defecto?"
 
-#: includes/admin/settings-fields.php:836
+#: includes/admin/settings-fields.php:848
 msgid "No location by default"
 msgstr "Sin ubicación por defecto"
 
-#: includes/admin/settings-fields.php:837
+#: includes/admin/settings-fields.php:849
 msgid "My business location"
 msgstr "Ubicación de mi empresa"
 
-#: includes/admin/settings-fields.php:869
+#: includes/admin/settings-fields.php:881
 msgid "Display prices"
 msgstr "Mostrar precios"
 
-#: includes/admin/settings-fields.php:878
+#: includes/admin/settings-fields.php:890
 msgid "Prices entered with tax"
 msgstr "Precios ingresados con impuesto"
 
-#: includes/admin/settings-fields.php:887
+#: includes/admin/settings-fields.php:899
 msgid "Price display suffix"
 msgstr "Sufijo de pantalla de precio"
 
-#: includes/admin/settings-fields.php:890
+#: includes/admin/settings-fields.php:902
 msgid "This shows after a price"
 msgstr "Esto se muestra después de un precio"
 
-#: includes/admin/settings-fields.php:899
+#: includes/admin/settings-fields.php:911
 msgid "Taxes"
 msgstr "Impuestos"
 
-#: includes/admin/settings-fields.php:906
+#: includes/admin/settings-fields.php:918
 msgid "Distraction Free Checkout"
 msgstr "Caja sin distracciones"
 
-#: includes/admin/settings-fields.php:909
+#: includes/admin/settings-fields.php:921
 msgid ""
 "Remove site header/footer and let user focus only on the checkout experience"
 msgstr ""
 "Elimine la cabecera y el pie de página del sitio y deje que el usuario se "
 "centre únicamente en la experiencia de pago"
 
-#: includes/admin/settings-fields.php:914
+#: includes/admin/settings-fields.php:926
 msgid "Allow Guest Checkout"
 msgstr "Permitir el registro de invitados"
 
-#: includes/admin/settings-fields.php:917
+#: includes/admin/settings-fields.php:929
 msgid "Allow users to checkout as a guest (do not require a user account)"
 msgstr ""
 "Permitir a los usuarios pagar como invitados (no requiere una cuenta de "
 "usuario)"
 
-#: includes/admin/settings-fields.php:920
+#: includes/admin/settings-fields.php:932
 msgid "Always collect a billing address"
 msgstr "Pedir siempre una dirección de facturación"
 
-#: includes/admin/settings-fields.php:923
+#: includes/admin/settings-fields.php:935
 msgid ""
 "Collect the address of the person paying on every order, even when nothing "
 "is being shipped. Invoices need the buyer's address, and the buyer is not "
@@ -2350,11 +2436,11 @@ msgstr ""
 "métodos de pago, como Square, siempre piden una dirección de facturación sin "
 "importar esta configuración."
 
-#: includes/admin/settings-fields.php:927
+#: includes/admin/settings-fields.php:939
 msgid "Allowed Countries"
 msgstr "Países permitidos"
 
-#: includes/admin/settings-fields.php:928
+#: includes/admin/settings-fields.php:940
 msgid ""
 "Which countries users can select at checkout. If empty, all countries are "
 "allowed."
@@ -2362,12 +2448,12 @@ msgstr ""
 "Qué países pueden seleccionar los usuarios al pagar. Si está vacío, se "
 "permiten todos los países."
 
-#: includes/admin/settings-fields.php:936
+#: includes/admin/settings-fields.php:948
 msgid "Google Maps API Key"
 msgstr "Clave API Google Maps"
 
 #. translators: %s is the URL to help documentation
-#: includes/admin/settings-fields.php:940
+#: includes/admin/settings-fields.php:952
 #, php-format
 msgid ""
 "Enter a Google API key to enable address autocomplete at checkout, <a "
@@ -2377,11 +2463,11 @@ msgstr ""
 "autocompletar direcciones en el proceso de pago, <a href=\"%s\" "
 "target=\"_blank\">más información aquí</a>"
 
-#: includes/admin/settings-fields.php:951
+#: includes/admin/settings-fields.php:963
 msgid "Next Order Number"
 msgstr "Próximo número de pedido"
 
-#: includes/admin/settings-fields.php:954
+#: includes/admin/settings-fields.php:966
 msgid ""
 "Leave blank to use default order numbering, otherwise set the next order "
 "number to be used"
@@ -2389,90 +2475,90 @@ msgstr ""
 "Dejar en blanco para utilizar la numeración de pedido por defecto, en caso "
 "contrario establecer el siguiente número de pedido a utilizar"
 
-#: includes/admin/settings-fields.php:958
+#: includes/admin/settings-fields.php:970
 msgid "Disable Invoice"
 msgstr "Desactivar factura"
 
-#: includes/admin/settings-fields.php:961
+#: includes/admin/settings-fields.php:973
 msgid "Disable invoices with orders"
 msgstr "Desactivar facturas con pedidos"
 
-#: includes/admin/settings-fields.php:967
+#: includes/admin/settings-fields.php:979
 msgid "Display Fields"
 msgstr "Campos de visualización"
 
-#: includes/admin/settings-fields.php:972
+#: includes/admin/settings-fields.php:984
 msgid "Other Fields"
 msgstr "Otros campos"
 
-#: includes/admin/settings-fields.php:977
-#: includes/admin/settings-fields.php:987 includes/admin/sunshine-order.php:745
-#: includes/class-cart.php:2064 templates/email/admin-receipt.php:145
+#: includes/admin/settings-fields.php:989
+#: includes/admin/settings-fields.php:999 includes/admin/sunshine-order.php:745
+#: includes/class-cart.php:2065 templates/email/admin-receipt.php:145
 #: templates/email/customer-receipt.php:149
 #: templates/email/order-status.php:117 templates/order/details.php:59
 msgid "Notes"
 msgstr "Notas"
 
-#: includes/admin/settings-fields.php:982
+#: includes/admin/settings-fields.php:994
 msgid "Required Other Fields"
 msgstr "Campos obligatorios"
 
-#: includes/admin/settings-fields.php:992
+#: includes/admin/settings-fields.php:1004
 msgid "VAT Label"
 msgstr "Etiqueta IVA"
 
-#: includes/admin/settings-fields.php:1042
+#: includes/admin/settings-fields.php:1054
 msgid "Payments"
 msgstr "Pagos"
 
-#: includes/admin/settings-fields.php:1083
+#: includes/admin/settings-fields.php:1095
 msgid "Delivery & Shipping"
 msgstr "Entrega y envío"
 
-#: includes/admin/settings-fields.php:1090
+#: includes/admin/settings-fields.php:1102
 msgid "Design Elements"
 msgstr "Elementos de diseño"
 
-#: includes/admin/settings-fields.php:1095
+#: includes/admin/settings-fields.php:1107
 msgid "Pages Theme"
 msgstr "Páginas Tema"
 
-#: includes/admin/settings-fields.php:1099
 #: includes/admin/settings-fields.php:1111
+#: includes/admin/settings-fields.php:1123
 msgid "My WordPress Theme"
 msgstr "Mi tema de WordPress"
 
-#: includes/admin/settings-fields.php:1100
 #: includes/admin/settings-fields.php:1112
+#: includes/admin/settings-fields.php:1124
 msgid "Classic"
 msgstr "Clásico"
 
-#: includes/admin/settings-fields.php:1101
 #: includes/admin/settings-fields.php:1113
+#: includes/admin/settings-fields.php:1125
 msgid "Cover"
 msgstr "Cubrir"
 
-#: includes/admin/settings-fields.php:1103
+#: includes/admin/settings-fields.php:1115
 msgid "What should be used for your general theme when viewing Sunshine pages"
 msgstr ""
 "Qué debe utilizarse para el tema general cuando se visualizan las páginas de "
 "Sunshine"
 
-#: includes/admin/settings-fields.php:1107
+#: includes/admin/settings-fields.php:1119
 msgid "Gallery Theme"
 msgstr "Tema de la galería"
 
-#: includes/admin/settings-fields.php:1115
+#: includes/admin/settings-fields.php:1127
 msgid "Allow galleries to use a different theme layout from the main pages"
 msgstr ""
 "Permitir que las galerías utilicen un tema diferente al de las páginas "
 "principales"
 
-#: includes/admin/settings-fields.php:1119
+#: includes/admin/settings-fields.php:1131
 msgid "Alternate integration"
 msgstr "Integración alternativa"
 
-#: includes/admin/settings-fields.php:1122
+#: includes/admin/settings-fields.php:1134
 msgid ""
 "Sunshine tries to blend into your theme seamlessly. If you are seeing weird "
 "layout issues, try this as an alternate method if integrating."
@@ -2481,63 +2567,63 @@ msgstr ""
 "problemas de diseño extraños, pruebe esto como un método alternativo si la "
 "integración."
 
-#: includes/admin/settings-fields.php:1125
-#: includes/admin/settings-fields.php:1327
+#: includes/admin/settings-fields.php:1137
+#: includes/admin/settings-fields.php:1339
 msgid "Logo"
 msgstr "Logo"
 
-#: includes/admin/settings-fields.php:1132
+#: includes/admin/settings-fields.php:1144
 msgid "Classic Theme Options"
 msgstr "Opciones del tema clásico"
 
-#: includes/admin/settings-fields.php:1151 themes/cover/functions.php:11
+#: includes/admin/settings-fields.php:1163 themes/cover/functions.php:11
 msgid "Menu Background"
 msgstr "Fondo del menú"
 
-#: includes/admin/settings-fields.php:1170 themes/cover/functions.php:16
+#: includes/admin/settings-fields.php:1182 themes/cover/functions.php:16
 msgid "Menu Links"
 msgstr "Links del menú"
 
-#: includes/admin/settings-fields.php:1189 themes/cover/functions.php:21
+#: includes/admin/settings-fields.php:1201 themes/cover/functions.php:21
 msgid "Main Background"
 msgstr "Fondo Principal"
 
-#: includes/admin/settings-fields.php:1208
+#: includes/admin/settings-fields.php:1220
 msgid "Main Text"
 msgstr "Texto principal"
 
-#: includes/admin/settings-fields.php:1227
+#: includes/admin/settings-fields.php:1239
 msgid "Main Links"
 msgstr "Enlaces principales"
 
-#: includes/admin/settings-fields.php:1246
+#: includes/admin/settings-fields.php:1258
 msgid "Gallery Password Box"
 msgstr "Cuadro de contraseña de la galería"
 
-#: includes/admin/settings-fields.php:1259
+#: includes/admin/settings-fields.php:1271
 msgid "Gallery Search Box"
 msgstr "Cuadro de búsqueda en la galería"
 
-#: includes/admin/settings-fields.php:1272
+#: includes/admin/settings-fields.php:1284
 msgid "Miscellaneous Elements"
 msgstr "Elementos varios"
 
-#: includes/admin/settings-fields.php:1277
+#: includes/admin/settings-fields.php:1289
 msgid "Auto-include Sunshine main menu"
 msgstr "Autoincluir el menú principal de Sunshine"
 
-#: includes/admin/settings-fields.php:1280
+#: includes/admin/settings-fields.php:1292
 msgid ""
 "Automatically have the Sunshine Main Menu appear above the Sunshine content"
 msgstr ""
 "Hacer que el menú principal de Sunshine aparezca automáticamente sobre el "
 "contenido de Sunshine"
 
-#: includes/admin/settings-fields.php:1284
+#: includes/admin/settings-fields.php:1296
 msgid "Hide link to main galleries page"
 msgstr "Ocultar enlace a la página principal de galerías"
 
-#: includes/admin/settings-fields.php:1287
+#: includes/admin/settings-fields.php:1299
 msgid ""
 "Hide the link to your main galleries page in any Sunshine menus. Helpful if "
 "you want users to stick to just a single gallery."
@@ -2545,59 +2631,59 @@ msgstr ""
 "Oculta el enlace a tu página principal de galerías en cualquier menú de "
 "Sunshine. Útil si quieres que los usuarios se limiten a una sola galería."
 
-#: includes/admin/settings-fields.php:1291
+#: includes/admin/settings-fields.php:1303
 msgid "Customizations"
 msgstr "Personalizaciones"
 
-#: includes/admin/settings-fields.php:1296
+#: includes/admin/settings-fields.php:1308
 msgid "Custom CSS for frontend"
 msgstr "CSS personalizado para frontend"
 
-#: includes/admin/settings-fields.php:1302
+#: includes/admin/settings-fields.php:1314
 msgid "Custom CSS for emails"
 msgstr "CSS personalizado para correos electrónicos"
 
-#: includes/admin/settings-fields.php:1307
+#: includes/admin/settings-fields.php:1319
 msgid "Before Sunshine"
 msgstr "Antes del sol"
 
-#: includes/admin/settings-fields.php:1310
+#: includes/admin/settings-fields.php:1322
 msgid "Shown before every Sunshine associated page"
 msgstr "Se muestra antes de cada página asociada a Sunshine"
 
-#: includes/admin/settings-fields.php:1313
+#: includes/admin/settings-fields.php:1325
 msgid "After Sunshine"
 msgstr "Después del sol"
 
-#: includes/admin/settings-fields.php:1316
+#: includes/admin/settings-fields.php:1328
 msgid "Shown after every Sunshine associated page"
 msgstr "Se muestra después de cada página asociada a Sunshine"
 
-#: includes/admin/settings-fields.php:1320
+#: includes/admin/settings-fields.php:1332
 msgid "Invoices"
 msgstr "Facturas"
 
-#: includes/admin/settings-fields.php:1330
+#: includes/admin/settings-fields.php:1342
 msgid "Will be shown on a white background"
 msgstr "Aparecerá sobre fondo blanco"
 
-#: includes/admin/settings-fields.php:1333
+#: includes/admin/settings-fields.php:1345
 msgid "Extra Content"
 msgstr "Añadir contenido extra"
 
-#: includes/admin/settings-fields.php:1336
+#: includes/admin/settings-fields.php:1348
 msgid "Extra content to be shown on all invoices"
 msgstr "Contenido adicional que debe figurar en todas las facturas"
 
-#: includes/admin/settings-fields.php:1345
+#: includes/admin/settings-fields.php:1357
 msgid "Design"
 msgstr "Diseño"
 
-#: includes/admin/settings-fields.php:1358
+#: includes/admin/settings-fields.php:1370
 msgid "Email Notifications"
 msgstr "Notificaciones de correo"
 
-#: includes/admin/settings-fields.php:1361
+#: includes/admin/settings-fields.php:1373
 msgid ""
 "Email notifications sent from Sunshine Photo Cart are listed below. Click on "
 "an email to configure it."
@@ -2606,72 +2692,72 @@ msgstr ""
 "se enumeran a continuación. Haga clic en un correo electrónico para "
 "configurarlo."
 
-#: includes/admin/settings-fields.php:1370
+#: includes/admin/settings-fields.php:1382
 msgid "Email Sender"
 msgstr "Remitente de correo electrónico"
 
-#: includes/admin/settings-fields.php:1376
+#: includes/admin/settings-fields.php:1388
 msgid "From Name"
 msgstr "Nombre del Remitente"
 
-#: includes/admin/settings-fields.php:1377
+#: includes/admin/settings-fields.php:1389
 msgid "When emails are sent to customers, what name should they come from"
 msgstr ""
 "Cuando se envían correos electrónicos a los clientes, ¿de qué nombre deben "
 "proceder?"
 
-#: includes/admin/settings-fields.php:1383
+#: includes/admin/settings-fields.php:1395
 msgid "From Email"
 msgstr "De Correo"
 
-#: includes/admin/settings-fields.php:1384
+#: includes/admin/settings-fields.php:1396
 msgid ""
 "When emails are sent to customers, what email address should they come from"
 msgstr ""
 "Cuando se envían correos electrónicos a los clientes, ¿de qué dirección de "
 "correo electrónico deben proceder?"
 
-#: includes/admin/settings-fields.php:1390
+#: includes/admin/settings-fields.php:1402
 msgid "Email Template"
 msgstr "Plantlla de correo electronico"
 
-#: includes/admin/settings-fields.php:1396
+#: includes/admin/settings-fields.php:1408
 msgid "Email logo"
 msgstr "Logotipo del correo electrónico"
 
-#: includes/admin/settings-fields.php:1397
+#: includes/admin/settings-fields.php:1409
 msgid "Logo to use in header of email"
 msgstr "Logotipo para el encabezamiento del correo electrónico"
 
-#: includes/admin/settings-fields.php:1403
+#: includes/admin/settings-fields.php:1415
 msgid "Signature"
 msgstr "Firma"
 
-#: includes/admin/settings-fields.php:1404
+#: includes/admin/settings-fields.php:1416
 msgid "Included in footer of every email"
 msgstr "Incluido en el pie de página de cada correo electrónico"
 
-#: includes/admin/settings-fields.php:1463
+#: includes/admin/settings-fields.php:1475
 msgid "Integrations"
 msgstr "Integraciones"
 
-#: includes/admin/settings-fields.php:1489
+#: includes/admin/settings-fields.php:1501
 msgid "Please enter your license key in order to enable your add-ons"
 msgstr "Introduzca su clave de licencia para activar sus complementos"
 
-#: includes/admin/settings-fields.php:1493
+#: includes/admin/settings-fields.php:1505
 msgid "Licenses"
 msgstr "Licencias"
 
-#: includes/admin/settings-fields.php:1523
+#: includes/admin/settings-fields.php:1535
 msgid "Account Erasure Requests"
 msgstr "Solicitudes de eliminación de cuentas"
 
-#: includes/admin/settings-fields.php:1529
+#: includes/admin/settings-fields.php:1541
 msgid "Remove personal data from orders"
 msgstr "Eliminar datos personales de pedidos"
 
-#: includes/admin/settings-fields.php:1531
+#: includes/admin/settings-fields.php:1543
 msgid ""
 "When handling an account erasure request, should personal data within orders "
 "be removed? If disabled, order personal data will be retained."
@@ -2680,15 +2766,15 @@ msgstr ""
 "datos personales incluidos en los pedidos? Si se desactiva, se conservarán "
 "los datos personales de los pedidos."
 
-#: includes/admin/settings-fields.php:1536
+#: includes/admin/settings-fields.php:1548
 msgid "Personal Data Removal"
 msgstr "Eliminación de datos personales"
 
-#: includes/admin/settings-fields.php:1541
+#: includes/admin/settings-fields.php:1553
 msgid "Allow bulk removal of personal data"
 msgstr "Permitir la eliminación masiva de datos personales."
 
-#: includes/admin/settings-fields.php:1543
+#: includes/admin/settings-fields.php:1555
 msgid ""
 "Adds an option to the orders screen for removing personal data in bulk. Note "
 "that removing personal data cannot be undone."
@@ -2697,11 +2783,11 @@ msgstr ""
 "forma masiva. Ten en cuenta que la eliminación de datos personales no se "
 "puede deshacer."
 
-#: includes/admin/settings-fields.php:1548
+#: includes/admin/settings-fields.php:1560
 msgid "Personal Data Retention"
 msgstr "Conservación de datos personales"
 
-#: includes/admin/settings-fields.php:1550
+#: includes/admin/settings-fields.php:1562
 msgid ""
 "Choose how long to retain personal data when it's no longer needed for "
 "processing. Leave the following options blank to retain this data "
@@ -2711,19 +2797,19 @@ msgstr ""
 "necesario para procesarlos. Deje en blanco las siguientes opciones para "
 "conservar estos datos indefinidamente."
 
-#: includes/admin/settings-fields.php:1555
+#: includes/admin/settings-fields.php:1567
 msgid "Retain inactive customer accounts"
 msgstr "Conservar las cuentas de clientes inactivos"
 
-#: includes/admin/settings-fields.php:1560
+#: includes/admin/settings-fields.php:1572
 msgid "Retain completed orders"
 msgstr "ReTener pedidos completados"
 
-#: includes/admin/settings-fields.php:1565
+#: includes/admin/settings-fields.php:1577
 msgid "Delete expired galleries after"
 msgstr "Eliminar las galerías vencidas después de"
 
-#: includes/admin/settings-fields.php:1569
+#: includes/admin/settings-fields.php:1581
 msgid ""
 "days — Galleries will be permanently deleted this many days after their "
 "expiration date. Leave blank to keep expired galleries indefinitely."
@@ -2732,59 +2818,59 @@ msgstr ""
 "desde su fecha de vencimiento. Déjalo en blanco para conservar las galerías "
 "vencidas indefinidamente."
 
-#: includes/admin/settings-fields.php:1578
+#: includes/admin/settings-fields.php:1590
 msgid "Privacy & Data"
 msgstr "Privacidad y datos"
 
-#: includes/admin/settings-fields.php:1587
+#: includes/admin/settings-fields.php:1599
 msgid "Allow Tracking"
 msgstr "Permitir el seguimiento"
 
-#: includes/admin/settings-fields.php:1592
+#: includes/admin/settings-fields.php:1604
 msgid "Types of Photography"
 msgstr "Tipos de fotografía"
 
-#: includes/admin/settings-fields.php:1595
+#: includes/admin/settings-fields.php:1607
 msgid "Family"
 msgstr "Familia"
 
-#: includes/admin/settings-fields.php:1596
+#: includes/admin/settings-fields.php:1608
 msgid "Newborn"
 msgstr "Recién nacido"
 
-#: includes/admin/settings-fields.php:1597
+#: includes/admin/settings-fields.php:1609
 msgid "Wedding"
 msgstr "Boda"
 
-#: includes/admin/settings-fields.php:1598
+#: includes/admin/settings-fields.php:1610
 msgid "School"
 msgstr "Escuela"
 
-#: includes/admin/settings-fields.php:1599
+#: includes/admin/settings-fields.php:1611
 msgid "Sports"
 msgstr "Deportes"
 
-#: includes/admin/settings-fields.php:1600
+#: includes/admin/settings-fields.php:1612
 msgid "Portraits"
 msgstr "Retratos"
 
-#: includes/admin/settings-fields.php:1601
+#: includes/admin/settings-fields.php:1613
 msgid "Animals"
 msgstr "Animales"
 
-#: includes/admin/settings-fields.php:1602
+#: includes/admin/settings-fields.php:1614
 msgid "Events"
 msgstr "Eventos"
 
-#: includes/admin/settings-fields.php:1603
+#: includes/admin/settings-fields.php:1615
 msgid "Real Estate"
 msgstr "Bienes Raices"
 
-#: includes/admin/settings-fields.php:1609
+#: includes/admin/settings-fields.php:1621
 msgid "Usage Tracking"
 msgstr "Seguimiento de uso"
 
-#: includes/admin/settings-fields.php:1611
+#: includes/admin/settings-fields.php:1623
 msgid ""
 "This data can help provide useful information to Sunshine Photo Cart and "
 "help guide new features and growth strategies. Your participation is "
@@ -2948,80 +3034,96 @@ msgstr "Carpetas FTP"
 msgid "Select folder"
 msgstr "Seleccionar carpeta"
 
-#: includes/admin/sunshine-gallery.php:372
+#. translators: 1: number of photos, 2: date and time of the last one
+#: includes/admin/sunshine-gallery.php:374
+#, php-format
+msgid ""
+"Sunshine checks this gallery's folder for new photos. It has added %1$d "
+"photo, last on %2$s."
+msgid_plural ""
+"Sunshine checks this gallery's folder for new photos. It has added %1$d "
+"photos, last on %2$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/sunshine-gallery.php:380
+msgid "Sunshine checks this gallery's folder for new photos."
+msgstr "Sunshine revisa si hay fotos nuevas en la carpeta de esta galería."
+
+#: includes/admin/sunshine-gallery.php:391
 msgid "Choose from Media Library"
 msgstr "Elija de la mediateca"
 
-#: includes/admin/sunshine-gallery.php:391
-#: includes/admin/sunshine-gallery.php:555
+#: includes/admin/sunshine-gallery.php:410
+#: includes/admin/sunshine-gallery.php:574
 msgid "Select all images"
 msgstr "Seleccionar todas las imágenes"
 
-#: includes/admin/sunshine-gallery.php:392
+#: includes/admin/sunshine-gallery.php:411
 msgid "Regenerate all gallery images"
 msgstr "Regenerar todas las imágenes de la galería"
 
-#: includes/admin/sunshine-gallery.php:393
+#: includes/admin/sunshine-gallery.php:412
 msgid "Refresh photo details"
 msgstr "Actualizar detalles de las fotos"
 
-#: includes/admin/sunshine-gallery.php:394
+#: includes/admin/sunshine-gallery.php:413
 msgid "Delete selected images"
 msgstr "Borrar imágenes seleccionadas"
 
 #. translators: %1$s is the number of images currently loaded, %2$s is the total number of images
-#: includes/admin/sunshine-gallery.php:399
+#: includes/admin/sunshine-gallery.php:418
 #, php-format
 msgid "Showing %1$s of %2$s images"
 msgstr "Mostrando %1$s de %2$s imágenes"
 
 #. translators: %s is a select dropdown with options for number of images to load
-#: includes/admin/sunshine-gallery.php:402
+#: includes/admin/sunshine-gallery.php:421
 #, php-format
 msgid "Load %s more images"
 msgstr "Cargar %s más imágenes"
 
-#: includes/admin/sunshine-gallery.php:403
+#: includes/admin/sunshine-gallery.php:422
 msgid "GO"
 msgstr "IR"
 
-#: includes/admin/sunshine-gallery.php:418
+#: includes/admin/sunshine-gallery.php:437
 msgid "Loading"
 msgstr "Cargando"
 
-#: includes/admin/sunshine-gallery.php:445
+#: includes/admin/sunshine-gallery.php:464
 msgid "Saving image order..."
 msgstr "Guardar orden de imagen..."
 
-#: includes/admin/sunshine-gallery.php:489
+#: includes/admin/sunshine-gallery.php:508
 msgid "Sorry, the image could not be deleted for some reason"
 msgstr "Lo sentimos, la imagen no pudo ser eliminado por alguna razón"
 
-#: includes/admin/sunshine-gallery.php:521
+#: includes/admin/sunshine-gallery.php:540
 msgid "Sorry, the image could not be set as featured"
 msgstr "Lo sentimos, la imagen no se pudo establecer como destacada"
 
-#: includes/admin/sunshine-gallery.php:549
+#: includes/admin/sunshine-gallery.php:568
 msgid "Select no images"
 msgstr "No seleccionar imágenes"
 
-#: includes/admin/sunshine-gallery.php:608
+#: includes/admin/sunshine-gallery.php:627
 msgid "Allowed Files"
 msgstr "Archivos Permitidos"
 
-#: includes/admin/sunshine-gallery.php:875
+#: includes/admin/sunshine-gallery.php:894
 msgid "No importable images were found in the selected folder."
 msgstr "No se encontraron imágenes importables en la carpeta seleccionada."
 
-#: includes/admin/sunshine-gallery.php:907
+#: includes/admin/sunshine-gallery.php:926
 msgid "The import stopped."
 msgstr "La importación se detuvo."
 
-#: includes/admin/sunshine-gallery.php:908
+#: includes/admin/sunshine-gallery.php:927
 msgid "The import stopped before every photo was brought in."
 msgstr "La importación se detuvo antes de traer todas las fotos."
 
-#: includes/admin/sunshine-gallery.php:962
+#: includes/admin/sunshine-gallery.php:981
 msgid ""
 "The image did not fully upload because it is too large for your server to "
 "handle. Thumbnails and watermarks may not have been applied."
@@ -3030,70 +3132,70 @@ msgstr ""
 "tu servidor la pueda manejar. Es posible que no se hayan aplicado miniaturas "
 "ni marcas de agua."
 
-#: includes/admin/sunshine-gallery.php:988
+#: includes/admin/sunshine-gallery.php:1007
 msgid ""
 "Unable to inspect the selected directory before import. Please try again."
 msgstr ""
 "No se puede inspeccionar el directorio seleccionado antes de la importación. "
 "Inténtalo de nuevo."
 
-#: includes/admin/sunshine-gallery.php:1031
+#: includes/admin/sunshine-gallery.php:1050
 msgid "Processing failed"
 msgstr "Falló el procesamiento"
 
-#: includes/admin/sunshine-gallery.php:1061
+#: includes/admin/sunshine-gallery.php:1080
 msgid "You do not have permission to edit this gallery"
 msgstr "No tienes permiso para editar esta galería"
 
-#: includes/admin/sunshine-gallery.php:1084
+#: includes/admin/sunshine-gallery.php:1103
 msgid "No file was uploaded"
 msgstr "Ningun archivo fue subido"
 
-#: includes/admin/sunshine-gallery.php:1117
+#: includes/admin/sunshine-gallery.php:1136
 msgid "Invalid file type"
 msgstr "Tipo de archivo invalido"
 
-#: includes/admin/sunshine-gallery.php:1125
+#: includes/admin/sunshine-gallery.php:1144
 msgid "You do not have permission to upload files"
 msgstr "No tienes permiso para subir archivos"
 
-#: includes/admin/sunshine-gallery.php:1136
+#: includes/admin/sunshine-gallery.php:1155
 msgid "Upload directory is not writable"
 msgstr "No se puede escribir en el directorio de carga"
 
-#: includes/admin/sunshine-gallery.php:1633
-#: includes/admin/sunshine-gallery.php:1686
+#: includes/admin/sunshine-gallery.php:1652
+#: includes/admin/sunshine-gallery.php:1705
 msgid "You do not have permission to import images."
 msgstr "No tienes permiso para importar imágenes."
 
-#: includes/admin/sunshine-gallery.php:1642
+#: includes/admin/sunshine-gallery.php:1661
 msgid "A directory must be selected before importing."
 msgstr "Se debe seleccionar un directorio antes de importar."
 
-#: includes/admin/sunshine-gallery.php:1651
-#: includes/admin/sunshine-gallery.php:1755
+#: includes/admin/sunshine-gallery.php:1670
+#: includes/admin/sunshine-gallery.php:1777
 msgid "The selected directory is not available."
 msgstr "El directorio seleccionado no está disponible."
 
-#: includes/admin/sunshine-gallery.php:1874
+#: includes/admin/sunshine-gallery.php:1896
 msgid "Already uploaded to gallery"
 msgstr "Ya subido a la galería"
 
 #. translators: %s is the upload directory
-#: includes/admin/sunshine-gallery.php:1889
+#: includes/admin/sunshine-gallery.php:1911
 #, php-format
 msgid "The selected file could not be copied to %s."
 msgstr "El archivo seleccionado no se ha podido copiar en %s."
 
-#: includes/admin/sunshine-gallery.php:1904
+#: includes/admin/sunshine-gallery.php:1926
 msgid "Could not be added to the gallery"
 msgstr "No se pudo agregar a la galería"
 
-#: includes/admin/sunshine-gallery.php:1921
+#: includes/admin/sunshine-gallery.php:1943
 msgid "No emails collected yet"
 msgstr "Aún no se han recopilado correos electrónicos"
 
-#: includes/admin/sunshine-gallery.php:1995
+#: includes/admin/sunshine-gallery.php:2017
 msgid "Add gallery name"
 msgstr "Añadir el nombre de la galería"
 
@@ -3157,7 +3259,7 @@ msgid "Select All"
 msgstr "Seleccionar todo"
 
 #: includes/admin/sunshine-order.php:434 includes/class-order.php:1058
-#: includes/class-sunshinephotocart.php:539 gallery.php:272 admin.php:237
+#: includes/class-sunshinephotocart.php:541 gallery.php:272 admin.php:237
 #: admin/customers.php:20 admin/customers.php:42 class-admin-gift-cards.php:189
 msgid "Order"
 msgstr "Orden"
@@ -3247,8 +3349,8 @@ msgid "Delivery/Shipping Method"
 msgstr "Entrega/Método de envío"
 
 #: includes/admin/sunshine-order.php:683
-#: includes/class-sunshinephotocart.php:588
-#: includes/class-sunshinephotocart.php:599 class-export-orders.php:514
+#: includes/class-sunshinephotocart.php:590
+#: includes/class-sunshinephotocart.php:601 class-export-orders.php:514
 #: class-export-orders.php:609
 msgid "Order Status"
 msgstr "Estado del pedido"
@@ -3325,7 +3427,7 @@ msgid "Image Data"
 msgstr "Datos de imagen"
 
 #: includes/admin/sunshine-order.php:807 includes/admin/sunshine-order.php:844
-#: includes/class-sunshinephotocart.php:427 templates/admin/order-items.php:104
+#: includes/class-sunshinephotocart.php:429 templates/admin/order-items.php:104
 #: templates/cart/item.php:5 templates/cart/items.php:5
 #: templates/checkout/summary.php:12 templates/invoice/admin.php:214
 #: templates/invoice/admin.php:226 templates/order/item.php:5
@@ -3633,7 +3735,7 @@ msgstr "¡No se han encontrado huérfanos!"
 
 #: includes/admin/tools/orphans.php:162
 #: includes/admin/tools/refresh-photo-details.php:221
-#: includes/admin/tools/regenerate.php:450
+#: includes/admin/tools/regenerate.php:637
 #: includes/admin/tools/square-reconcile.php:184
 #: includes/admin/tools/unused-image-sizes.php:153 hooks.php:693
 msgid "Abort"
@@ -3696,7 +3798,8 @@ msgstr "Actualizando detalles de las fotos de \"%s\""
 
 #: includes/admin/tools/refresh-photo-details.php:231
 #: includes/admin/tools/refresh-photo-details.php:256
-#: includes/admin/tools/regenerate.php:480
+#: includes/admin/tools/regenerate.php:667
+#: includes/admin/tools/regenerate.php:680
 msgid "Done!"
 msgstr "¡Hecho!"
 
@@ -3710,7 +3813,8 @@ msgstr ""
 
 #: includes/admin/tools/regenerate.php:22
 #: includes/admin/tools/regenerate.php:25
-#: includes/admin/tools/regenerate.php:37
+#: includes/admin/tools/regenerate.php:39
+#: includes/admin/tools/regenerate.php:83
 msgid "Regenerate Images"
 msgstr "Regenerar imágenes"
 
@@ -3722,40 +3826,52 @@ msgstr ""
 "Si ha cambiado el tamaño de la miniatura, el tamaño de la descarga digital o "
 "la configuración de la marca de agua, deberá regenerar las imágenes."
 
-#: includes/admin/tools/regenerate.php:193
+#: includes/admin/tools/regenerate.php:252
 msgid "Could not find original file to regenerate from"
 msgstr ""
 "No se ha podido encontrar el archivo original a partir del cual regenerar"
 
-#: includes/admin/tools/regenerate.php:231
+#: includes/admin/tools/regenerate.php:290
 msgid "Could not download file from cloud storage for regeneration"
 msgstr ""
 "No se pudo descargar el archivo del almacenamiento en la nube para su "
 "regeneración."
 
-#: includes/admin/tools/regenerate.php:240
+#: includes/admin/tools/regenerate.php:299
 msgid "Cloud Storage addon is required to regenerate this offloaded image"
 msgstr ""
 "Se requiere el complemento Cloud Storage para regenerar esta imagen "
 "descargada."
 
-#: includes/admin/tools/regenerate.php:269
+#: includes/admin/tools/regenerate.php:321
+msgid "Could not restore the original file from cloud storage"
+msgstr "No se pudo restaurar el archivo original desde el almacenamiento en la nube"
+
+#: includes/admin/tools/regenerate.php:335
 msgid "Original file is missing locally and no cloud-storage key is set."
 msgstr ""
 "Falta el archivo original en local y no hay ninguna clave de almacenamiento "
 "en la nube configurada."
 
 #. translators: %s is the gallery title
-#: includes/admin/tools/regenerate.php:435
+#: includes/admin/tools/regenerate.php:618
 #, php-format
 msgid "Regenerating images for \"%s\""
 msgstr "Regeneración de imágenes para \"%s\""
 
-#: includes/admin/tools/regenerate.php:438
+#. translators: %d is the number of galleries
+#: includes/admin/tools/regenerate.php:622
+#, fuzzy, php-format
+msgid "Regenerating images for %d gallery"
+msgid_plural "Regenerating images for %d galleries"
+msgstr[0] "Regeneración de imágenes para \"%s\""
+msgstr[1] "Regeneración de imágenes para \"%s\""
+
+#: includes/admin/tools/regenerate.php:625
 msgid "Regenerating images"
 msgstr "Regeneración de imágenes"
 
-#: includes/admin/tools/regenerate.php:473
+#: includes/admin/tools/regenerate.php:660
 msgid ""
 "Image did not fully upload because it is too large for your server to "
 "handle. Thumbnails and watermarks may not have been applied. Recommend "
@@ -3765,12 +3881,36 @@ msgstr ""
 "servidor. Es posible que no se hayan aplicado las miniaturas y las marcas de "
 "agua. Se recomienda aumentar la memoria disponible."
 
-#: includes/admin/tools/regenerate.php:514
+#: includes/admin/tools/regenerate.php:710
+msgid "Sub-galleries Found"
+msgstr "Subgalerías encontradas"
+
+#. translators: %d is the number of sub-galleries
+#: includes/admin/tools/regenerate.php:716
+#, php-format
+msgid ""
+"There is %d sub-gallery inside the galleries you picked. Do you want to "
+"regenerate its images too?"
+msgid_plural ""
+"There are %d sub-galleries inside the galleries you picked. Do you want to "
+"regenerate their images too?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/tools/regenerate.php:729
+msgid "Yes, include sub-galleries"
+msgstr "Sí, incluir las subgalerías"
+
+#: includes/admin/tools/regenerate.php:732
+msgid "No, only the galleries I picked"
+msgstr "No, solo las galerías que elegí"
+
+#: includes/admin/tools/regenerate.php:754
 msgid "Watermark Settings Detected"
 msgstr "Configuración de marca de agua detectada"
 
 #. translators: %d is the number of images without watermark
-#: includes/admin/tools/regenerate.php:520
+#: includes/admin/tools/regenerate.php:760
 #, php-format
 msgid ""
 "You have %d image that does not have watermark enabled, but you have a "
@@ -3785,19 +3925,19 @@ msgstr[1] ""
 "Tienes %d imágenes que no tienen la marca de agua habilitada, pero tienes "
 "una marca de agua configurada en tus ajustes generales."
 
-#: includes/admin/tools/regenerate.php:531
+#: includes/admin/tools/regenerate.php:771
 msgid "How would you like to proceed?"
 msgstr "¿Cómo desea proceder?"
 
-#: includes/admin/tools/regenerate.php:534
+#: includes/admin/tools/regenerate.php:774
 msgid "Apply watermark to all images"
 msgstr "Aplicar marca de agua a todas las imágenes"
 
-#: includes/admin/tools/regenerate.php:537
+#: includes/admin/tools/regenerate.php:777
 msgid "Keep current image watermark settings"
 msgstr "Mantener la configuración actual de la marca de agua de la imagen"
 
-#: includes/admin/tools/regenerate.php:574
+#: includes/admin/tools/regenerate.php:815
 msgid ""
 "No image found at this position. It may have been deleted since this run "
 "started."
@@ -3950,56 +4090,58 @@ msgstr "Se ha eliminado un artículo de su cesta porque ya no existe"
 msgid ""
 "An item has been removed from your cart because one of its options is no "
 "longer available"
-msgstr "Se quitó un artículo de tu carrito porque una de sus opciones ya no está disponible"
+msgstr ""
+"Se quitó un artículo de tu carrito porque una de sus opciones ya no está "
+"disponible"
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:750
+#: includes/class-cart.php:751
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr "Descuento \"%s\" eliminado porque ya no es válido"
 
-#: includes/class-cart.php:1697
+#: includes/class-cart.php:1698
 msgid "Contact Information"
 msgstr "Información de contacto"
 
-#: includes/class-cart.php:1702 includes/class-countries.php:3424
+#: includes/class-cart.php:1703 includes/class-countries.php:3424
 #: includes/functions/account.php:579 templates/account/signup.php:20
 #: class-export-orders.php:522
 msgid "First Name"
 msgstr "Nombre"
 
-#: includes/class-cart.php:1711 includes/class-countries.php:3433
+#: includes/class-cart.php:1712 includes/class-countries.php:3433
 #: includes/functions/account.php:587 templates/account/signup.php:27
 #: class-export-orders.php:523
 msgid "Last Name"
 msgstr "Apellido"
 
-#: includes/class-cart.php:1737 templates/account/login.php:18
+#: includes/class-cart.php:1738 templates/account/login.php:18
 #: templates/account/signup.php:9 templates/shortcodes/password.php:4
 msgid "Password"
 msgstr "Contraseña"
 
-#: includes/class-cart.php:1739
+#: includes/class-cart.php:1740
 msgid "Optionally set a password"
 msgstr "Si lo desea, puede establecer una contraseña"
 
-#: includes/class-cart.php:1756 templates/email/admin-receipt.php:198
+#: includes/class-cart.php:1757 templates/email/admin-receipt.php:198
 #: templates/email/customer-receipt.php:184
 #: templates/email/order-status.php:152 templates/invoice/admin.php:185
 #: templates/order/details.php:39 class-export-orders.php:526
 msgid "EU VAT Number"
 msgstr "Número de IVA de la UE"
 
-#: includes/class-cart.php:1858
+#: includes/class-cart.php:1859
 msgid "Delivery Method"
 msgstr "Método de entrega"
 
-#: includes/class-cart.php:1918 includes/class-cart.php:1935
+#: includes/class-cart.php:1919 includes/class-cart.php:1936
 #: templates/invoice/admin.php:174 class-export-orders.php:520
 msgid "Shipping Method"
 msgstr "Método de envío"
 
-#: includes/class-cart.php:1940 includes/class-cart.php:2452
+#: includes/class-cart.php:1941 includes/class-cart.php:2453
 msgid ""
 "Sorry, shipping is not available to the address you entered. Please double "
 "check the address or try a different shipping address."
@@ -4007,36 +4149,36 @@ msgstr ""
 "Lo sentimos, no hay envío disponible a la dirección que ingresaste. Revisa "
 "la dirección o prueba con otra dirección de envío."
 
-#: includes/class-cart.php:2001
+#: includes/class-cart.php:2002
 msgid "Use shipping address as billing address"
 msgstr "Utilizar la dirección de envío como dirección de facturación"
 
-#: includes/class-cart.php:2039
+#: includes/class-cart.php:2040
 msgid "Same as shipping address"
 msgstr "La misma que la dirección de envío"
 
-#: includes/class-cart.php:2091
+#: includes/class-cart.php:2092
 msgid "Payment"
 msgstr "Pago"
 
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:2101
+#: includes/class-cart.php:2102
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr "Utilizar mis créditos (%s disponibles)"
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:2109 includes/class-payment-method.php:242
+#: includes/class-cart.php:2110 includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr "Enviar pedido y pagar %s"
 
-#: includes/class-cart.php:2111
+#: includes/class-cart.php:2112
 msgid "Submit Order for Free"
 msgstr "Enviar pedido gratis"
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:2136
+#: includes/class-cart.php:2137
 #, php-format
 msgid ""
 "By submitting this order, you agree to our <a href=\"%1$s\" "
@@ -4045,57 +4187,57 @@ msgstr ""
 "Al enviar este pedido, acepta que <a href=\"%1$s\" target=\"_blank\">%2$s</a>"
 
 #. translators: %s is the section name
-#: includes/class-cart.php:2177
+#: includes/class-cart.php:2178
 #, php-format
 msgid "Edit %s"
 msgstr "Editar %s"
 
-#: includes/class-cart.php:2195
+#: includes/class-cart.php:2196
 msgid "Next Step"
 msgstr "Siguiente paso"
 
-#: includes/class-cart.php:2372
+#: includes/class-cart.php:2373
 msgid "Invalid checkout section"
 msgstr "Sección de pago no válida"
 
-#: includes/class-cart.php:2388
+#: includes/class-cart.php:2389
 msgid "Field contains invalid data"
 msgstr "El campo contiene datos no válidos"
 
 #. translators: %s is the field name
-#: includes/class-cart.php:2411
+#: includes/class-cart.php:2412
 #, php-format
 msgid "%s is required"
 msgstr "%s es obligatorio para quitar la meta de la imagen"
 
-#: includes/class-cart.php:2423 frontend.php:173
+#: includes/class-cart.php:2424 frontend.php:173
 msgid "Invalid email"
 msgstr "Email inválido"
 
-#: includes/class-cart.php:2528 includes/class-cart.php:2933
-#: includes/class-cart.php:2941
+#: includes/class-cart.php:2529 includes/class-cart.php:2934
+#: includes/class-cart.php:2942
 msgid "Please select a payment method before completing your order."
 msgstr "Elige un método de pago antes de completar tu pedido."
 
-#: includes/class-cart.php:2540 includes/class-cart.php:2792
+#: includes/class-cart.php:2541 includes/class-cart.php:2793
 msgid "Please select a shipping method before completing your order."
 msgstr "Selecciona un método de envío antes de completar tu pedido."
 
 #. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
-#: includes/class-cart.php:2661
+#: includes/class-cart.php:2662
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
 msgstr "Completa lo siguiente antes de enviar tu pedido: %s"
 
-#: includes/class-cart.php:2671
+#: includes/class-cart.php:2672
 msgid "Please log in or create an account to complete this order"
 msgstr "Inicia sesión o crea una cuenta para completar este pedido"
 
-#: includes/class-cart.php:2704
+#: includes/class-cart.php:2705
 msgid "Customer is trying to pay again"
 msgstr "El cliente está intentando pagar de nuevo"
 
-#: includes/class-cart.php:2717
+#: includes/class-cart.php:2718
 msgid ""
 "Error encountered during checkout process and your order has already been "
 "marked as paid."
@@ -4103,19 +4245,19 @@ msgstr ""
 "Se ha producido un error durante el proceso de pago y su pedido ya se ha "
 "marcado como pagado."
 
-#: includes/class-cart.php:2717 includes/class-cart.php:3238
+#: includes/class-cart.php:2718 includes/class-cart.php:3239
 msgid "View the order"
 msgstr "Ver el pedido"
 
-#: includes/class-cart.php:2729
+#: includes/class-cart.php:2730
 msgid "No payment method selected"
 msgstr "Ningún método de pago seleccionado"
 
-#: includes/class-cart.php:2858
+#: includes/class-cart.php:2859
 msgid "Failed to initialize order"
 msgstr "No se ha podido inicializar el pedido."
 
-#: includes/class-cart.php:2901
+#: includes/class-cart.php:2902
 msgid ""
 "Something happened while trying to process your order. Please contact the "
 "site owner for more details."
@@ -4123,35 +4265,39 @@ msgstr ""
 "Ha ocurrido algo al intentar procesar su pedido. Póngase en contacto con el "
 "propietario del sitio para obtener más información."
 
-#: includes/class-cart.php:2966
+#: includes/class-cart.php:2967
 msgid "No payment method"
 msgstr "No hay forma de pago"
 
 #. translators: 1: store credit the order used, 2: store credit the customer had left
-#: includes/class-cart.php:3048
+#: includes/class-cart.php:3049
 #, php-format
 msgid ""
 "This order used %1$s of store credit, but the customer only had %2$s left "
 "when it was paid. The difference was not collected."
-msgstr "Este pedido usó %1$s de crédito, pero al cliente solo le quedaban %2$s cuando se pagó. La diferencia no se cobró."
+msgstr ""
+"Este pedido usó %1$s de crédito, pero al cliente solo le quedaban %2$s "
+"cuando se pagó. La diferencia no se cobró."
 
-#: includes/class-cart.php:3128
+#: includes/class-cart.php:3129
 msgid "Your store credit has changed. Please review your order and try again."
 msgstr "Tu crédito cambió. Revisa tu pedido e inténtalo de nuevo."
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:3136
+#: includes/class-cart.php:3137
 #, php-format
 msgid ""
 "Discount \"%s\" can no longer be used. Please review your order and try "
 "again."
-msgstr "El descuento \"%s\" ya no se puede usar. Revisa tu pedido e inténtalo de nuevo."
+msgstr ""
+"El descuento \"%s\" ya no se puede usar. Revisa tu pedido e inténtalo de "
+"nuevo."
 
-#: includes/class-cart.php:3155 includes/functions/account.php:250
+#: includes/class-cart.php:3156 includes/functions/account.php:250
 msgid "Too many signup attempts, please try again later"
 msgstr "Demasiados intentos de registro, inténtalo más tarde"
 
-#: includes/class-cart.php:3167
+#: includes/class-cart.php:3168
 msgid ""
 "User account already exists with that email address - please login to "
 "continue"
@@ -4159,7 +4305,7 @@ msgstr ""
 "Ya existe una cuenta de usuario con esa dirección de correo electrónico. "
 "Inicie sesión para continuar"
 
-#: includes/class-cart.php:3238
+#: includes/class-cart.php:3239
 msgid "It appears your previous checkout has already been processed."
 msgstr "Parece que su compra anterior ya ha sido procesada."
 
@@ -13031,7 +13177,7 @@ msgstr "Lo sentimos, no tiene permiso para ver esta imagen"
 
 #: includes/class-frontend.php:989 includes/functions/add-to-cart.php:17
 #: includes/functions/comments.php:16 includes/functions/comments.php:63
-#: includes/functions/image.php:380 includes/functions/share.php:16
+#: includes/functions/image.php:396 includes/functions/share.php:16
 #: includes/functions/store.php:11 includes/functions/store.php:137
 #: includes/functions/store.php:192 includes/functions/template.php:373
 #: frontend.php:668 frontend.php:956
@@ -13153,7 +13299,9 @@ msgstr "%s fee"
 msgid ""
 "%1$s can't take payments under %2$s. Add more to your order or choose "
 "another way to pay."
-msgstr "%1$s no acepta pagos de menos de %2$s. Agrega más a tu pedido o elige otra forma de pago."
+msgstr ""
+"%1$s no acepta pagos de menos de %2$s. Agrega más a tu pedido o elige otra "
+"forma de pago."
 
 #. translators: %s is the add-on name, such as "Stripe Pro"
 #: includes/class-payment-method.php:402
@@ -13196,270 +13344,270 @@ msgstr "ID de instancia: %s"
 msgid "Shipping or delivery"
 msgstr "Envío o entrega"
 
-#: includes/class-sunshinephotocart.php:378
-#: includes/class-sunshinephotocart.php:540 common.php:7 common.php:47
+#: includes/class-sunshinephotocart.php:380
+#: includes/class-sunshinephotocart.php:542 common.php:7 common.php:47
 #: discounts.php:36 gift-cards.php:98
 msgid "Add New"
 msgstr "Agregar Nuevo"
 
-#: includes/class-sunshinephotocart.php:379
+#: includes/class-sunshinephotocart.php:381
 msgid "Add New Gallery"
 msgstr "Agregar Nueva galeria"
 
-#: includes/class-sunshinephotocart.php:380
+#: includes/class-sunshinephotocart.php:382
 msgid "New Gallery"
 msgstr "Nueva Galeria"
 
-#: includes/class-sunshinephotocart.php:381 includes/functions/misc.php:497
+#: includes/class-sunshinephotocart.php:383 includes/functions/misc.php:499
 msgid "Edit Gallery"
 msgstr "Editar Galería"
 
-#: includes/class-sunshinephotocart.php:382
+#: includes/class-sunshinephotocart.php:384
 msgid "View Gallery"
 msgstr "Ver galería"
 
-#: includes/class-sunshinephotocart.php:383
+#: includes/class-sunshinephotocart.php:385
 msgid "All Galleries"
 msgstr "Todas las Galerias"
 
-#: includes/class-sunshinephotocart.php:384
+#: includes/class-sunshinephotocart.php:386
 msgid "Search Galleries"
 msgstr "Busca galerías"
 
-#: includes/class-sunshinephotocart.php:385
+#: includes/class-sunshinephotocart.php:387
 msgid "Parent Gallery:"
 msgstr "Galería de padres:"
 
-#: includes/class-sunshinephotocart.php:387
+#: includes/class-sunshinephotocart.php:389
 msgid "No galleries found in Trash"
 msgstr "No se han encontrado galerías en Papelera"
 
-#: includes/class-sunshinephotocart.php:388
+#: includes/class-sunshinephotocart.php:390
 msgid "Gallery Featured Image"
 msgstr "Galería Imagen destacada"
 
-#: includes/class-sunshinephotocart.php:389
+#: includes/class-sunshinephotocart.php:391
 msgid "Set featured image image"
 msgstr "Establecer imagen destacada"
 
-#: includes/class-sunshinephotocart.php:390
+#: includes/class-sunshinephotocart.php:392
 msgid "Remove featured image"
 msgstr "Eliminar imagen destacada"
 
-#: includes/class-sunshinephotocart.php:391
+#: includes/class-sunshinephotocart.php:393
 msgid "Use as featured image"
 msgstr "Usar como imagen destacada"
 
-#: includes/class-sunshinephotocart.php:392
+#: includes/class-sunshinephotocart.php:394
 msgid "Gallery archives"
 msgstr "Galería de archivos"
 
-#: includes/class-sunshinephotocart.php:393
+#: includes/class-sunshinephotocart.php:395
 msgid "Insert into gallery"
 msgstr "Insertar en la galería"
 
-#: includes/class-sunshinephotocart.php:394
+#: includes/class-sunshinephotocart.php:396
 msgid "Uploaded to this gallery"
 msgstr "Subido a esta galería"
 
-#: includes/class-sunshinephotocart.php:395
+#: includes/class-sunshinephotocart.php:397
 msgid "Filter galleries list"
 msgstr "Filtrar lista de galerías"
 
-#: includes/class-sunshinephotocart.php:396
+#: includes/class-sunshinephotocart.php:398
 msgid "Galleries list navigation"
 msgstr "Navegación por la lista de galerías"
 
-#: includes/class-sunshinephotocart.php:397
+#: includes/class-sunshinephotocart.php:399
 msgid "Galleries list"
 msgstr "Lista de galerías"
 
-#: includes/class-sunshinephotocart.php:428
+#: includes/class-sunshinephotocart.php:430
 msgid "Add Product"
 msgstr "Añadir Producto"
 
-#: includes/class-sunshinephotocart.php:429
+#: includes/class-sunshinephotocart.php:431
 msgid "Add New Product"
 msgstr "Agregar Nuevo Producto"
 
-#: includes/class-sunshinephotocart.php:430
+#: includes/class-sunshinephotocart.php:432
 msgid "Edit Product"
 msgstr "Editar Producto"
 
-#: includes/class-sunshinephotocart.php:431
+#: includes/class-sunshinephotocart.php:433
 msgid "New Product"
 msgstr "Nuevo producto"
 
-#: includes/class-sunshinephotocart.php:432
+#: includes/class-sunshinephotocart.php:434
 msgid "All Products"
 msgstr "Todos los Productos"
 
-#: includes/class-sunshinephotocart.php:433
+#: includes/class-sunshinephotocart.php:435
 msgid "View Products"
 msgstr "Ver productos"
 
-#: includes/class-sunshinephotocart.php:434
+#: includes/class-sunshinephotocart.php:436
 msgid "Search Products"
 msgstr "Buscar Productos"
 
-#: includes/class-sunshinephotocart.php:435
+#: includes/class-sunshinephotocart.php:437
 msgid "No products found"
 msgstr "No se encontraron productos"
 
-#: includes/class-sunshinephotocart.php:436
+#: includes/class-sunshinephotocart.php:438
 msgid "No products found in trash"
 msgstr "No hay productos encontrados en Trash"
 
-#: includes/class-sunshinephotocart.php:462
+#: includes/class-sunshinephotocart.php:464
 msgid "Product Categories"
 msgstr "Categorías de Productos"
 
-#: includes/class-sunshinephotocart.php:463
-#: includes/class-sunshinephotocart.php:479
+#: includes/class-sunshinephotocart.php:465
+#: includes/class-sunshinephotocart.php:481
 msgid "Product Category"
 msgstr "Categoría del producto"
 
-#: includes/class-sunshinephotocart.php:464
+#: includes/class-sunshinephotocart.php:466
 msgid "Search Product Categories"
 msgstr "Buscar categorías de productos"
 
-#: includes/class-sunshinephotocart.php:465
+#: includes/class-sunshinephotocart.php:467
 msgid "All Product Categories"
 msgstr "Todas las categorías de productos"
 
-#: includes/class-sunshinephotocart.php:466
+#: includes/class-sunshinephotocart.php:468
 msgid "Parent Product Category"
 msgstr "Categoría de Producto Superior"
 
-#: includes/class-sunshinephotocart.php:467
+#: includes/class-sunshinephotocart.php:469
 msgid "Parent Product Category:"
 msgstr "Categoría de Producto Superior:"
 
-#: includes/class-sunshinephotocart.php:468
+#: includes/class-sunshinephotocart.php:470
 msgid "Edit Product Category"
 msgstr "Editar categoría de producto"
 
-#: includes/class-sunshinephotocart.php:469
+#: includes/class-sunshinephotocart.php:471
 msgid "Update Product Category"
 msgstr "Actualizar categoría de producto"
 
-#: includes/class-sunshinephotocart.php:470
+#: includes/class-sunshinephotocart.php:472
 msgid "Add New Product Category"
 msgstr "Añadir nueva categoría de productos"
 
-#: includes/class-sunshinephotocart.php:471
+#: includes/class-sunshinephotocart.php:473
 msgid "New Product Category Name"
 msgstr "Nombre de la nueva categoría de productos"
 
-#: includes/class-sunshinephotocart.php:472
+#: includes/class-sunshinephotocart.php:474
 msgid "Separate categories with commas"
 msgstr "Separar categorías con comas"
 
-#: includes/class-sunshinephotocart.php:473
+#: includes/class-sunshinephotocart.php:475
 msgid "Choose from the most used categories"
 msgstr "Elija entre las categorías más utilizadas"
 
-#: includes/class-sunshinephotocart.php:504 class-admin-automated-emails.php:93
+#: includes/class-sunshinephotocart.php:506 class-admin-automated-emails.php:93
 msgid "Price Levels"
 msgstr "Niveles de precios"
 
-#: includes/class-sunshinephotocart.php:506
+#: includes/class-sunshinephotocart.php:508
 msgid "Search Price Levels"
 msgstr "Buscar niveles de precios"
 
-#: includes/class-sunshinephotocart.php:507
+#: includes/class-sunshinephotocart.php:509
 msgid "All Price Levels"
 msgstr "Todos los precios"
 
-#: includes/class-sunshinephotocart.php:508
+#: includes/class-sunshinephotocart.php:510
 msgid "Parent Price Level"
 msgstr "Nivel de precios"
 
-#: includes/class-sunshinephotocart.php:509
+#: includes/class-sunshinephotocart.php:511
 msgid "Parent Price Level:"
 msgstr "Nivel de precios de los padres:"
 
-#: includes/class-sunshinephotocart.php:510
+#: includes/class-sunshinephotocart.php:512
 msgid "Edit Price Level"
 msgstr "Editar nivel de precios"
 
-#: includes/class-sunshinephotocart.php:511
+#: includes/class-sunshinephotocart.php:513
 msgid "Update Price Level"
 msgstr "Actualizar nivel de precios"
 
-#: includes/class-sunshinephotocart.php:512
+#: includes/class-sunshinephotocart.php:514
 msgid "Add New Price Level"
 msgstr "Añadir nuevo nivel de precios"
 
-#: includes/class-sunshinephotocart.php:513
+#: includes/class-sunshinephotocart.php:515
 msgid "New Price Level"
 msgstr "Nuevo nivel de precios"
 
-#: includes/class-sunshinephotocart.php:541
+#: includes/class-sunshinephotocart.php:543
 msgid "Add New Order"
 msgstr "Añadir nueva compra"
 
-#: includes/class-sunshinephotocart.php:542
+#: includes/class-sunshinephotocart.php:544
 msgid "Edit Order"
 msgstr "Editar compra"
 
-#: includes/class-sunshinephotocart.php:543
+#: includes/class-sunshinephotocart.php:545
 msgid "New Order"
 msgstr "Nuevo pedido"
 
-#: includes/class-sunshinephotocart.php:544
+#: includes/class-sunshinephotocart.php:546
 msgid "All Orders"
 msgstr "Todos los Pedidos"
 
-#: includes/class-sunshinephotocart.php:545
+#: includes/class-sunshinephotocart.php:547
 msgid "View Orders"
 msgstr "Ver pedidos"
 
-#: includes/class-sunshinephotocart.php:546
+#: includes/class-sunshinephotocart.php:548
 msgid "Search Orders"
 msgstr "Buscar pedidos"
 
-#: includes/class-sunshinephotocart.php:547
+#: includes/class-sunshinephotocart.php:549
 msgid "No orders found"
 msgstr "No se encontraron órdenes"
 
-#: includes/class-sunshinephotocart.php:548
+#: includes/class-sunshinephotocart.php:550
 msgid "No orders found in trash"
 msgstr "No se han encontrado pedidos en la papelera"
 
-#: includes/class-sunshinephotocart.php:587
+#: includes/class-sunshinephotocart.php:589
 msgid "Order Statuses"
 msgstr "Estado de los pedidos"
 
-#: includes/class-sunshinephotocart.php:589
+#: includes/class-sunshinephotocart.php:591
 msgid "Search Order Status"
 msgstr "Buscar estado del pedido"
 
-#: includes/class-sunshinephotocart.php:590
+#: includes/class-sunshinephotocart.php:592
 msgid "All Order Status"
 msgstr "Estado de todos los pedidos"
 
-#: includes/class-sunshinephotocart.php:591
+#: includes/class-sunshinephotocart.php:593
 msgid "Parent Order Status"
 msgstr "Estado de la orden de los padres"
 
-#: includes/class-sunshinephotocart.php:592
+#: includes/class-sunshinephotocart.php:594
 msgid "Parent Order Status:"
 msgstr "Estado de la orden de los padres:"
 
-#: includes/class-sunshinephotocart.php:593
+#: includes/class-sunshinephotocart.php:595
 msgid "Edit Order Status"
 msgstr "Editar el estado del pedido"
 
-#: includes/class-sunshinephotocart.php:594
+#: includes/class-sunshinephotocart.php:596
 msgid "Update Order Status"
 msgstr "Actualizar el estado del pedido"
 
-#: includes/class-sunshinephotocart.php:595
+#: includes/class-sunshinephotocart.php:597
 msgid "Add New Order Status"
 msgstr "Añadir estado de nuevo pedido"
 
-#: includes/class-sunshinephotocart.php:596
+#: includes/class-sunshinephotocart.php:598
 msgid "New Order Status"
 msgstr "Estado del nuevo pedido"
 
@@ -13497,7 +13645,10 @@ msgid ""
 "Email sent to admins when a payment can't be accepted for an order or an "
 "order is marked Failed. Sent to the recipients below, or the site admin "
 "email when left empty."
-msgstr "Email que se envía a los admins cuando no se puede aceptar un pago de un pedido o un pedido se marca como Falló. Se envía a los destinatarios de abajo, o al email de admin del sitio si se deja vacío."
+msgstr ""
+"Email que se envía a los admins cuando no se puede aceptar un pago de un "
+"pedido o un pedido se marca como Falló. Se envía a los destinatarios de "
+"abajo, o al email de admin del sitio si se deja vacío."
 
 #. translators: %1$s is the order name, %2$s is the site name
 #: includes/emails/class-email-admin-payment-problem.php:19
@@ -13513,7 +13664,10 @@ msgstr "Enviar cuando"
 msgid ""
 "A payment didn't match the order (wrong amount, currency or account, or paid "
 "for another order). The customer may have paid, but the order stayed unpaid."
-msgstr "Un pago no coincidía con el pedido (importe, moneda o cuenta incorrectos, o pagado para otro pedido). Puede que el cliente haya pagado, pero el pedido quedó sin pagar."
+msgstr ""
+"Un pago no coincidía con el pedido (importe, moneda o cuenta incorrectos, o "
+"pagado para otro pedido). Puede que el cliente haya pagado, pero el pedido "
+"quedó sin pagar."
 
 #: includes/emails/class-email-admin-payment-problem.php:49
 msgid "A payment was declined or cancelled at the payment service"
@@ -13733,7 +13887,9 @@ msgstr "Correo Electrónico inválido"
 msgid ""
 "An account could not be created with that email address. If you already have "
 "one, log in or reset your password."
-msgstr "No se pudo crear una cuenta con ese email. Si ya tienes una, inicia sesión o restablece tu contraseña."
+msgstr ""
+"No se pudo crear una cuenta con ese email. Si ya tienes una, inicia sesión o "
+"restablece tu contraseña."
 
 #. translators: %s: User email address
 #: includes/functions/account.php:301
@@ -13756,7 +13912,9 @@ msgstr "Intento de restablecimiento de contraseña no válido"
 msgid ""
 "If there is an account for %s, an email has been sent to it with information "
 "on resetting your password"
-msgstr "Si existe una cuenta para %s, se le envió un email con información para restablecer tu contraseña"
+msgstr ""
+"Si existe una cuenta para %s, se le envió un email con información para "
+"restablecer tu contraseña"
 
 #: includes/functions/account.php:400
 msgid "Passwords do not match"
@@ -14885,7 +15043,9 @@ msgstr "Comisiones de transacción"
 msgid ""
 "PayPal payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "El pago de PayPal %1$s por %2$s no coincide con el total del pedido, el pedido no se completó"
+msgstr ""
+"El pago de PayPal %1$s por %2$s no coincide con el total del pedido, el "
+"pedido no se completó"
 
 #: includes/payment-methods/paypal-legacy.php:415
 msgid "Customer cancelled the PayPal payment"
@@ -15133,14 +15293,18 @@ msgstr "Error al capturar el pago de PayPal"
 msgid ""
 "PayPal capture %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "La captura de PayPal %1$s por %2$s no coincide con el total del pedido, el pedido no se completó"
+msgstr ""
+"La captura de PayPal %1$s por %2$s no coincide con el total del pedido, el "
+"pedido no se completó"
 
 #: includes/payment-methods/paypal.php:716
 #: includes/payment-methods/square.php:1714
 #: includes/payment-methods/stripe.php:2962
 msgid ""
 "Your payment did not match the order total, please contact the site owner"
-msgstr "Tu pago no coincidía con el total del pedido, contacta a el propietario del sitio"
+msgstr ""
+"Tu pago no coincidía con el total del pedido, contacta a el propietario del "
+"sitio"
 
 #. translators: %s is the payment method name
 #: includes/payment-methods/paypal.php:725
@@ -15364,13 +15528,18 @@ msgstr "Ficha cuadrada actualizada correctamente"
 msgid ""
 "Square: your connection can no longer renew and will stop taking payments "
 "when the current key expires. Disconnect and connect Square again now."
-msgstr "Square: tu conexión ya no se puede renovar y dejará de aceptar pagos cuando venza la clave actual. Desconecta Square y vuelve a conectarlo ahora."
+msgstr ""
+"Square: tu conexión ya no se puede renovar y dejará de aceptar pagos cuando "
+"venza la clave actual. Desconecta Square y vuelve a conectarlo ahora."
 
 #: includes/payment-methods/square.php:697
 msgid ""
 "Square: could not reach Square to renew the connection. It will try again. "
 "If this message keeps coming back, disconnect and connect Square again."
-msgstr "Square: no se pudo contactar con Square para renovar la conexión. Se volverá a intentar. Si este mensaje sigue apareciendo, desconecta Square y vuelve a conectarlo."
+msgstr ""
+"Square: no se pudo contactar con Square para renovar la conexión. Se volverá "
+"a intentar. Si este mensaje sigue apareciendo, desconecta Square y vuelve a "
+"conectarlo."
 
 #. translators: %s: link to the Square settings
 #: includes/payment-methods/square.php:833
@@ -15378,13 +15547,17 @@ msgstr "Square: no se pudo contactar con Square para renovar la conexión. Se vo
 msgid ""
 "Square: <a href=\"%s\">disconnect and connect Square again</a> to use the "
 "more secure connection, where only your site holds your Square keys."
-msgstr "Square: <a href=\"%s\">desconecta Square y vuelve a conectarlo</a> para usar la conexión más segura, en la que solo tu sitio guarda tus claves de Square."
+msgstr ""
+"Square: <a href=\"%s\">desconecta Square y vuelve a conectarlo</a> para usar "
+"la conexión más segura, en la que solo tu sitio guarda tus claves de Square."
 
 #: includes/payment-methods/square.php:843
 msgid ""
 "Square: your connection has not renewed lately and will stop working soon. "
 "Disconnect and connect Square again to keep taking payments."
-msgstr "Square: tu conexión no se renovó últimamente y pronto dejará de funcionar. Desconecta Square y vuelve a conectarlo para seguir aceptando pagos."
+msgstr ""
+"Square: tu conexión no se renovó últimamente y pronto dejará de funcionar. "
+"Desconecta Square y vuelve a conectarlo para seguir aceptando pagos."
 
 #. translators: %s is a comma-separated list of discount codes
 #: includes/payment-methods/square.php:1237
@@ -15446,7 +15619,9 @@ msgstr ""
 msgid ""
 "Square payment %1$s was declined or cancelled (status %2$s), so the order "
 "was not marked paid"
-msgstr "El pago de Square %1$s fue rechazado o cancelado (estado %2$s), así que el pedido no se marcó como pagado"
+msgstr ""
+"El pago de Square %1$s fue rechazado o cancelado (estado %2$s), así que el "
+"pedido no se marcó como pagado"
 
 #. translators: 1: Square payment ID, 2: amount paid in Square
 #: includes/payment-methods/square.php:1707
@@ -15455,7 +15630,9 @@ msgstr "El pago de Square %1$s fue rechazado o cancelado (estado %2$s), así que
 msgid ""
 "Square payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "El pago de Square %1$s por %2$s no coincide con el total del pedido, el pedido no se completó"
+msgstr ""
+"El pago de Square %1$s por %2$s no coincide con el total del pedido, el "
+"pedido no se completó"
 
 #: includes/payment-methods/square.php:1712
 msgid "Your payment was declined. Please try again or use another way to pay."
@@ -15595,7 +15772,9 @@ msgstr "No se pudo volver a revisar este pago: %s"
 msgid ""
 "%s can't take a payment this small. Add more to your order or choose another "
 "way to pay."
-msgstr "%s no puede aceptar un pago tan pequeño. Agrega más a tu pedido o elige otra forma de pago."
+msgstr ""
+"%s no puede aceptar un pago tan pequeño. Agrega más a tu pedido o elige otra "
+"forma de pago."
 
 #: includes/payment-methods/stripe.php:382
 #: includes/payment-methods/stripe.php:3838
@@ -15997,7 +16176,9 @@ msgstr "Stripe se ha desconectado correctamente"
 msgid ""
 "Stripe payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "El pago de Stripe %1$s por %2$s no coincide con el total del pedido, el pedido no se completó"
+msgstr ""
+"El pago de Stripe %1$s por %2$s no coincide con el total del pedido, el "
+"pedido no se completó"
 
 #: includes/payment-methods/stripe.php:1748
 #: includes/payment-methods/stripe.php:1749
@@ -16056,7 +16237,9 @@ msgstr "Impuesto sobre ventas"
 msgid ""
 "This order could not be sent to Stripe for the right amount, please contact "
 "the site owner"
-msgstr "Este pedido no se pudo enviar a Stripe por el importe correcto, contacta a el propietario del sitio"
+msgstr ""
+"Este pedido no se pudo enviar a Stripe por el importe correcto, contacta a "
+"el propietario del sitio"
 
 #. translators: 1: product name, 2: quantity
 #: includes/payment-methods/stripe.php:2645
@@ -16173,13 +16356,18 @@ msgstr "Para tramitar pedidos de pruebas"
 msgid ""
 "The Test payment method is on and every customer can use it, so orders can "
 "be placed without paying. Turn it off when you are done testing."
-msgstr "El método de pago de prueba está activado y cualquier cliente puede usarlo, así que se pueden hacer pedidos sin pagar. Desactívalo cuando termines de probar."
+msgstr ""
+"El método de pago de prueba está activado y cualquier cliente puede usarlo, "
+"así que se pueden hacer pedidos sin pagar. Desactívalo cuando termines de "
+"probar."
 
 #: includes/payment-methods/test.php:24
 msgid ""
 "The Test payment method is on. Only admins can use it at checkout. Turn it "
 "off when you are done testing."
-msgstr "El método de pago de prueba está activado. Solo los admins pueden usarlo al pagar. Desactívalo cuando termines de probar."
+msgstr ""
+"El método de pago de prueba está activado. Solo los admins pueden usarlo al "
+"pagar. Desactívalo cuando termines de probar."
 
 #: includes/payment-methods/test.php:27
 msgid "Payment method settings"
@@ -16193,7 +16381,10 @@ msgstr "Permitir a los clientes"
 msgid ""
 "Let customers who are not admins use this payment method. Their orders are "
 "marked paid without any payment, so only turn this on while testing."
-msgstr "Deja que los clientes que no son admins usen este método de pago. Sus pedidos se marcan como pagados sin ningún pago, así que actívalo solo mientras pruebas."
+msgstr ""
+"Deja que los clientes que no son admins usen este método de pago. Sus "
+"pedidos se marcan como pagados sin ningún pago, así que actívalo solo "
+"mientras pruebas."
 
 #: includes/shipping-methods/flat-rate.php:7
 msgid "Flat Rate"
@@ -16585,13 +16776,17 @@ msgstr "Estado del pedido"
 msgid ""
 "Check this payment in %s's dashboard before refunding or marking the order "
 "paid."
-msgstr "Revisa este pago en el panel de %s antes de reembolsar o marcar el pedido como pagado."
+msgstr ""
+"Revisa este pago en el panel de %s antes de reembolsar o marcar el pedido "
+"como pagado."
 
 #: templates/email/admin-payment-problem.php:36
 msgid ""
 "Check this payment in your payment processor's dashboard before refunding or "
 "marking the order paid."
-msgstr "Revisa este pago en el panel de tu procesador de pagos antes de reembolsar o marcar el pedido como pagado."
+msgstr ""
+"Revisa este pago en el panel de tu procesador de pagos antes de reembolsar o "
+"marcar el pedido como pagado."
 
 #: templates/email/admin-receipt.php:13
 msgid "View Invoice"
@@ -17011,7 +17206,9 @@ msgstr "Importe máximo del pedido"
 msgid ""
 "Only make this shipping option available when cart contains at least one of "
 "the selected products. Leave empty for all products."
-msgstr "Ofrecer esta opción de envío solo cuando el carrito contenga al menos uno de los productos seleccionados. Déjalo vacío para todos los productos."
+msgstr ""
+"Ofrecer esta opción de envío solo cuando el carrito contenga al menos uno de "
+"los productos seleccionados. Déjalo vacío para todos los productos."
 
 #: hooks.php:52
 msgid "Include Galleries"
@@ -17457,7 +17654,9 @@ msgstr "Sin respuesta del procesador de tarjetas de crédito"
 msgid ""
 "Authorize.net approved only %1$s of the %2$s total on a prepaid card. The "
 "order was not paid and the partial charge was cancelled."
-msgstr "Authorize.net solo aprobó %1$s del total de %2$s en una tarjeta prepago. El pedido no se pagó y el cargo parcial se canceló."
+msgstr ""
+"Authorize.net solo aprobó %1$s del total de %2$s en una tarjeta prepago. El "
+"pedido no se pagó y el cargo parcial se canceló."
 
 #. translators: %s: Authorize.net transaction ID
 #: class-authorizenet.php:335
@@ -17465,19 +17664,25 @@ msgstr "Authorize.net solo aprobó %1$s del total de %2$s en una tarjeta prepago
 msgid ""
 "Could not cancel the partial Authorize.net charge %s. Void it in your "
 "Authorize.net account."
-msgstr "No se pudo cancelar el cargo parcial de Authorize.net %s. Anúlalo en tu cuenta de Authorize.net."
+msgstr ""
+"No se pudo cancelar el cargo parcial de Authorize.net %s. Anúlalo en tu "
+"cuenta de Authorize.net."
 
 #: class-authorizenet.php:342
 msgid ""
 "Your card does not have enough on it to pay the full order total, so it was "
 "not charged. Please use another card."
-msgstr "Tu tarjeta no tiene saldo suficiente para pagar el total del pedido, así que no se cobró. Usa otra tarjeta."
+msgstr ""
+"Tu tarjeta no tiene saldo suficiente para pagar el total del pedido, así que "
+"no se cobró. Usa otra tarjeta."
 
 #: class-authorizenet.php:353
 msgid ""
 "Authorize.net authorized the card but did not charge it yet. Capture the "
 "payment in your Authorize.net account."
-msgstr "Authorize.net autorizó la tarjeta pero aún no la cobró. Captura el pago en tu cuenta de Authorize.net."
+msgstr ""
+"Authorize.net autorizó la tarjeta pero aún no la cobró. Captura el pago en "
+"tu cuenta de Authorize.net."
 
 #. translators: 1: Authorize.net transaction ID, 2: Authorize.net reason code
 #: class-authorizenet.php:367
@@ -17486,7 +17691,10 @@ msgid ""
 "Authorize.net is holding payment %1$s for review (reason %2$s). The order "
 "stays Pending. Approve or decline it in your Authorize.net account, then "
 "update this order."
-msgstr "Authorize.net está reteniendo el pago %1$s para revisión (motivo %2$s). El pedido sigue Pendiente. Apruébalo o recházalo en tu cuenta de Authorize.net y luego actualiza este pedido."
+msgstr ""
+"Authorize.net está reteniendo el pago %1$s para revisión (motivo %2$s). El "
+"pedido sigue Pendiente. Apruébalo o recházalo en tu cuenta de Authorize.net "
+"y luego actualiza este pedido."
 
 #. translators: %1$s: error message, %2$s: error code
 #: class-authorizenet.php:374 class-authorizenet.php:377
@@ -18313,8 +18521,8 @@ msgstr "Descargar créditos"
 msgid "Save download credits"
 msgstr "Ahorrar créditos de descarga"
 
-#: admin/galleries.php:7 admin/settings.php:102 frontend.php:1050
-#: frontend.php:1060 reports/class-reports-image-downloads.php:38
+#: admin/galleries.php:7 admin/settings.php:102 frontend.php:1056
+#: frontend.php:1066 reports/class-reports-image-downloads.php:38
 #: reports/class-reports-image-downloads.php:157
 msgid "Downloads"
 msgstr "Descargas"
@@ -18398,53 +18606,54 @@ msgstr "Si lo desea, puede cargar archivos para descargarlos con este pedido"
 msgid "File could not be deleted"
 msgstr "No se ha podido eliminar el archivo"
 
-#: admin/orders.php:276 admin/orders.php:478 frontend.php:60 frontend.php:151
-#: frontend.php:237 frontend.php:349 frontend.php:462 frontend.php:662
-#: frontend.php:950 order.php:396 order.php:591 order.php:736 order.php:1009
+#: admin/orders.php:276 admin/orders.php:286 admin/orders.php:484
+#: frontend.php:60 frontend.php:151 frontend.php:237 frontend.php:349
+#: frontend.php:462 frontend.php:662 frontend.php:950 order.php:396
+#: order.php:591 order.php:736 order.php:1009 exports.php:305 exports.php:315
 #: add-to-cart.php:36 cart.php:123 cart.php:144 shortcodes.php:79
 msgid "Invalid request"
 msgstr "Solicitud invalida"
 
-#: admin/orders.php:351 frontend.php:340 frontend.php:453 frontend.php:549
+#: admin/orders.php:357 frontend.php:340 frontend.php:453 frontend.php:549
 #: frontend.php:941
 msgid "Sorry, you do not have permission to download"
 msgstr "Lo sentimos, no tiene permiso para descargar"
 
-#: admin/orders.php:365
+#: admin/orders.php:371
 msgid "Notify user of files added to order"
 msgstr "Notificar al usuario los archivos añadidos al pedido"
 
-#: admin/orders.php:469
+#: admin/orders.php:475
 msgid "Download all originals"
 msgstr "Descargar todos los originales"
 
-#: admin/orders.php:482
+#: admin/orders.php:488
 msgid "You do not have permission to download these files"
 msgstr "No tienes permiso para descargar estos archivos."
 
-#: admin/orders.php:487
+#: admin/orders.php:493
 msgid "Order not found"
 msgstr "Pedido no encontrada"
 
-#: admin/orders.php:493
+#: admin/orders.php:499
 msgid "No images found in this order"
 msgstr "No se han encontrado imágenes en este pedido."
 
-#: admin/orders.php:496 class-rest-downloads-controller.php:142
+#: admin/orders.php:502 class-rest-downloads-controller.php:142
 msgid "Originals"
 msgstr "Originales"
 
-#: admin/orders.php:502
+#: admin/orders.php:508
 msgid "Admin downloaded all original images"
 msgstr "El administrador descargó todas las imágenes originales."
 
-#: admin/orders.php:513
+#: admin/orders.php:519
 msgid "Customer was notified via email about new files available for download"
 msgstr ""
 "El cliente fue notificado por correo electrónico sobre los nuevos archivos "
 "disponibles para su descarga"
 
-#: admin/orders.php:515
+#: admin/orders.php:521
 msgid "No files were attached to this order"
 msgstr "No se han adjuntado archivos a esta orden"
 
@@ -18629,22 +18838,22 @@ msgstr "Descargar los artículos de su pedido"
 msgid "Digital Download"
 msgstr "Descarga digital"
 
-#: class-download.php:752
+#: class-download.php:838
 msgid "Unable to process download. The requested file may not be available."
 msgstr ""
 "No se puede procesar la descarga. Es posible que el archivo solicitado no "
 "esté disponible."
 
-#: class-download.php:753 class-download.php:799 class-download.php:875
-#: class-download.php:937 class-download.php:957 class-download.php:1439
-#: frontend.php:292 frontend.php:821 frontend.php:829
+#: class-download.php:839 class-download.php:886 class-download.php:964
+#: class-download.php:1028 class-download.php:1048 class-download.php:1535
+#: class-download.php:1585 frontend.php:292 frontend.php:821 frontend.php:829
 #: includes/download-handler.php:99 includes/download-handler.php:107
 #: includes/download-handler.php:162 includes/download-handler.php:177
 #: includes/download-handler.php:184 includes/download-handler.php:210
 msgid "Download Error"
 msgstr "Error de descarga"
 
-#: class-download.php:798 class-download.php:2061
+#: class-download.php:885 class-download.php:1966
 msgid ""
 "Sorry, the requested file could not be found. Please try again or contact "
 "support."
@@ -18652,7 +18861,7 @@ msgstr ""
 "Lo sentimos, no se ha encontrado el archivo solicitado. Inténtalo de nuevo o "
 "ponte en contacto con el servicio de asistencia."
 
-#: class-download.php:874
+#: class-download.php:963
 msgid ""
 "Sorry, some of the files in this download could not be retrieved. Please try "
 "again or contact support."
@@ -18660,7 +18869,7 @@ msgstr ""
 "Lo sentimos, no se pudieron obtener algunos de los archivos de esta "
 "descarga. Inténtalo nuevamente o contacta a soporte."
 
-#: class-download.php:936
+#: class-download.php:1027
 msgid ""
 "Sorry, this download could not be prepared. Please try again or contact "
 "support."
@@ -18668,7 +18877,7 @@ msgstr ""
 "Lo sentimos, esta descarga no se pudo preparar. Inténtalo nuevamente o "
 "contacta a soporte."
 
-#: class-download.php:956
+#: class-download.php:1047 class-download.php:1584
 msgid ""
 "Sorry, some of the files in this download could not be read. Please try "
 "again or contact support."
@@ -18676,7 +18885,7 @@ msgstr ""
 "Lo sentimos, no se pudieron leer algunos de los archivos de esta descarga. "
 "Inténtalo nuevamente o contacta a soporte."
 
-#: class-download.php:1438
+#: class-download.php:1534
 msgid ""
 "Sorry, some of the files in this download could not be found. Please try "
 "again or contact support."
@@ -18684,11 +18893,11 @@ msgstr ""
 "Lo sentimos, no se encontraron algunos de los archivos de esta descarga. "
 "Inténtalo nuevamente o contacta a soporte."
 
-#: class-download.php:2136
+#: class-download.php:2041
 msgid "Sorry, the file could not be downloaded. Please try again."
 msgstr "Lo sentimos, no se pudo descargar el archivo. Inténtalo de nuevo."
 
-#: class-download.php:2400
+#: class-download.php:2334
 msgid "original"
 msgstr "original"
 
@@ -18804,15 +19013,15 @@ msgstr "Descargar Galería"
 msgid "You do not have permission to download this file"
 msgstr "No tiene permiso para descargar este archivo"
 
-#: frontend.php:1148
+#: frontend.php:1154
 msgid "You have no available downloads"
 msgstr "No tiene descargas disponibles"
 
-#: frontend.php:1173
+#: frontend.php:1179
 msgid "Please provide a valid email address"
 msgstr "Por favor, proporcione una dirección de correo electrónico válida."
 
-#: frontend.php:1178
+#: frontend.php:1184
 msgid "Invalid request type"
 msgstr "Tipo de solicitud inválido"
 
@@ -19577,15 +19786,15 @@ msgstr "Cualquier galería"
 msgid "Will include all child galleries as well"
 msgstr "Incluirá también todas las galerías infantiles"
 
-#: class-export.php:200
+#: class-export.php:201
 msgid "File Format"
 msgstr "Formato de archivo"
 
-#: class-export.php:204
+#: class-export.php:205
 msgid "CSV"
 msgstr "CSV"
 
-#: class-export.php:209
+#: class-export.php:210
 msgid "XML"
 msgstr "Xml"
 
@@ -19612,6 +19821,11 @@ msgstr "Exportaciones"
 #: exports.php:117
 msgid "Past Exports"
 msgstr "Exportaciones anteriores"
+
+#: exports.php:299
+#, fuzzy
+msgid "You are not allowed to run exports"
+msgstr "Lo sentimos, no tiene permiso para ver esta imagen"
 
 #. Plugin Name of the plugin
 #: light-blue.php
@@ -20074,7 +20288,9 @@ msgstr "Clave de pruebas secreta"
 msgid ""
 "Mollie payment %1$s was not accepted for this order: %2$s The order was left "
 "unpaid."
-msgstr "El pago de Mollie %1$s no se aceptó para este pedido: %2$s El pedido quedó sin pagar."
+msgstr ""
+"El pago de Mollie %1$s no se aceptó para este pedido: %2$s El pedido quedó "
+"sin pagar."
 
 #: class-mollie.php:350 class-quickpay.php:433
 msgid "it was made for a different order."
@@ -20589,7 +20805,9 @@ msgstr "No se ha podido preparar el pago"
 msgid ""
 "Mercado Pago payment not started: this Mercado Pago account only takes "
 "payments in %1$s, and the store charges in %2$s"
-msgstr "Pago de Mercado Pago no iniciado: esta cuenta de Mercado Pago solo acepta pagos en %1$s y la tienda cobra en %2$s"
+msgstr ""
+"Pago de Mercado Pago no iniciado: esta cuenta de Mercado Pago solo acepta "
+"pagos en %1$s y la tienda cobra en %2$s"
 
 #. translators: %s: Mercado Pago's reason
 #: class-mercadopago-pro.php:255
@@ -20639,7 +20857,9 @@ msgstr "No se ha podido procesar el pago, inténtelo de nuevo"
 msgid ""
 "Mercado Pago can't take payments in %s for this store. Please choose another "
 "way to pay."
-msgstr "Mercado Pago no puede aceptar pagos en %s para esta tienda. Elige otra forma de pago."
+msgstr ""
+"Mercado Pago no puede aceptar pagos en %s para esta tienda. Elige otra forma "
+"de pago."
 
 #. translators: %s: payment status from Mercado Pago, e.g. rejected
 #: trait-mercadopago-common.php:86
@@ -20683,7 +20903,9 @@ msgstr "el importe es %1$s, el total del pedido es %2$s"
 msgid ""
 "Mercado Pago payment %1$s was declined or cancelled (status %2$s), so the "
 "order was not marked paid"
-msgstr "El pago de Mercado Pago %1$s fue rechazado o cancelado (estado %2$s), así que el pedido no se marcó como pagado"
+msgstr ""
+"El pago de Mercado Pago %1$s fue rechazado o cancelado (estado %2$s), así "
+"que el pedido no se marcó como pagado"
 
 #. translators: 1: Mercado Pago payment ID, 2: reason, e.g. "amount is 1, order total is 110"
 #: trait-mercadopago-common.php:119
@@ -20691,11 +20913,15 @@ msgstr "El pago de Mercado Pago %1$s fue rechazado o cancelado (estado %2$s), as
 msgid ""
 "Mercado Pago payment %1$s did not match this order, so the order was not "
 "marked paid (%2$s)"
-msgstr "El pago de Mercado Pago %1$s no coincidía con este pedido, así que el pedido no se marcó como pagado (%2$s)"
+msgstr ""
+"El pago de Mercado Pago %1$s no coincidía con este pedido, así que el pedido "
+"no se marcó como pagado (%2$s)"
 
 #: trait-mercadopago-common.php:205
 msgid "Could not refund payment: this order has no Mercado Pago payment"
-msgstr "No se pudo reembolsar el pago: este pedido no tiene ningún pago de Mercado Pago"
+msgstr ""
+"No se pudo reembolsar el pago: este pedido no tiene ningún pago de Mercado "
+"Pago"
 
 #: trait-mercadopago-common.php:219
 msgid "Could not refund payment: nothing is left to refund"
@@ -20756,7 +20982,9 @@ msgstr "Envíe el pago a través de %s"
 msgid ""
 "Thank you! Your payment is being confirmed by Payfast. Your order will show "
 "as paid once Payfast confirms it."
-msgstr "¡Gracias! Payfast está confirmando tu pago. Tu pedido aparecerá como pagado en cuanto Payfast lo confirme."
+msgstr ""
+"¡Gracias! Payfast está confirmando tu pago. Tu pedido aparecerá como pagado "
+"en cuanto Payfast lo confirme."
 
 #: class-payfast.php:379
 msgid "Customer cancelled the Payfast payment"
@@ -20768,7 +20996,9 @@ msgstr "El cliente canceló el pago de Payfast"
 msgid ""
 "Payfast sent a payment notice, but the order was not finished because its "
 "status is %s"
-msgstr "Payfast envió un aviso de pago, pero el pedido no se completó porque su estado es %s"
+msgstr ""
+"Payfast envió un aviso de pago, pero el pedido no se completó porque su "
+"estado es %s"
 
 #. translators: %s: payment status from Payfast, e.g. CANCELLED
 #: class-payfast.php:443
@@ -20776,7 +21006,9 @@ msgstr "Payfast envió un aviso de pago, pero el pedido no se completó porque s
 msgid ""
 "Payfast says the payment was declined or cancelled (status %s), so the order "
 "was not marked paid"
-msgstr "Payfast dice que el pago fue rechazado o cancelado (estado %s), así que el pedido no se marcó como pagado"
+msgstr ""
+"Payfast dice que el pago fue rechazado o cancelado (estado %s), así que el "
+"pedido no se marcó como pagado"
 
 #. translators: %s: why the payment was not accepted
 #: class-payfast.php:446
@@ -20807,19 +21039,25 @@ msgstr "el importe pagado (%1$s) no coincide con el total del pedido (%2$s)"
 #, php-format
 msgid ""
 "Payfast API lists a payment for this order, but the order was left unpaid: %s"
-msgstr "La API de Payfast muestra un pago para este pedido, pero el pedido quedó sin pagar: %s"
+msgstr ""
+"La API de Payfast muestra un pago para este pedido, pero el pedido quedó sin "
+"pagar: %s"
 
 #. translators: %s: what went wrong
 #: class-payfast.php:545
 #, php-format
 msgid "Could not check the payment with the Payfast API, order left unpaid: %s"
-msgstr "No se pudo comprobar el pago con la API de Payfast, el pedido quedó sin pagar: %s"
+msgstr ""
+"No se pudo comprobar el pago con la API de Payfast, el pedido quedó sin "
+"pagar: %s"
 
 #: class-payfast.php:570
 msgid ""
 "Payfast payment confirmed through the PayFast API (payment notice not "
 "received)"
-msgstr "Pago de Payfast confirmado mediante la API de PayFast (no se recibió el aviso de pago)"
+msgstr ""
+"Pago de Payfast confirmado mediante la API de PayFast (no se recibió el "
+"aviso de pago)"
 
 #. translators: %s: transaction type from Payfast
 #: class-payfast.php:633
@@ -20846,7 +21084,9 @@ msgstr "Payfast no dio un ID de pago"
 #: class-payfast.php:685 class-payfast.php:861
 msgid ""
 "the Payfast API needs the merchant ID and passphrase in the Payfast settings"
-msgstr "la API de Payfast necesita el ID de comerciante y la frase de contraseña en los configuración de Payfast"
+msgstr ""
+"la API de Payfast necesita el ID de comerciante y la frase de contraseña en "
+"los configuración de Payfast"
 
 #. translators: %s: error message
 #: class-payfast.php:704 class-payfast.php:884
@@ -20878,7 +21118,9 @@ msgstr "No se pudo reembolsar el pago en Payfast: %s"
 msgid ""
 "This order has no Payfast payment ID, so it can't be refunded from here. You "
 "can refund it in your Payfast dashboard."
-msgstr "Este pedido no tiene ID de pago de Payfast, así que no se puede reembolsar desde aquí. Puedes reembolsarlo en tu panel de Payfast."
+msgstr ""
+"Este pedido no tiene ID de pago de Payfast, así que no se puede reembolsar "
+"desde aquí. Puedes reembolsarlo en tu panel de Payfast."
 
 #: class-payfast.php:1016
 msgid "there is nothing left to refund on this order"
@@ -20906,13 +21148,17 @@ msgstr "Payfast solo puede reembolsar %s más en este pago"
 msgid ""
 "Payfast can only pay this refund into the customer's bank account, which "
 "needs their bank details. You can do this refund in your Payfast dashboard."
-msgstr "Payfast solo puede hacer este reembolso a la cuenta bancaria del cliente, lo que requiere sus datos bancarios. Puedes hacer este reembolso en tu panel de Payfast."
+msgstr ""
+"Payfast solo puede hacer este reembolso a la cuenta bancaria del cliente, lo "
+"que requiere sus datos bancarios. Puedes hacer este reembolso en tu panel de "
+"Payfast."
 
 #. translators: %s: refund method from Payfast
 #: class-payfast.php:1065
 #, php-format
 msgid "Payfast can't refund this amount from here (refund method: %s)"
-msgstr "Payfast no puede reembolsar este importe desde aquí (método de reembolso: %s)"
+msgstr ""
+"Payfast no puede reembolsar este importe desde aquí (método de reembolso: %s)"
 
 #. Plugin Name of the plugin
 #: paystack.php
@@ -20941,7 +21187,9 @@ msgstr "Moneda no admitida"
 msgid ""
 "Paystack return link had a payment reference from a different order, so the "
 "order was left unpaid"
-msgstr "El enlace de regreso de Paystack tenía una referencia de pago de otro pedido, así que el pedido quedó sin pagar"
+msgstr ""
+"El enlace de regreso de Paystack tenía una referencia de pago de otro "
+"pedido, así que el pedido quedó sin pagar"
 
 #: class-paystack.php:254 class-paystack.php:260 class-quickpay.php:214
 msgid "Could not verify payment status"
@@ -20967,7 +21215,9 @@ msgstr "Paystack devolvió un pago de otra referencia"
 msgid ""
 "the amount paid (%1$s) does not match the order total (%2$s), both in the "
 "smallest unit of the currency"
-msgstr "el importe pagado (%1$s) no coincide con el total del pedido (%2$s), ambos en la unidad más pequeña de la moneda"
+msgstr ""
+"el importe pagado (%1$s) no coincide con el total del pedido (%2$s), ambos "
+"en la unidad más pequeña de la moneda"
 
 #. translators: 1: currency paid in, 2: order currency
 #: class-paystack.php:296
@@ -20981,7 +21231,9 @@ msgstr "el pago fue en %1$s pero el pedido está en %2$s"
 msgid ""
 "Paystack payment %1$s was declined or cancelled (status %2$s), so the order "
 "was not marked paid"
-msgstr "El pago de Paystack %1$s fue rechazado o cancelado (estado %2$s), así que el pedido no se marcó como pagado"
+msgstr ""
+"El pago de Paystack %1$s fue rechazado o cancelado (estado %2$s), así que el "
+"pedido no se marcó como pagado"
 
 #. translators: %s: why the payment was not accepted
 #: class-paystack.php:313
@@ -21032,7 +21284,9 @@ msgstr "Pago no aceptado"
 msgid ""
 "QuickPay payment %1$s was declined or not finished (state %2$s), so the "
 "order was not marked paid."
-msgstr "El pago de QuickPay %1$s fue rechazado o no se completó (estado %2$s), así que el pedido no se marcó como pagado."
+msgstr ""
+"El pago de QuickPay %1$s fue rechazado o no se completó (estado %2$s), así "
+"que el pedido no se marcó como pagado."
 
 #. translators: 1: QuickPay payment ID, 2: reason the payment was not accepted
 #: class-quickpay.php:228 class-quickpay.php:339
@@ -21040,7 +21294,9 @@ msgstr "El pago de QuickPay %1$s fue rechazado o no se completó (estado %2$s), 
 msgid ""
 "QuickPay payment %1$s was not accepted for this order: %2$s The order was "
 "left unpaid."
-msgstr "El pago de QuickPay %1$s no se aceptó para este pedido: %2$s El pedido quedó sin pagar."
+msgstr ""
+"El pago de QuickPay %1$s no se aceptó para este pedido: %2$s El pedido quedó "
+"sin pagar."
 
 #: class-quickpay.php:292
 msgid "Customer cancelled the QuickPay payment"
@@ -23019,7 +23275,7 @@ msgstr "actualizadas hasta ahora..."
 msgid "Unknown choice"
 msgstr "Opción desconocida"
 
-#: cloud-storage.php:109
+#: cloud-storage.php:115
 msgid "Every 5 minutes"
 msgstr "Cada 5 minutos"
 
@@ -23157,12 +23413,12 @@ msgid "Connection successful! All tests passed."
 msgstr "¡Conexión establecida! Todas las pruebas superadas."
 
 #: includes/class-cloud-storage-client-gcs.php:31
-#: includes/class-cloud-storage-client-gcs.php:574
+#: includes/class-cloud-storage-client-gcs.php:630
 msgid "Google Cloud Storage JSON key is required"
 msgstr "Se requiere la clave JSON de Google Cloud Storage."
 
 #: includes/class-cloud-storage-client-gcs.php:39
-#: includes/class-cloud-storage-client-gcs.php:581
+#: includes/class-cloud-storage-client-gcs.php:637
 msgid "Invalid JSON key file. Please check your service account JSON."
 msgstr ""
 "Archivo de claves JSON no válido. Por favor, revise el JSON de su cuenta de "
@@ -23352,23 +23608,23 @@ msgstr "Sin subcarpetas"
 msgid "Error loading folders"
 msgstr "Error al cargar carpetas"
 
-#: includes/class-cloud-storage-manager.php:2398
+#: includes/class-cloud-storage-manager.php:2415
 msgid "No objects found in WP Offload Media data"
 msgstr "No se han encontrado objetos en los datos de WP Offload Media."
 
-#: includes/class-cloud-storage-manager.php:2458
+#: includes/class-cloud-storage-manager.php:2475
 msgid "Could not build URLs from WP Offload Media data"
 msgstr "No se pudieron crear URL a partir de los datos de WP Offload Media."
 
-#: includes/class-cloud-storage-manager.php:2546
+#: includes/class-cloud-storage-manager.php:2563
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr "No se pudieron recuperar las URL de WP Offload Media."
 
-#: includes/hooks.php:430 includes/hooks.php:464
+#: includes/hooks.php:436 includes/hooks.php:470
 msgid "Sunshine Cloud Storage:"
 msgstr "Almacenamiento en la nube Sunshine:"
 
-#: includes/hooks.php:431
+#: includes/hooks.php:437
 msgid ""
 "WP Offload Media plugin is currently active. These two plugins should not be "
 "active at the same time as they will conflict. Please deactivate WP Offload "
@@ -23378,7 +23634,7 @@ msgstr ""
 "deben estar activos al mismo tiempo, ya que entrarán en conflicto. Desactive "
 "WP Offload Media antes de utilizar Sunshine Cloud Storage."
 
-#: includes/hooks.php:433
+#: includes/hooks.php:439
 msgid ""
 "<strong>Good news:</strong> Sunshine can take over your previously offloaded "
 "items. After deactivating WP Offload Media, run the WP Offload Media "
@@ -23389,7 +23645,7 @@ msgstr ""
 "Media, ejecuta la herramienta de migración de WP Offload Media para pasar "
 "esos datos al almacenamiento propio de Sunshine."
 
-#: includes/hooks.php:438
+#: includes/hooks.php:444
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media plugin is active. "
 "You have Cloud Storage set to \"Entire WordPress site\" which may conflict. "
@@ -23402,7 +23658,7 @@ msgstr ""
 "la posibilidad de configurarlo en «Solo galerías Sunshine» o desactivar uno "
 "de los complementos."
 
-#: includes/hooks.php:465
+#: includes/hooks.php:471
 msgid ""
 "Your cloud storage bucket does not support per-object ACLs (Access Control "
 "Lists). This means Sunshine cannot set individual files as public or "
@@ -23415,7 +23671,7 @@ msgstr ""
 "las miniaturas no se muestren o que las imágenes en alta resolución sean de "
 "acceso público."
 
-#: includes/hooks.php:469
+#: includes/hooks.php:475
 msgid ""
 "<strong>How to fix:</strong> Go to Google Cloud Console &rarr; Cloud Storage "
 "&rarr; Your Bucket &rarr; Permissions &rarr; Access Control &rarr; Switch "
@@ -23425,7 +23681,7 @@ msgstr ""
 "Storage → Su bucket → Permisos → Control de acceso → Cambie de «Uniforme» a "
 "«Detallado»."
 
-#: includes/hooks.php:471
+#: includes/hooks.php:477
 msgid ""
 "<strong>How to fix:</strong> Go to S3 Console &rarr; Your Bucket &rarr; "
 "Permissions &rarr; Object Ownership &rarr; Edit &rarr; Select \"ACLs "
@@ -23435,7 +23691,7 @@ msgstr ""
 "Permisos → Propiedad de objetos → Editar → Seleccione «ACL habilitadas» con "
 "«Propietario del bucket preferido»."
 
-#: includes/hooks.php:473
+#: includes/hooks.php:479
 msgid ""
 "<strong>How to fix:</strong> Check your storage provider's documentation for "
 "enabling per-object ACLs on your bucket."
@@ -23443,7 +23699,7 @@ msgstr ""
 "<strong>Cómo solucionarlo:</strong> Consulte la documentación de su "
 "proveedor de almacenamiento para habilitar las ACL por objeto en su bucket."
 
-#: includes/hooks.php:477
+#: includes/hooks.php:483
 msgid ""
 "After making changes, go to Sunshine Settings &rarr; Cloud Storage and click "
 "\"Test Connection\" to verify."
@@ -23452,7 +23708,7 @@ msgstr ""
 "Almacenamiento en la nube y haz clic en «Probar conexión» para verificarlo."
 
 #. translators: 1: link opening tag, 2: link closing tag
-#: includes/hooks.php:533
+#: includes/hooks.php:539
 #, php-format
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media data was found on "
@@ -23717,7 +23973,9 @@ msgstr "Solo las tarjetas con saldo > 0."
 msgid ""
 "A gift card on this order no longer has enough balance. Please review your "
 "order and try again."
-msgstr "Una tarjeta de regalo de este pedido ya no tiene saldo suficiente. Revisa tu pedido e inténtalo de nuevo."
+msgstr ""
+"Una tarjeta de regalo de este pedido ya no tiene saldo suficiente. Revisa tu "
+"pedido e inténtalo de nuevo."
 
 #. translators: 1: gift card code, 2: amount the order used, 3: amount left on the card
 #: order-integration.php:214
@@ -23725,7 +23983,9 @@ msgstr "Una tarjeta de regalo de este pedido ya no tiene saldo suficiente. Revis
 msgid ""
 "Gift card %1$s was used for %2$s on this order, but only %3$s was left on it "
 "when the order was paid. The difference was not collected."
-msgstr "La tarjeta de regalo %1$s se usó por %2$s en este pedido, pero solo le quedaban %3$s cuando se pagó el pedido. La diferencia no se cobró."
+msgstr ""
+"La tarjeta de regalo %1$s se usó por %2$s en este pedido, pero solo le "
+"quedaban %3$s cuando se pagó el pedido. La diferencia no se cobró."
 
 #. translators: 1: gift card code, 2: amount applied to the order, 3: remaining balance on the card
 #: order-integration.php:220
@@ -23739,7 +23999,9 @@ msgstr "Tarjeta de regalo %1$s canjeada: %2$s aplicado, %3$s restante"
 msgid ""
 "Gift card %1$s was used for %2$s on this order, but only %3$s was left on it "
 "when the order was reopened. The difference was not collected."
-msgstr "La tarjeta de regalo %1$s se usó por %2$s en este pedido, pero solo le quedaban %3$s cuando se reabrió el pedido. La diferencia no se cobró."
+msgstr ""
+"La tarjeta de regalo %1$s se usó por %2$s en este pedido, pero solo le "
+"quedaban %3$s cuando se reabrió el pedido. La diferencia no se cobró."
 
 #. translators: 1: gift card code, 2: amount given back to the card, 3: new balance on the card
 #: order-integration.php:359
@@ -23751,7 +24013,8 @@ msgstr "Tarjeta de regalo %1$s: %2$s devuelto, el saldo ahora es %3$s"
 #: order-integration.php:362
 #, php-format
 msgid "Gift card %1$s: %2$s taken again, balance is now %3$s"
-msgstr "Tarjeta de regalo %1$s: %2$s descontado de nuevo, el saldo ahora es %3$s"
+msgstr ""
+"Tarjeta de regalo %1$s: %2$s descontado de nuevo, el saldo ahora es %3$s"
 
 #. translators: 1: gift card code, 2: amount already spent from it
 #: order-integration.php:427
@@ -23759,7 +24022,9 @@ msgstr "Tarjeta de regalo %1$s: %2$s descontado de nuevo, el saldo ahora es %3$s
 msgid ""
 "Gift card %1$s bought on this order can no longer be used. %2$s had already "
 "been spent from it."
-msgstr "La tarjeta de regalo %1$s comprada en este pedido ya no se puede usar. Ya se habían gastado %2$s de ella."
+msgstr ""
+"La tarjeta de regalo %1$s comprada en este pedido ya no se puede usar. Ya se "
+"habían gastado %2$s de ella."
 
 #: product-integration.php:42
 msgid "Custom"
@@ -24563,10 +24828,6 @@ msgstr "Agregar al Carrito"
 #, fuzzy
 #~ msgid "Test event sent."
 #~ msgstr "Clave de pruebas secreta"
-
-#, fuzzy
-#~ msgid "You are not allowed to manage webhooks."
-#~ msgstr "Lo sentimos, no tiene permiso para ver esta imagen"
 
 #, fuzzy, php-format
 #~ msgid "You do not have permission to %1$s %2$s via the API."

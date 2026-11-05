@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-10-21T20:25:22+00:00\n"
+"POT-Creation-Date: 2026-11-05T22:34:27+00:00\n"
 "PO-Revision-Date: 2026-03-02 21:19-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -75,19 +75,19 @@ msgstr ""
 "Dina licenser kunde inte aktiveras eftersom din server misslyckades med att "
 "ansluta till SunshinePhotoCart.com: %s"
 
-#: includes/admin/addons.php:76 includes/admin/class-license.php:279
-#: includes/admin/class-license.php:446 class-paystack.php:196
+#: includes/admin/addons.php:76 includes/admin/class-license.php:282
+#: includes/admin/class-license.php:449 class-paystack.php:196
 msgid "Unknown error occured"
 msgstr "Okänt fel uppstod"
 
 #. translators: %1$s is the addon name, %2$s is the error message
 #. translators: %1$s is the product name, %2$s is the error message
-#: includes/admin/addons.php:80 includes/admin/class-license.php:284
+#: includes/admin/addons.php:80 includes/admin/class-license.php:287
 #, php-format
 msgid "License for %1$s failed to be activated: %2$s"
 msgstr "Licensen för %1$s kunde inte aktiveras: %2$s"
 
-#: includes/admin/addons.php:132 includes/admin/class-license.php:344
+#: includes/admin/addons.php:132 includes/admin/class-license.php:347
 msgid "An error occurred, please try again."
 msgstr "Ett fel uppstod. Försök igen."
 
@@ -105,7 +105,9 @@ msgstr "Din session har gått ut. Ladda om sidan och försök igen."
 msgid ""
 "You do not have permission to install plugins on this site. Ask an "
 "administrator to install this add-on."
-msgstr "Du har inte behörighet att installera tillägg på den här webbplatsen. Be en administratör att installera det här tillägget."
+msgstr ""
+"Du har inte behörighet att installera tillägg på den här webbplatsen. Be en "
+"administratör att installera det här tillägget."
 
 #: includes/admin/addons.php:382
 msgid ""
@@ -128,6 +130,59 @@ msgstr ""
 #: includes/admin/addons.php:408
 msgid "This add-on could not be installed."
 msgstr "Det här tillägget kunde inte installeras."
+
+#. translators: 1: add-on name, 2: why the update was refused
+#: includes/admin/class-addon-update-verify.php:100
+#, php-format
+msgid ""
+"%1$s refused this update because it could not confirm it came from Sunshine "
+"Photo Cart: %2$s Your current version was left in place."
+msgstr "%1$s nekade den här uppdateringen eftersom det inte gick att bekräfta att den kommer från Sunshine Photo Cart: %2$s Din nuvarande version har behållits."
+
+#: includes/admin/class-addon-update-verify.php:155
+msgid "the update has no signature."
+msgstr "uppdateringen saknar signatur."
+
+#: includes/admin/class-addon-update-verify.php:160
+msgid "the signature file is damaged."
+msgstr "signaturfilen är skadad."
+
+#: includes/admin/class-addon-update-verify.php:164
+msgid "the signature does not match."
+msgstr "signaturen stämmer inte."
+
+#: includes/admin/class-addon-update-verify.php:169
+msgid "the signed file list is damaged."
+msgstr "den signerade fillistan är skadad."
+
+#: includes/admin/class-addon-update-verify.php:173
+msgid "the signature is for a different plugin."
+msgstr "signaturen gäller ett annat tillägg."
+
+#. translators: 1: signed version, 2: installed version
+#: includes/admin/class-addon-update-verify.php:179
+#, php-format
+msgid ""
+"the signed version (%1$s) is not newer than the installed version (%2$s)."
+msgstr "den signerade versionen (%1$s) är inte nyare än den installerade versionen (%2$s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:191
+#, php-format
+msgid "the update has a file that was not signed (%s)."
+msgstr "uppdateringen innehåller en fil som inte har signerats (%s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:195
+#, php-format
+msgid "a file was changed after it was signed (%s)."
+msgstr "en fil ändrades efter att den signerats (%s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:202
+#, php-format
+msgid "a signed file is missing (%s)."
+msgstr "en signerad fil saknas (%s)."
 
 #. translators: the plugin name.
 #: includes/admin/class-addon-update.php:257
@@ -275,7 +330,7 @@ msgstr "Redigera i helskärm."
 msgid "Write a Review"
 msgstr "Skriv en recension"
 
-#: includes/admin/class-admin.php:264 includes/admin/class-admin.php:1035
+#: includes/admin/class-admin.php:264 includes/admin/class-admin.php:1037
 msgid "Upgrade"
 msgstr "Uppgradera"
 
@@ -340,11 +395,11 @@ msgstr ""
 "Cart</a>! Vänligen betygsätt <a href=\"%2$s\" target=\"_blank\">oss</a> på "
 "<a href=\"%2$s\" target=\"_blank\">WordPress.org</a>"
 
-#: includes/admin/class-admin.php:538
+#: includes/admin/class-admin.php:540
 msgid "View Sunshine Galleries"
 msgstr "Se Sunshine Gallerier"
 
-#: includes/admin/class-admin.php:570
+#: includes/admin/class-admin.php:572
 msgid ""
 "The slug for core order statuses is not editable as it could break Sunshine "
 "functionality"
@@ -352,24 +407,24 @@ msgstr ""
 "Sluggen för kärnorderstatusar är inte redigerbar eftersom det kan bryta "
 "Sunshine-funktionaliteten"
 
-#: includes/admin/class-admin.php:584
+#: includes/admin/class-admin.php:586
 msgid "Order Updated"
 msgstr "Order uppdaterad"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:586
+#: includes/admin/class-admin.php:588
 #, php-format
 msgid "<strong>Gallery updated</strong>, <a href=\"%s\">view gallery</a>"
 msgstr "<strong>Galleriet uppdaterat</strong>, <a href=\"%s\">se</a> galleriet"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:588
+#: includes/admin/class-admin.php:590
 #, php-format
 msgid "<strong>Gallery created</strong>, <a href=\"%s\">view gallery</a>"
 msgstr "<strong>Galleri skapat</strong>, <a href=\"%s\">visa galleri</a>"
 
 #. translators: %s is the URL to settings page
-#: includes/admin/class-admin.php:595
+#: includes/admin/class-admin.php:597
 #, php-format
 msgid ""
 "Sunshine logging is enabled. <a href=\"%s\">Please disable when no longer in "
@@ -379,7 +434,7 @@ msgstr ""
 "längre används.</a>"
 
 #. translators: %s is the URL to the Galleries settings page
-#: includes/admin/class-admin.php:624
+#: includes/admin/class-admin.php:626
 #, php-format
 msgid ""
 "Your watermark image file could not be found on this server, so new images "
@@ -390,7 +445,7 @@ msgstr ""
 "ingen vattenstämpel. <a href=\"%s\">Ladda upp vattenstämpelbilden igen</a>."
 
 #. translators: 1: number of images waiting, 2: URL to the Site Health info page
-#: includes/admin/class-admin.php:691
+#: includes/admin/class-admin.php:693
 #, php-format
 msgid ""
 "%1$d image is waiting to be processed, but WordPress could not save the "
@@ -408,7 +463,7 @@ msgstr[1] ""
 "a>."
 
 #. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
-#: includes/admin/class-admin.php:708
+#: includes/admin/class-admin.php:710
 #, php-format
 msgid ""
 "%1$d image is waiting to be processed, but WordPress cron has not run for "
@@ -427,7 +482,7 @@ msgstr[1] ""
 "%2$s. <a href=\"%3$s\">Kolla webbplatshälsan</a> eller se <a href=\"%4$s\" "
 "target=\"_blank\">hur du sätter upp ett pålitligt server-cron</a>."
 
-#: includes/admin/class-admin.php:721
+#: includes/admin/class-admin.php:723
 msgid ""
 "This site has WP-Cron turned off, so a server cron job has to call wp-"
 "cron.php for anything to run."
@@ -436,7 +491,7 @@ msgstr ""
 "anropa wp-cron.php för att något ska köras."
 
 #. translators: %s is the URL to installation page
-#: includes/admin/class-admin.php:730
+#: includes/admin/class-admin.php:732
 #, php-format
 msgid ""
 "Sunshine installation process was skipped. <a href=\"%s\">Please complete "
@@ -446,79 +501,79 @@ msgstr ""
 "slutför installationsprocessen.</a>"
 
 #. translators: %1$d is the number of orders, %2$s is the number of orders in plural
-#: includes/admin/class-admin.php:1013
+#: includes/admin/class-admin.php:1015
 #, php-format
 msgid "%s order"
 msgid_plural "%s orders"
 msgstr[0] "%s beställning"
 msgstr[1] "%s beställningar"
 
-#: includes/admin/class-admin.php:1021 includes/admin/customers.php:13
+#: includes/admin/class-admin.php:1023 includes/admin/customers.php:13
 #: includes/admin/customers.php:34 includes/admin/reports.php:20 reports.php:7
 msgid "Customers"
 msgstr "Kunder"
 
-#: includes/admin/class-admin.php:1022 includes/admin/reports.php:90
+#: includes/admin/class-admin.php:1024 includes/admin/reports.php:90
 msgid "Reports"
 msgstr "Rapporter"
 
-#: includes/admin/class-admin.php:1023 includes/admin/tools.php:36
+#: includes/admin/class-admin.php:1025 includes/admin/tools.php:36
 #: includes/admin/tools.php:42
 msgid "Tools"
 msgstr "Verktyg"
 
-#: includes/admin/class-admin.php:1024
+#: includes/admin/class-admin.php:1026
 msgid "Add-ons"
 msgstr "Tillägg"
 
-#: includes/admin/class-admin.php:1027
+#: includes/admin/class-admin.php:1029
 msgid "Setup Guide"
 msgstr "Installationsguide"
 
-#: includes/admin/class-admin.php:1032
+#: includes/admin/class-admin.php:1034
 msgid "Get Help"
 msgstr "Skaffa hjälp"
 
-#: includes/admin/class-admin.php:1063
+#: includes/admin/class-admin.php:1065
 msgid "Keywords"
 msgstr "Nyckelord"
 
-#: includes/admin/class-admin.php:1075
+#: includes/admin/class-admin.php:1077
 msgid "Use gallery price level"
 msgstr "Använd galleri prisnivå"
 
-#: includes/admin/class-admin.php:1083 includes/admin/sunshine-gallery.php:218
-#: includes/class-sunshinephotocart.php:505
-#: includes/class-sunshinephotocart.php:518 class-export-galleries.php:22
+#: includes/admin/class-admin.php:1085 includes/admin/sunshine-gallery.php:218
+#: includes/class-sunshinephotocart.php:507
+#: includes/class-sunshinephotocart.php:520 class-export-galleries.php:22
 msgid "Price Level"
 msgstr "Prisnivå"
 
-#: includes/admin/class-admin.php:1094
+#: includes/admin/class-admin.php:1096
 msgid "Disable Purchasing"
 msgstr "Inaktivera inköp"
 
-#: includes/admin/class-admin.php:1100 includes/admin/settings-fields.php:702
+#: includes/admin/class-admin.php:1102 includes/admin/settings-fields.php:714
 #: admin/products.php:45
 msgid "Watermark"
 msgstr "Vattenstämpel"
 
-#: includes/admin/class-admin.php:1145
+#: includes/admin/class-admin.php:1147
 msgid "Metadata"
 msgstr "Metadata"
 
-#: includes/admin/class-admin.php:1232
+#: includes/admin/class-admin.php:1234
 msgid "Log file has been cleared"
 msgstr "Loggfilen har rensats"
 
-#: includes/admin/class-admin.php:1288
+#: includes/admin/class-admin.php:1290
 msgid "Error log file has been cleared"
 msgstr "Fel loggfilen har rensats"
 
-#: includes/admin/class-admin.php:1294 includes/admin/class-admin.php:1302
+#: includes/admin/class-admin.php:1296 includes/admin/class-admin.php:1304
 msgid "You do not have permission to access this file."
 msgstr "Du har inte behörighet till att komma åt den här filen."
 
-#: includes/admin/class-admin.php:1310
+#: includes/admin/class-admin.php:1312
 msgid "Log file not found."
 msgstr "Loggfilen hittades inte."
 
@@ -533,8 +588,8 @@ msgid "Name"
 msgstr "Namn"
 
 #: includes/admin/class-customers-table.php:43
-#: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1720 includes/functions/account.php:595
+#: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1444
+#: includes/class-cart.php:1721 includes/functions/account.php:595
 #: includes/payment-methods/paypal-legacy.php:50
 #: includes/payment-methods/paypal-legacy.php:63
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
@@ -544,7 +599,7 @@ msgid "Email"
 msgstr "E-post"
 
 #: includes/admin/class-customers-table.php:44 includes/admin/customers.php:187
-#: includes/admin/install.php:307 includes/admin/settings-fields.php:245
+#: includes/admin/install.php:309 includes/admin/settings-fields.php:245
 #: includes/admin/sunshine-gallery.php:170 includes/class-frontend.php:956
 #: templates/multi-image-select/select-images.php:37
 msgid "Favorites"
@@ -552,9 +607,9 @@ msgstr "Favoriter"
 
 #: includes/admin/class-customers-table.php:45 includes/admin/customers.php:137
 #: includes/admin/reports.php:16 includes/admin/settings-fields.php:297
-#: includes/admin/settings-fields.php:946
-#: includes/class-sunshinephotocart.php:538
-#: includes/class-sunshinephotocart.php:550 includes/functions/account.php:429
+#: includes/admin/settings-fields.php:958
+#: includes/class-sunshinephotocart.php:540
+#: includes/class-sunshinephotocart.php:552 includes/functions/account.php:429
 #: templates/email/summary.php:30 class-reports-customers-table.php:35
 #: class-reports-galleries-table.php:37 class-reports-products-table.php:35
 #: gallery.php:271 gallery.php:298 templates/account/downloads.php:19
@@ -587,25 +642,25 @@ msgid "Dismiss this notice."
 msgstr "Avfärda detta meddelande."
 
 #. translators: the license key expiration date
-#: includes/admin/class-license.php:96
+#: includes/admin/class-license.php:99
 #, php-format
 msgid "Your license key expired on %s."
 msgstr "Din licensnyckel löpte ut %s."
 
-#: includes/admin/class-license.php:103
+#: includes/admin/class-license.php:106
 msgid "Your license key has been disabled"
 msgstr "Din licensnyckel har inaktiverats"
 
-#: includes/admin/class-license.php:107
+#: includes/admin/class-license.php:110
 msgid "Invalid license"
 msgstr "Ogiltig licens"
 
-#: includes/admin/class-license.php:111
+#: includes/admin/class-license.php:114
 msgid "Invalid license key"
 msgstr "Ogiltig licensnyckel"
 
 #. translators: %1$s is the previous site URL, %2$s is the current site URL, %3$s is the URL to the sunshinephotocart.com account licenses page
-#: includes/admin/class-license.php:122
+#: includes/admin/class-license.php:125
 #, php-format
 msgid ""
 "Your license was activated on %1$s but this site is now %2$s. To use the "
@@ -620,7 +675,7 @@ msgstr ""
 "Aktivera igen."
 
 #. translators: %s is the URL to the sunshinephotocart.com account licenses page
-#: includes/admin/class-license.php:130
+#: includes/admin/class-license.php:133
 #, php-format
 msgid ""
 "This license appears to be activated on a different site. <a href=\"%s\" "
@@ -633,22 +688,22 @@ msgstr ""
 "Sites</strong> bredvid licensen, inaktivera den gamla URL:en och kom sedan "
 "tillbaka hit och klicka på Aktivera igen."
 
-#: includes/admin/class-license.php:137
+#: includes/admin/class-license.php:140
 msgid "This appears to be an invalid license key"
 msgstr "Detta verkar vara en ogiltig licensnyckel"
 
-#: includes/admin/class-license.php:142
+#: includes/admin/class-license.php:145
 msgid "You have a special lifetime license that never expires!"
 msgstr "Du har en speciell livstidslicens som aldrig går ut!"
 
 #. translators: the license key expiration date
-#: includes/admin/class-license.php:146
+#: includes/admin/class-license.php:149
 #, php-format
 msgid "Expires on %s"
 msgstr "Löper ut den %s"
 
 #. translators: %1$s is the product name, %2$s is the URL to the licenses page
-#: includes/admin/class-license.php:243
+#: includes/admin/class-license.php:246
 #, php-format
 msgid ""
 "You do not have an active license for %1$s, please enter and activate your "
@@ -658,19 +713,19 @@ msgstr ""
 "nuvarande <a href=\"%2$s\">licens på sidan Licenser</a>"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:303
+#: includes/admin/class-license.php:306
 #, php-format
 msgid "License for %s has been activated"
 msgstr "Licensen för %s har aktiverats"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:365
+#: includes/admin/class-license.php:368
 #, php-format
 msgid "License for %s has been deactivated"
 msgstr "Licensen för %s har avaktiverats"
 
 #. translators: %1$s is the product name, %2$s is the URL to support
-#: includes/admin/class-license.php:368
+#: includes/admin/class-license.php:371
 #, php-format
 msgid ""
 "License for %1$s could not be deactivated, please <a href=\"%2$s\" "
@@ -680,7 +735,7 @@ msgstr ""
 "target=\"_blank\">kontakta support</a>"
 
 #. translators: %1$s is the URL to licenses page, %2$s is the URL to account on SunshinePhotoCart.com
-#: includes/admin/class-license.php:382
+#: includes/admin/class-license.php:385
 #, php-format
 msgid ""
 "To enable updates, please enter your license key on the <a "
@@ -692,13 +747,13 @@ msgstr ""
 "href=\"%2$s\" target=\"_blank\">ditt konto på SunshinePhotoCart.com</a>."
 
 #. translators: %1$s is the product name, %2$s is the error message
-#: includes/admin/class-license.php:452
+#: includes/admin/class-license.php:455
 #, php-format
 msgid "License for %1$s failed to be updated: %2$s"
 msgstr "Licensen för %1$s kunde inte uppdateras: %2$s"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:460
+#: includes/admin/class-license.php:463
 #, php-format
 msgid "License for %s has been updated"
 msgstr "Licensen för %s har uppdaterats"
@@ -771,15 +826,15 @@ msgstr ""
 "sekretessinställningar."
 
 #: includes/admin/class-privacy.php:190 includes/admin/class-privacy.php:257
-#: includes/admin/settings-fields.php:976
-#: includes/admin/settings-fields.php:986 includes/class-cart.php:1747
+#: includes/admin/settings-fields.php:988
+#: includes/admin/settings-fields.php:998 includes/class-cart.php:1748
 #: templates/invoice/admin.php:165 templates/order/details.php:13
 #: class-export-orders.php:525
 msgid "Phone"
 msgstr "Telefon"
 
-#: includes/admin/class-privacy.php:191 includes/admin/settings-fields.php:978
-#: includes/admin/settings-fields.php:988
+#: includes/admin/class-privacy.php:191 includes/admin/settings-fields.php:990
+#: includes/admin/settings-fields.php:1000
 msgid "VAT Number"
 msgstr "Momsregistreringsnummer"
 
@@ -866,7 +921,7 @@ msgid "Billing Name"
 msgstr "Faktureringsnamn"
 
 #: includes/admin/class-privacy.php:259 includes/admin/customers.php:106
-#: includes/class-cart.php:2033 templates/invoice/admin.php:195
+#: includes/class-cart.php:2034 templates/invoice/admin.php:195
 msgid "Billing Address"
 msgstr "Fakturaadress"
 
@@ -875,7 +930,7 @@ msgid "Shipping Name"
 msgstr "Fraktnamn"
 
 #: includes/admin/class-privacy.php:268 includes/admin/customers.php:99
-#: includes/class-cart.php:1887 includes/template-hooks.php:460
+#: includes/class-cart.php:1888 includes/template-hooks.php:460
 #: templates/invoice/admin.php:192
 msgid "Shipping Address"
 msgstr "Leveransadress"
@@ -908,7 +963,7 @@ msgid "Personal data removed."
 msgstr "Personuppgifter har tagits bort."
 
 #: includes/admin/class-tool.php:152 includes/admin/gallery-navigator.php:79
-#: gallery.php:27 frontend.php:1163
+#: gallery.php:27 frontend.php:1169
 msgid "Security check failed"
 msgstr "Säkerhetskontrollen misslyckades"
 
@@ -941,7 +996,7 @@ msgstr "Leverera"
 msgid "Insufficient permissions."
 msgstr "Otillräckliga behörigheter."
 
-#: includes/admin/class-update.php:633 includes/admin/install.php:294
+#: includes/admin/class-update.php:633 includes/admin/install.php:296
 #: includes/admin/settings-fields.php:250
 msgid "Terms & Conditions"
 msgstr "Användarvillkor"
@@ -1060,7 +1115,7 @@ msgid "Permission denied"
 msgstr "Åtkomst nekades"
 
 #: includes/admin/gallery-navigator.php:116
-#: includes/class-sunshinephotocart.php:386
+#: includes/class-sunshinephotocart.php:388
 msgid "No galleries found."
 msgstr "Inga bildgallerier hittades."
 
@@ -1072,13 +1127,13 @@ msgstr "Dra för att arrangera"
 #: includes/admin/gallery-navigator.php:159
 #: includes/admin/gallery-navigator.php:323
 #: includes/admin/sunshine-gallery.php:55
-#: includes/admin/sunshine-gallery.php:2011
+#: includes/admin/sunshine-gallery.php:2033
 msgid "Password Protected"
 msgstr "Lösenordskyddat"
 
 #: includes/admin/gallery-navigator.php:161
 #: includes/admin/gallery-navigator.php:325
-#: includes/admin/sunshine-gallery.php:2013
+#: includes/admin/sunshine-gallery.php:2035
 msgid "Private"
 msgstr "Privat"
 
@@ -1095,7 +1150,7 @@ msgstr "Utgången"
 
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:340
-#: includes/admin/sunshine-gallery.php:1608
+#: includes/admin/sunshine-gallery.php:1627
 #: includes/class-cloud-storage-import.php:994
 msgid "images"
 msgstr "bilder"
@@ -1109,7 +1164,7 @@ msgstr[1] "undergallerier"
 
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
-#: includes/admin/gallery-navigator.php:348 includes/class-cart.php:2177
+#: includes/admin/gallery-navigator.php:348 includes/class-cart.php:2178
 msgid "Edit"
 msgstr "Redigera"
 
@@ -1137,115 +1192,115 @@ msgstr[1] "%1$d gallerier hittades för \"%2$s\""
 msgid "You do not have permission to perform this action."
 msgstr "Du har inte behörighet att utföra den här åtgärden."
 
-#: includes/admin/install.php:243
+#: includes/admin/install.php:245
 msgid "Client Galleries"
 msgstr "Kundgallerier"
 
-#: includes/admin/install.php:255 includes/admin/settings-fields.php:240
+#: includes/admin/install.php:257 includes/admin/settings-fields.php:240
 msgid "Account"
 msgstr "Konto"
 
-#: includes/admin/install.php:268 includes/admin/settings-fields.php:230
+#: includes/admin/install.php:270 includes/admin/settings-fields.php:230
 #: templates/cart/mini-cart.php:6
 msgid "Cart"
 msgstr "Varukorg"
 
-#: includes/admin/install.php:281 includes/admin/settings-fields.php:235
-#: includes/admin/settings-fields.php:1003
+#: includes/admin/install.php:283 includes/admin/settings-fields.php:235
+#: includes/admin/settings-fields.php:1015
 #: includes/payment-methods/paypal.php:179
 msgid "Checkout"
 msgstr "Kassa"
 
-#: includes/admin/install.php:322 includes/admin/sunshine-gallery.php:54
+#: includes/admin/install.php:324 includes/admin/sunshine-gallery.php:54
 #: includes/admin/sunshine-gallery.php:114
 msgid "Default"
 msgstr "Standard"
 
-#: includes/admin/install.php:331
+#: includes/admin/install.php:333
 msgid "Prints"
 msgstr "Utskrifter"
 
-#: includes/admin/install.php:403
+#: includes/admin/install.php:405
 msgid "Pending Payment"
 msgstr "Väntar på betalning"
 
-#: includes/admin/install.php:407
+#: includes/admin/install.php:409
 msgid "We have received your order but payment is still pending"
 msgstr "Vi har mottagit din beställning men betalningen är ännu inte genomförd"
 
-#: includes/admin/install.php:416 hooks.php:599
+#: includes/admin/install.php:418 hooks.php:599
 msgid "New"
 msgstr "Nytt"
 
-#: includes/admin/install.php:420
+#: includes/admin/install.php:422
 msgid "We have received your order and payment"
 msgstr "Vi har mottagit din beställning och betalning"
 
-#: includes/admin/install.php:429 includes/admin/sunshine-gallery.php:1031
+#: includes/admin/install.php:431 includes/admin/sunshine-gallery.php:1050
 msgid "Processing"
 msgstr "Bearbetas"
 
-#: includes/admin/install.php:433
+#: includes/admin/install.php:435
 msgid "The images in your order are being processed and/or printed"
 msgstr ""
 "Bilderna i din beställning håller på att bearbetas och/eller skrivas ut"
 
-#: includes/admin/install.php:442
+#: includes/admin/install.php:444
 msgid "Shipped/Completed"
 msgstr "Avsänd/kompletterad"
 
-#: includes/admin/install.php:446
+#: includes/admin/install.php:448
 msgid "Your items have shipped (or are available for download)!"
 msgstr "Dina artiklar har skickats (eller är tillgängliga för nedladdning)!"
 
-#: includes/admin/install.php:455
+#: includes/admin/install.php:457
 msgid "Cancelled"
 msgstr "Avbruten"
 
-#: includes/admin/install.php:459
+#: includes/admin/install.php:461
 msgid "Your order was cancelled"
 msgstr "Din beställning har avbrutits"
 
-#: includes/admin/install.php:468
+#: includes/admin/install.php:470
 msgid "Refunded"
 msgstr "Återbetald"
 
-#: includes/admin/install.php:472
+#: includes/admin/install.php:474
 msgid "Your order was refunded"
 msgstr "Din order har återbetalats"
 
-#: includes/admin/install.php:481
+#: includes/admin/install.php:483
 msgid "Ready for pickup"
 msgstr "Klar för upphämtning"
 
-#: includes/admin/install.php:485
+#: includes/admin/install.php:487
 msgid "Your order is ready to be picked up"
 msgstr "Din beställning är redo att hämtas"
 
-#: includes/admin/install.php:494
+#: includes/admin/install.php:496
 msgid "Failed"
 msgstr "Misslyckad"
 
-#: includes/admin/install.php:498 includes/functions/checkout.php:1069
+#: includes/admin/install.php:500 includes/functions/checkout.php:1069
 msgid "Payment failed"
 msgstr "Betalningen misslyckades"
 
-#: includes/admin/install.php:689
+#: includes/admin/install.php:691
 msgid "Could not activate license key"
 msgstr "Det gick inte att aktivera licensnyckeln"
 
-#: includes/admin/install.php:720
+#: includes/admin/install.php:722
 msgid "Could not subscribe to email list"
 msgstr "Det gick inte att prenumerera på e-postlistan"
 
 #. translators: %s is the plugin version number
-#: includes/admin/install.php:730
+#: includes/admin/install.php:732
 #, php-format
 msgid "Welcome to Sunshine Photo Cart %s"
 msgstr "Välkommen till Sunshine Fotovagn %s"
 
 #. translators: %1$s is the plugin version number
-#: includes/admin/install.php:734
+#: includes/admin/install.php:736
 #, php-format
 msgid ""
 "<strong>Thank you for updating to the latest version!</strong> Sunshine %1$s "
@@ -1256,11 +1311,11 @@ msgstr ""
 "Sunshine %1$s är det mest omfattande pluginet för kundkontroll och fotovagn "
 "för WordPress. Vi hoppas att du får större försäljningsframgångar!"
 
-#: includes/admin/install.php:754 templates/admin/updates/update.php:35
+#: includes/admin/install.php:756 templates/admin/updates/update.php:35
 msgid "Recent Improvements"
 msgstr "Nya förbättringar"
 
-#: includes/admin/install.php:756 templates/admin/updates/update.php:37
+#: includes/admin/install.php:758 templates/admin/updates/update.php:37
 msgid "See the full Changelog"
 msgstr "Se den fullständiga Changeloggen"
 
@@ -1375,15 +1430,15 @@ msgstr "Molnlagring"
 
 #: includes/admin/reports.php:17 includes/admin/sunshine-gallery.php:196
 #: includes/admin/sunshine-product-category.php:169
-#: includes/class-sunshinephotocart.php:426
-#: includes/class-sunshinephotocart.php:438 hooks.php:43 reports.php:4
+#: includes/class-sunshinephotocart.php:428
+#: includes/class-sunshinephotocart.php:440 hooks.php:43 reports.php:4
 #: price-levels.php:48 admin/products.php:54
 msgid "Products"
 msgstr "Produkter"
 
 #: includes/admin/reports.php:18 includes/admin/settings-fields.php:321
-#: includes/admin/settings-fields.php:804 includes/admin/sunshine-order.php:440
-#: includes/class-sunshinephotocart.php:374 includes/functions/account.php:434
+#: includes/admin/settings-fields.php:816 includes/admin/sunshine-order.php:440
+#: includes/class-sunshinephotocart.php:376 includes/functions/account.php:434
 #: reports.php:5 class-admin-automated-emails.php:64 hooks.php:677
 #: templates/account/downloads.php:30 class-export-galleries.php:10
 #: class-export-orders.php:552
@@ -1662,8 +1717,8 @@ msgid "URLs"
 msgstr "URL:er"
 
 #: includes/admin/settings-fields.php:261
-#: includes/class-sunshinephotocart.php:375
 #: includes/class-sunshinephotocart.php:377
+#: includes/class-sunshinephotocart.php:379
 #: class-reports-galleries-table.php:36 gallery.php:277
 #: class-export-orders.php:631 messaging.php:148
 msgid "Gallery"
@@ -1753,10 +1808,41 @@ msgstr ""
 "för att skapa galleriet"
 
 #: includes/admin/settings-fields.php:392
+msgid "Check folders for new photos"
+msgstr "Kontrollera mappar efter nya foton"
+
+#: includes/admin/settings-fields.php:396
+msgid "Off"
+msgstr "Av"
+
+#: includes/admin/settings-fields.php:397
+msgid "Every hour"
+msgstr "Varje timme"
+
+#: includes/admin/settings-fields.php:398
+msgid "Twice a day"
+msgstr "Två gånger om dagen"
+
+#: includes/admin/settings-fields.php:399
+msgid "Once a day"
+msgstr "En gång om dagen"
+
+#: includes/admin/settings-fields.php:401
+msgid ""
+"Galleries made from an FTP or cloud folder get any photos added to that "
+"folder later. Photos are only ever added: one removed from the folder stays "
+"in the gallery, and one you delete from the gallery is not brought back. "
+"Galleries that existed before you turn this on only get photos added to "
+"their folder after that. Each check of a cloud folder reads the list of "
+"files in your bucket, so checking every hour means more requests to your "
+"storage service."
+msgstr "Gallerier som skapats från en FTP- eller molnmapp får alla foton som läggs till i mappen senare. Foton läggs bara till: ett foto som tas bort från mappen stannar i galleriet, och ett foto som du tar bort från galleriet kommer inte tillbaka. Gallerier som fanns innan du slog på det här får bara foton som läggs till i deras mapp efter det. Varje kontroll av en molnmapp läser fillistan i din bucket, så att kontrollera varje timme innebär fler förfrågningar till din lagringstjänst."
+
+#: includes/admin/settings-fields.php:404
 msgid "Show images in Media Library"
 msgstr "Visa bilder i mediabiblioteket"
 
-#: includes/admin/settings-fields.php:395
+#: includes/admin/settings-fields.php:407
 msgid ""
 "By default Sunshine hides images uploaded to Sunshine galleries in the Media "
 "Library, enabling this option will show them instead. Use at your own risk."
@@ -1765,11 +1851,11 @@ msgstr ""
 "i mediebiblioteket, om du aktiverar det här alternativet visas de istället. "
 "Använd på egen risk."
 
-#: includes/admin/settings-fields.php:398
+#: includes/admin/settings-fields.php:410
 msgid "Delay image processing"
 msgstr "Fördröj bildbearbetning"
 
-#: includes/admin/settings-fields.php:401
+#: includes/admin/settings-fields.php:413
 msgid ""
 "When enabled, intermediate image sizes (thumbnails and large) and watermarks "
 "will be generated in the background after upload, allowing faster initial "
@@ -1782,15 +1868,15 @@ msgstr ""
 "kanske inte är tillgängliga i alla storlekar omedelbart förrän bearbetningen "
 "är klar."
 
-#: includes/admin/settings-fields.php:416
+#: includes/admin/settings-fields.php:428
 msgid "Features"
 msgstr "Funktioner"
 
-#: includes/admin/settings-fields.php:420
+#: includes/admin/settings-fields.php:432
 msgid "Image Theft Prevention"
 msgstr "Förebyggande av bildstöld"
 
-#: includes/admin/settings-fields.php:423
+#: includes/admin/settings-fields.php:435
 msgid ""
 "Enabling this option will disable the right click menu and also not allow "
 "images to be dragged/dropped to the desktop. NOT a 100% effective method, "
@@ -1801,11 +1887,11 @@ msgstr ""
 "effektiv metod, men bör stoppa de flesta. Används INTE för "
 "administratörsanvändare."
 
-#: includes/admin/settings-fields.php:428
+#: includes/admin/settings-fields.php:440
 msgid "Proofing Only"
 msgstr "Endast korrekturläsning"
 
-#: includes/admin/settings-fields.php:431
+#: includes/admin/settings-fields.php:443
 msgid ""
 "This will remove all aspects of purchasing abilities throughout the site, "
 "leaving just image viewing and adding to favorites"
@@ -1813,21 +1899,21 @@ msgstr ""
 "Detta kommer att ta bort alla aspekter av inköpsmöjligheter på hela "
 "webbplatsen, så att det bara är att visa bilder och lägga till i favoriter"
 
-#: includes/admin/settings-fields.php:436
+#: includes/admin/settings-fields.php:448
 msgid "Allow product comments"
 msgstr "Tillåt produktkommentarer"
 
-#: includes/admin/settings-fields.php:439
+#: includes/admin/settings-fields.php:451
 msgid "Allow users to enter comments when adding an item to cart"
 msgstr ""
 "Tillåt användare att ange kommentarer när de lägger till en artikel i "
 "varukorgen"
 
-#: includes/admin/settings-fields.php:443
+#: includes/admin/settings-fields.php:455
 msgid "Allow Store"
 msgstr "Tillåt butik"
 
-#: includes/admin/settings-fields.php:446
+#: includes/admin/settings-fields.php:458
 msgid ""
 "Galleries come with a Store where products are shown first and customers add "
 "images to cart."
@@ -1835,35 +1921,35 @@ msgstr ""
 "Gallerierna har en butik där produkterna visas först och kunderna lägger "
 "till bilder i varukorgen."
 
-#: includes/admin/settings-fields.php:451
+#: includes/admin/settings-fields.php:463
 msgid "Allow Gallery Sharing"
 msgstr "Tillåt delning av galleri"
 
-#: includes/admin/settings-fields.php:454
+#: includes/admin/settings-fields.php:466
 msgid "Allow users to share galleries"
 msgstr "Tillåt användare att dela gallerier"
 
-#: includes/admin/settings-fields.php:457
+#: includes/admin/settings-fields.php:469
 msgid "Allow Image Sharing"
 msgstr "Tillåt bilddelning"
 
-#: includes/admin/settings-fields.php:460
+#: includes/admin/settings-fields.php:472
 msgid "Allow users to share images within a gallery and favorites"
 msgstr "Låt användare dela bilder i ett galleri och favoriter"
 
-#: includes/admin/settings-fields.php:463
+#: includes/admin/settings-fields.php:475
 msgid "Use Secure File Names"
 msgstr "Använd säkra filnamn"
 
-#: includes/admin/settings-fields.php:466
+#: includes/admin/settings-fields.php:478
 msgid "Add random strings to image file names for added security"
 msgstr "Lägg till slumpmässiga strängar till bildfilnamn för ökad säkerhet"
 
-#: includes/admin/settings-fields.php:470
+#: includes/admin/settings-fields.php:482
 msgid "Enable Open Graph"
 msgstr "Aktivera Open Graph"
 
-#: includes/admin/settings-fields.php:473
+#: includes/admin/settings-fields.php:485
 msgid ""
 "Add Open Graph meta tags to the site for galleries and image pages (your SEO "
 "plugin may already be doing this)"
@@ -1871,11 +1957,11 @@ msgstr ""
 "Lägg till Open Graph-metataggar på webbplatsen för gallerier och bildsidor "
 "(ditt SEO-plugin kanske redan gör detta)"
 
-#: includes/admin/settings-fields.php:476
+#: includes/admin/settings-fields.php:488
 msgid "Hide galleries from search engines"
 msgstr "Dölj gallerier från sökmotorer"
 
-#: includes/admin/settings-fields.php:479
+#: includes/admin/settings-fields.php:491
 msgid ""
 "Enabling this option will attempt to block search engine bots from crawling "
 "and indexing galleries and images"
@@ -1883,67 +1969,67 @@ msgstr ""
 "Om du aktiverar det här alternativet försöker du blockera sökmotorrobotar "
 "från att genomsöka och indexera gallerier och bilder"
 
-#: includes/admin/settings-fields.php:484
+#: includes/admin/settings-fields.php:496
 msgid "Display Options"
 msgstr "Visningsalternativ"
 
-#: includes/admin/settings-fields.php:488
+#: includes/admin/settings-fields.php:500
 msgid "Gallery Order"
 msgstr "Ordning i galleriet"
 
-#: includes/admin/settings-fields.php:493
-#: includes/admin/settings-fields.php:504
+#: includes/admin/settings-fields.php:505
+#: includes/admin/settings-fields.php:516
 msgid "Custom ordering"
 msgstr "Anpassad sortering"
 
-#: includes/admin/settings-fields.php:494
+#: includes/admin/settings-fields.php:506
 msgid "Gallery Creation Date (New to Old)"
 msgstr "Datum då galleriet skapades (nytt till gammalt)"
 
-#: includes/admin/settings-fields.php:495
+#: includes/admin/settings-fields.php:507
 msgid "Gallery Creation Date (Old to New)"
 msgstr "Datum för skapande av galleri (gammalt till nytt)"
 
-#: includes/admin/settings-fields.php:496
-#: includes/admin/settings-fields.php:509
+#: includes/admin/settings-fields.php:508
+#: includes/admin/settings-fields.php:521
 msgid "Alphabetical"
 msgstr "Alfabetisk"
 
-#: includes/admin/settings-fields.php:500
+#: includes/admin/settings-fields.php:512
 msgid "Image Order"
 msgstr "Bildordning"
 
-#: includes/admin/settings-fields.php:505
+#: includes/admin/settings-fields.php:517
 msgid "Order images shot (New to Old)"
 msgstr "Orderbilder tagna (nya till gamla)"
 
-#: includes/admin/settings-fields.php:506
+#: includes/admin/settings-fields.php:518
 msgid "Order images shot (Old to New)"
 msgstr "Beställning av bilder (gamla till nya)"
 
-#: includes/admin/settings-fields.php:507
+#: includes/admin/settings-fields.php:519
 msgid "Image Upload Date (New to Old)"
 msgstr "Datum för uppladdning av bild (ny till gammal)"
 
-#: includes/admin/settings-fields.php:508
+#: includes/admin/settings-fields.php:520
 msgid "Image Upload Date (Old to New)"
 msgstr "Datum för uppladdning av bild (gammal till ny)"
 
-#: includes/admin/settings-fields.php:511
+#: includes/admin/settings-fields.php:523
 msgid "If selecting \"Order images shot\" images must have proper metadata"
 msgstr ""
 "Om du väljer \"Beställ bilder som tagits\" måste bilderna ha korrekta "
 "metadata"
 
-#: includes/admin/settings-fields.php:511
+#: includes/admin/settings-fields.php:523
 msgid "learn more"
 msgstr "läs mer"
 
-#: includes/admin/settings-fields.php:515
+#: includes/admin/settings-fields.php:527
 msgid "Fallback Featured Image"
 msgstr "Utvald bild som reserv"
 
-#: includes/admin/settings-fields.php:518
+#: includes/admin/settings-fields.php:530
 msgid ""
 "Upload a custom thumbnail image to be used when no specific featured image "
 "is set"
@@ -1951,11 +2037,11 @@ msgstr ""
 "Ladda upp en egen miniatyrbild som ska användas när ingen specifik bild har "
 "angetts"
 
-#: includes/admin/settings-fields.php:522
+#: includes/admin/settings-fields.php:534
 msgid "Password Protected Featured Image"
 msgstr "Lösenordsskyddad bild för utvalda bilder"
 
-#: includes/admin/settings-fields.php:525
+#: includes/admin/settings-fields.php:537
 msgid ""
 "Upload a custom thumbnail image to be used when a gallery is password "
 "protected"
@@ -1963,114 +2049,114 @@ msgstr ""
 "Ladda upp en egen miniatyrbild som ska användas när ett galleri är "
 "lösenordsskyddat"
 
-#: includes/admin/settings-fields.php:531
+#: includes/admin/settings-fields.php:543
 msgid "Galleries List Display"
 msgstr "Galleri lista visning"
 
-#: includes/admin/settings-fields.php:536
+#: includes/admin/settings-fields.php:548
 msgid "Galleries Layout"
 msgstr "Layout för gallerier"
 
-#: includes/admin/settings-fields.php:539
-#: includes/admin/settings-fields.php:595
+#: includes/admin/settings-fields.php:551
+#: includes/admin/settings-fields.php:607
 msgid "Cropping option not recommended for justified or masonry"
 msgstr "Beskärningsalternativ rekommenderas inte för motiverade eller murverk"
 
-#: includes/admin/settings-fields.php:542
-#: includes/admin/settings-fields.php:598
+#: includes/admin/settings-fields.php:554
+#: includes/admin/settings-fields.php:610
 msgid "Standard"
 msgstr "Standard"
 
-#: includes/admin/settings-fields.php:546
-#: includes/admin/settings-fields.php:602
+#: includes/admin/settings-fields.php:558
+#: includes/admin/settings-fields.php:614
 msgid "Justified"
 msgstr "Justerade"
 
-#: includes/admin/settings-fields.php:550
-#: includes/admin/settings-fields.php:606
+#: includes/admin/settings-fields.php:562
+#: includes/admin/settings-fields.php:618
 msgid "Masonry"
 msgstr "Masonry"
 
-#: includes/admin/settings-fields.php:556
+#: includes/admin/settings-fields.php:568
 msgid "Galleries Columns"
 msgstr "Gallerier Kolumner"
 
-#: includes/admin/settings-fields.php:567
+#: includes/admin/settings-fields.php:579
 msgid "Galleries Per Page"
 msgstr "Gallerier per sida"
 
-#: includes/admin/settings-fields.php:571
+#: includes/admin/settings-fields.php:583
 msgid "Set to 0 for unlimited galleries (no pagination)"
 msgstr "Ställ in på 0 för obegränsade gallerier (ingen paginering)"
 
-#: includes/admin/settings-fields.php:575
+#: includes/admin/settings-fields.php:587
 msgid "Galleries Pagination Style"
 msgstr "Gallerier Sidnumreringsstil"
 
-#: includes/admin/settings-fields.php:579
-#: includes/admin/settings-fields.php:633
+#: includes/admin/settings-fields.php:591
+#: includes/admin/settings-fields.php:645
 msgid "Numbered pagination"
 msgstr "Numrerad paginering"
 
-#: includes/admin/settings-fields.php:580
-#: includes/admin/settings-fields.php:634
+#: includes/admin/settings-fields.php:592
+#: includes/admin/settings-fields.php:646
 msgid "Load more button"
 msgstr "Ladda mer knapp"
 
-#: includes/admin/settings-fields.php:581
-#: includes/admin/settings-fields.php:635
+#: includes/admin/settings-fields.php:593
+#: includes/admin/settings-fields.php:647
 msgid "Automatic infinite scrolling"
 msgstr "Automatisk oändlig rullning"
 
-#: includes/admin/settings-fields.php:587
+#: includes/admin/settings-fields.php:599
 msgid "Images Display"
 msgstr "Bildvisning"
 
-#: includes/admin/settings-fields.php:592
+#: includes/admin/settings-fields.php:604
 msgid "Images Layout"
 msgstr "Layout för bilder"
 
-#: includes/admin/settings-fields.php:612
+#: includes/admin/settings-fields.php:624
 msgid "Images Columns"
 msgstr "Bilder Kolumner"
 
-#: includes/admin/settings-fields.php:623
+#: includes/admin/settings-fields.php:635
 msgid "Images Per Page"
 msgstr "Bilder per sida"
 
-#: includes/admin/settings-fields.php:629
+#: includes/admin/settings-fields.php:641
 msgid "Images Pagination Style"
 msgstr "Bilder Sidnumreringsstil"
 
-#: includes/admin/settings-fields.php:639
+#: includes/admin/settings-fields.php:651
 msgid "Thumbnail Content"
 msgstr "Miniatyrbildens innehåll"
 
-#: includes/admin/settings-fields.php:641
+#: includes/admin/settings-fields.php:653
 msgid "What to show below image thumbnails"
 msgstr "Vad som ska visas under miniatyrbilderna"
 
-#: includes/admin/settings-fields.php:644
+#: includes/admin/settings-fields.php:656
 msgid "Nothing"
 msgstr "Inget"
 
-#: includes/admin/settings-fields.php:645 templates/admin/order-items.php:103
+#: includes/admin/settings-fields.php:657 templates/admin/order-items.php:103
 msgid "Filename"
 msgstr "Filnamn"
 
-#: includes/admin/settings-fields.php:646
+#: includes/admin/settings-fields.php:658
 msgid "Title (Images MUST have EXIF field \"Title\")"
 msgstr "Titel (bilder MÅSTE ha EXIF-fältet \"Titel\")"
 
-#: includes/admin/settings-fields.php:647
+#: includes/admin/settings-fields.php:659
 msgid "Caption"
 msgstr "Bildtext"
 
-#: includes/admin/settings-fields.php:651
+#: includes/admin/settings-fields.php:663
 msgid "Single Image Caption"
 msgstr "Bildtext för enstaka bild"
 
-#: includes/admin/settings-fields.php:654
+#: includes/admin/settings-fields.php:666
 msgid ""
 "Show the image caption (from EXIF metadata) below the image on single image "
 "pages"
@@ -2078,12 +2164,12 @@ msgstr ""
 "Visa bildtexten (från EXIF-metadata) under bilden på sidor med enstaka "
 "bilder."
 
-#: includes/admin/settings-fields.php:659
+#: includes/admin/settings-fields.php:671
 msgid "Image Sizing"
 msgstr "Bildstorlek"
 
 #. translators: %s is the URL to help documentation
-#: includes/admin/settings-fields.php:662
+#: includes/admin/settings-fields.php:674
 #, php-format
 msgid ""
 "Making changes to your image sizes does not immediately affect your "
@@ -2094,15 +2180,15 @@ msgstr ""
 "måste regenerera alla bilder. <a href=\"%s\" target=\"_blank\">Vänligen se "
 "denna hjälpartikel</a>"
 
-#: includes/admin/settings-fields.php:666
+#: includes/admin/settings-fields.php:678
 msgid "Thumbnail Size"
 msgstr "Storlek Miniatyrbild"
 
-#: includes/admin/settings-fields.php:671
+#: includes/admin/settings-fields.php:683
 msgid "Thumbnail Crop"
 msgstr "Beskärning av miniatyrbild"
 
-#: includes/admin/settings-fields.php:673
+#: includes/admin/settings-fields.php:685
 msgid ""
 "Crop image to this exact size. Note: Cropped images not recommended for "
 "Justified or Masonry layouts"
@@ -2110,27 +2196,27 @@ msgstr ""
 "Beskär bilden till denna exakta storlek. Obs: Beskurna bilder rekommenderas "
 "inte för Justified- eller Masonry-layouter"
 
-#: includes/admin/settings-fields.php:674
+#: includes/admin/settings-fields.php:686
 msgid ""
 "Should images be cropped to the exact dimensions of your thumbnail width / "
 "height"
 msgstr ""
 "Ska bilderna beskäras till exakt samma mått som miniatyrbilden (bredd/höjd)"
 
-#: includes/admin/settings-fields.php:679
+#: includes/admin/settings-fields.php:691
 msgid "Large Size"
 msgstr "Stor"
 
-#: includes/admin/settings-fields.php:687
+#: includes/admin/settings-fields.php:699
 msgid "Large size must be larger than thumbnail size (both width and height)"
 msgstr ""
 "Stor storlek måste vara större än miniatyrstorlek (både bredd och höjd)"
 
-#: includes/admin/settings-fields.php:692
+#: includes/admin/settings-fields.php:704
 msgid "Image Quality"
 msgstr "Bildkvalitet"
 
-#: includes/admin/settings-fields.php:694
+#: includes/admin/settings-fields.php:706
 msgid ""
 "Quality that generated images are saved from 1-100. The higher the quality "
 "the larger the file size. If left empty, the default is 82."
@@ -2138,87 +2224,87 @@ msgstr ""
 "Kvalitet som genererade bilder sparas från 1-100. Ju högre kvalitet desto "
 "större filstorlek. Om detta fält lämnas tomt är standardvärdet 82."
 
-#: includes/admin/settings-fields.php:707
+#: includes/admin/settings-fields.php:719
 msgid "Watermark Image"
 msgstr "Vattenstämpelbild"
 
-#: includes/admin/settings-fields.php:710
+#: includes/admin/settings-fields.php:722
 msgid "Must be a PNG image, ideally with transparency"
 msgstr "Måste vara en PNG-bild, helst med transparens"
 
-#: includes/admin/settings-fields.php:714
+#: includes/admin/settings-fields.php:726
 msgid "Max Size"
 msgstr "Max Storlek"
 
-#: includes/admin/settings-fields.php:719
+#: includes/admin/settings-fields.php:731
 msgid "From 1-100, a max percent size of the image"
 msgstr "Från 1-100, en maximal procentuell storlek på bilden"
 
-#: includes/admin/settings-fields.php:722
-#: includes/admin/settings-fields.php:780
+#: includes/admin/settings-fields.php:734
+#: includes/admin/settings-fields.php:792
 msgid "Position"
 msgstr "Position"
 
-#: includes/admin/settings-fields.php:726
+#: includes/admin/settings-fields.php:738
 msgid "Center"
 msgstr "Centrera"
 
-#: includes/admin/settings-fields.php:727
+#: includes/admin/settings-fields.php:739
 msgid "Repeat"
 msgstr "Upprepa"
 
-#: includes/admin/settings-fields.php:728
+#: includes/admin/settings-fields.php:740
 msgid "Top Left"
 msgstr "Övre vänster"
 
-#: includes/admin/settings-fields.php:729
+#: includes/admin/settings-fields.php:741
 msgid "Top Right"
 msgstr "Övre höger"
 
-#: includes/admin/settings-fields.php:730
+#: includes/admin/settings-fields.php:742
 msgid "Bottom Left"
 msgstr "Nedre vänster"
 
-#: includes/admin/settings-fields.php:731
+#: includes/admin/settings-fields.php:743
 msgid "Bottom Right"
 msgstr "Nedre höger"
 
-#: includes/admin/settings-fields.php:735
+#: includes/admin/settings-fields.php:747
 msgid "Margin from edge"
 msgstr "Marginal från kant"
 
-#: includes/admin/settings-fields.php:741
+#: includes/admin/settings-fields.php:753
 msgid "Watermark Thumbnails"
 msgstr "Vattenstämpel miniatyrer"
 
-#: includes/admin/settings-fields.php:748
+#: includes/admin/settings-fields.php:760
 msgid "Favorites / Selections"
 msgstr "Favoriter / Val"
 
-#: includes/admin/settings-fields.php:753
+#: includes/admin/settings-fields.php:765
 msgid "Enable Favorites"
 msgstr "Aktivera favoriter"
 
-#: includes/admin/settings-fields.php:756
+#: includes/admin/settings-fields.php:768
 msgid "Allow users to save images to their favorites"
 msgstr "Låt användare spara bilder till sina favoriter"
 
-#: includes/admin/settings-fields.php:759
+#: includes/admin/settings-fields.php:771
 msgid "Enable Guest Favorites"
 msgstr "Aktivera gästfavoriter"
 
-#: includes/admin/settings-fields.php:762
+#: includes/admin/settings-fields.php:774
 msgid ""
 "Allow visitors who are not logged in to save favorites for their browser "
 "session"
 msgstr ""
 "Låt besökare som inte är inloggade spara favoriter för sin webbläsarsession"
 
-#: includes/admin/settings-fields.php:773
+#: includes/admin/settings-fields.php:785
 msgid "Enable Selection Tray"
 msgstr "Aktivera urvalsfältet"
 
-#: includes/admin/settings-fields.php:776
+#: includes/admin/settings-fields.php:788
 msgid ""
 "Show users their selected favorites in a persistent popup while viewing "
 "galleries"
@@ -2226,27 +2312,27 @@ msgstr ""
 "Visa användarna deras valda favoriter i ett permanent popup-fönster medan de "
 "tittar på gallerier."
 
-#: includes/admin/settings-fields.php:784
+#: includes/admin/settings-fields.php:796
 msgid "Float bottom right"
 msgstr "Flytande längst ned till höger"
 
-#: includes/admin/settings-fields.php:785
+#: includes/admin/settings-fields.php:797
 msgid "Float bottom left"
 msgstr "Flytande nedre vänstra hörnet"
 
-#: includes/admin/settings-fields.php:795
+#: includes/admin/settings-fields.php:807
 msgid "Choose where the selection tray appears on the page"
 msgstr "Välj var urvalsfältet ska visas på sidan"
 
-#: includes/admin/settings-fields.php:812
+#: includes/admin/settings-fields.php:824
 msgid "Enable Taxes"
 msgstr "Aktivera moms"
 
-#: includes/admin/settings-fields.php:818
+#: includes/admin/settings-fields.php:830
 msgid "Tax Rates"
 msgstr "Momssatser"
 
-#: includes/admin/settings-fields.php:820
+#: includes/admin/settings-fields.php:832
 msgid ""
 "Be as specific as you need. Order for most priority. You can include "
 "multiple zip/postal codes with commas."
@@ -2254,11 +2340,11 @@ msgstr ""
 "Var så specifik som du behöver. Ordna efter högsta prioritet. Du kan ange "
 "flera postnummer med kommatecken."
 
-#: includes/admin/settings-fields.php:832
+#: includes/admin/settings-fields.php:844
 msgid "Default customer location"
 msgstr "Förvald kundplats"
 
-#: includes/admin/settings-fields.php:833
+#: includes/admin/settings-fields.php:845
 msgid ""
 "If customer does not have address entered yet, what location is used to "
 "determine the default location"
@@ -2266,58 +2352,58 @@ msgstr ""
 "Om kunden inte har angett någon adress ännu, vilken plats används för att "
 "fastställa standardplatsen"
 
-#: includes/admin/settings-fields.php:836
+#: includes/admin/settings-fields.php:848
 msgid "No location by default"
 msgstr "Ingen förvald plats"
 
-#: includes/admin/settings-fields.php:837
+#: includes/admin/settings-fields.php:849
 msgid "My business location"
 msgstr "Min verksamhetsort"
 
-#: includes/admin/settings-fields.php:869
+#: includes/admin/settings-fields.php:881
 msgid "Display prices"
 msgstr "Visa priser"
 
-#: includes/admin/settings-fields.php:878
+#: includes/admin/settings-fields.php:890
 msgid "Prices entered with tax"
 msgstr "Priser angivna med moms"
 
-#: includes/admin/settings-fields.php:887
+#: includes/admin/settings-fields.php:899
 msgid "Price display suffix"
 msgstr "Suffix för pris"
 
-#: includes/admin/settings-fields.php:890
+#: includes/admin/settings-fields.php:902
 msgid "This shows after a price"
 msgstr "Detta visar efter ett pris"
 
-#: includes/admin/settings-fields.php:899
+#: includes/admin/settings-fields.php:911
 msgid "Taxes"
 msgstr "Moms"
 
-#: includes/admin/settings-fields.php:906
+#: includes/admin/settings-fields.php:918
 msgid "Distraction Free Checkout"
 msgstr "Distraktionsfri kassa"
 
-#: includes/admin/settings-fields.php:909
+#: includes/admin/settings-fields.php:921
 msgid ""
 "Remove site header/footer and let user focus only on the checkout experience"
 msgstr ""
 "Ta bort sidhuvudet/sidfoten och låt användaren fokusera enbart på kassan"
 
-#: includes/admin/settings-fields.php:914
+#: includes/admin/settings-fields.php:926
 msgid "Allow Guest Checkout"
 msgstr "Tillåt gästutcheckning"
 
-#: includes/admin/settings-fields.php:917
+#: includes/admin/settings-fields.php:929
 msgid "Allow users to checkout as a guest (do not require a user account)"
 msgstr ""
 "Tillåt användare att checka ut som gäst (kräver inte ett användarkonto)"
 
-#: includes/admin/settings-fields.php:920
+#: includes/admin/settings-fields.php:932
 msgid "Always collect a billing address"
 msgstr "Samla alltid in en fakturaadress"
 
-#: includes/admin/settings-fields.php:923
+#: includes/admin/settings-fields.php:935
 msgid ""
 "Collect the address of the person paying on every order, even when nothing "
 "is being shipped. Invoices need the buyer's address, and the buyer is not "
@@ -2332,11 +2418,11 @@ msgstr ""
 "betalsätt, som Square, samlar alltid in en fakturaadress oavsett den här "
 "inställningen."
 
-#: includes/admin/settings-fields.php:927
+#: includes/admin/settings-fields.php:939
 msgid "Allowed Countries"
 msgstr "Tillåtna länder"
 
-#: includes/admin/settings-fields.php:928
+#: includes/admin/settings-fields.php:940
 msgid ""
 "Which countries users can select at checkout. If empty, all countries are "
 "allowed."
@@ -2344,12 +2430,12 @@ msgstr ""
 "Vilka länder användare kan välja i kassan. Om det är tomt är alla länder "
 "tillåtna."
 
-#: includes/admin/settings-fields.php:936
+#: includes/admin/settings-fields.php:948
 msgid "Google Maps API Key"
 msgstr "Google Maps API-nyckel"
 
 #. translators: %s is the URL to help documentation
-#: includes/admin/settings-fields.php:940
+#: includes/admin/settings-fields.php:952
 #, php-format
 msgid ""
 "Enter a Google API key to enable address autocomplete at checkout, <a "
@@ -2358,11 +2444,11 @@ msgstr ""
 "Ange en Google API-nyckel för att aktivera autokomplettering av adresser i "
 "kassan, <a href=\"%s\" target=\"_blank\">läs mer här</a>"
 
-#: includes/admin/settings-fields.php:951
+#: includes/admin/settings-fields.php:963
 msgid "Next Order Number"
 msgstr "Nästa ordernummer"
 
-#: includes/admin/settings-fields.php:954
+#: includes/admin/settings-fields.php:966
 msgid ""
 "Leave blank to use default order numbering, otherwise set the next order "
 "number to be used"
@@ -2370,87 +2456,87 @@ msgstr ""
 "Lämna tomt för att använda standardordernummer, annars ange nästa "
 "ordernummer som ska användas"
 
-#: includes/admin/settings-fields.php:958
+#: includes/admin/settings-fields.php:970
 msgid "Disable Invoice"
 msgstr "Inaktivera faktura"
 
-#: includes/admin/settings-fields.php:961
+#: includes/admin/settings-fields.php:973
 msgid "Disable invoices with orders"
 msgstr "Inaktivera fakturor med order"
 
-#: includes/admin/settings-fields.php:967
+#: includes/admin/settings-fields.php:979
 msgid "Display Fields"
 msgstr "Visa fält"
 
-#: includes/admin/settings-fields.php:972
+#: includes/admin/settings-fields.php:984
 msgid "Other Fields"
 msgstr "Andra områden"
 
-#: includes/admin/settings-fields.php:977
-#: includes/admin/settings-fields.php:987 includes/admin/sunshine-order.php:745
-#: includes/class-cart.php:2064 templates/email/admin-receipt.php:145
+#: includes/admin/settings-fields.php:989
+#: includes/admin/settings-fields.php:999 includes/admin/sunshine-order.php:745
+#: includes/class-cart.php:2065 templates/email/admin-receipt.php:145
 #: templates/email/customer-receipt.php:149
 #: templates/email/order-status.php:117 templates/order/details.php:59
 msgid "Notes"
 msgstr "Anteckningar"
 
-#: includes/admin/settings-fields.php:982
+#: includes/admin/settings-fields.php:994
 msgid "Required Other Fields"
 msgstr "Obligatoriskt Övriga fält"
 
-#: includes/admin/settings-fields.php:992
+#: includes/admin/settings-fields.php:1004
 msgid "VAT Label"
 msgstr "Momsetikett"
 
-#: includes/admin/settings-fields.php:1042
+#: includes/admin/settings-fields.php:1054
 msgid "Payments"
 msgstr "Betalningar"
 
-#: includes/admin/settings-fields.php:1083
+#: includes/admin/settings-fields.php:1095
 msgid "Delivery & Shipping"
 msgstr "Leverans och frakt"
 
-#: includes/admin/settings-fields.php:1090
+#: includes/admin/settings-fields.php:1102
 msgid "Design Elements"
 msgstr "Designelement"
 
-#: includes/admin/settings-fields.php:1095
+#: includes/admin/settings-fields.php:1107
 msgid "Pages Theme"
 msgstr "Sidtema"
 
-#: includes/admin/settings-fields.php:1099
 #: includes/admin/settings-fields.php:1111
+#: includes/admin/settings-fields.php:1123
 msgid "My WordPress Theme"
 msgstr "Mitt WordPress-tema"
 
-#: includes/admin/settings-fields.php:1100
 #: includes/admin/settings-fields.php:1112
+#: includes/admin/settings-fields.php:1124
 msgid "Classic"
 msgstr "Klassisk"
 
-#: includes/admin/settings-fields.php:1101
 #: includes/admin/settings-fields.php:1113
+#: includes/admin/settings-fields.php:1125
 msgid "Cover"
 msgstr "Täck"
 
-#: includes/admin/settings-fields.php:1103
+#: includes/admin/settings-fields.php:1115
 msgid "What should be used for your general theme when viewing Sunshine pages"
 msgstr ""
 "Vad bör användas för ditt allmänna tema när du tittar på Sunshine-sidor"
 
-#: includes/admin/settings-fields.php:1107
+#: includes/admin/settings-fields.php:1119
 msgid "Gallery Theme"
 msgstr "Galleritema"
 
-#: includes/admin/settings-fields.php:1115
+#: includes/admin/settings-fields.php:1127
 msgid "Allow galleries to use a different theme layout from the main pages"
 msgstr "Tillåt gallerier att använda en annan temalayout än huvudsidorna"
 
-#: includes/admin/settings-fields.php:1119
+#: includes/admin/settings-fields.php:1131
 msgid "Alternate integration"
 msgstr "Alternativ integration"
 
-#: includes/admin/settings-fields.php:1122
+#: includes/admin/settings-fields.php:1134
 msgid ""
 "Sunshine tries to blend into your theme seamlessly. If you are seeing weird "
 "layout issues, try this as an alternate method if integrating."
@@ -2459,61 +2545,61 @@ msgstr ""
 "konstiga layoutproblem kan du prova detta som en alternativ metod om du "
 "integrerar."
 
-#: includes/admin/settings-fields.php:1125
-#: includes/admin/settings-fields.php:1327
+#: includes/admin/settings-fields.php:1137
+#: includes/admin/settings-fields.php:1339
 msgid "Logo"
 msgstr "Logotyp"
 
-#: includes/admin/settings-fields.php:1132
+#: includes/admin/settings-fields.php:1144
 msgid "Classic Theme Options"
 msgstr "Klassiska temaalternativ"
 
-#: includes/admin/settings-fields.php:1151 themes/cover/functions.php:11
+#: includes/admin/settings-fields.php:1163 themes/cover/functions.php:11
 msgid "Menu Background"
 msgstr "Menybakgrund"
 
-#: includes/admin/settings-fields.php:1170 themes/cover/functions.php:16
+#: includes/admin/settings-fields.php:1182 themes/cover/functions.php:16
 msgid "Menu Links"
 msgstr "Länkar i menyn"
 
-#: includes/admin/settings-fields.php:1189 themes/cover/functions.php:21
+#: includes/admin/settings-fields.php:1201 themes/cover/functions.php:21
 msgid "Main Background"
 msgstr "Huvudbakgrund"
 
-#: includes/admin/settings-fields.php:1208
+#: includes/admin/settings-fields.php:1220
 msgid "Main Text"
 msgstr "Brödtext"
 
-#: includes/admin/settings-fields.php:1227
+#: includes/admin/settings-fields.php:1239
 msgid "Main Links"
 msgstr "Huvudlänkar"
 
-#: includes/admin/settings-fields.php:1246
+#: includes/admin/settings-fields.php:1258
 msgid "Gallery Password Box"
 msgstr "Lösenordsbox för galleri"
 
-#: includes/admin/settings-fields.php:1259
+#: includes/admin/settings-fields.php:1271
 msgid "Gallery Search Box"
 msgstr "Sökruta för galleri"
 
-#: includes/admin/settings-fields.php:1272
+#: includes/admin/settings-fields.php:1284
 msgid "Miscellaneous Elements"
 msgstr "Diverse element"
 
-#: includes/admin/settings-fields.php:1277
+#: includes/admin/settings-fields.php:1289
 msgid "Auto-include Sunshine main menu"
 msgstr "Inkludera Sunshine automatiskt i huvudmenyn"
 
-#: includes/admin/settings-fields.php:1280
+#: includes/admin/settings-fields.php:1292
 msgid ""
 "Automatically have the Sunshine Main Menu appear above the Sunshine content"
 msgstr "Låt automatiskt Sunshine-huvudmenyn visas ovanför Sunshine-innehållet"
 
-#: includes/admin/settings-fields.php:1284
+#: includes/admin/settings-fields.php:1296
 msgid "Hide link to main galleries page"
 msgstr "Dölj länk till huvudsidan för gallerier"
 
-#: includes/admin/settings-fields.php:1287
+#: includes/admin/settings-fields.php:1299
 msgid ""
 "Hide the link to your main galleries page in any Sunshine menus. Helpful if "
 "you want users to stick to just a single gallery."
@@ -2521,59 +2607,59 @@ msgstr ""
 "Dölj länken till din huvudsida för gallerier i alla Sunshine-menyer. "
 "Användbart om du vill att användarna ska hålla sig till ett enda galleri."
 
-#: includes/admin/settings-fields.php:1291
+#: includes/admin/settings-fields.php:1303
 msgid "Customizations"
 msgstr "Anpassningar"
 
-#: includes/admin/settings-fields.php:1296
+#: includes/admin/settings-fields.php:1308
 msgid "Custom CSS for frontend"
 msgstr "Anpassad CSS för frontend"
 
-#: includes/admin/settings-fields.php:1302
+#: includes/admin/settings-fields.php:1314
 msgid "Custom CSS for emails"
 msgstr "Anpassad CSS för e-postmeddelanden"
 
-#: includes/admin/settings-fields.php:1307
+#: includes/admin/settings-fields.php:1319
 msgid "Before Sunshine"
 msgstr "Före solsken"
 
-#: includes/admin/settings-fields.php:1310
+#: includes/admin/settings-fields.php:1322
 msgid "Shown before every Sunshine associated page"
 msgstr "Visas före varje associerad Sunshine-sida"
 
-#: includes/admin/settings-fields.php:1313
+#: includes/admin/settings-fields.php:1325
 msgid "After Sunshine"
 msgstr "Efter solsken"
 
-#: includes/admin/settings-fields.php:1316
+#: includes/admin/settings-fields.php:1328
 msgid "Shown after every Sunshine associated page"
 msgstr "Visas efter varje associerad sida i Sunshine"
 
-#: includes/admin/settings-fields.php:1320
+#: includes/admin/settings-fields.php:1332
 msgid "Invoices"
 msgstr "Fakturor"
 
-#: includes/admin/settings-fields.php:1330
+#: includes/admin/settings-fields.php:1342
 msgid "Will be shown on a white background"
 msgstr "Kommer att visas på vit bakgrund"
 
-#: includes/admin/settings-fields.php:1333
+#: includes/admin/settings-fields.php:1345
 msgid "Extra Content"
 msgstr "Extra Innehåll"
 
-#: includes/admin/settings-fields.php:1336
+#: includes/admin/settings-fields.php:1348
 msgid "Extra content to be shown on all invoices"
 msgstr "Extra innehåll som ska visas på alla fakturor"
 
-#: includes/admin/settings-fields.php:1345
+#: includes/admin/settings-fields.php:1357
 msgid "Design"
 msgstr "Design"
 
-#: includes/admin/settings-fields.php:1358
+#: includes/admin/settings-fields.php:1370
 msgid "Email Notifications"
 msgstr "E-postnotifikationer"
 
-#: includes/admin/settings-fields.php:1361
+#: includes/admin/settings-fields.php:1373
 msgid ""
 "Email notifications sent from Sunshine Photo Cart are listed below. Click on "
 "an email to configure it."
@@ -2581,71 +2667,71 @@ msgstr ""
 "E-postmeddelanden som skickas från Sunshine Photo Cart listas nedan. Klicka "
 "på ett e-postmeddelande för att konfigurera det."
 
-#: includes/admin/settings-fields.php:1370
+#: includes/admin/settings-fields.php:1382
 msgid "Email Sender"
 msgstr "Avsändare av e-post"
 
-#: includes/admin/settings-fields.php:1376
+#: includes/admin/settings-fields.php:1388
 msgid "From Name"
 msgstr "Från namn"
 
-#: includes/admin/settings-fields.php:1377
+#: includes/admin/settings-fields.php:1389
 msgid "When emails are sent to customers, what name should they come from"
 msgstr ""
 "När e-postmeddelanden skickas till kunder, vilket namn ska de komma från"
 
-#: includes/admin/settings-fields.php:1383
+#: includes/admin/settings-fields.php:1395
 msgid "From Email"
 msgstr "Från e-post"
 
-#: includes/admin/settings-fields.php:1384
+#: includes/admin/settings-fields.php:1396
 msgid ""
 "When emails are sent to customers, what email address should they come from"
 msgstr ""
 "När e-postmeddelanden skickas till kunder, vilken e-postadress ska de komma "
 "från"
 
-#: includes/admin/settings-fields.php:1390
+#: includes/admin/settings-fields.php:1402
 msgid "Email Template"
 msgstr "E-postmall"
 
-#: includes/admin/settings-fields.php:1396
+#: includes/admin/settings-fields.php:1408
 msgid "Email logo"
 msgstr "E-post-logotyp"
 
-#: includes/admin/settings-fields.php:1397
+#: includes/admin/settings-fields.php:1409
 msgid "Logo to use in header of email"
 msgstr "Logotyp som ska användas i e-postmeddelandets rubrik"
 
-#: includes/admin/settings-fields.php:1403
+#: includes/admin/settings-fields.php:1415
 msgid "Signature"
 msgstr "Underskrift"
 
-#: includes/admin/settings-fields.php:1404
+#: includes/admin/settings-fields.php:1416
 msgid "Included in footer of every email"
 msgstr "Inkluderas i sidfoten i varje e-postmeddelande"
 
-#: includes/admin/settings-fields.php:1463
+#: includes/admin/settings-fields.php:1475
 msgid "Integrations"
 msgstr "Integrationer"
 
-#: includes/admin/settings-fields.php:1489
+#: includes/admin/settings-fields.php:1501
 msgid "Please enter your license key in order to enable your add-ons"
 msgstr "Ange din licensnyckel för att aktivera dina tillägg"
 
-#: includes/admin/settings-fields.php:1493
+#: includes/admin/settings-fields.php:1505
 msgid "Licenses"
 msgstr "Licenser"
 
-#: includes/admin/settings-fields.php:1523
+#: includes/admin/settings-fields.php:1535
 msgid "Account Erasure Requests"
 msgstr "Förfrågningar om kontoradering"
 
-#: includes/admin/settings-fields.php:1529
+#: includes/admin/settings-fields.php:1541
 msgid "Remove personal data from orders"
 msgstr "Ta bort personliga uppgifter från ordrar"
 
-#: includes/admin/settings-fields.php:1531
+#: includes/admin/settings-fields.php:1543
 msgid ""
 "When handling an account erasure request, should personal data within orders "
 "be removed? If disabled, order personal data will be retained."
@@ -2654,15 +2740,15 @@ msgstr ""
 "konto hanteras? Om funktionen är inaktiverad kommer personuppgifter i "
 "beställningar att behållas."
 
-#: includes/admin/settings-fields.php:1536
+#: includes/admin/settings-fields.php:1548
 msgid "Personal Data Removal"
 msgstr "Borttagning av personuppgifter"
 
-#: includes/admin/settings-fields.php:1541
+#: includes/admin/settings-fields.php:1553
 msgid "Allow bulk removal of personal data"
 msgstr "Tillåt massradering av personuppgifter"
 
-#: includes/admin/settings-fields.php:1543
+#: includes/admin/settings-fields.php:1555
 msgid ""
 "Adds an option to the orders screen for removing personal data in bulk. Note "
 "that removing personal data cannot be undone."
@@ -2670,11 +2756,11 @@ msgstr ""
 "Lägger till ett alternativ i dina ordrar för att ta bort personuppgifter i "
 "bulk. Observera att borttagning av personuppgifter inte kan ångras."
 
-#: includes/admin/settings-fields.php:1548
+#: includes/admin/settings-fields.php:1560
 msgid "Personal Data Retention"
 msgstr "Lagring av personuppgifter"
 
-#: includes/admin/settings-fields.php:1550
+#: includes/admin/settings-fields.php:1562
 msgid ""
 "Choose how long to retain personal data when it's no longer needed for "
 "processing. Leave the following options blank to retain this data "
@@ -2684,19 +2770,19 @@ msgstr ""
 "bearbetning. Lämna följande alternativ tomma för att behålla dessa uppgifter "
 "på obestämd tid."
 
-#: includes/admin/settings-fields.php:1555
+#: includes/admin/settings-fields.php:1567
 msgid "Retain inactive customer accounts"
 msgstr "Behåll inaktiva kundkonton"
 
-#: includes/admin/settings-fields.php:1560
+#: includes/admin/settings-fields.php:1572
 msgid "Retain completed orders"
 msgstr "Bevara färdigbehandlade ordrar"
 
-#: includes/admin/settings-fields.php:1565
+#: includes/admin/settings-fields.php:1577
 msgid "Delete expired galleries after"
 msgstr "Ta bort utgångna gallerier efter"
 
-#: includes/admin/settings-fields.php:1569
+#: includes/admin/settings-fields.php:1581
 msgid ""
 "days — Galleries will be permanently deleted this many days after their "
 "expiration date. Leave blank to keep expired galleries indefinitely."
@@ -2704,59 +2790,59 @@ msgstr ""
 "dagar — Gallerier raderas permanent så här många dagar efter sitt "
 "utgångsdatum. Lämna tomt för att behålla utgångna gallerier för alltid."
 
-#: includes/admin/settings-fields.php:1578
+#: includes/admin/settings-fields.php:1590
 msgid "Privacy & Data"
 msgstr "Integritet och data"
 
-#: includes/admin/settings-fields.php:1587
+#: includes/admin/settings-fields.php:1599
 msgid "Allow Tracking"
 msgstr "Tillåt spårning"
 
-#: includes/admin/settings-fields.php:1592
+#: includes/admin/settings-fields.php:1604
 msgid "Types of Photography"
 msgstr "Typer av fotografering"
 
-#: includes/admin/settings-fields.php:1595
+#: includes/admin/settings-fields.php:1607
 msgid "Family"
 msgstr "Familj"
 
-#: includes/admin/settings-fields.php:1596
+#: includes/admin/settings-fields.php:1608
 msgid "Newborn"
 msgstr "Nyfödd"
 
-#: includes/admin/settings-fields.php:1597
+#: includes/admin/settings-fields.php:1609
 msgid "Wedding"
 msgstr "Bröllop"
 
-#: includes/admin/settings-fields.php:1598
+#: includes/admin/settings-fields.php:1610
 msgid "School"
 msgstr "Skola"
 
-#: includes/admin/settings-fields.php:1599
+#: includes/admin/settings-fields.php:1611
 msgid "Sports"
 msgstr "Idrott"
 
-#: includes/admin/settings-fields.php:1600
+#: includes/admin/settings-fields.php:1612
 msgid "Portraits"
 msgstr "Porträtt"
 
-#: includes/admin/settings-fields.php:1601
+#: includes/admin/settings-fields.php:1613
 msgid "Animals"
 msgstr "Djur"
 
-#: includes/admin/settings-fields.php:1602
+#: includes/admin/settings-fields.php:1614
 msgid "Events"
 msgstr "Evenemang"
 
-#: includes/admin/settings-fields.php:1603
+#: includes/admin/settings-fields.php:1615
 msgid "Real Estate"
 msgstr "Fastigheter"
 
-#: includes/admin/settings-fields.php:1609
+#: includes/admin/settings-fields.php:1621
 msgid "Usage Tracking"
 msgstr "Användningsstatistik"
 
-#: includes/admin/settings-fields.php:1611
+#: includes/admin/settings-fields.php:1623
 msgid ""
 "This data can help provide useful information to Sunshine Photo Cart and "
 "help guide new features and growth strategies. Your participation is "
@@ -2920,80 +3006,96 @@ msgstr "FTP-mappar"
 msgid "Select folder"
 msgstr "Välj mapp"
 
-#: includes/admin/sunshine-gallery.php:372
+#. translators: 1: number of photos, 2: date and time of the last one
+#: includes/admin/sunshine-gallery.php:374
+#, php-format
+msgid ""
+"Sunshine checks this gallery's folder for new photos. It has added %1$d "
+"photo, last on %2$s."
+msgid_plural ""
+"Sunshine checks this gallery's folder for new photos. It has added %1$d "
+"photos, last on %2$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/sunshine-gallery.php:380
+msgid "Sunshine checks this gallery's folder for new photos."
+msgstr "Sunshine kontrollerar det här galleriets mapp efter nya foton."
+
+#: includes/admin/sunshine-gallery.php:391
 msgid "Choose from Media Library"
 msgstr "Välj från mediebiblioteket"
 
-#: includes/admin/sunshine-gallery.php:391
-#: includes/admin/sunshine-gallery.php:555
+#: includes/admin/sunshine-gallery.php:410
+#: includes/admin/sunshine-gallery.php:574
 msgid "Select all images"
 msgstr "Välj alla bilder"
 
-#: includes/admin/sunshine-gallery.php:392
+#: includes/admin/sunshine-gallery.php:411
 msgid "Regenerate all gallery images"
 msgstr "Regenerera alla bilder i galleriet"
 
-#: includes/admin/sunshine-gallery.php:393
+#: includes/admin/sunshine-gallery.php:412
 msgid "Refresh photo details"
 msgstr "Uppdatera bilddetaljer"
 
-#: includes/admin/sunshine-gallery.php:394
+#: includes/admin/sunshine-gallery.php:413
 msgid "Delete selected images"
 msgstr "Radera markerade bilder"
 
 #. translators: %1$s is the number of images currently loaded, %2$s is the total number of images
-#: includes/admin/sunshine-gallery.php:399
+#: includes/admin/sunshine-gallery.php:418
 #, php-format
 msgid "Showing %1$s of %2$s images"
 msgstr "Visar %1$s av %2$s bilder"
 
 #. translators: %s is a select dropdown with options for number of images to load
-#: includes/admin/sunshine-gallery.php:402
+#: includes/admin/sunshine-gallery.php:421
 #, php-format
 msgid "Load %s more images"
 msgstr "Ladda %s fler bilder"
 
-#: includes/admin/sunshine-gallery.php:403
+#: includes/admin/sunshine-gallery.php:422
 msgid "GO"
 msgstr "SÖK"
 
-#: includes/admin/sunshine-gallery.php:418
+#: includes/admin/sunshine-gallery.php:437
 msgid "Loading"
 msgstr "Laddar"
 
-#: includes/admin/sunshine-gallery.php:445
+#: includes/admin/sunshine-gallery.php:464
 msgid "Saving image order..."
 msgstr "Spara bildordning..."
 
-#: includes/admin/sunshine-gallery.php:489
+#: includes/admin/sunshine-gallery.php:508
 msgid "Sorry, the image could not be deleted for some reason"
 msgstr "Tyvärr kunde bilden inte raderas av någon anledning"
 
-#: includes/admin/sunshine-gallery.php:521
+#: includes/admin/sunshine-gallery.php:540
 msgid "Sorry, the image could not be set as featured"
 msgstr "Tyvärr, bilden kunde inte ställas in som utvald"
 
-#: includes/admin/sunshine-gallery.php:549
+#: includes/admin/sunshine-gallery.php:568
 msgid "Select no images"
 msgstr "Välj inga bilder"
 
-#: includes/admin/sunshine-gallery.php:608
+#: includes/admin/sunshine-gallery.php:627
 msgid "Allowed Files"
 msgstr "Tillåtna filer"
 
-#: includes/admin/sunshine-gallery.php:875
+#: includes/admin/sunshine-gallery.php:894
 msgid "No importable images were found in the selected folder."
 msgstr "Inga importerbara bilder hittades i den valda mappen."
 
-#: includes/admin/sunshine-gallery.php:907
+#: includes/admin/sunshine-gallery.php:926
 msgid "The import stopped."
 msgstr "Importen stoppades."
 
-#: includes/admin/sunshine-gallery.php:908
+#: includes/admin/sunshine-gallery.php:927
 msgid "The import stopped before every photo was brought in."
 msgstr "Importen stoppades innan alla foton hade tagits in."
 
-#: includes/admin/sunshine-gallery.php:962
+#: includes/admin/sunshine-gallery.php:981
 msgid ""
 "The image did not fully upload because it is too large for your server to "
 "handle. Thumbnails and watermarks may not have been applied."
@@ -3001,69 +3103,69 @@ msgstr ""
 "Bilden laddades inte upp helt eftersom den är för stor för din server. "
 "Miniatyrbilder och vattenstämplar kanske inte har tillämpats."
 
-#: includes/admin/sunshine-gallery.php:988
+#: includes/admin/sunshine-gallery.php:1007
 msgid ""
 "Unable to inspect the selected directory before import. Please try again."
 msgstr ""
 "Det går inte att inspektera den valda katalogen före import. Försök igen."
 
-#: includes/admin/sunshine-gallery.php:1031
+#: includes/admin/sunshine-gallery.php:1050
 msgid "Processing failed"
 msgstr "Bearbetningen misslyckades"
 
-#: includes/admin/sunshine-gallery.php:1061
+#: includes/admin/sunshine-gallery.php:1080
 msgid "You do not have permission to edit this gallery"
 msgstr "Du har inte behörighet att redigera det här galleriet"
 
-#: includes/admin/sunshine-gallery.php:1084
+#: includes/admin/sunshine-gallery.php:1103
 msgid "No file was uploaded"
 msgstr "Ingen fil laddades upp"
 
-#: includes/admin/sunshine-gallery.php:1117
+#: includes/admin/sunshine-gallery.php:1136
 msgid "Invalid file type"
 msgstr "Ogiltig filtyp"
 
-#: includes/admin/sunshine-gallery.php:1125
+#: includes/admin/sunshine-gallery.php:1144
 msgid "You do not have permission to upload files"
 msgstr "Du har inte behörighet att ladda upp filer"
 
-#: includes/admin/sunshine-gallery.php:1136
+#: includes/admin/sunshine-gallery.php:1155
 msgid "Upload directory is not writable"
 msgstr "Uppladdningskatalogen är inte skrivbar"
 
-#: includes/admin/sunshine-gallery.php:1633
-#: includes/admin/sunshine-gallery.php:1686
+#: includes/admin/sunshine-gallery.php:1652
+#: includes/admin/sunshine-gallery.php:1705
 msgid "You do not have permission to import images."
 msgstr "Du har inte behörighet att importera bilder."
 
-#: includes/admin/sunshine-gallery.php:1642
+#: includes/admin/sunshine-gallery.php:1661
 msgid "A directory must be selected before importing."
 msgstr "En katalog måste väljas innan importen."
 
-#: includes/admin/sunshine-gallery.php:1651
-#: includes/admin/sunshine-gallery.php:1755
+#: includes/admin/sunshine-gallery.php:1670
+#: includes/admin/sunshine-gallery.php:1777
 msgid "The selected directory is not available."
 msgstr "Den valda katalogen är inte tillgänglig."
 
-#: includes/admin/sunshine-gallery.php:1874
+#: includes/admin/sunshine-gallery.php:1896
 msgid "Already uploaded to gallery"
 msgstr "Redan uppladdad till galleriet"
 
 #. translators: %s is the upload directory
-#: includes/admin/sunshine-gallery.php:1889
+#: includes/admin/sunshine-gallery.php:1911
 #, php-format
 msgid "The selected file could not be copied to %s."
 msgstr "Den valda filen kunde inte kopieras till %s."
 
-#: includes/admin/sunshine-gallery.php:1904
+#: includes/admin/sunshine-gallery.php:1926
 msgid "Could not be added to the gallery"
 msgstr "Kunde inte läggas till i galleriet"
 
-#: includes/admin/sunshine-gallery.php:1921
+#: includes/admin/sunshine-gallery.php:1943
 msgid "No emails collected yet"
 msgstr "Inga e-postmeddelanden har samlats in ännu"
 
-#: includes/admin/sunshine-gallery.php:1995
+#: includes/admin/sunshine-gallery.php:2017
 msgid "Add gallery name"
 msgstr "Lägg till galleriets namn"
 
@@ -3127,7 +3229,7 @@ msgid "Select All"
 msgstr "Välj alla"
 
 #: includes/admin/sunshine-order.php:434 includes/class-order.php:1058
-#: includes/class-sunshinephotocart.php:539 gallery.php:272 admin.php:237
+#: includes/class-sunshinephotocart.php:541 gallery.php:272 admin.php:237
 #: admin/customers.php:20 admin/customers.php:42 class-admin-gift-cards.php:189
 msgid "Order"
 msgstr "Beställning"
@@ -3217,8 +3319,8 @@ msgid "Delivery/Shipping Method"
 msgstr "Leverans/fraktsätt"
 
 #: includes/admin/sunshine-order.php:683
-#: includes/class-sunshinephotocart.php:588
-#: includes/class-sunshinephotocart.php:599 class-export-orders.php:514
+#: includes/class-sunshinephotocart.php:590
+#: includes/class-sunshinephotocart.php:601 class-export-orders.php:514
 #: class-export-orders.php:609
 msgid "Order Status"
 msgstr "Orderstatus"
@@ -3295,7 +3397,7 @@ msgid "Image Data"
 msgstr "Bilddata"
 
 #: includes/admin/sunshine-order.php:807 includes/admin/sunshine-order.php:844
-#: includes/class-sunshinephotocart.php:427 templates/admin/order-items.php:104
+#: includes/class-sunshinephotocart.php:429 templates/admin/order-items.php:104
 #: templates/cart/item.php:5 templates/cart/items.php:5
 #: templates/checkout/summary.php:12 templates/invoice/admin.php:214
 #: templates/invoice/admin.php:226 templates/order/item.php:5
@@ -3599,7 +3701,7 @@ msgstr "Inga föräldralösa barn har hittats!"
 
 #: includes/admin/tools/orphans.php:162
 #: includes/admin/tools/refresh-photo-details.php:221
-#: includes/admin/tools/regenerate.php:450
+#: includes/admin/tools/regenerate.php:637
 #: includes/admin/tools/square-reconcile.php:184
 #: includes/admin/tools/unused-image-sizes.php:153 hooks.php:693
 msgid "Abort"
@@ -3660,7 +3762,8 @@ msgstr "Uppdaterar bilddetaljer för \"%s\""
 
 #: includes/admin/tools/refresh-photo-details.php:231
 #: includes/admin/tools/refresh-photo-details.php:256
-#: includes/admin/tools/regenerate.php:480
+#: includes/admin/tools/regenerate.php:667
+#: includes/admin/tools/regenerate.php:680
 msgid "Done!"
 msgstr "Klart!"
 
@@ -3674,7 +3777,8 @@ msgstr ""
 
 #: includes/admin/tools/regenerate.php:22
 #: includes/admin/tools/regenerate.php:25
-#: includes/admin/tools/regenerate.php:37
+#: includes/admin/tools/regenerate.php:39
+#: includes/admin/tools/regenerate.php:83
 msgid "Regenerate Images"
 msgstr "Regenerera bilder"
 
@@ -3686,33 +3790,45 @@ msgstr ""
 "Om du har ändrat miniatyrstorlek, digital nedladdningsstorlek eller "
 "inställningar för vattenstämpel måste du regenerera bilderna."
 
-#: includes/admin/tools/regenerate.php:193
+#: includes/admin/tools/regenerate.php:252
 msgid "Could not find original file to regenerate from"
 msgstr "Kunde inte hitta originalfil att regenerera från"
 
-#: includes/admin/tools/regenerate.php:231
+#: includes/admin/tools/regenerate.php:290
 msgid "Could not download file from cloud storage for regeneration"
 msgstr "Det gick inte att ladda ner filen från molnlagringen för återskapande."
 
-#: includes/admin/tools/regenerate.php:240
+#: includes/admin/tools/regenerate.php:299
 msgid "Cloud Storage addon is required to regenerate this offloaded image"
 msgstr "Cloud Storage-tillägget krävs för att återskapa denna avlastade bild."
 
-#: includes/admin/tools/regenerate.php:269
+#: includes/admin/tools/regenerate.php:321
+msgid "Could not restore the original file from cloud storage"
+msgstr "Det gick inte att återställa originalfilen från molnlagringen"
+
+#: includes/admin/tools/regenerate.php:335
 msgid "Original file is missing locally and no cloud-storage key is set."
 msgstr "Originalfilen saknas lokalt och ingen molnlagringsnyckel är angiven."
 
 #. translators: %s is the gallery title
-#: includes/admin/tools/regenerate.php:435
+#: includes/admin/tools/regenerate.php:618
 #, php-format
 msgid "Regenerating images for \"%s\""
 msgstr "Återskapande av bilder för \"%s\""
 
-#: includes/admin/tools/regenerate.php:438
+#. translators: %d is the number of galleries
+#: includes/admin/tools/regenerate.php:622
+#, fuzzy, php-format
+msgid "Regenerating images for %d gallery"
+msgid_plural "Regenerating images for %d galleries"
+msgstr[0] "Återskapande av bilder för \"%s\""
+msgstr[1] "Återskapande av bilder för \"%s\""
+
+#: includes/admin/tools/regenerate.php:625
 msgid "Regenerating images"
 msgstr "Förnyande bilder"
 
-#: includes/admin/tools/regenerate.php:473
+#: includes/admin/tools/regenerate.php:660
 msgid ""
 "Image did not fully upload because it is too large for your server to "
 "handle. Thumbnails and watermarks may not have been applied. Recommend "
@@ -3722,12 +3838,36 @@ msgstr ""
 "ska kunna hantera den. Miniatyrbilder och vattenstämplar kanske inte har "
 "använts. Rekommenderar att öka tillgängligt minne."
 
-#: includes/admin/tools/regenerate.php:514
+#: includes/admin/tools/regenerate.php:710
+msgid "Sub-galleries Found"
+msgstr "Undergallerier hittades"
+
+#. translators: %d is the number of sub-galleries
+#: includes/admin/tools/regenerate.php:716
+#, php-format
+msgid ""
+"There is %d sub-gallery inside the galleries you picked. Do you want to "
+"regenerate its images too?"
+msgid_plural ""
+"There are %d sub-galleries inside the galleries you picked. Do you want to "
+"regenerate their images too?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/tools/regenerate.php:729
+msgid "Yes, include sub-galleries"
+msgstr "Ja, ta med undergallerier"
+
+#: includes/admin/tools/regenerate.php:732
+msgid "No, only the galleries I picked"
+msgstr "Nej, bara de gallerier jag valde"
+
+#: includes/admin/tools/regenerate.php:754
 msgid "Watermark Settings Detected"
 msgstr "Vattenstämpelinställningar upptäckta"
 
 #. translators: %d is the number of images without watermark
-#: includes/admin/tools/regenerate.php:520
+#: includes/admin/tools/regenerate.php:760
 #, php-format
 msgid ""
 "You have %d image that does not have watermark enabled, but you have a "
@@ -3742,19 +3882,19 @@ msgstr[1] ""
 "Du har %d bilder som inte har vattenstämpel aktiverat, men du har en "
 "vattenstämpel inställd i dina allmänna inställningar."
 
-#: includes/admin/tools/regenerate.php:531
+#: includes/admin/tools/regenerate.php:771
 msgid "How would you like to proceed?"
 msgstr "Hur vill ni gå vidare?"
 
-#: includes/admin/tools/regenerate.php:534
+#: includes/admin/tools/regenerate.php:774
 msgid "Apply watermark to all images"
 msgstr "Lägg till vattenstämpel på alla bilder"
 
-#: includes/admin/tools/regenerate.php:537
+#: includes/admin/tools/regenerate.php:777
 msgid "Keep current image watermark settings"
 msgstr "Behåll aktuella inställningar för bildvattenstämpel"
 
-#: includes/admin/tools/regenerate.php:574
+#: includes/admin/tools/regenerate.php:815
 msgid ""
 "No image found at this position. It may have been deleted since this run "
 "started."
@@ -3908,56 +4048,58 @@ msgstr ""
 msgid ""
 "An item has been removed from your cart because one of its options is no "
 "longer available"
-msgstr "En vara har tagits bort från din varukorg eftersom ett av dess alternativ inte längre finns"
+msgstr ""
+"En vara har tagits bort från din varukorg eftersom ett av dess alternativ "
+"inte längre finns"
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:750
+#: includes/class-cart.php:751
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr "Rabatt \"%s\" borttagen eftersom den inte längre är giltig"
 
-#: includes/class-cart.php:1697
+#: includes/class-cart.php:1698
 msgid "Contact Information"
 msgstr "Kontaktinformation"
 
-#: includes/class-cart.php:1702 includes/class-countries.php:3424
+#: includes/class-cart.php:1703 includes/class-countries.php:3424
 #: includes/functions/account.php:579 templates/account/signup.php:20
 #: class-export-orders.php:522
 msgid "First Name"
 msgstr "Förnamn"
 
-#: includes/class-cart.php:1711 includes/class-countries.php:3433
+#: includes/class-cart.php:1712 includes/class-countries.php:3433
 #: includes/functions/account.php:587 templates/account/signup.php:27
 #: class-export-orders.php:523
 msgid "Last Name"
 msgstr "Efternamn"
 
-#: includes/class-cart.php:1737 templates/account/login.php:18
+#: includes/class-cart.php:1738 templates/account/login.php:18
 #: templates/account/signup.php:9 templates/shortcodes/password.php:4
 msgid "Password"
 msgstr "Lösenord"
 
-#: includes/class-cart.php:1739
+#: includes/class-cart.php:1740
 msgid "Optionally set a password"
 msgstr "Ange ett lösenord som tillval"
 
-#: includes/class-cart.php:1756 templates/email/admin-receipt.php:198
+#: includes/class-cart.php:1757 templates/email/admin-receipt.php:198
 #: templates/email/customer-receipt.php:184
 #: templates/email/order-status.php:152 templates/invoice/admin.php:185
 #: templates/order/details.php:39 class-export-orders.php:526
 msgid "EU VAT Number"
 msgstr "EU-MOMSNUMMER"
 
-#: includes/class-cart.php:1858
+#: includes/class-cart.php:1859
 msgid "Delivery Method"
 msgstr "Leverans metod"
 
-#: includes/class-cart.php:1918 includes/class-cart.php:1935
+#: includes/class-cart.php:1919 includes/class-cart.php:1936
 #: templates/invoice/admin.php:174 class-export-orders.php:520
 msgid "Shipping Method"
 msgstr "Leveranssätt"
 
-#: includes/class-cart.php:1940 includes/class-cart.php:2452
+#: includes/class-cart.php:1941 includes/class-cart.php:2453
 msgid ""
 "Sorry, shipping is not available to the address you entered. Please double "
 "check the address or try a different shipping address."
@@ -3965,36 +4107,36 @@ msgstr ""
 "Tyvärr, frakt är inte möjlig till adressen du angav. Dubbelkolla adressen "
 "eller prova en annan leveransadress."
 
-#: includes/class-cart.php:2001
+#: includes/class-cart.php:2002
 msgid "Use shipping address as billing address"
 msgstr "Använd leveransadress som faktureringsadress"
 
-#: includes/class-cart.php:2039
+#: includes/class-cart.php:2040
 msgid "Same as shipping address"
 msgstr "Samma som leveransadress"
 
-#: includes/class-cart.php:2091
+#: includes/class-cart.php:2092
 msgid "Payment"
 msgstr "Betalning"
 
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:2101
+#: includes/class-cart.php:2102
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr "Använd mina krediter (%s tillgängliga)"
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:2109 includes/class-payment-method.php:242
+#: includes/class-cart.php:2110 includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr "Skicka order och betala %s"
 
-#: includes/class-cart.php:2111
+#: includes/class-cart.php:2112
 msgid "Submit Order for Free"
 msgstr "Skicka order kostnadsfritt"
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:2136
+#: includes/class-cart.php:2137
 #, php-format
 msgid ""
 "By submitting this order, you agree to our <a href=\"%1$s\" "
@@ -4004,57 +4146,57 @@ msgstr ""
 "target=\"_blank\">%2$s</a>"
 
 #. translators: %s is the section name
-#: includes/class-cart.php:2177
+#: includes/class-cart.php:2178
 #, php-format
 msgid "Edit %s"
 msgstr "Redigera %s"
 
-#: includes/class-cart.php:2195
+#: includes/class-cart.php:2196
 msgid "Next Step"
 msgstr "Nästa Steg"
 
-#: includes/class-cart.php:2372
+#: includes/class-cart.php:2373
 msgid "Invalid checkout section"
 msgstr "Ogiltigt utcheckningsavsnitt"
 
-#: includes/class-cart.php:2388
+#: includes/class-cart.php:2389
 msgid "Field contains invalid data"
 msgstr "Fältet innehåller ogiltiga data"
 
 #. translators: %s is the field name
-#: includes/class-cart.php:2411
+#: includes/class-cart.php:2412
 #, php-format
 msgid "%s is required"
 msgstr "%s krävs"
 
-#: includes/class-cart.php:2423 frontend.php:173
+#: includes/class-cart.php:2424 frontend.php:173
 msgid "Invalid email"
 msgstr "Ogiltig e-postadress"
 
-#: includes/class-cart.php:2528 includes/class-cart.php:2933
-#: includes/class-cart.php:2941
+#: includes/class-cart.php:2529 includes/class-cart.php:2934
+#: includes/class-cart.php:2942
 msgid "Please select a payment method before completing your order."
 msgstr "Välj en betalningsmetod innan du slutför din beställning."
 
-#: includes/class-cart.php:2540 includes/class-cart.php:2792
+#: includes/class-cart.php:2541 includes/class-cart.php:2793
 msgid "Please select a shipping method before completing your order."
 msgstr "Välj en fraktmetod innan du slutför din beställning."
 
 #. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
-#: includes/class-cart.php:2661
+#: includes/class-cart.php:2662
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
 msgstr "Fyll i följande innan du skickar din beställning: %s"
 
-#: includes/class-cart.php:2671
+#: includes/class-cart.php:2672
 msgid "Please log in or create an account to complete this order"
 msgstr "Logga in eller skapa ett konto för att slutföra den här beställningen"
 
-#: includes/class-cart.php:2704
+#: includes/class-cart.php:2705
 msgid "Customer is trying to pay again"
 msgstr "Kunden försöker betala igen"
 
-#: includes/class-cart.php:2717
+#: includes/class-cart.php:2718
 msgid ""
 "Error encountered during checkout process and your order has already been "
 "marked as paid."
@@ -4062,19 +4204,19 @@ msgstr ""
 "Fel uppstod under utcheckningsprocessen och din order har redan markerats "
 "som betald."
 
-#: includes/class-cart.php:2717 includes/class-cart.php:3238
+#: includes/class-cart.php:2718 includes/class-cart.php:3239
 msgid "View the order"
 msgstr "Se ordern"
 
-#: includes/class-cart.php:2729
+#: includes/class-cart.php:2730
 msgid "No payment method selected"
 msgstr "Ingen betalningsmetod vald"
 
-#: includes/class-cart.php:2858
+#: includes/class-cart.php:2859
 msgid "Failed to initialize order"
 msgstr "Det gick inte att initiera beställningen"
 
-#: includes/class-cart.php:2901
+#: includes/class-cart.php:2902
 msgid ""
 "Something happened while trying to process your order. Please contact the "
 "site owner for more details."
@@ -4082,35 +4224,40 @@ msgstr ""
 "Något hände när vi försökte behandla din beställning. Vänligen kontakta "
 "webbplatsens ägare för mer information."
 
-#: includes/class-cart.php:2966
+#: includes/class-cart.php:2967
 msgid "No payment method"
 msgstr "Ingen betalningsmetod"
 
 #. translators: 1: store credit the order used, 2: store credit the customer had left
-#: includes/class-cart.php:3048
+#: includes/class-cart.php:3049
 #, php-format
 msgid ""
 "This order used %1$s of store credit, but the customer only had %2$s left "
 "when it was paid. The difference was not collected."
-msgstr "Den här beställningen använde %1$s i butikskredit, men kunden hade bara %2$s kvar när den betalades. Mellanskillnaden togs inte ut."
+msgstr ""
+"Den här beställningen använde %1$s i butikskredit, men kunden hade bara %2$s "
+"kvar när den betalades. Mellanskillnaden togs inte ut."
 
-#: includes/class-cart.php:3128
+#: includes/class-cart.php:3129
 msgid "Your store credit has changed. Please review your order and try again."
-msgstr "Din butikskredit har ändrats. Gå igenom din beställning och försök igen."
+msgstr ""
+"Din butikskredit har ändrats. Gå igenom din beställning och försök igen."
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:3136
+#: includes/class-cart.php:3137
 #, php-format
 msgid ""
 "Discount \"%s\" can no longer be used. Please review your order and try "
 "again."
-msgstr "Rabatten \"%s\" kan inte längre användas. Gå igenom din beställning och försök igen."
+msgstr ""
+"Rabatten \"%s\" kan inte längre användas. Gå igenom din beställning och "
+"försök igen."
 
-#: includes/class-cart.php:3155 includes/functions/account.php:250
+#: includes/class-cart.php:3156 includes/functions/account.php:250
 msgid "Too many signup attempts, please try again later"
 msgstr "För många registreringsförsök, försök igen senare"
 
-#: includes/class-cart.php:3167
+#: includes/class-cart.php:3168
 msgid ""
 "User account already exists with that email address - please login to "
 "continue"
@@ -4118,7 +4265,7 @@ msgstr ""
 "Det finns redan ett användarkonto med den e-postadressen - logga in för att "
 "fortsätta"
 
-#: includes/class-cart.php:3238
+#: includes/class-cart.php:3239
 msgid "It appears your previous checkout has already been processed."
 msgstr "Det verkar som om din tidigare utcheckning redan har behandlats."
 
@@ -12990,7 +13137,7 @@ msgstr "Tyvärr, du får inte visa den här bilden"
 
 #: includes/class-frontend.php:989 includes/functions/add-to-cart.php:17
 #: includes/functions/comments.php:16 includes/functions/comments.php:63
-#: includes/functions/image.php:380 includes/functions/share.php:16
+#: includes/functions/image.php:396 includes/functions/share.php:16
 #: includes/functions/store.php:11 includes/functions/store.php:137
 #: includes/functions/store.php:192 includes/functions/template.php:373
 #: frontend.php:668 frontend.php:956
@@ -13112,7 +13259,9 @@ msgstr "%s i avgift"
 msgid ""
 "%1$s can't take payments under %2$s. Add more to your order or choose "
 "another way to pay."
-msgstr "%1$s kan inte ta emot betalningar under %2$s. Lägg till mer i din beställning eller välj ett annat sätt att betala."
+msgstr ""
+"%1$s kan inte ta emot betalningar under %2$s. Lägg till mer i din "
+"beställning eller välj ett annat sätt att betala."
 
 #. translators: %s is the add-on name, such as "Stripe Pro"
 #: includes/class-payment-method.php:402
@@ -13154,270 +13303,270 @@ msgstr "Instans-ID: %s"
 msgid "Shipping or delivery"
 msgstr "Frakt eller leverans"
 
-#: includes/class-sunshinephotocart.php:378
-#: includes/class-sunshinephotocart.php:540 common.php:7 common.php:47
+#: includes/class-sunshinephotocart.php:380
+#: includes/class-sunshinephotocart.php:542 common.php:7 common.php:47
 #: discounts.php:36 gift-cards.php:98
 msgid "Add New"
 msgstr "Lägg till ny"
 
-#: includes/class-sunshinephotocart.php:379
+#: includes/class-sunshinephotocart.php:381
 msgid "Add New Gallery"
 msgstr "Lägg till nytt bildgalleri"
 
-#: includes/class-sunshinephotocart.php:380
+#: includes/class-sunshinephotocart.php:382
 msgid "New Gallery"
 msgstr "Nytt bildgalleri"
 
-#: includes/class-sunshinephotocart.php:381 includes/functions/misc.php:497
+#: includes/class-sunshinephotocart.php:383 includes/functions/misc.php:499
 msgid "Edit Gallery"
 msgstr "Redigera Galleri"
 
-#: includes/class-sunshinephotocart.php:382
+#: includes/class-sunshinephotocart.php:384
 msgid "View Gallery"
 msgstr "Visa Galleri"
 
-#: includes/class-sunshinephotocart.php:383
+#: includes/class-sunshinephotocart.php:385
 msgid "All Galleries"
 msgstr "Alla Gallerier"
 
-#: includes/class-sunshinephotocart.php:384
+#: includes/class-sunshinephotocart.php:386
 msgid "Search Galleries"
 msgstr "Sök Gallerier"
 
-#: includes/class-sunshinephotocart.php:385
+#: includes/class-sunshinephotocart.php:387
 msgid "Parent Gallery:"
 msgstr "Modergalleri:"
 
-#: includes/class-sunshinephotocart.php:387
+#: includes/class-sunshinephotocart.php:389
 msgid "No galleries found in Trash"
 msgstr "Inga gallerier hittade i Trash"
 
-#: includes/class-sunshinephotocart.php:388
+#: includes/class-sunshinephotocart.php:390
 msgid "Gallery Featured Image"
 msgstr "Galleri Utvalda bilder"
 
-#: includes/class-sunshinephotocart.php:389
+#: includes/class-sunshinephotocart.php:391
 msgid "Set featured image image"
 msgstr "Ange bild för utvald bild"
 
-#: includes/class-sunshinephotocart.php:390
+#: includes/class-sunshinephotocart.php:392
 msgid "Remove featured image"
 msgstr "Ta bort utvald bild"
 
-#: includes/class-sunshinephotocart.php:391
+#: includes/class-sunshinephotocart.php:393
 msgid "Use as featured image"
 msgstr "Använd som utvald bild"
 
-#: includes/class-sunshinephotocart.php:392
+#: includes/class-sunshinephotocart.php:394
 msgid "Gallery archives"
 msgstr "Galleri arkiv"
 
-#: includes/class-sunshinephotocart.php:393
+#: includes/class-sunshinephotocart.php:395
 msgid "Insert into gallery"
 msgstr "Infoga i galleriet"
 
-#: includes/class-sunshinephotocart.php:394
+#: includes/class-sunshinephotocart.php:396
 msgid "Uploaded to this gallery"
 msgstr "Uppladdad till detta galleri"
 
-#: includes/class-sunshinephotocart.php:395
+#: includes/class-sunshinephotocart.php:397
 msgid "Filter galleries list"
 msgstr "Filtrera listan över gallerier"
 
-#: includes/class-sunshinephotocart.php:396
+#: includes/class-sunshinephotocart.php:398
 msgid "Galleries list navigation"
 msgstr "Gallerier listnavigering"
 
-#: includes/class-sunshinephotocart.php:397
+#: includes/class-sunshinephotocart.php:399
 msgid "Galleries list"
 msgstr "Lista över gallerier"
 
-#: includes/class-sunshinephotocart.php:428
+#: includes/class-sunshinephotocart.php:430
 msgid "Add Product"
 msgstr "Lägg till produkt"
 
-#: includes/class-sunshinephotocart.php:429
+#: includes/class-sunshinephotocart.php:431
 msgid "Add New Product"
 msgstr "Lägg till ny produkt"
 
-#: includes/class-sunshinephotocart.php:430
+#: includes/class-sunshinephotocart.php:432
 msgid "Edit Product"
 msgstr "Redigera Produkt"
 
-#: includes/class-sunshinephotocart.php:431
+#: includes/class-sunshinephotocart.php:433
 msgid "New Product"
 msgstr "Ny produkt"
 
-#: includes/class-sunshinephotocart.php:432
+#: includes/class-sunshinephotocart.php:434
 msgid "All Products"
 msgstr "Alla produkter"
 
-#: includes/class-sunshinephotocart.php:433
+#: includes/class-sunshinephotocart.php:435
 msgid "View Products"
 msgstr "Visa produkter"
 
-#: includes/class-sunshinephotocart.php:434
+#: includes/class-sunshinephotocart.php:436
 msgid "Search Products"
 msgstr "Sök efter produkter"
 
-#: includes/class-sunshinephotocart.php:435
+#: includes/class-sunshinephotocart.php:437
 msgid "No products found"
 msgstr "Inga produkter hittades"
 
-#: includes/class-sunshinephotocart.php:436
+#: includes/class-sunshinephotocart.php:438
 msgid "No products found in trash"
 msgstr "Inga produkter hittades i papperskorgen"
 
-#: includes/class-sunshinephotocart.php:462
+#: includes/class-sunshinephotocart.php:464
 msgid "Product Categories"
 msgstr "Produktkategorier"
 
-#: includes/class-sunshinephotocart.php:463
-#: includes/class-sunshinephotocart.php:479
+#: includes/class-sunshinephotocart.php:465
+#: includes/class-sunshinephotocart.php:481
 msgid "Product Category"
 msgstr "Produktkategori"
 
-#: includes/class-sunshinephotocart.php:464
+#: includes/class-sunshinephotocart.php:466
 msgid "Search Product Categories"
 msgstr "Sök i produktkategorier"
 
-#: includes/class-sunshinephotocart.php:465
+#: includes/class-sunshinephotocart.php:467
 msgid "All Product Categories"
 msgstr "Alla produktkategorier"
 
-#: includes/class-sunshinephotocart.php:466
+#: includes/class-sunshinephotocart.php:468
 msgid "Parent Product Category"
 msgstr "Överliggande produktkategori"
 
-#: includes/class-sunshinephotocart.php:467
+#: includes/class-sunshinephotocart.php:469
 msgid "Parent Product Category:"
 msgstr "Överordnad produktkategori:"
 
-#: includes/class-sunshinephotocart.php:468
+#: includes/class-sunshinephotocart.php:470
 msgid "Edit Product Category"
 msgstr "Redigera produktkategori"
 
-#: includes/class-sunshinephotocart.php:469
+#: includes/class-sunshinephotocart.php:471
 msgid "Update Product Category"
 msgstr "Uppdatera produktkategori"
 
-#: includes/class-sunshinephotocart.php:470
+#: includes/class-sunshinephotocart.php:472
 msgid "Add New Product Category"
 msgstr "Lägg till ny produktkategori"
 
-#: includes/class-sunshinephotocart.php:471
+#: includes/class-sunshinephotocart.php:473
 msgid "New Product Category Name"
 msgstr "Namn på ny produktkategori"
 
-#: includes/class-sunshinephotocart.php:472
+#: includes/class-sunshinephotocart.php:474
 msgid "Separate categories with commas"
 msgstr "Avgränsa kategorier med kommatecken"
 
-#: includes/class-sunshinephotocart.php:473
+#: includes/class-sunshinephotocart.php:475
 msgid "Choose from the most used categories"
 msgstr "Välj bland de mest populära kategorier"
 
-#: includes/class-sunshinephotocart.php:504 class-admin-automated-emails.php:93
+#: includes/class-sunshinephotocart.php:506 class-admin-automated-emails.php:93
 msgid "Price Levels"
 msgstr "Prisnivåer"
 
-#: includes/class-sunshinephotocart.php:506
+#: includes/class-sunshinephotocart.php:508
 msgid "Search Price Levels"
 msgstr "Sök prisnivåer"
 
-#: includes/class-sunshinephotocart.php:507
+#: includes/class-sunshinephotocart.php:509
 msgid "All Price Levels"
 msgstr "Alla prisnivåer"
 
-#: includes/class-sunshinephotocart.php:508
+#: includes/class-sunshinephotocart.php:510
 msgid "Parent Price Level"
 msgstr "Prisnivå för förälder"
 
-#: includes/class-sunshinephotocart.php:509
+#: includes/class-sunshinephotocart.php:511
 msgid "Parent Price Level:"
 msgstr "Prisnivå för förälder:"
 
-#: includes/class-sunshinephotocart.php:510
+#: includes/class-sunshinephotocart.php:512
 msgid "Edit Price Level"
 msgstr "Redigera prisnivå"
 
-#: includes/class-sunshinephotocart.php:511
+#: includes/class-sunshinephotocart.php:513
 msgid "Update Price Level"
 msgstr "Uppdatera prisnivå"
 
-#: includes/class-sunshinephotocart.php:512
+#: includes/class-sunshinephotocart.php:514
 msgid "Add New Price Level"
 msgstr "Lägg till ny prisnivå"
 
-#: includes/class-sunshinephotocart.php:513
+#: includes/class-sunshinephotocart.php:515
 msgid "New Price Level"
 msgstr "Ny prisnivå"
 
-#: includes/class-sunshinephotocart.php:541
+#: includes/class-sunshinephotocart.php:543
 msgid "Add New Order"
 msgstr "Lägg till ny beställning"
 
-#: includes/class-sunshinephotocart.php:542
+#: includes/class-sunshinephotocart.php:544
 msgid "Edit Order"
 msgstr "Redigera order"
 
-#: includes/class-sunshinephotocart.php:543
+#: includes/class-sunshinephotocart.php:545
 msgid "New Order"
 msgstr "Ny order"
 
-#: includes/class-sunshinephotocart.php:544
+#: includes/class-sunshinephotocart.php:546
 msgid "All Orders"
 msgstr "Alla beställningar"
 
-#: includes/class-sunshinephotocart.php:545
+#: includes/class-sunshinephotocart.php:547
 msgid "View Orders"
 msgstr "Visa ordrar"
 
-#: includes/class-sunshinephotocart.php:546
+#: includes/class-sunshinephotocart.php:548
 msgid "Search Orders"
 msgstr "Sök order"
 
-#: includes/class-sunshinephotocart.php:547
+#: includes/class-sunshinephotocart.php:549
 msgid "No orders found"
 msgstr "Inga beställningar hittades"
 
-#: includes/class-sunshinephotocart.php:548
+#: includes/class-sunshinephotocart.php:550
 msgid "No orders found in trash"
 msgstr "Inga beställningar hittades i papperskorgen"
 
-#: includes/class-sunshinephotocart.php:587
+#: includes/class-sunshinephotocart.php:589
 msgid "Order Statuses"
 msgstr "Orderstatusar"
 
-#: includes/class-sunshinephotocart.php:589
+#: includes/class-sunshinephotocart.php:591
 msgid "Search Order Status"
 msgstr "Sök orderstatus"
 
-#: includes/class-sunshinephotocart.php:590
+#: includes/class-sunshinephotocart.php:592
 msgid "All Order Status"
 msgstr "Status för alla order"
 
-#: includes/class-sunshinephotocart.php:591
+#: includes/class-sunshinephotocart.php:593
 msgid "Parent Order Status"
 msgstr "Status för föräldraorder"
 
-#: includes/class-sunshinephotocart.php:592
+#: includes/class-sunshinephotocart.php:594
 msgid "Parent Order Status:"
 msgstr "Föräldraorderstatus:"
 
-#: includes/class-sunshinephotocart.php:593
+#: includes/class-sunshinephotocart.php:595
 msgid "Edit Order Status"
 msgstr "Redigera orderstatus"
 
-#: includes/class-sunshinephotocart.php:594
+#: includes/class-sunshinephotocart.php:596
 msgid "Update Order Status"
 msgstr "Uppdatera orderstatus"
 
-#: includes/class-sunshinephotocart.php:595
+#: includes/class-sunshinephotocart.php:597
 msgid "Add New Order Status"
 msgstr "Lägg till ny orderstatus"
 
-#: includes/class-sunshinephotocart.php:596
+#: includes/class-sunshinephotocart.php:598
 msgid "New Order Status"
 msgstr "Status för ny order"
 
@@ -13453,7 +13602,11 @@ msgid ""
 "Email sent to admins when a payment can't be accepted for an order or an "
 "order is marked Failed. Sent to the recipients below, or the site admin "
 "email when left empty."
-msgstr "E-post som skickas till administratörer när en betalning inte kan godkännas för en beställning eller när en beställning markeras som Misslyckad. Skickas till mottagarna nedan, eller till webbplatsens admin-e-post om fältet lämnas tomt."
+msgstr ""
+"E-post som skickas till administratörer när en betalning inte kan godkännas "
+"för en beställning eller när en beställning markeras som Misslyckad. Skickas "
+"till mottagarna nedan, eller till webbplatsens admin-e-post om fältet lämnas "
+"tomt."
 
 #. translators: %1$s is the order name, %2$s is the site name
 #: includes/emails/class-email-admin-payment-problem.php:19
@@ -13469,7 +13622,10 @@ msgstr "Skicka när"
 msgid ""
 "A payment didn't match the order (wrong amount, currency or account, or paid "
 "for another order). The customer may have paid, but the order stayed unpaid."
-msgstr "En betalning stämde inte med beställningen (fel belopp, valuta eller konto, eller betald för en annan beställning). Kunden kan ha betalat, men beställningen förblev obetald."
+msgstr ""
+"En betalning stämde inte med beställningen (fel belopp, valuta eller konto, "
+"eller betald för en annan beställning). Kunden kan ha betalat, men "
+"beställningen förblev obetald."
 
 #: includes/emails/class-email-admin-payment-problem.php:49
 msgid "A payment was declined or cancelled at the payment service"
@@ -13679,7 +13835,9 @@ msgstr "Ogiltig e-postadress"
 msgid ""
 "An account could not be created with that email address. If you already have "
 "one, log in or reset your password."
-msgstr "Ett konto kunde inte skapas med den e-postadressen. Om du redan har ett, logga in eller återställ ditt lösenord."
+msgstr ""
+"Ett konto kunde inte skapas med den e-postadressen. Om du redan har ett, "
+"logga in eller återställ ditt lösenord."
 
 #. translators: %s: User email address
 #: includes/functions/account.php:301
@@ -13701,7 +13859,9 @@ msgstr "Ogiltigt försök att återställa lösenord"
 msgid ""
 "If there is an account for %s, an email has been sent to it with information "
 "on resetting your password"
-msgstr "Om det finns ett konto för %s har ett e-postmeddelande skickats dit med information om hur du återställer ditt lösenord"
+msgstr ""
+"Om det finns ett konto för %s har ett e-postmeddelande skickats dit med "
+"information om hur du återställer ditt lösenord"
 
 #: includes/functions/account.php:400
 msgid "Passwords do not match"
@@ -14828,7 +14988,9 @@ msgstr "Transaktionsavgifter"
 msgid ""
 "PayPal payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "PayPal-betalningen %1$s på %2$s stämmer inte med beställningens totalsumma, beställningen slutfördes inte"
+msgstr ""
+"PayPal-betalningen %1$s på %2$s stämmer inte med beställningens totalsumma, "
+"beställningen slutfördes inte"
 
 #: includes/payment-methods/paypal-legacy.php:415
 msgid "Customer cancelled the PayPal payment"
@@ -15077,14 +15239,18 @@ msgstr "Misslyckades med att ta emot PayPal-betalning"
 msgid ""
 "PayPal capture %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "PayPal-dragningen %1$s på %2$s stämmer inte med beställningens totalsumma, beställningen slutfördes inte"
+msgstr ""
+"PayPal-dragningen %1$s på %2$s stämmer inte med beställningens totalsumma, "
+"beställningen slutfördes inte"
 
 #: includes/payment-methods/paypal.php:716
 #: includes/payment-methods/square.php:1714
 #: includes/payment-methods/stripe.php:2962
 msgid ""
 "Your payment did not match the order total, please contact the site owner"
-msgstr "Din betalning stämde inte med beställningens totalsumma, kontakta webbplatsens ägare"
+msgstr ""
+"Din betalning stämde inte med beställningens totalsumma, kontakta "
+"webbplatsens ägare"
 
 #. translators: %s is the payment method name
 #: includes/payment-methods/paypal.php:725
@@ -15307,13 +15473,19 @@ msgstr "Square token har framgångsrikt uppdaterats"
 msgid ""
 "Square: your connection can no longer renew and will stop taking payments "
 "when the current key expires. Disconnect and connect Square again now."
-msgstr "Square: din anslutning kan inte längre förnyas och slutar ta emot betalningar när den nuvarande nyckeln går ut. Koppla från och anslut Square igen nu."
+msgstr ""
+"Square: din anslutning kan inte längre förnyas och slutar ta emot "
+"betalningar när den nuvarande nyckeln går ut. Koppla från och anslut Square "
+"igen nu."
 
 #: includes/payment-methods/square.php:697
 msgid ""
 "Square: could not reach Square to renew the connection. It will try again. "
 "If this message keeps coming back, disconnect and connect Square again."
-msgstr "Square: kunde inte nå Square för att förnya anslutningen. Det görs ett nytt försök. Om det här meddelandet fortsätter att dyka upp, koppla från och anslut Square igen."
+msgstr ""
+"Square: kunde inte nå Square för att förnya anslutningen. Det görs ett nytt "
+"försök. Om det här meddelandet fortsätter att dyka upp, koppla från och "
+"anslut Square igen."
 
 #. translators: %s: link to the Square settings
 #: includes/payment-methods/square.php:833
@@ -15321,13 +15493,19 @@ msgstr "Square: kunde inte nå Square för att förnya anslutningen. Det görs e
 msgid ""
 "Square: <a href=\"%s\">disconnect and connect Square again</a> to use the "
 "more secure connection, where only your site holds your Square keys."
-msgstr "Square: <a href=\"%s\">koppla från och anslut Square igen</a> för att använda den säkrare anslutningen, där bara din webbplats har dina Square-nycklar."
+msgstr ""
+"Square: <a href=\"%s\">koppla från och anslut Square igen</a> för att "
+"använda den säkrare anslutningen, där bara din webbplats har dina Square-"
+"nycklar."
 
 #: includes/payment-methods/square.php:843
 msgid ""
 "Square: your connection has not renewed lately and will stop working soon. "
 "Disconnect and connect Square again to keep taking payments."
-msgstr "Square: din anslutning har inte förnyats på ett tag och slutar snart fungera. Koppla från och anslut Square igen för att fortsätta ta emot betalningar."
+msgstr ""
+"Square: din anslutning har inte förnyats på ett tag och slutar snart "
+"fungera. Koppla från och anslut Square igen för att fortsätta ta emot "
+"betalningar."
 
 #. translators: %s is a comma-separated list of discount codes
 #: includes/payment-methods/square.php:1237
@@ -15388,7 +15566,9 @@ msgstr ""
 msgid ""
 "Square payment %1$s was declined or cancelled (status %2$s), so the order "
 "was not marked paid"
-msgstr "Square-betalningen %1$s nekades eller avbröts (status %2$s), så beställningen markerades inte som betald"
+msgstr ""
+"Square-betalningen %1$s nekades eller avbröts (status %2$s), så "
+"beställningen markerades inte som betald"
 
 #. translators: 1: Square payment ID, 2: amount paid in Square
 #: includes/payment-methods/square.php:1707
@@ -15397,11 +15577,14 @@ msgstr "Square-betalningen %1$s nekades eller avbröts (status %2$s), så bestä
 msgid ""
 "Square payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "Square-betalningen %1$s på %2$s stämmer inte med beställningens totalsumma, beställningen slutfördes inte"
+msgstr ""
+"Square-betalningen %1$s på %2$s stämmer inte med beställningens totalsumma, "
+"beställningen slutfördes inte"
 
 #: includes/payment-methods/square.php:1712
 msgid "Your payment was declined. Please try again or use another way to pay."
-msgstr "Din betalning nekades. Försök igen eller välj ett annat sätt att betala."
+msgstr ""
+"Din betalning nekades. Försök igen eller välj ett annat sätt att betala."
 
 #: includes/payment-methods/square.php:1849
 msgid "Every 15 minutes"
@@ -15537,7 +15720,9 @@ msgstr "Kunde inte kontrollera den här betalningen igen: %s"
 msgid ""
 "%s can't take a payment this small. Add more to your order or choose another "
 "way to pay."
-msgstr "%s kan inte ta emot en så liten betalning. Lägg till mer i din beställning eller välj ett annat sätt att betala."
+msgstr ""
+"%s kan inte ta emot en så liten betalning. Lägg till mer i din beställning "
+"eller välj ett annat sätt att betala."
 
 #: includes/payment-methods/stripe.php:382
 #: includes/payment-methods/stripe.php:3838
@@ -15933,7 +16118,9 @@ msgstr "Stripe har framgångsrikt kopplats bort"
 msgid ""
 "Stripe payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "Stripe-betalningen %1$s på %2$s stämmer inte med beställningens totalsumma, beställningen slutfördes inte"
+msgstr ""
+"Stripe-betalningen %1$s på %2$s stämmer inte med beställningens totalsumma, "
+"beställningen slutfördes inte"
 
 #: includes/payment-methods/stripe.php:1748
 #: includes/payment-methods/stripe.php:1749
@@ -15979,7 +16166,8 @@ msgstr ""
 #: includes/payment-methods/stripe.php:1970
 #, php-format
 msgid "%s could not be loaded. Please try again or choose another way to pay."
-msgstr "%s kunde inte laddas. Försök igen eller välj ett annat sätt att betala."
+msgstr ""
+"%s kunde inte laddas. Försök igen eller välj ett annat sätt att betala."
 
 #: includes/payment-methods/stripe.php:2181
 msgid "Sales Tax"
@@ -15992,7 +16180,9 @@ msgstr "Moms"
 msgid ""
 "This order could not be sent to Stripe for the right amount, please contact "
 "the site owner"
-msgstr "Den här beställningen kunde inte skickas till Stripe med rätt belopp, kontakta webbplatsens ägare"
+msgstr ""
+"Den här beställningen kunde inte skickas till Stripe med rätt belopp, "
+"kontakta webbplatsens ägare"
 
 #. translators: 1: product name, 2: quantity
 #: includes/payment-methods/stripe.php:2645
@@ -16046,7 +16236,8 @@ msgstr "Stripe-betalningen har avbrutits"
 #: includes/payment-methods/stripe.php:3266
 #, php-format
 msgid "Stripe payment %s is not paid yet, waiting for it to clear"
-msgstr "Stripe-betalningen %s är inte betald ännu, väntar på att den ska gå igenom"
+msgstr ""
+"Stripe-betalningen %s är inte betald ännu, väntar på att den ska gå igenom"
 
 #: includes/payment-methods/stripe.php:3590
 msgid "Your payment was successful! Completing your order..."
@@ -16109,13 +16300,18 @@ msgstr "För bearbetning av testbeställningar"
 msgid ""
 "The Test payment method is on and every customer can use it, so orders can "
 "be placed without paying. Turn it off when you are done testing."
-msgstr "Testbetalningsmetoden är på och alla kunder kan använda den, så beställningar kan läggas utan att betala. Stäng av den när du är klar med testningen."
+msgstr ""
+"Testbetalningsmetoden är på och alla kunder kan använda den, så "
+"beställningar kan läggas utan att betala. Stäng av den när du är klar med "
+"testningen."
 
 #: includes/payment-methods/test.php:24
 msgid ""
 "The Test payment method is on. Only admins can use it at checkout. Turn it "
 "off when you are done testing."
-msgstr "Testbetalningsmetoden är på. Bara administratörer kan använda den i kassan. Stäng av den när du är klar med testningen."
+msgstr ""
+"Testbetalningsmetoden är på. Bara administratörer kan använda den i kassan. "
+"Stäng av den när du är klar med testningen."
 
 #: includes/payment-methods/test.php:27
 msgid "Payment method settings"
@@ -16129,7 +16325,10 @@ msgstr "Tillåt kunder"
 msgid ""
 "Let customers who are not admins use this payment method. Their orders are "
 "marked paid without any payment, so only turn this on while testing."
-msgstr "Låt kunder som inte är administratörer använda den här betalningsmetoden. Deras beställningar markeras som betalda utan någon betalning, så slå bara på detta medan du testar."
+msgstr ""
+"Låt kunder som inte är administratörer använda den här betalningsmetoden. "
+"Deras beställningar markeras som betalda utan någon betalning, så slå bara "
+"på detta medan du testar."
 
 #: includes/shipping-methods/flat-rate.php:7
 msgid "Flat Rate"
@@ -16516,13 +16715,17 @@ msgstr "Beställningsstatus"
 msgid ""
 "Check this payment in %s's dashboard before refunding or marking the order "
 "paid."
-msgstr "Kontrollera den här betalningen i %s-panelen innan du återbetalar eller markerar beställningen som betald."
+msgstr ""
+"Kontrollera den här betalningen i %s-panelen innan du återbetalar eller "
+"markerar beställningen som betald."
 
 #: templates/email/admin-payment-problem.php:36
 msgid ""
 "Check this payment in your payment processor's dashboard before refunding or "
 "marking the order paid."
-msgstr "Kontrollera den här betalningen i din betaltjänsts panel innan du återbetalar eller markerar beställningen som betald."
+msgstr ""
+"Kontrollera den här betalningen i din betaltjänsts panel innan du "
+"återbetalar eller markerar beställningen som betald."
 
 #: templates/email/admin-receipt.php:13
 msgid "View Invoice"
@@ -16943,7 +17146,9 @@ msgstr "Maximalt orderbelopp"
 msgid ""
 "Only make this shipping option available when cart contains at least one of "
 "the selected products. Leave empty for all products."
-msgstr "Gör bara det här fraktalternativet tillgängligt när varukorgen innehåller minst en av de valda produkterna. Lämna tomt för alla produkter."
+msgstr ""
+"Gör bara det här fraktalternativet tillgängligt när varukorgen innehåller "
+"minst en av de valda produkterna. Lämna tomt för alla produkter."
 
 #: hooks.php:52
 msgid "Include Galleries"
@@ -17388,7 +17593,9 @@ msgstr "Inget svar från kreditkortsleverantören"
 msgid ""
 "Authorize.net approved only %1$s of the %2$s total on a prepaid card. The "
 "order was not paid and the partial charge was cancelled."
-msgstr "Authorize.net godkände bara %1$s av totalsumman %2$s på ett förbetalt kort. Beställningen betalades inte och den delvisa debiteringen avbröts."
+msgstr ""
+"Authorize.net godkände bara %1$s av totalsumman %2$s på ett förbetalt kort. "
+"Beställningen betalades inte och den delvisa debiteringen avbröts."
 
 #. translators: %s: Authorize.net transaction ID
 #: class-authorizenet.php:335
@@ -17396,19 +17603,25 @@ msgstr "Authorize.net godkände bara %1$s av totalsumman %2$s på ett förbetalt
 msgid ""
 "Could not cancel the partial Authorize.net charge %s. Void it in your "
 "Authorize.net account."
-msgstr "Kunde inte avbryta den delvisa Authorize.net-debiteringen %s. Makulera den i ditt Authorize.net-konto."
+msgstr ""
+"Kunde inte avbryta den delvisa Authorize.net-debiteringen %s. Makulera den i "
+"ditt Authorize.net-konto."
 
 #: class-authorizenet.php:342
 msgid ""
 "Your card does not have enough on it to pay the full order total, so it was "
 "not charged. Please use another card."
-msgstr "Det finns inte tillräckligt på ditt kort för att betala hela beställningen, så det debiterades inte. Använd ett annat kort."
+msgstr ""
+"Det finns inte tillräckligt på ditt kort för att betala hela beställningen, "
+"så det debiterades inte. Använd ett annat kort."
 
 #: class-authorizenet.php:353
 msgid ""
 "Authorize.net authorized the card but did not charge it yet. Capture the "
 "payment in your Authorize.net account."
-msgstr "Authorize.net godkände kortet men har inte debiterat det ännu. Dra betalningen i ditt Authorize.net-konto."
+msgstr ""
+"Authorize.net godkände kortet men har inte debiterat det ännu. Dra "
+"betalningen i ditt Authorize.net-konto."
 
 #. translators: 1: Authorize.net transaction ID, 2: Authorize.net reason code
 #: class-authorizenet.php:367
@@ -17417,7 +17630,10 @@ msgid ""
 "Authorize.net is holding payment %1$s for review (reason %2$s). The order "
 "stays Pending. Approve or decline it in your Authorize.net account, then "
 "update this order."
-msgstr "Authorize.net håller betalningen %1$s för granskning (orsak %2$s). Beställningen förblir Väntande. Godkänn eller neka den i ditt Authorize.net-konto och uppdatera sedan den här beställningen."
+msgstr ""
+"Authorize.net håller betalningen %1$s för granskning (orsak %2$s). "
+"Beställningen förblir Väntande. Godkänn eller neka den i ditt Authorize.net-"
+"konto och uppdatera sedan den här beställningen."
 
 #. translators: %1$s: error message, %2$s: error code
 #: class-authorizenet.php:374 class-authorizenet.php:377
@@ -18233,8 +18449,8 @@ msgstr "Ladda ner krediter"
 msgid "Save download credits"
 msgstr "Spara nedladdningskrediter"
 
-#: admin/galleries.php:7 admin/settings.php:102 frontend.php:1050
-#: frontend.php:1060 reports/class-reports-image-downloads.php:38
+#: admin/galleries.php:7 admin/settings.php:102 frontend.php:1056
+#: frontend.php:1066 reports/class-reports-image-downloads.php:38
 #: reports/class-reports-image-downloads.php:157
 msgid "Downloads"
 msgstr "Nedladdningar"
@@ -18316,53 +18532,54 @@ msgstr ""
 msgid "File could not be deleted"
 msgstr "Filen kunde inte raderas"
 
-#: admin/orders.php:276 admin/orders.php:478 frontend.php:60 frontend.php:151
-#: frontend.php:237 frontend.php:349 frontend.php:462 frontend.php:662
-#: frontend.php:950 order.php:396 order.php:591 order.php:736 order.php:1009
+#: admin/orders.php:276 admin/orders.php:286 admin/orders.php:484
+#: frontend.php:60 frontend.php:151 frontend.php:237 frontend.php:349
+#: frontend.php:462 frontend.php:662 frontend.php:950 order.php:396
+#: order.php:591 order.php:736 order.php:1009 exports.php:305 exports.php:315
 #: add-to-cart.php:36 cart.php:123 cart.php:144 shortcodes.php:79
 msgid "Invalid request"
 msgstr "Felaktig beställning"
 
-#: admin/orders.php:351 frontend.php:340 frontend.php:453 frontend.php:549
+#: admin/orders.php:357 frontend.php:340 frontend.php:453 frontend.php:549
 #: frontend.php:941
 msgid "Sorry, you do not have permission to download"
 msgstr "Tyvärr, du har inte tillstånd att ladda ner"
 
-#: admin/orders.php:365
+#: admin/orders.php:371
 msgid "Notify user of files added to order"
 msgstr "Meddela användaren om filer som lagts till i ordern"
 
-#: admin/orders.php:469
+#: admin/orders.php:475
 msgid "Download all originals"
 msgstr "Ladda ner alla original"
 
-#: admin/orders.php:482
+#: admin/orders.php:488
 msgid "You do not have permission to download these files"
 msgstr "Du har inte behörighet att ladda ner dessa filer."
 
-#: admin/orders.php:487
+#: admin/orders.php:493
 msgid "Order not found"
 msgstr "Beställningen hittades inte."
 
-#: admin/orders.php:493
+#: admin/orders.php:499
 msgid "No images found in this order"
 msgstr "Inga bilder hittades i denna beställning"
 
-#: admin/orders.php:496 class-rest-downloads-controller.php:142
+#: admin/orders.php:502 class-rest-downloads-controller.php:142
 msgid "Originals"
 msgstr "Original"
 
-#: admin/orders.php:502
+#: admin/orders.php:508
 msgid "Admin downloaded all original images"
 msgstr "Administratören har laddat ner alla originalbilder."
 
-#: admin/orders.php:513
+#: admin/orders.php:519
 msgid "Customer was notified via email about new files available for download"
 msgstr ""
 "Kunden informerades via e-post om nya filer som var tillgängliga för "
 "nedladdning"
 
-#: admin/orders.php:515
+#: admin/orders.php:521
 msgid "No files were attached to this order"
 msgstr "Inga filer bifogades till detta beslut"
 
@@ -18538,22 +18755,22 @@ msgstr "Ladda ner dina beställningsposter"
 msgid "Digital Download"
 msgstr "Digital nedladdning"
 
-#: class-download.php:752
+#: class-download.php:838
 msgid "Unable to process download. The requested file may not be available."
 msgstr ""
 "Det går inte att bearbeta nedladdningen. Den begärda filen kanske inte är "
 "tillgänglig."
 
-#: class-download.php:753 class-download.php:799 class-download.php:875
-#: class-download.php:937 class-download.php:957 class-download.php:1439
-#: frontend.php:292 frontend.php:821 frontend.php:829
+#: class-download.php:839 class-download.php:886 class-download.php:964
+#: class-download.php:1028 class-download.php:1048 class-download.php:1535
+#: class-download.php:1585 frontend.php:292 frontend.php:821 frontend.php:829
 #: includes/download-handler.php:99 includes/download-handler.php:107
 #: includes/download-handler.php:162 includes/download-handler.php:177
 #: includes/download-handler.php:184 includes/download-handler.php:210
 msgid "Download Error"
 msgstr "Nedladdningsfel"
 
-#: class-download.php:798 class-download.php:2061
+#: class-download.php:885 class-download.php:1966
 msgid ""
 "Sorry, the requested file could not be found. Please try again or contact "
 "support."
@@ -18561,7 +18778,7 @@ msgstr ""
 "Tyvärr, den begärda filen kunde inte hittas. Försök igen eller kontakta "
 "supporten."
 
-#: class-download.php:874
+#: class-download.php:963
 msgid ""
 "Sorry, some of the files in this download could not be retrieved. Please try "
 "again or contact support."
@@ -18569,7 +18786,7 @@ msgstr ""
 "Tyvärr, några av filerna i den här nedladdningen kunde inte hämtas. Försök "
 "igen eller kontakta supporten."
 
-#: class-download.php:936
+#: class-download.php:1027
 msgid ""
 "Sorry, this download could not be prepared. Please try again or contact "
 "support."
@@ -18577,7 +18794,7 @@ msgstr ""
 "Tyvärr, den här nedladdningen kunde inte förberedas. Försök igen eller "
 "kontakta supporten."
 
-#: class-download.php:956
+#: class-download.php:1047 class-download.php:1584
 msgid ""
 "Sorry, some of the files in this download could not be read. Please try "
 "again or contact support."
@@ -18585,7 +18802,7 @@ msgstr ""
 "Tyvärr, några av filerna i den här nedladdningen kunde inte läsas. Försök "
 "igen eller kontakta supporten."
 
-#: class-download.php:1438
+#: class-download.php:1534
 msgid ""
 "Sorry, some of the files in this download could not be found. Please try "
 "again or contact support."
@@ -18593,11 +18810,11 @@ msgstr ""
 "Tyvärr, några av filerna i den här nedladdningen hittades inte. Försök igen "
 "eller kontakta supporten."
 
-#: class-download.php:2136
+#: class-download.php:2041
 msgid "Sorry, the file could not be downloaded. Please try again."
 msgstr "Tyvärr kunde filen inte laddas ner. Försök igen."
 
-#: class-download.php:2400
+#: class-download.php:2334
 msgid "original"
 msgstr "orginal"
 
@@ -18710,15 +18927,15 @@ msgstr "Ladda ner Galleri"
 msgid "You do not have permission to download this file"
 msgstr "Du har inte tillåtelse att ladda ned den här filen"
 
-#: frontend.php:1148
+#: frontend.php:1154
 msgid "You have no available downloads"
 msgstr "Du har inga tillgängliga nedladdningar"
 
-#: frontend.php:1173
+#: frontend.php:1179
 msgid "Please provide a valid email address"
 msgstr "Vänligen ange en giltig e-postadress"
 
-#: frontend.php:1178
+#: frontend.php:1184
 msgid "Invalid request type"
 msgstr "Felaktig typ av begäran"
 
@@ -19465,15 +19682,15 @@ msgstr "Alla gallerier"
 msgid "Will include all child galleries as well"
 msgstr "Kommer att inkludera alla barngallerier också"
 
-#: class-export.php:200
+#: class-export.php:201
 msgid "File Format"
 msgstr "Filformat"
 
-#: class-export.php:204
+#: class-export.php:205
 msgid "CSV"
 msgstr "CSV"
 
-#: class-export.php:209
+#: class-export.php:210
 msgid "XML"
 msgstr "XML"
 
@@ -19500,6 +19717,11 @@ msgstr "Export"
 #: exports.php:117
 msgid "Past Exports"
 msgstr "Tidigare export"
+
+#: exports.php:299
+#, fuzzy
+msgid "You are not allowed to run exports"
+msgstr "Tyvärr, du får inte visa den här bilden"
 
 #. Plugin Name of the plugin
 #: light-blue.php
@@ -19952,7 +20174,9 @@ msgstr "Hemlig test-nyckel"
 msgid ""
 "Mollie payment %1$s was not accepted for this order: %2$s The order was left "
 "unpaid."
-msgstr "Mollie-betalningen %1$s godkändes inte för den här beställningen: %2$s Beställningen lämnades obetald."
+msgstr ""
+"Mollie-betalningen %1$s godkändes inte för den här beställningen: %2$s "
+"Beställningen lämnades obetald."
 
 #: class-mollie.php:350 class-quickpay.php:433
 msgid "it was made for a different order."
@@ -20459,7 +20683,9 @@ msgstr "Kunde inte förbereda betalningen"
 msgid ""
 "Mercado Pago payment not started: this Mercado Pago account only takes "
 "payments in %1$s, and the store charges in %2$s"
-msgstr "Mercado Pago-betalningen startades inte: det här Mercado Pago-kontot tar bara emot betalningar i %1$s, och butiken tar betalt i %2$s"
+msgstr ""
+"Mercado Pago-betalningen startades inte: det här Mercado Pago-kontot tar "
+"bara emot betalningar i %1$s, och butiken tar betalt i %2$s"
 
 #. translators: %s: Mercado Pago's reason
 #: class-mercadopago-pro.php:255
@@ -20509,7 +20735,9 @@ msgstr "Betalningen kunde inte behandlas, vänligen försök igen"
 msgid ""
 "Mercado Pago can't take payments in %s for this store. Please choose another "
 "way to pay."
-msgstr "Mercado Pago kan inte ta emot betalningar i %s för den här butiken. Välj ett annat sätt att betala."
+msgstr ""
+"Mercado Pago kan inte ta emot betalningar i %s för den här butiken. Välj ett "
+"annat sätt att betala."
 
 #. translators: %s: payment status from Mercado Pago, e.g. rejected
 #: trait-mercadopago-common.php:86
@@ -20553,7 +20781,9 @@ msgstr "beloppet är %1$s, beställningens totalsumma är %2$s"
 msgid ""
 "Mercado Pago payment %1$s was declined or cancelled (status %2$s), so the "
 "order was not marked paid"
-msgstr "Mercado Pago-betalningen %1$s nekades eller avbröts (status %2$s), så beställningen markerades inte som betald"
+msgstr ""
+"Mercado Pago-betalningen %1$s nekades eller avbröts (status %2$s), så "
+"beställningen markerades inte som betald"
 
 #. translators: 1: Mercado Pago payment ID, 2: reason, e.g. "amount is 1, order total is 110"
 #: trait-mercadopago-common.php:119
@@ -20561,11 +20791,14 @@ msgstr "Mercado Pago-betalningen %1$s nekades eller avbröts (status %2$s), så 
 msgid ""
 "Mercado Pago payment %1$s did not match this order, so the order was not "
 "marked paid (%2$s)"
-msgstr "Mercado Pago-betalningen %1$s stämde inte med den här beställningen, så beställningen markerades inte som betald (%2$s)"
+msgstr ""
+"Mercado Pago-betalningen %1$s stämde inte med den här beställningen, så "
+"beställningen markerades inte som betald (%2$s)"
 
 #: trait-mercadopago-common.php:205
 msgid "Could not refund payment: this order has no Mercado Pago payment"
-msgstr "Kunde inte återbetala: den här beställningen har ingen Mercado Pago-betalning"
+msgstr ""
+"Kunde inte återbetala: den här beställningen har ingen Mercado Pago-betalning"
 
 #: trait-mercadopago-common.php:219
 msgid "Could not refund payment: nothing is left to refund"
@@ -20626,7 +20859,9 @@ msgstr "Skicka in betalning via %s"
 msgid ""
 "Thank you! Your payment is being confirmed by Payfast. Your order will show "
 "as paid once Payfast confirms it."
-msgstr "Tack! Din betalning bekräftas av Payfast. Din beställning visas som betald när Payfast har bekräftat den."
+msgstr ""
+"Tack! Din betalning bekräftas av Payfast. Din beställning visas som betald "
+"när Payfast har bekräftat den."
 
 #: class-payfast.php:379
 msgid "Customer cancelled the Payfast payment"
@@ -20638,7 +20873,9 @@ msgstr "Kunden avbröt Payfast-betalningen"
 msgid ""
 "Payfast sent a payment notice, but the order was not finished because its "
 "status is %s"
-msgstr "Payfast skickade ett betalningsmeddelande, men beställningen slutfördes inte eftersom dess status är %s"
+msgstr ""
+"Payfast skickade ett betalningsmeddelande, men beställningen slutfördes inte "
+"eftersom dess status är %s"
 
 #. translators: %s: payment status from Payfast, e.g. CANCELLED
 #: class-payfast.php:443
@@ -20646,13 +20883,17 @@ msgstr "Payfast skickade ett betalningsmeddelande, men beställningen slutförde
 msgid ""
 "Payfast says the payment was declined or cancelled (status %s), so the order "
 "was not marked paid"
-msgstr "Payfast säger att betalningen nekades eller avbröts (status %s), så beställningen markerades inte som betald"
+msgstr ""
+"Payfast säger att betalningen nekades eller avbröts (status %s), så "
+"beställningen markerades inte som betald"
 
 #. translators: %s: why the payment was not accepted
 #: class-payfast.php:446
 #, php-format
 msgid "Payfast payment notice not accepted, order left unpaid: %s"
-msgstr "Payfast-betalningsmeddelandet godkändes inte, beställningen lämnades obetald: %s"
+msgstr ""
+"Payfast-betalningsmeddelandet godkändes inte, beställningen lämnades "
+"obetald: %s"
 
 #. translators: %s: merchant ID in the payment notice
 #: class-payfast.php:488
@@ -20670,26 +20911,33 @@ msgstr "Payfast säger att betalningens status är %s"
 #: class-payfast.php:503 class-payfast.php:648
 #, php-format
 msgid "the amount paid (%1$s) does not match the order total (%2$s)"
-msgstr "det betalda beloppet (%1$s) stämmer inte med beställningens totalsumma (%2$s)"
+msgstr ""
+"det betalda beloppet (%1$s) stämmer inte med beställningens totalsumma (%2$s)"
 
 #. translators: %s: why the payment was not accepted
 #: class-payfast.php:538
 #, php-format
 msgid ""
 "Payfast API lists a payment for this order, but the order was left unpaid: %s"
-msgstr "Payfast API visar en betalning för den här beställningen, men beställningen lämnades obetald: %s"
+msgstr ""
+"Payfast API visar en betalning för den här beställningen, men beställningen "
+"lämnades obetald: %s"
 
 #. translators: %s: what went wrong
 #: class-payfast.php:545
 #, php-format
 msgid "Could not check the payment with the Payfast API, order left unpaid: %s"
-msgstr "Kunde inte kontrollera betalningen med Payfast API, beställningen lämnades obetald: %s"
+msgstr ""
+"Kunde inte kontrollera betalningen med Payfast API, beställningen lämnades "
+"obetald: %s"
 
 #: class-payfast.php:570
 msgid ""
 "Payfast payment confirmed through the PayFast API (payment notice not "
 "received)"
-msgstr "Payfast-betalningen bekräftades via PayFast API (inget betalningsmeddelande togs emot)"
+msgstr ""
+"Payfast-betalningen bekräftades via PayFast API (inget betalningsmeddelande "
+"togs emot)"
 
 #. translators: %s: transaction type from Payfast
 #: class-payfast.php:633
@@ -20748,7 +20996,9 @@ msgstr "Kunde inte återbetala i Payfast: %s"
 msgid ""
 "This order has no Payfast payment ID, so it can't be refunded from here. You "
 "can refund it in your Payfast dashboard."
-msgstr "Den här beställningen har inget Payfast-betalnings-ID, så den kan inte återbetalas härifrån. Du kan återbetala den i din Payfast-panel."
+msgstr ""
+"Den här beställningen har inget Payfast-betalnings-ID, så den kan inte "
+"återbetalas härifrån. Du kan återbetala den i din Payfast-panel."
 
 #: class-payfast.php:1016
 msgid "there is nothing left to refund on this order"
@@ -20776,13 +21026,18 @@ msgstr "Payfast kan bara återbetala %s till på den här betalningen"
 msgid ""
 "Payfast can only pay this refund into the customer's bank account, which "
 "needs their bank details. You can do this refund in your Payfast dashboard."
-msgstr "Payfast kan bara betala ut den här återbetalningen till kundens bankkonto, vilket kräver kundens bankuppgifter. Du kan göra återbetalningen i din Payfast-panel."
+msgstr ""
+"Payfast kan bara betala ut den här återbetalningen till kundens bankkonto, "
+"vilket kräver kundens bankuppgifter. Du kan göra återbetalningen i din "
+"Payfast-panel."
 
 #. translators: %s: refund method from Payfast
 #: class-payfast.php:1065
 #, php-format
 msgid "Payfast can't refund this amount from here (refund method: %s)"
-msgstr "Payfast kan inte återbetala det här beloppet härifrån (återbetalningsmetod: %s)"
+msgstr ""
+"Payfast kan inte återbetala det här beloppet härifrån (återbetalningsmetod: "
+"%s)"
 
 #. Plugin Name of the plugin
 #: paystack.php
@@ -20811,7 +21066,9 @@ msgstr "Valuta som inte stöds"
 msgid ""
 "Paystack return link had a payment reference from a different order, so the "
 "order was left unpaid"
-msgstr "Paystacks returlänk hade en betalningsreferens från en annan beställning, så beställningen lämnades obetald"
+msgstr ""
+"Paystacks returlänk hade en betalningsreferens från en annan beställning, så "
+"beställningen lämnades obetald"
 
 #: class-paystack.php:254 class-paystack.php:260 class-quickpay.php:214
 msgid "Could not verify payment status"
@@ -20837,7 +21094,9 @@ msgstr "Paystack returnerade en betalning för en annan referens"
 msgid ""
 "the amount paid (%1$s) does not match the order total (%2$s), both in the "
 "smallest unit of the currency"
-msgstr "det betalda beloppet (%1$s) stämmer inte med beställningens totalsumma (%2$s), båda i valutans minsta enhet"
+msgstr ""
+"det betalda beloppet (%1$s) stämmer inte med beställningens totalsumma "
+"(%2$s), båda i valutans minsta enhet"
 
 #. translators: 1: currency paid in, 2: order currency
 #: class-paystack.php:296
@@ -20851,13 +21110,16 @@ msgstr "betalningen var i %1$s men beställningen är i %2$s"
 msgid ""
 "Paystack payment %1$s was declined or cancelled (status %2$s), so the order "
 "was not marked paid"
-msgstr "Paystack-betalningen %1$s nekades eller avbröts (status %2$s), så beställningen markerades inte som betald"
+msgstr ""
+"Paystack-betalningen %1$s nekades eller avbröts (status %2$s), så "
+"beställningen markerades inte som betald"
 
 #. translators: %s: why the payment was not accepted
 #: class-paystack.php:313
 #, php-format
 msgid "Paystack payment not accepted, order left unpaid: %s"
-msgstr "Paystack-betalningen godkändes inte, beställningen lämnades obetald: %s"
+msgstr ""
+"Paystack-betalningen godkändes inte, beställningen lämnades obetald: %s"
 
 #: class-paystack.php:404
 msgid "Customer cancelled the Paystack payment"
@@ -20902,7 +21164,9 @@ msgstr "Betalning accepteras inte"
 msgid ""
 "QuickPay payment %1$s was declined or not finished (state %2$s), so the "
 "order was not marked paid."
-msgstr "QuickPay-betalningen %1$s nekades eller slutfördes inte (status %2$s), så beställningen markerades inte som betald."
+msgstr ""
+"QuickPay-betalningen %1$s nekades eller slutfördes inte (status %2$s), så "
+"beställningen markerades inte som betald."
 
 #. translators: 1: QuickPay payment ID, 2: reason the payment was not accepted
 #: class-quickpay.php:228 class-quickpay.php:339
@@ -20910,7 +21174,9 @@ msgstr "QuickPay-betalningen %1$s nekades eller slutfördes inte (status %2$s), 
 msgid ""
 "QuickPay payment %1$s was not accepted for this order: %2$s The order was "
 "left unpaid."
-msgstr "QuickPay-betalningen %1$s godkändes inte för den här beställningen: %2$s Beställningen lämnades obetald."
+msgstr ""
+"QuickPay-betalningen %1$s godkändes inte för den här beställningen: %2$s "
+"Beställningen lämnades obetald."
 
 #: class-quickpay.php:292
 msgid "Customer cancelled the QuickPay payment"
@@ -22848,7 +23114,7 @@ msgstr "uppdaterade hittills..."
 msgid "Unknown choice"
 msgstr "Okänt val"
 
-#: cloud-storage.php:109
+#: cloud-storage.php:115
 msgid "Every 5 minutes"
 msgstr "Var 5:e minut"
 
@@ -22981,12 +23247,12 @@ msgid "Connection successful! All tests passed."
 msgstr "Anslutningen lyckades! Alla tester godkända."
 
 #: includes/class-cloud-storage-client-gcs.php:31
-#: includes/class-cloud-storage-client-gcs.php:574
+#: includes/class-cloud-storage-client-gcs.php:630
 msgid "Google Cloud Storage JSON key is required"
 msgstr "Google Cloud Storage JSON-nyckel krävs"
 
 #: includes/class-cloud-storage-client-gcs.php:39
-#: includes/class-cloud-storage-client-gcs.php:581
+#: includes/class-cloud-storage-client-gcs.php:637
 msgid "Invalid JSON key file. Please check your service account JSON."
 msgstr "Ogiltig JSON-nyckelfil. Kontrollera ditt servicekontos JSON."
 
@@ -23170,23 +23436,23 @@ msgstr "Inga undermappar"
 msgid "Error loading folders"
 msgstr "Fel vid laddning av mappar"
 
-#: includes/class-cloud-storage-manager.php:2398
+#: includes/class-cloud-storage-manager.php:2415
 msgid "No objects found in WP Offload Media data"
 msgstr "Inga objekt hittades i WP Offload Media-data"
 
-#: includes/class-cloud-storage-manager.php:2458
+#: includes/class-cloud-storage-manager.php:2475
 msgid "Could not build URLs from WP Offload Media data"
 msgstr "Kunde inte skapa URL:er från WP Offload Media-data"
 
-#: includes/class-cloud-storage-manager.php:2546
+#: includes/class-cloud-storage-manager.php:2563
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr "Kunde inte hämta URL:er från WP Offload Media"
 
-#: includes/hooks.php:430 includes/hooks.php:464
+#: includes/hooks.php:436 includes/hooks.php:470
 msgid "Sunshine Cloud Storage:"
 msgstr "Sunshine molnlagring:"
 
-#: includes/hooks.php:431
+#: includes/hooks.php:437
 msgid ""
 "WP Offload Media plugin is currently active. These two plugins should not be "
 "active at the same time as they will conflict. Please deactivate WP Offload "
@@ -23196,7 +23462,7 @@ msgstr ""
 "vara aktiva samtidigt, eftersom de kommer att orsaka konflikter. Inaktivera "
 "WP Offload Media innan du använder Sunshine Cloud Storage."
 
-#: includes/hooks.php:433
+#: includes/hooks.php:439
 msgid ""
 "<strong>Good news:</strong> Sunshine can take over your previously offloaded "
 "items. After deactivating WP Offload Media, run the WP Offload Media "
@@ -23206,7 +23472,7 @@ msgstr ""
 "flyttat. När du har inaktiverat WP Offload Media kör du verktyget WP Offload "
 "Media-migrering för att flytta datan till Sunshines eget lager."
 
-#: includes/hooks.php:438
+#: includes/hooks.php:444
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media plugin is active. "
 "You have Cloud Storage set to \"Entire WordPress site\" which may conflict. "
@@ -23218,7 +23484,7 @@ msgstr ""
 "orsaka konflikter. Överväg att ställa in det på \"Endast Sunshine-"
 "gallerier\" eller inaktivera ett av pluginen."
 
-#: includes/hooks.php:465
+#: includes/hooks.php:471
 msgid ""
 "Your cloud storage bucket does not support per-object ACLs (Access Control "
 "Lists). This means Sunshine cannot set individual files as public or "
@@ -23230,7 +23496,7 @@ msgstr ""
 "eller privata, vilket kan leda till att miniatyrbilder inte visas eller att "
 "bilder i full upplösning blir offentligt tillgängliga."
 
-#: includes/hooks.php:469
+#: includes/hooks.php:475
 msgid ""
 "<strong>How to fix:</strong> Go to Google Cloud Console &rarr; Cloud Storage "
 "&rarr; Your Bucket &rarr; Permissions &rarr; Access Control &rarr; Switch "
@@ -23240,7 +23506,7 @@ msgstr ""
 "→ Cloud Storage → Din bucket → Behörigheter → Åtkomstkontroll → Byt från "
 "\"Enhetlig\" till \"Finkornig\"."
 
-#: includes/hooks.php:471
+#: includes/hooks.php:477
 msgid ""
 "<strong>How to fix:</strong> Go to S3 Console &rarr; Your Bucket &rarr; "
 "Permissions &rarr; Object Ownership &rarr; Edit &rarr; Select \"ACLs "
@@ -23250,7 +23516,7 @@ msgstr ""
 "bucket → Behörigheter → Objektägande → Redigera → Välj \"ACL aktiverat\" med "
 "\"Bucketägare prioriteras\"."
 
-#: includes/hooks.php:473
+#: includes/hooks.php:479
 msgid ""
 "<strong>How to fix:</strong> Check your storage provider's documentation for "
 "enabling per-object ACLs on your bucket."
@@ -23258,7 +23524,7 @@ msgstr ""
 "<strong>Så här åtgärdar du problemet:</strong> Kontrollera dokumentationen "
 "från din lagringsleverantör för att aktivera ACL per objekt i din bucket."
 
-#: includes/hooks.php:477
+#: includes/hooks.php:483
 msgid ""
 "After making changes, go to Sunshine Settings &rarr; Cloud Storage and click "
 "\"Test Connection\" to verify."
@@ -23267,7 +23533,7 @@ msgstr ""
 "Molnlagring och klickar på \"Testa anslutning\" för att verifiera."
 
 #. translators: 1: link opening tag, 2: link closing tag
-#: includes/hooks.php:533
+#: includes/hooks.php:539
 #, php-format
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media data was found on "
@@ -23523,7 +23789,9 @@ msgstr "Endast kort med ett saldo > 0."
 msgid ""
 "A gift card on this order no longer has enough balance. Please review your "
 "order and try again."
-msgstr "Ett presentkort på den här beställningen har inte längre tillräckligt saldo. Gå igenom din beställning och försök igen."
+msgstr ""
+"Ett presentkort på den här beställningen har inte längre tillräckligt saldo. "
+"Gå igenom din beställning och försök igen."
 
 #. translators: 1: gift card code, 2: amount the order used, 3: amount left on the card
 #: order-integration.php:214
@@ -23531,7 +23799,9 @@ msgstr "Ett presentkort på den här beställningen har inte längre tillräckli
 msgid ""
 "Gift card %1$s was used for %2$s on this order, but only %3$s was left on it "
 "when the order was paid. The difference was not collected."
-msgstr "Presentkortet %1$s användes för %2$s på den här beställningen, men bara %3$s fanns kvar på det när beställningen betalades. Mellanskillnaden togs inte ut."
+msgstr ""
+"Presentkortet %1$s användes för %2$s på den här beställningen, men bara %3$s "
+"fanns kvar på det när beställningen betalades. Mellanskillnaden togs inte ut."
 
 #. translators: 1: gift card code, 2: amount applied to the order, 3: remaining balance on the card
 #: order-integration.php:220
@@ -23545,7 +23815,10 @@ msgstr "Presentkort %1$s inlöst: %2$s använt, %3$s kvar"
 msgid ""
 "Gift card %1$s was used for %2$s on this order, but only %3$s was left on it "
 "when the order was reopened. The difference was not collected."
-msgstr "Presentkortet %1$s användes för %2$s på den här beställningen, men bara %3$s fanns kvar på det när beställningen öppnades igen. Mellanskillnaden togs inte ut."
+msgstr ""
+"Presentkortet %1$s användes för %2$s på den här beställningen, men bara %3$s "
+"fanns kvar på det när beställningen öppnades igen. Mellanskillnaden togs "
+"inte ut."
 
 #. translators: 1: gift card code, 2: amount given back to the card, 3: new balance on the card
 #: order-integration.php:359
@@ -23565,7 +23838,9 @@ msgstr "Presentkort %1$s: %2$s draget igen, saldot är nu %3$s"
 msgid ""
 "Gift card %1$s bought on this order can no longer be used. %2$s had already "
 "been spent from it."
-msgstr "Presentkortet %1$s som köptes på den här beställningen kan inte längre användas. %2$s hade redan använts från det."
+msgstr ""
+"Presentkortet %1$s som köptes på den här beställningen kan inte längre "
+"användas. %2$s hade redan använts från det."
 
 #: product-integration.php:42
 msgid "Custom"
@@ -24361,10 +24636,6 @@ msgstr "Lägg i varukorgen"
 #, fuzzy
 #~ msgid "Test event sent."
 #~ msgstr "Hemlig test-nyckel"
-
-#, fuzzy
-#~ msgid "You are not allowed to manage webhooks."
-#~ msgstr "Tyvärr, du får inte visa den här bilden"
 
 #, fuzzy, php-format
 #~ msgid "You do not have permission to %1$s %2$s via the API."

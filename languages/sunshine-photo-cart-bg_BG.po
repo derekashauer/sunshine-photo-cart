@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-10-21T20:25:22+00:00\n"
+"POT-Creation-Date: 2026-11-05T22:34:27+00:00\n"
 "PO-Revision-Date: 2026-02-27 15:47-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -75,19 +75,19 @@ msgstr ""
 "Лицензите ви не могат да бъдат активирани, защото сървърът ви не успява да "
 "се свърже със SunshinePhotoCart.com: %s"
 
-#: includes/admin/addons.php:76 includes/admin/class-license.php:279
-#: includes/admin/class-license.php:446 class-paystack.php:196
+#: includes/admin/addons.php:76 includes/admin/class-license.php:282
+#: includes/admin/class-license.php:449 class-paystack.php:196
 msgid "Unknown error occured"
 msgstr "Възникна неизвестна грешка"
 
 #. translators: %1$s is the addon name, %2$s is the error message
 #. translators: %1$s is the product name, %2$s is the error message
-#: includes/admin/addons.php:80 includes/admin/class-license.php:284
+#: includes/admin/addons.php:80 includes/admin/class-license.php:287
 #, php-format
 msgid "License for %1$s failed to be activated: %2$s"
 msgstr "Лицензът за %1$s не е активиран: %2$s"
 
-#: includes/admin/addons.php:132 includes/admin/class-license.php:344
+#: includes/admin/addons.php:132 includes/admin/class-license.php:347
 msgid "An error occurred, please try again."
 msgstr "Възникна грешка, опитайте отново."
 
@@ -105,7 +105,9 @@ msgstr "Сесията ти изтече. Презареди страницат�
 msgid ""
 "You do not have permission to install plugins on this site. Ask an "
 "administrator to install this add-on."
-msgstr "Нямаш права да инсталираш плъгини на този сайт. Помоли администратор да инсталира това разширение."
+msgstr ""
+"Нямаш права да инсталираш плъгини на този сайт. Помоли администратор да "
+"инсталира това разширение."
 
 #: includes/admin/addons.php:382
 msgid ""
@@ -128,6 +130,59 @@ msgstr ""
 #: includes/admin/addons.php:408
 msgid "This add-on could not be installed."
 msgstr "Тази добавка не можа да бъде инсталирана."
+
+#. translators: 1: add-on name, 2: why the update was refused
+#: includes/admin/class-addon-update-verify.php:100
+#, php-format
+msgid ""
+"%1$s refused this update because it could not confirm it came from Sunshine "
+"Photo Cart: %2$s Your current version was left in place."
+msgstr "%1$s отказа тази актуализация, защото не можа да потвърди, че е от Sunshine Photo Cart: %2$s Текущата ти версия е запазена."
+
+#: includes/admin/class-addon-update-verify.php:155
+msgid "the update has no signature."
+msgstr "актуализацията няма подпис."
+
+#: includes/admin/class-addon-update-verify.php:160
+msgid "the signature file is damaged."
+msgstr "файлът с подписа е повреден."
+
+#: includes/admin/class-addon-update-verify.php:164
+msgid "the signature does not match."
+msgstr "подписът не съвпада."
+
+#: includes/admin/class-addon-update-verify.php:169
+msgid "the signed file list is damaged."
+msgstr "подписаният списък с файлове е повреден."
+
+#: includes/admin/class-addon-update-verify.php:173
+msgid "the signature is for a different plugin."
+msgstr "подписът е за друг плъгин."
+
+#. translators: 1: signed version, 2: installed version
+#: includes/admin/class-addon-update-verify.php:179
+#, php-format
+msgid ""
+"the signed version (%1$s) is not newer than the installed version (%2$s)."
+msgstr "подписаната версия (%1$s) не е по-нова от инсталираната версия (%2$s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:191
+#, php-format
+msgid "the update has a file that was not signed (%s)."
+msgstr "актуализацията съдържа файл, който не е подписан (%s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:195
+#, php-format
+msgid "a file was changed after it was signed (%s)."
+msgstr "файл е бил променен след подписването (%s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:202
+#, php-format
+msgid "a signed file is missing (%s)."
+msgstr "липсва подписан файл (%s)."
 
 #. translators: the plugin name.
 #: includes/admin/class-addon-update.php:257
@@ -276,7 +331,7 @@ msgstr "Редактирай на цял екран."
 msgid "Write a Review"
 msgstr "Напишете отзив"
 
-#: includes/admin/class-admin.php:264 includes/admin/class-admin.php:1035
+#: includes/admin/class-admin.php:264 includes/admin/class-admin.php:1037
 msgid "Upgrade"
 msgstr "Надграждане"
 
@@ -341,11 +396,11 @@ msgstr ""
 "Photo Cart</a>! Моля, <a href=\"%2$s\" target=\"_blank\">оценете ни в</a> <a "
 "href=\"%2$s\" target=\"_blank\">WordPress.org</a>"
 
-#: includes/admin/class-admin.php:538
+#: includes/admin/class-admin.php:540
 msgid "View Sunshine Galleries"
 msgstr "Вижте галериите на Sunshine"
 
-#: includes/admin/class-admin.php:570
+#: includes/admin/class-admin.php:572
 msgid ""
 "The slug for core order statuses is not editable as it could break Sunshine "
 "functionality"
@@ -353,24 +408,24 @@ msgstr ""
 "Слоугът за основните статуси на поръчките не може да се редактира, тъй като "
 "това може да наруши функционалността на Sunshine"
 
-#: includes/admin/class-admin.php:584
+#: includes/admin/class-admin.php:586
 msgid "Order Updated"
 msgstr "Актуализирана поръчка"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:586
+#: includes/admin/class-admin.php:588
 #, php-format
 msgid "<strong>Gallery updated</strong>, <a href=\"%s\">view gallery</a>"
 msgstr "<strong>Обновена галерия</strong>, <a href=\"%s\">вижте галерията</a>"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:588
+#: includes/admin/class-admin.php:590
 #, php-format
 msgid "<strong>Gallery created</strong>, <a href=\"%s\">view gallery</a>"
 msgstr "<strong>Създадена галерия</strong>, <a href=\"%s\">вижте галерията</a>"
 
 #. translators: %s is the URL to settings page
-#: includes/admin/class-admin.php:595
+#: includes/admin/class-admin.php:597
 #, php-format
 msgid ""
 "Sunshine logging is enabled. <a href=\"%s\">Please disable when no longer in "
@@ -380,7 +435,7 @@ msgstr ""
 "деактивирайте го, когато вече не се използва.</a>"
 
 #. translators: %s is the URL to the Galleries settings page
-#: includes/admin/class-admin.php:624
+#: includes/admin/class-admin.php:626
 #, php-format
 msgid ""
 "Your watermark image file could not be found on this server, so new images "
@@ -392,7 +447,7 @@ msgstr ""
 "изображението за воден знак отново</a>."
 
 #. translators: 1: number of images waiting, 2: URL to the Site Health info page
-#: includes/admin/class-admin.php:691
+#: includes/admin/class-admin.php:693
 #, php-format
 msgid ""
 "%1$d image is waiting to be processed, but WordPress could not save the "
@@ -408,7 +463,7 @@ msgstr[1] ""
 "задача, която ги обработва. <a href=\"%2$s\">Провери здравето на сайта</a>."
 
 #. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
-#: includes/admin/class-admin.php:708
+#: includes/admin/class-admin.php:710
 #, php-format
 msgid ""
 "%1$d image is waiting to be processed, but WordPress cron has not run for "
@@ -427,7 +482,7 @@ msgstr[1] ""
 "href=\"%3$s\">Провери здравето на сайта</a> или виж <a href=\"%4$s\" "
 "target=\"_blank\">как да настроиш надежден сървърен cron</a>."
 
-#: includes/admin/class-admin.php:721
+#: includes/admin/class-admin.php:723
 msgid ""
 "This site has WP-Cron turned off, so a server cron job has to call wp-"
 "cron.php for anything to run."
@@ -436,7 +491,7 @@ msgstr ""
 "извиква wp-cron.php, за да се изпълни каквото и да е."
 
 #. translators: %s is the URL to installation page
-#: includes/admin/class-admin.php:730
+#: includes/admin/class-admin.php:732
 #, php-format
 msgid ""
 "Sunshine installation process was skipped. <a href=\"%s\">Please complete "
@@ -446,79 +501,79 @@ msgstr ""
 "завършете процеса на инсталиране.</a>"
 
 #. translators: %1$d is the number of orders, %2$s is the number of orders in plural
-#: includes/admin/class-admin.php:1013
+#: includes/admin/class-admin.php:1015
 #, php-format
 msgid "%s order"
 msgid_plural "%s orders"
 msgstr[0] "%s поръчка"
 msgstr[1] "%s поръчки"
 
-#: includes/admin/class-admin.php:1021 includes/admin/customers.php:13
+#: includes/admin/class-admin.php:1023 includes/admin/customers.php:13
 #: includes/admin/customers.php:34 includes/admin/reports.php:20 reports.php:7
 msgid "Customers"
 msgstr "Клиенти"
 
-#: includes/admin/class-admin.php:1022 includes/admin/reports.php:90
+#: includes/admin/class-admin.php:1024 includes/admin/reports.php:90
 msgid "Reports"
 msgstr "Отчети"
 
-#: includes/admin/class-admin.php:1023 includes/admin/tools.php:36
+#: includes/admin/class-admin.php:1025 includes/admin/tools.php:36
 #: includes/admin/tools.php:42
 msgid "Tools"
 msgstr "Инструменти"
 
-#: includes/admin/class-admin.php:1024
+#: includes/admin/class-admin.php:1026
 msgid "Add-ons"
 msgstr "Добавки"
 
-#: includes/admin/class-admin.php:1027
+#: includes/admin/class-admin.php:1029
 msgid "Setup Guide"
 msgstr "Ръководство за настройка"
 
-#: includes/admin/class-admin.php:1032
+#: includes/admin/class-admin.php:1034
 msgid "Get Help"
 msgstr "Получаване на помощ"
 
-#: includes/admin/class-admin.php:1063
+#: includes/admin/class-admin.php:1065
 msgid "Keywords"
 msgstr "Ключови думи"
 
-#: includes/admin/class-admin.php:1075
+#: includes/admin/class-admin.php:1077
 msgid "Use gallery price level"
 msgstr "Използване на ценовото ниво на галерията"
 
-#: includes/admin/class-admin.php:1083 includes/admin/sunshine-gallery.php:218
-#: includes/class-sunshinephotocart.php:505
-#: includes/class-sunshinephotocart.php:518 class-export-galleries.php:22
+#: includes/admin/class-admin.php:1085 includes/admin/sunshine-gallery.php:218
+#: includes/class-sunshinephotocart.php:507
+#: includes/class-sunshinephotocart.php:520 class-export-galleries.php:22
 msgid "Price Level"
 msgstr "Ценово ниво"
 
-#: includes/admin/class-admin.php:1094
+#: includes/admin/class-admin.php:1096
 msgid "Disable Purchasing"
 msgstr "Деактивиране на закупуването"
 
-#: includes/admin/class-admin.php:1100 includes/admin/settings-fields.php:702
+#: includes/admin/class-admin.php:1102 includes/admin/settings-fields.php:714
 #: admin/products.php:45
 msgid "Watermark"
 msgstr "Воден знак"
 
-#: includes/admin/class-admin.php:1145
+#: includes/admin/class-admin.php:1147
 msgid "Metadata"
 msgstr "Метаданни"
 
-#: includes/admin/class-admin.php:1232
+#: includes/admin/class-admin.php:1234
 msgid "Log file has been cleared"
 msgstr "Файлът на дневника е изтрит"
 
-#: includes/admin/class-admin.php:1288
+#: includes/admin/class-admin.php:1290
 msgid "Error log file has been cleared"
 msgstr "Файлът с регистрация на грешките е изчистен"
 
-#: includes/admin/class-admin.php:1294 includes/admin/class-admin.php:1302
+#: includes/admin/class-admin.php:1296 includes/admin/class-admin.php:1304
 msgid "You do not have permission to access this file."
 msgstr "Нямате разрешение за достъп до този файл."
 
-#: includes/admin/class-admin.php:1310
+#: includes/admin/class-admin.php:1312
 msgid "Log file not found."
 msgstr "Не е намерен файл с лог."
 
@@ -533,8 +588,8 @@ msgid "Name"
 msgstr "Име"
 
 #: includes/admin/class-customers-table.php:43
-#: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1720 includes/functions/account.php:595
+#: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1444
+#: includes/class-cart.php:1721 includes/functions/account.php:595
 #: includes/payment-methods/paypal-legacy.php:50
 #: includes/payment-methods/paypal-legacy.php:63
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
@@ -544,7 +599,7 @@ msgid "Email"
 msgstr "Имейл"
 
 #: includes/admin/class-customers-table.php:44 includes/admin/customers.php:187
-#: includes/admin/install.php:307 includes/admin/settings-fields.php:245
+#: includes/admin/install.php:309 includes/admin/settings-fields.php:245
 #: includes/admin/sunshine-gallery.php:170 includes/class-frontend.php:956
 #: templates/multi-image-select/select-images.php:37
 msgid "Favorites"
@@ -552,9 +607,9 @@ msgstr "Наблюдавани"
 
 #: includes/admin/class-customers-table.php:45 includes/admin/customers.php:137
 #: includes/admin/reports.php:16 includes/admin/settings-fields.php:297
-#: includes/admin/settings-fields.php:946
-#: includes/class-sunshinephotocart.php:538
-#: includes/class-sunshinephotocart.php:550 includes/functions/account.php:429
+#: includes/admin/settings-fields.php:958
+#: includes/class-sunshinephotocart.php:540
+#: includes/class-sunshinephotocart.php:552 includes/functions/account.php:429
 #: templates/email/summary.php:30 class-reports-customers-table.php:35
 #: class-reports-galleries-table.php:37 class-reports-products-table.php:35
 #: gallery.php:271 gallery.php:298 templates/account/downloads.php:19
@@ -587,25 +642,25 @@ msgid "Dismiss this notice."
 msgstr "Отхвърли съобщението."
 
 #. translators: the license key expiration date
-#: includes/admin/class-license.php:96
+#: includes/admin/class-license.php:99
 #, php-format
 msgid "Your license key expired on %s."
 msgstr "Лицензионният ви ключ е изтекъл на %s."
 
-#: includes/admin/class-license.php:103
+#: includes/admin/class-license.php:106
 msgid "Your license key has been disabled"
 msgstr "Вашият лицензионен ключ е бил деактивиран"
 
-#: includes/admin/class-license.php:107
+#: includes/admin/class-license.php:110
 msgid "Invalid license"
 msgstr "Невалиден лиценз"
 
-#: includes/admin/class-license.php:111
+#: includes/admin/class-license.php:114
 msgid "Invalid license key"
 msgstr "Invalid license key"
 
 #. translators: %1$s is the previous site URL, %2$s is the current site URL, %3$s is the URL to the sunshinephotocart.com account licenses page
-#: includes/admin/class-license.php:122
+#: includes/admin/class-license.php:125
 #, php-format
 msgid ""
 "Your license was activated on %1$s but this site is now %2$s. To use the "
@@ -619,7 +674,7 @@ msgstr ""
 "адрес, после се върни тук и натисни Активирай отново."
 
 #. translators: %s is the URL to the sunshinephotocart.com account licenses page
-#: includes/admin/class-license.php:130
+#: includes/admin/class-license.php:133
 #, php-format
 msgid ""
 "This license appears to be activated on a different site. <a href=\"%s\" "
@@ -632,22 +687,22 @@ msgstr ""
 "strong> до този лиценз, деактивирай стария адрес, после се върни тук и "
 "натисни Активирай отново."
 
-#: includes/admin/class-license.php:137
+#: includes/admin/class-license.php:140
 msgid "This appears to be an invalid license key"
 msgstr "Изглежда, че това е невалиден лицензен ключ"
 
-#: includes/admin/class-license.php:142
+#: includes/admin/class-license.php:145
 msgid "You have a special lifetime license that never expires!"
 msgstr "Имате специален доживотен лиценз, който никога не изтича!"
 
 #. translators: the license key expiration date
-#: includes/admin/class-license.php:146
+#: includes/admin/class-license.php:149
 #, php-format
 msgid "Expires on %s"
 msgstr "Изтича на %s"
 
 #. translators: %1$s is the product name, %2$s is the URL to the licenses page
-#: includes/admin/class-license.php:243
+#: includes/admin/class-license.php:246
 #, php-format
 msgid ""
 "You do not have an active license for %1$s, please enter and activate your "
@@ -657,19 +712,19 @@ msgstr ""
 "лиценз на <a href=\"%2$s\">страницата Лицензи</a>"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:303
+#: includes/admin/class-license.php:306
 #, php-format
 msgid "License for %s has been activated"
 msgstr "Лицензът за %s е активиран"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:365
+#: includes/admin/class-license.php:368
 #, php-format
 msgid "License for %s has been deactivated"
 msgstr "Лицензът за %s е деактивиран"
 
 #. translators: %1$s is the product name, %2$s is the URL to support
-#: includes/admin/class-license.php:368
+#: includes/admin/class-license.php:371
 #, php-format
 msgid ""
 "License for %1$s could not be deactivated, please <a href=\"%2$s\" "
@@ -679,7 +734,7 @@ msgstr ""
 "target=\"_blank\">свържете се с поддръжката</a>"
 
 #. translators: %1$s is the URL to licenses page, %2$s is the URL to account on SunshinePhotoCart.com
-#: includes/admin/class-license.php:382
+#: includes/admin/class-license.php:385
 #, php-format
 msgid ""
 "To enable updates, please enter your license key on the <a "
@@ -691,13 +746,13 @@ msgstr ""
 "href=\"%2$s\" target=\"_blank\">профила си в SunshinePhotoCart.com</a>."
 
 #. translators: %1$s is the product name, %2$s is the error message
-#: includes/admin/class-license.php:452
+#: includes/admin/class-license.php:455
 #, php-format
 msgid "License for %1$s failed to be updated: %2$s"
 msgstr "Лицензът за %1$s не беше актуализиран: %2$s"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:460
+#: includes/admin/class-license.php:463
 #, php-format
 msgid "License for %s has been updated"
 msgstr "Лицензът за %s е актуализиран"
@@ -770,15 +825,15 @@ msgstr ""
 "за поверителност."
 
 #: includes/admin/class-privacy.php:190 includes/admin/class-privacy.php:257
-#: includes/admin/settings-fields.php:976
-#: includes/admin/settings-fields.php:986 includes/class-cart.php:1747
+#: includes/admin/settings-fields.php:988
+#: includes/admin/settings-fields.php:998 includes/class-cart.php:1748
 #: templates/invoice/admin.php:165 templates/order/details.php:13
 #: class-export-orders.php:525
 msgid "Phone"
 msgstr "Телефон"
 
-#: includes/admin/class-privacy.php:191 includes/admin/settings-fields.php:978
-#: includes/admin/settings-fields.php:988
+#: includes/admin/class-privacy.php:191 includes/admin/settings-fields.php:990
+#: includes/admin/settings-fields.php:1000
 msgid "VAT Number"
 msgstr "ДДС номер"
 
@@ -865,7 +920,7 @@ msgid "Billing Name"
 msgstr "Име за фактуриране"
 
 #: includes/admin/class-privacy.php:259 includes/admin/customers.php:106
-#: includes/class-cart.php:2033 templates/invoice/admin.php:195
+#: includes/class-cart.php:2034 templates/invoice/admin.php:195
 msgid "Billing Address"
 msgstr "Адрес на плащане"
 
@@ -874,7 +929,7 @@ msgid "Shipping Name"
 msgstr "Име на доставчика"
 
 #: includes/admin/class-privacy.php:268 includes/admin/customers.php:99
-#: includes/class-cart.php:1887 includes/template-hooks.php:460
+#: includes/class-cart.php:1888 includes/template-hooks.php:460
 #: templates/invoice/admin.php:192
 msgid "Shipping Address"
 msgstr "Адрес за доставка"
@@ -907,7 +962,7 @@ msgid "Personal data removed."
 msgstr "Личните данни са премахнати."
 
 #: includes/admin/class-tool.php:152 includes/admin/gallery-navigator.php:79
-#: gallery.php:27 frontend.php:1163
+#: gallery.php:27 frontend.php:1169
 msgid "Security check failed"
 msgstr "Проверката на сигурността се провали"
 
@@ -940,7 +995,7 @@ msgstr "Кораб"
 msgid "Insufficient permissions."
 msgstr "Недостатъчни разрешения."
 
-#: includes/admin/class-update.php:633 includes/admin/install.php:294
+#: includes/admin/class-update.php:633 includes/admin/install.php:296
 #: includes/admin/settings-fields.php:250
 msgid "Terms & Conditions"
 msgstr "Правила и условия"
@@ -1059,7 +1114,7 @@ msgid "Permission denied"
 msgstr "Достъп отказан"
 
 #: includes/admin/gallery-navigator.php:116
-#: includes/class-sunshinephotocart.php:386
+#: includes/class-sunshinephotocart.php:388
 msgid "No galleries found."
 msgstr "Не са намерени галерии."
 
@@ -1071,13 +1126,13 @@ msgstr "Плъзнете, за да преподредите"
 #: includes/admin/gallery-navigator.php:159
 #: includes/admin/gallery-navigator.php:323
 #: includes/admin/sunshine-gallery.php:55
-#: includes/admin/sunshine-gallery.php:2011
+#: includes/admin/sunshine-gallery.php:2033
 msgid "Password Protected"
 msgstr "Защитена с парола"
 
 #: includes/admin/gallery-navigator.php:161
 #: includes/admin/gallery-navigator.php:325
-#: includes/admin/sunshine-gallery.php:2013
+#: includes/admin/sunshine-gallery.php:2035
 msgid "Private"
 msgstr "Личен"
 
@@ -1094,7 +1149,7 @@ msgstr "Изтекла"
 
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:340
-#: includes/admin/sunshine-gallery.php:1608
+#: includes/admin/sunshine-gallery.php:1627
 #: includes/class-cloud-storage-import.php:994
 msgid "images"
 msgstr "снимки"
@@ -1108,7 +1163,7 @@ msgstr[1] "подгалерии"
 
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
-#: includes/admin/gallery-navigator.php:348 includes/class-cart.php:2177
+#: includes/admin/gallery-navigator.php:348 includes/class-cart.php:2178
 msgid "Edit"
 msgstr "Редактирай"
 
@@ -1136,114 +1191,114 @@ msgstr[1] "%1$d галерии, намерени за \"%2$s\""
 msgid "You do not have permission to perform this action."
 msgstr "Нямате разрешение да извършите това действие."
 
-#: includes/admin/install.php:243
+#: includes/admin/install.php:245
 msgid "Client Galleries"
 msgstr "Галерии на клиенти"
 
-#: includes/admin/install.php:255 includes/admin/settings-fields.php:240
+#: includes/admin/install.php:257 includes/admin/settings-fields.php:240
 msgid "Account"
 msgstr "Профил"
 
-#: includes/admin/install.php:268 includes/admin/settings-fields.php:230
+#: includes/admin/install.php:270 includes/admin/settings-fields.php:230
 #: templates/cart/mini-cart.php:6
 msgid "Cart"
 msgstr "Количка"
 
-#: includes/admin/install.php:281 includes/admin/settings-fields.php:235
-#: includes/admin/settings-fields.php:1003
+#: includes/admin/install.php:283 includes/admin/settings-fields.php:235
+#: includes/admin/settings-fields.php:1015
 #: includes/payment-methods/paypal.php:179
 msgid "Checkout"
 msgstr "Плащане"
 
-#: includes/admin/install.php:322 includes/admin/sunshine-gallery.php:54
+#: includes/admin/install.php:324 includes/admin/sunshine-gallery.php:54
 #: includes/admin/sunshine-gallery.php:114
 msgid "Default"
 msgstr "По подразбиране"
 
-#: includes/admin/install.php:331
+#: includes/admin/install.php:333
 msgid "Prints"
 msgstr "Отпечатъци"
 
-#: includes/admin/install.php:403
+#: includes/admin/install.php:405
 msgid "Pending Payment"
 msgstr "В очакване на плащане"
 
-#: includes/admin/install.php:407
+#: includes/admin/install.php:409
 msgid "We have received your order but payment is still pending"
 msgstr "Получихме вашата поръчка, но плащането все още не е извършено"
 
-#: includes/admin/install.php:416 hooks.php:599
+#: includes/admin/install.php:418 hooks.php:599
 msgid "New"
 msgstr "Нов"
 
-#: includes/admin/install.php:420
+#: includes/admin/install.php:422
 msgid "We have received your order and payment"
 msgstr "Получихме вашата поръчка и плащане"
 
-#: includes/admin/install.php:429 includes/admin/sunshine-gallery.php:1031
+#: includes/admin/install.php:431 includes/admin/sunshine-gallery.php:1050
 msgid "Processing"
 msgstr "Обработка"
 
-#: includes/admin/install.php:433
+#: includes/admin/install.php:435
 msgid "The images in your order are being processed and/or printed"
 msgstr "Изображенията във вашата поръчка се обработват и/или отпечатват"
 
-#: includes/admin/install.php:442
+#: includes/admin/install.php:444
 msgid "Shipped/Completed"
 msgstr "Изпратени/завършени"
 
-#: includes/admin/install.php:446
+#: includes/admin/install.php:448
 msgid "Your items have shipped (or are available for download)!"
 msgstr "Вашите продукти са изпратени (или са налични за изтегляне)!"
 
-#: includes/admin/install.php:455
+#: includes/admin/install.php:457
 msgid "Cancelled"
 msgstr "Отменен"
 
-#: includes/admin/install.php:459
+#: includes/admin/install.php:461
 msgid "Your order was cancelled"
 msgstr "Поръчката ви е отменена"
 
-#: includes/admin/install.php:468
+#: includes/admin/install.php:470
 msgid "Refunded"
 msgstr "Възстановени средства"
 
-#: includes/admin/install.php:472
+#: includes/admin/install.php:474
 msgid "Your order was refunded"
 msgstr "Поръчката ви е възстановена"
 
-#: includes/admin/install.php:481
+#: includes/admin/install.php:483
 msgid "Ready for pickup"
 msgstr "Готов за взимане"
 
-#: includes/admin/install.php:485
+#: includes/admin/install.php:487
 msgid "Your order is ready to be picked up"
 msgstr "Поръчката ви е готова за получаване"
 
-#: includes/admin/install.php:494
+#: includes/admin/install.php:496
 msgid "Failed"
 msgstr "Неуспешно"
 
-#: includes/admin/install.php:498 includes/functions/checkout.php:1069
+#: includes/admin/install.php:500 includes/functions/checkout.php:1069
 msgid "Payment failed"
 msgstr "Плащането е неуспешно"
 
-#: includes/admin/install.php:689
+#: includes/admin/install.php:691
 msgid "Could not activate license key"
 msgstr "Не може да активирате лицензионния ключ"
 
-#: includes/admin/install.php:720
+#: includes/admin/install.php:722
 msgid "Could not subscribe to email list"
 msgstr "Не можах да се абонирам за имейл списък"
 
 #. translators: %s is the plugin version number
-#: includes/admin/install.php:730
+#: includes/admin/install.php:732
 #, php-format
 msgid "Welcome to Sunshine Photo Cart %s"
 msgstr "Добре дошли в количката за снимки на Sunshine %s"
 
 #. translators: %1$s is the plugin version number
-#: includes/admin/install.php:734
+#: includes/admin/install.php:736
 #, php-format
 msgid ""
 "<strong>Thank you for updating to the latest version!</strong> Sunshine %1$s "
@@ -1255,11 +1310,11 @@ msgstr ""
 "снимки за WordPress. Надяваме се да се радвате на по-голям успех в "
 "продажбите!"
 
-#: includes/admin/install.php:754 templates/admin/updates/update.php:35
+#: includes/admin/install.php:756 templates/admin/updates/update.php:35
 msgid "Recent Improvements"
 msgstr "Последни подобрения"
 
-#: includes/admin/install.php:756 templates/admin/updates/update.php:37
+#: includes/admin/install.php:758 templates/admin/updates/update.php:37
 msgid "See the full Changelog"
 msgstr "Вижте пълния списък с промени"
 
@@ -1375,15 +1430,15 @@ msgstr "Съхранение в облак"
 
 #: includes/admin/reports.php:17 includes/admin/sunshine-gallery.php:196
 #: includes/admin/sunshine-product-category.php:169
-#: includes/class-sunshinephotocart.php:426
-#: includes/class-sunshinephotocart.php:438 hooks.php:43 reports.php:4
+#: includes/class-sunshinephotocart.php:428
+#: includes/class-sunshinephotocart.php:440 hooks.php:43 reports.php:4
 #: price-levels.php:48 admin/products.php:54
 msgid "Products"
 msgstr "Продукти"
 
 #: includes/admin/reports.php:18 includes/admin/settings-fields.php:321
-#: includes/admin/settings-fields.php:804 includes/admin/sunshine-order.php:440
-#: includes/class-sunshinephotocart.php:374 includes/functions/account.php:434
+#: includes/admin/settings-fields.php:816 includes/admin/sunshine-order.php:440
+#: includes/class-sunshinephotocart.php:376 includes/functions/account.php:434
 #: reports.php:5 class-admin-automated-emails.php:64 hooks.php:677
 #: templates/account/downloads.php:30 class-export-galleries.php:10
 #: class-export-orders.php:552
@@ -1663,8 +1718,8 @@ msgid "URLs"
 msgstr "URL адреси"
 
 #: includes/admin/settings-fields.php:261
-#: includes/class-sunshinephotocart.php:375
 #: includes/class-sunshinephotocart.php:377
+#: includes/class-sunshinephotocart.php:379
 #: class-reports-galleries-table.php:36 gallery.php:277
 #: class-export-orders.php:631 messaging.php:148
 msgid "Gallery"
@@ -1754,10 +1809,41 @@ msgstr ""
 "използвано за създаване на галерията"
 
 #: includes/admin/settings-fields.php:392
+msgid "Check folders for new photos"
+msgstr "Проверявай папките за нови снимки"
+
+#: includes/admin/settings-fields.php:396
+msgid "Off"
+msgstr "Изключено"
+
+#: includes/admin/settings-fields.php:397
+msgid "Every hour"
+msgstr "Всеки час"
+
+#: includes/admin/settings-fields.php:398
+msgid "Twice a day"
+msgstr "Два пъти на ден"
+
+#: includes/admin/settings-fields.php:399
+msgid "Once a day"
+msgstr "Веднъж на ден"
+
+#: includes/admin/settings-fields.php:401
+msgid ""
+"Galleries made from an FTP or cloud folder get any photos added to that "
+"folder later. Photos are only ever added: one removed from the folder stays "
+"in the gallery, and one you delete from the gallery is not brought back. "
+"Galleries that existed before you turn this on only get photos added to "
+"their folder after that. Each check of a cloud folder reads the list of "
+"files in your bucket, so checking every hour means more requests to your "
+"storage service."
+msgstr "Галериите, създадени от FTP или облачна папка, получават всички снимки, добавени по-късно в тази папка. Снимките само се добавят: снимка, махната от папката, остава в галерията, а снимка, която изтриеш от галерията, не се връща. Галериите, съществували преди да включиш това, получават само снимките, добавени в папката им след това. Всяка проверка на облачна папка чете списъка с файлове в твоя bucket, така че проверката на всеки час означава повече заявки към услугата ти за съхранение."
+
+#: includes/admin/settings-fields.php:404
 msgid "Show images in Media Library"
 msgstr "Показване на изображенията в Библиотеката на медиите"
 
-#: includes/admin/settings-fields.php:395
+#: includes/admin/settings-fields.php:407
 msgid ""
 "By default Sunshine hides images uploaded to Sunshine galleries in the Media "
 "Library, enabling this option will show them instead. Use at your own risk."
@@ -1766,11 +1852,11 @@ msgstr ""
 "Sunshine, в Библиотеката на медиите, но ако активирате тази опция, те ще "
 "бъдат показани вместо това. Използвайте на свой риск."
 
-#: includes/admin/settings-fields.php:398
+#: includes/admin/settings-fields.php:410
 msgid "Delay image processing"
 msgstr "Забавяне на обработката на изображения"
 
-#: includes/admin/settings-fields.php:401
+#: includes/admin/settings-fields.php:413
 msgid ""
 "When enabled, intermediate image sizes (thumbnails and large) and watermarks "
 "will be generated in the background after upload, allowing faster initial "
@@ -1783,15 +1869,15 @@ msgstr ""
 "може да не са веднага достъпни във всички размери, докато не приключи "
 "обработката."
 
-#: includes/admin/settings-fields.php:416
+#: includes/admin/settings-fields.php:428
 msgid "Features"
 msgstr "Особености"
 
-#: includes/admin/settings-fields.php:420
+#: includes/admin/settings-fields.php:432
 msgid "Image Theft Prevention"
 msgstr "Предотвратяване на кражба на изображения"
 
-#: includes/admin/settings-fields.php:423
+#: includes/admin/settings-fields.php:435
 msgid ""
 "Enabling this option will disable the right click menu and also not allow "
 "images to be dragged/dropped to the desktop. NOT a 100% effective method, "
@@ -1802,11 +1888,11 @@ msgstr ""
 "плот. Това НЕ е 100% eефективен метод, но би трябвало да спре повечето хора. "
 "НЕ се използва за администраторски потребители."
 
-#: includes/admin/settings-fields.php:428
+#: includes/admin/settings-fields.php:440
 msgid "Proofing Only"
 msgstr "Само за проверка"
 
-#: includes/admin/settings-fields.php:431
+#: includes/admin/settings-fields.php:443
 msgid ""
 "This will remove all aspects of purchasing abilities throughout the site, "
 "leaving just image viewing and adding to favorites"
@@ -1814,21 +1900,21 @@ msgstr ""
 "Това ще премахне всички аспекти на възможностите за закупуване в целия сайт, "
 "като остави само разглеждане на изображения и добавяне към любими"
 
-#: includes/admin/settings-fields.php:436
+#: includes/admin/settings-fields.php:448
 msgid "Allow product comments"
 msgstr "Разрешаване на коментари за продукта"
 
-#: includes/admin/settings-fields.php:439
+#: includes/admin/settings-fields.php:451
 msgid "Allow users to enter comments when adding an item to cart"
 msgstr ""
 "Позволете на потребителите да въвеждат коментари при добавяне на елемент в "
 "количката"
 
-#: includes/admin/settings-fields.php:443
+#: includes/admin/settings-fields.php:455
 msgid "Allow Store"
 msgstr "Разреши магазин"
 
-#: includes/admin/settings-fields.php:446
+#: includes/admin/settings-fields.php:458
 msgid ""
 "Galleries come with a Store where products are shown first and customers add "
 "images to cart."
@@ -1836,39 +1922,39 @@ msgstr ""
 "Галериите разполагат с магазин, където продуктите се показват първо, а "
 "клиентите добавят изображенията в количката."
 
-#: includes/admin/settings-fields.php:451
+#: includes/admin/settings-fields.php:463
 msgid "Allow Gallery Sharing"
 msgstr "Разреши споделяне на галерия"
 
-#: includes/admin/settings-fields.php:454
+#: includes/admin/settings-fields.php:466
 msgid "Allow users to share galleries"
 msgstr "Позволете на потребителите да споделят галерии"
 
-#: includes/admin/settings-fields.php:457
+#: includes/admin/settings-fields.php:469
 msgid "Allow Image Sharing"
 msgstr "Разреши споделяне на изображения"
 
-#: includes/admin/settings-fields.php:460
+#: includes/admin/settings-fields.php:472
 msgid "Allow users to share images within a gallery and favorites"
 msgstr ""
 "Позволете на потребителите да споделят изображения в галерия и в списъка с "
 "любими"
 
-#: includes/admin/settings-fields.php:463
+#: includes/admin/settings-fields.php:475
 msgid "Use Secure File Names"
 msgstr "Използвайте сигурни имена на файлове"
 
-#: includes/admin/settings-fields.php:466
+#: includes/admin/settings-fields.php:478
 msgid "Add random strings to image file names for added security"
 msgstr ""
 "Добавете случайни символни низове към имената на файловете с изображения за "
 "допълнителна сигурност"
 
-#: includes/admin/settings-fields.php:470
+#: includes/admin/settings-fields.php:482
 msgid "Enable Open Graph"
 msgstr "Активиране на Open Graph"
 
-#: includes/admin/settings-fields.php:473
+#: includes/admin/settings-fields.php:485
 msgid ""
 "Add Open Graph meta tags to the site for galleries and image pages (your SEO "
 "plugin may already be doing this)"
@@ -1876,11 +1962,11 @@ msgstr ""
 "Добавяне на метаетикети Open Graph към сайта за галериите и страниците с "
 "изображения (възможно е плъгинът ви за SEO вече да прави това)"
 
-#: includes/admin/settings-fields.php:476
+#: includes/admin/settings-fields.php:488
 msgid "Hide galleries from search engines"
 msgstr "Скриване на галериите от търсачките"
 
-#: includes/admin/settings-fields.php:479
+#: includes/admin/settings-fields.php:491
 msgid ""
 "Enabling this option will attempt to block search engine bots from crawling "
 "and indexing galleries and images"
@@ -1888,67 +1974,67 @@ msgstr ""
 "Активирането на тази опция ще се опита да блокира ботовете на търсачките да "
 "обхождат и индексират галерии и изображения"
 
-#: includes/admin/settings-fields.php:484
+#: includes/admin/settings-fields.php:496
 msgid "Display Options"
 msgstr "Опции за дисплея"
 
-#: includes/admin/settings-fields.php:488
+#: includes/admin/settings-fields.php:500
 msgid "Gallery Order"
 msgstr "Поръчка на галерията"
 
-#: includes/admin/settings-fields.php:493
-#: includes/admin/settings-fields.php:504
+#: includes/admin/settings-fields.php:505
+#: includes/admin/settings-fields.php:516
 msgid "Custom ordering"
 msgstr "Потребителска подредба"
 
-#: includes/admin/settings-fields.php:494
+#: includes/admin/settings-fields.php:506
 msgid "Gallery Creation Date (New to Old)"
 msgstr "Дата на създаване на галерията (от нова към стара)"
 
-#: includes/admin/settings-fields.php:495
+#: includes/admin/settings-fields.php:507
 msgid "Gallery Creation Date (Old to New)"
 msgstr "Дата на създаване на галерията (от старата към новата)"
 
-#: includes/admin/settings-fields.php:496
-#: includes/admin/settings-fields.php:509
+#: includes/admin/settings-fields.php:508
+#: includes/admin/settings-fields.php:521
 msgid "Alphabetical"
 msgstr "По азбучен ред"
 
-#: includes/admin/settings-fields.php:500
+#: includes/admin/settings-fields.php:512
 msgid "Image Order"
 msgstr "Поръчка на изображения"
 
-#: includes/admin/settings-fields.php:505
+#: includes/admin/settings-fields.php:517
 msgid "Order images shot (New to Old)"
 msgstr "Поръчка на снимки (от нова към стара)"
 
-#: includes/admin/settings-fields.php:506
+#: includes/admin/settings-fields.php:518
 msgid "Order images shot (Old to New)"
 msgstr "Поръчка на снимки (от стари към нови)"
 
-#: includes/admin/settings-fields.php:507
+#: includes/admin/settings-fields.php:519
 msgid "Image Upload Date (New to Old)"
 msgstr "Дата на качване на изображението (от ново към старо)"
 
-#: includes/admin/settings-fields.php:508
+#: includes/admin/settings-fields.php:520
 msgid "Image Upload Date (Old to New)"
 msgstr "Дата на качване на изображението (от старо към ново)"
 
-#: includes/admin/settings-fields.php:511
+#: includes/admin/settings-fields.php:523
 msgid "If selecting \"Order images shot\" images must have proper metadata"
 msgstr ""
 "Ако изберете \"Поръчай заснетите изображения\", изображенията трябва да имат "
 "подходящи метаданни"
 
-#: includes/admin/settings-fields.php:511
+#: includes/admin/settings-fields.php:523
 msgid "learn more"
 msgstr "научете повече"
 
-#: includes/admin/settings-fields.php:515
+#: includes/admin/settings-fields.php:527
 msgid "Fallback Featured Image"
 msgstr "Резервно препоръчано изображение"
 
-#: includes/admin/settings-fields.php:518
+#: includes/admin/settings-fields.php:530
 msgid ""
 "Upload a custom thumbnail image to be used when no specific featured image "
 "is set"
@@ -1956,11 +2042,11 @@ msgstr ""
 "Качване на персонализирано миниатюрно изображение, което да се използва, "
 "когато не е зададено конкретно изображение"
 
-#: includes/admin/settings-fields.php:522
+#: includes/admin/settings-fields.php:534
 msgid "Password Protected Featured Image"
 msgstr "Защитено с парола препоръчано изображение"
 
-#: includes/admin/settings-fields.php:525
+#: includes/admin/settings-fields.php:537
 msgid ""
 "Upload a custom thumbnail image to be used when a gallery is password "
 "protected"
@@ -1968,114 +2054,114 @@ msgstr ""
 "Качване на персонализирано миниатюрно изображение, което да се използва, "
 "когато галерията е защитена с парола"
 
-#: includes/admin/settings-fields.php:531
+#: includes/admin/settings-fields.php:543
 msgid "Galleries List Display"
 msgstr "Списък с галерии"
 
-#: includes/admin/settings-fields.php:536
+#: includes/admin/settings-fields.php:548
 msgid "Galleries Layout"
 msgstr "Подреждане на галериите"
 
-#: includes/admin/settings-fields.php:539
-#: includes/admin/settings-fields.php:595
+#: includes/admin/settings-fields.php:551
+#: includes/admin/settings-fields.php:607
 msgid "Cropping option not recommended for justified or masonry"
 msgstr "Опцията за изрязване не се препоръчва за обосновани или зидани стени"
 
-#: includes/admin/settings-fields.php:542
-#: includes/admin/settings-fields.php:598
+#: includes/admin/settings-fields.php:554
+#: includes/admin/settings-fields.php:610
 msgid "Standard"
 msgstr "Стандарт"
 
-#: includes/admin/settings-fields.php:546
-#: includes/admin/settings-fields.php:602
+#: includes/admin/settings-fields.php:558
+#: includes/admin/settings-fields.php:614
 msgid "Justified"
 msgstr "Justified"
 
-#: includes/admin/settings-fields.php:550
-#: includes/admin/settings-fields.php:606
+#: includes/admin/settings-fields.php:562
+#: includes/admin/settings-fields.php:618
 msgid "Masonry"
 msgstr "Masonry"
 
-#: includes/admin/settings-fields.php:556
+#: includes/admin/settings-fields.php:568
 msgid "Galleries Columns"
 msgstr "Галерии Колони"
 
-#: includes/admin/settings-fields.php:567
+#: includes/admin/settings-fields.php:579
 msgid "Galleries Per Page"
 msgstr "Галерии на страница"
 
-#: includes/admin/settings-fields.php:571
+#: includes/admin/settings-fields.php:583
 msgid "Set to 0 for unlimited galleries (no pagination)"
 msgstr "Задайте 0 за неограничен брой галерии (без разбиване на страници)"
 
-#: includes/admin/settings-fields.php:575
+#: includes/admin/settings-fields.php:587
 msgid "Galleries Pagination Style"
 msgstr "Стил на разбиване на страници в галериите"
 
-#: includes/admin/settings-fields.php:579
-#: includes/admin/settings-fields.php:633
+#: includes/admin/settings-fields.php:591
+#: includes/admin/settings-fields.php:645
 msgid "Numbered pagination"
 msgstr "Номериране на страниците"
 
-#: includes/admin/settings-fields.php:580
-#: includes/admin/settings-fields.php:634
+#: includes/admin/settings-fields.php:592
+#: includes/admin/settings-fields.php:646
 msgid "Load more button"
 msgstr "Зареди още бутон"
 
-#: includes/admin/settings-fields.php:581
-#: includes/admin/settings-fields.php:635
+#: includes/admin/settings-fields.php:593
+#: includes/admin/settings-fields.php:647
 msgid "Automatic infinite scrolling"
 msgstr "Автоматично безкрайно превъртане"
 
-#: includes/admin/settings-fields.php:587
+#: includes/admin/settings-fields.php:599
 msgid "Images Display"
 msgstr "Показване на изображения"
 
-#: includes/admin/settings-fields.php:592
+#: includes/admin/settings-fields.php:604
 msgid "Images Layout"
 msgstr "Оформление на изображенията"
 
-#: includes/admin/settings-fields.php:612
+#: includes/admin/settings-fields.php:624
 msgid "Images Columns"
 msgstr "Изображения Колони"
 
-#: includes/admin/settings-fields.php:623
+#: includes/admin/settings-fields.php:635
 msgid "Images Per Page"
 msgstr "Изображения на страница"
 
-#: includes/admin/settings-fields.php:629
+#: includes/admin/settings-fields.php:641
 msgid "Images Pagination Style"
 msgstr "Стил на разбиване на страници на изображения"
 
-#: includes/admin/settings-fields.php:639
+#: includes/admin/settings-fields.php:651
 msgid "Thumbnail Content"
 msgstr "Съдържание на миниатюрата"
 
-#: includes/admin/settings-fields.php:641
+#: includes/admin/settings-fields.php:653
 msgid "What to show below image thumbnails"
 msgstr "Какво да се показва под миниатюрите на изображенията"
 
-#: includes/admin/settings-fields.php:644
+#: includes/admin/settings-fields.php:656
 msgid "Nothing"
 msgstr "Нищо"
 
-#: includes/admin/settings-fields.php:645 templates/admin/order-items.php:103
+#: includes/admin/settings-fields.php:657 templates/admin/order-items.php:103
 msgid "Filename"
 msgstr "Име на файла"
 
-#: includes/admin/settings-fields.php:646
+#: includes/admin/settings-fields.php:658
 msgid "Title (Images MUST have EXIF field \"Title\")"
 msgstr "Заглавие (изображенията ТРЯБВА да имат EXIF поле \"Заглавие\")"
 
-#: includes/admin/settings-fields.php:647
+#: includes/admin/settings-fields.php:659
 msgid "Caption"
 msgstr "Надпис"
 
-#: includes/admin/settings-fields.php:651
+#: includes/admin/settings-fields.php:663
 msgid "Single Image Caption"
 msgstr "Единствен надпис към изображение"
 
-#: includes/admin/settings-fields.php:654
+#: includes/admin/settings-fields.php:666
 msgid ""
 "Show the image caption (from EXIF metadata) below the image on single image "
 "pages"
@@ -2083,12 +2169,12 @@ msgstr ""
 "Покажи надписа на изображението (от EXIF метаданни) под изображението на "
 "страници с едно изображение"
 
-#: includes/admin/settings-fields.php:659
+#: includes/admin/settings-fields.php:671
 msgid "Image Sizing"
 msgstr "Размер на изображението"
 
 #. translators: %s is the URL to help documentation
-#: includes/admin/settings-fields.php:662
+#: includes/admin/settings-fields.php:674
 #, php-format
 msgid ""
 "Making changes to your image sizes does not immediately affect your "
@@ -2099,15 +2185,15 @@ msgstr ""
 "ви и ще трябва да регенерирате всички изображения. <a href=\"%s\" "
 "target=\"_blank\">Моля, вижте тази помощна статия</a>"
 
-#: includes/admin/settings-fields.php:666
+#: includes/admin/settings-fields.php:678
 msgid "Thumbnail Size"
 msgstr "Размер на умалените изображения"
 
-#: includes/admin/settings-fields.php:671
+#: includes/admin/settings-fields.php:683
 msgid "Thumbnail Crop"
 msgstr "Изрязване на миниатюри"
 
-#: includes/admin/settings-fields.php:673
+#: includes/admin/settings-fields.php:685
 msgid ""
 "Crop image to this exact size. Note: Cropped images not recommended for "
 "Justified or Masonry layouts"
@@ -2115,7 +2201,7 @@ msgstr ""
 "Изрязване на изображението до този точен размер. Забележка: Изрязаните "
 "изображения не се препоръчват за оформления Justified или Masonry"
 
-#: includes/admin/settings-fields.php:674
+#: includes/admin/settings-fields.php:686
 msgid ""
 "Should images be cropped to the exact dimensions of your thumbnail width / "
 "height"
@@ -2123,21 +2209,21 @@ msgstr ""
 "Трябва ли изображенията да бъдат изрязани до точните размери на ширината/"
 "височината на миниатюрата"
 
-#: includes/admin/settings-fields.php:679
+#: includes/admin/settings-fields.php:691
 msgid "Large Size"
 msgstr "Голям размер"
 
-#: includes/admin/settings-fields.php:687
+#: includes/admin/settings-fields.php:699
 msgid "Large size must be larger than thumbnail size (both width and height)"
 msgstr ""
 "Големият размер трябва да е по-голям от размера на миниатюрата (както по "
 "ширина, така и по височина)"
 
-#: includes/admin/settings-fields.php:692
+#: includes/admin/settings-fields.php:704
 msgid "Image Quality"
 msgstr "Качество на изображението"
 
-#: includes/admin/settings-fields.php:694
+#: includes/admin/settings-fields.php:706
 msgid ""
 "Quality that generated images are saved from 1-100. The higher the quality "
 "the larger the file size. If left empty, the default is 82."
@@ -2146,76 +2232,76 @@ msgstr ""
 "Колкото по-високо е качеството, толкова по-голям е размерът на файла. Ако "
 "остане празно, по подразбиране е 82."
 
-#: includes/admin/settings-fields.php:707
+#: includes/admin/settings-fields.php:719
 msgid "Watermark Image"
 msgstr "Изображение на воден знак"
 
-#: includes/admin/settings-fields.php:710
+#: includes/admin/settings-fields.php:722
 msgid "Must be a PNG image, ideally with transparency"
 msgstr "Трябва да е изображение PNG, в идеалния случай с прозрачност"
 
-#: includes/admin/settings-fields.php:714
+#: includes/admin/settings-fields.php:726
 msgid "Max Size"
 msgstr "Макс. площ"
 
-#: includes/admin/settings-fields.php:719
+#: includes/admin/settings-fields.php:731
 msgid "From 1-100, a max percent size of the image"
 msgstr "От 1 до 100, максимален размер на изображението в проценти"
 
-#: includes/admin/settings-fields.php:722
-#: includes/admin/settings-fields.php:780
+#: includes/admin/settings-fields.php:734
+#: includes/admin/settings-fields.php:792
 msgid "Position"
 msgstr "Позиция"
 
-#: includes/admin/settings-fields.php:726
+#: includes/admin/settings-fields.php:738
 msgid "Center"
 msgstr "Център"
 
-#: includes/admin/settings-fields.php:727
+#: includes/admin/settings-fields.php:739
 msgid "Repeat"
 msgstr "Повторение"
 
-#: includes/admin/settings-fields.php:728
+#: includes/admin/settings-fields.php:740
 msgid "Top Left"
 msgstr "Горе в ляво"
 
-#: includes/admin/settings-fields.php:729
+#: includes/admin/settings-fields.php:741
 msgid "Top Right"
 msgstr "Горе вдясно"
 
-#: includes/admin/settings-fields.php:730
+#: includes/admin/settings-fields.php:742
 msgid "Bottom Left"
 msgstr "Долу ляво"
 
-#: includes/admin/settings-fields.php:731
+#: includes/admin/settings-fields.php:743
 msgid "Bottom Right"
 msgstr "Отдолу в дясно"
 
-#: includes/admin/settings-fields.php:735
+#: includes/admin/settings-fields.php:747
 msgid "Margin from edge"
 msgstr "Марж от ръба"
 
-#: includes/admin/settings-fields.php:741
+#: includes/admin/settings-fields.php:753
 msgid "Watermark Thumbnails"
 msgstr "Миниатюри с воден знак"
 
-#: includes/admin/settings-fields.php:748
+#: includes/admin/settings-fields.php:760
 msgid "Favorites / Selections"
 msgstr "Любими / Избор"
 
-#: includes/admin/settings-fields.php:753
+#: includes/admin/settings-fields.php:765
 msgid "Enable Favorites"
 msgstr "Активиране на любими"
 
-#: includes/admin/settings-fields.php:756
+#: includes/admin/settings-fields.php:768
 msgid "Allow users to save images to their favorites"
 msgstr "Позволете на потребителите да запазват изображения в любимите си"
 
-#: includes/admin/settings-fields.php:759
+#: includes/admin/settings-fields.php:771
 msgid "Enable Guest Favorites"
 msgstr "Включи любими за гости"
 
-#: includes/admin/settings-fields.php:762
+#: includes/admin/settings-fields.php:774
 msgid ""
 "Allow visitors who are not logged in to save favorites for their browser "
 "session"
@@ -2223,11 +2309,11 @@ msgstr ""
 "Позволи на посетители, които не са влезли в профил, да запазват наблюдавани "
 "за сесията на браузъра си"
 
-#: includes/admin/settings-fields.php:773
+#: includes/admin/settings-fields.php:785
 msgid "Enable Selection Tray"
 msgstr "Активиране на панел за избор"
 
-#: includes/admin/settings-fields.php:776
+#: includes/admin/settings-fields.php:788
 msgid ""
 "Show users their selected favorites in a persistent popup while viewing "
 "galleries"
@@ -2235,27 +2321,27 @@ msgstr ""
 "Покажете на потребителите избраните от тях любими в постоянен прозорец, "
 "докато разглеждат галериите."
 
-#: includes/admin/settings-fields.php:784
+#: includes/admin/settings-fields.php:796
 msgid "Float bottom right"
 msgstr "Плаващ в долния десен ъгъл"
 
-#: includes/admin/settings-fields.php:785
+#: includes/admin/settings-fields.php:797
 msgid "Float bottom left"
 msgstr "Плаващ долу вляво"
 
-#: includes/admin/settings-fields.php:795
+#: includes/admin/settings-fields.php:807
 msgid "Choose where the selection tray appears on the page"
 msgstr "Изберете къде да се показва панелът за избор на страницата"
 
-#: includes/admin/settings-fields.php:812
+#: includes/admin/settings-fields.php:824
 msgid "Enable Taxes"
 msgstr "Разреши Таксите"
 
-#: includes/admin/settings-fields.php:818
+#: includes/admin/settings-fields.php:830
 msgid "Tax Rates"
 msgstr "Данъци"
 
-#: includes/admin/settings-fields.php:820
+#: includes/admin/settings-fields.php:832
 msgid ""
 "Be as specific as you need. Order for most priority. You can include "
 "multiple zip/postal codes with commas."
@@ -2263,11 +2349,11 @@ msgstr ""
 "Бъдете толкова конкретни, колкото е необходимо. Поръчайте с най-голям "
 "приоритет. Можете да включите няколко пощенски кода със запетайки."
 
-#: includes/admin/settings-fields.php:832
+#: includes/admin/settings-fields.php:844
 msgid "Default customer location"
 msgstr "Местоположение на клиента по подразбиране"
 
-#: includes/admin/settings-fields.php:833
+#: includes/admin/settings-fields.php:845
 msgid ""
 "If customer does not have address entered yet, what location is used to "
 "determine the default location"
@@ -2275,60 +2361,60 @@ msgstr ""
 "Ако клиентът все още няма въведен адрес, кое местоположение се използва за "
 "определяне на местоположението по подразбиране"
 
-#: includes/admin/settings-fields.php:836
+#: includes/admin/settings-fields.php:848
 msgid "No location by default"
 msgstr "Няма местоположение по подразбиране"
 
-#: includes/admin/settings-fields.php:837
+#: includes/admin/settings-fields.php:849
 msgid "My business location"
 msgstr "Местонахождението на бизнеса ми"
 
-#: includes/admin/settings-fields.php:869
+#: includes/admin/settings-fields.php:881
 msgid "Display prices"
 msgstr "Показване на цените"
 
-#: includes/admin/settings-fields.php:878
+#: includes/admin/settings-fields.php:890
 msgid "Prices entered with tax"
 msgstr "Цените са въведени с данък"
 
-#: includes/admin/settings-fields.php:887
+#: includes/admin/settings-fields.php:899
 msgid "Price display suffix"
 msgstr "Суфикс за показване на цените"
 
-#: includes/admin/settings-fields.php:890
+#: includes/admin/settings-fields.php:902
 msgid "This shows after a price"
 msgstr "Това се вижда след цена"
 
-#: includes/admin/settings-fields.php:899
+#: includes/admin/settings-fields.php:911
 msgid "Taxes"
 msgstr "Данъци"
 
-#: includes/admin/settings-fields.php:906
+#: includes/admin/settings-fields.php:918
 msgid "Distraction Free Checkout"
 msgstr "Проверка без разсейване"
 
-#: includes/admin/settings-fields.php:909
+#: includes/admin/settings-fields.php:921
 msgid ""
 "Remove site header/footer and let user focus only on the checkout experience"
 msgstr ""
 "Премахнете заглавието на сайта и петата колонка и оставете потребителя да се "
 "съсредоточи само върху процеса на плащане"
 
-#: includes/admin/settings-fields.php:914
+#: includes/admin/settings-fields.php:926
 msgid "Allow Guest Checkout"
 msgstr "Разрешаване на регистрацията на гости"
 
-#: includes/admin/settings-fields.php:917
+#: includes/admin/settings-fields.php:929
 msgid "Allow users to checkout as a guest (do not require a user account)"
 msgstr ""
 "Позволете на потребителите да се регистрират като гости (не изисквайте "
 "потребителски акаунт)"
 
-#: includes/admin/settings-fields.php:920
+#: includes/admin/settings-fields.php:932
 msgid "Always collect a billing address"
 msgstr "Винаги събирай адрес на плащане"
 
-#: includes/admin/settings-fields.php:923
+#: includes/admin/settings-fields.php:935
 msgid ""
 "Collect the address of the person paying on every order, even when nothing "
 "is being shipped. Invoices need the buyer's address, and the buyer is not "
@@ -2343,11 +2429,11 @@ msgstr ""
 "като Square, винаги събират адрес за фактуриране независимо от тази "
 "настройка."
 
-#: includes/admin/settings-fields.php:927
+#: includes/admin/settings-fields.php:939
 msgid "Allowed Countries"
 msgstr "Разрешени държави"
 
-#: includes/admin/settings-fields.php:928
+#: includes/admin/settings-fields.php:940
 msgid ""
 "Which countries users can select at checkout. If empty, all countries are "
 "allowed."
@@ -2355,12 +2441,12 @@ msgstr ""
 "Кои държави могат да избират потребителите при поръчка. Ако е празно, всички "
 "държави са разрешени."
 
-#: includes/admin/settings-fields.php:936
+#: includes/admin/settings-fields.php:948
 msgid "Google Maps API Key"
 msgstr "Google карта API ключ"
 
 #. translators: %s is the URL to help documentation
-#: includes/admin/settings-fields.php:940
+#: includes/admin/settings-fields.php:952
 #, php-format
 msgid ""
 "Enter a Google API key to enable address autocomplete at checkout, <a "
@@ -2369,11 +2455,11 @@ msgstr ""
 "Въведете Google API ключ, за да активирате автоматичното попълване на адреса "
 "при поръчка, <a href=\"%s\" target=\"_blank\">научете повече тук</a>"
 
-#: includes/admin/settings-fields.php:951
+#: includes/admin/settings-fields.php:963
 msgid "Next Order Number"
 msgstr "Следващ номер на поръчката"
 
-#: includes/admin/settings-fields.php:954
+#: includes/admin/settings-fields.php:966
 msgid ""
 "Leave blank to use default order numbering, otherwise set the next order "
 "number to be used"
@@ -2381,90 +2467,90 @@ msgstr ""
 "Оставете празно, за да използвате номерацията по подразбиране, в противен "
 "случай задайте следващия номер на поръчката, който ще се използва"
 
-#: includes/admin/settings-fields.php:958
+#: includes/admin/settings-fields.php:970
 msgid "Disable Invoice"
 msgstr "Деактивиране на фактурата"
 
-#: includes/admin/settings-fields.php:961
+#: includes/admin/settings-fields.php:973
 msgid "Disable invoices with orders"
 msgstr "Деактивиране на фактури с поръчки"
 
-#: includes/admin/settings-fields.php:967
+#: includes/admin/settings-fields.php:979
 msgid "Display Fields"
 msgstr "Полета за показване"
 
-#: includes/admin/settings-fields.php:972
+#: includes/admin/settings-fields.php:984
 msgid "Other Fields"
 msgstr "Други полета"
 
-#: includes/admin/settings-fields.php:977
-#: includes/admin/settings-fields.php:987 includes/admin/sunshine-order.php:745
-#: includes/class-cart.php:2064 templates/email/admin-receipt.php:145
+#: includes/admin/settings-fields.php:989
+#: includes/admin/settings-fields.php:999 includes/admin/sunshine-order.php:745
+#: includes/class-cart.php:2065 templates/email/admin-receipt.php:145
 #: templates/email/customer-receipt.php:149
 #: templates/email/order-status.php:117 templates/order/details.php:59
 msgid "Notes"
 msgstr "Бележки"
 
-#: includes/admin/settings-fields.php:982
+#: includes/admin/settings-fields.php:994
 msgid "Required Other Fields"
 msgstr "Задължителни други полета"
 
-#: includes/admin/settings-fields.php:992
+#: includes/admin/settings-fields.php:1004
 msgid "VAT Label"
 msgstr "Етикет за ДДС"
 
-#: includes/admin/settings-fields.php:1042
+#: includes/admin/settings-fields.php:1054
 msgid "Payments"
 msgstr "Плащания"
 
-#: includes/admin/settings-fields.php:1083
+#: includes/admin/settings-fields.php:1095
 msgid "Delivery & Shipping"
 msgstr "Доставка и транспортиране"
 
-#: includes/admin/settings-fields.php:1090
+#: includes/admin/settings-fields.php:1102
 msgid "Design Elements"
 msgstr "Елементи на дизайна"
 
-#: includes/admin/settings-fields.php:1095
+#: includes/admin/settings-fields.php:1107
 msgid "Pages Theme"
 msgstr "Тема на страниците"
 
-#: includes/admin/settings-fields.php:1099
 #: includes/admin/settings-fields.php:1111
+#: includes/admin/settings-fields.php:1123
 msgid "My WordPress Theme"
 msgstr "Моята тема на WordPress"
 
-#: includes/admin/settings-fields.php:1100
 #: includes/admin/settings-fields.php:1112
+#: includes/admin/settings-fields.php:1124
 msgid "Classic"
 msgstr "Класически"
 
-#: includes/admin/settings-fields.php:1101
 #: includes/admin/settings-fields.php:1113
+#: includes/admin/settings-fields.php:1125
 msgid "Cover"
 msgstr "Корица"
 
-#: includes/admin/settings-fields.php:1103
+#: includes/admin/settings-fields.php:1115
 msgid "What should be used for your general theme when viewing Sunshine pages"
 msgstr ""
 "Какво трябва да се използва за общата ви тема при разглеждане на страниците "
 "на Sunshine"
 
-#: includes/admin/settings-fields.php:1107
+#: includes/admin/settings-fields.php:1119
 msgid "Gallery Theme"
 msgstr "Тема на галерията"
 
-#: includes/admin/settings-fields.php:1115
+#: includes/admin/settings-fields.php:1127
 msgid "Allow galleries to use a different theme layout from the main pages"
 msgstr ""
 "Позволете на галериите да използват различно оформление на темата от това на "
 "основните страници"
 
-#: includes/admin/settings-fields.php:1119
+#: includes/admin/settings-fields.php:1131
 msgid "Alternate integration"
 msgstr "Алтернативна интеграция"
 
-#: includes/admin/settings-fields.php:1122
+#: includes/admin/settings-fields.php:1134
 msgid ""
 "Sunshine tries to blend into your theme seamlessly. If you are seeing weird "
 "layout issues, try this as an alternate method if integrating."
@@ -2473,62 +2559,62 @@ msgstr ""
 "странни проблеми с оформлението, опитайте това като алтернативен метод за "
 "интегриране."
 
-#: includes/admin/settings-fields.php:1125
-#: includes/admin/settings-fields.php:1327
+#: includes/admin/settings-fields.php:1137
+#: includes/admin/settings-fields.php:1339
 msgid "Logo"
 msgstr "Лого"
 
-#: includes/admin/settings-fields.php:1132
+#: includes/admin/settings-fields.php:1144
 msgid "Classic Theme Options"
 msgstr "Класически опции на темата"
 
-#: includes/admin/settings-fields.php:1151 themes/cover/functions.php:11
+#: includes/admin/settings-fields.php:1163 themes/cover/functions.php:11
 msgid "Menu Background"
 msgstr "Фона на мнюто"
 
-#: includes/admin/settings-fields.php:1170 themes/cover/functions.php:16
+#: includes/admin/settings-fields.php:1182 themes/cover/functions.php:16
 msgid "Menu Links"
 msgstr "Връзки към менюто"
 
-#: includes/admin/settings-fields.php:1189 themes/cover/functions.php:21
+#: includes/admin/settings-fields.php:1201 themes/cover/functions.php:21
 msgid "Main Background"
 msgstr "Основен контекст"
 
-#: includes/admin/settings-fields.php:1208
+#: includes/admin/settings-fields.php:1220
 msgid "Main Text"
 msgstr "Основен текст"
 
-#: includes/admin/settings-fields.php:1227
+#: includes/admin/settings-fields.php:1239
 msgid "Main Links"
 msgstr "Основни връзки"
 
-#: includes/admin/settings-fields.php:1246
+#: includes/admin/settings-fields.php:1258
 msgid "Gallery Password Box"
 msgstr "Кутия за парола на галерията"
 
-#: includes/admin/settings-fields.php:1259
+#: includes/admin/settings-fields.php:1271
 msgid "Gallery Search Box"
 msgstr "Поле за търсене в галерията"
 
-#: includes/admin/settings-fields.php:1272
+#: includes/admin/settings-fields.php:1284
 msgid "Miscellaneous Elements"
 msgstr "Различни елементи"
 
-#: includes/admin/settings-fields.php:1277
+#: includes/admin/settings-fields.php:1289
 msgid "Auto-include Sunshine main menu"
 msgstr "Автоматично включване на главното меню на Sunshine"
 
-#: includes/admin/settings-fields.php:1280
+#: includes/admin/settings-fields.php:1292
 msgid ""
 "Automatically have the Sunshine Main Menu appear above the Sunshine content"
 msgstr ""
 "Автоматично се появява главното меню на Sunshine над съдържанието на Sunshine"
 
-#: includes/admin/settings-fields.php:1284
+#: includes/admin/settings-fields.php:1296
 msgid "Hide link to main galleries page"
 msgstr "Скриване на връзката към основната страница на галериите"
 
-#: includes/admin/settings-fields.php:1287
+#: includes/admin/settings-fields.php:1299
 msgid ""
 "Hide the link to your main galleries page in any Sunshine menus. Helpful if "
 "you want users to stick to just a single gallery."
@@ -2536,59 +2622,59 @@ msgstr ""
 "Скрийте връзката към основната си страница с галерии в менютата на Sunshine. "
 "Полезно, ако искате потребителите да се придържат само към една галерия."
 
-#: includes/admin/settings-fields.php:1291
+#: includes/admin/settings-fields.php:1303
 msgid "Customizations"
 msgstr "Персонализации"
 
-#: includes/admin/settings-fields.php:1296
+#: includes/admin/settings-fields.php:1308
 msgid "Custom CSS for frontend"
 msgstr "Потребителски CSS за frontend"
 
-#: includes/admin/settings-fields.php:1302
+#: includes/admin/settings-fields.php:1314
 msgid "Custom CSS for emails"
 msgstr "Персонализиран CSS за имейли"
 
-#: includes/admin/settings-fields.php:1307
+#: includes/admin/settings-fields.php:1319
 msgid "Before Sunshine"
 msgstr "Преди слънцето"
 
-#: includes/admin/settings-fields.php:1310
+#: includes/admin/settings-fields.php:1322
 msgid "Shown before every Sunshine associated page"
 msgstr "Показва се преди всяка страница, свързана с Sunshine"
 
-#: includes/admin/settings-fields.php:1313
+#: includes/admin/settings-fields.php:1325
 msgid "After Sunshine"
 msgstr "След слънчевата светлина"
 
-#: includes/admin/settings-fields.php:1316
+#: includes/admin/settings-fields.php:1328
 msgid "Shown after every Sunshine associated page"
 msgstr "Показва се след всяка страница, свързана със Sunshine"
 
-#: includes/admin/settings-fields.php:1320
+#: includes/admin/settings-fields.php:1332
 msgid "Invoices"
 msgstr "Фактури"
 
-#: includes/admin/settings-fields.php:1330
+#: includes/admin/settings-fields.php:1342
 msgid "Will be shown on a white background"
 msgstr "Ще се показва на бял фон"
 
-#: includes/admin/settings-fields.php:1333
+#: includes/admin/settings-fields.php:1345
 msgid "Extra Content"
 msgstr "Допълнително съдържание"
 
-#: includes/admin/settings-fields.php:1336
+#: includes/admin/settings-fields.php:1348
 msgid "Extra content to be shown on all invoices"
 msgstr "Допълнително съдържание, което да се показва във всички фактури"
 
-#: includes/admin/settings-fields.php:1345
+#: includes/admin/settings-fields.php:1357
 msgid "Design"
 msgstr "Дизайн"
 
-#: includes/admin/settings-fields.php:1358
+#: includes/admin/settings-fields.php:1370
 msgid "Email Notifications"
 msgstr "Известия по имейл"
 
-#: includes/admin/settings-fields.php:1361
+#: includes/admin/settings-fields.php:1373
 msgid ""
 "Email notifications sent from Sunshine Photo Cart are listed below. Click on "
 "an email to configure it."
@@ -2596,68 +2682,68 @@ msgstr ""
 "Имейл известията, изпратени от Sunshine Photo Cart, са изброени по-долу. "
 "Щракнете върху имейл, за да го конфигурирате."
 
-#: includes/admin/settings-fields.php:1370
+#: includes/admin/settings-fields.php:1382
 msgid "Email Sender"
 msgstr "Изпращач на имейл"
 
-#: includes/admin/settings-fields.php:1376
+#: includes/admin/settings-fields.php:1388
 msgid "From Name"
 msgstr "От имени"
 
-#: includes/admin/settings-fields.php:1377
+#: includes/admin/settings-fields.php:1389
 msgid "When emails are sent to customers, what name should they come from"
 msgstr "От какво име трябва да идват имейлите, изпратени до клиентите"
 
-#: includes/admin/settings-fields.php:1383
+#: includes/admin/settings-fields.php:1395
 msgid "From Email"
 msgstr "От Емайл"
 
-#: includes/admin/settings-fields.php:1384
+#: includes/admin/settings-fields.php:1396
 msgid ""
 "When emails are sent to customers, what email address should they come from"
 msgstr "От какъв имейл адрес трябва да се изпращат имейлите до клиентите"
 
-#: includes/admin/settings-fields.php:1390
+#: includes/admin/settings-fields.php:1402
 msgid "Email Template"
 msgstr "Шаблон за имейл"
 
-#: includes/admin/settings-fields.php:1396
+#: includes/admin/settings-fields.php:1408
 msgid "Email logo"
 msgstr "Лого на имейл"
 
-#: includes/admin/settings-fields.php:1397
+#: includes/admin/settings-fields.php:1409
 msgid "Logo to use in header of email"
 msgstr "Лого, което да се използва в заглавието на имейла"
 
-#: includes/admin/settings-fields.php:1403
+#: includes/admin/settings-fields.php:1415
 msgid "Signature"
 msgstr "Подпис"
 
-#: includes/admin/settings-fields.php:1404
+#: includes/admin/settings-fields.php:1416
 msgid "Included in footer of every email"
 msgstr "Включен в долния колонтитул на всеки имейл"
 
-#: includes/admin/settings-fields.php:1463
+#: includes/admin/settings-fields.php:1475
 msgid "Integrations"
 msgstr "Интеграции"
 
-#: includes/admin/settings-fields.php:1489
+#: includes/admin/settings-fields.php:1501
 msgid "Please enter your license key in order to enable your add-ons"
 msgstr "Моля, въведете лицензионния си ключ, за да разрешите добавките си"
 
-#: includes/admin/settings-fields.php:1493
+#: includes/admin/settings-fields.php:1505
 msgid "Licenses"
 msgstr "Лицензи"
 
-#: includes/admin/settings-fields.php:1523
+#: includes/admin/settings-fields.php:1535
 msgid "Account Erasure Requests"
 msgstr "Искания за изтриване на акаунт"
 
-#: includes/admin/settings-fields.php:1529
+#: includes/admin/settings-fields.php:1541
 msgid "Remove personal data from orders"
 msgstr "Премахване на личните данни от поръчките"
 
-#: includes/admin/settings-fields.php:1531
+#: includes/admin/settings-fields.php:1543
 msgid ""
 "When handling an account erasure request, should personal data within orders "
 "be removed? If disabled, order personal data will be retained."
@@ -2666,15 +2752,15 @@ msgstr ""
 "премахнати личните данни в поръчките? Ако тази опция е деактивирана, личните "
 "данни в поръчките ще бъдат запазени."
 
-#: includes/admin/settings-fields.php:1536
+#: includes/admin/settings-fields.php:1548
 msgid "Personal Data Removal"
 msgstr "Премахване на лични данни"
 
-#: includes/admin/settings-fields.php:1541
+#: includes/admin/settings-fields.php:1553
 msgid "Allow bulk removal of personal data"
 msgstr "Разрешаване на масово изтриване на лични данни"
 
-#: includes/admin/settings-fields.php:1543
+#: includes/admin/settings-fields.php:1555
 msgid ""
 "Adds an option to the orders screen for removing personal data in bulk. Note "
 "that removing personal data cannot be undone."
@@ -2683,11 +2769,11 @@ msgstr ""
 "поръчките. Имайте предвид, че премахнатите лични данни не могат да бъдат "
 "възстановени."
 
-#: includes/admin/settings-fields.php:1548
+#: includes/admin/settings-fields.php:1560
 msgid "Personal Data Retention"
 msgstr "Съхранение на лични данни"
 
-#: includes/admin/settings-fields.php:1550
+#: includes/admin/settings-fields.php:1562
 msgid ""
 "Choose how long to retain personal data when it's no longer needed for "
 "processing. Leave the following options blank to retain this data "
@@ -2697,19 +2783,19 @@ msgstr ""
 "необходими за обработка. Оставете параметрите празни, да да се съхраняват за "
 "неоределено време."
 
-#: includes/admin/settings-fields.php:1555
+#: includes/admin/settings-fields.php:1567
 msgid "Retain inactive customer accounts"
 msgstr "Запазване на неактивни клиентски акаунти"
 
-#: includes/admin/settings-fields.php:1560
+#: includes/admin/settings-fields.php:1572
 msgid "Retain completed orders"
 msgstr "Съхраняване на приключени поръчки"
 
-#: includes/admin/settings-fields.php:1565
+#: includes/admin/settings-fields.php:1577
 msgid "Delete expired galleries after"
 msgstr "Изтрий изтеклите галерии след"
 
-#: includes/admin/settings-fields.php:1569
+#: includes/admin/settings-fields.php:1581
 msgid ""
 "days — Galleries will be permanently deleted this many days after their "
 "expiration date. Leave blank to keep expired galleries indefinitely."
@@ -2717,59 +2803,59 @@ msgstr ""
 "дни — Галериите ще бъдат изтрити безвъзвратно толкова дни след датата им на "
 "изтичане. Остави празно, за да пазиш изтеклите галерии безсрочно."
 
-#: includes/admin/settings-fields.php:1578
+#: includes/admin/settings-fields.php:1590
 msgid "Privacy & Data"
 msgstr "Поверителност и данни"
 
-#: includes/admin/settings-fields.php:1587
+#: includes/admin/settings-fields.php:1599
 msgid "Allow Tracking"
 msgstr "Разрешаване на проследяването"
 
-#: includes/admin/settings-fields.php:1592
+#: includes/admin/settings-fields.php:1604
 msgid "Types of Photography"
 msgstr "Видове фотография"
 
-#: includes/admin/settings-fields.php:1595
+#: includes/admin/settings-fields.php:1607
 msgid "Family"
 msgstr "Фамилия"
 
-#: includes/admin/settings-fields.php:1596
+#: includes/admin/settings-fields.php:1608
 msgid "Newborn"
 msgstr "Новородено"
 
-#: includes/admin/settings-fields.php:1597
+#: includes/admin/settings-fields.php:1609
 msgid "Wedding"
 msgstr "Сватба"
 
-#: includes/admin/settings-fields.php:1598
+#: includes/admin/settings-fields.php:1610
 msgid "School"
 msgstr "Училище"
 
-#: includes/admin/settings-fields.php:1599
+#: includes/admin/settings-fields.php:1611
 msgid "Sports"
 msgstr "Спортове"
 
-#: includes/admin/settings-fields.php:1600
+#: includes/admin/settings-fields.php:1612
 msgid "Portraits"
 msgstr "портрети"
 
-#: includes/admin/settings-fields.php:1601
+#: includes/admin/settings-fields.php:1613
 msgid "Animals"
 msgstr "Животни"
 
-#: includes/admin/settings-fields.php:1602
+#: includes/admin/settings-fields.php:1614
 msgid "Events"
 msgstr "Събития"
 
-#: includes/admin/settings-fields.php:1603
+#: includes/admin/settings-fields.php:1615
 msgid "Real Estate"
 msgstr "Недвижими имоти"
 
-#: includes/admin/settings-fields.php:1609
+#: includes/admin/settings-fields.php:1621
 msgid "Usage Tracking"
 msgstr "Проследяване на използването"
 
-#: includes/admin/settings-fields.php:1611
+#: includes/admin/settings-fields.php:1623
 msgid ""
 "This data can help provide useful information to Sunshine Photo Cart and "
 "help guide new features and growth strategies. Your participation is "
@@ -2933,82 +3019,98 @@ msgstr "FTP папки"
 msgid "Select folder"
 msgstr "Изберете папка"
 
-#: includes/admin/sunshine-gallery.php:372
+#. translators: 1: number of photos, 2: date and time of the last one
+#: includes/admin/sunshine-gallery.php:374
+#, php-format
+msgid ""
+"Sunshine checks this gallery's folder for new photos. It has added %1$d "
+"photo, last on %2$s."
+msgid_plural ""
+"Sunshine checks this gallery's folder for new photos. It has added %1$d "
+"photos, last on %2$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/sunshine-gallery.php:380
+msgid "Sunshine checks this gallery's folder for new photos."
+msgstr "Sunshine проверява папката на тази галерия за нови снимки."
+
+#: includes/admin/sunshine-gallery.php:391
 msgid "Choose from Media Library"
 msgstr "Изберете от медийната библиотека"
 
-#: includes/admin/sunshine-gallery.php:391
-#: includes/admin/sunshine-gallery.php:555
+#: includes/admin/sunshine-gallery.php:410
+#: includes/admin/sunshine-gallery.php:574
 msgid "Select all images"
 msgstr "Избиране на всички изображения"
 
-#: includes/admin/sunshine-gallery.php:392
+#: includes/admin/sunshine-gallery.php:411
 msgid "Regenerate all gallery images"
 msgstr "Регенериране на всички изображения в галерията"
 
-#: includes/admin/sunshine-gallery.php:393
+#: includes/admin/sunshine-gallery.php:412
 msgid "Refresh photo details"
 msgstr "Обнови данните на снимките"
 
-#: includes/admin/sunshine-gallery.php:394
+#: includes/admin/sunshine-gallery.php:413
 msgid "Delete selected images"
 msgstr "Изтриване на избрани изображения"
 
 #. translators: %1$s is the number of images currently loaded, %2$s is the total number of images
-#: includes/admin/sunshine-gallery.php:399
+#: includes/admin/sunshine-gallery.php:418
 #, php-format
 msgid "Showing %1$s of %2$s images"
 msgstr "Показване на %1$s от %2$s изображения"
 
 #. translators: %s is a select dropdown with options for number of images to load
-#: includes/admin/sunshine-gallery.php:402
+#: includes/admin/sunshine-gallery.php:421
 #, php-format
 msgid "Load %s more images"
 msgstr "Зареждане на %s повече изображения"
 
-#: includes/admin/sunshine-gallery.php:403
+#: includes/admin/sunshine-gallery.php:422
 msgid "GO"
 msgstr "НАПРЕД"
 
-#: includes/admin/sunshine-gallery.php:418
+#: includes/admin/sunshine-gallery.php:437
 msgid "Loading"
 msgstr "Зареждане"
 
-#: includes/admin/sunshine-gallery.php:445
+#: includes/admin/sunshine-gallery.php:464
 msgid "Saving image order..."
 msgstr "Запазване на реда на изображенията..."
 
-#: includes/admin/sunshine-gallery.php:489
+#: includes/admin/sunshine-gallery.php:508
 msgid "Sorry, the image could not be deleted for some reason"
 msgstr "Съжалявам, но по някаква причина изображението не може да бъде изтрито"
 
-#: includes/admin/sunshine-gallery.php:521
+#: includes/admin/sunshine-gallery.php:540
 msgid "Sorry, the image could not be set as featured"
 msgstr "Съжаляваме, но изображението не може да бъде зададено като водещо"
 
-#: includes/admin/sunshine-gallery.php:549
+#: includes/admin/sunshine-gallery.php:568
 msgid "Select no images"
 msgstr "Изберете да няма изображения"
 
-#: includes/admin/sunshine-gallery.php:608
+#: includes/admin/sunshine-gallery.php:627
 msgid "Allowed Files"
 msgstr "Позволени файлове"
 
-#: includes/admin/sunshine-gallery.php:875
+#: includes/admin/sunshine-gallery.php:894
 msgid "No importable images were found in the selected folder."
 msgstr ""
 "В избраната папка не бяха намерени изображения, които могат да бъдат "
 "импортирани."
 
-#: includes/admin/sunshine-gallery.php:907
+#: includes/admin/sunshine-gallery.php:926
 msgid "The import stopped."
 msgstr "Импортирането спря."
 
-#: includes/admin/sunshine-gallery.php:908
+#: includes/admin/sunshine-gallery.php:927
 msgid "The import stopped before every photo was brought in."
 msgstr "Импортирането спря, преди да бъдат качени всички снимки."
 
-#: includes/admin/sunshine-gallery.php:962
+#: includes/admin/sunshine-gallery.php:981
 msgid ""
 "The image did not fully upload because it is too large for your server to "
 "handle. Thumbnails and watermarks may not have been applied."
@@ -3016,70 +3118,70 @@ msgstr ""
 "Изображението не се качи изцяло, защото е прекалено голямо за вашия сървър. "
 "Възможно е да не са приложени миниатюри и воден знак."
 
-#: includes/admin/sunshine-gallery.php:988
+#: includes/admin/sunshine-gallery.php:1007
 msgid ""
 "Unable to inspect the selected directory before import. Please try again."
 msgstr ""
 "Не е възможно да се провери избраната директория преди импортирането. Моля, "
 "опитайте отново."
 
-#: includes/admin/sunshine-gallery.php:1031
+#: includes/admin/sunshine-gallery.php:1050
 msgid "Processing failed"
 msgstr "Обработката е неуспешна"
 
-#: includes/admin/sunshine-gallery.php:1061
+#: includes/admin/sunshine-gallery.php:1080
 msgid "You do not have permission to edit this gallery"
 msgstr "Нямаш права да редактираш тази галерия"
 
-#: includes/admin/sunshine-gallery.php:1084
+#: includes/admin/sunshine-gallery.php:1103
 msgid "No file was uploaded"
 msgstr "Никакъв файл не беше качен"
 
-#: includes/admin/sunshine-gallery.php:1117
+#: includes/admin/sunshine-gallery.php:1136
 msgid "Invalid file type"
 msgstr "Невалиден тип файл"
 
-#: includes/admin/sunshine-gallery.php:1125
+#: includes/admin/sunshine-gallery.php:1144
 msgid "You do not have permission to upload files"
 msgstr "Нямаш права да качваш файлове"
 
-#: includes/admin/sunshine-gallery.php:1136
+#: includes/admin/sunshine-gallery.php:1155
 msgid "Upload directory is not writable"
 msgstr "Директорията за качване не може да се записва"
 
-#: includes/admin/sunshine-gallery.php:1633
-#: includes/admin/sunshine-gallery.php:1686
+#: includes/admin/sunshine-gallery.php:1652
+#: includes/admin/sunshine-gallery.php:1705
 msgid "You do not have permission to import images."
 msgstr "Нямате разрешение да импортирате изображения."
 
-#: includes/admin/sunshine-gallery.php:1642
+#: includes/admin/sunshine-gallery.php:1661
 msgid "A directory must be selected before importing."
 msgstr "Преди импортирането трябва да бъде избрана директория."
 
-#: includes/admin/sunshine-gallery.php:1651
-#: includes/admin/sunshine-gallery.php:1755
+#: includes/admin/sunshine-gallery.php:1670
+#: includes/admin/sunshine-gallery.php:1777
 msgid "The selected directory is not available."
 msgstr "Избраната директория не е налична."
 
-#: includes/admin/sunshine-gallery.php:1874
+#: includes/admin/sunshine-gallery.php:1896
 msgid "Already uploaded to gallery"
 msgstr "Вече е качена в галерията"
 
 #. translators: %s is the upload directory
-#: includes/admin/sunshine-gallery.php:1889
+#: includes/admin/sunshine-gallery.php:1911
 #, php-format
 msgid "The selected file could not be copied to %s."
 msgstr "Избраният файл не може да бъде копиран в %s."
 
-#: includes/admin/sunshine-gallery.php:1904
+#: includes/admin/sunshine-gallery.php:1926
 msgid "Could not be added to the gallery"
 msgstr "Не можа да бъде добавено към галерията"
 
-#: includes/admin/sunshine-gallery.php:1921
+#: includes/admin/sunshine-gallery.php:1943
 msgid "No emails collected yet"
 msgstr "Все още няма събрани имейли"
 
-#: includes/admin/sunshine-gallery.php:1995
+#: includes/admin/sunshine-gallery.php:2017
 msgid "Add gallery name"
 msgstr "Добавяне на име на галерията"
 
@@ -3143,7 +3245,7 @@ msgid "Select All"
 msgstr "Избор на всичко"
 
 #: includes/admin/sunshine-order.php:434 includes/class-order.php:1058
-#: includes/class-sunshinephotocart.php:539 gallery.php:272 admin.php:237
+#: includes/class-sunshinephotocart.php:541 gallery.php:272 admin.php:237
 #: admin/customers.php:20 admin/customers.php:42 class-admin-gift-cards.php:189
 msgid "Order"
 msgstr "Поръчка"
@@ -3233,8 +3335,8 @@ msgid "Delivery/Shipping Method"
 msgstr "Доставка/Метод на доставка"
 
 #: includes/admin/sunshine-order.php:683
-#: includes/class-sunshinephotocart.php:588
-#: includes/class-sunshinephotocart.php:599 class-export-orders.php:514
+#: includes/class-sunshinephotocart.php:590
+#: includes/class-sunshinephotocart.php:601 class-export-orders.php:514
 #: class-export-orders.php:609
 msgid "Order Status"
 msgstr "Състояние на поръчката"
@@ -3311,7 +3413,7 @@ msgid "Image Data"
 msgstr "Данни за изображенията"
 
 #: includes/admin/sunshine-order.php:807 includes/admin/sunshine-order.php:844
-#: includes/class-sunshinephotocart.php:427 templates/admin/order-items.php:104
+#: includes/class-sunshinephotocart.php:429 templates/admin/order-items.php:104
 #: templates/cart/item.php:5 templates/cart/items.php:5
 #: templates/checkout/summary.php:12 templates/invoice/admin.php:214
 #: templates/invoice/admin.php:226 templates/order/item.php:5
@@ -3619,7 +3721,7 @@ msgstr "Не са открити сираци!"
 
 #: includes/admin/tools/orphans.php:162
 #: includes/admin/tools/refresh-photo-details.php:221
-#: includes/admin/tools/regenerate.php:450
+#: includes/admin/tools/regenerate.php:637
 #: includes/admin/tools/square-reconcile.php:184
 #: includes/admin/tools/unused-image-sizes.php:153 hooks.php:693
 msgid "Abort"
@@ -3681,7 +3783,8 @@ msgstr "Обновяване на данните на снимките за „%
 
 #: includes/admin/tools/refresh-photo-details.php:231
 #: includes/admin/tools/refresh-photo-details.php:256
-#: includes/admin/tools/regenerate.php:480
+#: includes/admin/tools/regenerate.php:667
+#: includes/admin/tools/regenerate.php:680
 msgid "Done!"
 msgstr "Готово!"
 
@@ -3695,7 +3798,8 @@ msgstr ""
 
 #: includes/admin/tools/regenerate.php:22
 #: includes/admin/tools/regenerate.php:25
-#: includes/admin/tools/regenerate.php:37
+#: includes/admin/tools/regenerate.php:39
+#: includes/admin/tools/regenerate.php:83
 msgid "Regenerate Images"
 msgstr "Регенериране на изображения"
 
@@ -3707,36 +3811,48 @@ msgstr ""
 "Ако сте променили размера на миниатюрата, размера на цифровото изтегляне или "
 "настройките на водния знак, трябва да регенерирате изображенията."
 
-#: includes/admin/tools/regenerate.php:193
+#: includes/admin/tools/regenerate.php:252
 msgid "Could not find original file to regenerate from"
 msgstr "Не можах да намеря оригиналния файл, от който да регенерирам"
 
-#: includes/admin/tools/regenerate.php:231
+#: includes/admin/tools/regenerate.php:290
 msgid "Could not download file from cloud storage for regeneration"
 msgstr "Не може да се изтегли файл от облачното хранилище за регенериране"
 
-#: includes/admin/tools/regenerate.php:240
+#: includes/admin/tools/regenerate.php:299
 msgid "Cloud Storage addon is required to regenerate this offloaded image"
 msgstr ""
 "Добавката Cloud Storage е необходима, за да се възстанови това прехвърлено "
 "изображение."
 
-#: includes/admin/tools/regenerate.php:269
+#: includes/admin/tools/regenerate.php:321
+msgid "Could not restore the original file from cloud storage"
+msgstr "Оригиналният файл не можа да бъде възстановен от облачното хранилище"
+
+#: includes/admin/tools/regenerate.php:335
 msgid "Original file is missing locally and no cloud-storage key is set."
 msgstr ""
 "Оригиналният файл липсва локално и няма зададен ключ за облачно хранилище."
 
 #. translators: %s is the gallery title
-#: includes/admin/tools/regenerate.php:435
+#: includes/admin/tools/regenerate.php:618
 #, php-format
 msgid "Regenerating images for \"%s\""
 msgstr "Регенериране на изображения за \"%s\""
 
-#: includes/admin/tools/regenerate.php:438
+#. translators: %d is the number of galleries
+#: includes/admin/tools/regenerate.php:622
+#, fuzzy, php-format
+msgid "Regenerating images for %d gallery"
+msgid_plural "Regenerating images for %d galleries"
+msgstr[0] "Регенериране на изображения за \"%s\""
+msgstr[1] "Регенериране на изображения за \"%s\""
+
+#: includes/admin/tools/regenerate.php:625
 msgid "Regenerating images"
 msgstr "Регенериране на изображения"
 
-#: includes/admin/tools/regenerate.php:473
+#: includes/admin/tools/regenerate.php:660
 msgid ""
 "Image did not fully upload because it is too large for your server to "
 "handle. Thumbnails and watermarks may not have been applied. Recommend "
@@ -3746,12 +3862,36 @@ msgstr ""
 "с него вашият сървър. Възможно е миниатюрите и водните знаци да не са били "
 "приложени. Препоръчваме да увеличите наличната памет."
 
-#: includes/admin/tools/regenerate.php:514
+#: includes/admin/tools/regenerate.php:710
+msgid "Sub-galleries Found"
+msgstr "Намерени подгалерии"
+
+#. translators: %d is the number of sub-galleries
+#: includes/admin/tools/regenerate.php:716
+#, php-format
+msgid ""
+"There is %d sub-gallery inside the galleries you picked. Do you want to "
+"regenerate its images too?"
+msgid_plural ""
+"There are %d sub-galleries inside the galleries you picked. Do you want to "
+"regenerate their images too?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/tools/regenerate.php:729
+msgid "Yes, include sub-galleries"
+msgstr "Да, включи подгалериите"
+
+#: includes/admin/tools/regenerate.php:732
+msgid "No, only the galleries I picked"
+msgstr "Не, само галериите, които избрах"
+
+#: includes/admin/tools/regenerate.php:754
 msgid "Watermark Settings Detected"
 msgstr "Настройки на воден знак"
 
 #. translators: %d is the number of images without watermark
-#: includes/admin/tools/regenerate.php:520
+#: includes/admin/tools/regenerate.php:760
 #, php-format
 msgid ""
 "You have %d image that does not have watermark enabled, but you have a "
@@ -3766,19 +3906,19 @@ msgstr[1] ""
 "Имаш %d изображения, за които не е активиран воден знак, но в общите си "
 "настройки имаш зададен воден знак."
 
-#: includes/admin/tools/regenerate.php:531
+#: includes/admin/tools/regenerate.php:771
 msgid "How would you like to proceed?"
 msgstr "Как бихте искали да продължите?"
 
-#: includes/admin/tools/regenerate.php:534
+#: includes/admin/tools/regenerate.php:774
 msgid "Apply watermark to all images"
 msgstr "Приложи воден знак към всички изображения"
 
-#: includes/admin/tools/regenerate.php:537
+#: includes/admin/tools/regenerate.php:777
 msgid "Keep current image watermark settings"
 msgstr "Запази текущите настройки за воден знак на изображението"
 
-#: includes/admin/tools/regenerate.php:574
+#: includes/admin/tools/regenerate.php:815
 msgid ""
 "No image found at this position. It may have been deleted since this run "
 "started."
@@ -3932,56 +4072,58 @@ msgstr "Един артикул е премахнат от количката в
 msgid ""
 "An item has been removed from your cart because one of its options is no "
 "longer available"
-msgstr "Един артикул беше премахнат от количката ти, защото една от опциите му вече не е налична"
+msgstr ""
+"Един артикул беше премахнат от количката ти, защото една от опциите му вече "
+"не е налична"
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:750
+#: includes/class-cart.php:751
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr "Отстъпката \"%s\" е премахната, защото вече не е валидна"
 
-#: includes/class-cart.php:1697
+#: includes/class-cart.php:1698
 msgid "Contact Information"
 msgstr "Информация за връзка"
 
-#: includes/class-cart.php:1702 includes/class-countries.php:3424
+#: includes/class-cart.php:1703 includes/class-countries.php:3424
 #: includes/functions/account.php:579 templates/account/signup.php:20
 #: class-export-orders.php:522
 msgid "First Name"
 msgstr "Име"
 
-#: includes/class-cart.php:1711 includes/class-countries.php:3433
+#: includes/class-cart.php:1712 includes/class-countries.php:3433
 #: includes/functions/account.php:587 templates/account/signup.php:27
 #: class-export-orders.php:523
 msgid "Last Name"
 msgstr "Фамилия"
 
-#: includes/class-cart.php:1737 templates/account/login.php:18
+#: includes/class-cart.php:1738 templates/account/login.php:18
 #: templates/account/signup.php:9 templates/shortcodes/password.php:4
 msgid "Password"
 msgstr "Парола"
 
-#: includes/class-cart.php:1739
+#: includes/class-cart.php:1740
 msgid "Optionally set a password"
 msgstr "По желание задайте парола"
 
-#: includes/class-cart.php:1756 templates/email/admin-receipt.php:198
+#: includes/class-cart.php:1757 templates/email/admin-receipt.php:198
 #: templates/email/customer-receipt.php:184
 #: templates/email/order-status.php:152 templates/invoice/admin.php:185
 #: templates/order/details.php:39 class-export-orders.php:526
 msgid "EU VAT Number"
 msgstr "Номер по ДДС на ЕС"
 
-#: includes/class-cart.php:1858
+#: includes/class-cart.php:1859
 msgid "Delivery Method"
 msgstr "Метод за доставка"
 
-#: includes/class-cart.php:1918 includes/class-cart.php:1935
+#: includes/class-cart.php:1919 includes/class-cart.php:1936
 #: templates/invoice/admin.php:174 class-export-orders.php:520
 msgid "Shipping Method"
 msgstr "Метод на доставка"
 
-#: includes/class-cart.php:1940 includes/class-cart.php:2452
+#: includes/class-cart.php:1941 includes/class-cart.php:2453
 msgid ""
 "Sorry, shipping is not available to the address you entered. Please double "
 "check the address or try a different shipping address."
@@ -3989,36 +4131,36 @@ msgstr ""
 "За съжаление доставка до адреса, който въведе, не е възможна. Провери адреса "
 "още веднъж или опитай с друг адрес за доставка."
 
-#: includes/class-cart.php:2001
+#: includes/class-cart.php:2002
 msgid "Use shipping address as billing address"
 msgstr "Използване на адреса за доставка като адрес за фактуриране"
 
-#: includes/class-cart.php:2039
+#: includes/class-cart.php:2040
 msgid "Same as shipping address"
 msgstr "Същият като адреса за доставка"
 
-#: includes/class-cart.php:2091
+#: includes/class-cart.php:2092
 msgid "Payment"
 msgstr "Плащане"
 
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:2101
+#: includes/class-cart.php:2102
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr "Използвайте моите кредити (%s налични)"
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:2109 includes/class-payment-method.php:242
+#: includes/class-cart.php:2110 includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr "Подаване на поръчка и плащане %s"
 
-#: includes/class-cart.php:2111
+#: includes/class-cart.php:2112
 msgid "Submit Order for Free"
 msgstr "Подайте поръчка безплатно"
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:2136
+#: includes/class-cart.php:2137
 #, php-format
 msgid ""
 "By submitting this order, you agree to our <a href=\"%1$s\" "
@@ -4028,57 +4170,57 @@ msgstr ""
 "target=\"_blank\">%2$s</a>"
 
 #. translators: %s is the section name
-#: includes/class-cart.php:2177
+#: includes/class-cart.php:2178
 #, php-format
 msgid "Edit %s"
 msgstr "Редактирай %s"
 
-#: includes/class-cart.php:2195
+#: includes/class-cart.php:2196
 msgid "Next Step"
 msgstr "Следваща Стъпка"
 
-#: includes/class-cart.php:2372
+#: includes/class-cart.php:2373
 msgid "Invalid checkout section"
 msgstr "Невалиден раздел за касиране"
 
-#: includes/class-cart.php:2388
+#: includes/class-cart.php:2389
 msgid "Field contains invalid data"
 msgstr "Полето съдържа невалидни данни"
 
 #. translators: %s is the field name
-#: includes/class-cart.php:2411
+#: includes/class-cart.php:2412
 #, php-format
 msgid "%s is required"
 msgstr "Задължително поле %s"
 
-#: includes/class-cart.php:2423 frontend.php:173
+#: includes/class-cart.php:2424 frontend.php:173
 msgid "Invalid email"
 msgstr "Невалиден e-mail адрес"
 
-#: includes/class-cart.php:2528 includes/class-cart.php:2933
-#: includes/class-cart.php:2941
+#: includes/class-cart.php:2529 includes/class-cart.php:2934
+#: includes/class-cart.php:2942
 msgid "Please select a payment method before completing your order."
 msgstr "Избери метод на плащане, преди да завършиш поръчката си."
 
-#: includes/class-cart.php:2540 includes/class-cart.php:2792
+#: includes/class-cart.php:2541 includes/class-cart.php:2793
 msgid "Please select a shipping method before completing your order."
 msgstr "Избери метод за доставка, преди да завършиш поръчката си."
 
 #. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
-#: includes/class-cart.php:2661
+#: includes/class-cart.php:2662
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
 msgstr "Попълни следното, преди да изпратиш поръчката си: %s"
 
-#: includes/class-cart.php:2671
+#: includes/class-cart.php:2672
 msgid "Please log in or create an account to complete this order"
 msgstr "Влез или си създай акаунт, за да завършиш тази поръчка"
 
-#: includes/class-cart.php:2704
+#: includes/class-cart.php:2705
 msgid "Customer is trying to pay again"
 msgstr "Клиентът се опитва да плати отново"
 
-#: includes/class-cart.php:2717
+#: includes/class-cart.php:2718
 msgid ""
 "Error encountered during checkout process and your order has already been "
 "marked as paid."
@@ -4086,19 +4228,19 @@ msgstr ""
 "По време на процеса на поръчка е възникнала грешка и поръчката ви вече е "
 "отбелязана като платена."
 
-#: includes/class-cart.php:2717 includes/class-cart.php:3238
+#: includes/class-cart.php:2718 includes/class-cart.php:3239
 msgid "View the order"
 msgstr "Преглед на поръчката"
 
-#: includes/class-cart.php:2729
+#: includes/class-cart.php:2730
 msgid "No payment method selected"
 msgstr "Не е избран метод на плащане"
 
-#: includes/class-cart.php:2858
+#: includes/class-cart.php:2859
 msgid "Failed to initialize order"
 msgstr "Неуспешна инициализация на поръчката"
 
-#: includes/class-cart.php:2901
+#: includes/class-cart.php:2902
 msgid ""
 "Something happened while trying to process your order. Please contact the "
 "site owner for more details."
@@ -4106,35 +4248,40 @@ msgstr ""
 "Нещо се е случило, докато се опитвахме да обработим поръчката ви. Моля, "
 "свържете се със собственика на сайта за повече информация."
 
-#: includes/class-cart.php:2966
+#: includes/class-cart.php:2967
 msgid "No payment method"
 msgstr "Няма метод на плащане"
 
 #. translators: 1: store credit the order used, 2: store credit the customer had left
-#: includes/class-cart.php:3048
+#: includes/class-cart.php:3049
 #, php-format
 msgid ""
 "This order used %1$s of store credit, but the customer only had %2$s left "
 "when it was paid. The difference was not collected."
-msgstr "Тази поръчка използва %1$s кредит в магазина, но при плащането клиентът е имал само %2$s. Разликата не е събрана."
+msgstr ""
+"Тази поръчка използва %1$s кредит в магазина, но при плащането клиентът е "
+"имал само %2$s. Разликата не е събрана."
 
-#: includes/class-cart.php:3128
+#: includes/class-cart.php:3129
 msgid "Your store credit has changed. Please review your order and try again."
-msgstr "Кредитът ти в магазина се промени. Прегледай поръчката си и опитай отново."
+msgstr ""
+"Кредитът ти в магазина се промени. Прегледай поръчката си и опитай отново."
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:3136
+#: includes/class-cart.php:3137
 #, php-format
 msgid ""
 "Discount \"%s\" can no longer be used. Please review your order and try "
 "again."
-msgstr "Отстъпката „%s“ вече не може да се използва. Прегледай поръчката си и опитай отново."
+msgstr ""
+"Отстъпката „%s“ вече не може да се използва. Прегледай поръчката си и опитай "
+"отново."
 
-#: includes/class-cart.php:3155 includes/functions/account.php:250
+#: includes/class-cart.php:3156 includes/functions/account.php:250
 msgid "Too many signup attempts, please try again later"
 msgstr "Твърде много опити за регистрация, опитай отново по-късно"
 
-#: includes/class-cart.php:3167
+#: includes/class-cart.php:3168
 msgid ""
 "User account already exists with that email address - please login to "
 "continue"
@@ -4142,7 +4289,7 @@ msgstr ""
 "Потребителският акаунт вече съществува с този имейл адрес - моля, влезте, за "
 "да продължите"
 
-#: includes/class-cart.php:3238
+#: includes/class-cart.php:3239
 msgid "It appears your previous checkout has already been processed."
 msgstr "Изглежда, че предишната ви поръчка вече е била обработена."
 
@@ -13014,7 +13161,7 @@ msgstr "Съжаляваме, но нямате право да видите т�
 
 #: includes/class-frontend.php:989 includes/functions/add-to-cart.php:17
 #: includes/functions/comments.php:16 includes/functions/comments.php:63
-#: includes/functions/image.php:380 includes/functions/share.php:16
+#: includes/functions/image.php:396 includes/functions/share.php:16
 #: includes/functions/store.php:11 includes/functions/store.php:137
 #: includes/functions/store.php:192 includes/functions/template.php:373
 #: frontend.php:668 frontend.php:956
@@ -13136,7 +13283,9 @@ msgstr "%s такса"
 msgid ""
 "%1$s can't take payments under %2$s. Add more to your order or choose "
 "another way to pay."
-msgstr "%1$s не приема плащания под %2$s. Добави още към поръчката си или избери друг начин на плащане."
+msgstr ""
+"%1$s не приема плащания под %2$s. Добави още към поръчката си или избери "
+"друг начин на плащане."
 
 #. translators: %s is the add-on name, such as "Stripe Pro"
 #: includes/class-payment-method.php:402
@@ -13178,270 +13327,270 @@ msgstr "ID на инстанцията: %s"
 msgid "Shipping or delivery"
 msgstr "Доставка или доставяне"
 
-#: includes/class-sunshinephotocart.php:378
-#: includes/class-sunshinephotocart.php:540 common.php:7 common.php:47
+#: includes/class-sunshinephotocart.php:380
+#: includes/class-sunshinephotocart.php:542 common.php:7 common.php:47
 #: discounts.php:36 gift-cards.php:98
 msgid "Add New"
 msgstr "Добави нов"
 
-#: includes/class-sunshinephotocart.php:379
+#: includes/class-sunshinephotocart.php:381
 msgid "Add New Gallery"
 msgstr "Добави нова Галерия"
 
-#: includes/class-sunshinephotocart.php:380
+#: includes/class-sunshinephotocart.php:382
 msgid "New Gallery"
 msgstr "Нова Галерия"
 
-#: includes/class-sunshinephotocart.php:381 includes/functions/misc.php:497
+#: includes/class-sunshinephotocart.php:383 includes/functions/misc.php:499
 msgid "Edit Gallery"
 msgstr "Редактиране на галерия"
 
-#: includes/class-sunshinephotocart.php:382
+#: includes/class-sunshinephotocart.php:384
 msgid "View Gallery"
 msgstr "Виж галерия"
 
-#: includes/class-sunshinephotocart.php:383
+#: includes/class-sunshinephotocart.php:385
 msgid "All Galleries"
 msgstr "Всички Галерии"
 
-#: includes/class-sunshinephotocart.php:384
+#: includes/class-sunshinephotocart.php:386
 msgid "Search Galleries"
 msgstr "Търсене в галерии"
 
-#: includes/class-sunshinephotocart.php:385
+#: includes/class-sunshinephotocart.php:387
 msgid "Parent Gallery:"
 msgstr "Галерия за родители:"
 
-#: includes/class-sunshinephotocart.php:387
+#: includes/class-sunshinephotocart.php:389
 msgid "No galleries found in Trash"
 msgstr "Няма намерени галерии в Кошче"
 
-#: includes/class-sunshinephotocart.php:388
+#: includes/class-sunshinephotocart.php:390
 msgid "Gallery Featured Image"
 msgstr "Галерия Препоръчано изображение"
 
-#: includes/class-sunshinephotocart.php:389
+#: includes/class-sunshinephotocart.php:391
 msgid "Set featured image image"
 msgstr "Задаване на изображение на изображението"
 
-#: includes/class-sunshinephotocart.php:390
+#: includes/class-sunshinephotocart.php:392
 msgid "Remove featured image"
 msgstr "Премахване на избраното изображение"
 
-#: includes/class-sunshinephotocart.php:391
+#: includes/class-sunshinephotocart.php:393
 msgid "Use as featured image"
 msgstr "Използване като избрано изображение"
 
-#: includes/class-sunshinephotocart.php:392
+#: includes/class-sunshinephotocart.php:394
 msgid "Gallery archives"
 msgstr "Архив на галерията"
 
-#: includes/class-sunshinephotocart.php:393
+#: includes/class-sunshinephotocart.php:395
 msgid "Insert into gallery"
 msgstr "Вмъкване в галерия"
 
-#: includes/class-sunshinephotocart.php:394
+#: includes/class-sunshinephotocart.php:396
 msgid "Uploaded to this gallery"
 msgstr "Качени в тази галерия"
 
-#: includes/class-sunshinephotocart.php:395
+#: includes/class-sunshinephotocart.php:397
 msgid "Filter galleries list"
 msgstr "Списък с галерии за филтриране"
 
-#: includes/class-sunshinephotocart.php:396
+#: includes/class-sunshinephotocart.php:398
 msgid "Galleries list navigation"
 msgstr "Навигация в списъка с галерии"
 
-#: includes/class-sunshinephotocart.php:397
+#: includes/class-sunshinephotocart.php:399
 msgid "Galleries list"
 msgstr "Списък на галериите"
 
-#: includes/class-sunshinephotocart.php:428
+#: includes/class-sunshinephotocart.php:430
 msgid "Add Product"
 msgstr "Добави продукт"
 
-#: includes/class-sunshinephotocart.php:429
+#: includes/class-sunshinephotocart.php:431
 msgid "Add New Product"
 msgstr "Добави нов продукт"
 
-#: includes/class-sunshinephotocart.php:430
+#: includes/class-sunshinephotocart.php:432
 msgid "Edit Product"
 msgstr "Редактиране на продукта"
 
-#: includes/class-sunshinephotocart.php:431
+#: includes/class-sunshinephotocart.php:433
 msgid "New Product"
 msgstr "Нов Продукт"
 
-#: includes/class-sunshinephotocart.php:432
+#: includes/class-sunshinephotocart.php:434
 msgid "All Products"
 msgstr "Всички продукти"
 
-#: includes/class-sunshinephotocart.php:433
+#: includes/class-sunshinephotocart.php:435
 msgid "View Products"
 msgstr "Преглед на продукти"
 
-#: includes/class-sunshinephotocart.php:434
+#: includes/class-sunshinephotocart.php:436
 msgid "Search Products"
 msgstr "Търсете продукти"
 
-#: includes/class-sunshinephotocart.php:435
+#: includes/class-sunshinephotocart.php:437
 msgid "No products found"
 msgstr "Не са открити продукти"
 
-#: includes/class-sunshinephotocart.php:436
+#: includes/class-sunshinephotocart.php:438
 msgid "No products found in trash"
 msgstr "Няма намерени продукти в кошчето за боклук"
 
-#: includes/class-sunshinephotocart.php:462
+#: includes/class-sunshinephotocart.php:464
 msgid "Product Categories"
 msgstr "Продуктови категории"
 
-#: includes/class-sunshinephotocart.php:463
-#: includes/class-sunshinephotocart.php:479
+#: includes/class-sunshinephotocart.php:465
+#: includes/class-sunshinephotocart.php:481
 msgid "Product Category"
 msgstr "Продуктова категория"
 
-#: includes/class-sunshinephotocart.php:464
+#: includes/class-sunshinephotocart.php:466
 msgid "Search Product Categories"
 msgstr "Търсене на продуктови категории"
 
-#: includes/class-sunshinephotocart.php:465
+#: includes/class-sunshinephotocart.php:467
 msgid "All Product Categories"
 msgstr "Всички Категории Артикули"
 
-#: includes/class-sunshinephotocart.php:466
+#: includes/class-sunshinephotocart.php:468
 msgid "Parent Product Category"
 msgstr "Родителска продуктова категория"
 
-#: includes/class-sunshinephotocart.php:467
+#: includes/class-sunshinephotocart.php:469
 msgid "Parent Product Category:"
 msgstr "Категория на родителския продукт:"
 
-#: includes/class-sunshinephotocart.php:468
+#: includes/class-sunshinephotocart.php:470
 msgid "Edit Product Category"
 msgstr "Редактиране на Продуктова Категория"
 
-#: includes/class-sunshinephotocart.php:469
+#: includes/class-sunshinephotocart.php:471
 msgid "Update Product Category"
 msgstr "Обновяване на Продуктова Категория"
 
-#: includes/class-sunshinephotocart.php:470
+#: includes/class-sunshinephotocart.php:472
 msgid "Add New Product Category"
 msgstr "Добавяне на Нова Продуктова Категория"
 
-#: includes/class-sunshinephotocart.php:471
+#: includes/class-sunshinephotocart.php:473
 msgid "New Product Category Name"
 msgstr "Нова Продуктова Категория"
 
-#: includes/class-sunshinephotocart.php:472
+#: includes/class-sunshinephotocart.php:474
 msgid "Separate categories with commas"
 msgstr "Отделни категории със запетаи"
 
-#: includes/class-sunshinephotocart.php:473
+#: includes/class-sunshinephotocart.php:475
 msgid "Choose from the most used categories"
 msgstr "Изберете от най-използваните категории"
 
-#: includes/class-sunshinephotocart.php:504 class-admin-automated-emails.php:93
+#: includes/class-sunshinephotocart.php:506 class-admin-automated-emails.php:93
 msgid "Price Levels"
 msgstr "Нива на цените"
 
-#: includes/class-sunshinephotocart.php:506
+#: includes/class-sunshinephotocart.php:508
 msgid "Search Price Levels"
 msgstr "Търсене на ценови нива"
 
-#: includes/class-sunshinephotocart.php:507
+#: includes/class-sunshinephotocart.php:509
 msgid "All Price Levels"
 msgstr "Всички ценови нива"
 
-#: includes/class-sunshinephotocart.php:508
+#: includes/class-sunshinephotocart.php:510
 msgid "Parent Price Level"
 msgstr "Ниво на цената на родителя"
 
-#: includes/class-sunshinephotocart.php:509
+#: includes/class-sunshinephotocart.php:511
 msgid "Parent Price Level:"
 msgstr "Ниво на цената на родителя:"
 
-#: includes/class-sunshinephotocart.php:510
+#: includes/class-sunshinephotocart.php:512
 msgid "Edit Price Level"
 msgstr "Редактиране на нивото на цената"
 
-#: includes/class-sunshinephotocart.php:511
+#: includes/class-sunshinephotocart.php:513
 msgid "Update Price Level"
 msgstr "Актуализиране на нивото на цената"
 
-#: includes/class-sunshinephotocart.php:512
+#: includes/class-sunshinephotocart.php:514
 msgid "Add New Price Level"
 msgstr "Добавяне на ново ценово ниво"
 
-#: includes/class-sunshinephotocart.php:513
+#: includes/class-sunshinephotocart.php:515
 msgid "New Price Level"
 msgstr "Ново ценово ниво"
 
-#: includes/class-sunshinephotocart.php:541
+#: includes/class-sunshinephotocart.php:543
 msgid "Add New Order"
 msgstr "Добавете Нова Поръчка"
 
-#: includes/class-sunshinephotocart.php:542
+#: includes/class-sunshinephotocart.php:544
 msgid "Edit Order"
 msgstr "Редакция на Поръчка"
 
-#: includes/class-sunshinephotocart.php:543
+#: includes/class-sunshinephotocart.php:545
 msgid "New Order"
 msgstr "Нова Поръчка"
 
-#: includes/class-sunshinephotocart.php:544
+#: includes/class-sunshinephotocart.php:546
 msgid "All Orders"
 msgstr "Всички поръчки"
 
-#: includes/class-sunshinephotocart.php:545
+#: includes/class-sunshinephotocart.php:547
 msgid "View Orders"
 msgstr "Преглед на поръчките"
 
-#: includes/class-sunshinephotocart.php:546
+#: includes/class-sunshinephotocart.php:548
 msgid "Search Orders"
 msgstr "Поръчки за търсене"
 
-#: includes/class-sunshinephotocart.php:547
+#: includes/class-sunshinephotocart.php:549
 msgid "No orders found"
 msgstr "Няма намерени поръчки"
 
-#: includes/class-sunshinephotocart.php:548
+#: includes/class-sunshinephotocart.php:550
 msgid "No orders found in trash"
 msgstr "Няма намерени поръчки в кошчето"
 
-#: includes/class-sunshinephotocart.php:587
+#: includes/class-sunshinephotocart.php:589
 msgid "Order Statuses"
 msgstr "Статуси на поръчките"
 
-#: includes/class-sunshinephotocart.php:589
+#: includes/class-sunshinephotocart.php:591
 msgid "Search Order Status"
 msgstr "Търсене на статус на поръчката"
 
-#: includes/class-sunshinephotocart.php:590
+#: includes/class-sunshinephotocart.php:592
 msgid "All Order Status"
 msgstr "Статус на всички поръчки"
 
-#: includes/class-sunshinephotocart.php:591
+#: includes/class-sunshinephotocart.php:593
 msgid "Parent Order Status"
 msgstr "Статус на родителската заповед"
 
-#: includes/class-sunshinephotocart.php:592
+#: includes/class-sunshinephotocart.php:594
 msgid "Parent Order Status:"
 msgstr "Статус на родителската заповед:"
 
-#: includes/class-sunshinephotocart.php:593
+#: includes/class-sunshinephotocart.php:595
 msgid "Edit Order Status"
 msgstr "Редактиране на статуса на поръчката"
 
-#: includes/class-sunshinephotocart.php:594
+#: includes/class-sunshinephotocart.php:596
 msgid "Update Order Status"
 msgstr "Актуализиране на статуса на поръчката"
 
-#: includes/class-sunshinephotocart.php:595
+#: includes/class-sunshinephotocart.php:597
 msgid "Add New Order Status"
 msgstr "Добавяне на статус на нова поръчка"
 
-#: includes/class-sunshinephotocart.php:596
+#: includes/class-sunshinephotocart.php:598
 msgid "New Order Status"
 msgstr "Статус на Нова поръчка"
 
@@ -13477,7 +13626,10 @@ msgid ""
 "Email sent to admins when a payment can't be accepted for an order or an "
 "order is marked Failed. Sent to the recipients below, or the site admin "
 "email when left empty."
-msgstr "Имейл до администраторите, когато плащане по поръчка не може да бъде прието или поръчка е отбелязана като Неуспешна. Изпраща се до получателите по-долу или до имейла на администратора на сайта, ако полето е празно."
+msgstr ""
+"Имейл до администраторите, когато плащане по поръчка не може да бъде прието "
+"или поръчка е отбелязана като Неуспешна. Изпраща се до получателите по-долу "
+"или до имейла на администратора на сайта, ако полето е празно."
 
 #. translators: %1$s is the order name, %2$s is the site name
 #: includes/emails/class-email-admin-payment-problem.php:19
@@ -13493,7 +13645,10 @@ msgstr "Изпращай, когато"
 msgid ""
 "A payment didn't match the order (wrong amount, currency or account, or paid "
 "for another order). The customer may have paid, but the order stayed unpaid."
-msgstr "Плащане не съвпадна с поръчката (грешна сума, валута или акаунт, или е платено за друга поръчка). Клиентът може да е платил, но поръчката е останала неплатена."
+msgstr ""
+"Плащане не съвпадна с поръчката (грешна сума, валута или акаунт, или е "
+"платено за друга поръчка). Клиентът може да е платил, но поръчката е "
+"останала неплатена."
 
 #: includes/emails/class-email-admin-payment-problem.php:49
 msgid "A payment was declined or cancelled at the payment service"
@@ -13705,7 +13860,9 @@ msgstr "Невалиден email"
 msgid ""
 "An account could not be created with that email address. If you already have "
 "one, log in or reset your password."
-msgstr "Не можа да се създаде акаунт с този имейл адрес. Ако вече имаш акаунт, влез или смени паролата си."
+msgstr ""
+"Не можа да се създаде акаунт с този имейл адрес. Ако вече имаш акаунт, влез "
+"или смени паролата си."
 
 #. translators: %s: User email address
 #: includes/functions/account.php:301
@@ -13726,7 +13883,9 @@ msgstr "Невалиден опит за възстановяване на па�
 msgid ""
 "If there is an account for %s, an email has been sent to it with information "
 "on resetting your password"
-msgstr "Ако има акаунт за %s, на него е изпратен имейл с информация за смяна на паролата"
+msgstr ""
+"Ако има акаунт за %s, на него е изпратен имейл с информация за смяна на "
+"паролата"
 
 #: includes/functions/account.php:400
 msgid "Passwords do not match"
@@ -14001,8 +14160,10 @@ msgstr "Въведи поне един имейл адрес"
 msgid "You can share your favorites with up to %d email address at a time"
 msgid_plural ""
 "You can share your favorites with up to %d email addresses at a time"
-msgstr[0] "Можеш да споделиш наблюдаваните си с най-много %d имейл адрес наведнъж"
-msgstr[1] "Можеш да споделиш наблюдаваните си с най-много %d имейл адреса наведнъж"
+msgstr[0] ""
+"Можеш да споделиш наблюдаваните си с най-много %d имейл адрес наведнъж"
+msgstr[1] ""
+"Можеш да споделиш наблюдаваните си с най-много %d имейл адреса наведнъж"
 
 #. translators: %s is the email address that was entered
 #: includes/functions/favorites.php:390
@@ -14856,7 +15017,9 @@ msgstr "Такси за транзакции"
 msgid ""
 "PayPal payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "PayPal плащане %1$s за %2$s не съвпада с общата сума на поръчката, поръчката не е завършена"
+msgstr ""
+"PayPal плащане %1$s за %2$s не съвпада с общата сума на поръчката, поръчката "
+"не е завършена"
 
 #: includes/payment-methods/paypal-legacy.php:415
 msgid "Customer cancelled the PayPal payment"
@@ -15105,14 +15268,18 @@ msgstr "Не успя да улови плащане в PayPal"
 msgid ""
 "PayPal capture %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "PayPal събиране %1$s за %2$s не съвпада с общата сума на поръчката, поръчката не е завършена"
+msgstr ""
+"PayPal събиране %1$s за %2$s не съвпада с общата сума на поръчката, "
+"поръчката не е завършена"
 
 #: includes/payment-methods/paypal.php:716
 #: includes/payment-methods/square.php:1714
 #: includes/payment-methods/stripe.php:2962
 msgid ""
 "Your payment did not match the order total, please contact the site owner"
-msgstr "Плащането ти не съвпадна с общата сума на поръчката, свържи се със собственика на сайта"
+msgstr ""
+"Плащането ти не съвпадна с общата сума на поръчката, свържи се със "
+"собственика на сайта"
 
 #. translators: %s is the payment method name
 #: includes/payment-methods/paypal.php:725
@@ -15336,13 +15503,18 @@ msgstr "Токенът Square е успешно обновен"
 msgid ""
 "Square: your connection can no longer renew and will stop taking payments "
 "when the current key expires. Disconnect and connect Square again now."
-msgstr "Square: връзката ти вече не може да се подновява и ще спре да приема плащания, когато текущият ключ изтече. Прекъсни и свържи Square отново сега."
+msgstr ""
+"Square: връзката ти вече не може да се подновява и ще спре да приема "
+"плащания, когато текущият ключ изтече. Прекъсни и свържи Square отново сега."
 
 #: includes/payment-methods/square.php:697
 msgid ""
 "Square: could not reach Square to renew the connection. It will try again. "
 "If this message keeps coming back, disconnect and connect Square again."
-msgstr "Square: не можа да се свърже със Square, за да поднови връзката. Ще опита отново. Ако това съобщение продължава да се появява, прекъсни и свържи Square отново."
+msgstr ""
+"Square: не можа да се свърже със Square, за да поднови връзката. Ще опита "
+"отново. Ако това съобщение продължава да се появява, прекъсни и свържи "
+"Square отново."
 
 #. translators: %s: link to the Square settings
 #: includes/payment-methods/square.php:833
@@ -15350,13 +15522,17 @@ msgstr "Square: не можа да се свърже със Square, за да п
 msgid ""
 "Square: <a href=\"%s\">disconnect and connect Square again</a> to use the "
 "more secure connection, where only your site holds your Square keys."
-msgstr "Square: <a href=\"%s\">прекъсни и свържи Square отново</a>, за да използваш по-сигурната връзка, при която само твоят сайт пази ключовете ти за Square."
+msgstr ""
+"Square: <a href=\"%s\">прекъсни и свържи Square отново</a>, за да използваш "
+"по-сигурната връзка, при която само твоят сайт пази ключовете ти за Square."
 
 #: includes/payment-methods/square.php:843
 msgid ""
 "Square: your connection has not renewed lately and will stop working soon. "
 "Disconnect and connect Square again to keep taking payments."
-msgstr "Square: връзката ти не е подновявана отдавна и скоро ще спре да работи. Прекъсни и свържи Square отново, за да продължиш да приемаш плащания."
+msgstr ""
+"Square: връзката ти не е подновявана отдавна и скоро ще спре да работи. "
+"Прекъсни и свържи Square отново, за да продължиш да приемаш плащания."
 
 #. translators: %s is a comma-separated list of discount codes
 #: includes/payment-methods/square.php:1237
@@ -15417,7 +15593,9 @@ msgstr ""
 msgid ""
 "Square payment %1$s was declined or cancelled (status %2$s), so the order "
 "was not marked paid"
-msgstr "Square плащане %1$s беше отказано или отменено (статус %2$s), затова поръчката не е отбелязана като платена"
+msgstr ""
+"Square плащане %1$s беше отказано или отменено (статус %2$s), затова "
+"поръчката не е отбелязана като платена"
 
 #. translators: 1: Square payment ID, 2: amount paid in Square
 #: includes/payment-methods/square.php:1707
@@ -15426,11 +15604,14 @@ msgstr "Square плащане %1$s беше отказано или отмене
 msgid ""
 "Square payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "Square плащане %1$s за %2$s не съвпада с общата сума на поръчката, поръчката не е завършена"
+msgstr ""
+"Square плащане %1$s за %2$s не съвпада с общата сума на поръчката, поръчката "
+"не е завършена"
 
 #: includes/payment-methods/square.php:1712
 msgid "Your payment was declined. Please try again or use another way to pay."
-msgstr "Плащането ти беше отказано. Опитай отново или избери друг начин на плащане."
+msgstr ""
+"Плащането ти беше отказано. Опитай отново или избери друг начин на плащане."
 
 #: includes/payment-methods/square.php:1849
 msgid "Every 15 minutes"
@@ -15565,7 +15746,9 @@ msgstr "Това плащане не можа да бъде проверено �
 msgid ""
 "%s can't take a payment this small. Add more to your order or choose another "
 "way to pay."
-msgstr "%s не може да приеме толкова малко плащане. Добави още към поръчката си или избери друг начин на плащане."
+msgstr ""
+"%s не може да приеме толкова малко плащане. Добави още към поръчката си или "
+"избери друг начин на плащане."
 
 #: includes/payment-methods/stripe.php:382
 #: includes/payment-methods/stripe.php:3838
@@ -15965,7 +16148,9 @@ msgstr "Stripe е успешно изключен"
 msgid ""
 "Stripe payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "Stripe плащане %1$s за %2$s не съвпада с общата сума на поръчката, поръчката не е завършена"
+msgstr ""
+"Stripe плащане %1$s за %2$s не съвпада с общата сума на поръчката, поръчката "
+"не е завършена"
 
 #: includes/payment-methods/stripe.php:1748
 #: includes/payment-methods/stripe.php:1749
@@ -16013,7 +16198,8 @@ msgstr ""
 #: includes/payment-methods/stripe.php:1970
 #, php-format
 msgid "%s could not be loaded. Please try again or choose another way to pay."
-msgstr "%s не можа да се зареди. Опитай отново или избери друг начин на плащане."
+msgstr ""
+"%s не можа да се зареди. Опитай отново или избери друг начин на плащане."
 
 #: includes/payment-methods/stripe.php:2181
 msgid "Sales Tax"
@@ -16026,7 +16212,9 @@ msgstr "Данък върху продажбите"
 msgid ""
 "This order could not be sent to Stripe for the right amount, please contact "
 "the site owner"
-msgstr "Тази поръчка не можа да бъде изпратена към Stripe с правилната сума, свържи се със собственика на сайта"
+msgstr ""
+"Тази поръчка не можа да бъде изпратена към Stripe с правилната сума, свържи "
+"се със собственика на сайта"
 
 #. translators: 1: product name, 2: quantity
 #: includes/payment-methods/stripe.php:2645
@@ -16144,13 +16332,18 @@ msgstr "За обработка на поръчки за тестове"
 msgid ""
 "The Test payment method is on and every customer can use it, so orders can "
 "be placed without paying. Turn it off when you are done testing."
-msgstr "Тестовият метод на плащане е включен и всеки клиент може да го използва, така че поръчки могат да се правят без плащане. Изключи го, когато приключиш с тестването."
+msgstr ""
+"Тестовият метод на плащане е включен и всеки клиент може да го използва, "
+"така че поръчки могат да се правят без плащане. Изключи го, когато приключиш "
+"с тестването."
 
 #: includes/payment-methods/test.php:24
 msgid ""
 "The Test payment method is on. Only admins can use it at checkout. Turn it "
 "off when you are done testing."
-msgstr "Тестовият метод на плащане е включен. Само администратори могат да го използват при плащане. Изключи го, когато приключиш с тестването."
+msgstr ""
+"Тестовият метод на плащане е включен. Само администратори могат да го "
+"използват при плащане. Изключи го, когато приключиш с тестването."
 
 #: includes/payment-methods/test.php:27
 msgid "Payment method settings"
@@ -16164,7 +16357,10 @@ msgstr "Разреши на клиентите"
 msgid ""
 "Let customers who are not admins use this payment method. Their orders are "
 "marked paid without any payment, so only turn this on while testing."
-msgstr "Позволи на клиенти, които не са администратори, да използват този метод на плащане. Поръчките им се отбелязват като платени без никакво плащане, затова го включвай само докато тестваш."
+msgstr ""
+"Позволи на клиенти, които не са администратори, да използват този метод на "
+"плащане. Поръчките им се отбелязват като платени без никакво плащане, затова "
+"го включвай само докато тестваш."
 
 #: includes/shipping-methods/flat-rate.php:7
 msgid "Flat Rate"
@@ -16557,13 +16753,17 @@ msgstr "Състояние на поръчката"
 msgid ""
 "Check this payment in %s's dashboard before refunding or marking the order "
 "paid."
-msgstr "Провери това плащане в таблото на %s, преди да възстановиш сумата или да отбележиш поръчката като платена."
+msgstr ""
+"Провери това плащане в таблото на %s, преди да възстановиш сумата или да "
+"отбележиш поръчката като платена."
 
 #: templates/email/admin-payment-problem.php:36
 msgid ""
 "Check this payment in your payment processor's dashboard before refunding or "
 "marking the order paid."
-msgstr "Провери това плащане в таблото на платежния си доставчик, преди да възстановиш сумата или да отбележиш поръчката като платена."
+msgstr ""
+"Провери това плащане в таблото на платежния си доставчик, преди да "
+"възстановиш сумата или да отбележиш поръчката като платена."
 
 #: templates/email/admin-receipt.php:13
 msgid "View Invoice"
@@ -16984,7 +17184,9 @@ msgstr "Максимална сума на поръчката"
 msgid ""
 "Only make this shipping option available when cart contains at least one of "
 "the selected products. Leave empty for all products."
-msgstr "Показвай тази опция за доставка само когато количката съдържа поне един от избраните продукти. Остави празно за всички продукти."
+msgstr ""
+"Показвай тази опция за доставка само когато количката съдържа поне един от "
+"избраните продукти. Остави празно за всички продукти."
 
 #: hooks.php:52
 msgid "Include Galleries"
@@ -17430,7 +17632,9 @@ msgstr "Няма отговор от процесора на кредитни к
 msgid ""
 "Authorize.net approved only %1$s of the %2$s total on a prepaid card. The "
 "order was not paid and the partial charge was cancelled."
-msgstr "Authorize.net одобри само %1$s от общо %2$s по предплатена карта. Поръчката не е платена, а частичното плащане е отменено."
+msgstr ""
+"Authorize.net одобри само %1$s от общо %2$s по предплатена карта. Поръчката "
+"не е платена, а частичното плащане е отменено."
 
 #. translators: %s: Authorize.net transaction ID
 #: class-authorizenet.php:335
@@ -17438,19 +17642,25 @@ msgstr "Authorize.net одобри само %1$s от общо %2$s по пре�
 msgid ""
 "Could not cancel the partial Authorize.net charge %s. Void it in your "
 "Authorize.net account."
-msgstr "Частичното плащане в Authorize.net %s не можа да бъде отменено. Анулирай го в акаунта си в Authorize.net."
+msgstr ""
+"Частичното плащане в Authorize.net %s не можа да бъде отменено. Анулирай го "
+"в акаунта си в Authorize.net."
 
 #: class-authorizenet.php:342
 msgid ""
 "Your card does not have enough on it to pay the full order total, so it was "
 "not charged. Please use another card."
-msgstr "Картата ти няма достатъчно наличност за цялата сума на поръчката, затова не е таксувана. Използвай друга карта."
+msgstr ""
+"Картата ти няма достатъчно наличност за цялата сума на поръчката, затова не "
+"е таксувана. Използвай друга карта."
 
 #: class-authorizenet.php:353
 msgid ""
 "Authorize.net authorized the card but did not charge it yet. Capture the "
 "payment in your Authorize.net account."
-msgstr "Authorize.net одобри картата, но още не я е таксувал. Събери плащането в акаунта си в Authorize.net."
+msgstr ""
+"Authorize.net одобри картата, но още не я е таксувал. Събери плащането в "
+"акаунта си в Authorize.net."
 
 #. translators: 1: Authorize.net transaction ID, 2: Authorize.net reason code
 #: class-authorizenet.php:367
@@ -17459,7 +17669,10 @@ msgid ""
 "Authorize.net is holding payment %1$s for review (reason %2$s). The order "
 "stays Pending. Approve or decline it in your Authorize.net account, then "
 "update this order."
-msgstr "Authorize.net задържа плащане %1$s за преглед (причина %2$s). Поръчката остава в изчакване. Одобри или откажи го в акаунта си в Authorize.net, след това обнови тази поръчка."
+msgstr ""
+"Authorize.net задържа плащане %1$s за преглед (причина %2$s). Поръчката "
+"остава в изчакване. Одобри или откажи го в акаунта си в Authorize.net, след "
+"това обнови тази поръчка."
 
 #. translators: %1$s: error message, %2$s: error code
 #: class-authorizenet.php:374 class-authorizenet.php:377
@@ -18276,8 +18489,8 @@ msgstr "Кредити за изтегляне"
 msgid "Save download credits"
 msgstr "Запазване на кредити за изтегляне"
 
-#: admin/galleries.php:7 admin/settings.php:102 frontend.php:1050
-#: frontend.php:1060 reports/class-reports-image-downloads.php:38
+#: admin/galleries.php:7 admin/settings.php:102 frontend.php:1056
+#: frontend.php:1066 reports/class-reports-image-downloads.php:38
 #: reports/class-reports-image-downloads.php:157
 msgid "Downloads"
 msgstr "Изтегляния"
@@ -18361,51 +18574,52 @@ msgstr ""
 msgid "File could not be deleted"
 msgstr "Файлът не може да бъде изтрит"
 
-#: admin/orders.php:276 admin/orders.php:478 frontend.php:60 frontend.php:151
-#: frontend.php:237 frontend.php:349 frontend.php:462 frontend.php:662
-#: frontend.php:950 order.php:396 order.php:591 order.php:736 order.php:1009
+#: admin/orders.php:276 admin/orders.php:286 admin/orders.php:484
+#: frontend.php:60 frontend.php:151 frontend.php:237 frontend.php:349
+#: frontend.php:462 frontend.php:662 frontend.php:950 order.php:396
+#: order.php:591 order.php:736 order.php:1009 exports.php:305 exports.php:315
 #: add-to-cart.php:36 cart.php:123 cart.php:144 shortcodes.php:79
 msgid "Invalid request"
 msgstr "Невалидна заявка"
 
-#: admin/orders.php:351 frontend.php:340 frontend.php:453 frontend.php:549
+#: admin/orders.php:357 frontend.php:340 frontend.php:453 frontend.php:549
 #: frontend.php:941
 msgid "Sorry, you do not have permission to download"
 msgstr "Съжаляваме, нямате разрешение за изтегляне"
 
-#: admin/orders.php:365
+#: admin/orders.php:371
 msgid "Notify user of files added to order"
 msgstr "Уведомяване на потребителя за файлове, добавени към поръчката"
 
-#: admin/orders.php:469
+#: admin/orders.php:475
 msgid "Download all originals"
 msgstr "Изтегли всички оригинали"
 
-#: admin/orders.php:482
+#: admin/orders.php:488
 msgid "You do not have permission to download these files"
 msgstr "Нямате разрешение да изтеглите тези файлове"
 
-#: admin/orders.php:487
+#: admin/orders.php:493
 msgid "Order not found"
 msgstr "Поръчката не е намерена"
 
-#: admin/orders.php:493
+#: admin/orders.php:499
 msgid "No images found in this order"
 msgstr "Няма намерени изображения в тази поръчка"
 
-#: admin/orders.php:496 class-rest-downloads-controller.php:142
+#: admin/orders.php:502 class-rest-downloads-controller.php:142
 msgid "Originals"
 msgstr "Оригинали"
 
-#: admin/orders.php:502
+#: admin/orders.php:508
 msgid "Admin downloaded all original images"
 msgstr "Администраторът изтегли всички оригинални изображения"
 
-#: admin/orders.php:513
+#: admin/orders.php:519
 msgid "Customer was notified via email about new files available for download"
 msgstr "Клиентът е уведомен по имейл за нови файлове, достъпни за изтегляне"
 
-#: admin/orders.php:515
+#: admin/orders.php:521
 msgid "No files were attached to this order"
 msgstr "Към тази заповед не са приложени файлове"
 
@@ -18586,22 +18800,22 @@ msgstr "Изтеглете елементите на поръчката си"
 msgid "Digital Download"
 msgstr "Дигитално изтегляне"
 
-#: class-download.php:752
+#: class-download.php:838
 msgid "Unable to process download. The requested file may not be available."
 msgstr ""
 "Не е възможно да се обработи изтеглянето. Възможно е поисканият файл да не е "
 "наличен."
 
-#: class-download.php:753 class-download.php:799 class-download.php:875
-#: class-download.php:937 class-download.php:957 class-download.php:1439
-#: frontend.php:292 frontend.php:821 frontend.php:829
+#: class-download.php:839 class-download.php:886 class-download.php:964
+#: class-download.php:1028 class-download.php:1048 class-download.php:1535
+#: class-download.php:1585 frontend.php:292 frontend.php:821 frontend.php:829
 #: includes/download-handler.php:99 includes/download-handler.php:107
 #: includes/download-handler.php:162 includes/download-handler.php:177
 #: includes/download-handler.php:184 includes/download-handler.php:210
 msgid "Download Error"
 msgstr "Грешка при изтегляне"
 
-#: class-download.php:798 class-download.php:2061
+#: class-download.php:885 class-download.php:1966
 msgid ""
 "Sorry, the requested file could not be found. Please try again or contact "
 "support."
@@ -18609,7 +18823,7 @@ msgstr ""
 "Съжаляваме, търсеният файл не беше намерен. Моля, опитайте отново или се "
 "свържете с отдела за поддръжка."
 
-#: class-download.php:874
+#: class-download.php:963
 msgid ""
 "Sorry, some of the files in this download could not be retrieved. Please try "
 "again or contact support."
@@ -18617,7 +18831,7 @@ msgstr ""
 "За съжаление някои от файловете в това изтегляне не можаха да бъдат "
 "получени. Опитай пак или се свържи с поддръжката."
 
-#: class-download.php:936
+#: class-download.php:1027
 msgid ""
 "Sorry, this download could not be prepared. Please try again or contact "
 "support."
@@ -18625,7 +18839,7 @@ msgstr ""
 "За съжаление това изтегляне не можа да бъде подготвено. Опитай пак или се "
 "свържи с поддръжката."
 
-#: class-download.php:956
+#: class-download.php:1047 class-download.php:1584
 msgid ""
 "Sorry, some of the files in this download could not be read. Please try "
 "again or contact support."
@@ -18633,7 +18847,7 @@ msgstr ""
 "За съжаление някои от файловете в това изтегляне не можаха да бъдат "
 "прочетени. Опитай пак или се свържи с поддръжката."
 
-#: class-download.php:1438
+#: class-download.php:1534
 msgid ""
 "Sorry, some of the files in this download could not be found. Please try "
 "again or contact support."
@@ -18641,11 +18855,11 @@ msgstr ""
 "За съжаление някои от файловете в това изтегляне не бяха намерени. Опитай "
 "пак или се свържи с поддръжката."
 
-#: class-download.php:2136
+#: class-download.php:2041
 msgid "Sorry, the file could not be downloaded. Please try again."
 msgstr "Съжаляваме, файлът не може да бъде изтеглен. Моля, опитайте отново."
 
-#: class-download.php:2400
+#: class-download.php:2334
 msgid "original"
 msgstr "оригинал"
 
@@ -18757,15 +18971,15 @@ msgstr "Изтегляне на галерия"
 msgid "You do not have permission to download this file"
 msgstr "Нямате разрешение да изтеглите този файл"
 
-#: frontend.php:1148
+#: frontend.php:1154
 msgid "You have no available downloads"
 msgstr "Нямате налични изтегляния"
 
-#: frontend.php:1173
+#: frontend.php:1179
 msgid "Please provide a valid email address"
 msgstr "Моля въведете валиден имейл адрес"
 
-#: frontend.php:1178
+#: frontend.php:1184
 msgid "Invalid request type"
 msgstr "Невалиден тип на заявката"
 
@@ -19511,15 +19725,15 @@ msgstr "Всяка галерия"
 msgid "Will include all child galleries as well"
 msgstr "Ще включва и всички детски галерии"
 
-#: class-export.php:200
+#: class-export.php:201
 msgid "File Format"
 msgstr "Формат на файла"
 
-#: class-export.php:204
+#: class-export.php:205
 msgid "CSV"
 msgstr "CSV"
 
-#: class-export.php:209
+#: class-export.php:210
 msgid "XML"
 msgstr "XML"
 
@@ -19546,6 +19760,11 @@ msgstr "Експорти"
 #: exports.php:117
 msgid "Past Exports"
 msgstr "Минал износ"
+
+#: exports.php:299
+#, fuzzy
+msgid "You are not allowed to run exports"
+msgstr "Съжаляваме, но нямате право да видите това изображение"
 
 #. Plugin Name of the plugin
 #: light-blue.php
@@ -20003,7 +20222,9 @@ msgstr "Тестови таен ключ"
 msgid ""
 "Mollie payment %1$s was not accepted for this order: %2$s The order was left "
 "unpaid."
-msgstr "Mollie плащане %1$s не беше прието за тази поръчка: %2$s Поръчката остана неплатена."
+msgstr ""
+"Mollie плащане %1$s не беше прието за тази поръчка: %2$s Поръчката остана "
+"неплатена."
 
 #: class-mollie.php:350 class-quickpay.php:433
 msgid "it was made for a different order."
@@ -20518,7 +20739,9 @@ msgstr "Не можах да подготвя плащане"
 msgid ""
 "Mercado Pago payment not started: this Mercado Pago account only takes "
 "payments in %1$s, and the store charges in %2$s"
-msgstr "Mercado Pago плащането не е започнато: този акаунт в Mercado Pago приема плащания само в %1$s, а магазинът таксува в %2$s"
+msgstr ""
+"Mercado Pago плащането не е започнато: този акаунт в Mercado Pago приема "
+"плащания само в %1$s, а магазинът таксува в %2$s"
 
 #. translators: %s: Mercado Pago's reason
 #: class-mercadopago-pro.php:255
@@ -20568,7 +20791,9 @@ msgstr "Плащането не може да бъде обработено, о�
 msgid ""
 "Mercado Pago can't take payments in %s for this store. Please choose another "
 "way to pay."
-msgstr "Mercado Pago не може да приема плащания в %s за този магазин. Избери друг начин на плащане."
+msgstr ""
+"Mercado Pago не може да приема плащания в %s за този магазин. Избери друг "
+"начин на плащане."
 
 #. translators: %s: payment status from Mercado Pago, e.g. rejected
 #: trait-mercadopago-common.php:86
@@ -20612,7 +20837,9 @@ msgstr "сумата е %1$s, а общата сума на поръчката �
 msgid ""
 "Mercado Pago payment %1$s was declined or cancelled (status %2$s), so the "
 "order was not marked paid"
-msgstr "Mercado Pago плащане %1$s беше отказано или отменено (статус %2$s), затова поръчката не е отбелязана като платена"
+msgstr ""
+"Mercado Pago плащане %1$s беше отказано или отменено (статус %2$s), затова "
+"поръчката не е отбелязана като платена"
 
 #. translators: 1: Mercado Pago payment ID, 2: reason, e.g. "amount is 1, order total is 110"
 #: trait-mercadopago-common.php:119
@@ -20620,15 +20847,19 @@ msgstr "Mercado Pago плащане %1$s беше отказано или отм
 msgid ""
 "Mercado Pago payment %1$s did not match this order, so the order was not "
 "marked paid (%2$s)"
-msgstr "Mercado Pago плащане %1$s не съвпадна с тази поръчка, затова поръчката не е отбелязана като платена (%2$s)"
+msgstr ""
+"Mercado Pago плащане %1$s не съвпадна с тази поръчка, затова поръчката не е "
+"отбелязана като платена (%2$s)"
 
 #: trait-mercadopago-common.php:205
 msgid "Could not refund payment: this order has no Mercado Pago payment"
-msgstr "Сумата не можа да бъде възстановена: тази поръчка няма Mercado Pago плащане"
+msgstr ""
+"Сумата не можа да бъде възстановена: тази поръчка няма Mercado Pago плащане"
 
 #: trait-mercadopago-common.php:219
 msgid "Could not refund payment: nothing is left to refund"
-msgstr "Сумата не можа да бъде възстановена: няма какво повече да се възстановява"
+msgstr ""
+"Сумата не можа да бъде възстановена: няма какво повече да се възстановява"
 
 #. Plugin Name of the plugin
 #: payfast.php
@@ -20685,7 +20916,9 @@ msgstr "Изпратете плащане чрез %s"
 msgid ""
 "Thank you! Your payment is being confirmed by Payfast. Your order will show "
 "as paid once Payfast confirms it."
-msgstr "Благодаря! Payfast потвърждава плащането ти. Поръчката ще се покаже като платена, щом Payfast я потвърди."
+msgstr ""
+"Благодаря! Payfast потвърждава плащането ти. Поръчката ще се покаже като "
+"платена, щом Payfast я потвърди."
 
 #: class-payfast.php:379
 msgid "Customer cancelled the Payfast payment"
@@ -20697,7 +20930,9 @@ msgstr "Клиентът отмени Payfast плащането"
 msgid ""
 "Payfast sent a payment notice, but the order was not finished because its "
 "status is %s"
-msgstr "Payfast изпрати известие за плащане, но поръчката не беше завършена, защото статусът ѝ е %s"
+msgstr ""
+"Payfast изпрати известие за плащане, но поръчката не беше завършена, защото "
+"статусът ѝ е %s"
 
 #. translators: %s: payment status from Payfast, e.g. CANCELLED
 #: class-payfast.php:443
@@ -20705,13 +20940,16 @@ msgstr "Payfast изпрати известие за плащане, но пор
 msgid ""
 "Payfast says the payment was declined or cancelled (status %s), so the order "
 "was not marked paid"
-msgstr "Payfast съобщава, че плащането е отказано или отменено (статус %s), затова поръчката не е отбелязана като платена"
+msgstr ""
+"Payfast съобщава, че плащането е отказано или отменено (статус %s), затова "
+"поръчката не е отбелязана като платена"
 
 #. translators: %s: why the payment was not accepted
 #: class-payfast.php:446
 #, php-format
 msgid "Payfast payment notice not accepted, order left unpaid: %s"
-msgstr "Известието за плащане от Payfast не е прието, поръчката остана неплатена: %s"
+msgstr ""
+"Известието за плащане от Payfast не е прието, поръчката остана неплатена: %s"
 
 #. translators: %s: merchant ID in the payment notice
 #: class-payfast.php:488
@@ -20736,19 +20974,25 @@ msgstr "платената сума (%1$s) не съвпада с общата �
 #, php-format
 msgid ""
 "Payfast API lists a payment for this order, but the order was left unpaid: %s"
-msgstr "API на Payfast показва плащане за тази поръчка, но поръчката остана неплатена: %s"
+msgstr ""
+"API на Payfast показва плащане за тази поръчка, но поръчката остана "
+"неплатена: %s"
 
 #. translators: %s: what went wrong
 #: class-payfast.php:545
 #, php-format
 msgid "Could not check the payment with the Payfast API, order left unpaid: %s"
-msgstr "Плащането не можа да бъде проверено чрез API на Payfast, поръчката остана неплатена: %s"
+msgstr ""
+"Плащането не можа да бъде проверено чрез API на Payfast, поръчката остана "
+"неплатена: %s"
 
 #: class-payfast.php:570
 msgid ""
 "Payfast payment confirmed through the PayFast API (payment notice not "
 "received)"
-msgstr "Payfast плащането е потвърдено чрез API на PayFast (известие за плащане не е получено)"
+msgstr ""
+"Payfast плащането е потвърдено чрез API на PayFast (известие за плащане не е "
+"получено)"
 
 #. translators: %s: transaction type from Payfast
 #: class-payfast.php:633
@@ -20775,7 +21019,8 @@ msgstr "Payfast не върна ID на плащането"
 #: class-payfast.php:685 class-payfast.php:861
 msgid ""
 "the Payfast API needs the merchant ID and passphrase in the Payfast settings"
-msgstr "API на Payfast изисква ID на търговеца и парола в настройките на Payfast"
+msgstr ""
+"API на Payfast изисква ID на търговеца и парола в настройките на Payfast"
 
 #. translators: %s: error message
 #: class-payfast.php:704 class-payfast.php:884
@@ -20807,7 +21052,9 @@ msgstr "Сумата не можа да бъде възстановена в Pay
 msgid ""
 "This order has no Payfast payment ID, so it can't be refunded from here. You "
 "can refund it in your Payfast dashboard."
-msgstr "Тази поръчка няма ID на плащане в Payfast, затова сумата не може да бъде възстановена оттук. Можеш да я възстановиш в таблото на Payfast."
+msgstr ""
+"Тази поръчка няма ID на плащане в Payfast, затова сумата не може да бъде "
+"възстановена оттук. Можеш да я възстановиш в таблото на Payfast."
 
 #: class-payfast.php:1016
 msgid "there is nothing left to refund on this order"
@@ -20823,7 +21070,8 @@ msgstr "Възстановяване на сума за поръчка %s"
 #: class-payfast.php:1044
 #, php-format
 msgid "Payfast says the payment can't be refunded (%s)"
-msgstr "Payfast съобщава, че сумата по плащането не може да бъде възстановена (%s)"
+msgstr ""
+"Payfast съобщава, че сумата по плащането не може да бъде възстановена (%s)"
 
 #. translators: %s: amount Payfast can still refund
 #: class-payfast.php:1053
@@ -20835,13 +21083,17 @@ msgstr "Payfast може да възстанови още само %s по то�
 msgid ""
 "Payfast can only pay this refund into the customer's bank account, which "
 "needs their bank details. You can do this refund in your Payfast dashboard."
-msgstr "Payfast може да преведе това възстановяване само по банковата сметка на клиента, за което са нужни банковите му данни. Можеш да направиш това възстановяване в таблото на Payfast."
+msgstr ""
+"Payfast може да преведе това възстановяване само по банковата сметка на "
+"клиента, за което са нужни банковите му данни. Можеш да направиш това "
+"възстановяване в таблото на Payfast."
 
 #. translators: %s: refund method from Payfast
 #: class-payfast.php:1065
 #, php-format
 msgid "Payfast can't refund this amount from here (refund method: %s)"
-msgstr "Payfast не може да възстанови тази сума оттук (метод на възстановяване: %s)"
+msgstr ""
+"Payfast не може да възстанови тази сума оттук (метод на възстановяване: %s)"
 
 #. Plugin Name of the plugin
 #: paystack.php
@@ -20870,7 +21122,9 @@ msgstr "Неподдържана валута"
 msgid ""
 "Paystack return link had a payment reference from a different order, so the "
 "order was left unpaid"
-msgstr "Връзката за връщане от Paystack съдържаше референция за плащане от друга поръчка, затова поръчката остана неплатена"
+msgstr ""
+"Връзката за връщане от Paystack съдържаше референция за плащане от друга "
+"поръчка, затова поръчката остана неплатена"
 
 #: class-paystack.php:254 class-paystack.php:260 class-quickpay.php:214
 msgid "Could not verify payment status"
@@ -20896,7 +21150,9 @@ msgstr "Paystack върна плащане за друга референция"
 msgid ""
 "the amount paid (%1$s) does not match the order total (%2$s), both in the "
 "smallest unit of the currency"
-msgstr "платената сума (%1$s) не съвпада с общата сума на поръчката (%2$s), и двете в най-малката единица на валутата"
+msgstr ""
+"платената сума (%1$s) не съвпада с общата сума на поръчката (%2$s), и двете "
+"в най-малката единица на валутата"
 
 #. translators: 1: currency paid in, 2: order currency
 #: class-paystack.php:296
@@ -20910,7 +21166,9 @@ msgstr "плащането беше в %1$s, а поръчката е в %2$s"
 msgid ""
 "Paystack payment %1$s was declined or cancelled (status %2$s), so the order "
 "was not marked paid"
-msgstr "Paystack плащане %1$s беше отказано или отменено (статус %2$s), затова поръчката не е отбелязана като платена"
+msgstr ""
+"Paystack плащане %1$s беше отказано или отменено (статус %2$s), затова "
+"поръчката не е отбелязана като платена"
 
 #. translators: %s: why the payment was not accepted
 #: class-paystack.php:313
@@ -20961,7 +21219,9 @@ msgstr "Плащането не се приема"
 msgid ""
 "QuickPay payment %1$s was declined or not finished (state %2$s), so the "
 "order was not marked paid."
-msgstr "QuickPay плащане %1$s беше отказано или не е завършено (състояние %2$s), затова поръчката не е отбелязана като платена."
+msgstr ""
+"QuickPay плащане %1$s беше отказано или не е завършено (състояние %2$s), "
+"затова поръчката не е отбелязана като платена."
 
 #. translators: 1: QuickPay payment ID, 2: reason the payment was not accepted
 #: class-quickpay.php:228 class-quickpay.php:339
@@ -20969,7 +21229,9 @@ msgstr "QuickPay плащане %1$s беше отказано или не е з
 msgid ""
 "QuickPay payment %1$s was not accepted for this order: %2$s The order was "
 "left unpaid."
-msgstr "QuickPay плащане %1$s не беше прието за тази поръчка: %2$s Поръчката остана неплатена."
+msgstr ""
+"QuickPay плащане %1$s не беше прието за тази поръчка: %2$s Поръчката остана "
+"неплатена."
 
 #: class-quickpay.php:292
 msgid "Customer cancelled the QuickPay payment"
@@ -21052,7 +21314,9 @@ msgstr ""
 #, php-format
 msgid ""
 "Sorry, only %2$d of %1$s are left. Please change the quantity in your cart."
-msgstr "За съжаление остават само %2$d бр. от %1$s. Промени количеството в количката си."
+msgstr ""
+"За съжаление остават само %2$d бр. от %1$s. Промени количеството в количката "
+"си."
 
 #. translators: %s is the product name
 #: sell-anything.php:238
@@ -22928,7 +23192,7 @@ msgstr "обновени досега..."
 msgid "Unknown choice"
 msgstr "Неизвестен избор"
 
-#: cloud-storage.php:109
+#: cloud-storage.php:115
 msgid "Every 5 minutes"
 msgstr "На всеки 5 минути"
 
@@ -23066,12 +23330,12 @@ msgid "Connection successful! All tests passed."
 msgstr "Връзката е успешна! Всички тестове са преминали успешно."
 
 #: includes/class-cloud-storage-client-gcs.php:31
-#: includes/class-cloud-storage-client-gcs.php:574
+#: includes/class-cloud-storage-client-gcs.php:630
 msgid "Google Cloud Storage JSON key is required"
 msgstr "Необходим е JSON ключ за Google Cloud Storage"
 
 #: includes/class-cloud-storage-client-gcs.php:39
-#: includes/class-cloud-storage-client-gcs.php:581
+#: includes/class-cloud-storage-client-gcs.php:637
 msgid "Invalid JSON key file. Please check your service account JSON."
 msgstr ""
 "Невалиден JSON ключов файл. Моля, проверете JSON на вашия сервизен акаунт."
@@ -23260,23 +23524,23 @@ msgstr "Без подпапки"
 msgid "Error loading folders"
 msgstr "Грешка при зареждането на папки"
 
-#: includes/class-cloud-storage-manager.php:2398
+#: includes/class-cloud-storage-manager.php:2415
 msgid "No objects found in WP Offload Media data"
 msgstr "Няма намерени обекти в данните на WP Offload Media"
 
-#: includes/class-cloud-storage-manager.php:2458
+#: includes/class-cloud-storage-manager.php:2475
 msgid "Could not build URLs from WP Offload Media data"
 msgstr "Не може да се създадат URL адреси от данните на WP Offload Media"
 
-#: includes/class-cloud-storage-manager.php:2546
+#: includes/class-cloud-storage-manager.php:2563
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr "Не може да се извлекат URL адреси от WP Offload Media"
 
-#: includes/hooks.php:430 includes/hooks.php:464
+#: includes/hooks.php:436 includes/hooks.php:470
 msgid "Sunshine Cloud Storage:"
 msgstr "Съхранение в облака Sunshine:"
 
-#: includes/hooks.php:431
+#: includes/hooks.php:437
 msgid ""
 "WP Offload Media plugin is currently active. These two plugins should not be "
 "active at the same time as they will conflict. Please deactivate WP Offload "
@@ -23286,7 +23550,7 @@ msgstr ""
 "бъдат активни едновременно, тъй като ще възникне конфликт. Моля, "
 "деактивирайте WP Offload Media, преди да използвате Sunshine Cloud Storage."
 
-#: includes/hooks.php:433
+#: includes/hooks.php:439
 msgid ""
 "<strong>Good news:</strong> Sunshine can take over your previously offloaded "
 "items. After deactivating WP Offload Media, run the WP Offload Media "
@@ -23297,7 +23561,7 @@ msgstr ""
 "миграция от WP Offload Media, за да преместиш тези данни в собственото "
 "хранилище на Sunshine."
 
-#: includes/hooks.php:438
+#: includes/hooks.php:444
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media plugin is active. "
 "You have Cloud Storage set to \"Entire WordPress site\" which may conflict. "
@@ -23309,7 +23573,7 @@ msgstr ""
 "може да доведе до конфликт. Помислете да го настроите на „Само галерии "
 "Sunshine“ или да деактивирате един от плъгините."
 
-#: includes/hooks.php:465
+#: includes/hooks.php:471
 msgid ""
 "Your cloud storage bucket does not support per-object ACLs (Access Control "
 "Lists). This means Sunshine cannot set individual files as public or "
@@ -23321,7 +23585,7 @@ msgstr ""
 "като публични или частни, което може да доведе до невъзможност за показване "
 "на миниатюри или до публичен достъп до изображения с пълна резолюция."
 
-#: includes/hooks.php:469
+#: includes/hooks.php:475
 msgid ""
 "<strong>How to fix:</strong> Go to Google Cloud Console &rarr; Cloud Storage "
 "&rarr; Your Bucket &rarr; Permissions &rarr; Access Control &rarr; Switch "
@@ -23331,7 +23595,7 @@ msgstr ""
 "Storage → Вашият Bucket → Разрешения → Контрол на достъпа → Превключете от "
 "„Унифициран“ на „Детайлен“."
 
-#: includes/hooks.php:471
+#: includes/hooks.php:477
 msgid ""
 "<strong>How to fix:</strong> Go to S3 Console &rarr; Your Bucket &rarr; "
 "Permissions &rarr; Object Ownership &rarr; Edit &rarr; Select \"ACLs "
@@ -23341,7 +23605,7 @@ msgstr ""
 "Permissions → Object Ownership → Edit → Изберете \"ACLs enabled\" с \"Bucket "
 "owner preferred\"."
 
-#: includes/hooks.php:473
+#: includes/hooks.php:479
 msgid ""
 "<strong>How to fix:</strong> Check your storage provider's documentation for "
 "enabling per-object ACLs on your bucket."
@@ -23349,7 +23613,7 @@ msgstr ""
 "<strong>Как да го поправите:</strong> Проверете документацията на доставчика "
 "на хранилището си за активиране на ACL за всеки обект във вашия букет."
 
-#: includes/hooks.php:477
+#: includes/hooks.php:483
 msgid ""
 "After making changes, go to Sunshine Settings &rarr; Cloud Storage and click "
 "\"Test Connection\" to verify."
@@ -23358,7 +23622,7 @@ msgstr ""
 "Облачно съхранение и кликнете върху „Тестване на връзката“, за да проверите."
 
 #. translators: 1: link opening tag, 2: link closing tag
-#: includes/hooks.php:533
+#: includes/hooks.php:539
 #, php-format
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media data was found on "
@@ -23620,7 +23884,9 @@ msgstr "Само карти с баланс > 0."
 msgid ""
 "A gift card on this order no longer has enough balance. Please review your "
 "order and try again."
-msgstr "Карта за подарък в тази поръчка вече няма достатъчно наличност. Прегледай поръчката си и опитай отново."
+msgstr ""
+"Карта за подарък в тази поръчка вече няма достатъчно наличност. Прегледай "
+"поръчката си и опитай отново."
 
 #. translators: 1: gift card code, 2: amount the order used, 3: amount left on the card
 #: order-integration.php:214
@@ -23628,7 +23894,9 @@ msgstr "Карта за подарък в тази поръчка вече ня�
 msgid ""
 "Gift card %1$s was used for %2$s on this order, but only %3$s was left on it "
 "when the order was paid. The difference was not collected."
-msgstr "Карта за подарък %1$s беше използвана за %2$s в тази поръчка, но при плащането на поръчката по нея са оставали само %3$s. Разликата не е събрана."
+msgstr ""
+"Карта за подарък %1$s беше използвана за %2$s в тази поръчка, но при "
+"плащането на поръчката по нея са оставали само %3$s. Разликата не е събрана."
 
 #. translators: 1: gift card code, 2: amount applied to the order, 3: remaining balance on the card
 #: order-integration.php:220
@@ -23642,7 +23910,10 @@ msgstr "Карта за подарък %1$s използвана: %2$s прил�
 msgid ""
 "Gift card %1$s was used for %2$s on this order, but only %3$s was left on it "
 "when the order was reopened. The difference was not collected."
-msgstr "Карта за подарък %1$s беше използвана за %2$s в тази поръчка, но при повторното отваряне на поръчката по нея са оставали само %3$s. Разликата не е събрана."
+msgstr ""
+"Карта за подарък %1$s беше използвана за %2$s в тази поръчка, но при "
+"повторното отваряне на поръчката по нея са оставали само %3$s. Разликата не "
+"е събрана."
 
 #. translators: 1: gift card code, 2: amount given back to the card, 3: new balance on the card
 #: order-integration.php:359
@@ -23662,7 +23933,9 @@ msgstr "Карта за подарък %1$s: отново взети %2$s, на�
 msgid ""
 "Gift card %1$s bought on this order can no longer be used. %2$s had already "
 "been spent from it."
-msgstr "Карта за подарък %1$s, купена с тази поръчка, вече не може да се използва. От нея вече са били изхарчени %2$s."
+msgstr ""
+"Карта за подарък %1$s, купена с тази поръчка, вече не може да се използва. "
+"От нея вече са били изхарчени %2$s."
 
 #: product-integration.php:42
 msgid "Custom"
@@ -24462,10 +24735,6 @@ msgstr "Добави в Количката"
 #, fuzzy
 #~ msgid "Test event sent."
 #~ msgstr "Тестови таен ключ"
-
-#, fuzzy
-#~ msgid "You are not allowed to manage webhooks."
-#~ msgstr "Съжаляваме, но нямате право да видите това изображение"
 
 #, fuzzy, php-format
 #~ msgid "You do not have permission to %1$s %2$s via the API."

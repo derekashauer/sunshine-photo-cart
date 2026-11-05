@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-10-21T20:25:22+00:00\n"
+"POT-Creation-Date: 2026-11-05T22:34:27+00:00\n"
 "PO-Revision-Date: 2026-02-27 15:50-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -75,19 +75,19 @@ msgstr ""
 "Lisenssejäsi ei voitu aktivoida, koska palvelimesi ei saanut yhteyttä "
 "SunshinePhotoCart.com-sivustoon: %s"
 
-#: includes/admin/addons.php:76 includes/admin/class-license.php:279
-#: includes/admin/class-license.php:446 class-paystack.php:196
+#: includes/admin/addons.php:76 includes/admin/class-license.php:282
+#: includes/admin/class-license.php:449 class-paystack.php:196
 msgid "Unknown error occured"
 msgstr "Tuntematon virhe ilmeni"
 
 #. translators: %1$s is the addon name, %2$s is the error message
 #. translators: %1$s is the product name, %2$s is the error message
-#: includes/admin/addons.php:80 includes/admin/class-license.php:284
+#: includes/admin/addons.php:80 includes/admin/class-license.php:287
 #, php-format
 msgid "License for %1$s failed to be activated: %2$s"
 msgstr "Lisenssiä %1$s ei onnistuttu aktivoimaan: %2$s"
 
-#: includes/admin/addons.php:132 includes/admin/class-license.php:344
+#: includes/admin/addons.php:132 includes/admin/class-license.php:347
 msgid "An error occurred, please try again."
 msgstr "Tapahtui virhe, yritä uudelleen."
 
@@ -105,7 +105,9 @@ msgstr "Istuntosi on vanhentunut. Lataa sivu uudelleen ja yritä uudestaan."
 msgid ""
 "You do not have permission to install plugins on this site. Ask an "
 "administrator to install this add-on."
-msgstr "Sinulla ei ole oikeutta asentaa lisäosia tälle sivustolle. Pyydä ylläpitäjää asentamaan tämä lisäosa."
+msgstr ""
+"Sinulla ei ole oikeutta asentaa lisäosia tälle sivustolle. Pyydä ylläpitäjää "
+"asentamaan tämä lisäosa."
 
 #: includes/admin/addons.php:382
 msgid ""
@@ -128,6 +130,59 @@ msgstr ""
 #: includes/admin/addons.php:408
 msgid "This add-on could not be installed."
 msgstr "Tätä lisäosaa ei voitu asentaa."
+
+#. translators: 1: add-on name, 2: why the update was refused
+#: includes/admin/class-addon-update-verify.php:100
+#, php-format
+msgid ""
+"%1$s refused this update because it could not confirm it came from Sunshine "
+"Photo Cart: %2$s Your current version was left in place."
+msgstr "%1$s hylkäsi tämän päivityksen, koska ei voitu varmistaa, että se on peräisin Sunshine Photo Cartilta: %2$s Nykyinen versiosi säilytettiin."
+
+#: includes/admin/class-addon-update-verify.php:155
+msgid "the update has no signature."
+msgstr "päivityksellä ei ole allekirjoitusta."
+
+#: includes/admin/class-addon-update-verify.php:160
+msgid "the signature file is damaged."
+msgstr "allekirjoitustiedosto on vahingoittunut."
+
+#: includes/admin/class-addon-update-verify.php:164
+msgid "the signature does not match."
+msgstr "allekirjoitus ei täsmää."
+
+#: includes/admin/class-addon-update-verify.php:169
+msgid "the signed file list is damaged."
+msgstr "allekirjoitettu tiedostoluettelo on vahingoittunut."
+
+#: includes/admin/class-addon-update-verify.php:173
+msgid "the signature is for a different plugin."
+msgstr "allekirjoitus kuuluu toiselle lisäosalle."
+
+#. translators: 1: signed version, 2: installed version
+#: includes/admin/class-addon-update-verify.php:179
+#, php-format
+msgid ""
+"the signed version (%1$s) is not newer than the installed version (%2$s)."
+msgstr "allekirjoitettu versio (%1$s) ei ole uudempi kuin asennettu versio (%2$s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:191
+#, php-format
+msgid "the update has a file that was not signed (%s)."
+msgstr "päivityksessä on tiedosto, jota ei ole allekirjoitettu (%s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:195
+#, php-format
+msgid "a file was changed after it was signed (%s)."
+msgstr "tiedostoa muutettiin allekirjoituksen jälkeen (%s)."
+
+#. translators: %s: file path
+#: includes/admin/class-addon-update-verify.php:202
+#, php-format
+msgid "a signed file is missing (%s)."
+msgstr "allekirjoitettu tiedosto puuttuu (%s)."
 
 #. translators: the plugin name.
 #: includes/admin/class-addon-update.php:257
@@ -275,7 +330,7 @@ msgstr "Muokkaa koko näytöllä."
 msgid "Write a Review"
 msgstr "Kirjoita arvostelu"
 
-#: includes/admin/class-admin.php:264 includes/admin/class-admin.php:1035
+#: includes/admin/class-admin.php:264 includes/admin/class-admin.php:1037
 msgid "Upgrade"
 msgstr "Päivitä"
 
@@ -340,11 +395,11 @@ msgstr ""
 "Cartia</a>! <a href=\"%2$s\" target=\"_blank\">Arvostele meitä</a> <a "
 "href=\"%2$s\" target=\"_blank\">WordPress.org</a>"
 
-#: includes/admin/class-admin.php:538
+#: includes/admin/class-admin.php:540
 msgid "View Sunshine Galleries"
 msgstr "Näytä auringonpaisteen galleriat"
 
-#: includes/admin/class-admin.php:570
+#: includes/admin/class-admin.php:572
 msgid ""
 "The slug for core order statuses is not editable as it could break Sunshine "
 "functionality"
@@ -352,25 +407,25 @@ msgstr ""
 "Ydintilaustilojen slugia ei voi muokata, koska se voisi rikkoa Sunshine-"
 "toiminnallisuuden"
 
-#: includes/admin/class-admin.php:584
+#: includes/admin/class-admin.php:586
 msgid "Order Updated"
 msgstr "Tilaus päivitetty"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:586
+#: includes/admin/class-admin.php:588
 #, php-format
 msgid "<strong>Gallery updated</strong>, <a href=\"%s\">view gallery</a>"
 msgstr ""
 "<strong>Galleria päivitetty</strong>, <a href=\"%s\">katso galleria</a>"
 
 #. translators: %s is the URL to view the gallery
-#: includes/admin/class-admin.php:588
+#: includes/admin/class-admin.php:590
 #, php-format
 msgid "<strong>Gallery created</strong>, <a href=\"%s\">view gallery</a>"
 msgstr "<strong>Galleria luotu</strong>, <a href=\"%s\">katso galleria</a>"
 
 #. translators: %s is the URL to settings page
-#: includes/admin/class-admin.php:595
+#: includes/admin/class-admin.php:597
 #, php-format
 msgid ""
 "Sunshine logging is enabled. <a href=\"%s\">Please disable when no longer in "
@@ -380,7 +435,7 @@ msgstr ""
 "sitä ei enää käytetä.</a>"
 
 #. translators: %s is the URL to the Galleries settings page
-#: includes/admin/class-admin.php:624
+#: includes/admin/class-admin.php:626
 #, php-format
 msgid ""
 "Your watermark image file could not be found on this server, so new images "
@@ -391,7 +446,7 @@ msgstr ""
 "ei lisätä vesileimaa. <a href=\"%s\">Lataa vesileimakuva uudelleen</a>."
 
 #. translators: 1: number of images waiting, 2: URL to the Site Health info page
-#: includes/admin/class-admin.php:691
+#: includes/admin/class-admin.php:693
 #, php-format
 msgid ""
 "%1$d image is waiting to be processed, but WordPress could not save the "
@@ -409,7 +464,7 @@ msgstr[1] ""
 "kunto</a>."
 
 #. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
-#: includes/admin/class-admin.php:708
+#: includes/admin/class-admin.php:710
 #, php-format
 msgid ""
 "%1$d image is waiting to be processed, but WordPress cron has not run for "
@@ -430,7 +485,7 @@ msgstr[1] ""
 "href=\"%4$s\" target=\"_blank\">miten luotettava palvelimen cron otetaan "
 "käyttöön</a>."
 
-#: includes/admin/class-admin.php:721
+#: includes/admin/class-admin.php:723
 msgid ""
 "This site has WP-Cron turned off, so a server cron job has to call wp-"
 "cron.php for anything to run."
@@ -439,7 +494,7 @@ msgstr ""
 "kutsua wp-cron.php-tiedostoa, jotta mikään ajetaan."
 
 #. translators: %s is the URL to installation page
-#: includes/admin/class-admin.php:730
+#: includes/admin/class-admin.php:732
 #, php-format
 msgid ""
 "Sunshine installation process was skipped. <a href=\"%s\">Please complete "
@@ -449,79 +504,79 @@ msgstr ""
 "loppuun.</a>"
 
 #. translators: %1$d is the number of orders, %2$s is the number of orders in plural
-#: includes/admin/class-admin.php:1013
+#: includes/admin/class-admin.php:1015
 #, php-format
 msgid "%s order"
 msgid_plural "%s orders"
 msgstr[0] "%s tilaus"
 msgstr[1] "%s tilausta"
 
-#: includes/admin/class-admin.php:1021 includes/admin/customers.php:13
+#: includes/admin/class-admin.php:1023 includes/admin/customers.php:13
 #: includes/admin/customers.php:34 includes/admin/reports.php:20 reports.php:7
 msgid "Customers"
 msgstr "Asiakkaat"
 
-#: includes/admin/class-admin.php:1022 includes/admin/reports.php:90
+#: includes/admin/class-admin.php:1024 includes/admin/reports.php:90
 msgid "Reports"
 msgstr "Raportit"
 
-#: includes/admin/class-admin.php:1023 includes/admin/tools.php:36
+#: includes/admin/class-admin.php:1025 includes/admin/tools.php:36
 #: includes/admin/tools.php:42
 msgid "Tools"
 msgstr "Työkalut"
 
-#: includes/admin/class-admin.php:1024
+#: includes/admin/class-admin.php:1026
 msgid "Add-ons"
 msgstr "Lisäosat"
 
-#: includes/admin/class-admin.php:1027
+#: includes/admin/class-admin.php:1029
 msgid "Setup Guide"
 msgstr "Asennusopas"
 
-#: includes/admin/class-admin.php:1032
+#: includes/admin/class-admin.php:1034
 msgid "Get Help"
 msgstr "Pyydä apua"
 
-#: includes/admin/class-admin.php:1063
+#: includes/admin/class-admin.php:1065
 msgid "Keywords"
 msgstr "Avainsanat"
 
-#: includes/admin/class-admin.php:1075
+#: includes/admin/class-admin.php:1077
 msgid "Use gallery price level"
 msgstr "Käytä gallerian hintatasoa"
 
-#: includes/admin/class-admin.php:1083 includes/admin/sunshine-gallery.php:218
-#: includes/class-sunshinephotocart.php:505
-#: includes/class-sunshinephotocart.php:518 class-export-galleries.php:22
+#: includes/admin/class-admin.php:1085 includes/admin/sunshine-gallery.php:218
+#: includes/class-sunshinephotocart.php:507
+#: includes/class-sunshinephotocart.php:520 class-export-galleries.php:22
 msgid "Price Level"
 msgstr "Hintataso"
 
-#: includes/admin/class-admin.php:1094
+#: includes/admin/class-admin.php:1096
 msgid "Disable Purchasing"
 msgstr "Poista ostot käytöstä"
 
-#: includes/admin/class-admin.php:1100 includes/admin/settings-fields.php:702
+#: includes/admin/class-admin.php:1102 includes/admin/settings-fields.php:714
 #: admin/products.php:45
 msgid "Watermark"
 msgstr "Vesileima"
 
-#: includes/admin/class-admin.php:1145
+#: includes/admin/class-admin.php:1147
 msgid "Metadata"
 msgstr "Metadata"
 
-#: includes/admin/class-admin.php:1232
+#: includes/admin/class-admin.php:1234
 msgid "Log file has been cleared"
 msgstr "Lokitiedosto on tyhjennetty"
 
-#: includes/admin/class-admin.php:1288
+#: includes/admin/class-admin.php:1290
 msgid "Error log file has been cleared"
 msgstr "Virhelokitiedosto on tyhjennetty"
 
-#: includes/admin/class-admin.php:1294 includes/admin/class-admin.php:1302
+#: includes/admin/class-admin.php:1296 includes/admin/class-admin.php:1304
 msgid "You do not have permission to access this file."
 msgstr "Sinulla ei ole oikeutta käyttää tätä tiedostoa."
 
-#: includes/admin/class-admin.php:1310
+#: includes/admin/class-admin.php:1312
 msgid "Log file not found."
 msgstr "Lokitiedostoa ei löytynyt."
 
@@ -536,8 +591,8 @@ msgid "Name"
 msgstr "Nimi"
 
 #: includes/admin/class-customers-table.php:43
-#: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1432
-#: includes/class-cart.php:1720 includes/functions/account.php:595
+#: includes/admin/class-privacy.php:256 includes/admin/settings-fields.php:1444
+#: includes/class-cart.php:1721 includes/functions/account.php:595
 #: includes/payment-methods/paypal-legacy.php:50
 #: includes/payment-methods/paypal-legacy.php:63
 #: templates/admin/order-items.php:69 templates/email/signup.php:9
@@ -547,7 +602,7 @@ msgid "Email"
 msgstr "Sähköposti"
 
 #: includes/admin/class-customers-table.php:44 includes/admin/customers.php:187
-#: includes/admin/install.php:307 includes/admin/settings-fields.php:245
+#: includes/admin/install.php:309 includes/admin/settings-fields.php:245
 #: includes/admin/sunshine-gallery.php:170 includes/class-frontend.php:956
 #: templates/multi-image-select/select-images.php:37
 msgid "Favorites"
@@ -555,9 +610,9 @@ msgstr "Suosikit"
 
 #: includes/admin/class-customers-table.php:45 includes/admin/customers.php:137
 #: includes/admin/reports.php:16 includes/admin/settings-fields.php:297
-#: includes/admin/settings-fields.php:946
-#: includes/class-sunshinephotocart.php:538
-#: includes/class-sunshinephotocart.php:550 includes/functions/account.php:429
+#: includes/admin/settings-fields.php:958
+#: includes/class-sunshinephotocart.php:540
+#: includes/class-sunshinephotocart.php:552 includes/functions/account.php:429
 #: templates/email/summary.php:30 class-reports-customers-table.php:35
 #: class-reports-galleries-table.php:37 class-reports-products-table.php:35
 #: gallery.php:271 gallery.php:298 templates/account/downloads.php:19
@@ -590,25 +645,25 @@ msgid "Dismiss this notice."
 msgstr "Piilota tämä ilmoitus."
 
 #. translators: the license key expiration date
-#: includes/admin/class-license.php:96
+#: includes/admin/class-license.php:99
 #, php-format
 msgid "Your license key expired on %s."
 msgstr "Lisenssiavaimesi vanhentui %s."
 
-#: includes/admin/class-license.php:103
+#: includes/admin/class-license.php:106
 msgid "Your license key has been disabled"
 msgstr "Lisenssiavaimesi on poistettu käytöstä"
 
-#: includes/admin/class-license.php:107
+#: includes/admin/class-license.php:110
 msgid "Invalid license"
 msgstr "Virheellinen lisenssi"
 
-#: includes/admin/class-license.php:111
+#: includes/admin/class-license.php:114
 msgid "Invalid license key"
 msgstr "Viallinen lisenssiavain"
 
 #. translators: %1$s is the previous site URL, %2$s is the current site URL, %3$s is the URL to the sunshinephotocart.com account licenses page
-#: includes/admin/class-license.php:122
+#: includes/admin/class-license.php:125
 #, php-format
 msgid ""
 "Your license was activated on %1$s but this site is now %2$s. To use the "
@@ -623,7 +678,7 @@ msgstr ""
 "Aktivoi uudelleen."
 
 #. translators: %s is the URL to the sunshinephotocart.com account licenses page
-#: includes/admin/class-license.php:130
+#: includes/admin/class-license.php:133
 #, php-format
 msgid ""
 "This license appears to be activated on a different site. <a href=\"%s\" "
@@ -636,22 +691,22 @@ msgstr ""
 "strong> tämän lisenssin kohdalla, poista vanha URL-osoite käytöstä, palaa "
 "sitten tänne ja klikkaa Aktivoi uudelleen."
 
-#: includes/admin/class-license.php:137
+#: includes/admin/class-license.php:140
 msgid "This appears to be an invalid license key"
 msgstr "Tämä näyttää olevan virheellinen lisenssiavain"
 
-#: includes/admin/class-license.php:142
+#: includes/admin/class-license.php:145
 msgid "You have a special lifetime license that never expires!"
 msgstr "Sinulla on erityinen elinikäinen lisenssi, joka ei vanhene koskaan!"
 
 #. translators: the license key expiration date
-#: includes/admin/class-license.php:146
+#: includes/admin/class-license.php:149
 #, php-format
 msgid "Expires on %s"
 msgstr "Vanhentuu %s"
 
 #. translators: %1$s is the product name, %2$s is the URL to the licenses page
-#: includes/admin/class-license.php:243
+#: includes/admin/class-license.php:246
 #, php-format
 msgid ""
 "You do not have an active license for %1$s, please enter and activate your "
@@ -661,19 +716,19 @@ msgstr ""
 "nykyinen lisenssi <a href=\"%2$s\">Lisenssit-sivulla</a>"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:303
+#: includes/admin/class-license.php:306
 #, php-format
 msgid "License for %s has been activated"
 msgstr "Lisenssi %s on aktivoitu"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:365
+#: includes/admin/class-license.php:368
 #, php-format
 msgid "License for %s has been deactivated"
 msgstr "Lisenssi %s on poistettu käytöstä"
 
 #. translators: %1$s is the product name, %2$s is the URL to support
-#: includes/admin/class-license.php:368
+#: includes/admin/class-license.php:371
 #, php-format
 msgid ""
 "License for %1$s could not be deactivated, please <a href=\"%2$s\" "
@@ -683,7 +738,7 @@ msgstr ""
 "target=\"_blank\">ota yhteyttä asiakaspalveluun</a>"
 
 #. translators: %1$s is the URL to licenses page, %2$s is the URL to account on SunshinePhotoCart.com
-#: includes/admin/class-license.php:382
+#: includes/admin/class-license.php:385
 #, php-format
 msgid ""
 "To enable updates, please enter your license key on the <a "
@@ -695,13 +750,13 @@ msgstr ""
 "target=\"_blank\">SunshinePhotoCart.com-tililtäsi</a>."
 
 #. translators: %1$s is the product name, %2$s is the error message
-#: includes/admin/class-license.php:452
+#: includes/admin/class-license.php:455
 #, php-format
 msgid "License for %1$s failed to be updated: %2$s"
 msgstr "Lisenssiä %1$s ei onnistuttu päivittämään: %2$s"
 
 #. translators: %s is the product name
-#: includes/admin/class-license.php:460
+#: includes/admin/class-license.php:463
 #, php-format
 msgid "License for %s has been updated"
 msgstr "Lisenssi %s on päivitetty"
@@ -774,15 +829,15 @@ msgstr ""
 "vuoksi."
 
 #: includes/admin/class-privacy.php:190 includes/admin/class-privacy.php:257
-#: includes/admin/settings-fields.php:976
-#: includes/admin/settings-fields.php:986 includes/class-cart.php:1747
+#: includes/admin/settings-fields.php:988
+#: includes/admin/settings-fields.php:998 includes/class-cart.php:1748
 #: templates/invoice/admin.php:165 templates/order/details.php:13
 #: class-export-orders.php:525
 msgid "Phone"
 msgstr "Puhelin"
 
-#: includes/admin/class-privacy.php:191 includes/admin/settings-fields.php:978
-#: includes/admin/settings-fields.php:988
+#: includes/admin/class-privacy.php:191 includes/admin/settings-fields.php:990
+#: includes/admin/settings-fields.php:1000
 msgid "VAT Number"
 msgstr "ALV (VAT) numero"
 
@@ -869,7 +924,7 @@ msgid "Billing Name"
 msgstr "Nimi"
 
 #: includes/admin/class-privacy.php:259 includes/admin/customers.php:106
-#: includes/class-cart.php:2033 templates/invoice/admin.php:195
+#: includes/class-cart.php:2034 templates/invoice/admin.php:195
 msgid "Billing Address"
 msgstr "Laskutusosoite"
 
@@ -878,7 +933,7 @@ msgid "Shipping Name"
 msgstr "Toimituksen nimi"
 
 #: includes/admin/class-privacy.php:268 includes/admin/customers.php:99
-#: includes/class-cart.php:1887 includes/template-hooks.php:460
+#: includes/class-cart.php:1888 includes/template-hooks.php:460
 #: templates/invoice/admin.php:192
 msgid "Shipping Address"
 msgstr "Toimitusosoite"
@@ -911,7 +966,7 @@ msgid "Personal data removed."
 msgstr "Henkilötiedot poistettu."
 
 #: includes/admin/class-tool.php:152 includes/admin/gallery-navigator.php:79
-#: gallery.php:27 frontend.php:1163
+#: gallery.php:27 frontend.php:1169
 msgid "Security check failed"
 msgstr "Turvatarkastus epäonnistui"
 
@@ -944,7 +999,7 @@ msgstr "Postita"
 msgid "Insufficient permissions."
 msgstr "Riittämättömät oikeudet."
 
-#: includes/admin/class-update.php:633 includes/admin/install.php:294
+#: includes/admin/class-update.php:633 includes/admin/install.php:296
 #: includes/admin/settings-fields.php:250
 msgid "Terms & Conditions"
 msgstr "Säännöt ja ehdot"
@@ -1063,7 +1118,7 @@ msgid "Permission denied"
 msgstr "Lupa evätty"
 
 #: includes/admin/gallery-navigator.php:116
-#: includes/class-sunshinephotocart.php:386
+#: includes/class-sunshinephotocart.php:388
 msgid "No galleries found."
 msgstr "Galleriaa ei löytynyt."
 
@@ -1075,13 +1130,13 @@ msgstr "Vedä ja järjestä uudelleen"
 #: includes/admin/gallery-navigator.php:159
 #: includes/admin/gallery-navigator.php:323
 #: includes/admin/sunshine-gallery.php:55
-#: includes/admin/sunshine-gallery.php:2011
+#: includes/admin/sunshine-gallery.php:2033
 msgid "Password Protected"
 msgstr "Suojattu salasanalla"
 
 #: includes/admin/gallery-navigator.php:161
 #: includes/admin/gallery-navigator.php:325
-#: includes/admin/sunshine-gallery.php:2013
+#: includes/admin/sunshine-gallery.php:2035
 msgid "Private"
 msgstr "Yksityinen"
 
@@ -1098,7 +1153,7 @@ msgstr "Päättynyt"
 
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:340
-#: includes/admin/sunshine-gallery.php:1608
+#: includes/admin/sunshine-gallery.php:1627
 #: includes/class-cloud-storage-import.php:994
 msgid "images"
 msgstr "kuvat"
@@ -1112,7 +1167,7 @@ msgstr[1] "alagalleriaa"
 
 #. translators: %s is the section name
 #: includes/admin/gallery-navigator.php:184
-#: includes/admin/gallery-navigator.php:348 includes/class-cart.php:2177
+#: includes/admin/gallery-navigator.php:348 includes/class-cart.php:2178
 msgid "Edit"
 msgstr "Muokkaa"
 
@@ -1140,116 +1195,116 @@ msgstr[1] "%1$d galleriaa löytyi hakusanalle \"%2$s\""
 msgid "You do not have permission to perform this action."
 msgstr "Sinulla ei ole lupaa suorittaa tätä toimintoa."
 
-#: includes/admin/install.php:243
+#: includes/admin/install.php:245
 msgid "Client Galleries"
 msgstr "Asiakasgalleriat"
 
-#: includes/admin/install.php:255 includes/admin/settings-fields.php:240
+#: includes/admin/install.php:257 includes/admin/settings-fields.php:240
 msgid "Account"
 msgstr "Käyttäjätili"
 
-#: includes/admin/install.php:268 includes/admin/settings-fields.php:230
+#: includes/admin/install.php:270 includes/admin/settings-fields.php:230
 #: templates/cart/mini-cart.php:6
 msgid "Cart"
 msgstr "Kori"
 
-#: includes/admin/install.php:281 includes/admin/settings-fields.php:235
-#: includes/admin/settings-fields.php:1003
+#: includes/admin/install.php:283 includes/admin/settings-fields.php:235
+#: includes/admin/settings-fields.php:1015
 #: includes/payment-methods/paypal.php:179
 msgid "Checkout"
 msgstr "Kassa"
 
-#: includes/admin/install.php:322 includes/admin/sunshine-gallery.php:54
+#: includes/admin/install.php:324 includes/admin/sunshine-gallery.php:54
 #: includes/admin/sunshine-gallery.php:114
 msgid "Default"
 msgstr "Oletus"
 
-#: includes/admin/install.php:331
+#: includes/admin/install.php:333
 msgid "Prints"
 msgstr "Tulosteet"
 
-#: includes/admin/install.php:403
+#: includes/admin/install.php:405
 msgid "Pending Payment"
 msgstr "Odottaa maksua"
 
-#: includes/admin/install.php:407
+#: includes/admin/install.php:409
 msgid "We have received your order but payment is still pending"
 msgstr "Olemme vastaanottaneet tilauksesi, mutta odotamme vielä maksua."
 
-#: includes/admin/install.php:416 hooks.php:599
+#: includes/admin/install.php:418 hooks.php:599
 msgid "New"
 msgstr "Uusi"
 
-#: includes/admin/install.php:420
+#: includes/admin/install.php:422
 msgid "We have received your order and payment"
 msgstr "Olemme vastaanottaneet tilauksesi ja maksusuorituksesi."
 
-#: includes/admin/install.php:429 includes/admin/sunshine-gallery.php:1031
+#: includes/admin/install.php:431 includes/admin/sunshine-gallery.php:1050
 msgid "Processing"
 msgstr "Käsitellään"
 
-#: includes/admin/install.php:433
+#: includes/admin/install.php:435
 msgid "The images in your order are being processed and/or printed"
 msgstr "Tilauksellasi olevia kuvia käsitellään ja valmistellaan juuri nyt"
 
-#: includes/admin/install.php:442
+#: includes/admin/install.php:444
 msgid "Shipped/Completed"
 msgstr "Toimitettu/Valmis"
 
-#: includes/admin/install.php:446
+#: includes/admin/install.php:448
 msgid "Your items have shipped (or are available for download)!"
 msgstr ""
 "Tilaamasi tuotteet on nyt toimitettu tai ne ovat nyt tallennettavissa omalle "
 "tietokoneellesi."
 
-#: includes/admin/install.php:455
+#: includes/admin/install.php:457
 msgid "Cancelled"
 msgstr "Peruutettu"
 
-#: includes/admin/install.php:459
+#: includes/admin/install.php:461
 msgid "Your order was cancelled"
 msgstr "Tilauksesi peruttiin"
 
-#: includes/admin/install.php:468
+#: includes/admin/install.php:470
 msgid "Refunded"
 msgstr "Hyvitetty"
 
-#: includes/admin/install.php:472
+#: includes/admin/install.php:474
 msgid "Your order was refunded"
 msgstr "Tilauksesi palautettiin"
 
-#: includes/admin/install.php:481
+#: includes/admin/install.php:483
 msgid "Ready for pickup"
 msgstr "Valmis noutoa varten"
 
-#: includes/admin/install.php:485
+#: includes/admin/install.php:487
 msgid "Your order is ready to be picked up"
 msgstr "Tilauksesi on valmis noudettavaksi"
 
-#: includes/admin/install.php:494
+#: includes/admin/install.php:496
 msgid "Failed"
 msgstr "Epäonnistui"
 
-#: includes/admin/install.php:498 includes/functions/checkout.php:1069
+#: includes/admin/install.php:500 includes/functions/checkout.php:1069
 msgid "Payment failed"
 msgstr "Maksu epäonnistui"
 
-#: includes/admin/install.php:689
+#: includes/admin/install.php:691
 msgid "Could not activate license key"
 msgstr "Lisenssiavainta ei voitu aktivoida"
 
-#: includes/admin/install.php:720
+#: includes/admin/install.php:722
 msgid "Could not subscribe to email list"
 msgstr "Sähköpostilistaa ei voitu tilata"
 
 #. translators: %s is the plugin version number
-#: includes/admin/install.php:730
+#: includes/admin/install.php:732
 #, php-format
 msgid "Welcome to Sunshine Photo Cart %s"
 msgstr "Tervetuloa Sunshine Photo Cart %s"
 
 #. translators: %1$s is the plugin version number
-#: includes/admin/install.php:734
+#: includes/admin/install.php:736
 #, php-format
 msgid ""
 "<strong>Thank you for updating to the latest version!</strong> Sunshine %1$s "
@@ -1260,11 +1315,11 @@ msgstr ""
 "WordPressin kattavin asiakastodistus- ja valokuvakori-lisäosa. Toivottavasti "
 "nautit suuremmasta myyntimenestyksestä!"
 
-#: includes/admin/install.php:754 templates/admin/updates/update.php:35
+#: includes/admin/install.php:756 templates/admin/updates/update.php:35
 msgid "Recent Improvements"
 msgstr "Viimeaikaiset parannukset"
 
-#: includes/admin/install.php:756 templates/admin/updates/update.php:37
+#: includes/admin/install.php:758 templates/admin/updates/update.php:37
 msgid "See the full Changelog"
 msgstr "Katso koko Changelog"
 
@@ -1379,15 +1434,15 @@ msgstr "Pilvitallennus"
 
 #: includes/admin/reports.php:17 includes/admin/sunshine-gallery.php:196
 #: includes/admin/sunshine-product-category.php:169
-#: includes/class-sunshinephotocart.php:426
-#: includes/class-sunshinephotocart.php:438 hooks.php:43 reports.php:4
+#: includes/class-sunshinephotocart.php:428
+#: includes/class-sunshinephotocart.php:440 hooks.php:43 reports.php:4
 #: price-levels.php:48 admin/products.php:54
 msgid "Products"
 msgstr "Tuotteet"
 
 #: includes/admin/reports.php:18 includes/admin/settings-fields.php:321
-#: includes/admin/settings-fields.php:804 includes/admin/sunshine-order.php:440
-#: includes/class-sunshinephotocart.php:374 includes/functions/account.php:434
+#: includes/admin/settings-fields.php:816 includes/admin/sunshine-order.php:440
+#: includes/class-sunshinephotocart.php:376 includes/functions/account.php:434
 #: reports.php:5 class-admin-automated-emails.php:64 hooks.php:677
 #: templates/account/downloads.php:30 class-export-galleries.php:10
 #: class-export-orders.php:552
@@ -1667,8 +1722,8 @@ msgid "URLs"
 msgstr "URLs"
 
 #: includes/admin/settings-fields.php:261
-#: includes/class-sunshinephotocart.php:375
 #: includes/class-sunshinephotocart.php:377
+#: includes/class-sunshinephotocart.php:379
 #: class-reports-galleries-table.php:36 gallery.php:277
 #: class-export-orders.php:631 messaging.php:148
 msgid "Gallery"
@@ -1758,10 +1813,41 @@ msgstr ""
 "tätä kautta"
 
 #: includes/admin/settings-fields.php:392
+msgid "Check folders for new photos"
+msgstr "Tarkista kansiot uusien kuvien varalta"
+
+#: includes/admin/settings-fields.php:396
+msgid "Off"
+msgstr "Pois"
+
+#: includes/admin/settings-fields.php:397
+msgid "Every hour"
+msgstr "Joka tunti"
+
+#: includes/admin/settings-fields.php:398
+msgid "Twice a day"
+msgstr "Kahdesti päivässä"
+
+#: includes/admin/settings-fields.php:399
+msgid "Once a day"
+msgstr "Kerran päivässä"
+
+#: includes/admin/settings-fields.php:401
+msgid ""
+"Galleries made from an FTP or cloud folder get any photos added to that "
+"folder later. Photos are only ever added: one removed from the folder stays "
+"in the gallery, and one you delete from the gallery is not brought back. "
+"Galleries that existed before you turn this on only get photos added to "
+"their folder after that. Each check of a cloud folder reads the list of "
+"files in your bucket, so checking every hour means more requests to your "
+"storage service."
+msgstr "FTP- tai pilvikansiosta tehdyt galleriat saavat kaikki kansioon myöhemmin lisätyt kuvat. Kuvia vain lisätään: kansiosta poistettu kuva jää galleriaan, eikä galleriasta poistamasi kuva palaa. Ennen tämän käyttöönottoa olemassa olleet galleriat saavat vain sen jälkeen kansioonsa lisätyt kuvat. Jokainen pilvikansion tarkistus lukee bucketisi tiedostoluettelon, joten tarkistus joka tunti tarkoittaa enemmän pyyntöjä tallennuspalveluusi."
+
+#: includes/admin/settings-fields.php:404
 msgid "Show images in Media Library"
 msgstr "Näytä kuvat mediakirjastossa"
 
-#: includes/admin/settings-fields.php:395
+#: includes/admin/settings-fields.php:407
 msgid ""
 "By default Sunshine hides images uploaded to Sunshine galleries in the Media "
 "Library, enabling this option will show them instead. Use at your own risk."
@@ -1770,11 +1856,11 @@ msgstr ""
 "mediakirjastossa, mutta tämän vaihtoehdon ottaminen käyttöön näyttää ne sen "
 "sijaan. Käytä omalla vastuullasi."
 
-#: includes/admin/settings-fields.php:398
+#: includes/admin/settings-fields.php:410
 msgid "Delay image processing"
 msgstr "Kuvankäsittelyn viive"
 
-#: includes/admin/settings-fields.php:401
+#: includes/admin/settings-fields.php:413
 msgid ""
 "When enabled, intermediate image sizes (thumbnails and large) and watermarks "
 "will be generated in the background after upload, allowing faster initial "
@@ -1786,15 +1872,15 @@ msgstr ""
 "alkuperäistä lataamista. Kuvat eivät välttämättä ole heti saatavilla "
 "kaikissa kooissa, ennen kuin käsittely on valmis."
 
-#: includes/admin/settings-fields.php:416
+#: includes/admin/settings-fields.php:428
 msgid "Features"
 msgstr "Ominaisuudet"
 
-#: includes/admin/settings-fields.php:420
+#: includes/admin/settings-fields.php:432
 msgid "Image Theft Prevention"
 msgstr "Kuvien suojaaminen luvattomalta käytöltä"
 
-#: includes/admin/settings-fields.php:423
+#: includes/admin/settings-fields.php:435
 msgid ""
 "Enabling this option will disable the right click menu and also not allow "
 "images to be dragged/dropped to the desktop. NOT a 100% effective method, "
@@ -1805,11 +1891,11 @@ msgstr ""
 "työpöydälle. EI ole 100% etehokas menetelmä, mutta sen pitäisi pysäyttää "
 "useimmat ihmiset. EI käytetä ylläpitäjäkäyttäjille."
 
-#: includes/admin/settings-fields.php:428
+#: includes/admin/settings-fields.php:440
 msgid "Proofing Only"
 msgstr "Vain koevedokset"
 
-#: includes/admin/settings-fields.php:431
+#: includes/admin/settings-fields.php:443
 msgid ""
 "This will remove all aspects of purchasing abilities throughout the site, "
 "leaving just image viewing and adding to favorites"
@@ -1817,20 +1903,20 @@ msgstr ""
 "Kaikki kuvien ostamiseen liittyvät oikeudet poistetaan. Käyttäjälle jää vain "
 "mahdollisuus selata kuvia ja merkitä niitä suosikeiksi."
 
-#: includes/admin/settings-fields.php:436
+#: includes/admin/settings-fields.php:448
 msgid "Allow product comments"
 msgstr "Salli tuotekommentit"
 
-#: includes/admin/settings-fields.php:439
+#: includes/admin/settings-fields.php:451
 msgid "Allow users to enter comments when adding an item to cart"
 msgstr ""
 "Salli käyttäjien syöttää kommentteja, kun he lisäävät tuotteen ostoskoriin"
 
-#: includes/admin/settings-fields.php:443
+#: includes/admin/settings-fields.php:455
 msgid "Allow Store"
 msgstr "Salli tallennus"
 
-#: includes/admin/settings-fields.php:446
+#: includes/admin/settings-fields.php:458
 msgid ""
 "Galleries come with a Store where products are shown first and customers add "
 "images to cart."
@@ -1838,37 +1924,37 @@ msgstr ""
 "Gallerioissa on myymälä, jossa tuotteet näytetään ensin ja asiakkaat "
 "lisäävät kuvia ostoskoriin."
 
-#: includes/admin/settings-fields.php:451
+#: includes/admin/settings-fields.php:463
 msgid "Allow Gallery Sharing"
 msgstr "Salli gallerian jakaminen"
 
-#: includes/admin/settings-fields.php:454
+#: includes/admin/settings-fields.php:466
 msgid "Allow users to share galleries"
 msgstr "Salli käyttäjien jakaa gallerioita"
 
-#: includes/admin/settings-fields.php:457
+#: includes/admin/settings-fields.php:469
 msgid "Allow Image Sharing"
 msgstr "Salli kuvien jakaminen"
 
-#: includes/admin/settings-fields.php:460
+#: includes/admin/settings-fields.php:472
 msgid "Allow users to share images within a gallery and favorites"
 msgstr "Salli käyttäjien jakaa kuvia galleriassa ja suosikeissa"
 
-#: includes/admin/settings-fields.php:463
+#: includes/admin/settings-fields.php:475
 msgid "Use Secure File Names"
 msgstr "Käytä turvallisia tiedostonimiä"
 
-#: includes/admin/settings-fields.php:466
+#: includes/admin/settings-fields.php:478
 msgid "Add random strings to image file names for added security"
 msgstr ""
 "Lisää satunnaisia merkkijonoja kuvatiedostojen nimiin turvallisuuden "
 "lisäämiseksi"
 
-#: includes/admin/settings-fields.php:470
+#: includes/admin/settings-fields.php:482
 msgid "Enable Open Graph"
 msgstr "Ota käyttöön Open Graph"
 
-#: includes/admin/settings-fields.php:473
+#: includes/admin/settings-fields.php:485
 msgid ""
 "Add Open Graph meta tags to the site for galleries and image pages (your SEO "
 "plugin may already be doing this)"
@@ -1876,11 +1962,11 @@ msgstr ""
 "Lisää Open Graph -metatunnisteet sivustolle gallerioihin ja kuvasivuille "
 "(SEO-liitännäinen saattaa jo tehdä tämän)"
 
-#: includes/admin/settings-fields.php:476
+#: includes/admin/settings-fields.php:488
 msgid "Hide galleries from search engines"
 msgstr "Piilota galleriat hakukoneilta"
 
-#: includes/admin/settings-fields.php:479
+#: includes/admin/settings-fields.php:491
 msgid ""
 "Enabling this option will attempt to block search engine bots from crawling "
 "and indexing galleries and images"
@@ -1888,66 +1974,66 @@ msgstr ""
 "Tämän vaihtoehdon ottaminen käyttöön yrittää estää hakukoneiden botteja "
 "indeksoimasta ja indeksoimasta gallerioita ja kuvia"
 
-#: includes/admin/settings-fields.php:484
+#: includes/admin/settings-fields.php:496
 msgid "Display Options"
 msgstr "Näyttöasetukset"
 
-#: includes/admin/settings-fields.php:488
+#: includes/admin/settings-fields.php:500
 msgid "Gallery Order"
 msgstr "Galleria Tilaus"
 
-#: includes/admin/settings-fields.php:493
-#: includes/admin/settings-fields.php:504
+#: includes/admin/settings-fields.php:505
+#: includes/admin/settings-fields.php:516
 msgid "Custom ordering"
 msgstr "Mukautettu järjestys"
 
-#: includes/admin/settings-fields.php:494
+#: includes/admin/settings-fields.php:506
 msgid "Gallery Creation Date (New to Old)"
 msgstr "Gallerian luontipäivämäärä (uusi vanhaan)"
 
-#: includes/admin/settings-fields.php:495
+#: includes/admin/settings-fields.php:507
 msgid "Gallery Creation Date (Old to New)"
 msgstr "Gallerian luontipäivämäärä (vanhasta uuteen)"
 
-#: includes/admin/settings-fields.php:496
-#: includes/admin/settings-fields.php:509
+#: includes/admin/settings-fields.php:508
+#: includes/admin/settings-fields.php:521
 msgid "Alphabetical"
 msgstr "Aakkosellinen"
 
-#: includes/admin/settings-fields.php:500
+#: includes/admin/settings-fields.php:512
 msgid "Image Order"
 msgstr "Kuvan tilaus"
 
-#: includes/admin/settings-fields.php:505
+#: includes/admin/settings-fields.php:517
 msgid "Order images shot (New to Old)"
 msgstr "Tilaa kuvat kuvattuna (Uusi vanhaan)"
 
-#: includes/admin/settings-fields.php:506
+#: includes/admin/settings-fields.php:518
 msgid "Order images shot (Old to New)"
 msgstr "Tilaa kuvat kuvattuna (vanhasta uuteen)"
 
-#: includes/admin/settings-fields.php:507
+#: includes/admin/settings-fields.php:519
 msgid "Image Upload Date (New to Old)"
 msgstr "Kuvan latauspäivämäärä (uudesta vanhaan)"
 
-#: includes/admin/settings-fields.php:508
+#: includes/admin/settings-fields.php:520
 msgid "Image Upload Date (Old to New)"
 msgstr "Kuvan latauspäivämäärä (vanhasta uuteen)"
 
-#: includes/admin/settings-fields.php:511
+#: includes/admin/settings-fields.php:523
 msgid "If selecting \"Order images shot\" images must have proper metadata"
 msgstr ""
 "Jos valitset \"Tilaa kuvat\", kuvilla on oltava asianmukaiset metatiedot"
 
-#: includes/admin/settings-fields.php:511
+#: includes/admin/settings-fields.php:523
 msgid "learn more"
 msgstr "lisätietoja"
 
-#: includes/admin/settings-fields.php:515
+#: includes/admin/settings-fields.php:527
 msgid "Fallback Featured Image"
 msgstr "Varakuva"
 
-#: includes/admin/settings-fields.php:518
+#: includes/admin/settings-fields.php:530
 msgid ""
 "Upload a custom thumbnail image to be used when no specific featured image "
 "is set"
@@ -1955,11 +2041,11 @@ msgstr ""
 "Lataa mukautettu pikkukuva, jota käytetään, kun mitään erityistä esillä "
 "olevaa kuvaa ei ole määritetty"
 
-#: includes/admin/settings-fields.php:522
+#: includes/admin/settings-fields.php:534
 msgid "Password Protected Featured Image"
 msgstr "Salasanalla suojattu esillä oleva kuva"
 
-#: includes/admin/settings-fields.php:525
+#: includes/admin/settings-fields.php:537
 msgid ""
 "Upload a custom thumbnail image to be used when a gallery is password "
 "protected"
@@ -1967,117 +2053,117 @@ msgstr ""
 "Lataa mukautettu pikkukuva, jota käytetään, kun galleria on suojattu "
 "salasanalla"
 
-#: includes/admin/settings-fields.php:531
+#: includes/admin/settings-fields.php:543
 msgid "Galleries List Display"
 msgstr "Gallerioiden luettelo"
 
-#: includes/admin/settings-fields.php:536
+#: includes/admin/settings-fields.php:548
 msgid "Galleries Layout"
 msgstr "Gallerioiden asettelu"
 
-#: includes/admin/settings-fields.php:539
-#: includes/admin/settings-fields.php:595
+#: includes/admin/settings-fields.php:551
+#: includes/admin/settings-fields.php:607
 msgid "Cropping option not recommended for justified or masonry"
 msgstr ""
 "Rajausvaihtoehtoa ei suositella perustelluille tai muuratuille kohteille"
 
-#: includes/admin/settings-fields.php:542
-#: includes/admin/settings-fields.php:598
+#: includes/admin/settings-fields.php:554
+#: includes/admin/settings-fields.php:610
 msgid "Standard"
 msgstr "Standardi"
 
-#: includes/admin/settings-fields.php:546
-#: includes/admin/settings-fields.php:602
+#: includes/admin/settings-fields.php:558
+#: includes/admin/settings-fields.php:614
 msgid "Justified"
 msgstr "Tasattu"
 
-#: includes/admin/settings-fields.php:550
-#: includes/admin/settings-fields.php:606
+#: includes/admin/settings-fields.php:562
+#: includes/admin/settings-fields.php:618
 msgid "Masonry"
 msgstr "Tiilitetty (Masonry)"
 
-#: includes/admin/settings-fields.php:556
+#: includes/admin/settings-fields.php:568
 msgid "Galleries Columns"
 msgstr "Gallerioissa Kolumnit"
 
-#: includes/admin/settings-fields.php:567
+#: includes/admin/settings-fields.php:579
 msgid "Galleries Per Page"
 msgstr "Gallerioita sivulla"
 
-#: includes/admin/settings-fields.php:571
+#: includes/admin/settings-fields.php:583
 msgid "Set to 0 for unlimited galleries (no pagination)"
 msgstr ""
 "Aseta arvoksi 0, jos haluat rajoittamattoman määrän gallerioita (ei "
 "sivutusta)."
 
-#: includes/admin/settings-fields.php:575
+#: includes/admin/settings-fields.php:587
 msgid "Galleries Pagination Style"
 msgstr "Gallerioiden sivutus"
 
-#: includes/admin/settings-fields.php:579
-#: includes/admin/settings-fields.php:633
+#: includes/admin/settings-fields.php:591
+#: includes/admin/settings-fields.php:645
 msgid "Numbered pagination"
 msgstr "Numeroitu sivunumerointi"
 
-#: includes/admin/settings-fields.php:580
-#: includes/admin/settings-fields.php:634
+#: includes/admin/settings-fields.php:592
+#: includes/admin/settings-fields.php:646
 msgid "Load more button"
 msgstr "Lataa lisää -painike"
 
-#: includes/admin/settings-fields.php:581
-#: includes/admin/settings-fields.php:635
+#: includes/admin/settings-fields.php:593
+#: includes/admin/settings-fields.php:647
 msgid "Automatic infinite scrolling"
 msgstr "Automaattinen loputon vieritys"
 
-#: includes/admin/settings-fields.php:587
+#: includes/admin/settings-fields.php:599
 msgid "Images Display"
 msgstr "Kuvien näyttö"
 
-#: includes/admin/settings-fields.php:592
+#: includes/admin/settings-fields.php:604
 msgid "Images Layout"
 msgstr "Kuvien asettelu"
 
-#: includes/admin/settings-fields.php:612
+#: includes/admin/settings-fields.php:624
 msgid "Images Columns"
 msgstr "Kuvat Sarakkeet"
 
-#: includes/admin/settings-fields.php:623
+#: includes/admin/settings-fields.php:635
 msgid "Images Per Page"
 msgstr "Kuvia sivulla"
 
-#: includes/admin/settings-fields.php:629
+#: includes/admin/settings-fields.php:641
 msgid "Images Pagination Style"
 msgstr "Kuvien sivutus tyyli"
 
-#: includes/admin/settings-fields.php:639
+#: includes/admin/settings-fields.php:651
 msgid "Thumbnail Content"
 msgstr "Pikkukuvan sisältö"
 
-#: includes/admin/settings-fields.php:641
+#: includes/admin/settings-fields.php:653
 msgid "What to show below image thumbnails"
 msgstr "Mitä näytetään kuvien pikkukuvien alla"
 
-#: includes/admin/settings-fields.php:644
+#: includes/admin/settings-fields.php:656
 msgid "Nothing"
 msgstr "Ei mitään"
 
-#: includes/admin/settings-fields.php:645 templates/admin/order-items.php:103
+#: includes/admin/settings-fields.php:657 templates/admin/order-items.php:103
 msgid "Filename"
 msgstr "Tiedostonimi"
 
-#: includes/admin/settings-fields.php:646
+#: includes/admin/settings-fields.php:658
 msgid "Title (Images MUST have EXIF field \"Title\")"
 msgstr "Otsikko (kuvilla PITÄÄ olla EXIF-kenttä \"Otsikko\")"
 
-#: includes/admin/settings-fields.php:647
+#: includes/admin/settings-fields.php:659
 msgid "Caption"
 msgstr "Kuvateksti"
 
-#: includes/admin/settings-fields.php:651
+#: includes/admin/settings-fields.php:663
 msgid "Single Image Caption"
 msgstr "Yksittäisen kuvan kuvateksti"
 
-#: includes/admin/settings-fields.php:654
+#: includes/admin/settings-fields.php:666
 msgid ""
 "Show the image caption (from EXIF metadata) below the image on single image "
 "pages"
@@ -2085,12 +2171,12 @@ msgstr ""
 "Näytä kuvan kuvateksti (EXIF-metatiedoista) kuvan alla yksittäisten kuvien "
 "sivuilla."
 
-#: includes/admin/settings-fields.php:659
+#: includes/admin/settings-fields.php:671
 msgid "Image Sizing"
 msgstr "Kuvien koon säätäminen"
 
 #. translators: %s is the URL to help documentation
-#: includes/admin/settings-fields.php:662
+#: includes/admin/settings-fields.php:674
 #, php-format
 msgid ""
 "Making changes to your image sizes does not immediately affect your "
@@ -2101,15 +2187,15 @@ msgstr ""
 "luotava kaikki kuvat uudelleen. <a href=\"%s\" target=\"_blank\">Katso tämä "
 "ohjeartikkeli</a>"
 
-#: includes/admin/settings-fields.php:666
+#: includes/admin/settings-fields.php:678
 msgid "Thumbnail Size"
 msgstr "Pienoiskuvan koko"
 
-#: includes/admin/settings-fields.php:671
+#: includes/admin/settings-fields.php:683
 msgid "Thumbnail Crop"
 msgstr "Pienoiskuvan rajaus"
 
-#: includes/admin/settings-fields.php:673
+#: includes/admin/settings-fields.php:685
 msgid ""
 "Crop image to this exact size. Note: Cropped images not recommended for "
 "Justified or Masonry layouts"
@@ -2117,27 +2203,27 @@ msgstr ""
 "Rajaa kuva juuri tähän kokoon. Huomaa: Rajattuja kuvia ei suositella "
 "Justified- tai Masonry-asetelmiin"
 
-#: includes/admin/settings-fields.php:674
+#: includes/admin/settings-fields.php:686
 msgid ""
 "Should images be cropped to the exact dimensions of your thumbnail width / "
 "height"
 msgstr "Rajataanko kuvat leveys- ja korkeusasetuksien mukaan"
 
-#: includes/admin/settings-fields.php:679
+#: includes/admin/settings-fields.php:691
 msgid "Large Size"
 msgstr "Suuri koko"
 
-#: includes/admin/settings-fields.php:687
+#: includes/admin/settings-fields.php:699
 msgid "Large size must be larger than thumbnail size (both width and height)"
 msgstr ""
 "Suuren koon on oltava suurempi kuin pikkukuvan koko (sekä leveys että "
 "korkeus)."
 
-#: includes/admin/settings-fields.php:692
+#: includes/admin/settings-fields.php:704
 msgid "Image Quality"
 msgstr "Kuvan laatu"
 
-#: includes/admin/settings-fields.php:694
+#: includes/admin/settings-fields.php:706
 msgid ""
 "Quality that generated images are saved from 1-100. The higher the quality "
 "the larger the file size. If left empty, the default is 82."
@@ -2146,76 +2232,76 @@ msgstr ""
 "laatu, sitä suurempi tiedostokoko. Jos asetus jätetään tyhjäksi, oletusarvo "
 "on 82."
 
-#: includes/admin/settings-fields.php:707
+#: includes/admin/settings-fields.php:719
 msgid "Watermark Image"
 msgstr "Vesileimakuva"
 
-#: includes/admin/settings-fields.php:710
+#: includes/admin/settings-fields.php:722
 msgid "Must be a PNG image, ideally with transparency"
 msgstr "Kuvan on oltava PNG-kuva, mieluiten läpinäkyvä"
 
-#: includes/admin/settings-fields.php:714
+#: includes/admin/settings-fields.php:726
 msgid "Max Size"
 msgstr "Max Koko"
 
-#: includes/admin/settings-fields.php:719
+#: includes/admin/settings-fields.php:731
 msgid "From 1-100, a max percent size of the image"
 msgstr "1-100, kuvan maksimikoko prosentteina"
 
-#: includes/admin/settings-fields.php:722
-#: includes/admin/settings-fields.php:780
+#: includes/admin/settings-fields.php:734
+#: includes/admin/settings-fields.php:792
 msgid "Position"
 msgstr "Asettelu"
 
-#: includes/admin/settings-fields.php:726
+#: includes/admin/settings-fields.php:738
 msgid "Center"
 msgstr "Keskelllä"
 
-#: includes/admin/settings-fields.php:727
+#: includes/admin/settings-fields.php:739
 msgid "Repeat"
 msgstr "Toista"
 
-#: includes/admin/settings-fields.php:728
+#: includes/admin/settings-fields.php:740
 msgid "Top Left"
 msgstr "Ylävasen"
 
-#: includes/admin/settings-fields.php:729
+#: includes/admin/settings-fields.php:741
 msgid "Top Right"
 msgstr "Yläoikea"
 
-#: includes/admin/settings-fields.php:730
+#: includes/admin/settings-fields.php:742
 msgid "Bottom Left"
 msgstr "Alavasen"
 
-#: includes/admin/settings-fields.php:731
+#: includes/admin/settings-fields.php:743
 msgid "Bottom Right"
 msgstr "Alaoikea"
 
-#: includes/admin/settings-fields.php:735
+#: includes/admin/settings-fields.php:747
 msgid "Margin from edge"
 msgstr "Etäisyys reunasta"
 
-#: includes/admin/settings-fields.php:741
+#: includes/admin/settings-fields.php:753
 msgid "Watermark Thumbnails"
 msgstr "Vesileiman pikkukuvat"
 
-#: includes/admin/settings-fields.php:748
+#: includes/admin/settings-fields.php:760
 msgid "Favorites / Selections"
 msgstr "Suosikit / Valinnat"
 
-#: includes/admin/settings-fields.php:753
+#: includes/admin/settings-fields.php:765
 msgid "Enable Favorites"
 msgstr "Ota suosikit käyttöön"
 
-#: includes/admin/settings-fields.php:756
+#: includes/admin/settings-fields.php:768
 msgid "Allow users to save images to their favorites"
 msgstr "Anna käyttäjien tallentaa kuvia suosikkeihinsa"
 
-#: includes/admin/settings-fields.php:759
+#: includes/admin/settings-fields.php:771
 msgid "Enable Guest Favorites"
 msgstr "Ota vieraiden suosikit käyttöön"
 
-#: includes/admin/settings-fields.php:762
+#: includes/admin/settings-fields.php:774
 msgid ""
 "Allow visitors who are not logged in to save favorites for their browser "
 "session"
@@ -2223,11 +2309,11 @@ msgstr ""
 "Salli kirjautumattomien vierailijoiden tallentaa suosikkeja selainistunnon "
 "ajaksi"
 
-#: includes/admin/settings-fields.php:773
+#: includes/admin/settings-fields.php:785
 msgid "Enable Selection Tray"
 msgstr "Ota valintakori käyttöön"
 
-#: includes/admin/settings-fields.php:776
+#: includes/admin/settings-fields.php:788
 msgid ""
 "Show users their selected favorites in a persistent popup while viewing "
 "galleries"
@@ -2235,27 +2321,27 @@ msgstr ""
 "Näytä käyttäjille heidän valitsemansa suosikit pysyvässä ponnahdusikkunassa "
 "gallerioita katsellessa."
 
-#: includes/admin/settings-fields.php:784
+#: includes/admin/settings-fields.php:796
 msgid "Float bottom right"
 msgstr "Kelluva oikeassa alakulmassa"
 
-#: includes/admin/settings-fields.php:785
+#: includes/admin/settings-fields.php:797
 msgid "Float bottom left"
 msgstr "Kelluva vasen alaosa"
 
-#: includes/admin/settings-fields.php:795
+#: includes/admin/settings-fields.php:807
 msgid "Choose where the selection tray appears on the page"
 msgstr "Valitse, mihin valintakenttä näkyy sivulla"
 
-#: includes/admin/settings-fields.php:812
+#: includes/admin/settings-fields.php:824
 msgid "Enable Taxes"
 msgstr "Ota verot käyttöön"
 
-#: includes/admin/settings-fields.php:818
+#: includes/admin/settings-fields.php:830
 msgid "Tax Rates"
 msgstr "Verokannat"
 
-#: includes/admin/settings-fields.php:820
+#: includes/admin/settings-fields.php:832
 msgid ""
 "Be as specific as you need. Order for most priority. You can include "
 "multiple zip/postal codes with commas."
@@ -2263,11 +2349,11 @@ msgstr ""
 "Ole niin tarkka kuin haluat. Järjestä tärkeysjärjestys. Voit lisätä useita "
 "postinumeroita pilkuilla."
 
-#: includes/admin/settings-fields.php:832
+#: includes/admin/settings-fields.php:844
 msgid "Default customer location"
 msgstr "Asiakkaan oletussijainti"
 
-#: includes/admin/settings-fields.php:833
+#: includes/admin/settings-fields.php:845
 msgid ""
 "If customer does not have address entered yet, what location is used to "
 "determine the default location"
@@ -2275,58 +2361,58 @@ msgstr ""
 "Jos asiakkaalla ei ole vielä osoitetta, mitä sijaintia käytetään "
 "oletussijainnin määrittämiseen"
 
-#: includes/admin/settings-fields.php:836
+#: includes/admin/settings-fields.php:848
 msgid "No location by default"
 msgstr "Ei oletussijaintia"
 
-#: includes/admin/settings-fields.php:837
+#: includes/admin/settings-fields.php:849
 msgid "My business location"
 msgstr "Yritykseni sijainti"
 
-#: includes/admin/settings-fields.php:869
+#: includes/admin/settings-fields.php:881
 msgid "Display prices"
 msgstr "Näytä hinnat"
 
-#: includes/admin/settings-fields.php:878
+#: includes/admin/settings-fields.php:890
 msgid "Prices entered with tax"
 msgstr "Verolliset hinnat"
 
-#: includes/admin/settings-fields.php:887
+#: includes/admin/settings-fields.php:899
 msgid "Price display suffix"
 msgstr "Hintanäytön jälkiliite"
 
-#: includes/admin/settings-fields.php:890
+#: includes/admin/settings-fields.php:902
 msgid "This shows after a price"
 msgstr "Tämä näkyy hinnan jälkeen"
 
-#: includes/admin/settings-fields.php:899
+#: includes/admin/settings-fields.php:911
 msgid "Taxes"
 msgstr "Verot"
 
-#: includes/admin/settings-fields.php:906
+#: includes/admin/settings-fields.php:918
 msgid "Distraction Free Checkout"
 msgstr "Häiriötön kassa"
 
-#: includes/admin/settings-fields.php:909
+#: includes/admin/settings-fields.php:921
 msgid ""
 "Remove site header/footer and let user focus only on the checkout experience"
 msgstr ""
 "Poista sivuston header/footer ja anna käyttäjän keskittyä vain "
 "kassakokemukseen"
 
-#: includes/admin/settings-fields.php:914
+#: includes/admin/settings-fields.php:926
 msgid "Allow Guest Checkout"
 msgstr "Salli vieraskassan käyttö"
 
-#: includes/admin/settings-fields.php:917
+#: includes/admin/settings-fields.php:929
 msgid "Allow users to checkout as a guest (do not require a user account)"
 msgstr "Salli käyttäjien tehdä kassakäynti vieraana (ei vaadi käyttäjätiliä)"
 
-#: includes/admin/settings-fields.php:920
+#: includes/admin/settings-fields.php:932
 msgid "Always collect a billing address"
 msgstr "Kysy aina laskutusosoite"
 
-#: includes/admin/settings-fields.php:923
+#: includes/admin/settings-fields.php:935
 msgid ""
 "Collect the address of the person paying on every order, even when nothing "
 "is being shipped. Invoices need the buyer's address, and the buyer is not "
@@ -2340,11 +2426,11 @@ msgstr ""
 "rastittaa ruudun ja käyttää toimitusosoitetta uudelleen. Jotkin maksutavat, "
 "kuten Square, keräävät laskutusosoitteen aina tästä asetuksesta riippumatta."
 
-#: includes/admin/settings-fields.php:927
+#: includes/admin/settings-fields.php:939
 msgid "Allowed Countries"
 msgstr "Sallitut maat"
 
-#: includes/admin/settings-fields.php:928
+#: includes/admin/settings-fields.php:940
 msgid ""
 "Which countries users can select at checkout. If empty, all countries are "
 "allowed."
@@ -2352,12 +2438,12 @@ msgstr ""
 "Mitkä maat käyttäjät voivat valita kassalla. Jos kenttä on tyhjä, kaikki "
 "maat ovat sallittuja."
 
-#: includes/admin/settings-fields.php:936
+#: includes/admin/settings-fields.php:948
 msgid "Google Maps API Key"
 msgstr "Google Maps API-avain"
 
 #. translators: %s is the URL to help documentation
-#: includes/admin/settings-fields.php:940
+#: includes/admin/settings-fields.php:952
 #, php-format
 msgid ""
 "Enter a Google API key to enable address autocomplete at checkout, <a "
@@ -2367,11 +2453,11 @@ msgstr ""
 "täydennyksen käyttöön kassalla, <a href=\"%s\" target=\"_blank\">lisätietoja "
 "täältä</a>"
 
-#: includes/admin/settings-fields.php:951
+#: includes/admin/settings-fields.php:963
 msgid "Next Order Number"
 msgstr "Seuraava tilausnumero"
 
-#: includes/admin/settings-fields.php:954
+#: includes/admin/settings-fields.php:966
 msgid ""
 "Leave blank to use default order numbering, otherwise set the next order "
 "number to be used"
@@ -2379,86 +2465,86 @@ msgstr ""
 "Jätä tyhjäksi, jos haluat käyttää oletustilausnumerointia, muuten aseta "
 "seuraava käytettävä tilausnumero"
 
-#: includes/admin/settings-fields.php:958
+#: includes/admin/settings-fields.php:970
 msgid "Disable Invoice"
 msgstr "Poista lasku käytöstä"
 
-#: includes/admin/settings-fields.php:961
+#: includes/admin/settings-fields.php:973
 msgid "Disable invoices with orders"
 msgstr "Laskujen poistaminen käytöstä tilausten kanssa"
 
-#: includes/admin/settings-fields.php:967
+#: includes/admin/settings-fields.php:979
 msgid "Display Fields"
 msgstr "Näyttökentät"
 
-#: includes/admin/settings-fields.php:972
+#: includes/admin/settings-fields.php:984
 msgid "Other Fields"
 msgstr "Muut alat"
 
-#: includes/admin/settings-fields.php:977
-#: includes/admin/settings-fields.php:987 includes/admin/sunshine-order.php:745
-#: includes/class-cart.php:2064 templates/email/admin-receipt.php:145
+#: includes/admin/settings-fields.php:989
+#: includes/admin/settings-fields.php:999 includes/admin/sunshine-order.php:745
+#: includes/class-cart.php:2065 templates/email/admin-receipt.php:145
 #: templates/email/customer-receipt.php:149
 #: templates/email/order-status.php:117 templates/order/details.php:59
 msgid "Notes"
 msgstr "Muistiinpanot"
 
-#: includes/admin/settings-fields.php:982
+#: includes/admin/settings-fields.php:994
 msgid "Required Other Fields"
 msgstr "Pakolliset muut kentät"
 
-#: includes/admin/settings-fields.php:992
+#: includes/admin/settings-fields.php:1004
 msgid "VAT Label"
 msgstr "ALV-merkintä"
 
-#: includes/admin/settings-fields.php:1042
+#: includes/admin/settings-fields.php:1054
 msgid "Payments"
 msgstr "Maksut"
 
-#: includes/admin/settings-fields.php:1083
+#: includes/admin/settings-fields.php:1095
 msgid "Delivery & Shipping"
 msgstr "Toimitus ja lähetys"
 
-#: includes/admin/settings-fields.php:1090
+#: includes/admin/settings-fields.php:1102
 msgid "Design Elements"
 msgstr "Ulkoasun osat"
 
-#: includes/admin/settings-fields.php:1095
+#: includes/admin/settings-fields.php:1107
 msgid "Pages Theme"
 msgstr "Sivut Teema"
 
-#: includes/admin/settings-fields.php:1099
 #: includes/admin/settings-fields.php:1111
+#: includes/admin/settings-fields.php:1123
 msgid "My WordPress Theme"
 msgstr "WordPressin teema"
 
-#: includes/admin/settings-fields.php:1100
 #: includes/admin/settings-fields.php:1112
+#: includes/admin/settings-fields.php:1124
 msgid "Classic"
 msgstr "Klassinen"
 
-#: includes/admin/settings-fields.php:1101
 #: includes/admin/settings-fields.php:1113
+#: includes/admin/settings-fields.php:1125
 msgid "Cover"
 msgstr "Kansikuva"
 
-#: includes/admin/settings-fields.php:1103
+#: includes/admin/settings-fields.php:1115
 msgid "What should be used for your general theme when viewing Sunshine pages"
 msgstr "Mitä tulisi käyttää yleisteemana Sunshine-sivuja katseltaessa?"
 
-#: includes/admin/settings-fields.php:1107
+#: includes/admin/settings-fields.php:1119
 msgid "Gallery Theme"
 msgstr "Galleria-teema"
 
-#: includes/admin/settings-fields.php:1115
+#: includes/admin/settings-fields.php:1127
 msgid "Allow galleries to use a different theme layout from the main pages"
 msgstr "Salli gallerioiden käyttää eri teeman ulkoasua kuin pääsivujen"
 
-#: includes/admin/settings-fields.php:1119
+#: includes/admin/settings-fields.php:1131
 msgid "Alternate integration"
 msgstr "Vaihtoehtoinen integrointi"
 
-#: includes/admin/settings-fields.php:1122
+#: includes/admin/settings-fields.php:1134
 msgid ""
 "Sunshine tries to blend into your theme seamlessly. If you are seeing weird "
 "layout issues, try this as an alternate method if integrating."
@@ -2467,62 +2553,62 @@ msgstr ""
 "ulkoasuongelmia, kokeile tätä vaihtoehtoista menetelmää, jos integroituminen "
 "on mahdollista."
 
-#: includes/admin/settings-fields.php:1125
-#: includes/admin/settings-fields.php:1327
+#: includes/admin/settings-fields.php:1137
+#: includes/admin/settings-fields.php:1339
 msgid "Logo"
 msgstr "Logo"
 
-#: includes/admin/settings-fields.php:1132
+#: includes/admin/settings-fields.php:1144
 msgid "Classic Theme Options"
 msgstr "Klassinen teema-asetukset"
 
-#: includes/admin/settings-fields.php:1151 themes/cover/functions.php:11
+#: includes/admin/settings-fields.php:1163 themes/cover/functions.php:11
 msgid "Menu Background"
 msgstr "Valikon taustaväri"
 
-#: includes/admin/settings-fields.php:1170 themes/cover/functions.php:16
+#: includes/admin/settings-fields.php:1182 themes/cover/functions.php:16
 msgid "Menu Links"
 msgstr "Valikko Linkit"
 
-#: includes/admin/settings-fields.php:1189 themes/cover/functions.php:21
+#: includes/admin/settings-fields.php:1201 themes/cover/functions.php:21
 msgid "Main Background"
 msgstr "Tärkein tausta"
 
-#: includes/admin/settings-fields.php:1208
+#: includes/admin/settings-fields.php:1220
 msgid "Main Text"
 msgstr "Pääkirjoitus"
 
-#: includes/admin/settings-fields.php:1227
+#: includes/admin/settings-fields.php:1239
 msgid "Main Links"
 msgstr "Tärkeimmät linkit"
 
-#: includes/admin/settings-fields.php:1246
+#: includes/admin/settings-fields.php:1258
 msgid "Gallery Password Box"
 msgstr "Galleria Salasana-ruutu"
 
-#: includes/admin/settings-fields.php:1259
+#: includes/admin/settings-fields.php:1271
 msgid "Gallery Search Box"
 msgstr "Gallerian hakukenttä"
 
-#: includes/admin/settings-fields.php:1272
+#: includes/admin/settings-fields.php:1284
 msgid "Miscellaneous Elements"
 msgstr "Erilaiset elementit"
 
-#: includes/admin/settings-fields.php:1277
+#: includes/admin/settings-fields.php:1289
 msgid "Auto-include Sunshine main menu"
 msgstr "Auringonpaisteen automaattinen sisällyttäminen päävalikkoon"
 
-#: includes/admin/settings-fields.php:1280
+#: includes/admin/settings-fields.php:1292
 msgid ""
 "Automatically have the Sunshine Main Menu appear above the Sunshine content"
 msgstr ""
 "Sunshinen päävalikko näkyy automaattisesti Sunshinen sisällön yläpuolella"
 
-#: includes/admin/settings-fields.php:1284
+#: includes/admin/settings-fields.php:1296
 msgid "Hide link to main galleries page"
 msgstr "Piilota linkki gallerioiden pääsivulle"
 
-#: includes/admin/settings-fields.php:1287
+#: includes/admin/settings-fields.php:1299
 msgid ""
 "Hide the link to your main galleries page in any Sunshine menus. Helpful if "
 "you want users to stick to just a single gallery."
@@ -2530,59 +2616,59 @@ msgstr ""
 "Piilota linkki päägalleriasivulle kaikissa Sunshine-valikoissa. Hyödyllinen, "
 "jos haluat käyttäjien pysyvän vain yhdessä galleriassa."
 
-#: includes/admin/settings-fields.php:1291
+#: includes/admin/settings-fields.php:1303
 msgid "Customizations"
 msgstr "Mukautukset"
 
-#: includes/admin/settings-fields.php:1296
+#: includes/admin/settings-fields.php:1308
 msgid "Custom CSS for frontend"
 msgstr "Mukautettu CSS frontendiä varten"
 
-#: includes/admin/settings-fields.php:1302
+#: includes/admin/settings-fields.php:1314
 msgid "Custom CSS for emails"
 msgstr "Mukautettu CSS sähköposteja varten"
 
-#: includes/admin/settings-fields.php:1307
+#: includes/admin/settings-fields.php:1319
 msgid "Before Sunshine"
 msgstr "Näytettävä koodi ennen Sunshinea"
 
-#: includes/admin/settings-fields.php:1310
+#: includes/admin/settings-fields.php:1322
 msgid "Shown before every Sunshine associated page"
 msgstr "Näytetään ennen jokaista Auringonpaisteeseen liittyvää sivua"
 
-#: includes/admin/settings-fields.php:1313
+#: includes/admin/settings-fields.php:1325
 msgid "After Sunshine"
 msgstr "Näytettävä koodi Sunshinen jälkeen"
 
-#: includes/admin/settings-fields.php:1316
+#: includes/admin/settings-fields.php:1328
 msgid "Shown after every Sunshine associated page"
 msgstr "Näytetään jokaisen auringonpaisteeseen liittyvän sivun jälkeen"
 
-#: includes/admin/settings-fields.php:1320
+#: includes/admin/settings-fields.php:1332
 msgid "Invoices"
 msgstr "Laskut"
 
-#: includes/admin/settings-fields.php:1330
+#: includes/admin/settings-fields.php:1342
 msgid "Will be shown on a white background"
 msgstr "Näytetään valkoisella pohjalla"
 
-#: includes/admin/settings-fields.php:1333
+#: includes/admin/settings-fields.php:1345
 msgid "Extra Content"
 msgstr "Lisäsisältö"
 
-#: includes/admin/settings-fields.php:1336
+#: includes/admin/settings-fields.php:1348
 msgid "Extra content to be shown on all invoices"
 msgstr "Kaikissa laskuissa ilmoitettava lisäsisältö"
 
-#: includes/admin/settings-fields.php:1345
+#: includes/admin/settings-fields.php:1357
 msgid "Design"
 msgstr "Ulkoasu"
 
-#: includes/admin/settings-fields.php:1358
+#: includes/admin/settings-fields.php:1370
 msgid "Email Notifications"
 msgstr "Sähköposti-ilmoitukset"
 
-#: includes/admin/settings-fields.php:1361
+#: includes/admin/settings-fields.php:1373
 msgid ""
 "Email notifications sent from Sunshine Photo Cart are listed below. Click on "
 "an email to configure it."
@@ -2590,68 +2676,68 @@ msgstr ""
 "Sunshine Photo Cartin lähettämät sähköposti-ilmoitukset on lueteltu alla. "
 "Klikkaa sähköpostia määrittääksesi sen."
 
-#: includes/admin/settings-fields.php:1370
+#: includes/admin/settings-fields.php:1382
 msgid "Email Sender"
 msgstr "Sähköpostin lähettäjä"
 
-#: includes/admin/settings-fields.php:1376
+#: includes/admin/settings-fields.php:1388
 msgid "From Name"
 msgstr "Lähettäjän nimi"
 
-#: includes/admin/settings-fields.php:1377
+#: includes/admin/settings-fields.php:1389
 msgid "When emails are sent to customers, what name should they come from"
 msgstr "Nimi, jolla sähköpostiviestit lähetetään asiakkaille"
 
-#: includes/admin/settings-fields.php:1383
+#: includes/admin/settings-fields.php:1395
 msgid "From Email"
 msgstr "Lähettäjän sähköpostiosoite"
 
-#: includes/admin/settings-fields.php:1384
+#: includes/admin/settings-fields.php:1396
 msgid ""
 "When emails are sent to customers, what email address should they come from"
 msgstr "Sähköpostiosoite, josta viestit lähetetään asiakkaille"
 
-#: includes/admin/settings-fields.php:1390
+#: includes/admin/settings-fields.php:1402
 msgid "Email Template"
 msgstr "Sähköpostin malli"
 
-#: includes/admin/settings-fields.php:1396
+#: includes/admin/settings-fields.php:1408
 msgid "Email logo"
 msgstr "Sähköpostilogo"
 
-#: includes/admin/settings-fields.php:1397
+#: includes/admin/settings-fields.php:1409
 msgid "Logo to use in header of email"
 msgstr "Sähköpostin otsikossa käytettävä logo"
 
-#: includes/admin/settings-fields.php:1403
+#: includes/admin/settings-fields.php:1415
 msgid "Signature"
 msgstr "Allekirjoitus"
 
-#: includes/admin/settings-fields.php:1404
+#: includes/admin/settings-fields.php:1416
 msgid "Included in footer of every email"
 msgstr "Sisältyy jokaisen sähköpostin alatunnisteeseen"
 
-#: includes/admin/settings-fields.php:1463
+#: includes/admin/settings-fields.php:1475
 msgid "Integrations"
 msgstr "Integraatiot"
 
-#: includes/admin/settings-fields.php:1489
+#: includes/admin/settings-fields.php:1501
 msgid "Please enter your license key in order to enable your add-ons"
 msgstr "Syötä lisenssiavain, jotta voit ottaa lisäosat käyttöön"
 
-#: includes/admin/settings-fields.php:1493
+#: includes/admin/settings-fields.php:1505
 msgid "Licenses"
 msgstr "Luvat"
 
-#: includes/admin/settings-fields.php:1523
+#: includes/admin/settings-fields.php:1535
 msgid "Account Erasure Requests"
 msgstr "Tilin poistamispyynnöt"
 
-#: includes/admin/settings-fields.php:1529
+#: includes/admin/settings-fields.php:1541
 msgid "Remove personal data from orders"
 msgstr "Poista henkilötiedot tilauksista"
 
-#: includes/admin/settings-fields.php:1531
+#: includes/admin/settings-fields.php:1543
 msgid ""
 "When handling an account erasure request, should personal data within orders "
 "be removed? If disabled, order personal data will be retained."
@@ -2660,15 +2746,15 @@ msgstr ""
 "henkilötiedot poistaa? Jos toiminto on pois käytöstä, tilausten "
 "henkilötiedot säilytetään."
 
-#: includes/admin/settings-fields.php:1536
+#: includes/admin/settings-fields.php:1548
 msgid "Personal Data Removal"
 msgstr "Henkilötietojen poistaminen"
 
-#: includes/admin/settings-fields.php:1541
+#: includes/admin/settings-fields.php:1553
 msgid "Allow bulk removal of personal data"
 msgstr "Salli henkilötietojen joukkopoisto"
 
-#: includes/admin/settings-fields.php:1543
+#: includes/admin/settings-fields.php:1555
 msgid ""
 "Adds an option to the orders screen for removing personal data in bulk. Note "
 "that removing personal data cannot be undone."
@@ -2676,11 +2762,11 @@ msgstr ""
 "Lisää tilausnäyttöön vaihtoehdon henkilötietojen poistamiseksi joukkona. "
 "Huomaa, että henkilötietojen poistamista ei voi peruuttaa."
 
-#: includes/admin/settings-fields.php:1548
+#: includes/admin/settings-fields.php:1560
 msgid "Personal Data Retention"
 msgstr "Henkilötietojen säilyttäminen"
 
-#: includes/admin/settings-fields.php:1550
+#: includes/admin/settings-fields.php:1562
 msgid ""
 "Choose how long to retain personal data when it's no longer needed for "
 "processing. Leave the following options blank to retain this data "
@@ -2690,19 +2776,19 @@ msgstr ""
 "käsittelyä varten. Jätä seuraavat vaihtoehdot tyhjiksi, jos haluat säilyttää "
 "nämä tiedot toistaiseksi."
 
-#: includes/admin/settings-fields.php:1555
+#: includes/admin/settings-fields.php:1567
 msgid "Retain inactive customer accounts"
 msgstr "Säilytä passiiviset asiakastilit"
 
-#: includes/admin/settings-fields.php:1560
+#: includes/admin/settings-fields.php:1572
 msgid "Retain completed orders"
 msgstr "Säilytä valmiit tilaukset"
 
-#: includes/admin/settings-fields.php:1565
+#: includes/admin/settings-fields.php:1577
 msgid "Delete expired galleries after"
 msgstr "Poista vanhentuneet galleriat, kun on kulunut"
 
-#: includes/admin/settings-fields.php:1569
+#: includes/admin/settings-fields.php:1581
 msgid ""
 "days — Galleries will be permanently deleted this many days after their "
 "expiration date. Leave blank to keep expired galleries indefinitely."
@@ -2711,59 +2797,59 @@ msgstr ""
 "vanhenemispäivän jälkeen. Jätä tyhjäksi, jos haluat säilyttää vanhentuneet "
 "galleriat ikuisesti."
 
-#: includes/admin/settings-fields.php:1578
+#: includes/admin/settings-fields.php:1590
 msgid "Privacy & Data"
 msgstr "Yksityisyys ja tiedot"
 
-#: includes/admin/settings-fields.php:1587
+#: includes/admin/settings-fields.php:1599
 msgid "Allow Tracking"
 msgstr "Salli seuranta"
 
-#: includes/admin/settings-fields.php:1592
+#: includes/admin/settings-fields.php:1604
 msgid "Types of Photography"
 msgstr "Valokuvauksen tyypit"
 
-#: includes/admin/settings-fields.php:1595
+#: includes/admin/settings-fields.php:1607
 msgid "Family"
 msgstr "Perhe"
 
-#: includes/admin/settings-fields.php:1596
+#: includes/admin/settings-fields.php:1608
 msgid "Newborn"
 msgstr "Vastasyntynyt"
 
-#: includes/admin/settings-fields.php:1597
+#: includes/admin/settings-fields.php:1609
 msgid "Wedding"
 msgstr "Häät"
 
-#: includes/admin/settings-fields.php:1598
+#: includes/admin/settings-fields.php:1610
 msgid "School"
 msgstr "Oppilaitos"
 
-#: includes/admin/settings-fields.php:1599
+#: includes/admin/settings-fields.php:1611
 msgid "Sports"
 msgstr "Urheilu"
 
-#: includes/admin/settings-fields.php:1600
+#: includes/admin/settings-fields.php:1612
 msgid "Portraits"
 msgstr "Muotokuvat"
 
-#: includes/admin/settings-fields.php:1601
+#: includes/admin/settings-fields.php:1613
 msgid "Animals"
 msgstr "Eläimet"
 
-#: includes/admin/settings-fields.php:1602
+#: includes/admin/settings-fields.php:1614
 msgid "Events"
 msgstr "Tapahtumat"
 
-#: includes/admin/settings-fields.php:1603
+#: includes/admin/settings-fields.php:1615
 msgid "Real Estate"
 msgstr "Kiinteistöt"
 
-#: includes/admin/settings-fields.php:1609
+#: includes/admin/settings-fields.php:1621
 msgid "Usage Tracking"
 msgstr "Käyttötilastot"
 
-#: includes/admin/settings-fields.php:1611
+#: includes/admin/settings-fields.php:1623
 msgid ""
 "This data can help provide useful information to Sunshine Photo Cart and "
 "help guide new features and growth strategies. Your participation is "
@@ -2927,80 +3013,96 @@ msgstr "FTP-kansiot"
 msgid "Select folder"
 msgstr "Valitse kansio"
 
-#: includes/admin/sunshine-gallery.php:372
+#. translators: 1: number of photos, 2: date and time of the last one
+#: includes/admin/sunshine-gallery.php:374
+#, php-format
+msgid ""
+"Sunshine checks this gallery's folder for new photos. It has added %1$d "
+"photo, last on %2$s."
+msgid_plural ""
+"Sunshine checks this gallery's folder for new photos. It has added %1$d "
+"photos, last on %2$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/sunshine-gallery.php:380
+msgid "Sunshine checks this gallery's folder for new photos."
+msgstr "Sunshine tarkistaa tämän gallerian kansion uusien kuvien varalta."
+
+#: includes/admin/sunshine-gallery.php:391
 msgid "Choose from Media Library"
 msgstr "Valitse mediakirjastosta"
 
-#: includes/admin/sunshine-gallery.php:391
-#: includes/admin/sunshine-gallery.php:555
+#: includes/admin/sunshine-gallery.php:410
+#: includes/admin/sunshine-gallery.php:574
 msgid "Select all images"
 msgstr "Valitse kaikki kuvat"
 
-#: includes/admin/sunshine-gallery.php:392
+#: includes/admin/sunshine-gallery.php:411
 msgid "Regenerate all gallery images"
 msgstr "Regeneroi kaikki galleriakuvat"
 
-#: includes/admin/sunshine-gallery.php:393
+#: includes/admin/sunshine-gallery.php:412
 msgid "Refresh photo details"
 msgstr "Päivitä kuvien tiedot"
 
-#: includes/admin/sunshine-gallery.php:394
+#: includes/admin/sunshine-gallery.php:413
 msgid "Delete selected images"
 msgstr "Poista valitut kuvat"
 
 #. translators: %1$s is the number of images currently loaded, %2$s is the total number of images
-#: includes/admin/sunshine-gallery.php:399
+#: includes/admin/sunshine-gallery.php:418
 #, php-format
 msgid "Showing %1$s of %2$s images"
 msgstr "Näytetään %1$s of %2$s kuvaa"
 
 #. translators: %s is a select dropdown with options for number of images to load
-#: includes/admin/sunshine-gallery.php:402
+#: includes/admin/sunshine-gallery.php:421
 #, php-format
 msgid "Load %s more images"
 msgstr "Lataa %s lisää kuvia"
 
-#: includes/admin/sunshine-gallery.php:403
+#: includes/admin/sunshine-gallery.php:422
 msgid "GO"
 msgstr "MENE"
 
-#: includes/admin/sunshine-gallery.php:418
+#: includes/admin/sunshine-gallery.php:437
 msgid "Loading"
 msgstr "Ladataan"
 
-#: includes/admin/sunshine-gallery.php:445
+#: includes/admin/sunshine-gallery.php:464
 msgid "Saving image order..."
 msgstr "Kuvajärjestyksen tallentaminen..."
 
-#: includes/admin/sunshine-gallery.php:489
+#: includes/admin/sunshine-gallery.php:508
 msgid "Sorry, the image could not be deleted for some reason"
 msgstr "Anteeksi, kuvaa ei jostain syystä voitu poistaa"
 
-#: includes/admin/sunshine-gallery.php:521
+#: includes/admin/sunshine-gallery.php:540
 msgid "Sorry, the image could not be set as featured"
 msgstr "Anteeksi, kuvaa ei voitu asettaa esillä olevaksi"
 
-#: includes/admin/sunshine-gallery.php:549
+#: includes/admin/sunshine-gallery.php:568
 msgid "Select no images"
 msgstr "Valitse ei kuvia"
 
-#: includes/admin/sunshine-gallery.php:608
+#: includes/admin/sunshine-gallery.php:627
 msgid "Allowed Files"
 msgstr "Sallitut tiedot"
 
-#: includes/admin/sunshine-gallery.php:875
+#: includes/admin/sunshine-gallery.php:894
 msgid "No importable images were found in the selected folder."
 msgstr "Valitusta kansiosta ei löytynyt tuontikelpoisia kuvia."
 
-#: includes/admin/sunshine-gallery.php:907
+#: includes/admin/sunshine-gallery.php:926
 msgid "The import stopped."
 msgstr "Tuonti pysähtyi."
 
-#: includes/admin/sunshine-gallery.php:908
+#: includes/admin/sunshine-gallery.php:927
 msgid "The import stopped before every photo was brought in."
 msgstr "Tuonti pysähtyi ennen kuin kaikki kuvat oli tuotu."
 
-#: includes/admin/sunshine-gallery.php:962
+#: includes/admin/sunshine-gallery.php:981
 msgid ""
 "The image did not fully upload because it is too large for your server to "
 "handle. Thumbnails and watermarks may not have been applied."
@@ -3008,68 +3110,68 @@ msgstr ""
 "Kuva ei latautunut kokonaan, koska se on liian suuri palvelimellesi. "
 "Pienoiskuvia ja vesileimoja ei ehkä ole lisätty."
 
-#: includes/admin/sunshine-gallery.php:988
+#: includes/admin/sunshine-gallery.php:1007
 msgid ""
 "Unable to inspect the selected directory before import. Please try again."
 msgstr "Valittua hakemistoa ei voitu tarkistaa ennen tuontia. Yritä uudelleen."
 
-#: includes/admin/sunshine-gallery.php:1031
+#: includes/admin/sunshine-gallery.php:1050
 msgid "Processing failed"
 msgstr "Käsittely epäonnistui"
 
-#: includes/admin/sunshine-gallery.php:1061
+#: includes/admin/sunshine-gallery.php:1080
 msgid "You do not have permission to edit this gallery"
 msgstr "Sinulla ei ole oikeutta muokata tätä galleriaa"
 
-#: includes/admin/sunshine-gallery.php:1084
+#: includes/admin/sunshine-gallery.php:1103
 msgid "No file was uploaded"
 msgstr "Tiedostoa ei ladattu"
 
-#: includes/admin/sunshine-gallery.php:1117
+#: includes/admin/sunshine-gallery.php:1136
 msgid "Invalid file type"
 msgstr "Tiedoston tyyppi ei kelpaa"
 
-#: includes/admin/sunshine-gallery.php:1125
+#: includes/admin/sunshine-gallery.php:1144
 msgid "You do not have permission to upload files"
 msgstr "Sinulla ei ole oikeutta ladata tiedostoja"
 
-#: includes/admin/sunshine-gallery.php:1136
+#: includes/admin/sunshine-gallery.php:1155
 msgid "Upload directory is not writable"
 msgstr "Upload-hakemisto ei ole kirjoitettavissa"
 
-#: includes/admin/sunshine-gallery.php:1633
-#: includes/admin/sunshine-gallery.php:1686
+#: includes/admin/sunshine-gallery.php:1652
+#: includes/admin/sunshine-gallery.php:1705
 msgid "You do not have permission to import images."
 msgstr "Sinulla ei ole lupaa tuoda kuvia."
 
-#: includes/admin/sunshine-gallery.php:1642
+#: includes/admin/sunshine-gallery.php:1661
 msgid "A directory must be selected before importing."
 msgstr "Hakemisto on valittava ennen tuontia."
 
-#: includes/admin/sunshine-gallery.php:1651
-#: includes/admin/sunshine-gallery.php:1755
+#: includes/admin/sunshine-gallery.php:1670
+#: includes/admin/sunshine-gallery.php:1777
 msgid "The selected directory is not available."
 msgstr "Valittua hakemistoa ei ole käytettävissä."
 
-#: includes/admin/sunshine-gallery.php:1874
+#: includes/admin/sunshine-gallery.php:1896
 msgid "Already uploaded to gallery"
 msgstr "Jo ladattu galleriaan"
 
 #. translators: %s is the upload directory
-#: includes/admin/sunshine-gallery.php:1889
+#: includes/admin/sunshine-gallery.php:1911
 #, php-format
 msgid "The selected file could not be copied to %s."
 msgstr "Valittua tiedostoa ei voitu kopioida kohtaan %s."
 
-#: includes/admin/sunshine-gallery.php:1904
+#: includes/admin/sunshine-gallery.php:1926
 msgid "Could not be added to the gallery"
 msgstr "Ei voitu lisätä galleriaan"
 
-#: includes/admin/sunshine-gallery.php:1921
+#: includes/admin/sunshine-gallery.php:1943
 msgid "No emails collected yet"
 msgstr "Ei vielä kerättyjä sähköposteja"
 
-#: includes/admin/sunshine-gallery.php:1995
+#: includes/admin/sunshine-gallery.php:2017
 msgid "Add gallery name"
 msgstr "Lisää gallerian nimi"
 
@@ -3133,7 +3235,7 @@ msgid "Select All"
 msgstr "Valitse kaikki"
 
 #: includes/admin/sunshine-order.php:434 includes/class-order.php:1058
-#: includes/class-sunshinephotocart.php:539 gallery.php:272 admin.php:237
+#: includes/class-sunshinephotocart.php:541 gallery.php:272 admin.php:237
 #: admin/customers.php:20 admin/customers.php:42 class-admin-gift-cards.php:189
 msgid "Order"
 msgstr "Tilaus"
@@ -3223,8 +3325,8 @@ msgid "Delivery/Shipping Method"
 msgstr "Toimitus/kuljetustapa"
 
 #: includes/admin/sunshine-order.php:683
-#: includes/class-sunshinephotocart.php:588
-#: includes/class-sunshinephotocart.php:599 class-export-orders.php:514
+#: includes/class-sunshinephotocart.php:590
+#: includes/class-sunshinephotocart.php:601 class-export-orders.php:514
 #: class-export-orders.php:609
 msgid "Order Status"
 msgstr "Tilauksen status"
@@ -3301,7 +3403,7 @@ msgid "Image Data"
 msgstr "Kuvatiedot"
 
 #: includes/admin/sunshine-order.php:807 includes/admin/sunshine-order.php:844
-#: includes/class-sunshinephotocart.php:427 templates/admin/order-items.php:104
+#: includes/class-sunshinephotocart.php:429 templates/admin/order-items.php:104
 #: templates/cart/item.php:5 templates/cart/items.php:5
 #: templates/checkout/summary.php:12 templates/invoice/admin.php:214
 #: templates/invoice/admin.php:226 templates/order/item.php:5
@@ -3608,7 +3710,7 @@ msgstr "Orpoja ei löytynyt!"
 
 #: includes/admin/tools/orphans.php:162
 #: includes/admin/tools/refresh-photo-details.php:221
-#: includes/admin/tools/regenerate.php:450
+#: includes/admin/tools/regenerate.php:637
 #: includes/admin/tools/square-reconcile.php:184
 #: includes/admin/tools/unused-image-sizes.php:153 hooks.php:693
 msgid "Abort"
@@ -3670,7 +3772,8 @@ msgstr "Päivitetään kuvien tietoja galleriaan \"%s\""
 
 #: includes/admin/tools/refresh-photo-details.php:231
 #: includes/admin/tools/refresh-photo-details.php:256
-#: includes/admin/tools/regenerate.php:480
+#: includes/admin/tools/regenerate.php:667
+#: includes/admin/tools/regenerate.php:680
 msgid "Done!"
 msgstr "Valmista!"
 
@@ -3684,7 +3787,8 @@ msgstr ""
 
 #: includes/admin/tools/regenerate.php:22
 #: includes/admin/tools/regenerate.php:25
-#: includes/admin/tools/regenerate.php:37
+#: includes/admin/tools/regenerate.php:39
+#: includes/admin/tools/regenerate.php:83
 msgid "Regenerate Images"
 msgstr "Uudistaa kuvia"
 
@@ -3696,38 +3800,50 @@ msgstr ""
 "Jos olet muuttanut pikkukuvan kokoa, digitaalisen latauksen kokoa tai "
 "vesileima-asetuksia, sinun on luotava kuvat uudelleen."
 
-#: includes/admin/tools/regenerate.php:193
+#: includes/admin/tools/regenerate.php:252
 msgid "Could not find original file to regenerate from"
 msgstr ""
 "Alkuperäistä tiedostoa ei löytynyt, josta se voitaisiin luoda uudelleen"
 
-#: includes/admin/tools/regenerate.php:231
+#: includes/admin/tools/regenerate.php:290
 msgid "Could not download file from cloud storage for regeneration"
 msgstr ""
 "Tiedostoa ei voitu ladata pilvitallennustilasta uudelleengenerointia varten."
 
-#: includes/admin/tools/regenerate.php:240
+#: includes/admin/tools/regenerate.php:299
 msgid "Cloud Storage addon is required to regenerate this offloaded image"
 msgstr ""
 "Tämän siirretyn kuvan uudelleen luomiseen tarvitaan Cloud Storage -lisäosa."
 
-#: includes/admin/tools/regenerate.php:269
+#: includes/admin/tools/regenerate.php:321
+msgid "Could not restore the original file from cloud storage"
+msgstr "Alkuperäistä tiedostoa ei voitu palauttaa pilvitallennustilasta"
+
+#: includes/admin/tools/regenerate.php:335
 msgid "Original file is missing locally and no cloud-storage key is set."
 msgstr ""
 "Alkuperäinen tiedosto puuttuu paikallisesti eikä pilvitallennusavainta ole "
 "asetettu."
 
 #. translators: %s is the gallery title
-#: includes/admin/tools/regenerate.php:435
+#: includes/admin/tools/regenerate.php:618
 #, php-format
 msgid "Regenerating images for \"%s\""
 msgstr "Kuvien uudelleenluominen kohteelle \"%s\""
 
-#: includes/admin/tools/regenerate.php:438
+#. translators: %d is the number of galleries
+#: includes/admin/tools/regenerate.php:622
+#, fuzzy, php-format
+msgid "Regenerating images for %d gallery"
+msgid_plural "Regenerating images for %d galleries"
+msgstr[0] "Kuvien uudelleenluominen kohteelle \"%s\""
+msgstr[1] "Kuvien uudelleenluominen kohteelle \"%s\""
+
+#: includes/admin/tools/regenerate.php:625
 msgid "Regenerating images"
 msgstr "Kuvien uudistaminen"
 
-#: includes/admin/tools/regenerate.php:473
+#: includes/admin/tools/regenerate.php:660
 msgid ""
 "Image did not fully upload because it is too large for your server to "
 "handle. Thumbnails and watermarks may not have been applied. Recommend "
@@ -3737,12 +3853,36 @@ msgstr ""
 "palvelimellesi. Pienoiskuvia ja vesileimoja ei ehkä ole otettu käyttöön. "
 "Suosittele käytettävissä olevan muistin lisäämistä."
 
-#: includes/admin/tools/regenerate.php:514
+#: includes/admin/tools/regenerate.php:710
+msgid "Sub-galleries Found"
+msgstr "Alagallerioita löytyi"
+
+#. translators: %d is the number of sub-galleries
+#: includes/admin/tools/regenerate.php:716
+#, php-format
+msgid ""
+"There is %d sub-gallery inside the galleries you picked. Do you want to "
+"regenerate its images too?"
+msgid_plural ""
+"There are %d sub-galleries inside the galleries you picked. Do you want to "
+"regenerate their images too?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/admin/tools/regenerate.php:729
+msgid "Yes, include sub-galleries"
+msgstr "Kyllä, ota alagalleriat mukaan"
+
+#: includes/admin/tools/regenerate.php:732
+msgid "No, only the galleries I picked"
+msgstr "Ei, vain valitsemani galleriat"
+
+#: includes/admin/tools/regenerate.php:754
 msgid "Watermark Settings Detected"
 msgstr "Vesileiman asetukset havaittu"
 
 #. translators: %d is the number of images without watermark
-#: includes/admin/tools/regenerate.php:520
+#: includes/admin/tools/regenerate.php:760
 #, php-format
 msgid ""
 "You have %d image that does not have watermark enabled, but you have a "
@@ -3757,19 +3897,19 @@ msgstr[1] ""
 "Sinulla on %d kuvaa, joissa vesileima ei ole käytössä, vaikka yleisissä "
 "asetuksissasi on määritetty vesileima."
 
-#: includes/admin/tools/regenerate.php:531
+#: includes/admin/tools/regenerate.php:771
 msgid "How would you like to proceed?"
 msgstr "Miten haluatte edetä?"
 
-#: includes/admin/tools/regenerate.php:534
+#: includes/admin/tools/regenerate.php:774
 msgid "Apply watermark to all images"
 msgstr "Lisää vesileima kaikkiin kuviin"
 
-#: includes/admin/tools/regenerate.php:537
+#: includes/admin/tools/regenerate.php:777
 msgid "Keep current image watermark settings"
 msgstr "Säilytä nykyiset kuvan vesileimausasetukset"
 
-#: includes/admin/tools/regenerate.php:574
+#: includes/admin/tools/regenerate.php:815
 msgid ""
 "No image found at this position. It may have been deleted since this run "
 "started."
@@ -3922,56 +4062,58 @@ msgstr "Tuote on poistettu ostoskoristasi, koska sitä ei ole enää olemassa"
 msgid ""
 "An item has been removed from your cart because one of its options is no "
 "longer available"
-msgstr "Tuote poistettiin ostoskoristasi, koska yksi sen vaihtoehdoista ei ole enää saatavilla"
+msgstr ""
+"Tuote poistettiin ostoskoristasi, koska yksi sen vaihtoehdoista ei ole enää "
+"saatavilla"
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:750
+#: includes/class-cart.php:751
 #, php-format
 msgid "Discount \"%s\" removed because it is no longer valid"
 msgstr "Alennus \"%s\" poistettu, koska se ei ole enää voimassa"
 
-#: includes/class-cart.php:1697
+#: includes/class-cart.php:1698
 msgid "Contact Information"
 msgstr "Yhteystiedot"
 
-#: includes/class-cart.php:1702 includes/class-countries.php:3424
+#: includes/class-cart.php:1703 includes/class-countries.php:3424
 #: includes/functions/account.php:579 templates/account/signup.php:20
 #: class-export-orders.php:522
 msgid "First Name"
 msgstr "Etunimi"
 
-#: includes/class-cart.php:1711 includes/class-countries.php:3433
+#: includes/class-cart.php:1712 includes/class-countries.php:3433
 #: includes/functions/account.php:587 templates/account/signup.php:27
 #: class-export-orders.php:523
 msgid "Last Name"
 msgstr "Sukunimi"
 
-#: includes/class-cart.php:1737 templates/account/login.php:18
+#: includes/class-cart.php:1738 templates/account/login.php:18
 #: templates/account/signup.php:9 templates/shortcodes/password.php:4
 msgid "Password"
 msgstr "Salasana"
 
-#: includes/class-cart.php:1739
+#: includes/class-cart.php:1740
 msgid "Optionally set a password"
 msgstr "Vaihtoehtoisesti salasanan asettaminen"
 
-#: includes/class-cart.php:1756 templates/email/admin-receipt.php:198
+#: includes/class-cart.php:1757 templates/email/admin-receipt.php:198
 #: templates/email/customer-receipt.php:184
 #: templates/email/order-status.php:152 templates/invoice/admin.php:185
 #: templates/order/details.php:39 class-export-orders.php:526
 msgid "EU VAT Number"
 msgstr "EU:n alv-numero"
 
-#: includes/class-cart.php:1858
+#: includes/class-cart.php:1859
 msgid "Delivery Method"
 msgstr "Toimitustapa"
 
-#: includes/class-cart.php:1918 includes/class-cart.php:1935
+#: includes/class-cart.php:1919 includes/class-cart.php:1936
 #: templates/invoice/admin.php:174 class-export-orders.php:520
 msgid "Shipping Method"
 msgstr "Toimitustapa"
 
-#: includes/class-cart.php:1940 includes/class-cart.php:2452
+#: includes/class-cart.php:1941 includes/class-cart.php:2453
 msgid ""
 "Sorry, shipping is not available to the address you entered. Please double "
 "check the address or try a different shipping address."
@@ -3979,36 +4121,36 @@ msgstr ""
 "Valitettavasti toimitus ei ole mahdollinen antamaasi osoitteeseen. Tarkista "
 "osoite tai kokeile toista toimitusosoitetta."
 
-#: includes/class-cart.php:2001
+#: includes/class-cart.php:2002
 msgid "Use shipping address as billing address"
 msgstr "Käytä toimitusosoitetta laskutusosoitteena"
 
-#: includes/class-cart.php:2039
+#: includes/class-cart.php:2040
 msgid "Same as shipping address"
 msgstr "Sama kuin toimitusosoite"
 
-#: includes/class-cart.php:2091
+#: includes/class-cart.php:2092
 msgid "Payment"
 msgstr "Maksu"
 
 #. translators: %s is the available credit amount formatted as price
-#: includes/class-cart.php:2101
+#: includes/class-cart.php:2102
 #, php-format
 msgid "Use my credits (%s available)"
 msgstr "Käytä hyvityksiäni (%s käytettävissä)"
 
 #. translators: %s is the order total amount formatted as price
-#: includes/class-cart.php:2109 includes/class-payment-method.php:242
+#: includes/class-cart.php:2110 includes/class-payment-method.php:242
 #, php-format
 msgid "Submit Order & Pay %s"
 msgstr "Lähetä tilaus ja maksa %s"
 
-#: includes/class-cart.php:2111
+#: includes/class-cart.php:2112
 msgid "Submit Order for Free"
 msgstr "Lähetä tilaus ilmaiseksi"
 
 #. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
-#: includes/class-cart.php:2136
+#: includes/class-cart.php:2137
 #, php-format
 msgid ""
 "By submitting this order, you agree to our <a href=\"%1$s\" "
@@ -4018,76 +4160,76 @@ msgstr ""
 "target=\"_blank\">%2$s</a>"
 
 #. translators: %s is the section name
-#: includes/class-cart.php:2177
+#: includes/class-cart.php:2178
 #, php-format
 msgid "Edit %s"
 msgstr "Muokkaa %s"
 
-#: includes/class-cart.php:2195
+#: includes/class-cart.php:2196
 msgid "Next Step"
 msgstr "Seuraava vaihe"
 
-#: includes/class-cart.php:2372
+#: includes/class-cart.php:2373
 msgid "Invalid checkout section"
 msgstr "Virheellinen kassan osio"
 
-#: includes/class-cart.php:2388
+#: includes/class-cart.php:2389
 msgid "Field contains invalid data"
 msgstr "Kenttä sisältää virheellisiä tietoja"
 
 #. translators: %s is the field name
-#: includes/class-cart.php:2411
+#: includes/class-cart.php:2412
 #, php-format
 msgid "%s is required"
 msgstr "%s on pakollinen"
 
-#: includes/class-cart.php:2423 frontend.php:173
+#: includes/class-cart.php:2424 frontend.php:173
 msgid "Invalid email"
 msgstr "Virheellinen sähköpostiosoite"
 
-#: includes/class-cart.php:2528 includes/class-cart.php:2933
-#: includes/class-cart.php:2941
+#: includes/class-cart.php:2529 includes/class-cart.php:2934
+#: includes/class-cart.php:2942
 msgid "Please select a payment method before completing your order."
 msgstr "Valitse maksutapa ennen kuin viimeistelet tilauksesi."
 
-#: includes/class-cart.php:2540 includes/class-cart.php:2792
+#: includes/class-cart.php:2541 includes/class-cart.php:2793
 msgid "Please select a shipping method before completing your order."
 msgstr "Valitse toimitustapa ennen tilauksen viimeistelyä."
 
 #. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
-#: includes/class-cart.php:2661
+#: includes/class-cart.php:2662
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
 msgstr "Täytä seuraavat ennen tilauksen lähettämistä: %s"
 
-#: includes/class-cart.php:2671
+#: includes/class-cart.php:2672
 msgid "Please log in or create an account to complete this order"
 msgstr "Kirjaudu sisään tai luo tili viimeistelläksesi tämän tilauksen"
 
-#: includes/class-cart.php:2704
+#: includes/class-cart.php:2705
 msgid "Customer is trying to pay again"
 msgstr "Asiakas yrittää maksaa uudelleen"
 
-#: includes/class-cart.php:2717
+#: includes/class-cart.php:2718
 msgid ""
 "Error encountered during checkout process and your order has already been "
 "marked as paid."
 msgstr ""
 "Kassaprosessin aikana ilmeni virhe ja tilauksesi on jo merkitty maksetuksi."
 
-#: includes/class-cart.php:2717 includes/class-cart.php:3238
+#: includes/class-cart.php:2718 includes/class-cart.php:3239
 msgid "View the order"
 msgstr "Näytä tilaus"
 
-#: includes/class-cart.php:2729
+#: includes/class-cart.php:2730
 msgid "No payment method selected"
 msgstr "Maksutapaa ei ole valittu"
 
-#: includes/class-cart.php:2858
+#: includes/class-cart.php:2859
 msgid "Failed to initialize order"
 msgstr "Tilauksen alustaminen epäonnistui"
 
-#: includes/class-cart.php:2901
+#: includes/class-cart.php:2902
 msgid ""
 "Something happened while trying to process your order. Please contact the "
 "site owner for more details."
@@ -4095,35 +4237,39 @@ msgstr ""
 "Jotain tapahtui, kun yritimme käsitellä tilaustasi. Ota yhteyttä sivuston "
 "omistajaan saadaksesi lisätietoja."
 
-#: includes/class-cart.php:2966
+#: includes/class-cart.php:2967
 msgid "No payment method"
 msgstr "Ei maksutapaa"
 
 #. translators: 1: store credit the order used, 2: store credit the customer had left
-#: includes/class-cart.php:3048
+#: includes/class-cart.php:3049
 #, php-format
 msgid ""
 "This order used %1$s of store credit, but the customer only had %2$s left "
 "when it was paid. The difference was not collected."
-msgstr "Tässä tilauksessa käytettiin %1$s kauppahyvitystä, mutta asiakkaalla oli jäljellä vain %2$s, kun tilaus maksettiin. Erotusta ei peritty."
+msgstr ""
+"Tässä tilauksessa käytettiin %1$s kauppahyvitystä, mutta asiakkaalla oli "
+"jäljellä vain %2$s, kun tilaus maksettiin. Erotusta ei peritty."
 
-#: includes/class-cart.php:3128
+#: includes/class-cart.php:3129
 msgid "Your store credit has changed. Please review your order and try again."
-msgstr "Kauppahyvityksesi on muuttunut. Tarkista tilauksesi ja yritä uudelleen."
+msgstr ""
+"Kauppahyvityksesi on muuttunut. Tarkista tilauksesi ja yritä uudelleen."
 
 #. translators: %s is the discount code
-#: includes/class-cart.php:3136
+#: includes/class-cart.php:3137
 #, php-format
 msgid ""
 "Discount \"%s\" can no longer be used. Please review your order and try "
 "again."
-msgstr "Alennusta \"%s\" ei voi enää käyttää. Tarkista tilauksesi ja yritä uudelleen."
+msgstr ""
+"Alennusta \"%s\" ei voi enää käyttää. Tarkista tilauksesi ja yritä uudelleen."
 
-#: includes/class-cart.php:3155 includes/functions/account.php:250
+#: includes/class-cart.php:3156 includes/functions/account.php:250
 msgid "Too many signup attempts, please try again later"
 msgstr "Liian monta rekisteröitymisyritystä, yritä myöhemmin uudelleen"
 
-#: includes/class-cart.php:3167
+#: includes/class-cart.php:3168
 msgid ""
 "User account already exists with that email address - please login to "
 "continue"
@@ -4131,7 +4277,7 @@ msgstr ""
 "Käyttäjätili on jo olemassa tällä sähköpostiosoitteella - kirjaudu sisään "
 "jatkaaksesi"
 
-#: includes/class-cart.php:3238
+#: includes/class-cart.php:3239
 msgid "It appears your previous checkout has already been processed."
 msgstr "Näyttää siltä, että edellinen kassasi on jo käsitelty."
 
@@ -13006,7 +13152,7 @@ msgstr "Pahoittelut, sinulla ei ole oikeuksia katsoa tätä kuvaa"
 
 #: includes/class-frontend.php:989 includes/functions/add-to-cart.php:17
 #: includes/functions/comments.php:16 includes/functions/comments.php:63
-#: includes/functions/image.php:380 includes/functions/share.php:16
+#: includes/functions/image.php:396 includes/functions/share.php:16
 #: includes/functions/store.php:11 includes/functions/store.php:137
 #: includes/functions/store.php:192 includes/functions/template.php:373
 #: frontend.php:668 frontend.php:956
@@ -13128,7 +13274,9 @@ msgstr "%s maksu"
 msgid ""
 "%1$s can't take payments under %2$s. Add more to your order or choose "
 "another way to pay."
-msgstr "%1$s ei voi ottaa vastaan alle %2$s maksuja. Lisää tilaukseesi tuotteita tai valitse toinen maksutapa."
+msgstr ""
+"%1$s ei voi ottaa vastaan alle %2$s maksuja. Lisää tilaukseesi tuotteita tai "
+"valitse toinen maksutapa."
 
 #. translators: %s is the add-on name, such as "Stripe Pro"
 #: includes/class-payment-method.php:402
@@ -13170,270 +13318,270 @@ msgstr "Instanssin tunnus: %s"
 msgid "Shipping or delivery"
 msgstr "Toimitus tai toimitus"
 
-#: includes/class-sunshinephotocart.php:378
-#: includes/class-sunshinephotocart.php:540 common.php:7 common.php:47
+#: includes/class-sunshinephotocart.php:380
+#: includes/class-sunshinephotocart.php:542 common.php:7 common.php:47
 #: discounts.php:36 gift-cards.php:98
 msgid "Add New"
 msgstr "Lisää uusi"
 
-#: includes/class-sunshinephotocart.php:379
+#: includes/class-sunshinephotocart.php:381
 msgid "Add New Gallery"
 msgstr "Lisää uusi Galleria"
 
-#: includes/class-sunshinephotocart.php:380
+#: includes/class-sunshinephotocart.php:382
 msgid "New Gallery"
 msgstr "Uusi Galleria"
 
-#: includes/class-sunshinephotocart.php:381 includes/functions/misc.php:497
+#: includes/class-sunshinephotocart.php:383 includes/functions/misc.php:499
 msgid "Edit Gallery"
 msgstr "Muokkaa Galleriaa"
 
-#: includes/class-sunshinephotocart.php:382
+#: includes/class-sunshinephotocart.php:384
 msgid "View Gallery"
 msgstr "Näytä Galleria"
 
-#: includes/class-sunshinephotocart.php:383
+#: includes/class-sunshinephotocart.php:385
 msgid "All Galleries"
 msgstr "Kaikki Galleriat"
 
-#: includes/class-sunshinephotocart.php:384
+#: includes/class-sunshinephotocart.php:386
 msgid "Search Galleries"
 msgstr "Etsi Gallerioista"
 
-#: includes/class-sunshinephotocart.php:385
+#: includes/class-sunshinephotocart.php:387
 msgid "Parent Gallery:"
 msgstr "Vanhempien galleria:"
 
-#: includes/class-sunshinephotocart.php:387
+#: includes/class-sunshinephotocart.php:389
 msgid "No galleries found in Trash"
 msgstr "Roskakorista ei löytynyt galleriaa"
 
-#: includes/class-sunshinephotocart.php:388
+#: includes/class-sunshinephotocart.php:390
 msgid "Gallery Featured Image"
 msgstr "Galleria Suosikkikuva"
 
-#: includes/class-sunshinephotocart.php:389
+#: includes/class-sunshinephotocart.php:391
 msgid "Set featured image image"
 msgstr "Aseta esillä olevan kuvan kuva"
 
-#: includes/class-sunshinephotocart.php:390
+#: includes/class-sunshinephotocart.php:392
 msgid "Remove featured image"
 msgstr "Poista artikkelikuva"
 
-#: includes/class-sunshinephotocart.php:391
+#: includes/class-sunshinephotocart.php:393
 msgid "Use as featured image"
 msgstr "Käytä artikkelikuvana"
 
-#: includes/class-sunshinephotocart.php:392
+#: includes/class-sunshinephotocart.php:394
 msgid "Gallery archives"
 msgstr "Gallerian arkistot"
 
-#: includes/class-sunshinephotocart.php:393
+#: includes/class-sunshinephotocart.php:395
 msgid "Insert into gallery"
 msgstr "Lisää galleriaan"
 
-#: includes/class-sunshinephotocart.php:394
+#: includes/class-sunshinephotocart.php:396
 msgid "Uploaded to this gallery"
 msgstr "Ladattu tähän galleriaan"
 
-#: includes/class-sunshinephotocart.php:395
+#: includes/class-sunshinephotocart.php:397
 msgid "Filter galleries list"
 msgstr "Suodata gallerioiden luettelo"
 
-#: includes/class-sunshinephotocart.php:396
+#: includes/class-sunshinephotocart.php:398
 msgid "Galleries list navigation"
 msgstr "Gallerioiden luettelon navigointi"
 
-#: includes/class-sunshinephotocart.php:397
+#: includes/class-sunshinephotocart.php:399
 msgid "Galleries list"
 msgstr "Galleriat luettelo"
 
-#: includes/class-sunshinephotocart.php:428
+#: includes/class-sunshinephotocart.php:430
 msgid "Add Product"
 msgstr "Lisää tuote"
 
-#: includes/class-sunshinephotocart.php:429
+#: includes/class-sunshinephotocart.php:431
 msgid "Add New Product"
 msgstr "Lisää uusi Tuote"
 
-#: includes/class-sunshinephotocart.php:430
+#: includes/class-sunshinephotocart.php:432
 msgid "Edit Product"
 msgstr "Muokkaa Tuotetta"
 
-#: includes/class-sunshinephotocart.php:431
+#: includes/class-sunshinephotocart.php:433
 msgid "New Product"
 msgstr "Uusi Tuote"
 
-#: includes/class-sunshinephotocart.php:432
+#: includes/class-sunshinephotocart.php:434
 msgid "All Products"
 msgstr "Kaikki Tuotteet"
 
-#: includes/class-sunshinephotocart.php:433
+#: includes/class-sunshinephotocart.php:435
 msgid "View Products"
 msgstr "Näytä Tuotteet"
 
-#: includes/class-sunshinephotocart.php:434
+#: includes/class-sunshinephotocart.php:436
 msgid "Search Products"
 msgstr "Etsi Tuotteista"
 
-#: includes/class-sunshinephotocart.php:435
+#: includes/class-sunshinephotocart.php:437
 msgid "No products found"
 msgstr "Tuotteita ei löytynyt"
 
-#: includes/class-sunshinephotocart.php:436
+#: includes/class-sunshinephotocart.php:438
 msgid "No products found in trash"
 msgstr "Poistettuja tuotteita ei löytynyt"
 
-#: includes/class-sunshinephotocart.php:462
+#: includes/class-sunshinephotocart.php:464
 msgid "Product Categories"
 msgstr "Tuotekategoriat"
 
-#: includes/class-sunshinephotocart.php:463
-#: includes/class-sunshinephotocart.php:479
+#: includes/class-sunshinephotocart.php:465
+#: includes/class-sunshinephotocart.php:481
 msgid "Product Category"
 msgstr "Tuotekategoria"
 
-#: includes/class-sunshinephotocart.php:464
+#: includes/class-sunshinephotocart.php:466
 msgid "Search Product Categories"
 msgstr "Etsi tuotekatekorioista"
 
-#: includes/class-sunshinephotocart.php:465
+#: includes/class-sunshinephotocart.php:467
 msgid "All Product Categories"
 msgstr "Kaikki tuotekategoriat"
 
-#: includes/class-sunshinephotocart.php:466
+#: includes/class-sunshinephotocart.php:468
 msgid "Parent Product Category"
 msgstr "Päätuotekategoria"
 
-#: includes/class-sunshinephotocart.php:467
+#: includes/class-sunshinephotocart.php:469
 msgid "Parent Product Category:"
 msgstr "Päätuotekategoria:"
 
-#: includes/class-sunshinephotocart.php:468
+#: includes/class-sunshinephotocart.php:470
 msgid "Edit Product Category"
 msgstr "Muokkaa tuotekategoriaa"
 
-#: includes/class-sunshinephotocart.php:469
+#: includes/class-sunshinephotocart.php:471
 msgid "Update Product Category"
 msgstr "Päivitä tuotekategoria"
 
-#: includes/class-sunshinephotocart.php:470
+#: includes/class-sunshinephotocart.php:472
 msgid "Add New Product Category"
 msgstr "Lisää uusi tuotekategoria"
 
-#: includes/class-sunshinephotocart.php:471
+#: includes/class-sunshinephotocart.php:473
 msgid "New Product Category Name"
 msgstr "Uuden tuotekategorian nimi"
 
-#: includes/class-sunshinephotocart.php:472
+#: includes/class-sunshinephotocart.php:474
 msgid "Separate categories with commas"
 msgstr "Erota kategoriat pilkulla"
 
-#: includes/class-sunshinephotocart.php:473
+#: includes/class-sunshinephotocart.php:475
 msgid "Choose from the most used categories"
 msgstr "Valitse eniten käytetyistä kategorioista"
 
-#: includes/class-sunshinephotocart.php:504 class-admin-automated-emails.php:93
+#: includes/class-sunshinephotocart.php:506 class-admin-automated-emails.php:93
 msgid "Price Levels"
 msgstr "Hintatasot"
 
-#: includes/class-sunshinephotocart.php:506
+#: includes/class-sunshinephotocart.php:508
 msgid "Search Price Levels"
 msgstr "Etsi Hintaryhmistä"
 
-#: includes/class-sunshinephotocart.php:507
+#: includes/class-sunshinephotocart.php:509
 msgid "All Price Levels"
 msgstr "Kaikki Hintaryhmät"
 
-#: includes/class-sunshinephotocart.php:508
+#: includes/class-sunshinephotocart.php:510
 msgid "Parent Price Level"
 msgstr "Päähintaryhmä"
 
-#: includes/class-sunshinephotocart.php:509
+#: includes/class-sunshinephotocart.php:511
 msgid "Parent Price Level:"
 msgstr "Päähintaryhmä:"
 
-#: includes/class-sunshinephotocart.php:510
+#: includes/class-sunshinephotocart.php:512
 msgid "Edit Price Level"
 msgstr "Muokkaa Hintaryhmää"
 
-#: includes/class-sunshinephotocart.php:511
+#: includes/class-sunshinephotocart.php:513
 msgid "Update Price Level"
 msgstr "Päivitä Hintaryhmä"
 
-#: includes/class-sunshinephotocart.php:512
+#: includes/class-sunshinephotocart.php:514
 msgid "Add New Price Level"
 msgstr "Lisää uusi Hintaryhmä"
 
-#: includes/class-sunshinephotocart.php:513
+#: includes/class-sunshinephotocart.php:515
 msgid "New Price Level"
 msgstr "Uusi Hintaryhmä"
 
-#: includes/class-sunshinephotocart.php:541
+#: includes/class-sunshinephotocart.php:543
 msgid "Add New Order"
 msgstr "Lisää uusi Tilaus"
 
-#: includes/class-sunshinephotocart.php:542
+#: includes/class-sunshinephotocart.php:544
 msgid "Edit Order"
 msgstr "Muokkaa Tilausta"
 
-#: includes/class-sunshinephotocart.php:543
+#: includes/class-sunshinephotocart.php:545
 msgid "New Order"
 msgstr "Uusi Tilaus"
 
-#: includes/class-sunshinephotocart.php:544
+#: includes/class-sunshinephotocart.php:546
 msgid "All Orders"
 msgstr "Kaikki Tilaukset"
 
-#: includes/class-sunshinephotocart.php:545
+#: includes/class-sunshinephotocart.php:547
 msgid "View Orders"
 msgstr "Näytä Tilaukset"
 
-#: includes/class-sunshinephotocart.php:546
+#: includes/class-sunshinephotocart.php:548
 msgid "Search Orders"
 msgstr "Etsi Tilauksista"
 
-#: includes/class-sunshinephotocart.php:547
+#: includes/class-sunshinephotocart.php:549
 msgid "No orders found"
 msgstr "Tilauksia ei löytynyt"
 
-#: includes/class-sunshinephotocart.php:548
+#: includes/class-sunshinephotocart.php:550
 msgid "No orders found in trash"
 msgstr "Poistettuja Tilauksia ei löytynyt"
 
-#: includes/class-sunshinephotocart.php:587
+#: includes/class-sunshinephotocart.php:589
 msgid "Order Statuses"
 msgstr "Tilausten tilat"
 
-#: includes/class-sunshinephotocart.php:589
+#: includes/class-sunshinephotocart.php:591
 msgid "Search Order Status"
 msgstr "Etsi Tilausten Statuksia"
 
-#: includes/class-sunshinephotocart.php:590
+#: includes/class-sunshinephotocart.php:592
 msgid "All Order Status"
 msgstr "Kaikki Tilausten Statukset"
 
-#: includes/class-sunshinephotocart.php:591
+#: includes/class-sunshinephotocart.php:593
 msgid "Parent Order Status"
 msgstr "Tilausten päästatus"
 
-#: includes/class-sunshinephotocart.php:592
+#: includes/class-sunshinephotocart.php:594
 msgid "Parent Order Status:"
 msgstr "Tilausten päästatus:"
 
-#: includes/class-sunshinephotocart.php:593
+#: includes/class-sunshinephotocart.php:595
 msgid "Edit Order Status"
 msgstr "Muokkaa Tilauksen Statusta"
 
-#: includes/class-sunshinephotocart.php:594
+#: includes/class-sunshinephotocart.php:596
 msgid "Update Order Status"
 msgstr "Päivitä Tilauksen Statusta"
 
-#: includes/class-sunshinephotocart.php:595
+#: includes/class-sunshinephotocart.php:597
 msgid "Add New Order Status"
 msgstr "Lisää uusi Tilauksen Status"
 
-#: includes/class-sunshinephotocart.php:596
+#: includes/class-sunshinephotocart.php:598
 msgid "New Order Status"
 msgstr "Uusi Tilauksen Status"
 
@@ -13469,7 +13617,10 @@ msgid ""
 "Email sent to admins when a payment can't be accepted for an order or an "
 "order is marked Failed. Sent to the recipients below, or the site admin "
 "email when left empty."
-msgstr "Sähköposti, joka lähetetään ylläpitäjille, kun tilauksen maksua ei voida hyväksyä tai tilaus merkitään epäonnistuneeksi. Lähetetään alla oleville vastaanottajille tai sivuston ylläpitäjän sähköpostiin, jos kenttä on tyhjä."
+msgstr ""
+"Sähköposti, joka lähetetään ylläpitäjille, kun tilauksen maksua ei voida "
+"hyväksyä tai tilaus merkitään epäonnistuneeksi. Lähetetään alla oleville "
+"vastaanottajille tai sivuston ylläpitäjän sähköpostiin, jos kenttä on tyhjä."
 
 #. translators: %1$s is the order name, %2$s is the site name
 #: includes/emails/class-email-admin-payment-problem.php:19
@@ -13485,7 +13636,10 @@ msgstr "Lähetä, kun"
 msgid ""
 "A payment didn't match the order (wrong amount, currency or account, or paid "
 "for another order). The customer may have paid, but the order stayed unpaid."
-msgstr "Maksu ei vastannut tilausta (väärä summa, valuutta tai tili, tai maksettu toisesta tilauksesta). Asiakas on ehkä maksanut, mutta tilaus jäi maksamattomaksi."
+msgstr ""
+"Maksu ei vastannut tilausta (väärä summa, valuutta tai tili, tai maksettu "
+"toisesta tilauksesta). Asiakas on ehkä maksanut, mutta tilaus jäi "
+"maksamattomaksi."
 
 #: includes/emails/class-email-admin-payment-problem.php:49
 msgid "A payment was declined or cancelled at the payment service"
@@ -13676,7 +13830,8 @@ msgstr "Virheellinen kirjautumisyritys"
 
 #: includes/functions/account.php:153 includes/functions/account.php:533
 msgid "Too many failed login attempts, please try again later"
-msgstr "Liian monta epäonnistunutta kirjautumisyritystä, yritä myöhemmin uudelleen"
+msgstr ""
+"Liian monta epäonnistunutta kirjautumisyritystä, yritä myöhemmin uudelleen"
 
 #: includes/functions/account.php:165 includes/functions/account.php:545
 msgid "Invalid email or password, please try again"
@@ -13698,7 +13853,9 @@ msgstr "Virheellinen sähköpostiosoite"
 msgid ""
 "An account could not be created with that email address. If you already have "
 "one, log in or reset your password."
-msgstr "Tiliä ei voitu luoda tällä sähköpostiosoitteella. Jos sinulla on jo tili, kirjaudu sisään tai nollaa salasanasi."
+msgstr ""
+"Tiliä ei voitu luoda tällä sähköpostiosoitteella. Jos sinulla on jo tili, "
+"kirjaudu sisään tai nollaa salasanasi."
 
 #. translators: %s: User email address
 #: includes/functions/account.php:301
@@ -13720,7 +13877,9 @@ msgstr "Virheellinen salasanan palautusyritys"
 msgid ""
 "If there is an account for %s, an email has been sent to it with information "
 "on resetting your password"
-msgstr "Jos osoitteelle %s on tili, sinne on lähetetty sähköposti, jossa on ohjeet salasanan nollaamiseen"
+msgstr ""
+"Jos osoitteelle %s on tili, sinne on lähetetty sähköposti, jossa on ohjeet "
+"salasanan nollaamiseen"
 
 #: includes/functions/account.php:400
 msgid "Passwords do not match"
@@ -14842,7 +15001,9 @@ msgstr "Transaktiomaksut"
 msgid ""
 "PayPal payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "PayPal-maksu %1$s (%2$s) ei vastaa tilauksen loppusummaa, tilausta ei viimeistelty"
+msgstr ""
+"PayPal-maksu %1$s (%2$s) ei vastaa tilauksen loppusummaa, tilausta ei "
+"viimeistelty"
 
 #: includes/payment-methods/paypal-legacy.php:415
 msgid "Customer cancelled the PayPal payment"
@@ -15088,14 +15249,17 @@ msgstr "PayPal-maksun kaappaaminen epäonnistui"
 msgid ""
 "PayPal capture %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "PayPal-veloitus %1$s (%2$s) ei vastaa tilauksen loppusummaa, tilausta ei viimeistelty"
+msgstr ""
+"PayPal-veloitus %1$s (%2$s) ei vastaa tilauksen loppusummaa, tilausta ei "
+"viimeistelty"
 
 #: includes/payment-methods/paypal.php:716
 #: includes/payment-methods/square.php:1714
 #: includes/payment-methods/stripe.php:2962
 msgid ""
 "Your payment did not match the order total, please contact the site owner"
-msgstr "Maksusi ei vastannut tilauksen loppusummaa, ota yhteyttä sivuston omistajaan"
+msgstr ""
+"Maksusi ei vastannut tilauksen loppusummaa, ota yhteyttä sivuston omistajaan"
 
 #. translators: %s is the payment method name
 #: includes/payment-methods/paypal.php:725
@@ -15318,13 +15482,19 @@ msgstr "Square token onnistuneesti päivitetty"
 msgid ""
 "Square: your connection can no longer renew and will stop taking payments "
 "when the current key expires. Disconnect and connect Square again now."
-msgstr "Square: yhteyttäsi ei voi enää uusia, ja se lakkaa ottamasta vastaan maksuja, kun nykyinen avain vanhenee. Katkaise yhteys ja yhdistä Square uudelleen nyt."
+msgstr ""
+"Square: yhteyttäsi ei voi enää uusia, ja se lakkaa ottamasta vastaan "
+"maksuja, kun nykyinen avain vanhenee. Katkaise yhteys ja yhdistä Square "
+"uudelleen nyt."
 
 #: includes/payment-methods/square.php:697
 msgid ""
 "Square: could not reach Square to renew the connection. It will try again. "
 "If this message keeps coming back, disconnect and connect Square again."
-msgstr "Square: Squareen ei saatu yhteyttä yhteyden uusimiseksi. Sitä yritetään uudelleen. Jos tämä viesti tulee jatkuvasti takaisin, katkaise yhteys ja yhdistä Square uudelleen."
+msgstr ""
+"Square: Squareen ei saatu yhteyttä yhteyden uusimiseksi. Sitä yritetään "
+"uudelleen. Jos tämä viesti tulee jatkuvasti takaisin, katkaise yhteys ja "
+"yhdistä Square uudelleen."
 
 #. translators: %s: link to the Square settings
 #: includes/payment-methods/square.php:833
@@ -15332,13 +15502,19 @@ msgstr "Square: Squareen ei saatu yhteyttä yhteyden uusimiseksi. Sitä yritetä
 msgid ""
 "Square: <a href=\"%s\">disconnect and connect Square again</a> to use the "
 "more secure connection, where only your site holds your Square keys."
-msgstr "Square: <a href=\"%s\">katkaise yhteys ja yhdistä Square uudelleen</a>, jotta voit käyttää turvallisempaa yhteyttä, jossa vain sivustollasi on Square-avaimesi."
+msgstr ""
+"Square: <a href=\"%s\">katkaise yhteys ja yhdistä Square uudelleen</a>, "
+"jotta voit käyttää turvallisempaa yhteyttä, jossa vain sivustollasi on "
+"Square-avaimesi."
 
 #: includes/payment-methods/square.php:843
 msgid ""
 "Square: your connection has not renewed lately and will stop working soon. "
 "Disconnect and connect Square again to keep taking payments."
-msgstr "Square: yhteyttäsi ei ole uusittu vähään aikaan, ja se lakkaa pian toimimasta. Katkaise yhteys ja yhdistä Square uudelleen, jotta voit jatkaa maksujen vastaanottamista."
+msgstr ""
+"Square: yhteyttäsi ei ole uusittu vähään aikaan, ja se lakkaa pian "
+"toimimasta. Katkaise yhteys ja yhdistä Square uudelleen, jotta voit jatkaa "
+"maksujen vastaanottamista."
 
 #. translators: %s is a comma-separated list of discount codes
 #: includes/payment-methods/square.php:1237
@@ -15398,7 +15574,9 @@ msgstr ""
 msgid ""
 "Square payment %1$s was declined or cancelled (status %2$s), so the order "
 "was not marked paid"
-msgstr "Square-maksu %1$s hylättiin tai peruttiin (tila %2$s), joten tilausta ei merkitty maksetuksi"
+msgstr ""
+"Square-maksu %1$s hylättiin tai peruttiin (tila %2$s), joten tilausta ei "
+"merkitty maksetuksi"
 
 #. translators: 1: Square payment ID, 2: amount paid in Square
 #: includes/payment-methods/square.php:1707
@@ -15407,7 +15585,9 @@ msgstr "Square-maksu %1$s hylättiin tai peruttiin (tila %2$s), joten tilausta e
 msgid ""
 "Square payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "Square-maksu %1$s (%2$s) ei vastaa tilauksen loppusummaa, tilausta ei viimeistelty"
+msgstr ""
+"Square-maksu %1$s (%2$s) ei vastaa tilauksen loppusummaa, tilausta ei "
+"viimeistelty"
 
 #: includes/payment-methods/square.php:1712
 msgid "Your payment was declined. Please try again or use another way to pay."
@@ -15544,7 +15724,9 @@ msgstr "Tätä maksua ei voitu tarkistaa uudelleen: %s"
 msgid ""
 "%s can't take a payment this small. Add more to your order or choose another "
 "way to pay."
-msgstr "%s ei voi ottaa vastaan näin pientä maksua. Lisää tilaukseesi tuotteita tai valitse toinen maksutapa."
+msgstr ""
+"%s ei voi ottaa vastaan näin pientä maksua. Lisää tilaukseesi tuotteita tai "
+"valitse toinen maksutapa."
 
 #: includes/payment-methods/stripe.php:382
 #: includes/payment-methods/stripe.php:3838
@@ -15943,7 +16125,9 @@ msgstr "Stripe on onnistuneesti katkaistu"
 msgid ""
 "Stripe payment %1$s for %2$s does not match the order total, order was not "
 "completed"
-msgstr "Stripe-maksu %1$s (%2$s) ei vastaa tilauksen loppusummaa, tilausta ei viimeistelty"
+msgstr ""
+"Stripe-maksu %1$s (%2$s) ei vastaa tilauksen loppusummaa, tilausta ei "
+"viimeistelty"
 
 #: includes/payment-methods/stripe.php:1748
 #: includes/payment-methods/stripe.php:1749
@@ -15985,7 +16169,8 @@ msgstr "Odotetaan vielä, että pankkisi vahvistaa maksun. Pidä tämä sivu auk
 #: includes/payment-methods/stripe.php:1970
 #, php-format
 msgid "%s could not be loaded. Please try again or choose another way to pay."
-msgstr "Maksutapaa %s ei voitu ladata. Yritä uudelleen tai valitse toinen maksutapa."
+msgstr ""
+"Maksutapaa %s ei voitu ladata. Yritä uudelleen tai valitse toinen maksutapa."
 
 #: includes/payment-methods/stripe.php:2181
 msgid "Sales Tax"
@@ -15998,7 +16183,9 @@ msgstr "Myyntivero"
 msgid ""
 "This order could not be sent to Stripe for the right amount, please contact "
 "the site owner"
-msgstr "Tätä tilausta ei voitu lähettää Stripeen oikealla summalla, ota yhteyttä sivuston omistajaan"
+msgstr ""
+"Tätä tilausta ei voitu lähettää Stripeen oikealla summalla, ota yhteyttä "
+"sivuston omistajaan"
 
 #. translators: 1: product name, 2: quantity
 #: includes/payment-methods/stripe.php:2645
@@ -16114,13 +16301,18 @@ msgstr "Testitilausten käsittelyä varten"
 msgid ""
 "The Test payment method is on and every customer can use it, so orders can "
 "be placed without paying. Turn it off when you are done testing."
-msgstr "Testimaksutapa on päällä ja kaikki asiakkaat voivat käyttää sitä, joten tilauksia voi tehdä maksamatta. Kytke se pois päältä, kun olet lopettanut testaamisen."
+msgstr ""
+"Testimaksutapa on päällä ja kaikki asiakkaat voivat käyttää sitä, joten "
+"tilauksia voi tehdä maksamatta. Kytke se pois päältä, kun olet lopettanut "
+"testaamisen."
 
 #: includes/payment-methods/test.php:24
 msgid ""
 "The Test payment method is on. Only admins can use it at checkout. Turn it "
 "off when you are done testing."
-msgstr "Testimaksutapa on päällä. Vain ylläpitäjät voivat käyttää sitä kassalla. Kytke se pois päältä, kun olet lopettanut testaamisen."
+msgstr ""
+"Testimaksutapa on päällä. Vain ylläpitäjät voivat käyttää sitä kassalla. "
+"Kytke se pois päältä, kun olet lopettanut testaamisen."
 
 #: includes/payment-methods/test.php:27
 msgid "Payment method settings"
@@ -16134,7 +16326,10 @@ msgstr "Salli asiakkaat"
 msgid ""
 "Let customers who are not admins use this payment method. Their orders are "
 "marked paid without any payment, so only turn this on while testing."
-msgstr "Anna asiakkaiden, jotka eivät ole ylläpitäjiä, käyttää tätä maksutapaa. Heidän tilauksensa merkitään maksetuiksi ilman maksua, joten kytke tämä päälle vain testatessasi."
+msgstr ""
+"Anna asiakkaiden, jotka eivät ole ylläpitäjiä, käyttää tätä maksutapaa. "
+"Heidän tilauksensa merkitään maksetuiksi ilman maksua, joten kytke tämä "
+"päälle vain testatessasi."
 
 #: includes/shipping-methods/flat-rate.php:7
 msgid "Flat Rate"
@@ -16523,13 +16718,17 @@ msgstr "Tilauksen tila"
 msgid ""
 "Check this payment in %s's dashboard before refunding or marking the order "
 "paid."
-msgstr "Tarkista tämä maksu palvelun %s hallintapaneelista ennen kuin hyvität tilauksen tai merkitset sen maksetuksi."
+msgstr ""
+"Tarkista tämä maksu palvelun %s hallintapaneelista ennen kuin hyvität "
+"tilauksen tai merkitset sen maksetuksi."
 
 #: templates/email/admin-payment-problem.php:36
 msgid ""
 "Check this payment in your payment processor's dashboard before refunding or "
 "marking the order paid."
-msgstr "Tarkista tämä maksu maksunvälittäjäsi hallintapaneelista ennen kuin hyvität tilauksen tai merkitset sen maksetuksi."
+msgstr ""
+"Tarkista tämä maksu maksunvälittäjäsi hallintapaneelista ennen kuin hyvität "
+"tilauksen tai merkitset sen maksetuksi."
 
 #: templates/email/admin-receipt.php:13
 msgid "View Invoice"
@@ -16949,7 +17148,9 @@ msgstr "Tilauksen enimmäismäärä"
 msgid ""
 "Only make this shipping option available when cart contains at least one of "
 "the selected products. Leave empty for all products."
-msgstr "Näytä tämä toimitustapa vain, kun ostoskorissa on vähintään yksi valituista tuotteista. Jätä tyhjäksi kaikille tuotteille."
+msgstr ""
+"Näytä tämä toimitustapa vain, kun ostoskorissa on vähintään yksi valituista "
+"tuotteista. Jätä tyhjäksi kaikille tuotteille."
 
 #: hooks.php:52
 msgid "Include Galleries"
@@ -17397,7 +17598,9 @@ msgstr "Ei vastausta luottokortin käsittelijältä"
 msgid ""
 "Authorize.net approved only %1$s of the %2$s total on a prepaid card. The "
 "order was not paid and the partial charge was cancelled."
-msgstr "Authorize.net hyväksyi prepaid-kortilta vain %1$s loppusummasta %2$s. Tilausta ei maksettu, ja osittainen veloitus peruttiin."
+msgstr ""
+"Authorize.net hyväksyi prepaid-kortilta vain %1$s loppusummasta %2$s. "
+"Tilausta ei maksettu, ja osittainen veloitus peruttiin."
 
 #. translators: %s: Authorize.net transaction ID
 #: class-authorizenet.php:335
@@ -17405,19 +17608,25 @@ msgstr "Authorize.net hyväksyi prepaid-kortilta vain %1$s loppusummasta %2$s. T
 msgid ""
 "Could not cancel the partial Authorize.net charge %s. Void it in your "
 "Authorize.net account."
-msgstr "Osittaista Authorize.net-veloitusta %s ei voitu perua. Mitätöi se Authorize.net-tililläsi."
+msgstr ""
+"Osittaista Authorize.net-veloitusta %s ei voitu perua. Mitätöi se "
+"Authorize.net-tililläsi."
 
 #: class-authorizenet.php:342
 msgid ""
 "Your card does not have enough on it to pay the full order total, so it was "
 "not charged. Please use another card."
-msgstr "Kortillasi ei ole tarpeeksi katetta koko tilauksen maksamiseen, joten sitä ei veloitettu. Käytä toista korttia."
+msgstr ""
+"Kortillasi ei ole tarpeeksi katetta koko tilauksen maksamiseen, joten sitä "
+"ei veloitettu. Käytä toista korttia."
 
 #: class-authorizenet.php:353
 msgid ""
 "Authorize.net authorized the card but did not charge it yet. Capture the "
 "payment in your Authorize.net account."
-msgstr "Authorize.net hyväksyi kortin, mutta ei ole vielä veloittanut sitä. Veloita maksu Authorize.net-tililläsi."
+msgstr ""
+"Authorize.net hyväksyi kortin, mutta ei ole vielä veloittanut sitä. Veloita "
+"maksu Authorize.net-tililläsi."
 
 #. translators: 1: Authorize.net transaction ID, 2: Authorize.net reason code
 #: class-authorizenet.php:367
@@ -17426,7 +17635,10 @@ msgid ""
 "Authorize.net is holding payment %1$s for review (reason %2$s). The order "
 "stays Pending. Approve or decline it in your Authorize.net account, then "
 "update this order."
-msgstr "Authorize.net pitää maksua %1$s tarkistettavana (syy %2$s). Tilaus pysyy odottavana. Hyväksy tai hylkää se Authorize.net-tililläsi ja päivitä sitten tämä tilaus."
+msgstr ""
+"Authorize.net pitää maksua %1$s tarkistettavana (syy %2$s). Tilaus pysyy "
+"odottavana. Hyväksy tai hylkää se Authorize.net-tililläsi ja päivitä sitten "
+"tämä tilaus."
 
 #. translators: %1$s: error message, %2$s: error code
 #: class-authorizenet.php:374 class-authorizenet.php:377
@@ -18241,8 +18453,8 @@ msgstr "Lataa krediittejä"
 msgid "Save download credits"
 msgstr "Tallenna latauskrediitit"
 
-#: admin/galleries.php:7 admin/settings.php:102 frontend.php:1050
-#: frontend.php:1060 reports/class-reports-image-downloads.php:38
+#: admin/galleries.php:7 admin/settings.php:102 frontend.php:1056
+#: frontend.php:1066 reports/class-reports-image-downloads.php:38
 #: reports/class-reports-image-downloads.php:157
 msgid "Downloads"
 msgstr "Lataukset"
@@ -18321,53 +18533,54 @@ msgstr "Voit ladata tiedostoja ladattavaksi tämän tilauksen yhteydessä"
 msgid "File could not be deleted"
 msgstr "Tiedostoa ei voitu poistaa"
 
-#: admin/orders.php:276 admin/orders.php:478 frontend.php:60 frontend.php:151
-#: frontend.php:237 frontend.php:349 frontend.php:462 frontend.php:662
-#: frontend.php:950 order.php:396 order.php:591 order.php:736 order.php:1009
+#: admin/orders.php:276 admin/orders.php:286 admin/orders.php:484
+#: frontend.php:60 frontend.php:151 frontend.php:237 frontend.php:349
+#: frontend.php:462 frontend.php:662 frontend.php:950 order.php:396
+#: order.php:591 order.php:736 order.php:1009 exports.php:305 exports.php:315
 #: add-to-cart.php:36 cart.php:123 cart.php:144 shortcodes.php:79
 msgid "Invalid request"
 msgstr "Virheellinen pyyntö"
 
-#: admin/orders.php:351 frontend.php:340 frontend.php:453 frontend.php:549
+#: admin/orders.php:357 frontend.php:340 frontend.php:453 frontend.php:549
 #: frontend.php:941
 msgid "Sorry, you do not have permission to download"
 msgstr "Anteeksi, sinulla ei ole lupaa ladata"
 
-#: admin/orders.php:365
+#: admin/orders.php:371
 msgid "Notify user of files added to order"
 msgstr "Ilmoita käyttäjälle tilaukseen lisätyistä tiedostoista"
 
-#: admin/orders.php:469
+#: admin/orders.php:475
 msgid "Download all originals"
 msgstr "Lataa kaikki alkuperäiset tiedostot"
 
-#: admin/orders.php:482
+#: admin/orders.php:488
 msgid "You do not have permission to download these files"
 msgstr "Sinulla ei ole lupaa ladata näitä tiedostoja."
 
-#: admin/orders.php:487
+#: admin/orders.php:493
 msgid "Order not found"
 msgstr "Tilausta ei löytynyt"
 
-#: admin/orders.php:493
+#: admin/orders.php:499
 msgid "No images found in this order"
 msgstr "Tässä tilauksessa ei löytynyt kuvia"
 
-#: admin/orders.php:496 class-rest-downloads-controller.php:142
+#: admin/orders.php:502 class-rest-downloads-controller.php:142
 msgid "Originals"
 msgstr "Alkuperäiset"
 
-#: admin/orders.php:502
+#: admin/orders.php:508
 msgid "Admin downloaded all original images"
 msgstr "Järjestelmänvalvoja on ladannut kaikki alkuperäiset kuvat."
 
-#: admin/orders.php:513
+#: admin/orders.php:519
 msgid "Customer was notified via email about new files available for download"
 msgstr ""
 "Asiakkaalle ilmoitettiin sähköpostitse uusista ladattavissa olevista "
 "tiedostoista"
 
-#: admin/orders.php:515
+#: admin/orders.php:521
 msgid "No files were attached to this order"
 msgstr "Tähän tilaukseen ei ole liitetty tiedostoja"
 
@@ -18546,21 +18759,21 @@ msgstr "Lataa tilauserät"
 msgid "Digital Download"
 msgstr "Digitaalinen lataus"
 
-#: class-download.php:752
+#: class-download.php:838
 msgid "Unable to process download. The requested file may not be available."
 msgstr ""
 "Latausta ei voida käsitellä. Pyydettyä tiedostoa ei ehkä ole saatavilla."
 
-#: class-download.php:753 class-download.php:799 class-download.php:875
-#: class-download.php:937 class-download.php:957 class-download.php:1439
-#: frontend.php:292 frontend.php:821 frontend.php:829
+#: class-download.php:839 class-download.php:886 class-download.php:964
+#: class-download.php:1028 class-download.php:1048 class-download.php:1535
+#: class-download.php:1585 frontend.php:292 frontend.php:821 frontend.php:829
 #: includes/download-handler.php:99 includes/download-handler.php:107
 #: includes/download-handler.php:162 includes/download-handler.php:177
 #: includes/download-handler.php:184 includes/download-handler.php:210
 msgid "Download Error"
 msgstr "Latausvirhe"
 
-#: class-download.php:798 class-download.php:2061
+#: class-download.php:885 class-download.php:1966
 msgid ""
 "Sorry, the requested file could not be found. Please try again or contact "
 "support."
@@ -18568,7 +18781,7 @@ msgstr ""
 "Valitettavasti pyydettyä tiedostoa ei löytynyt. Yritä uudelleen tai ota "
 "yhteyttä tukeen."
 
-#: class-download.php:874
+#: class-download.php:963
 msgid ""
 "Sorry, some of the files in this download could not be retrieved. Please try "
 "again or contact support."
@@ -18576,7 +18789,7 @@ msgstr ""
 "Valitettavasti joitakin tämän latauksen tiedostoja ei saatu haettua. Yritä "
 "uudelleen tai ota yhteyttä tukeen."
 
-#: class-download.php:936
+#: class-download.php:1027
 msgid ""
 "Sorry, this download could not be prepared. Please try again or contact "
 "support."
@@ -18584,7 +18797,7 @@ msgstr ""
 "Valitettavasti tätä latausta ei voitu valmistella. Yritä uudelleen tai ota "
 "yhteyttä tukeen."
 
-#: class-download.php:956
+#: class-download.php:1047 class-download.php:1584
 msgid ""
 "Sorry, some of the files in this download could not be read. Please try "
 "again or contact support."
@@ -18592,7 +18805,7 @@ msgstr ""
 "Valitettavasti joitakin tämän latauksen tiedostoja ei voitu lukea. Yritä "
 "uudelleen tai ota yhteyttä tukeen."
 
-#: class-download.php:1438
+#: class-download.php:1534
 msgid ""
 "Sorry, some of the files in this download could not be found. Please try "
 "again or contact support."
@@ -18600,11 +18813,11 @@ msgstr ""
 "Valitettavasti joitakin tämän latauksen tiedostoja ei löytynyt. Yritä "
 "uudelleen tai ota yhteyttä tukeen."
 
-#: class-download.php:2136
+#: class-download.php:2041
 msgid "Sorry, the file could not be downloaded. Please try again."
 msgstr "Valitettavasti tiedostoa ei voitu ladata. Yritä uudelleen."
 
-#: class-download.php:2400
+#: class-download.php:2334
 msgid "original"
 msgstr "alkuperäinen"
 
@@ -18718,15 +18931,15 @@ msgstr "Lataa galleria"
 msgid "You do not have permission to download this file"
 msgstr "Sinulla ei ole lupaa ladata tätä tiedostoa."
 
-#: frontend.php:1148
+#: frontend.php:1154
 msgid "You have no available downloads"
 msgstr "Sinulla ei ole käytettävissä olevia latauksia"
 
-#: frontend.php:1173
+#: frontend.php:1179
 msgid "Please provide a valid email address"
 msgstr "Anna kelvollinen sähköpostiosoite"
 
-#: frontend.php:1178
+#: frontend.php:1184
 msgid "Invalid request type"
 msgstr "Virheellinen pyyntö tyyppi"
 
@@ -19475,15 +19688,15 @@ msgstr "Mikä tahansa galleria"
 msgid "Will include all child galleries as well"
 msgstr "Sisältää myös kaikki lapsigalleriat"
 
-#: class-export.php:200
+#: class-export.php:201
 msgid "File Format"
 msgstr "Tiedostomuoto"
 
-#: class-export.php:204
+#: class-export.php:205
 msgid "CSV"
 msgstr "CSV"
 
-#: class-export.php:209
+#: class-export.php:210
 msgid "XML"
 msgstr "Xml"
 
@@ -19510,6 +19723,11 @@ msgstr "Viennit"
 #: exports.php:117
 msgid "Past Exports"
 msgstr "Aiempi vienti"
+
+#: exports.php:299
+#, fuzzy
+msgid "You are not allowed to run exports"
+msgstr "Pahoittelut, sinulla ei ole oikeuksia katsoa tätä kuvaa"
 
 #. Plugin Name of the plugin
 #: light-blue.php
@@ -19965,7 +20183,9 @@ msgstr "Test Secret Key"
 msgid ""
 "Mollie payment %1$s was not accepted for this order: %2$s The order was left "
 "unpaid."
-msgstr "Mollie-maksua %1$s ei hyväksytty tälle tilaukselle: %2$s Tilaus jätettiin maksamattomaksi."
+msgstr ""
+"Mollie-maksua %1$s ei hyväksytty tälle tilaukselle: %2$s Tilaus jätettiin "
+"maksamattomaksi."
 
 #: class-mollie.php:350 class-quickpay.php:433
 msgid "it was made for a different order."
@@ -20473,7 +20693,9 @@ msgstr "Maksua ei voitu valmistella"
 msgid ""
 "Mercado Pago payment not started: this Mercado Pago account only takes "
 "payments in %1$s, and the store charges in %2$s"
-msgstr "Mercado Pago -maksua ei aloitettu: tämä Mercado Pago -tili ottaa vastaan maksuja vain valuutassa %1$s, ja kauppa veloittaa valuutassa %2$s"
+msgstr ""
+"Mercado Pago -maksua ei aloitettu: tämä Mercado Pago -tili ottaa vastaan "
+"maksuja vain valuutassa %1$s, ja kauppa veloittaa valuutassa %2$s"
 
 #. translators: %s: Mercado Pago's reason
 #: class-mercadopago-pro.php:255
@@ -20523,7 +20745,9 @@ msgstr "Maksua ei voitu käsitellä, yritä uudelleen"
 msgid ""
 "Mercado Pago can't take payments in %s for this store. Please choose another "
 "way to pay."
-msgstr "Mercado Pago ei voi ottaa vastaan maksuja valuutassa %s tälle kaupalle. Valitse toinen maksutapa."
+msgstr ""
+"Mercado Pago ei voi ottaa vastaan maksuja valuutassa %s tälle kaupalle. "
+"Valitse toinen maksutapa."
 
 #. translators: %s: payment status from Mercado Pago, e.g. rejected
 #: trait-mercadopago-common.php:86
@@ -20567,7 +20791,9 @@ msgstr "summa on %1$s, tilauksen loppusumma on %2$s"
 msgid ""
 "Mercado Pago payment %1$s was declined or cancelled (status %2$s), so the "
 "order was not marked paid"
-msgstr "Mercado Pago -maksu %1$s hylättiin tai peruttiin (tila %2$s), joten tilausta ei merkitty maksetuksi"
+msgstr ""
+"Mercado Pago -maksu %1$s hylättiin tai peruttiin (tila %2$s), joten tilausta "
+"ei merkitty maksetuksi"
 
 #. translators: 1: Mercado Pago payment ID, 2: reason, e.g. "amount is 1, order total is 110"
 #: trait-mercadopago-common.php:119
@@ -20575,11 +20801,14 @@ msgstr "Mercado Pago -maksu %1$s hylättiin tai peruttiin (tila %2$s), joten til
 msgid ""
 "Mercado Pago payment %1$s did not match this order, so the order was not "
 "marked paid (%2$s)"
-msgstr "Mercado Pago -maksu %1$s ei vastannut tätä tilausta, joten tilausta ei merkitty maksetuksi (%2$s)"
+msgstr ""
+"Mercado Pago -maksu %1$s ei vastannut tätä tilausta, joten tilausta ei "
+"merkitty maksetuksi (%2$s)"
 
 #: trait-mercadopago-common.php:205
 msgid "Could not refund payment: this order has no Mercado Pago payment"
-msgstr "Maksua ei voitu hyvittää: tässä tilauksessa ei ole Mercado Pago -maksua"
+msgstr ""
+"Maksua ei voitu hyvittää: tässä tilauksessa ei ole Mercado Pago -maksua"
 
 #: trait-mercadopago-common.php:219
 msgid "Could not refund payment: nothing is left to refund"
@@ -20640,7 +20869,9 @@ msgstr "Lähetä maksu %s"
 msgid ""
 "Thank you! Your payment is being confirmed by Payfast. Your order will show "
 "as paid once Payfast confirms it."
-msgstr "Kiitos! Payfast vahvistaa maksuasi. Tilauksesi näkyy maksettuna, kun Payfast on vahvistanut sen."
+msgstr ""
+"Kiitos! Payfast vahvistaa maksuasi. Tilauksesi näkyy maksettuna, kun Payfast "
+"on vahvistanut sen."
 
 #: class-payfast.php:379
 msgid "Customer cancelled the Payfast payment"
@@ -20652,7 +20883,9 @@ msgstr "Asiakas perui Payfast-maksun"
 msgid ""
 "Payfast sent a payment notice, but the order was not finished because its "
 "status is %s"
-msgstr "Payfast lähetti maksuilmoituksen, mutta tilausta ei viimeistelty, koska sen tila on %s"
+msgstr ""
+"Payfast lähetti maksuilmoituksen, mutta tilausta ei viimeistelty, koska sen "
+"tila on %s"
 
 #. translators: %s: payment status from Payfast, e.g. CANCELLED
 #: class-payfast.php:443
@@ -20660,13 +20893,16 @@ msgstr "Payfast lähetti maksuilmoituksen, mutta tilausta ei viimeistelty, koska
 msgid ""
 "Payfast says the payment was declined or cancelled (status %s), so the order "
 "was not marked paid"
-msgstr "Payfastin mukaan maksu hylättiin tai peruttiin (tila %s), joten tilausta ei merkitty maksetuksi"
+msgstr ""
+"Payfastin mukaan maksu hylättiin tai peruttiin (tila %s), joten tilausta ei "
+"merkitty maksetuksi"
 
 #. translators: %s: why the payment was not accepted
 #: class-payfast.php:446
 #, php-format
 msgid "Payfast payment notice not accepted, order left unpaid: %s"
-msgstr "Payfast-maksuilmoitusta ei hyväksytty, tilaus jätettiin maksamattomaksi: %s"
+msgstr ""
+"Payfast-maksuilmoitusta ei hyväksytty, tilaus jätettiin maksamattomaksi: %s"
 
 #. translators: %s: merchant ID in the payment notice
 #: class-payfast.php:488
@@ -20691,19 +20927,24 @@ msgstr "maksettu summa (%1$s) ei vastaa tilauksen loppusummaa (%2$s)"
 #, php-format
 msgid ""
 "Payfast API lists a payment for this order, but the order was left unpaid: %s"
-msgstr "Payfast API näyttää maksun tälle tilaukselle, mutta tilaus jätettiin maksamattomaksi: %s"
+msgstr ""
+"Payfast API näyttää maksun tälle tilaukselle, mutta tilaus jätettiin "
+"maksamattomaksi: %s"
 
 #. translators: %s: what went wrong
 #: class-payfast.php:545
 #, php-format
 msgid "Could not check the payment with the Payfast API, order left unpaid: %s"
-msgstr "Maksua ei voitu tarkistaa Payfast API:n kautta, tilaus jätettiin maksamattomaksi: %s"
+msgstr ""
+"Maksua ei voitu tarkistaa Payfast API:n kautta, tilaus jätettiin "
+"maksamattomaksi: %s"
 
 #: class-payfast.php:570
 msgid ""
 "Payfast payment confirmed through the PayFast API (payment notice not "
 "received)"
-msgstr "Payfast-maksu vahvistettu PayFast API:n kautta (maksuilmoitusta ei saatu)"
+msgstr ""
+"Payfast-maksu vahvistettu PayFast API:n kautta (maksuilmoitusta ei saatu)"
 
 #. translators: %s: transaction type from Payfast
 #: class-payfast.php:633
@@ -20730,7 +20971,8 @@ msgstr "Payfast ei antanut maksutunnusta"
 #: class-payfast.php:685 class-payfast.php:861
 msgid ""
 "the Payfast API needs the merchant ID and passphrase in the Payfast settings"
-msgstr "Payfast API tarvitsee kauppiastunnuksen ja salalauseen Payfast-asetuksissa"
+msgstr ""
+"Payfast API tarvitsee kauppiastunnuksen ja salalauseen Payfast-asetuksissa"
 
 #. translators: %s: error message
 #: class-payfast.php:704 class-payfast.php:884
@@ -20762,7 +21004,9 @@ msgstr "Maksua ei voitu hyvittää Payfastissa: %s"
 msgid ""
 "This order has no Payfast payment ID, so it can't be refunded from here. You "
 "can refund it in your Payfast dashboard."
-msgstr "Tällä tilauksella ei ole Payfast-maksutunnusta, joten sitä ei voi hyvittää täältä. Voit hyvittää sen Payfastin hallintapaneelissa."
+msgstr ""
+"Tällä tilauksella ei ole Payfast-maksutunnusta, joten sitä ei voi hyvittää "
+"täältä. Voit hyvittää sen Payfastin hallintapaneelissa."
 
 #: class-payfast.php:1016
 msgid "there is nothing left to refund on this order"
@@ -20790,7 +21034,10 @@ msgstr "Payfast voi hyvittää tästä maksusta enää %s"
 msgid ""
 "Payfast can only pay this refund into the customer's bank account, which "
 "needs their bank details. You can do this refund in your Payfast dashboard."
-msgstr "Payfast voi maksaa tämän hyvityksen vain asiakkaan pankkitilille, mikä vaatii hänen pankkitietonsa. Voit tehdä tämän hyvityksen Payfastin hallintapaneelissa."
+msgstr ""
+"Payfast voi maksaa tämän hyvityksen vain asiakkaan pankkitilille, mikä "
+"vaatii hänen pankkitietonsa. Voit tehdä tämän hyvityksen Payfastin "
+"hallintapaneelissa."
 
 #. translators: %s: refund method from Payfast
 #: class-payfast.php:1065
@@ -20825,7 +21072,9 @@ msgstr "Ei tuettu valuutta"
 msgid ""
 "Paystack return link had a payment reference from a different order, so the "
 "order was left unpaid"
-msgstr "Paystackin paluulinkissä oli toisen tilauksen maksuviite, joten tilaus jätettiin maksamattomaksi"
+msgstr ""
+"Paystackin paluulinkissä oli toisen tilauksen maksuviite, joten tilaus "
+"jätettiin maksamattomaksi"
 
 #: class-paystack.php:254 class-paystack.php:260 class-quickpay.php:214
 msgid "Could not verify payment status"
@@ -20851,7 +21100,9 @@ msgstr "Paystack palautti maksun toiselle viitteelle"
 msgid ""
 "the amount paid (%1$s) does not match the order total (%2$s), both in the "
 "smallest unit of the currency"
-msgstr "maksettu summa (%1$s) ei vastaa tilauksen loppusummaa (%2$s), molemmat valuutan pienimpänä yksikkönä"
+msgstr ""
+"maksettu summa (%1$s) ei vastaa tilauksen loppusummaa (%2$s), molemmat "
+"valuutan pienimpänä yksikkönä"
 
 #. translators: 1: currency paid in, 2: order currency
 #: class-paystack.php:296
@@ -20865,7 +21116,9 @@ msgstr "maksu oli valuutassa %1$s, mutta tilaus on valuutassa %2$s"
 msgid ""
 "Paystack payment %1$s was declined or cancelled (status %2$s), so the order "
 "was not marked paid"
-msgstr "Paystack-maksu %1$s hylättiin tai peruttiin (tila %2$s), joten tilausta ei merkitty maksetuksi"
+msgstr ""
+"Paystack-maksu %1$s hylättiin tai peruttiin (tila %2$s), joten tilausta ei "
+"merkitty maksetuksi"
 
 #. translators: %s: why the payment was not accepted
 #: class-paystack.php:313
@@ -20916,7 +21169,9 @@ msgstr "Maksua ei hyväksytä"
 msgid ""
 "QuickPay payment %1$s was declined or not finished (state %2$s), so the "
 "order was not marked paid."
-msgstr "QuickPay-maksu %1$s hylättiin tai sitä ei viety loppuun (tila %2$s), joten tilausta ei merkitty maksetuksi."
+msgstr ""
+"QuickPay-maksu %1$s hylättiin tai sitä ei viety loppuun (tila %2$s), joten "
+"tilausta ei merkitty maksetuksi."
 
 #. translators: 1: QuickPay payment ID, 2: reason the payment was not accepted
 #: class-quickpay.php:228 class-quickpay.php:339
@@ -20924,7 +21179,9 @@ msgstr "QuickPay-maksu %1$s hylättiin tai sitä ei viety loppuun (tila %2$s), j
 msgid ""
 "QuickPay payment %1$s was not accepted for this order: %2$s The order was "
 "left unpaid."
-msgstr "QuickPay-maksua %1$s ei hyväksytty tälle tilaukselle: %2$s Tilaus jätettiin maksamattomaksi."
+msgstr ""
+"QuickPay-maksua %1$s ei hyväksytty tälle tilaukselle: %2$s Tilaus jätettiin "
+"maksamattomaksi."
 
 #: class-quickpay.php:292
 msgid "Customer cancelled the QuickPay payment"
@@ -21007,7 +21264,9 @@ msgstr ""
 #, php-format
 msgid ""
 "Sorry, only %2$d of %1$s are left. Please change the quantity in your cart."
-msgstr "Valitettavasti tuotetta %1$s on jäljellä vain %2$d. Muuta määrää ostoskorissasi."
+msgstr ""
+"Valitettavasti tuotetta %1$s on jäljellä vain %2$d. Muuta määrää "
+"ostoskorissasi."
 
 #. translators: %s is the product name
 #: sell-anything.php:238
@@ -22865,7 +23124,7 @@ msgstr "päivitetty tähän mennessä..."
 msgid "Unknown choice"
 msgstr "Tuntematon valinta"
 
-#: cloud-storage.php:109
+#: cloud-storage.php:115
 msgid "Every 5 minutes"
 msgstr "5 minuutin välein"
 
@@ -22998,12 +23257,12 @@ msgid "Connection successful! All tests passed."
 msgstr "Yhteys onnistui! Kaikki testit läpäisty."
 
 #: includes/class-cloud-storage-client-gcs.php:31
-#: includes/class-cloud-storage-client-gcs.php:574
+#: includes/class-cloud-storage-client-gcs.php:630
 msgid "Google Cloud Storage JSON key is required"
 msgstr "Google Cloud Storage JSON -avain vaaditaan"
 
 #: includes/class-cloud-storage-client-gcs.php:39
-#: includes/class-cloud-storage-client-gcs.php:581
+#: includes/class-cloud-storage-client-gcs.php:637
 msgid "Invalid JSON key file. Please check your service account JSON."
 msgstr "JSON-avain tiedosto on virheellinen. Tarkista palvelutilisi JSON."
 
@@ -23192,23 +23451,23 @@ msgstr "Ei alikansioita"
 msgid "Error loading folders"
 msgstr "Virhe kansioiden lataamisessa"
 
-#: includes/class-cloud-storage-manager.php:2398
+#: includes/class-cloud-storage-manager.php:2415
 msgid "No objects found in WP Offload Media data"
 msgstr "WP Offload Media -tiedoista ei löytynyt kohteita"
 
-#: includes/class-cloud-storage-manager.php:2458
+#: includes/class-cloud-storage-manager.php:2475
 msgid "Could not build URLs from WP Offload Media data"
 msgstr "WP Offload Media -tiedoista ei voitu luoda URL-osoitteita."
 
-#: includes/class-cloud-storage-manager.php:2546
+#: includes/class-cloud-storage-manager.php:2563
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr "WP Offload Media -sovelluksesta ei voitu hakea URL-osoitteita."
 
-#: includes/hooks.php:430 includes/hooks.php:464
+#: includes/hooks.php:436 includes/hooks.php:470
 msgid "Sunshine Cloud Storage:"
 msgstr "Sunshine-pilvitallennus:"
 
-#: includes/hooks.php:431
+#: includes/hooks.php:437
 msgid ""
 "WP Offload Media plugin is currently active. These two plugins should not be "
 "active at the same time as they will conflict. Please deactivate WP Offload "
@@ -23219,7 +23478,7 @@ msgstr ""
 "ristiriidan. Poista WP Offload Media käytöstä ennen Sunshine Cloud Storage "
 "-palvelun käyttöä."
 
-#: includes/hooks.php:433
+#: includes/hooks.php:439
 msgid ""
 "<strong>Good news:</strong> Sunshine can take over your previously offloaded "
 "items. After deactivating WP Offload Media, run the WP Offload Media "
@@ -23230,7 +23489,7 @@ msgstr ""
 "Offload Media -siirtotyökalu siirtääksesi tiedot Sunshinen omaan "
 "tallennukseen."
 
-#: includes/hooks.php:438
+#: includes/hooks.php:444
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media plugin is active. "
 "You have Cloud Storage set to \"Entire WordPress site\" which may conflict. "
@@ -23242,7 +23501,7 @@ msgstr ""
 "mikä voi aiheuttaa ristiriidan. Harkitse sen asettamista tilaan \"Vain "
 "Sunshine-galleriat\" tai yhden laajennuksen poistamista käytöstä."
 
-#: includes/hooks.php:465
+#: includes/hooks.php:471
 msgid ""
 "Your cloud storage bucket does not support per-object ACLs (Access Control "
 "Lists). This means Sunshine cannot set individual files as public or "
@@ -23255,7 +23514,7 @@ msgstr ""
 "että pikkukuvat eivät näy tai täysresoluutioiset kuvat ovat julkisesti "
 "saatavilla."
 
-#: includes/hooks.php:469
+#: includes/hooks.php:475
 msgid ""
 "<strong>How to fix:</strong> Go to Google Cloud Console &rarr; Cloud Storage "
 "&rarr; Your Bucket &rarr; Permissions &rarr; Access Control &rarr; Switch "
@@ -23265,7 +23524,7 @@ msgstr ""
 "→ Oma säilytyspaikka → Käyttöoikeudet → Käyttöoikeuksien hallinta → Vaihda "
 "asetuksesta \"Yhtenäinen\" asetukseen \"Tarkka\"."
 
-#: includes/hooks.php:471
+#: includes/hooks.php:477
 msgid ""
 "<strong>How to fix:</strong> Go to S3 Console &rarr; Your Bucket &rarr; "
 "Permissions &rarr; Object Ownership &rarr; Edit &rarr; Select \"ACLs "
@@ -23275,7 +23534,7 @@ msgstr ""
 "Käyttöoikeudet → Objektin omistusoikeus → Muokkaa → Valitse \"ACL-oikeudet "
 "käytössä\" ja \"Säilytyspaikan omistaja ensisijainen\"."
 
-#: includes/hooks.php:473
+#: includes/hooks.php:479
 msgid ""
 "<strong>How to fix:</strong> Check your storage provider's documentation for "
 "enabling per-object ACLs on your bucket."
@@ -23283,7 +23542,7 @@ msgstr ""
 "<strong>Korjaustapa:</strong> Tarkista tallennuspalveluntarjoajan ohjeista, "
 "miten voit ottaa käyttöön objektikohtaiset ACL-oikeudet säilytyspaikassasi."
 
-#: includes/hooks.php:477
+#: includes/hooks.php:483
 msgid ""
 "After making changes, go to Sunshine Settings &rarr; Cloud Storage and click "
 "\"Test Connection\" to verify."
@@ -23292,7 +23551,7 @@ msgstr ""
 "Pilvitallennus ja napsauta \"Testaa yhteys\" vahvistaaksesi."
 
 #. translators: 1: link opening tag, 2: link closing tag
-#: includes/hooks.php:533
+#: includes/hooks.php:539
 #, php-format
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media data was found on "
@@ -23552,7 +23811,9 @@ msgstr "Vain kortit, joiden saldo on > 0."
 msgid ""
 "A gift card on this order no longer has enough balance. Please review your "
 "order and try again."
-msgstr "Tämän tilauksen lahjakortilla ei ole enää tarpeeksi saldoa. Tarkista tilauksesi ja yritä uudelleen."
+msgstr ""
+"Tämän tilauksen lahjakortilla ei ole enää tarpeeksi saldoa. Tarkista "
+"tilauksesi ja yritä uudelleen."
 
 #. translators: 1: gift card code, 2: amount the order used, 3: amount left on the card
 #: order-integration.php:214
@@ -23560,7 +23821,9 @@ msgstr "Tämän tilauksen lahjakortilla ei ole enää tarpeeksi saldoa. Tarkista
 msgid ""
 "Gift card %1$s was used for %2$s on this order, but only %3$s was left on it "
 "when the order was paid. The difference was not collected."
-msgstr "Lahjakorttia %1$s käytettiin %2$s tässä tilauksessa, mutta siinä oli jäljellä vain %3$s, kun tilaus maksettiin. Erotusta ei peritty."
+msgstr ""
+"Lahjakorttia %1$s käytettiin %2$s tässä tilauksessa, mutta siinä oli "
+"jäljellä vain %3$s, kun tilaus maksettiin. Erotusta ei peritty."
 
 #. translators: 1: gift card code, 2: amount applied to the order, 3: remaining balance on the card
 #: order-integration.php:220
@@ -23574,7 +23837,9 @@ msgstr "Lahjakortti %1$s lunastettu: %2$s käytetty, %3$s jäljellä"
 msgid ""
 "Gift card %1$s was used for %2$s on this order, but only %3$s was left on it "
 "when the order was reopened. The difference was not collected."
-msgstr "Lahjakorttia %1$s käytettiin %2$s tässä tilauksessa, mutta siinä oli jäljellä vain %3$s, kun tilaus avattiin uudelleen. Erotusta ei peritty."
+msgstr ""
+"Lahjakorttia %1$s käytettiin %2$s tässä tilauksessa, mutta siinä oli "
+"jäljellä vain %3$s, kun tilaus avattiin uudelleen. Erotusta ei peritty."
 
 #. translators: 1: gift card code, 2: amount given back to the card, 3: new balance on the card
 #: order-integration.php:359
@@ -23594,7 +23859,9 @@ msgstr "Lahjakortti %1$s: %2$s veloitettu uudelleen, saldo on nyt %3$s"
 msgid ""
 "Gift card %1$s bought on this order can no longer be used. %2$s had already "
 "been spent from it."
-msgstr "Tässä tilauksessa ostettua lahjakorttia %1$s ei voi enää käyttää. Siitä oli jo käytetty %2$s."
+msgstr ""
+"Tässä tilauksessa ostettua lahjakorttia %1$s ei voi enää käyttää. Siitä oli "
+"jo käytetty %2$s."
 
 #: product-integration.php:42
 msgid "Custom"
@@ -24391,10 +24658,6 @@ msgstr "Lisää koriin"
 #, fuzzy
 #~ msgid "Test event sent."
 #~ msgstr "Test Secret Key"
-
-#, fuzzy
-#~ msgid "You are not allowed to manage webhooks."
-#~ msgstr "Pahoittelut, sinulla ei ole oikeuksia katsoa tätä kuvaa"
 
 #, fuzzy, php-format
 #~ msgid "You do not have permission to %1$s %2$s via the API."
