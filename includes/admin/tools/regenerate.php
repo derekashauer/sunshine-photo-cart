@@ -396,12 +396,15 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			add_filter( 'jpeg_quality', $set_quality, 999 );
 		}
 
-		// The admin class turns this off for gallery photos, but the API and CLI don't load it.
+		// The admin class sets both of these, but the API and CLI don't load it. Without them
+		// large photos get scaled and WordPress's own sizes are made with no watermark.
 		add_filter( 'big_image_size_threshold', '__return_false', 999 );
+		add_filter( 'intermediate_image_sizes', 'sunshine_upload_image_sizes', 99999 );
 
 		$new_metadata = wp_generate_attachment_metadata( $image_id, $file_path );
 
 		remove_filter( 'big_image_size_threshold', '__return_false', 999 );
+		remove_filter( 'intermediate_image_sizes', 'sunshine_upload_image_sizes', 99999 );
 
 		$new_metadata = sunshine_ensure_intermediate_sizes( $image_id, $new_metadata, $file_path );
 
