@@ -262,6 +262,16 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 
 		// Sunshine Cloud Storage offload: pull the file local for processing.
 		$cloud_storage_key = get_post_meta( $image_id, 'sunshine_cloud_storage_key', true );
+
+		if ( ! empty( $cloud_storage_key ) && substr( $file_path, 0, 2 ) != 's3' && file_exists( $file_path ) && ! $this->restore_changed_original( $image_id, $file_path, $cloud_storage_key ) ) {
+			return array(
+				'ok'       => false,
+				'image_id' => (int) $image_id,
+				'file'     => $image->get_name(),
+				'error'    => __( 'Could not download file from cloud storage for regeneration', 'sunshine-photo-cart' ),
+			);
+		}
+
 		if ( ! empty( $cloud_storage_key ) && ( ! file_exists( $file_path ) || substr( $file_path, 0, 2 ) == 's3' ) ) {
 			$sunshine_cloud_offloaded = true;
 
@@ -437,6 +447,56 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			'file'     => $image->get_name(),
 			'error'    => null,
 		);
+	}
+
+	/**
+	 * Put the true original back when the local file no longer matches it.
+	 *
+	 * An older Regenerate Images could watermark the local original in place. Building
+	 * from that file stamps every size twice and records its size as the original's,
+	 * which hides the problem from Cloud Storage and Digital Downloads for good. Only
+	 * acts when Cloud Storage confirms the cloud copy is the size recorded for the original.
+	 *
+	 * @param int    $image_id          Attachment ID.
+	 * @param string $file_path         Local original.
+	 * @param string $cloud_storage_key Object key of the cloud original.
+	 * @return bool False when the original could not be put back.
+	 */
+	protected function restore_changed_original( $image_id, $file_path, $cloud_storage_key ) {
+		$metadata      = wp_get_attachment_metadata( $image_id );
+		$recorded_size = ! empty( $metadata['filesize'] ) ? (int) $metadata['filesize'] : 0;
+		if ( ! $recorded_size || (int) filesize( $file_path ) === $recorded_size ) {
+			return true;
+		}
+
+		// Cloud Storage can update before or after core, so the check may not exist yet.
+		if ( ! class_exists( 'Sunshine_Cloud_Storage_Manager' ) || ! class_exists( 'Sunshine_Cloud_Storage_Client' ) ) {
+			return true;
+		}
+		$manager = Sunshine_Cloud_Storage_Manager::instance();
+		if ( ! method_exists( $manager, 'cloud_copy_matches_recorded_size' ) || ! $manager->cloud_copy_matches_recorded_size( $image_id ) ) {
+			return true;
+		}
+
+		if ( ! function_exists( 'wp_tempnam' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		// Download to a temp file first, so a failed download leaves the local file as it was.
+		$temp_file = wp_tempnam( basename( $cloud_storage_key ) );
+		$restored  = $temp_file
+			&& Sunshine_Cloud_Storage_Client::instance()->download_file( $cloud_storage_key, $temp_file )
+			&& (int) filesize( $temp_file ) === $recorded_size
+			&& copy( $temp_file, $file_path );
+
+		if ( $temp_file ) {
+			wp_delete_file( $temp_file );
+		}
+		clearstatcache( true, $file_path );
+
+		SPC()->log( ( $restored ? 'Cloud Storage: Restored changed original for regeneration: ' : 'Cloud Storage: Failed to restore changed original for regeneration: ' ) . $cloud_storage_key );
+
+		return $restored;
 	}
 
 	protected function do_process() {
