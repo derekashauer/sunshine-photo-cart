@@ -396,7 +396,12 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 			add_filter( 'jpeg_quality', $set_quality, 999 );
 		}
 
+		// The admin class turns this off for gallery photos, but the API and CLI don't load it.
+		add_filter( 'big_image_size_threshold', '__return_false', 999 );
+
 		$new_metadata = wp_generate_attachment_metadata( $image_id, $file_path );
+
+		remove_filter( 'big_image_size_threshold', '__return_false', 999 );
 
 		$new_metadata = sunshine_ensure_intermediate_sizes( $image_id, $new_metadata, $file_path );
 
@@ -447,30 +452,34 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 	}
 
 	/**
-	 * Put the true original back when the local file no longer matches it.
+	 * Put the true original back when the local file no longer matches the cloud copy.
 	 *
 	 * An older Regenerate Images could watermark the local original in place. Building
-	 * from that file stamps every size twice and records its size as the original's,
-	 * which hides the problem from Cloud Storage and Digital Downloads for good. The cloud
-	 * copy replaces the local file only if it is the size recorded for the original.
+	 * from that file stamps every size twice and hides the problem from Cloud Storage and
+	 * Digital Downloads. Running it twice also recorded the changed file's size as the
+	 * original's, so the cloud copy is what the local file is compared to.
 	 *
 	 * @param int    $image_id          Attachment ID.
 	 * @param string $file_path         Local original.
 	 * @param string $cloud_storage_key Object key of the cloud original.
-	 * @return bool False when the cloud copy could not be checked or put in place.
+	 * @return bool False when a known change could not be put right.
 	 */
 	protected function restore_changed_original( $image_id, $file_path, $cloud_storage_key ) {
-		$metadata      = wp_get_attachment_metadata( $image_id );
-		$recorded_size = ! empty( $metadata['filesize'] ) ? (int) $metadata['filesize'] : 0;
-
-		// A scaled photo records the scaled file's size, so there is nothing to compare to.
-		if ( ! $recorded_size || ! empty( $metadata['original_image'] ) || (int) filesize( $file_path ) === $recorded_size ) {
-			return true;
-		}
-
 		if ( ! class_exists( 'Sunshine_Cloud_Storage_Client' ) ) {
 			return true;
 		}
+
+		$client     = Sunshine_Cloud_Storage_Client::instance();
+		$local_size = (int) filesize( $file_path );
+
+		// Most providers report a size, which saves downloading photos that match.
+		if ( (int) $client->get_remote_size( $cloud_storage_key ) === $local_size ) {
+			return true;
+		}
+
+		// A scaled photo records the scaled file's size, which says nothing about the original.
+		$metadata      = wp_get_attachment_metadata( $image_id );
+		$recorded_size = ( empty( $metadata['original_image'] ) && ! empty( $metadata['filesize'] ) ) ? (int) $metadata['filesize'] : 0;
 
 		if ( ! function_exists( 'wp_tempnam' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -479,16 +488,30 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 		// Beside the local file, so a failed download leaves it alone and the swap is one rename.
 		$temp_file = wp_tempnam( basename( $cloud_storage_key ), trailingslashit( dirname( $file_path ) ) );
 
-		if ( ! Sunshine_Cloud_Storage_Client::instance()->download_file( $cloud_storage_key, $temp_file ) ) {
+		if ( ! $client->download_file( $cloud_storage_key, $temp_file ) ) {
 			wp_delete_file( $temp_file );
-			SPC()->log( 'Cloud Storage: Failed to download original to check changed local file: ' . $cloud_storage_key );
-			return false;
+			SPC()->log( 'Cloud Storage: Failed to download original to check local file: ' . $cloud_storage_key );
+
+			// Nothing shows this photo changed, and it can still be put right on a later run.
+			return $local_size === $recorded_size;
 		}
 
 		clearstatcache( true, $temp_file );
-		if ( (int) filesize( $temp_file ) !== $recorded_size ) {
+		$cloud_size = (int) filesize( $temp_file );
+
+		if ( $cloud_size === $local_size ) {
 			wp_delete_file( $temp_file );
-			SPC()->log( 'Cloud Storage: Cloud copy is not the recorded size, keeping the local file: ' . $cloud_storage_key );
+			return true;
+		}
+
+		// A recorded size that differs from the local file is still the original's. Without
+		// one, the cloud copy has to prove it is whole: image tools accept a cut-off JPEG.
+		$recorded_size_is_good = $recorded_size && $recorded_size !== $local_size;
+		$is_original           = $recorded_size_is_good ? $cloud_size === $recorded_size : $this->is_complete_copy( $temp_file, $file_path );
+
+		if ( ! $is_original ) {
+			wp_delete_file( $temp_file );
+			SPC()->log( 'Cloud Storage: Cloud copy is not confirmed as the original, keeping the local file: ' . $cloud_storage_key );
 			return true;
 		}
 
@@ -502,6 +525,24 @@ class SPC_Tool_Regenerate extends SPC_Tool {
 		SPC()->log( 'Cloud Storage: Restored changed original for regeneration: ' . $cloud_storage_key );
 
 		return true;
+	}
+
+	/**
+	 * Whether a downloaded file is a whole JPEG with the same dimensions as the local photo.
+	 *
+	 * @param string $copy_path  Downloaded file.
+	 * @param string $local_path Local photo.
+	 * @return bool
+	 */
+	protected function is_complete_copy( $copy_path, $local_path ) {
+		$copy  = @getimagesize( $copy_path );
+		$local = @getimagesize( $local_path );
+		if ( ! $copy || ! $local || 'image/jpeg' !== $copy['mime'] || $copy[0] !== $local[0] || $copy[1] !== $local[1] ) {
+			return false;
+		}
+
+		// A whole JPEG ends with this marker.
+		return "\xFF\xD9" === file_get_contents( $copy_path, false, null, filesize( $copy_path ) - 2 );
 	}
 
 	protected function do_process() {
