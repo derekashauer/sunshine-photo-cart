@@ -1712,6 +1712,9 @@ function sunshine_ajax_gallery_import() {
 	$item_number = intval( $_POST['item_number'] );
 	$dir         = isset( $_POST['dir'] ) ? sanitize_text_field( wp_unslash( $_POST['dir'] ) ) : '';
 	$watermark   = ! empty( $_POST['watermark'] ) ? 1 : 0;
+
+	// Photos brought in later from this folder follow the same choice.
+	update_post_meta( $gallery_id, 'sunshine_import_watermark', $watermark );
 	$single      = ! empty( $_POST['single'] );
 	$import_run  = isset( $_POST['import_run'] ) ? sanitize_key( wp_unslash( $_POST['import_run'] ) ) : '';
 

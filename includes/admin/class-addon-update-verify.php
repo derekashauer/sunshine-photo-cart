@@ -14,7 +14,8 @@
  * make a signature that passes here.
  *
  * Every add-on that registers an SPC_License with its plugin file is added here by
- * SPC_License, so one check covers them all. The check runs on
+ * SPC_License. Add-ons only do that in wp-admin and cron runs, so any other add-on being
+ * updated, such as under WP-CLI, is recognised by its plugin name. The check runs on
  * `upgrader_source_selection`: after WordPress unzips the package but before it removes
  * the installed copy. Returning a WP_Error there aborts the update and leaves the old
  * version in place. An admin uploading a zip by hand under Plugins > Add New is not
@@ -60,10 +61,6 @@ class SPC_Addon_Update_Verify {
 	 */
 	public static function watch( $file, $version, $name ) {
 
-		if ( empty( self::$addons ) ) {
-			add_filter( 'upgrader_source_selection', array( __CLASS__, 'check_package' ), 10, 4 );
-		}
-
 		self::$addons[ plugin_basename( $file ) ] = array(
 			'folder'  => basename( dirname( $file ) ),
 			'version' => (string) $version,
@@ -80,11 +77,15 @@ class SPC_Addon_Update_Verify {
 	 */
 	public static function check_package( $source, $remote_source = '', $upgrader = null, $hook_extra = array() ) {
 
-		if ( is_wp_error( $source ) || empty( $hook_extra['plugin'] ) || ! isset( self::$addons[ $hook_extra['plugin'] ] ) ) {
+		if ( is_wp_error( $source ) || empty( $hook_extra['plugin'] ) ) {
 			return $source;
 		}
 
-		$addon   = self::$addons[ $hook_extra['plugin'] ];
+		$addon = self::find_addon( $hook_extra['plugin'] );
+		if ( ! $addon ) {
+			return $source;
+		}
+
 		$problem = self::find_problem( $source, $addon['folder'], $addon['version'] );
 		if ( '' === $problem ) {
 			return $source;
@@ -104,6 +105,40 @@ class SPC_Addon_Update_Verify {
 	}
 
 	/**
+	 * Details of the add-on being updated.
+	 *
+	 * @param string $plugin Plugin basename.
+	 * @return array|false Folder, version and name, or false when it isn't an add-on.
+	 */
+	private static function find_addon( $plugin ) {
+
+		if ( isset( self::$addons[ $plugin ] ) ) {
+			return self::$addons[ $plugin ];
+		}
+
+		// Core has the add-ons' name pattern too, but it comes from WordPress.org, unsigned.
+		$file = WP_PLUGIN_DIR . '/' . $plugin;
+		if ( plugin_basename( SUNSHINE_PHOTO_CART_FILE ) === $plugin || ! is_readable( $file ) ) {
+			return false;
+		}
+
+		if ( ! function_exists( 'get_plugin_data' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		$data = get_plugin_data( $file, false, false );
+		if ( 0 !== strpos( $data['Name'], 'Sunshine Photo Cart - ' ) || ! in_array( $data['Author'], array( 'WP Sunshine', 'Sunshine Photo Cart' ), true ) ) {
+			return false;
+		}
+
+		return array(
+			'folder'  => dirname( $plugin ),
+			'version' => (string) $data['Version'],
+			'name'    => $data['Name'],
+		);
+	}
+
+	/**
 	 * Checks an unzipped package folder.
 	 *
 	 * @param string $source  Folder the package was unzipped to.
@@ -117,29 +152,34 @@ class SPC_Addon_Update_Verify {
 
 		$signature_file = $source . self::SIGNATURE_FILE;
 		if ( ! is_readable( $signature_file ) ) {
-			return 'the update has no signature.';
+			return __( 'the update has no signature.', 'sunshine-photo-cart' );
 		}
 
 		$signed = json_decode( (string) file_get_contents( $signature_file ), true );
 		if ( ! is_array( $signed ) || empty( $signed['manifest'] ) || empty( $signed['signature'] ) || ! is_string( $signed['manifest'] ) || ! is_string( $signed['signature'] ) ) {
-			return 'the signature file is damaged.';
+			return __( 'the signature file is damaged.', 'sunshine-photo-cart' );
 		}
 
 		if ( ! self::signature_matches( $signed['manifest'], $signed['signature'] ) ) {
-			return 'the signature does not match.';
+			return __( 'the signature does not match.', 'sunshine-photo-cart' );
 		}
 
 		$manifest = json_decode( $signed['manifest'], true );
 		if ( ! is_array( $manifest ) || empty( $manifest['version'] ) || empty( $manifest['files'] ) || ! is_array( $manifest['files'] ) ) {
-			return 'the signed file list is damaged.';
+			return __( 'the signed file list is damaged.', 'sunshine-photo-cart' );
 		}
 
 		if ( ( $manifest['plugin'] ?? '' ) !== $folder ) {
-			return 'the signature is for a different plugin.';
+			return __( 'the signature is for a different plugin.', 'sunshine-photo-cart' );
 		}
 
 		if ( ! version_compare( (string) $manifest['version'], $version, '>' ) ) {
-			return sprintf( 'the signed version (%s) is not newer than the installed version (%s).', $manifest['version'], $version );
+			return sprintf(
+				/* translators: 1: signed version, 2: installed version */
+				__( 'the signed version (%1$s) is not newer than the installed version (%2$s).', 'sunshine-photo-cart' ),
+				$manifest['version'],
+				$version
+			);
 		}
 
 		$found = self::list_files( $source );
@@ -147,16 +187,19 @@ class SPC_Addon_Update_Verify {
 
 		foreach ( $found as $path => $full_path ) {
 			if ( ! isset( $manifest['files'][ $path ] ) ) {
-				return sprintf( 'the update has a file that was not signed (%s).', $path );
+				/* translators: %s: file path */
+				return sprintf( __( 'the update has a file that was not signed (%s).', 'sunshine-photo-cart' ), $path );
 			}
 			if ( ! hash_equals( (string) $manifest['files'][ $path ], (string) hash_file( 'sha256', $full_path ) ) ) {
-				return sprintf( 'a file was changed after it was signed (%s).', $path );
+				/* translators: %s: file path */
+				return sprintf( __( 'a file was changed after it was signed (%s).', 'sunshine-photo-cart' ), $path );
 			}
 		}
 
 		foreach ( array_keys( $manifest['files'] ) as $path ) {
 			if ( ! isset( $found[ $path ] ) ) {
-				return sprintf( 'a signed file is missing (%s).', $path );
+				/* translators: %s: file path */
+				return sprintf( __( 'a signed file is missing (%s).', 'sunshine-photo-cart' ), $path );
 			}
 		}
 
@@ -212,3 +255,5 @@ class SPC_Addon_Update_Verify {
 		return $files;
 	}
 }
+
+add_filter( 'upgrader_source_selection', array( 'SPC_Addon_Update_Verify', 'check_package' ), 10, 4 );
