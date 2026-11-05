@@ -25,6 +25,11 @@ function sunshine_watermark_image( $attachment_id, $metadata = array(), $passed_
 			$image_path     = str_replace( $image_basename, '', $image );
 			if ( $image_size != 'full' && ! empty( $image ) && ! empty( $metadata ) && ! empty( $metadata['sizes'][ $image_size ]['file'] ) ) {
 				$image = $image_path . $metadata['sizes'][ $image_size ]['file'];
+			} elseif ( $image_size != 'full' ) {
+				// Without its own file the size would fall back to the original, and the
+				// original must never be watermarked.
+				SPC()->log( 'No ' . $image_size . ' file recorded for image ' . $attachment_id . ', not watermarking the original' );
+				return;
 			}
 
 			if ( ! file_exists( $image ) ) {
