@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-11-05T22:34:27+00:00\n"
+"POT-Creation-Date: 2026-11-06T03:09:56+00:00\n"
 "PO-Revision-Date: 2026-03-02 20:33-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -138,7 +138,9 @@ msgstr "Deze add-on kon niet worden geïnstalleerd."
 msgid ""
 "%1$s refused this update because it could not confirm it came from Sunshine "
 "Photo Cart: %2$s Your current version was left in place."
-msgstr "%1$s heeft deze update geweigerd omdat niet kon worden bevestigd dat deze van Sunshine Photo Cart komt: %2$s Je huidige versie is behouden."
+msgstr ""
+"%1$s heeft deze update geweigerd omdat niet kon worden bevestigd dat deze "
+"van Sunshine Photo Cart komt: %2$s Je huidige versie is behouden."
 
 #: includes/admin/class-addon-update-verify.php:155
 msgid "the update has no signature."
@@ -165,7 +167,9 @@ msgstr "de handtekening hoort bij een andere plugin."
 #, php-format
 msgid ""
 "the signed version (%1$s) is not newer than the installed version (%2$s)."
-msgstr "de ondertekende versie (%1$s) is niet nieuwer dan de geïnstalleerde versie (%2$s)."
+msgstr ""
+"de ondertekende versie (%1$s) is niet nieuwer dan de geïnstalleerde versie "
+"(%2$s)."
 
 #. translators: %s: file path
 #: includes/admin/class-addon-update-verify.php:191
@@ -384,7 +388,8 @@ msgstr "Instellingen"
 msgid "Go Pro"
 msgstr "Upgraden naar Pro"
 
-#. translators: %1$s is the URL to the Sunshine Photo Cart website, %2$s is the URL to the WordPress.org plugin reviews page
+#. translators: %1$s is the URL to the Sunshine Photo Cart website, %2$s is the
+#. URL to the WordPress.org plugin reviews page
 #: includes/admin/class-admin.php:429
 #, php-format
 msgid ""
@@ -447,7 +452,8 @@ msgstr ""
 "afbeeldingen krijgen geen watermerk. <a href=\"%s\">Upload de "
 "watermerkafbeelding opnieuw</a>."
 
-#. translators: 1: number of images waiting, 2: URL to the Site Health info page
+#. translators: 1: number of images waiting, 2: URL to the Site Health info
+#. page
 #: includes/admin/class-admin.php:693
 #, php-format
 msgid ""
@@ -464,7 +470,9 @@ msgstr[1] ""
 "achtergrondtaak die dit doet niet opslaan. <a href=\"%2$s\">Bekijk de "
 "sitediagnose</a>."
 
-#. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
+#. translators: 1: number of images waiting, 2: how long ago cron should have
+#. run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the
+#. server cron documentation
 #: includes/admin/class-admin.php:710
 #, php-format
 msgid ""
@@ -504,7 +512,8 @@ msgstr ""
 "Zonneschijninstallatie is overgeslagen. <a href=\"%s\">Voltooi het "
 "installatieproces.</a>"
 
-#. translators: %1$d is the number of orders, %2$s is the number of orders in plural
+#. translators: %1$d is the number of orders, %2$s is the number of orders in
+#. plural
 #: includes/admin/class-admin.php:1015
 #, php-format
 msgid "%s order"
@@ -663,7 +672,8 @@ msgstr "Ongeldige licentie"
 msgid "Invalid license key"
 msgstr "Ongeldige licentiesleutel"
 
-#. translators: %1$s is the previous site URL, %2$s is the current site URL, %3$s is the URL to the sunshinephotocart.com account licenses page
+#. translators: %1$s is the previous site URL, %2$s is the current site URL,
+#. %3$s is the URL to the sunshinephotocart.com account licenses page
 #: includes/admin/class-license.php:125
 #, php-format
 msgid ""
@@ -677,7 +687,8 @@ msgstr ""
 "account</a>, klik op <strong>Manage Sites</strong> naast deze licentie, "
 "deactiveer de oude URL, kom dan hier terug en klik opnieuw op Activeren."
 
-#. translators: %s is the URL to the sunshinephotocart.com account licenses page
+#. translators: %s is the URL to the sunshinephotocart.com account licenses
+#. page
 #: includes/admin/class-license.php:133
 #, php-format
 msgid ""
@@ -737,7 +748,8 @@ msgstr ""
 "Licentie voor %1$s kon niet worden gedeactiveerd, neem <a href=\"%2$s\" "
 "target=\"_blank\">contact op met ondersteuning</a>"
 
-#. translators: %1$s is the URL to licenses page, %2$s is the URL to account on SunshinePhotoCart.com
+#. translators: %1$s is the URL to licenses page, %2$s is the URL to account on
+#. SunshinePhotoCart.com
 #: includes/admin/class-license.php:385
 #, php-format
 msgid ""
@@ -984,7 +996,8 @@ msgstr "Bijwerken"
 msgid "Pickup"
 msgstr "Afhalen"
 
-#. Translators: This is the name of the delivery method that will be displayed to the customer.
+#. Translators: This is the name of the delivery method that will be displayed
+#. to the customer.
 #: includes/admin/class-update.php:395 includes/admin/class-update.php:1241
 #: includes/delivery-methods/shipping.php:8
 msgid "Ship"
@@ -1154,7 +1167,7 @@ msgstr "Verlopen"
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:340
 #: includes/admin/sunshine-gallery.php:1627
-#: includes/class-cloud-storage-import.php:994
+#: includes/class-cloud-storage-import.php:1005
 msgid "images"
 msgstr "afbeeldingen"
 
@@ -1431,7 +1444,7 @@ msgid "Quantity Discounts"
 msgstr "Hoeveelheid kortingen"
 
 #: includes/admin/promos.php:248 admin/settings.php:642
-#: includes/class-cloud-storage-import.php:256
+#: includes/class-cloud-storage-import.php:278
 msgid "Cloud Storage"
 msgstr "Cloud Storage"
 
@@ -1844,7 +1857,14 @@ msgid ""
 "their folder after that. Each check of a cloud folder reads the list of "
 "files in your bucket, so checking every hour means more requests to your "
 "storage service."
-msgstr "Galerijen die zijn gemaakt vanuit een FTP- of cloudmap krijgen alle foto's die later aan die map worden toegevoegd. Foto's worden alleen toegevoegd: een foto die uit de map is gehaald blijft in de galerij, en een foto die je uit de galerij verwijdert komt niet terug. Galerijen die al bestonden voordat je dit aanzette krijgen alleen foto's die daarna aan hun map zijn toegevoegd. Elke controle van een cloudmap leest de bestandslijst van je bucket, dus elk uur controleren betekent meer verzoeken aan je opslagdienst."
+msgstr ""
+"Galerijen die zijn gemaakt vanuit een FTP- of cloudmap krijgen alle foto's "
+"die later aan die map worden toegevoegd. Foto's worden alleen toegevoegd: "
+"een foto die uit de map is gehaald blijft in de galerij, en een foto die je "
+"uit de galerij verwijdert komt niet terug. Galerijen die al bestonden "
+"voordat je dit aanzette krijgen alleen foto's die daarna aan hun map zijn "
+"toegevoegd. Elke controle van een cloudmap leest de bestandslijst van je "
+"bucket, dus elk uur controleren betekent meer verzoeken aan je opslagdienst."
 
 #: includes/admin/settings-fields.php:404
 msgid "Show images in Media Library"
@@ -3034,7 +3054,11 @@ msgid_plural ""
 "Sunshine checks this gallery's folder for new photos. It has added %1$d "
 "photos, last on %2$s."
 msgstr[0] ""
+"Sunshine controleert de map van deze galerij op nieuwe foto's. Er is %1$d "
+"foto toegevoegd, voor het laatst op %2$s."
 msgstr[1] ""
+"Sunshine controleert de map van deze galerij op nieuwe foto's. Er zijn %1$d "
+"foto's toegevoegd, voor het laatst op %2$s."
 
 #: includes/admin/sunshine-gallery.php:380
 msgid "Sunshine checks this gallery's folder for new photos."
@@ -3061,13 +3085,15 @@ msgstr "Fotogegevens vernieuwen"
 msgid "Delete selected images"
 msgstr "Geselecteerde afbeeldingen verwijderen"
 
-#. translators: %1$s is the number of images currently loaded, %2$s is the total number of images
+#. translators: %1$s is the number of images currently loaded, %2$s is the
+#. total number of images
 #: includes/admin/sunshine-gallery.php:418
 #, php-format
 msgid "Showing %1$s of %2$s images"
 msgstr "Toont %1$s van %2$s afbeeldingen"
 
-#. translators: %s is a select dropdown with options for number of images to load
+#. translators: %s is a select dropdown with options for number of images to
+#. load
 #: includes/admin/sunshine-gallery.php:421
 #, php-format
 msgid "Load %s more images"
@@ -3329,7 +3355,8 @@ msgstr "E-mail met bestelling opnieuw verzenden naar klant"
 msgid "Test Order"
 msgstr "Test bestelling"
 
-#. translators: %1$s is the order name, %2$s is the total amount formatted as price
+#. translators: %1$s is the order name, %2$s is the total amount formatted as
+#. price
 #: includes/admin/sunshine-order.php:632
 #, php-format
 msgid "%1$s &mdash; %2$s"
@@ -3389,7 +3416,8 @@ msgstr "Log"
 msgid "Refunds"
 msgstr "Terugbetalingen"
 
-#. translators: 1: number of items in meta, 2: number of items in database, 3: URL to fix the order
+#. translators: 1: number of items in meta, 2: number of items in database, 3:
+#. URL to fix the order
 #: includes/admin/sunshine-order.php:793
 #, php-format
 msgid ""
@@ -3648,7 +3676,8 @@ msgstr "Sunshine Photo Cart aanbevolen geheugenlimiet"
 msgid "Performance"
 msgstr "Prestaties"
 
-#. translators: %1$s is the WordPress memory limit, %2$s is the PHP memory limit
+#. translators: %1$s is the WordPress memory limit, %2$s is the PHP memory
+#. limit
 #: includes/admin/system-info.php:103
 #, php-format
 msgid ""
@@ -3846,11 +3875,11 @@ msgstr "Afbeeldingen opnieuw genereren voor \"%s\""
 
 #. translators: %d is the number of galleries
 #: includes/admin/tools/regenerate.php:622
-#, fuzzy, php-format
+#, php-format
 msgid "Regenerating images for %d gallery"
 msgid_plural "Regenerating images for %d galleries"
-msgstr[0] "Afbeeldingen opnieuw genereren voor \"%s\""
-msgstr[1] "Afbeeldingen opnieuw genereren voor \"%s\""
+msgstr[0] "Afbeeldingen regenereren voor %d galerij"
+msgstr[1] "Afbeeldingen regenereren voor %d galerijen"
 
 #: includes/admin/tools/regenerate.php:625
 msgid "Regenerating images"
@@ -3880,7 +3909,11 @@ msgid_plural ""
 "There are %d sub-galleries inside the galleries you picked. Do you want to "
 "regenerate their images too?"
 msgstr[0] ""
+"Er zit %d subgalerij in de galerijen die je hebt gekozen. Wil je de "
+"afbeeldingen daarvan ook regenereren?"
 msgstr[1] ""
+"Er zitten %d subgalerijen in de galerijen die je hebt gekozen. Wil je de "
+"afbeeldingen daarvan ook regenereren?"
 
 #: includes/admin/tools/regenerate.php:729
 msgid "Yes, include sub-galleries"
@@ -4164,7 +4197,8 @@ msgstr "Bestelling indienen en betalen %s"
 msgid "Submit Order for Free"
 msgstr "Gratis bestelling plaatsen"
 
-#. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
+#. translators: %1$s is the URL to the terms page, %2$s is the title of the
+#. terms page
 #: includes/class-cart.php:2137
 #, php-format
 msgid ""
@@ -4211,7 +4245,8 @@ msgstr "Kies een betaalmethode voordat je je bestelling afrondt."
 msgid "Please select a shipping method before completing your order."
 msgstr "Kies een verzendmethode voordat je je bestelling afrondt."
 
-#. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
+#. translators: %s is a comma separated list of checkout section names, e.g.
+#. "Shipping Address, Payment"
 #: includes/class-cart.php:2662
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
@@ -4257,7 +4292,8 @@ msgstr ""
 msgid "No payment method"
 msgstr "Geen betaalmethode"
 
-#. translators: 1: store credit the order used, 2: store credit the customer had left
+#. translators: 1: store credit the order used, 2: store credit the customer
+#. had left
 #: includes/class-cart.php:3049
 #, php-format
 msgid ""
@@ -13284,7 +13320,8 @@ msgstr "Kosten bedrag"
 msgid "%s fee"
 msgstr "%s kosten"
 
-#. translators: %1$s is the payment method name, such as "Stripe", %2$s is the smallest amount it can take, formatted as a price
+#. translators: %1$s is the payment method name, such as "Stripe", %2$s is the
+#. smallest amount it can take, formatted as a price
 #: includes/class-payment-method.php:323
 #, php-format
 msgid ""
@@ -13729,7 +13766,8 @@ msgstr ""
 "Kennisgeving van favorieten verzonden door klanten naar een aangepaste "
 "ontvanger"
 
-#. translators: %1$s is the customer first name, %2$s is the customer last name, %3$s is the site name
+#. translators: %1$s is the customer first name, %2$s is the customer last
+#. name, %3$s is the site name
 #: includes/emails/class-email-custom-favorites.php:11
 #, php-format
 msgid "%1$s %2$s has sent you favorited images on %3$s"
@@ -15044,7 +15082,8 @@ msgstr "PayPal-betaling is geannuleerd"
 msgid "Continue to PayPal"
 msgstr "Doorgaan naar PayPal"
 
-#. translators: 1: URL to the PayPal Developer Dashboard Apps & Credentials page, 2: URL to the Sunshine PayPal setup guide
+#. translators: 1: URL to the PayPal Developer Dashboard Apps & Credentials
+#. page, 2: URL to the Sunshine PayPal setup guide
 #: includes/payment-methods/paypal.php:53
 #, php-format
 msgid ""
@@ -15070,7 +15109,8 @@ msgstr ""
 msgid "Live Client ID"
 msgstr "Live-client-ID"
 
-#. translators: %s is the URL to the PayPal Developer Dashboard Apps & Credentials page
+#. translators: %s is the URL to the PayPal Developer Dashboard Apps &
+#. Credentials page
 #: includes/payment-methods/paypal.php:73
 #, php-format
 msgid ""
@@ -15098,7 +15138,8 @@ msgstr ""
 msgid "Sandbox Client ID"
 msgstr "Sandbox-cliënt-ID"
 
-#. translators: %s is the URL to the PayPal Developer Dashboard Apps & Credentials page
+#. translators: %s is the URL to the PayPal Developer Dashboard Apps &
+#. Credentials page
 #: includes/payment-methods/paypal.php:104
 #, php-format
 msgid ""
@@ -15601,7 +15642,8 @@ msgstr ""
 "Je betaling wordt nog door Square geverifieerd. Wacht even en ververs de "
 "pagina om verder te gaan."
 
-#. translators: 1: Square payment ID, 2: payment status from Square, e.g. FAILED
+#. translators: 1: Square payment ID, 2: payment status from Square, e.g.
+#. FAILED
 #: includes/payment-methods/square.php:1704
 #, php-format
 msgid ""
@@ -16326,7 +16368,8 @@ msgstr "Verbinding mislukt: %s"
 msgid "Refund amount is higher than allowed"
 msgstr "Restitutiebedrag is hoger dan toegestaan"
 
-#. translators: %1$s is the maximum allowed refund amount, %2$s is the requested refund amount
+#. translators: %1$s is the maximum allowed refund amount, %2$s is the
+#. requested refund amount
 #: includes/payment-methods/stripe.php:3931
 #, php-format
 msgid ""
@@ -16501,7 +16544,8 @@ msgstr "Een zoekvak weergeven"
 msgid "Hello %1$s (not %1$s? <a href=\"%2$s\">Log out</a>)"
 msgstr "Hallo %1$s (niet %1$s? <a href=\"%2$s\">Log uit</a>)"
 
-#. translators: 1: recent orders url 2: shipping address url 3: password and account details url
+#. translators: 1: recent orders url 2: shipping address url 3: password and
+#. account details url
 #: templates/account/dashboard.php:22
 #, php-format
 msgid ""
@@ -16932,7 +16976,8 @@ msgstr "Vul je e-mailadres in om de galerij te bekijken"
 msgid "Submit"
 msgstr "Verzenden"
 
-#. translators: %1$s is the gallery name and %2$s is the gallery expiration date
+#. translators: %1$s is the gallery name and %2$s is the gallery expiration
+#. date
 #: templates/gallery/expired.php:3
 #, php-format
 msgid "The gallery %1$s expired on %2$s and is no longer accessible"
@@ -18304,7 +18349,8 @@ msgstr[1] ""
 msgid "%1$d of these %2$d folders are already in Sunshine."
 msgstr "%1$d van deze %2$d mappen staan al in Sunshine."
 
-#. translators: 1: number of new folders, 2: number of photos missing from folders already imported
+#. translators: 1: number of new folders, 2: number of photos missing from
+#. folders already imported
 #: hooks.php:514
 #, php-format
 msgid ""
@@ -18367,7 +18413,8 @@ msgstr ""
 "importeert, wordt er voor elke map hieronder een galerij gemaakt, ook voor "
 "de mappen die je al hebt."
 
-#. translators: %d: number of photos in this folder that are not in the gallery yet
+#. translators: %d: number of photos in this folder that are not in the gallery
+#. yet
 #: hooks.php:593
 #, php-format
 msgid "Already imported, %d photos missing"
@@ -18792,7 +18839,8 @@ msgstr ""
 "minimum is 2 (afzonderlijke bestanden worden altijd onmiddellijk "
 "gedownload). Laat dit veld leeg om achtergrondverwerking uit te schakelen."
 
-#. translators: %s is the URL to the "Setting Up a Reliable Server Cron" documentation article
+#. translators: %s is the URL to the "Setting Up a Reliable Server Cron"
+#. documentation article
 #: admin/settings.php:87
 #, php-format
 msgid ""
@@ -18816,22 +18864,22 @@ msgstr "Bestelitems downloaden"
 msgid "Digital Download"
 msgstr "Digitale Download"
 
-#: class-download.php:838
+#: class-download.php:864
 msgid "Unable to process download. The requested file may not be available."
 msgstr ""
 "Kan download niet verwerken. Het gevraagde bestand is mogelijk niet "
 "beschikbaar."
 
-#: class-download.php:839 class-download.php:886 class-download.php:964
-#: class-download.php:1028 class-download.php:1048 class-download.php:1535
-#: class-download.php:1585 frontend.php:292 frontend.php:821 frontend.php:829
+#: class-download.php:865 class-download.php:912 class-download.php:990
+#: class-download.php:1054 class-download.php:1074 class-download.php:1561
+#: class-download.php:1611 frontend.php:292 frontend.php:821 frontend.php:829
 #: includes/download-handler.php:99 includes/download-handler.php:107
 #: includes/download-handler.php:162 includes/download-handler.php:177
 #: includes/download-handler.php:184 includes/download-handler.php:210
 msgid "Download Error"
 msgstr "Downloadfout"
 
-#: class-download.php:885 class-download.php:1966
+#: class-download.php:911 class-download.php:1992
 msgid ""
 "Sorry, the requested file could not be found. Please try again or contact "
 "support."
@@ -18839,7 +18887,7 @@ msgstr ""
 "Sorry, het gevraagde bestand kan niet worden gevonden. Probeer het opnieuw "
 "of neem contact op met de helpdesk."
 
-#: class-download.php:963
+#: class-download.php:989
 msgid ""
 "Sorry, some of the files in this download could not be retrieved. Please try "
 "again or contact support."
@@ -18847,7 +18895,7 @@ msgstr ""
 "Sorry, sommige bestanden in deze download konden niet worden opgehaald. "
 "Probeer het opnieuw of neem contact op met support."
 
-#: class-download.php:1027
+#: class-download.php:1053
 msgid ""
 "Sorry, this download could not be prepared. Please try again or contact "
 "support."
@@ -18855,7 +18903,7 @@ msgstr ""
 "Sorry, deze download kon niet worden voorbereid. Probeer het opnieuw of neem "
 "contact op met support."
 
-#: class-download.php:1047 class-download.php:1584
+#: class-download.php:1073 class-download.php:1610
 msgid ""
 "Sorry, some of the files in this download could not be read. Please try "
 "again or contact support."
@@ -18863,7 +18911,7 @@ msgstr ""
 "Sorry, sommige bestanden in deze download konden niet worden gelezen. "
 "Probeer het opnieuw of neem contact op met support."
 
-#: class-download.php:1534
+#: class-download.php:1560
 msgid ""
 "Sorry, some of the files in this download could not be found. Please try "
 "again or contact support."
@@ -18871,11 +18919,11 @@ msgstr ""
 "Sorry, sommige bestanden in deze download konden niet worden gevonden. "
 "Probeer het opnieuw of neem contact op met support."
 
-#: class-download.php:2041
+#: class-download.php:2067
 msgid "Sorry, the file could not be downloaded. Please try again."
 msgstr "Sorry, het bestand kon niet worden gedownload. Probeer het nog eens."
 
-#: class-download.php:2334
+#: class-download.php:2360
 msgid "original"
 msgstr "origineel"
 
@@ -19784,9 +19832,8 @@ msgid "Past Exports"
 msgstr "Export in het verleden"
 
 #: exports.php:299
-#, fuzzy
 msgid "You are not allowed to run exports"
-msgstr "Sorry, je hebt geen toestemming om deze afbeelding te bekijken"
+msgstr "Je mag geen exports uitvoeren"
 
 #. Plugin Name of the plugin
 #: light-blue.php
@@ -20658,7 +20705,8 @@ msgstr "Upsell-berichten tonen aan klanten tijdens het bekijken van galerijen"
 msgid "%1$s: %2$u or more in cart"
 msgstr "%1$s: %2$u of meer in winkelwagen"
 
-#. translators: %1$s: additional quantity needed, %2$s: product name, %3$s: savings amount per item
+#. translators: %1$s: additional quantity needed, %2$s: product name, %3$s:
+#. savings amount per item
 #: frontend.php:286
 #, php-format
 msgid "Add %1$s more %2$s to cart to save %3$s on each"
@@ -20824,7 +20872,8 @@ msgstr "status is %s"
 #. translators: 1: amount paid, 2: order total
 #. translators: %s: payment status from Payfast, e.g. CANCELLED
 #. translators: %s: payment status from Paystack
-#. translators: 1: QuickPay payment ID, 2: payment state from QuickPay, e.g. rejected
+#. translators: 1: QuickPay payment ID, 2: payment state from QuickPay, e.g.
+#. rejected
 #: trait-mercadopago-common.php:86 trait-mercadopago-common.php:97
 #: trait-mercadopago-common.php:102 class-payfast.php:443
 #: class-paystack.php:288 class-quickpay.php:225
@@ -20849,7 +20898,8 @@ msgstr "valuta is %1$s, bestelling is in %2$s"
 msgid "amount is %1$s, order total is %2$s"
 msgstr "bedrag is %1$s, besteltotaal is %2$s"
 
-#. translators: 1: Mercado Pago payment ID, 2: payment status from Mercado Pago, e.g. rejected
+#. translators: 1: Mercado Pago payment ID, 2: payment status from Mercado
+#. Pago, e.g. rejected
 #: trait-mercadopago-common.php:116
 #, php-format
 msgid ""
@@ -20859,7 +20909,8 @@ msgstr ""
 "Mercado Pago-betaling %1$s is geweigerd of geannuleerd (status %2$s), dus de "
 "bestelling is niet als betaald gemarkeerd"
 
-#. translators: 1: Mercado Pago payment ID, 2: reason, e.g. "amount is 1, order total is 110"
+#. translators: 1: Mercado Pago payment ID, 2: reason, e.g. "amount is 1, order
+#. total is 110"
 #: trait-mercadopago-common.php:119
 #, php-format
 msgid ""
@@ -21161,7 +21212,8 @@ msgstr "Paystack meldt dat de betaalstatus %s is"
 msgid "Paystack returned a payment for a different reference"
 msgstr "Paystack gaf een betaling terug met een andere referentie"
 
-#. translators: 1: amount paid in the currency's smallest unit, 2: order total in the currency's smallest unit
+#. translators: 1: amount paid in the currency's smallest unit, 2: order total
+#. in the currency's smallest unit
 #: class-paystack.php:293
 #, php-format
 msgid ""
@@ -21177,7 +21229,8 @@ msgstr ""
 msgid "the payment was in %1$s but the order is in %2$s"
 msgstr "de betaling was in %1$s maar de bestelling is in %2$s"
 
-#. translators: 1: Paystack payment reference, 2: payment status from Paystack, e.g. abandoned
+#. translators: 1: Paystack payment reference, 2: payment status from Paystack,
+#. e.g. abandoned
 #: class-paystack.php:310
 #, php-format
 msgid ""
@@ -21230,7 +21283,8 @@ msgstr "Kan geen verbinding maken met betalingsverwerker"
 msgid "Payment not accepted"
 msgstr "Betaling niet geaccepteerd"
 
-#. translators: 1: QuickPay payment ID, 2: payment state from QuickPay, e.g. rejected
+#. translators: 1: QuickPay payment ID, 2: payment state from QuickPay, e.g.
+#. rejected
 #: class-quickpay.php:225
 #, php-format
 msgid ""
@@ -21705,14 +21759,14 @@ msgstr "Ongeldige bijlage-ID"
 #: admin/tools.php:1085 admin/tools.php:1125 admin/tools.php:1159
 #: admin/tools.php:1631 admin/tools.php:1676 admin/tools.php:1776
 #: admin/tools.php:1818 admin/tools.php:2083 admin/tools.php:2204
-#: includes/class-cloud-storage-import.php:508
-#: includes/class-cloud-storage-import.php:853
-#: includes/class-cloud-storage-import.php:913
+#: includes/class-cloud-storage-import.php:530
+#: includes/class-cloud-storage-import.php:868
+#: includes/class-cloud-storage-import.php:926
 msgid "Insufficient permissions"
 msgstr "Onvoldoende machtigingen"
 
-#: admin/media-library.php:227 includes/class-cloud-storage-import.php:511
-#: includes/class-cloud-storage-import.php:857
+#: admin/media-library.php:227 includes/class-cloud-storage-import.php:533
+#: includes/class-cloud-storage-import.php:872
 msgid "Cloud storage is not configured"
 msgstr "Cloudopslag is niet geconfigureerd"
 
@@ -22554,7 +22608,8 @@ msgstr "Verander Scope"
 msgid "All %d images are already in cloud storage. Nothing to migrate!"
 msgstr "Alle %d afbeeldingen staan al in de cloudopslag. Niets om te migreren!"
 
-#. translators: %1$s: total image count, %2$s: number already offloaded, %3$s: number needing offload
+#. translators: %1$s: total image count, %2$s: number already offloaded, %3$s:
+#. number needing offload
 #: admin/tools.php:138
 #, php-format
 msgid "Total Images: %1$s | Already Offloaded: %2$s | Need to Offload: %3$s"
@@ -22672,7 +22727,8 @@ msgstr "Migratie voltooid"
 msgid "Successfully migrated %d images to cloud storage!"
 msgstr "%d afbeeldingen succesvol gemigreerd naar cloudopslag!"
 
-#. translators: %1$d: number of successful uploads, %2$d: number of failed uploads
+#. translators: %1$d: number of successful uploads, %2$d: number of failed
+#. uploads
 #: admin/tools.php:386
 #, php-format
 msgid "Migration completed with %1$d successful and %2$d failed uploads."
@@ -22848,7 +22904,8 @@ msgstr ""
 msgid "Cleanup Cancelled"
 msgstr "Opschonen geannuleerd"
 
-#. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed
+#. translators: %1$d: number of local files deleted, %2$s: amount of disk space
+#. freed
 #: admin/tools.php:946
 #, php-format
 msgid ""
@@ -22862,13 +22919,15 @@ msgstr ""
 msgid "Cleanup Complete"
 msgstr "Opschonen voltooid"
 
-#. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed
+#. translators: %1$d: number of local files deleted, %2$s: amount of disk space
+#. freed
 #: admin/tools.php:958
 #, php-format
 msgid "Deleted %1$d local files and freed %2$s of disk space."
 msgstr "%1$d lokale bestanden verwijderd en %2$s schijfruimte vrijgemaakt."
 
-#. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed, %3$d: number of files skipped
+#. translators: %1$d: number of local files deleted, %2$s: amount of disk space
+#. freed, %3$d: number of files skipped
 #: admin/tools.php:967
 #, php-format
 msgid ""
@@ -23161,7 +23220,8 @@ msgstr ""
 msgid "Network error. Reload the page to carry on where this stopped."
 msgstr "Netwerkfout. Herlaad de pagina om verder te gaan waar dit is gestopt."
 
-#. translators: 1: bucket images are recorded in, 2: bucket the site is set up for
+#. translators: 1: bucket images are recorded in, 2: bucket the site is set up
+#. for
 #: admin/tools.php:2141
 #, php-format
 msgid ""
@@ -23238,13 +23298,14 @@ msgstr ""
 "Bedankt dat je Sunshine Cloud Storage gebruikt!"
 
 #. translators: %s: site name
-#: includes/class-background-migration.php:208
+#: includes/class-background-migration.php:216
 #, php-format
 msgid "Cloud Storage Migration Complete - %s"
 msgstr "Migratie naar cloudopslag voltooid - %s"
 
-#. translators: %d: total number of images, %d: number successfully migrated, %d: number failed, %s: admin URL
-#: includes/class-background-migration.php:212
+#. translators: %d: total number of images, %d: number successfully migrated,
+#. %d: number failed, %d: number skipped, %s: admin URL
+#: includes/class-background-migration.php:220
 #, php-format
 msgid ""
 "Your cloud storage migration has completed.\n"
@@ -23253,15 +23314,17 @@ msgid ""
 "- Total images: %d\n"
 "- Successfully migrated: %d\n"
 "- Failed: %d\n"
+"- Skipped because they have no local file or are still processing: %d\n"
 "\n"
 "You can view the full details in your WordPress admin at: %s\n"
 "\n"
 "Thank you for using Sunshine Cloud Storage!"
 msgstr ""
 "De migratie van uw cloudopslag is voltooid. Samenvatting: - Totaal aantal "
-"afbeeldingen: %d - Succesvol gemigreerd: %d - Mislukt: %d U kunt de "
-"volledige details bekijken in uw WordPress-beheerder op: %s Bedankt voor het "
-"gebruik van Sunshine Cloud Storage!"
+"afbeeldingen: %d - Succesvol gemigreerd: %d - Mislukt: %d\n"
+"- Overgeslagen omdat ze geen lokaal bestand hebben of nog worden verwerkt: "
+"%d U kunt de volledige details bekijken in uw WordPress-beheerder op: %s "
+"Bedankt voor het gebruik van Sunshine Cloud Storage!"
 
 #: includes/class-cloud-storage-client-bunny.php:42
 msgid "Bunny.net Storage Zone Password and Storage Zone Name are required"
@@ -23435,49 +23498,49 @@ msgstr ""
 msgid "Unexpected error: %s"
 msgstr "Onverwachte fout: %s"
 
-#: includes/class-cloud-storage-import.php:247
+#: includes/class-cloud-storage-import.php:269
 msgid "Image Source"
 msgstr "Afbeelding Bron"
 
-#: includes/class-cloud-storage-import.php:252
+#: includes/class-cloud-storage-import.php:274
 msgid "FTP Folder"
 msgstr "FTP-map"
 
-#: includes/class-cloud-storage-import.php:262
+#: includes/class-cloud-storage-import.php:284
 msgid "Cloud Storage Folder"
 msgstr "Cloudopslagmap"
 
-#: includes/class-cloud-storage-import.php:269
+#: includes/class-cloud-storage-import.php:291
 msgid "Loading folders..."
 msgstr "Mappen laden bezig..."
 
-#: includes/class-cloud-storage-import.php:277
+#: includes/class-cloud-storage-import.php:299
 msgid "Selected:"
 msgstr "Geselecteerd:"
 
-#: includes/class-cloud-storage-import.php:282
+#: includes/class-cloud-storage-import.php:304
 msgid ""
 "Click the arrow to expand folders. Select a folder using the radio button."
 msgstr ""
 "Klik op de pijl om mappen uit te vouwen. Selecteer een map met behulp van "
 "het keuzerondje."
 
-#: includes/class-cloud-storage-import.php:304
+#: includes/class-cloud-storage-import.php:326
 msgid ""
 "Cloud storage is not configured. Please configure it in Sunshine settings."
 msgstr ""
 "Cloudopslag is niet geconfigureerd. Configureer dit in de Sunshine-"
 "instellingen."
 
-#: includes/class-cloud-storage-import.php:309
+#: includes/class-cloud-storage-import.php:331
 msgid "Please select a cloud storage folder."
 msgstr "Selecteer een map voor cloudopslag."
 
-#: includes/class-cloud-storage-import.php:448
+#: includes/class-cloud-storage-import.php:470
 msgid "Scanning your cloud storage…"
 msgstr "Je cloudopslag wordt doorzocht…"
 
-#: includes/class-cloud-storage-import.php:449
+#: includes/class-cloud-storage-import.php:471
 msgid ""
 "Large buckets are scanned in small batches so the import never times out. "
 "This can take a moment."
@@ -23485,16 +23548,17 @@ msgstr ""
 "Grote buckets worden in kleine stukjes doorzocht zodat de import nooit een "
 "time-out krijgt. Dit kan even duren."
 
-#: includes/class-cloud-storage-import.php:450
+#: includes/class-cloud-storage-import.php:472
 msgid "galleries found so far"
 msgstr "galerijen tot nu toe gevonden"
 
-#: includes/class-cloud-storage-import.php:532
+#: includes/class-cloud-storage-import.php:554
 msgid "Scan session expired, please start over."
 msgstr "De scansessie is verlopen, begin opnieuw."
 
-#. translators: %s is the folder path in the cloud storage bucket that could not be read
-#: includes/class-cloud-storage-import.php:595
+#. translators: %s is the folder path in the cloud storage bucket that could
+#. not be read
+#: includes/class-cloud-storage-import.php:616
 #, php-format
 msgid ""
 "Could not read the folder \"%s\" from your cloud storage, so the scan was "
@@ -23505,46 +23569,46 @@ msgstr ""
 "gestopt voordat er iets is geïmporteerd. Dit is meestal tijdelijk, dus "
 "probeer het opnieuw."
 
-#: includes/class-cloud-storage-import.php:864
-#: includes/class-cloud-storage-import.php:920
-#: includes/class-cloud-storage-import.php:1023
+#: includes/class-cloud-storage-import.php:879
+#: includes/class-cloud-storage-import.php:933
+#: includes/class-cloud-storage-import.php:1034
 msgid "Could not initialize cloud storage client"
 msgstr "Kan cloudopslagclient niet initialiseren"
 
-#: includes/class-cloud-storage-import.php:869
-#: includes/class-cloud-storage-import.php:925
+#: includes/class-cloud-storage-import.php:884
+#: includes/class-cloud-storage-import.php:938
 msgid "Failed to list cloud storage contents"
 msgstr "Kan de inhoud van de cloudopslag niet weergeven"
 
-#: includes/class-cloud-storage-import.php:992
+#: includes/class-cloud-storage-import.php:1003
 msgid "Loading..."
 msgstr "Laden…"
 
-#: includes/class-cloud-storage-import.php:993
+#: includes/class-cloud-storage-import.php:1004
 msgid "No subfolders"
 msgstr "Geen submappen"
 
-#: includes/class-cloud-storage-import.php:995
+#: includes/class-cloud-storage-import.php:1006
 msgid "Error loading folders"
 msgstr "Fout bij het laden van mappen"
 
-#: includes/class-cloud-storage-manager.php:2415
+#: includes/class-cloud-storage-manager.php:2421
 msgid "No objects found in WP Offload Media data"
 msgstr "Geen objecten gevonden in WP Offload Media-gegevens"
 
-#: includes/class-cloud-storage-manager.php:2475
+#: includes/class-cloud-storage-manager.php:2481
 msgid "Could not build URLs from WP Offload Media data"
 msgstr "Kan geen URL's maken op basis van WP Offload Media-gegevens"
 
-#: includes/class-cloud-storage-manager.php:2563
+#: includes/class-cloud-storage-manager.php:2569
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr "Kan geen URL's ophalen van WP Offload Media"
 
-#: includes/hooks.php:436 includes/hooks.php:470
+#: includes/hooks.php:430 includes/hooks.php:464
 msgid "Sunshine Cloud Storage:"
 msgstr "Sunshine Cloudopslag:"
 
-#: includes/hooks.php:437
+#: includes/hooks.php:431
 msgid ""
 "WP Offload Media plugin is currently active. These two plugins should not be "
 "active at the same time as they will conflict. Please deactivate WP Offload "
@@ -23554,7 +23618,7 @@ msgstr ""
 "niet tegelijkertijd actief zijn, omdat ze met elkaar conflicteren. "
 "Deactiveer WP Offload Media voordat u Sunshine Cloud Storage gebruikt."
 
-#: includes/hooks.php:439
+#: includes/hooks.php:433
 msgid ""
 "<strong>Good news:</strong> Sunshine can take over your previously offloaded "
 "items. After deactivating WP Offload Media, run the WP Offload Media "
@@ -23564,7 +23628,7 @@ msgstr ""
 "overnemen. Deactiveer WP Offload Media en voer daarna de WP Offload Media "
 "migratietool uit om die gegevens naar Sunshine's eigen opslag te verplaatsen."
 
-#: includes/hooks.php:444
+#: includes/hooks.php:438
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media plugin is active. "
 "You have Cloud Storage set to \"Entire WordPress site\" which may conflict. "
@@ -23576,7 +23640,7 @@ msgstr ""
 "conflicten kan veroorzaken. Overweeg om dit in te stellen op \"Alleen "
 "Sunshine-galerijen\" of een van de plug-ins uit te schakelen."
 
-#: includes/hooks.php:471
+#: includes/hooks.php:465
 msgid ""
 "Your cloud storage bucket does not support per-object ACLs (Access Control "
 "Lists). This means Sunshine cannot set individual files as public or "
@@ -23588,7 +23652,7 @@ msgstr ""
 "privé kan instellen, waardoor miniaturen mogelijk niet worden weergegeven of "
 "afbeeldingen met volledige resolutie openbaar toegankelijk zijn."
 
-#: includes/hooks.php:475
+#: includes/hooks.php:469
 msgid ""
 "<strong>How to fix:</strong> Go to Google Cloud Console &rarr; Cloud Storage "
 "&rarr; Your Bucket &rarr; Permissions &rarr; Access Control &rarr; Switch "
@@ -23598,7 +23662,7 @@ msgstr ""
 "Uw bucket → Machtigingen → Toegangscontrole → Schakel over van 'Uniform' "
 "naar 'Fijnmazig'."
 
-#: includes/hooks.php:477
+#: includes/hooks.php:471
 msgid ""
 "<strong>How to fix:</strong> Go to S3 Console &rarr; Your Bucket &rarr; "
 "Permissions &rarr; Object Ownership &rarr; Edit &rarr; Select \"ACLs "
@@ -23608,7 +23672,7 @@ msgstr ""
 "Objectbezit → Bewerken → Selecteer \"ACL's ingeschakeld\" met "
 "\"Bucketeigenaar voorkeur\"."
 
-#: includes/hooks.php:479
+#: includes/hooks.php:473
 msgid ""
 "<strong>How to fix:</strong> Check your storage provider's documentation for "
 "enabling per-object ACLs on your bucket."
@@ -23616,7 +23680,7 @@ msgstr ""
 "<strong>Oplossing:</strong> raadpleeg de documentatie van uw opslagprovider "
 "voor het inschakelen van ACL's per object op uw bucket."
 
-#: includes/hooks.php:483
+#: includes/hooks.php:477
 msgid ""
 "After making changes, go to Sunshine Settings &rarr; Cloud Storage and click "
 "\"Test Connection\" to verify."
@@ -23625,7 +23689,7 @@ msgstr ""
 "Cloudopslag en klik op 'Verbinding testen' om te controleren."
 
 #. translators: 1: link opening tag, 2: link closing tag
-#: includes/hooks.php:539
+#: includes/hooks.php:533
 #, php-format
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media data was found on "
@@ -23891,7 +23955,8 @@ msgstr ""
 "Een cadeaubon op deze bestelling heeft niet genoeg saldo meer. Controleer je "
 "bestelling en probeer het opnieuw."
 
-#. translators: 1: gift card code, 2: amount the order used, 3: amount left on the card
+#. translators: 1: gift card code, 2: amount the order used, 3: amount left on
+#. the card
 #: order-integration.php:214
 #, php-format
 msgid ""
@@ -23901,13 +23966,15 @@ msgstr ""
 "Cadeaubon %1$s is voor %2$s gebruikt op deze bestelling, maar er stond nog "
 "maar %3$s op toen de bestelling werd betaald. Het verschil is niet geïnd."
 
-#. translators: 1: gift card code, 2: amount applied to the order, 3: remaining balance on the card
+#. translators: 1: gift card code, 2: amount applied to the order, 3: remaining
+#. balance on the card
 #: order-integration.php:220
 #, php-format
 msgid "Gift card %1$s redeemed: %2$s applied, %3$s remaining"
 msgstr "Cadeaubon %1$s ingewisseld: %2$s verrekend, %3$s resterend"
 
-#. translators: 1: gift card code, 2: amount the order used, 3: amount left on the card
+#. translators: 1: gift card code, 2: amount the order used, 3: amount left on
+#. the card
 #: order-integration.php:348
 #, php-format
 msgid ""
@@ -23917,13 +23984,15 @@ msgstr ""
 "Cadeaubon %1$s is voor %2$s gebruikt op deze bestelling, maar er stond nog "
 "maar %3$s op toen de bestelling werd heropend. Het verschil is niet geïnd."
 
-#. translators: 1: gift card code, 2: amount given back to the card, 3: new balance on the card
+#. translators: 1: gift card code, 2: amount given back to the card, 3: new
+#. balance on the card
 #: order-integration.php:359
 #, php-format
 msgid "Gift card %1$s: %2$s given back, balance is now %3$s"
 msgstr "Cadeaubon %1$s: %2$s teruggezet, saldo is nu %3$s"
 
-#. translators: 1: gift card code, 2: amount taken from the card again, 3: new balance on the card
+#. translators: 1: gift card code, 2: amount taken from the card again, 3: new
+#. balance on the card
 #: order-integration.php:362
 #, php-format
 msgid "Gift card %1$s: %2$s taken again, balance is now %3$s"

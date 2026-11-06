@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-11-05T22:34:27+00:00\n"
+"POT-Creation-Date: 2026-11-06T03:09:56+00:00\n"
 "PO-Revision-Date: 2026-03-02 20:27-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -137,7 +137,9 @@ msgstr "Ezt a bővítményt nem sikerült telepíteni."
 msgid ""
 "%1$s refused this update because it could not confirm it came from Sunshine "
 "Photo Cart: %2$s Your current version was left in place."
-msgstr "A(z) %1$s elutasította ezt a frissítést, mert nem sikerült megerősíteni, hogy a Sunshine Photo Carttól származik: %2$s A jelenlegi verziód megmaradt."
+msgstr ""
+"A(z) %1$s elutasította ezt a frissítést, mert nem sikerült megerősíteni, "
+"hogy a Sunshine Photo Carttól származik: %2$s A jelenlegi verziód megmaradt."
 
 #: includes/admin/class-addon-update-verify.php:155
 msgid "the update has no signature."
@@ -383,7 +385,8 @@ msgstr "Beállítások"
 msgid "Go Pro"
 msgstr "Válts Próra"
 
-#. translators: %1$s is the URL to the Sunshine Photo Cart website, %2$s is the URL to the WordPress.org plugin reviews page
+#. translators: %1$s is the URL to the Sunshine Photo Cart website, %2$s is the
+#. URL to the WordPress.org plugin reviews page
 #: includes/admin/class-admin.php:429
 #, php-format
 msgid ""
@@ -446,7 +449,8 @@ msgstr ""
 "A vízjel képfájlja nem található ezen a szerveren, ezért az új képek nem "
 "kapnak vízjelet. <a href=\"%s\">Töltsd fel újra a vízjel képet</a>."
 
-#. translators: 1: number of images waiting, 2: URL to the Site Health info page
+#. translators: 1: number of images waiting, 2: URL to the Site Health info
+#. page
 #: includes/admin/class-admin.php:693
 #, php-format
 msgid ""
@@ -464,7 +468,9 @@ msgstr[1] ""
 "háttérfeladatot, ami feldolgozza őket. <a href=\"%2$s\">Nézd meg a "
 "webhelyállapotot</a>."
 
-#. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
+#. translators: 1: number of images waiting, 2: how long ago cron should have
+#. run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the
+#. server cron documentation
 #: includes/admin/class-admin.php:710
 #, php-format
 msgid ""
@@ -504,7 +510,8 @@ msgstr ""
 "A Sunshine telepítési folyamatot kihagytuk. <a href=\"%s\">Kérjük, fejezze "
 "be a telepítési folyamatot.</a>"
 
-#. translators: %1$d is the number of orders, %2$s is the number of orders in plural
+#. translators: %1$d is the number of orders, %2$s is the number of orders in
+#. plural
 #: includes/admin/class-admin.php:1015
 #, php-format
 msgid "%s order"
@@ -663,7 +670,8 @@ msgstr "Érvénytelen licenc kulcs"
 msgid "Invalid license key"
 msgstr "Érvénytelen licenc kulcs"
 
-#. translators: %1$s is the previous site URL, %2$s is the current site URL, %3$s is the URL to the sunshinephotocart.com account licenses page
+#. translators: %1$s is the previous site URL, %2$s is the current site URL,
+#. %3$s is the URL to the sunshinephotocart.com account licenses page
 #: includes/admin/class-license.php:125
 #, php-format
 msgid ""
@@ -678,7 +686,8 @@ msgstr ""
 "<strong>Manage Sites</strong> gombra, kapcsold ki a régi címet, majd gyere "
 "vissza ide, és kattints újra az Aktiválás gombra."
 
-#. translators: %s is the URL to the sunshinephotocart.com account licenses page
+#. translators: %s is the URL to the sunshinephotocart.com account licenses
+#. page
 #: includes/admin/class-license.php:133
 #, php-format
 msgid ""
@@ -740,7 +749,8 @@ msgstr ""
 "A %1$s licencét nem sikerült deaktiválni, kérjük, <a href=\"%2$s\" "
 "target=\"_blank\">forduljon az ügyfélszolgálathoz</a>"
 
-#. translators: %1$s is the URL to licenses page, %2$s is the URL to account on SunshinePhotoCart.com
+#. translators: %1$s is the URL to licenses page, %2$s is the URL to account on
+#. SunshinePhotoCart.com
 #: includes/admin/class-license.php:385
 #, php-format
 msgid ""
@@ -988,7 +998,8 @@ msgstr "Frissítés"
 msgid "Pickup"
 msgstr "Elvitel"
 
-#. Translators: This is the name of the delivery method that will be displayed to the customer.
+#. Translators: This is the name of the delivery method that will be displayed
+#. to the customer.
 #: includes/admin/class-update.php:395 includes/admin/class-update.php:1241
 #: includes/delivery-methods/shipping.php:8
 msgid "Ship"
@@ -1158,7 +1169,7 @@ msgstr "Lejárt"
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:340
 #: includes/admin/sunshine-gallery.php:1627
-#: includes/class-cloud-storage-import.php:994
+#: includes/class-cloud-storage-import.php:1005
 msgid "images"
 msgstr "képek"
 
@@ -1433,7 +1444,7 @@ msgid "Quantity Discounts"
 msgstr "Mennyiségi kedvezmények"
 
 #: includes/admin/promos.php:248 admin/settings.php:642
-#: includes/class-cloud-storage-import.php:256
+#: includes/class-cloud-storage-import.php:278
 msgid "Cloud Storage"
 msgstr "Felhőtár"
 
@@ -1846,7 +1857,14 @@ msgid ""
 "their folder after that. Each check of a cloud folder reads the list of "
 "files in your bucket, so checking every hour means more requests to your "
 "storage service."
-msgstr "Az FTP- vagy felhőmappából készült galériák megkapják a mappába később felkerülő fotókat. A fotók csak hozzáadódnak: a mappából eltávolított fotó a galériában marad, a galériából törölt fotó pedig nem kerül vissza. A bekapcsolás előtt már létező galériák csak az ezután a mappájukba kerülő fotókat kapják meg. Egy felhőmappa minden ellenőrzése beolvassa a bucketed fájllistáját, így az óránkénti ellenőrzés több kérést jelent a tárhelyszolgáltatásod felé."
+msgstr ""
+"Az FTP- vagy felhőmappából készült galériák megkapják a mappába később "
+"felkerülő fotókat. A fotók csak hozzáadódnak: a mappából eltávolított fotó a "
+"galériában marad, a galériából törölt fotó pedig nem kerül vissza. A "
+"bekapcsolás előtt már létező galériák csak az ezután a mappájukba kerülő "
+"fotókat kapják meg. Egy felhőmappa minden ellenőrzése beolvassa a bucketed "
+"fájllistáját, így az óránkénti ellenőrzés több kérést jelent a "
+"tárhelyszolgáltatásod felé."
 
 #: includes/admin/settings-fields.php:404
 msgid "Show images in Media Library"
@@ -3038,7 +3056,11 @@ msgid_plural ""
 "Sunshine checks this gallery's folder for new photos. It has added %1$d "
 "photos, last on %2$s."
 msgstr[0] ""
+"A Sunshine új fotókat keres ennek a galériának a mappájában. Eddig %1$d "
+"fotót adott hozzá, legutóbb ekkor: %2$s."
 msgstr[1] ""
+"A Sunshine új fotókat keres ennek a galériának a mappájában. Eddig %1$d "
+"fotót adott hozzá, legutóbb ekkor: %2$s."
 
 #: includes/admin/sunshine-gallery.php:380
 msgid "Sunshine checks this gallery's folder for new photos."
@@ -3065,13 +3087,15 @@ msgstr "Fotóadatok frissítése"
 msgid "Delete selected images"
 msgstr "Kijelölt képek törlése"
 
-#. translators: %1$s is the number of images currently loaded, %2$s is the total number of images
+#. translators: %1$s is the number of images currently loaded, %2$s is the
+#. total number of images
 #: includes/admin/sunshine-gallery.php:418
 #, php-format
 msgid "Showing %1$s of %2$s images"
 msgstr "Mutasd %1$s a %2$s képből %2$s képet"
 
-#. translators: %s is a select dropdown with options for number of images to load
+#. translators: %s is a select dropdown with options for number of images to
+#. load
 #: includes/admin/sunshine-gallery.php:421
 #, php-format
 msgid "Load %s more images"
@@ -3332,7 +3356,8 @@ msgstr "Megrendelési e-mail újraküldése az ügyfélnek"
 msgid "Test Order"
 msgstr "Teszt rendelés"
 
-#. translators: %1$s is the order name, %2$s is the total amount formatted as price
+#. translators: %1$s is the order name, %2$s is the total amount formatted as
+#. price
 #: includes/admin/sunshine-order.php:632
 #, php-format
 msgid "%1$s &mdash; %2$s"
@@ -3392,7 +3417,8 @@ msgstr "Napló"
 msgid "Refunds"
 msgstr "Visszatérítések"
 
-#. translators: 1: number of items in meta, 2: number of items in database, 3: URL to fix the order
+#. translators: 1: number of items in meta, 2: number of items in database, 3:
+#. URL to fix the order
 #: includes/admin/sunshine-order.php:793
 #, php-format
 msgid ""
@@ -3651,7 +3677,8 @@ msgstr "Sunshine Photo Cart Ajánlott memória korlát"
 msgid "Performance"
 msgstr "Teljesítmény"
 
-#. translators: %1$s is the WordPress memory limit, %2$s is the PHP memory limit
+#. translators: %1$s is the WordPress memory limit, %2$s is the PHP memory
+#. limit
 #: includes/admin/system-info.php:103
 #, php-format
 msgid ""
@@ -3846,11 +3873,11 @@ msgstr "A \"%s\" képek újragenerálása"
 
 #. translators: %d is the number of galleries
 #: includes/admin/tools/regenerate.php:622
-#, fuzzy, php-format
+#, php-format
 msgid "Regenerating images for %d gallery"
 msgid_plural "Regenerating images for %d galleries"
-msgstr[0] "A \"%s\" képek újragenerálása"
-msgstr[1] "A \"%s\" képek újragenerálása"
+msgstr[0] "Képek regenerálása %d galériához"
+msgstr[1] "Képek regenerálása %d galériához"
 
 #: includes/admin/tools/regenerate.php:625
 msgid "Regenerating images"
@@ -3880,7 +3907,11 @@ msgid_plural ""
 "There are %d sub-galleries inside the galleries you picked. Do you want to "
 "regenerate their images too?"
 msgstr[0] ""
+"A kiválasztott galériákban %d algaléria van. Szeretnéd a képeit is "
+"regenerálni?"
 msgstr[1] ""
+"A kiválasztott galériákban %d algaléria van. Szeretnéd ezek képeit is "
+"regenerálni?"
 
 #: includes/admin/tools/regenerate.php:729
 msgid "Yes, include sub-galleries"
@@ -4160,7 +4191,8 @@ msgstr "Megrendelés leadása és fizetés %s"
 msgid "Submit Order for Free"
 msgstr "Rendelés beküldése ingyenesen"
 
-#. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
+#. translators: %1$s is the URL to the terms page, %2$s is the title of the
+#. terms page
 #: includes/class-cart.php:2137
 #, php-format
 msgid ""
@@ -4207,7 +4239,8 @@ msgstr "Válassz fizetési módot, mielőtt befejezed a rendelést."
 msgid "Please select a shipping method before completing your order."
 msgstr "Válassz szállítási módot, mielőtt befejezed a rendelést."
 
-#. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
+#. translators: %s is a comma separated list of checkout section names, e.g.
+#. "Shipping Address, Payment"
 #: includes/class-cart.php:2662
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
@@ -4253,7 +4286,8 @@ msgstr ""
 msgid "No payment method"
 msgstr "Nincs fizetési mód"
 
-#. translators: 1: store credit the order used, 2: store credit the customer had left
+#. translators: 1: store credit the order used, 2: store credit the customer
+#. had left
 #: includes/class-cart.php:3049
 #, php-format
 msgid ""
@@ -13277,7 +13311,8 @@ msgstr "Különbözeti díj"
 msgid "%s fee"
 msgstr "%s díj"
 
-#. translators: %1$s is the payment method name, such as "Stripe", %2$s is the smallest amount it can take, formatted as a price
+#. translators: %1$s is the payment method name, such as "Stripe", %2$s is the
+#. smallest amount it can take, formatted as a price
 #: includes/class-payment-method.php:323
 #, php-format
 msgid ""
@@ -13718,7 +13753,8 @@ msgstr "Kedvencek (egyéni címzett)"
 msgid "Favorites notification sent by customers to a custom recipient"
 msgstr "Az ügyfelek által egyéni címzettnek küldött kedvencek értesítései"
 
-#. translators: %1$s is the customer first name, %2$s is the customer last name, %3$s is the site name
+#. translators: %1$s is the customer first name, %2$s is the customer last
+#. name, %3$s is the site name
 #: includes/emails/class-email-custom-favorites.php:11
 #, php-format
 msgid "%1$s %2$s has sent you favorited images on %3$s"
@@ -15029,7 +15065,8 @@ msgstr "A PayPal fizetés törlésre került"
 msgid "Continue to PayPal"
 msgstr "Tovább a PayPal oldalra"
 
-#. translators: 1: URL to the PayPal Developer Dashboard Apps & Credentials page, 2: URL to the Sunshine PayPal setup guide
+#. translators: 1: URL to the PayPal Developer Dashboard Apps & Credentials
+#. page, 2: URL to the Sunshine PayPal setup guide
 #: includes/payment-methods/paypal.php:53
 #, php-format
 msgid ""
@@ -15055,7 +15092,8 @@ msgstr ""
 msgid "Live Client ID"
 msgstr "Élő kliens azonosító"
 
-#. translators: %s is the URL to the PayPal Developer Dashboard Apps & Credentials page
+#. translators: %s is the URL to the PayPal Developer Dashboard Apps &
+#. Credentials page
 #: includes/payment-methods/paypal.php:73
 #, php-format
 msgid ""
@@ -15084,7 +15122,8 @@ msgstr ""
 msgid "Sandbox Client ID"
 msgstr "Sandbox ügyfél azonosítója"
 
-#. translators: %s is the URL to the PayPal Developer Dashboard Apps & Credentials page
+#. translators: %s is the URL to the PayPal Developer Dashboard Apps &
+#. Credentials page
 #: includes/payment-methods/paypal.php:104
 #, php-format
 msgid ""
@@ -15588,7 +15627,8 @@ msgstr ""
 "A Square még mindig ellenőrzi a fizetésedet. Várj egy pillanatot, és "
 "frissítsd az oldalt a folytatáshoz."
 
-#. translators: 1: Square payment ID, 2: payment status from Square, e.g. FAILED
+#. translators: 1: Square payment ID, 2: payment status from Square, e.g.
+#. FAILED
 #: includes/payment-methods/square.php:1704
 #, php-format
 msgid ""
@@ -16317,7 +16357,8 @@ msgstr "Nem sikerült csatlakozni: %s"
 msgid "Refund amount is higher than allowed"
 msgstr "A visszatérítés összege magasabb a megengedettnél"
 
-#. translators: %1$s is the maximum allowed refund amount, %2$s is the requested refund amount
+#. translators: %1$s is the maximum allowed refund amount, %2$s is the
+#. requested refund amount
 #: includes/payment-methods/stripe.php:3931
 #, php-format
 msgid ""
@@ -16492,7 +16533,8 @@ msgstr "Keresőmező megjelenítése"
 msgid "Hello %1$s (not %1$s? <a href=\"%2$s\">Log out</a>)"
 msgstr "Helló %1$s! (nem %1$s vagy? <a href=\"%2$s\">Kijelentkezés</a>)"
 
-#. translators: 1: recent orders url 2: shipping address url 3: password and account details url
+#. translators: 1: recent orders url 2: shipping address url 3: password and
+#. account details url
 #: templates/account/dashboard.php:22
 #, php-format
 msgid ""
@@ -16927,7 +16969,8 @@ msgstr "Add meg az e-mail címed a galéria eléréséhez"
 msgid "Submit"
 msgstr "Küldés"
 
-#. translators: %1$s is the gallery name and %2$s is the gallery expiration date
+#. translators: %1$s is the gallery name and %2$s is the gallery expiration
+#. date
 #: templates/gallery/expired.php:3
 #, php-format
 msgid "The gallery %1$s expired on %2$s and is no longer accessible"
@@ -18298,7 +18341,8 @@ msgstr[1] ""
 msgid "%1$d of these %2$d folders are already in Sunshine."
 msgstr "Ebből a(z) %2$d mappából %1$d már megvan a Sunshine-ban."
 
-#. translators: 1: number of new folders, 2: number of photos missing from folders already imported
+#. translators: 1: number of new folders, 2: number of photos missing from
+#. folders already imported
 #: hooks.php:514
 #, php-format
 msgid ""
@@ -18362,7 +18406,8 @@ msgstr ""
 "importálsz, minden alább felsorolt mappához létrejön egy galéria, azokhoz "
 "is, amelyek már megvannak."
 
-#. translators: %d: number of photos in this folder that are not in the gallery yet
+#. translators: %d: number of photos in this folder that are not in the gallery
+#. yet
 #: hooks.php:593
 #, php-format
 msgid "Already imported, %d photos missing"
@@ -18787,7 +18832,8 @@ msgstr ""
 "egyfájlos letöltések mindig azonnal feldolgozásra kerülnek). Ha üresen "
 "hagyja, a háttérfeldolgozás kikapcsolásra kerül."
 
-#. translators: %s is the URL to the "Setting Up a Reliable Server Cron" documentation article
+#. translators: %s is the URL to the "Setting Up a Reliable Server Cron"
+#. documentation article
 #: admin/settings.php:87
 #, php-format
 msgid ""
@@ -18811,20 +18857,20 @@ msgstr "A megrendelt tételek letöltése"
 msgid "Digital Download"
 msgstr "Digitális letöltés"
 
-#: class-download.php:838
+#: class-download.php:864
 msgid "Unable to process download. The requested file may not be available."
 msgstr "A letöltés nem feldolgozható. Lehet, hogy a kért fájl nem érhető el."
 
-#: class-download.php:839 class-download.php:886 class-download.php:964
-#: class-download.php:1028 class-download.php:1048 class-download.php:1535
-#: class-download.php:1585 frontend.php:292 frontend.php:821 frontend.php:829
+#: class-download.php:865 class-download.php:912 class-download.php:990
+#: class-download.php:1054 class-download.php:1074 class-download.php:1561
+#: class-download.php:1611 frontend.php:292 frontend.php:821 frontend.php:829
 #: includes/download-handler.php:99 includes/download-handler.php:107
 #: includes/download-handler.php:162 includes/download-handler.php:177
 #: includes/download-handler.php:184 includes/download-handler.php:210
 msgid "Download Error"
 msgstr "Letöltési hiba"
 
-#: class-download.php:885 class-download.php:1966
+#: class-download.php:911 class-download.php:1992
 msgid ""
 "Sorry, the requested file could not be found. Please try again or contact "
 "support."
@@ -18832,7 +18878,7 @@ msgstr ""
 "Sajnáljuk, a kért fájl nem található. Kérjük, próbálkozzon újra, vagy vegye "
 "fel a kapcsolatot az ügyfélszolgálattal."
 
-#: class-download.php:963
+#: class-download.php:989
 msgid ""
 "Sorry, some of the files in this download could not be retrieved. Please try "
 "again or contact support."
@@ -18840,7 +18886,7 @@ msgstr ""
 "Sajnos ebből a letöltésből néhány fájlt nem sikerült lekérni. Próbáld újra, "
 "vagy fordulj az ügyfélszolgálathoz."
 
-#: class-download.php:1027
+#: class-download.php:1053
 msgid ""
 "Sorry, this download could not be prepared. Please try again or contact "
 "support."
@@ -18848,7 +18894,7 @@ msgstr ""
 "Sajnos ezt a letöltést nem sikerült előkészíteni. Próbáld újra, vagy fordulj "
 "az ügyfélszolgálathoz."
 
-#: class-download.php:1047 class-download.php:1584
+#: class-download.php:1073 class-download.php:1610
 msgid ""
 "Sorry, some of the files in this download could not be read. Please try "
 "again or contact support."
@@ -18856,7 +18902,7 @@ msgstr ""
 "Sajnos ebből a letöltésből néhány fájlt nem sikerült beolvasni. Próbáld "
 "újra, vagy fordulj az ügyfélszolgálathoz."
 
-#: class-download.php:1534
+#: class-download.php:1560
 msgid ""
 "Sorry, some of the files in this download could not be found. Please try "
 "again or contact support."
@@ -18864,11 +18910,11 @@ msgstr ""
 "Sajnos ebből a letöltésből néhány fájlt nem sikerült megtalálni. Próbáld "
 "újra, vagy fordulj az ügyfélszolgálathoz."
 
-#: class-download.php:2041
+#: class-download.php:2067
 msgid "Sorry, the file could not be downloaded. Please try again."
 msgstr "Sajnáljuk, a fájl nem tölthető le. Kérjük, próbálkozzon újra."
 
-#: class-download.php:2334
+#: class-download.php:2360
 msgid "original"
 msgstr "eredeti"
 
@@ -19779,9 +19825,8 @@ msgid "Past Exports"
 msgstr "Korábbi exportok"
 
 #: exports.php:299
-#, fuzzy
 msgid "You are not allowed to run exports"
-msgstr "Sajnálom, de nem szabad ezt a képet megnézned"
+msgstr "Nincs jogosultságod exportálást futtatni"
 
 #. Plugin Name of the plugin
 #: light-blue.php
@@ -20647,7 +20692,8 @@ msgstr ""
 msgid "%1$s: %2$u or more in cart"
 msgstr "%1$s: %2$u vagy több a kosárban"
 
-#. translators: %1$s: additional quantity needed, %2$s: product name, %3$s: savings amount per item
+#. translators: %1$s: additional quantity needed, %2$s: product name, %3$s:
+#. savings amount per item
 #: frontend.php:286
 #, php-format
 msgid "Add %1$s more %2$s to cart to save %3$s on each"
@@ -20814,7 +20860,8 @@ msgstr "állapot: %s"
 #. translators: 1: amount paid, 2: order total
 #. translators: %s: payment status from Payfast, e.g. CANCELLED
 #. translators: %s: payment status from Paystack
-#. translators: 1: QuickPay payment ID, 2: payment state from QuickPay, e.g. rejected
+#. translators: 1: QuickPay payment ID, 2: payment state from QuickPay, e.g.
+#. rejected
 #: trait-mercadopago-common.php:86 trait-mercadopago-common.php:97
 #: trait-mercadopago-common.php:102 class-payfast.php:443
 #: class-paystack.php:288 class-quickpay.php:225
@@ -20839,7 +20886,8 @@ msgstr "pénznem: %1$s, a rendelés pénzneme: %2$s"
 msgid "amount is %1$s, order total is %2$s"
 msgstr "összeg: %1$s, a rendelés végösszege: %2$s"
 
-#. translators: 1: Mercado Pago payment ID, 2: payment status from Mercado Pago, e.g. rejected
+#. translators: 1: Mercado Pago payment ID, 2: payment status from Mercado
+#. Pago, e.g. rejected
 #: trait-mercadopago-common.php:116
 #, php-format
 msgid ""
@@ -20849,7 +20897,8 @@ msgstr ""
 "A(z) %1$s Mercado Pago fizetést elutasították vagy törölték (állapot: %2$s), "
 "ezért a rendelés nem lett fizetettnek jelölve"
 
-#. translators: 1: Mercado Pago payment ID, 2: reason, e.g. "amount is 1, order total is 110"
+#. translators: 1: Mercado Pago payment ID, 2: reason, e.g. "amount is 1, order
+#. total is 110"
 #: trait-mercadopago-common.php:119
 #, php-format
 msgid ""
@@ -21155,7 +21204,8 @@ msgstr "A Paystack szerint a fizetés állapota: %s"
 msgid "Paystack returned a payment for a different reference"
 msgstr "A Paystack egy másik hivatkozáshoz tartozó fizetést adott vissza"
 
-#. translators: 1: amount paid in the currency's smallest unit, 2: order total in the currency's smallest unit
+#. translators: 1: amount paid in the currency's smallest unit, 2: order total
+#. in the currency's smallest unit
 #: class-paystack.php:293
 #, php-format
 msgid ""
@@ -21171,7 +21221,8 @@ msgstr ""
 msgid "the payment was in %1$s but the order is in %2$s"
 msgstr "a fizetés %1$s pénznemben történt, de a rendelés %2$s pénznemű"
 
-#. translators: 1: Paystack payment reference, 2: payment status from Paystack, e.g. abandoned
+#. translators: 1: Paystack payment reference, 2: payment status from Paystack,
+#. e.g. abandoned
 #: class-paystack.php:310
 #, php-format
 msgid ""
@@ -21225,7 +21276,8 @@ msgstr "Nem tudott csatlakozni a fizetési processzorhoz"
 msgid "Payment not accepted"
 msgstr "Fizetés nem elfogadott"
 
-#. translators: 1: QuickPay payment ID, 2: payment state from QuickPay, e.g. rejected
+#. translators: 1: QuickPay payment ID, 2: payment state from QuickPay, e.g.
+#. rejected
 #: class-quickpay.php:225
 #, php-format
 msgid ""
@@ -21698,14 +21750,14 @@ msgstr "Érvénytelen melléklet azonosító"
 #: admin/tools.php:1085 admin/tools.php:1125 admin/tools.php:1159
 #: admin/tools.php:1631 admin/tools.php:1676 admin/tools.php:1776
 #: admin/tools.php:1818 admin/tools.php:2083 admin/tools.php:2204
-#: includes/class-cloud-storage-import.php:508
-#: includes/class-cloud-storage-import.php:853
-#: includes/class-cloud-storage-import.php:913
+#: includes/class-cloud-storage-import.php:530
+#: includes/class-cloud-storage-import.php:868
+#: includes/class-cloud-storage-import.php:926
 msgid "Insufficient permissions"
 msgstr "Nem megfelelő jogosultságok"
 
-#: admin/media-library.php:227 includes/class-cloud-storage-import.php:511
-#: includes/class-cloud-storage-import.php:857
+#: admin/media-library.php:227 includes/class-cloud-storage-import.php:533
+#: includes/class-cloud-storage-import.php:872
 msgid "Cloud storage is not configured"
 msgstr "A felhőalapú tárolás nincs konfigurálva"
 
@@ -22555,7 +22607,8 @@ msgid "All %d images are already in cloud storage. Nothing to migrate!"
 msgstr ""
 "Az összes %d kép már a felhőalapú tárhelyen található. Nincs mit áthelyezni!"
 
-#. translators: %1$s: total image count, %2$s: number already offloaded, %3$s: number needing offload
+#. translators: %1$s: total image count, %2$s: number already offloaded, %3$s:
+#. number needing offload
 #: admin/tools.php:138
 #, php-format
 msgid "Total Images: %1$s | Already Offloaded: %2$s | Need to Offload: %3$s"
@@ -22670,7 +22723,8 @@ msgstr "A migráció befejeződött"
 msgid "Successfully migrated %d images to cloud storage!"
 msgstr "%d kép sikeresen átkerült a felhőalapú tárhelyre!"
 
-#. translators: %1$d: number of successful uploads, %2$d: number of failed uploads
+#. translators: %1$d: number of successful uploads, %2$d: number of failed
+#. uploads
 #: admin/tools.php:386
 #, php-format
 msgid "Migration completed with %1$d successful and %2$d failed uploads."
@@ -22843,7 +22897,8 @@ msgstr "Leállítod a tisztítást? A már törölt fájlok nem állíthatók vi
 msgid "Cleanup Cancelled"
 msgstr "Tisztítás megszakítva"
 
-#. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed
+#. translators: %1$d: number of local files deleted, %2$s: amount of disk space
+#. freed
 #: admin/tools.php:946
 #, php-format
 msgid ""
@@ -22857,13 +22912,15 @@ msgstr ""
 msgid "Cleanup Complete"
 msgstr "Tisztítás kész"
 
-#. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed
+#. translators: %1$d: number of local files deleted, %2$s: amount of disk space
+#. freed
 #: admin/tools.php:958
 #, php-format
 msgid "Deleted %1$d local files and freed %2$s of disk space."
 msgstr "%1$d helyi fájl törölve, és %2$s lemezterület felszabadítva."
 
-#. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed, %3$d: number of files skipped
+#. translators: %1$d: number of local files deleted, %2$s: amount of disk space
+#. freed, %3$d: number of files skipped
 #: admin/tools.php:967
 #, php-format
 msgid ""
@@ -23157,7 +23214,8 @@ msgid "Network error. Reload the page to carry on where this stopped."
 msgstr ""
 "Hálózati hiba. Töltsd újra az oldalt, hogy onnan folytasd, ahol megállt."
 
-#. translators: 1: bucket images are recorded in, 2: bucket the site is set up for
+#. translators: 1: bucket images are recorded in, 2: bucket the site is set up
+#. for
 #: admin/tools.php:2141
 #, php-format
 msgid ""
@@ -23234,13 +23292,14 @@ msgstr ""
 "Köszönjük, hogy a Sunshine Cloud Storage-ot használod!"
 
 #. translators: %s: site name
-#: includes/class-background-migration.php:208
+#: includes/class-background-migration.php:216
 #, php-format
 msgid "Cloud Storage Migration Complete - %s"
 msgstr "Felhőalapú tárolás áttelepítése befejeződött - %s"
 
-#. translators: %d: total number of images, %d: number successfully migrated, %d: number failed, %s: admin URL
-#: includes/class-background-migration.php:212
+#. translators: %d: total number of images, %d: number successfully migrated,
+#. %d: number failed, %d: number skipped, %s: admin URL
+#: includes/class-background-migration.php:220
 #, php-format
 msgid ""
 "Your cloud storage migration has completed.\n"
@@ -23249,15 +23308,17 @@ msgid ""
 "- Total images: %d\n"
 "- Successfully migrated: %d\n"
 "- Failed: %d\n"
+"- Skipped because they have no local file or are still processing: %d\n"
 "\n"
 "You can view the full details in your WordPress admin at: %s\n"
 "\n"
 "Thank you for using Sunshine Cloud Storage!"
 msgstr ""
 "A felhőalapú tároló áttelepítése befejeződött. Összefoglalás: - Összes kép: "
-"%d - Sikeresen áttelepített: %d - Sikertelen: %d A teljes részleteket a "
-"WordPress admin felületén tekintheti meg: %s Köszönjük, hogy a Sunshine "
-"Cloud Storage szolgáltatást használja!"
+"%d - Sikeresen áttelepített: %d - Sikertelen: %d\n"
+"- Kihagyva, mert nincs helyi fájljuk, vagy még feldolgozás alatt állnak: %d "
+"A teljes részleteket a WordPress admin felületén tekintheti meg: %s "
+"Köszönjük, hogy a Sunshine Cloud Storage szolgáltatást használja!"
 
 #: includes/class-cloud-storage-client-bunny.php:42
 msgid "Bunny.net Storage Zone Password and Storage Zone Name are required"
@@ -23434,49 +23495,49 @@ msgstr ""
 msgid "Unexpected error: %s"
 msgstr "Váratlan hiba: %s"
 
-#: includes/class-cloud-storage-import.php:247
+#: includes/class-cloud-storage-import.php:269
 msgid "Image Source"
 msgstr "Kép forrása"
 
-#: includes/class-cloud-storage-import.php:252
+#: includes/class-cloud-storage-import.php:274
 msgid "FTP Folder"
 msgstr "FTP mappa"
 
-#: includes/class-cloud-storage-import.php:262
+#: includes/class-cloud-storage-import.php:284
 msgid "Cloud Storage Folder"
 msgstr "Felhőalapú tároló mappa"
 
-#: includes/class-cloud-storage-import.php:269
+#: includes/class-cloud-storage-import.php:291
 msgid "Loading folders..."
 msgstr "Mappák betöltése..."
 
-#: includes/class-cloud-storage-import.php:277
+#: includes/class-cloud-storage-import.php:299
 msgid "Selected:"
 msgstr "Kiválasztott:"
 
-#: includes/class-cloud-storage-import.php:282
+#: includes/class-cloud-storage-import.php:304
 msgid ""
 "Click the arrow to expand folders. Select a folder using the radio button."
 msgstr ""
 "Kattintson a nyílra a mappák kibontásához. Válassza ki a mappát a "
 "választógombbal."
 
-#: includes/class-cloud-storage-import.php:304
+#: includes/class-cloud-storage-import.php:326
 msgid ""
 "Cloud storage is not configured. Please configure it in Sunshine settings."
 msgstr ""
 "A felhőalapú tárolás nincs konfigurálva. Kérjük, konfigurálja a Sunshine "
 "beállításaiban."
 
-#: includes/class-cloud-storage-import.php:309
+#: includes/class-cloud-storage-import.php:331
 msgid "Please select a cloud storage folder."
 msgstr "Kérjük, válasszon ki egy felhőalapú tároló mappát."
 
-#: includes/class-cloud-storage-import.php:448
+#: includes/class-cloud-storage-import.php:470
 msgid "Scanning your cloud storage…"
 msgstr "A felhőtárhelyed vizsgálata…"
 
-#: includes/class-cloud-storage-import.php:449
+#: includes/class-cloud-storage-import.php:471
 msgid ""
 "Large buckets are scanned in small batches so the import never times out. "
 "This can take a moment."
@@ -23484,16 +23545,17 @@ msgstr ""
 "A nagy bucketeket kis adagokban vizsgáljuk át, hogy az importálás soha ne "
 "fusson időtúllépésbe. Ez eltarthat egy ideig."
 
-#: includes/class-cloud-storage-import.php:450
+#: includes/class-cloud-storage-import.php:472
 msgid "galleries found so far"
 msgstr "galéria található eddig"
 
-#: includes/class-cloud-storage-import.php:532
+#: includes/class-cloud-storage-import.php:554
 msgid "Scan session expired, please start over."
 msgstr "A vizsgálati munkamenet lejárt, kezdd elölről."
 
-#. translators: %s is the folder path in the cloud storage bucket that could not be read
-#: includes/class-cloud-storage-import.php:595
+#. translators: %s is the folder path in the cloud storage bucket that could
+#. not be read
+#: includes/class-cloud-storage-import.php:616
 #, php-format
 msgid ""
 "Could not read the folder \"%s\" from your cloud storage, so the scan was "
@@ -23504,46 +23566,46 @@ msgstr ""
 "leállt, mielőtt bármi importálódott volna. Ez általában átmeneti, ezért "
 "kérlek, próbáld újra."
 
-#: includes/class-cloud-storage-import.php:864
-#: includes/class-cloud-storage-import.php:920
-#: includes/class-cloud-storage-import.php:1023
+#: includes/class-cloud-storage-import.php:879
+#: includes/class-cloud-storage-import.php:933
+#: includes/class-cloud-storage-import.php:1034
 msgid "Could not initialize cloud storage client"
 msgstr "A felhőalapú tároló kliens inicializálása nem sikerült."
 
-#: includes/class-cloud-storage-import.php:869
-#: includes/class-cloud-storage-import.php:925
+#: includes/class-cloud-storage-import.php:884
+#: includes/class-cloud-storage-import.php:938
 msgid "Failed to list cloud storage contents"
 msgstr "A felhőalapú tároló tartalmának felsorolása nem sikerült"
 
-#: includes/class-cloud-storage-import.php:992
+#: includes/class-cloud-storage-import.php:1003
 msgid "Loading..."
 msgstr "Betöltés..."
 
-#: includes/class-cloud-storage-import.php:993
+#: includes/class-cloud-storage-import.php:1004
 msgid "No subfolders"
 msgstr "Nincsenek almappák"
 
-#: includes/class-cloud-storage-import.php:995
+#: includes/class-cloud-storage-import.php:1006
 msgid "Error loading folders"
 msgstr "Hiba a mappák betöltésekor"
 
-#: includes/class-cloud-storage-manager.php:2415
+#: includes/class-cloud-storage-manager.php:2421
 msgid "No objects found in WP Offload Media data"
 msgstr "Nincs objektum található a WP Offload Media adatbázisban"
 
-#: includes/class-cloud-storage-manager.php:2475
+#: includes/class-cloud-storage-manager.php:2481
 msgid "Could not build URLs from WP Offload Media data"
 msgstr "Nem sikerült URL-eket létrehozni a WP Offload Media adatokból"
 
-#: includes/class-cloud-storage-manager.php:2563
+#: includes/class-cloud-storage-manager.php:2569
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr "Nem sikerült lekérni az URL-eket a WP Offload Media-ból."
 
-#: includes/hooks.php:436 includes/hooks.php:470
+#: includes/hooks.php:430 includes/hooks.php:464
 msgid "Sunshine Cloud Storage:"
 msgstr "Sunshine felhőalapú tárolás:"
 
-#: includes/hooks.php:437
+#: includes/hooks.php:431
 msgid ""
 "WP Offload Media plugin is currently active. These two plugins should not be "
 "active at the same time as they will conflict. Please deactivate WP Offload "
@@ -23553,7 +23615,7 @@ msgstr ""
 "egyszerre aktív, mert ütköznek egymással. Kérjük, deaktiválja a WP Offload "
 "Media plugint, mielőtt a Sunshine Cloud Storage-t használná."
 
-#: includes/hooks.php:439
+#: includes/hooks.php:433
 msgid ""
 "<strong>Good news:</strong> Sunshine can take over your previously offloaded "
 "items. After deactivating WP Offload Media, run the WP Offload Media "
@@ -23564,7 +23626,7 @@ msgstr ""
 "Media áttelepítő eszközt, hogy az adatok a Sunshine saját tárolójába "
 "kerüljenek."
 
-#: includes/hooks.php:444
+#: includes/hooks.php:438
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media plugin is active. "
 "You have Cloud Storage set to \"Entire WordPress site\" which may conflict. "
@@ -23576,7 +23638,7 @@ msgstr ""
 "ami ütközhet. Fontolja meg a „Sunshine galleries only” (Csak Sunshine "
 "galériák) beállítás választását, vagy az egyik plugin letiltását."
 
-#: includes/hooks.php:471
+#: includes/hooks.php:465
 msgid ""
 "Your cloud storage bucket does not support per-object ACLs (Access Control "
 "Lists). This means Sunshine cannot set individual files as public or "
@@ -23589,7 +23651,7 @@ msgstr ""
 "eredményezheti, hogy a miniatűrök nem jelennek meg, vagy a teljes felbontású "
 "képek nyilvánosan hozzáférhetőek lesznek."
 
-#: includes/hooks.php:475
+#: includes/hooks.php:469
 msgid ""
 "<strong>How to fix:</strong> Go to Google Cloud Console &rarr; Cloud Storage "
 "&rarr; Your Bucket &rarr; Permissions &rarr; Access Control &rarr; Switch "
@@ -23599,7 +23661,7 @@ msgstr ""
 "→ Cloud Storage → A saját tároló → Engedélyek → Hozzáférés-vezérlés → "
 "Váltson az „Egységes” beállításról a „Finomhangolás” beállításra."
 
-#: includes/hooks.php:477
+#: includes/hooks.php:471
 msgid ""
 "<strong>How to fix:</strong> Go to S3 Console &rarr; Your Bucket &rarr; "
 "Permissions &rarr; Object Ownership &rarr; Edit &rarr; Select \"ACLs "
@@ -23610,7 +23672,7 @@ msgstr ""
 "„ACL-ek engedélyezve” opciót a „Tároló tulajdonosának előnyben részesítése” "
 "beállítással."
 
-#: includes/hooks.php:479
+#: includes/hooks.php:473
 msgid ""
 "<strong>How to fix:</strong> Check your storage provider's documentation for "
 "enabling per-object ACLs on your bucket."
@@ -23618,7 +23680,7 @@ msgstr ""
 "<strong>Hogyan lehet kijavítani:</strong> Ellenőrizze a tárolási szolgáltató "
 "dokumentációját az objektumonkénti ACL-ek engedélyezéséről a tárolóban."
 
-#: includes/hooks.php:483
+#: includes/hooks.php:477
 msgid ""
 "After making changes, go to Sunshine Settings &rarr; Cloud Storage and click "
 "\"Test Connection\" to verify."
@@ -23628,7 +23690,7 @@ msgstr ""
 "ellenőrzéshez."
 
 #. translators: 1: link opening tag, 2: link closing tag
-#: includes/hooks.php:539
+#: includes/hooks.php:533
 #, php-format
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media data was found on "
@@ -23892,7 +23954,8 @@ msgstr ""
 "A rendelésben lévő egyik ajándékkártyán már nincs elég egyenleg. Nézd át a "
 "rendelésedet, és próbáld újra."
 
-#. translators: 1: gift card code, 2: amount the order used, 3: amount left on the card
+#. translators: 1: gift card code, 2: amount the order used, 3: amount left on
+#. the card
 #: order-integration.php:214
 #, php-format
 msgid ""
@@ -23903,13 +23966,15 @@ msgstr ""
 "de a rendelés kifizetésekor már csak %3$s maradt rajta. A különbözet nem "
 "lett beszedve."
 
-#. translators: 1: gift card code, 2: amount applied to the order, 3: remaining balance on the card
+#. translators: 1: gift card code, 2: amount applied to the order, 3: remaining
+#. balance on the card
 #: order-integration.php:220
 #, php-format
 msgid "Gift card %1$s redeemed: %2$s applied, %3$s remaining"
 msgstr "A(z) %1$s ajándékkártya beváltva: %2$s felhasználva, %3$s maradt"
 
-#. translators: 1: gift card code, 2: amount the order used, 3: amount left on the card
+#. translators: 1: gift card code, 2: amount the order used, 3: amount left on
+#. the card
 #: order-integration.php:348
 #, php-format
 msgid ""
@@ -23920,13 +23985,15 @@ msgstr ""
 "de a rendelés újranyitásakor már csak %3$s maradt rajta. A különbözet nem "
 "lett beszedve."
 
-#. translators: 1: gift card code, 2: amount given back to the card, 3: new balance on the card
+#. translators: 1: gift card code, 2: amount given back to the card, 3: new
+#. balance on the card
 #: order-integration.php:359
 #, php-format
 msgid "Gift card %1$s: %2$s given back, balance is now %3$s"
 msgstr "%1$s ajándékkártya: %2$s visszaadva, az egyenleg most %3$s"
 
-#. translators: 1: gift card code, 2: amount taken from the card again, 3: new balance on the card
+#. translators: 1: gift card code, 2: amount taken from the card again, 3: new
+#. balance on the card
 #: order-integration.php:362
 #, php-format
 msgid "Gift card %1$s: %2$s taken again, balance is now %3$s"

@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Sunshine Photo Cart\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/sunshine-gift-"
 "cards\n"
-"POT-Creation-Date: 2026-11-05T22:34:27+00:00\n"
+"POT-Creation-Date: 2026-11-06T03:09:56+00:00\n"
 "PO-Revision-Date: 2026-02-27 15:50-0700\n"
 "Last-Translator: Derek Ashauer <derek@sunshinephotocart.com>\n"
 "Language-Team: \n"
@@ -137,7 +137,9 @@ msgstr "Tätä lisäosaa ei voitu asentaa."
 msgid ""
 "%1$s refused this update because it could not confirm it came from Sunshine "
 "Photo Cart: %2$s Your current version was left in place."
-msgstr "%1$s hylkäsi tämän päivityksen, koska ei voitu varmistaa, että se on peräisin Sunshine Photo Cartilta: %2$s Nykyinen versiosi säilytettiin."
+msgstr ""
+"%1$s hylkäsi tämän päivityksen, koska ei voitu varmistaa, että se on "
+"peräisin Sunshine Photo Cartilta: %2$s Nykyinen versiosi säilytettiin."
 
 #: includes/admin/class-addon-update-verify.php:155
 msgid "the update has no signature."
@@ -164,7 +166,8 @@ msgstr "allekirjoitus kuuluu toiselle lisäosalle."
 #, php-format
 msgid ""
 "the signed version (%1$s) is not newer than the installed version (%2$s)."
-msgstr "allekirjoitettu versio (%1$s) ei ole uudempi kuin asennettu versio (%2$s)."
+msgstr ""
+"allekirjoitettu versio (%1$s) ei ole uudempi kuin asennettu versio (%2$s)."
 
 #. translators: %s: file path
 #: includes/admin/class-addon-update-verify.php:191
@@ -383,7 +386,8 @@ msgstr "Asetukset"
 msgid "Go Pro"
 msgstr "Hanki Pro"
 
-#. translators: %1$s is the URL to the Sunshine Photo Cart website, %2$s is the URL to the WordPress.org plugin reviews page
+#. translators: %1$s is the URL to the Sunshine Photo Cart website, %2$s is the
+#. URL to the WordPress.org plugin reviews page
 #: includes/admin/class-admin.php:429
 #, php-format
 msgid ""
@@ -445,7 +449,8 @@ msgstr ""
 "Vesileimakuvatiedostoasi ei löytynyt tältä palvelimelta, joten uusiin kuviin "
 "ei lisätä vesileimaa. <a href=\"%s\">Lataa vesileimakuva uudelleen</a>."
 
-#. translators: 1: number of images waiting, 2: URL to the Site Health info page
+#. translators: 1: number of images waiting, 2: URL to the Site Health info
+#. page
 #: includes/admin/class-admin.php:693
 #, php-format
 msgid ""
@@ -463,7 +468,9 @@ msgstr[1] ""
 "taustatehtävää, joka käsittelee ne. <a href=\"%2$s\">Tarkista sivuston "
 "kunto</a>."
 
-#. translators: 1: number of images waiting, 2: how long ago cron should have run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the server cron documentation
+#. translators: 1: number of images waiting, 2: how long ago cron should have
+#. run, e.g. "2 hours", 3: URL to the Site Health info page, 4: URL to the
+#. server cron documentation
 #: includes/admin/class-admin.php:710
 #, php-format
 msgid ""
@@ -503,7 +510,8 @@ msgstr ""
 "Auringonpaisteen asennusprosessi ohitettiin. <a href=\"%s\">Suorita asennus "
 "loppuun.</a>"
 
-#. translators: %1$d is the number of orders, %2$s is the number of orders in plural
+#. translators: %1$d is the number of orders, %2$s is the number of orders in
+#. plural
 #: includes/admin/class-admin.php:1015
 #, php-format
 msgid "%s order"
@@ -662,7 +670,8 @@ msgstr "Virheellinen lisenssi"
 msgid "Invalid license key"
 msgstr "Viallinen lisenssiavain"
 
-#. translators: %1$s is the previous site URL, %2$s is the current site URL, %3$s is the URL to the sunshinephotocart.com account licenses page
+#. translators: %1$s is the previous site URL, %2$s is the current site URL,
+#. %3$s is the URL to the sunshinephotocart.com account licenses page
 #: includes/admin/class-license.php:125
 #, php-format
 msgid ""
@@ -677,7 +686,8 @@ msgstr ""
 "kohdalla, poista vanha URL-osoite käytöstä, palaa sitten tänne ja klikkaa "
 "Aktivoi uudelleen."
 
-#. translators: %s is the URL to the sunshinephotocart.com account licenses page
+#. translators: %s is the URL to the sunshinephotocart.com account licenses
+#. page
 #: includes/admin/class-license.php:133
 #, php-format
 msgid ""
@@ -737,7 +747,8 @@ msgstr ""
 "Lisenssiä %1$s ei voitu poistaa käytöstä, <a href=\"%2$s\" "
 "target=\"_blank\">ota yhteyttä asiakaspalveluun</a>"
 
-#. translators: %1$s is the URL to licenses page, %2$s is the URL to account on SunshinePhotoCart.com
+#. translators: %1$s is the URL to licenses page, %2$s is the URL to account on
+#. SunshinePhotoCart.com
 #: includes/admin/class-license.php:385
 #, php-format
 msgid ""
@@ -984,7 +995,8 @@ msgstr "Päivitä"
 msgid "Pickup"
 msgstr "Nouto"
 
-#. Translators: This is the name of the delivery method that will be displayed to the customer.
+#. Translators: This is the name of the delivery method that will be displayed
+#. to the customer.
 #: includes/admin/class-update.php:395 includes/admin/class-update.php:1241
 #: includes/delivery-methods/shipping.php:8
 msgid "Ship"
@@ -1154,7 +1166,7 @@ msgstr "Päättynyt"
 #: includes/admin/gallery-navigator.php:176
 #: includes/admin/gallery-navigator.php:340
 #: includes/admin/sunshine-gallery.php:1627
-#: includes/class-cloud-storage-import.php:994
+#: includes/class-cloud-storage-import.php:1005
 msgid "images"
 msgstr "kuvat"
 
@@ -1428,7 +1440,7 @@ msgid "Quantity Discounts"
 msgstr "Määräalennukset"
 
 #: includes/admin/promos.php:248 admin/settings.php:642
-#: includes/class-cloud-storage-import.php:256
+#: includes/class-cloud-storage-import.php:278
 msgid "Cloud Storage"
 msgstr "Pilvitallennus"
 
@@ -1841,7 +1853,13 @@ msgid ""
 "their folder after that. Each check of a cloud folder reads the list of "
 "files in your bucket, so checking every hour means more requests to your "
 "storage service."
-msgstr "FTP- tai pilvikansiosta tehdyt galleriat saavat kaikki kansioon myöhemmin lisätyt kuvat. Kuvia vain lisätään: kansiosta poistettu kuva jää galleriaan, eikä galleriasta poistamasi kuva palaa. Ennen tämän käyttöönottoa olemassa olleet galleriat saavat vain sen jälkeen kansioonsa lisätyt kuvat. Jokainen pilvikansion tarkistus lukee bucketisi tiedostoluettelon, joten tarkistus joka tunti tarkoittaa enemmän pyyntöjä tallennuspalveluusi."
+msgstr ""
+"FTP- tai pilvikansiosta tehdyt galleriat saavat kaikki kansioon myöhemmin "
+"lisätyt kuvat. Kuvia vain lisätään: kansiosta poistettu kuva jää galleriaan, "
+"eikä galleriasta poistamasi kuva palaa. Ennen tämän käyttöönottoa olemassa "
+"olleet galleriat saavat vain sen jälkeen kansioonsa lisätyt kuvat. Jokainen "
+"pilvikansion tarkistus lukee bucketisi tiedostoluettelon, joten tarkistus "
+"joka tunti tarkoittaa enemmän pyyntöjä tallennuspalveluusi."
 
 #: includes/admin/settings-fields.php:404
 msgid "Show images in Media Library"
@@ -3023,7 +3041,11 @@ msgid_plural ""
 "Sunshine checks this gallery's folder for new photos. It has added %1$d "
 "photos, last on %2$s."
 msgstr[0] ""
+"Sunshine tarkistaa tämän gallerian kansion uusien kuvien varalta. Se on "
+"lisännyt %1$d kuvan, viimeksi %2$s."
 msgstr[1] ""
+"Sunshine tarkistaa tämän gallerian kansion uusien kuvien varalta. Se on "
+"lisännyt %1$d kuvaa, viimeksi %2$s."
 
 #: includes/admin/sunshine-gallery.php:380
 msgid "Sunshine checks this gallery's folder for new photos."
@@ -3050,13 +3072,15 @@ msgstr "Päivitä kuvien tiedot"
 msgid "Delete selected images"
 msgstr "Poista valitut kuvat"
 
-#. translators: %1$s is the number of images currently loaded, %2$s is the total number of images
+#. translators: %1$s is the number of images currently loaded, %2$s is the
+#. total number of images
 #: includes/admin/sunshine-gallery.php:418
 #, php-format
 msgid "Showing %1$s of %2$s images"
 msgstr "Näytetään %1$s of %2$s kuvaa"
 
-#. translators: %s is a select dropdown with options for number of images to load
+#. translators: %s is a select dropdown with options for number of images to
+#. load
 #: includes/admin/sunshine-gallery.php:421
 #, php-format
 msgid "Load %s more images"
@@ -3314,7 +3338,8 @@ msgstr "Lähetä tilaussähköposti asiakkaalle uudelleen"
 msgid "Test Order"
 msgstr "Testitilaus"
 
-#. translators: %1$s is the order name, %2$s is the total amount formatted as price
+#. translators: %1$s is the order name, %2$s is the total amount formatted as
+#. price
 #: includes/admin/sunshine-order.php:632
 #, php-format
 msgid "%1$s &mdash; %2$s"
@@ -3374,7 +3399,8 @@ msgstr "Loki"
 msgid "Refunds"
 msgstr "Hyvitykset"
 
-#. translators: 1: number of items in meta, 2: number of items in database, 3: URL to fix the order
+#. translators: 1: number of items in meta, 2: number of items in database, 3:
+#. URL to fix the order
 #: includes/admin/sunshine-order.php:793
 #, php-format
 msgid ""
@@ -3635,7 +3661,8 @@ msgstr "Sunshine Photo Cart Suositeltava muistiraja"
 msgid "Performance"
 msgstr "Suorituskyky"
 
-#. translators: %1$s is the WordPress memory limit, %2$s is the PHP memory limit
+#. translators: %1$s is the WordPress memory limit, %2$s is the PHP memory
+#. limit
 #: includes/admin/system-info.php:103
 #, php-format
 msgid ""
@@ -3833,11 +3860,11 @@ msgstr "Kuvien uudelleenluominen kohteelle \"%s\""
 
 #. translators: %d is the number of galleries
 #: includes/admin/tools/regenerate.php:622
-#, fuzzy, php-format
+#, php-format
 msgid "Regenerating images for %d gallery"
 msgid_plural "Regenerating images for %d galleries"
-msgstr[0] "Kuvien uudelleenluominen kohteelle \"%s\""
-msgstr[1] "Kuvien uudelleenluominen kohteelle \"%s\""
+msgstr[0] "Luodaan kuvia uudelleen: %d galleria"
+msgstr[1] "Luodaan kuvia uudelleen: %d galleriaa"
 
 #: includes/admin/tools/regenerate.php:625
 msgid "Regenerating images"
@@ -3867,7 +3894,11 @@ msgid_plural ""
 "There are %d sub-galleries inside the galleries you picked. Do you want to "
 "regenerate their images too?"
 msgstr[0] ""
+"Valitsemiesi gallerioiden sisällä on %d alagalleria. Haluatko luoda myös sen "
+"kuvat uudelleen?"
 msgstr[1] ""
+"Valitsemiesi gallerioiden sisällä on %d alagalleriaa. Haluatko luoda myös "
+"niiden kuvat uudelleen?"
 
 #: includes/admin/tools/regenerate.php:729
 msgid "Yes, include sub-galleries"
@@ -4149,7 +4180,8 @@ msgstr "Lähetä tilaus ja maksa %s"
 msgid "Submit Order for Free"
 msgstr "Lähetä tilaus ilmaiseksi"
 
-#. translators: %1$s is the URL to the terms page, %2$s is the title of the terms page
+#. translators: %1$s is the URL to the terms page, %2$s is the title of the
+#. terms page
 #: includes/class-cart.php:2137
 #, php-format
 msgid ""
@@ -4196,7 +4228,8 @@ msgstr "Valitse maksutapa ennen kuin viimeistelet tilauksesi."
 msgid "Please select a shipping method before completing your order."
 msgstr "Valitse toimitustapa ennen tilauksen viimeistelyä."
 
-#. translators: %s is a comma separated list of checkout section names, e.g. "Shipping Address, Payment"
+#. translators: %s is a comma separated list of checkout section names, e.g.
+#. "Shipping Address, Payment"
 #: includes/class-cart.php:2662
 #, php-format
 msgid "Please complete the following before submitting your order: %s"
@@ -4241,7 +4274,8 @@ msgstr ""
 msgid "No payment method"
 msgstr "Ei maksutapaa"
 
-#. translators: 1: store credit the order used, 2: store credit the customer had left
+#. translators: 1: store credit the order used, 2: store credit the customer
+#. had left
 #: includes/class-cart.php:3049
 #, php-format
 msgid ""
@@ -13268,7 +13302,8 @@ msgstr "Palkkion määrä"
 msgid "%s fee"
 msgstr "%s maksu"
 
-#. translators: %1$s is the payment method name, such as "Stripe", %2$s is the smallest amount it can take, formatted as a price
+#. translators: %1$s is the payment method name, such as "Stripe", %2$s is the
+#. smallest amount it can take, formatted as a price
 #: includes/class-payment-method.php:323
 #, php-format
 msgid ""
@@ -13709,7 +13744,8 @@ msgid "Favorites notification sent by customers to a custom recipient"
 msgstr ""
 "Asiakkaiden lähettämät suosikki-ilmoitukset mukautetulle vastaanottajalle"
 
-#. translators: %1$s is the customer first name, %2$s is the customer last name, %3$s is the site name
+#. translators: %1$s is the customer first name, %2$s is the customer last
+#. name, %3$s is the site name
 #: includes/emails/class-email-custom-favorites.php:11
 #, php-format
 msgid "%1$s %2$s has sent you favorited images on %3$s"
@@ -15017,7 +15053,8 @@ msgstr "PayPal-maksu on peruutettu"
 msgid "Continue to PayPal"
 msgstr "Jatka PayPaliin"
 
-#. translators: 1: URL to the PayPal Developer Dashboard Apps & Credentials page, 2: URL to the Sunshine PayPal setup guide
+#. translators: 1: URL to the PayPal Developer Dashboard Apps & Credentials
+#. page, 2: URL to the Sunshine PayPal setup guide
 #: includes/payment-methods/paypal.php:53
 #, php-format
 msgid ""
@@ -15043,7 +15080,8 @@ msgstr ""
 msgid "Live Client ID"
 msgstr "Live Client ID"
 
-#. translators: %s is the URL to the PayPal Developer Dashboard Apps & Credentials page
+#. translators: %s is the URL to the PayPal Developer Dashboard Apps &
+#. Credentials page
 #: includes/payment-methods/paypal.php:73
 #, php-format
 msgid ""
@@ -15072,7 +15110,8 @@ msgstr ""
 msgid "Sandbox Client ID"
 msgstr "Sandbox-tilin asiakastunnus"
 
-#. translators: %s is the URL to the PayPal Developer Dashboard Apps & Credentials page
+#. translators: %s is the URL to the PayPal Developer Dashboard Apps &
+#. Credentials page
 #: includes/payment-methods/paypal.php:104
 #, php-format
 msgid ""
@@ -15568,7 +15607,8 @@ msgid ""
 msgstr ""
 "Square vahvistaa vielä maksuasi. Odota hetki ja päivitä sivu jatkaaksesi."
 
-#. translators: 1: Square payment ID, 2: payment status from Square, e.g. FAILED
+#. translators: 1: Square payment ID, 2: payment status from Square, e.g.
+#. FAILED
 #: includes/payment-methods/square.php:1704
 #, php-format
 msgid ""
@@ -16283,7 +16323,8 @@ msgstr "Yhteyden muodostaminen epäonnistui: %s"
 msgid "Refund amount is higher than allowed"
 msgstr "Palautuksen määrä on suurempi kuin sallittu"
 
-#. translators: %1$s is the maximum allowed refund amount, %2$s is the requested refund amount
+#. translators: %1$s is the maximum allowed refund amount, %2$s is the
+#. requested refund amount
 #: includes/payment-methods/stripe.php:3931
 #, php-format
 msgid ""
@@ -16458,7 +16499,8 @@ msgstr "Näytä hakukenttä"
 msgid "Hello %1$s (not %1$s? <a href=\"%2$s\">Log out</a>)"
 msgstr "Hei %1$s (Etkö ole %1$s? <a href=“%2$s”>Kirjaudu ulos</a>)"
 
-#. translators: 1: recent orders url 2: shipping address url 3: password and account details url
+#. translators: 1: recent orders url 2: shipping address url 3: password and
+#. account details url
 #: templates/account/dashboard.php:22
 #, php-format
 msgid ""
@@ -16889,7 +16931,8 @@ msgstr "Anna sähköposti päästäksesi galleriaan"
 msgid "Submit"
 msgstr "Lähetä"
 
-#. translators: %1$s is the gallery name and %2$s is the gallery expiration date
+#. translators: %1$s is the gallery name and %2$s is the gallery expiration
+#. date
 #: templates/gallery/expired.php:3
 #, php-format
 msgid "The gallery %1$s expired on %2$s and is no longer accessible"
@@ -18254,7 +18297,8 @@ msgstr[1] ""
 msgid "%1$d of these %2$d folders are already in Sunshine."
 msgstr "%1$d näistä %2$d kansiosta on jo Sunshinessa."
 
-#. translators: 1: number of new folders, 2: number of photos missing from folders already imported
+#. translators: 1: number of new folders, 2: number of photos missing from
+#. folders already imported
 #: hooks.php:514
 #, php-format
 msgid ""
@@ -18316,7 +18360,8 @@ msgstr ""
 "Sunshine osaa tuoda vain puuttuvat kansiot. Jos tuot nyt, jokaisesta alla "
 "luetellusta kansiosta luodaan galleria, myös niistä jotka sinulla jo on."
 
-#. translators: %d: number of photos in this folder that are not in the gallery yet
+#. translators: %d: number of photos in this folder that are not in the gallery
+#. yet
 #: hooks.php:593
 #, php-format
 msgid "Already imported, %d photos missing"
@@ -18735,7 +18780,8 @@ msgstr ""
 "(yksittäiset tiedostot ladataan aina välittömästi). Jätä kenttä tyhjäksi, "
 "jos haluat poistaa taustakäsittelyn käytöstä."
 
-#. translators: %s is the URL to the "Setting Up a Reliable Server Cron" documentation article
+#. translators: %s is the URL to the "Setting Up a Reliable Server Cron"
+#. documentation article
 #: admin/settings.php:87
 #, php-format
 msgid ""
@@ -18759,21 +18805,21 @@ msgstr "Lataa tilauserät"
 msgid "Digital Download"
 msgstr "Digitaalinen lataus"
 
-#: class-download.php:838
+#: class-download.php:864
 msgid "Unable to process download. The requested file may not be available."
 msgstr ""
 "Latausta ei voida käsitellä. Pyydettyä tiedostoa ei ehkä ole saatavilla."
 
-#: class-download.php:839 class-download.php:886 class-download.php:964
-#: class-download.php:1028 class-download.php:1048 class-download.php:1535
-#: class-download.php:1585 frontend.php:292 frontend.php:821 frontend.php:829
+#: class-download.php:865 class-download.php:912 class-download.php:990
+#: class-download.php:1054 class-download.php:1074 class-download.php:1561
+#: class-download.php:1611 frontend.php:292 frontend.php:821 frontend.php:829
 #: includes/download-handler.php:99 includes/download-handler.php:107
 #: includes/download-handler.php:162 includes/download-handler.php:177
 #: includes/download-handler.php:184 includes/download-handler.php:210
 msgid "Download Error"
 msgstr "Latausvirhe"
 
-#: class-download.php:885 class-download.php:1966
+#: class-download.php:911 class-download.php:1992
 msgid ""
 "Sorry, the requested file could not be found. Please try again or contact "
 "support."
@@ -18781,7 +18827,7 @@ msgstr ""
 "Valitettavasti pyydettyä tiedostoa ei löytynyt. Yritä uudelleen tai ota "
 "yhteyttä tukeen."
 
-#: class-download.php:963
+#: class-download.php:989
 msgid ""
 "Sorry, some of the files in this download could not be retrieved. Please try "
 "again or contact support."
@@ -18789,7 +18835,7 @@ msgstr ""
 "Valitettavasti joitakin tämän latauksen tiedostoja ei saatu haettua. Yritä "
 "uudelleen tai ota yhteyttä tukeen."
 
-#: class-download.php:1027
+#: class-download.php:1053
 msgid ""
 "Sorry, this download could not be prepared. Please try again or contact "
 "support."
@@ -18797,7 +18843,7 @@ msgstr ""
 "Valitettavasti tätä latausta ei voitu valmistella. Yritä uudelleen tai ota "
 "yhteyttä tukeen."
 
-#: class-download.php:1047 class-download.php:1584
+#: class-download.php:1073 class-download.php:1610
 msgid ""
 "Sorry, some of the files in this download could not be read. Please try "
 "again or contact support."
@@ -18805,7 +18851,7 @@ msgstr ""
 "Valitettavasti joitakin tämän latauksen tiedostoja ei voitu lukea. Yritä "
 "uudelleen tai ota yhteyttä tukeen."
 
-#: class-download.php:1534
+#: class-download.php:1560
 msgid ""
 "Sorry, some of the files in this download could not be found. Please try "
 "again or contact support."
@@ -18813,11 +18859,11 @@ msgstr ""
 "Valitettavasti joitakin tämän latauksen tiedostoja ei löytynyt. Yritä "
 "uudelleen tai ota yhteyttä tukeen."
 
-#: class-download.php:2041
+#: class-download.php:2067
 msgid "Sorry, the file could not be downloaded. Please try again."
 msgstr "Valitettavasti tiedostoa ei voitu ladata. Yritä uudelleen."
 
-#: class-download.php:2334
+#: class-download.php:2360
 msgid "original"
 msgstr "alkuperäinen"
 
@@ -19725,9 +19771,8 @@ msgid "Past Exports"
 msgstr "Aiempi vienti"
 
 #: exports.php:299
-#, fuzzy
 msgid "You are not allowed to run exports"
-msgstr "Pahoittelut, sinulla ei ole oikeuksia katsoa tätä kuvaa"
+msgstr "Sinulla ei ole oikeutta suorittaa vientejä"
 
 #. Plugin Name of the plugin
 #: light-blue.php
@@ -20594,7 +20639,8 @@ msgstr "Näytä upsell-ilmoitukset asiakkaille gallerioita katsellessasi"
 msgid "%1$s: %2$u or more in cart"
 msgstr "%1$s: %2$u tai enemmän ostoskorissa"
 
-#. translators: %1$s: additional quantity needed, %2$s: product name, %3$s: savings amount per item
+#. translators: %1$s: additional quantity needed, %2$s: product name, %3$s:
+#. savings amount per item
 #: frontend.php:286
 #, php-format
 msgid "Add %1$s more %2$s to cart to save %3$s on each"
@@ -20760,7 +20806,8 @@ msgstr "tila on %s"
 #. translators: 1: amount paid, 2: order total
 #. translators: %s: payment status from Payfast, e.g. CANCELLED
 #. translators: %s: payment status from Paystack
-#. translators: 1: QuickPay payment ID, 2: payment state from QuickPay, e.g. rejected
+#. translators: 1: QuickPay payment ID, 2: payment state from QuickPay, e.g.
+#. rejected
 #: trait-mercadopago-common.php:86 trait-mercadopago-common.php:97
 #: trait-mercadopago-common.php:102 class-payfast.php:443
 #: class-paystack.php:288 class-quickpay.php:225
@@ -20785,7 +20832,8 @@ msgstr "valuutta on %1$s, tilaus on valuutassa %2$s"
 msgid "amount is %1$s, order total is %2$s"
 msgstr "summa on %1$s, tilauksen loppusumma on %2$s"
 
-#. translators: 1: Mercado Pago payment ID, 2: payment status from Mercado Pago, e.g. rejected
+#. translators: 1: Mercado Pago payment ID, 2: payment status from Mercado
+#. Pago, e.g. rejected
 #: trait-mercadopago-common.php:116
 #, php-format
 msgid ""
@@ -20795,7 +20843,8 @@ msgstr ""
 "Mercado Pago -maksu %1$s hylättiin tai peruttiin (tila %2$s), joten tilausta "
 "ei merkitty maksetuksi"
 
-#. translators: 1: Mercado Pago payment ID, 2: reason, e.g. "amount is 1, order total is 110"
+#. translators: 1: Mercado Pago payment ID, 2: reason, e.g. "amount is 1, order
+#. total is 110"
 #: trait-mercadopago-common.php:119
 #, php-format
 msgid ""
@@ -21094,7 +21143,8 @@ msgstr "Paystackin mukaan maksun tila on %s"
 msgid "Paystack returned a payment for a different reference"
 msgstr "Paystack palautti maksun toiselle viitteelle"
 
-#. translators: 1: amount paid in the currency's smallest unit, 2: order total in the currency's smallest unit
+#. translators: 1: amount paid in the currency's smallest unit, 2: order total
+#. in the currency's smallest unit
 #: class-paystack.php:293
 #, php-format
 msgid ""
@@ -21110,7 +21160,8 @@ msgstr ""
 msgid "the payment was in %1$s but the order is in %2$s"
 msgstr "maksu oli valuutassa %1$s, mutta tilaus on valuutassa %2$s"
 
-#. translators: 1: Paystack payment reference, 2: payment status from Paystack, e.g. abandoned
+#. translators: 1: Paystack payment reference, 2: payment status from Paystack,
+#. e.g. abandoned
 #: class-paystack.php:310
 #, php-format
 msgid ""
@@ -21163,7 +21214,8 @@ msgstr "Yhteyttä maksuprosessoriin ei saatu muodostettua"
 msgid "Payment not accepted"
 msgstr "Maksua ei hyväksytä"
 
-#. translators: 1: QuickPay payment ID, 2: payment state from QuickPay, e.g. rejected
+#. translators: 1: QuickPay payment ID, 2: payment state from QuickPay, e.g.
+#. rejected
 #: class-quickpay.php:225
 #, php-format
 msgid ""
@@ -21633,14 +21685,14 @@ msgstr "Virheellinen liitetiedoston tunnus"
 #: admin/tools.php:1085 admin/tools.php:1125 admin/tools.php:1159
 #: admin/tools.php:1631 admin/tools.php:1676 admin/tools.php:1776
 #: admin/tools.php:1818 admin/tools.php:2083 admin/tools.php:2204
-#: includes/class-cloud-storage-import.php:508
-#: includes/class-cloud-storage-import.php:853
-#: includes/class-cloud-storage-import.php:913
+#: includes/class-cloud-storage-import.php:530
+#: includes/class-cloud-storage-import.php:868
+#: includes/class-cloud-storage-import.php:926
 msgid "Insufficient permissions"
 msgstr "Riittämättömät käyttöoikeudet"
 
-#: admin/media-library.php:227 includes/class-cloud-storage-import.php:511
-#: includes/class-cloud-storage-import.php:857
+#: admin/media-library.php:227 includes/class-cloud-storage-import.php:533
+#: includes/class-cloud-storage-import.php:872
 msgid "Cloud storage is not configured"
 msgstr "Pilvitallennustilaa ei ole määritetty"
 
@@ -22485,7 +22537,8 @@ msgid "All %d images are already in cloud storage. Nothing to migrate!"
 msgstr ""
 "Kaikki %d kuvat ovat jo pilvitallennustilassa. Mitään ei tarvitse siirtää!"
 
-#. translators: %1$s: total image count, %2$s: number already offloaded, %3$s: number needing offload
+#. translators: %1$s: total image count, %2$s: number already offloaded, %3$s:
+#. number needing offload
 #: admin/tools.php:138
 #, php-format
 msgid "Total Images: %1$s | Already Offloaded: %2$s | Need to Offload: %3$s"
@@ -22601,7 +22654,8 @@ msgstr "Siirtyminen valmis"
 msgid "Successfully migrated %d images to cloud storage!"
 msgstr "%d kuvaa siirretty onnistuneesti pilvitallennustilaan!"
 
-#. translators: %1$d: number of successful uploads, %2$d: number of failed uploads
+#. translators: %1$d: number of successful uploads, %2$d: number of failed
+#. uploads
 #: admin/tools.php:386
 #, php-format
 msgid "Migration completed with %1$d successful and %2$d failed uploads."
@@ -22775,7 +22829,8 @@ msgstr "Pysäytetäänkö siivous? Jo poistettuja tiedostoja ei palauteta."
 msgid "Cleanup Cancelled"
 msgstr "Siivous peruutettu"
 
-#. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed
+#. translators: %1$d: number of local files deleted, %2$s: amount of disk space
+#. freed
 #: admin/tools.php:946
 #, php-format
 msgid ""
@@ -22789,13 +22844,15 @@ msgstr ""
 msgid "Cleanup Complete"
 msgstr "Siivous valmis"
 
-#. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed
+#. translators: %1$d: number of local files deleted, %2$s: amount of disk space
+#. freed
 #: admin/tools.php:958
 #, php-format
 msgid "Deleted %1$d local files and freed %2$s of disk space."
 msgstr "Poistettiin %1$d paikallista tiedostoa ja vapautettiin %2$s levytilaa."
 
-#. translators: %1$d: number of local files deleted, %2$s: amount of disk space freed, %3$d: number of files skipped
+#. translators: %1$d: number of local files deleted, %2$s: amount of disk space
+#. freed, %3$d: number of files skipped
 #: admin/tools.php:967
 #, php-format
 msgid ""
@@ -23084,7 +23141,8 @@ msgstr ""
 msgid "Network error. Reload the page to carry on where this stopped."
 msgstr "Verkkovirhe. Lataa sivu uudelleen jatkaaksesi siitä, mihin tämä jäi."
 
-#. translators: 1: bucket images are recorded in, 2: bucket the site is set up for
+#. translators: 1: bucket images are recorded in, 2: bucket the site is set up
+#. for
 #: admin/tools.php:2141
 #, php-format
 msgid ""
@@ -23161,13 +23219,14 @@ msgstr ""
 "Kiitos, että käytät Sunshine Cloud Storagea!"
 
 #. translators: %s: site name
-#: includes/class-background-migration.php:208
+#: includes/class-background-migration.php:216
 #, php-format
 msgid "Cloud Storage Migration Complete - %s"
 msgstr "Pilvitallennustilan siirto valmis - %s"
 
-#. translators: %d: total number of images, %d: number successfully migrated, %d: number failed, %s: admin URL
-#: includes/class-background-migration.php:212
+#. translators: %d: total number of images, %d: number successfully migrated,
+#. %d: number failed, %d: number skipped, %s: admin URL
+#: includes/class-background-migration.php:220
 #, php-format
 msgid ""
 "Your cloud storage migration has completed.\n"
@@ -23176,15 +23235,17 @@ msgid ""
 "- Total images: %d\n"
 "- Successfully migrated: %d\n"
 "- Failed: %d\n"
+"- Skipped because they have no local file or are still processing: %d\n"
 "\n"
 "You can view the full details in your WordPress admin at: %s\n"
 "\n"
 "Thank you for using Sunshine Cloud Storage!"
 msgstr ""
 "Pilvitallennustilan siirto on valmis. Yhteenveto: - Kuvien kokonaismäärä: %d "
-"- Siirretty onnistuneesti: %d - Epäonnistunut: %d Voit tarkastella kaikkia "
-"tietoja WordPress-hallintapaneelissa osoitteessa: %s Kiitos, että käytät "
-"Sunshine Cloud Storage -palvelua!"
+"- Siirretty onnistuneesti: %d - Epäonnistunut: %d\n"
+"- Ohitettu, koska niillä ei ole paikallista tiedostoa tai niiden käsittely "
+"on kesken: %d Voit tarkastella kaikkia tietoja WordPress-hallintapaneelissa "
+"osoitteessa: %s Kiitos, että käytät Sunshine Cloud Storage -palvelua!"
 
 #: includes/class-cloud-storage-client-bunny.php:42
 msgid "Bunny.net Storage Zone Password and Storage Zone Name are required"
@@ -23360,47 +23421,47 @@ msgstr ""
 msgid "Unexpected error: %s"
 msgstr "Odottamaton virhe: %s"
 
-#: includes/class-cloud-storage-import.php:247
+#: includes/class-cloud-storage-import.php:269
 msgid "Image Source"
 msgstr "Kuvan lähde"
 
-#: includes/class-cloud-storage-import.php:252
+#: includes/class-cloud-storage-import.php:274
 msgid "FTP Folder"
 msgstr "FTP-kansio"
 
-#: includes/class-cloud-storage-import.php:262
+#: includes/class-cloud-storage-import.php:284
 msgid "Cloud Storage Folder"
 msgstr "Pilvitallennuskansio"
 
-#: includes/class-cloud-storage-import.php:269
+#: includes/class-cloud-storage-import.php:291
 msgid "Loading folders..."
 msgstr "Kansioiden lataaminen..."
 
-#: includes/class-cloud-storage-import.php:277
+#: includes/class-cloud-storage-import.php:299
 msgid "Selected:"
 msgstr "Valittu:"
 
-#: includes/class-cloud-storage-import.php:282
+#: includes/class-cloud-storage-import.php:304
 msgid ""
 "Click the arrow to expand folders. Select a folder using the radio button."
 msgstr ""
 "Napsauta nuolta laajentaaksesi kansiot. Valitse kansio valintapainikkeella."
 
-#: includes/class-cloud-storage-import.php:304
+#: includes/class-cloud-storage-import.php:326
 msgid ""
 "Cloud storage is not configured. Please configure it in Sunshine settings."
 msgstr ""
 "Pilvitallennustilaa ei ole määritetty. Määritä se Sunshine-asetuksissa."
 
-#: includes/class-cloud-storage-import.php:309
+#: includes/class-cloud-storage-import.php:331
 msgid "Please select a cloud storage folder."
 msgstr "Valitse pilvitallennuskansio."
 
-#: includes/class-cloud-storage-import.php:448
+#: includes/class-cloud-storage-import.php:470
 msgid "Scanning your cloud storage…"
 msgstr "Skannataan pilvitallennustasi…"
 
-#: includes/class-cloud-storage-import.php:449
+#: includes/class-cloud-storage-import.php:471
 msgid ""
 "Large buckets are scanned in small batches so the import never times out. "
 "This can take a moment."
@@ -23408,16 +23469,17 @@ msgstr ""
 "Suuret bucketit skannataan pienissä erissä, jottei tuonti koskaan "
 "aikakatkaise. Tämä voi kestää hetken."
 
-#: includes/class-cloud-storage-import.php:450
+#: includes/class-cloud-storage-import.php:472
 msgid "galleries found so far"
 msgstr "galleriaa löytynyt toistaiseksi"
 
-#: includes/class-cloud-storage-import.php:532
+#: includes/class-cloud-storage-import.php:554
 msgid "Scan session expired, please start over."
 msgstr "Skannausistunto vanhentui, aloita alusta."
 
-#. translators: %s is the folder path in the cloud storage bucket that could not be read
-#: includes/class-cloud-storage-import.php:595
+#. translators: %s is the folder path in the cloud storage bucket that could
+#. not be read
+#: includes/class-cloud-storage-import.php:616
 #, php-format
 msgid ""
 "Could not read the folder \"%s\" from your cloud storage, so the scan was "
@@ -23428,46 +23490,46 @@ msgstr ""
 "keskeytettiin ennen kuin mitään tuotiin. Tämä on yleensä tilapäistä, joten "
 "yritä uudelleen."
 
-#: includes/class-cloud-storage-import.php:864
-#: includes/class-cloud-storage-import.php:920
-#: includes/class-cloud-storage-import.php:1023
+#: includes/class-cloud-storage-import.php:879
+#: includes/class-cloud-storage-import.php:933
+#: includes/class-cloud-storage-import.php:1034
 msgid "Could not initialize cloud storage client"
 msgstr "Pilvitallennustilan asiakasta ei voitu alustaa"
 
-#: includes/class-cloud-storage-import.php:869
-#: includes/class-cloud-storage-import.php:925
+#: includes/class-cloud-storage-import.php:884
+#: includes/class-cloud-storage-import.php:938
 msgid "Failed to list cloud storage contents"
 msgstr "Pilvitallennustilan sisältöä ei voitu luetella"
 
-#: includes/class-cloud-storage-import.php:992
+#: includes/class-cloud-storage-import.php:1003
 msgid "Loading..."
 msgstr "Ladataan…"
 
-#: includes/class-cloud-storage-import.php:993
+#: includes/class-cloud-storage-import.php:1004
 msgid "No subfolders"
 msgstr "Ei alikansioita"
 
-#: includes/class-cloud-storage-import.php:995
+#: includes/class-cloud-storage-import.php:1006
 msgid "Error loading folders"
 msgstr "Virhe kansioiden lataamisessa"
 
-#: includes/class-cloud-storage-manager.php:2415
+#: includes/class-cloud-storage-manager.php:2421
 msgid "No objects found in WP Offload Media data"
 msgstr "WP Offload Media -tiedoista ei löytynyt kohteita"
 
-#: includes/class-cloud-storage-manager.php:2475
+#: includes/class-cloud-storage-manager.php:2481
 msgid "Could not build URLs from WP Offload Media data"
 msgstr "WP Offload Media -tiedoista ei voitu luoda URL-osoitteita."
 
-#: includes/class-cloud-storage-manager.php:2563
+#: includes/class-cloud-storage-manager.php:2569
 msgid "Could not retrieve URLs from WP Offload Media"
 msgstr "WP Offload Media -sovelluksesta ei voitu hakea URL-osoitteita."
 
-#: includes/hooks.php:436 includes/hooks.php:470
+#: includes/hooks.php:430 includes/hooks.php:464
 msgid "Sunshine Cloud Storage:"
 msgstr "Sunshine-pilvitallennus:"
 
-#: includes/hooks.php:437
+#: includes/hooks.php:431
 msgid ""
 "WP Offload Media plugin is currently active. These two plugins should not be "
 "active at the same time as they will conflict. Please deactivate WP Offload "
@@ -23478,7 +23540,7 @@ msgstr ""
 "ristiriidan. Poista WP Offload Media käytöstä ennen Sunshine Cloud Storage "
 "-palvelun käyttöä."
 
-#: includes/hooks.php:439
+#: includes/hooks.php:433
 msgid ""
 "<strong>Good news:</strong> Sunshine can take over your previously offloaded "
 "items. After deactivating WP Offload Media, run the WP Offload Media "
@@ -23489,7 +23551,7 @@ msgstr ""
 "Offload Media -siirtotyökalu siirtääksesi tiedot Sunshinen omaan "
 "tallennukseen."
 
-#: includes/hooks.php:444
+#: includes/hooks.php:438
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media plugin is active. "
 "You have Cloud Storage set to \"Entire WordPress site\" which may conflict. "
@@ -23501,7 +23563,7 @@ msgstr ""
 "mikä voi aiheuttaa ristiriidan. Harkitse sen asettamista tilaan \"Vain "
 "Sunshine-galleriat\" tai yhden laajennuksen poistamista käytöstä."
 
-#: includes/hooks.php:471
+#: includes/hooks.php:465
 msgid ""
 "Your cloud storage bucket does not support per-object ACLs (Access Control "
 "Lists). This means Sunshine cannot set individual files as public or "
@@ -23514,7 +23576,7 @@ msgstr ""
 "että pikkukuvat eivät näy tai täysresoluutioiset kuvat ovat julkisesti "
 "saatavilla."
 
-#: includes/hooks.php:475
+#: includes/hooks.php:469
 msgid ""
 "<strong>How to fix:</strong> Go to Google Cloud Console &rarr; Cloud Storage "
 "&rarr; Your Bucket &rarr; Permissions &rarr; Access Control &rarr; Switch "
@@ -23524,7 +23586,7 @@ msgstr ""
 "→ Oma säilytyspaikka → Käyttöoikeudet → Käyttöoikeuksien hallinta → Vaihda "
 "asetuksesta \"Yhtenäinen\" asetukseen \"Tarkka\"."
 
-#: includes/hooks.php:477
+#: includes/hooks.php:471
 msgid ""
 "<strong>How to fix:</strong> Go to S3 Console &rarr; Your Bucket &rarr; "
 "Permissions &rarr; Object Ownership &rarr; Edit &rarr; Select \"ACLs "
@@ -23534,7 +23596,7 @@ msgstr ""
 "Käyttöoikeudet → Objektin omistusoikeus → Muokkaa → Valitse \"ACL-oikeudet "
 "käytössä\" ja \"Säilytyspaikan omistaja ensisijainen\"."
 
-#: includes/hooks.php:479
+#: includes/hooks.php:473
 msgid ""
 "<strong>How to fix:</strong> Check your storage provider's documentation for "
 "enabling per-object ACLs on your bucket."
@@ -23542,7 +23604,7 @@ msgstr ""
 "<strong>Korjaustapa:</strong> Tarkista tallennuspalveluntarjoajan ohjeista, "
 "miten voit ottaa käyttöön objektikohtaiset ACL-oikeudet säilytyspaikassasi."
 
-#: includes/hooks.php:483
+#: includes/hooks.php:477
 msgid ""
 "After making changes, go to Sunshine Settings &rarr; Cloud Storage and click "
 "\"Test Connection\" to verify."
@@ -23551,7 +23613,7 @@ msgstr ""
 "Pilvitallennus ja napsauta \"Testaa yhteys\" vahvistaaksesi."
 
 #. translators: 1: link opening tag, 2: link closing tag
-#: includes/hooks.php:539
+#: includes/hooks.php:533
 #, php-format
 msgid ""
 "<strong>Sunshine Cloud Storage:</strong> WP Offload Media data was found on "
@@ -23815,7 +23877,8 @@ msgstr ""
 "Tämän tilauksen lahjakortilla ei ole enää tarpeeksi saldoa. Tarkista "
 "tilauksesi ja yritä uudelleen."
 
-#. translators: 1: gift card code, 2: amount the order used, 3: amount left on the card
+#. translators: 1: gift card code, 2: amount the order used, 3: amount left on
+#. the card
 #: order-integration.php:214
 #, php-format
 msgid ""
@@ -23825,13 +23888,15 @@ msgstr ""
 "Lahjakorttia %1$s käytettiin %2$s tässä tilauksessa, mutta siinä oli "
 "jäljellä vain %3$s, kun tilaus maksettiin. Erotusta ei peritty."
 
-#. translators: 1: gift card code, 2: amount applied to the order, 3: remaining balance on the card
+#. translators: 1: gift card code, 2: amount applied to the order, 3: remaining
+#. balance on the card
 #: order-integration.php:220
 #, php-format
 msgid "Gift card %1$s redeemed: %2$s applied, %3$s remaining"
 msgstr "Lahjakortti %1$s lunastettu: %2$s käytetty, %3$s jäljellä"
 
-#. translators: 1: gift card code, 2: amount the order used, 3: amount left on the card
+#. translators: 1: gift card code, 2: amount the order used, 3: amount left on
+#. the card
 #: order-integration.php:348
 #, php-format
 msgid ""
@@ -23841,13 +23906,15 @@ msgstr ""
 "Lahjakorttia %1$s käytettiin %2$s tässä tilauksessa, mutta siinä oli "
 "jäljellä vain %3$s, kun tilaus avattiin uudelleen. Erotusta ei peritty."
 
-#. translators: 1: gift card code, 2: amount given back to the card, 3: new balance on the card
+#. translators: 1: gift card code, 2: amount given back to the card, 3: new
+#. balance on the card
 #: order-integration.php:359
 #, php-format
 msgid "Gift card %1$s: %2$s given back, balance is now %3$s"
 msgstr "Lahjakortti %1$s: %2$s palautettu, saldo on nyt %3$s"
 
-#. translators: 1: gift card code, 2: amount taken from the card again, 3: new balance on the card
+#. translators: 1: gift card code, 2: amount taken from the card again, 3: new
+#. balance on the card
 #: order-integration.php:362
 #, php-format
 msgid "Gift card %1$s: %2$s taken again, balance is now %3$s"
