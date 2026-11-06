@@ -6,7 +6,7 @@ Tags: client photo gallery, photo proofing, client proofing, sell photos, client
 Requires at least: 5.9
 Requires PHP: 7.4
 Tested up to: 7.1
-Stable tag: 3.8
+Stable tag: 3.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -243,7 +243,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
-= 3.8.1 =
+= 3.8.1 - November 5, 2026 =
 * Security: Add-on updates are refused unless they're signed by Sunshine Photo Cart, so a hacked update server can't push a bad add-on to your site
 * Change: Sunshine now needs WordPress 5.9 or newer. Image uploads did not work on older WordPress versions running PHP 7
 * Change: Import from FTP folder also finds .jpeg and .png photos, the same as browser uploads, and works with folder names that have brackets
