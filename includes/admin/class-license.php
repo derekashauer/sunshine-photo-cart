@@ -477,6 +477,11 @@ class SPC_License {
 
 			$this->save_license_data( $license_data );
 
+			// The saved status looked fine before this check, so try the plan key now rather than next week.
+			if ( 'valid' !== $license_data->license ) {
+				$this->switch_to_plan_key();
+			}
+
 		}
 
 	}
