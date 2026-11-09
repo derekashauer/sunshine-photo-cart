@@ -337,6 +337,7 @@ class SPC_License {
 					SPC()->notices->add_admin( $this->id . '_license_activated', sprintf( __( 'License for %s has been activated', 'sunshine-photo-cart' ), $this->name ) );
 				}
 				SPC()->update_option( 'license_' . $this->id, $license_key );
+				$this->license_key = $license_key;
 				SPC()->update_option( 'license_expiration_' . $this->id, $license_data->expires );
 				SPC()->update_option( 'license_url_' . $this->id, home_url() );
 				$status_code = $license_data->license;
@@ -531,6 +532,20 @@ class SPC_License {
 	}
 
 	/**
+	 * Product names as a short list for the admin bar: the first three, then "and more".
+	 *
+	 * @param array $names Product names.
+	 * @return string
+	 */
+	public static function names_for_notice( $names ) {
+		if ( count( $names ) > 3 ) {
+			/* translators: %s is a list of the first three add-on names */
+			return sprintf( __( '%s and more', 'sunshine-photo-cart' ), join( ', ', array_slice( $names, 0, 3 ) ) );
+		}
+		return join( ', ', $names );
+	}
+
+	/**
 	 * The plan (Pro, Plus or Basic) with a valid license on this site, if any.
 	 *
 	 * @return SPC_License|false
@@ -564,14 +579,15 @@ class SPC_License {
 	 * Switch this add-on to the site's plan key when the plan covers it.
 	 *
 	 * Sites set up before they had a plan can still hold a separate key for each
-	 * add-on. Those keys stay valid with the store, but they expire on their own
-	 * schedule, so the plan key replaces them once the store confirms it covers this add-on.
+	 * add-on. Those keys expire on their own schedule, so once one stops working the
+	 * plan key replaces it, after the store confirms the plan covers this add-on.
+	 * A key that still works (a lifetime key, say) is left alone.
 	 *
 	 * @return bool True when this add-on was switched to the plan key.
 	 */
 	public function switch_to_plan_key() {
 
-		if ( $this->requires ) {
+		if ( $this->requires || ( $this->is_valid() && ! $this->is_expired() ) ) {
 			return false;
 		}
 
@@ -646,7 +662,8 @@ class SPC_License {
 	 * @return array
 	 */
 	public function problem_addons( $problem_addons ) {
-		if ( $this->license_key && ! $this->is_replaced_by_other_plan() && ! $this->is_valid() && 'expired' !== $this->get_status() ) {
+		// No status means the key was deactivated on purpose, or never checked.
+		if ( $this->license_key && ! $this->is_replaced_by_other_plan() && ! in_array( $this->get_status(), array( '', false, 'valid', 'expired' ), true ) ) {
 			$problem_addons[ $this->id ] = $this->name;
 		}
 		return $problem_addons;
