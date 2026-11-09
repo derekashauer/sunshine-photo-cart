@@ -136,11 +136,12 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						'name'        => __( 'Terms', 'sunshine-photo-cart' ),
 						'type'        => 'radio',
 						'options'     => array(
-							''             => __( 'Default', 'sunshine-photo-cart' ),
+							/* translators: %s is the site-wide setting for gallery terms, "Required" or "Not required" */
+							''             => sprintf( __( 'Default (%s)', 'sunshine-photo-cart' ), SPC()->get_option( 'gallery_terms' ) ? __( 'Required', 'sunshine-photo-cart' ) : __( 'Not required', 'sunshine-photo-cart' ) ),
 							'required'     => __( 'Required', 'sunshine-photo-cart' ),
 							'not_required' => __( 'Not required', 'sunshine-photo-cart' ),
 						),
-						'description' => __( 'Ask visitors to agree to your gallery terms before they see the photos. Default follows Sunshine > Settings > Galleries.', 'sunshine-photo-cart' ),
+						'description' => __( 'Ask visitors to agree to your gallery terms before they see the photos.', 'sunshine-photo-cart' ),
 						'quick_edit'  => true,
 						'bulk_edit'   => true,
 					),
