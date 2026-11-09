@@ -34,8 +34,10 @@ class SPC_License {
 		add_action( 'admin_init', array( $this, 'listener' ), 5 );
 		add_action( 'admin_init', array( $this, 'manual_license_check' ) );
 		add_action( 'sunshine_expired_addons', array( $this, 'expired_addons' ) );
+		add_filter( 'sunshine_license_problem_addons', array( $this, 'problem_addons' ) );
 		add_action( 'sunshine_active_addons', array( $this, 'active_addons' ) );
 		add_action( 'sunshine_license_check', array( $this, 'check_license' ) );
+		add_action( 'sunshine_plan_activated', array( $this, 'switch_to_plan_key' ) );
 
 		if ( $file ) {
 			$plugin_base_name = plugin_basename( $file );
@@ -82,6 +84,35 @@ class SPC_License {
 	}
 
 	public function default_options( $fields ) {
+
+		$plan = self::get_valid_plan();
+
+		// With a valid plan, only that plan's key is shown.
+		if ( $this->is_replaced_by_other_plan() ) {
+			return $fields;
+		}
+
+		// Add-ons using the plan key are listed under the plan instead of getting their own key field.
+		if ( $this->is_covered_by_plan() ) {
+			$key = 'planzcovered'; // Sorts right after the plan field.
+			if ( empty( $fields[ $key ] ) ) {
+				$fields[ $key ] = array(
+					'name'             => __( 'Add-ons', 'sunshine-photo-cart' ),
+					'id'               => 'license_covered_addons',
+					'type'             => 'html',
+					'addon_names'      => array(),
+					'hide_system_info' => true,
+				);
+			}
+			$fields[ $key ]['addon_names'][] = $this->name;
+			natcasesort( $fields[ $key ]['addon_names'] );
+			$fields[ $key ]['html'] = '<p>' . sprintf(
+				/* translators: %s is the plan name, like Sunshine Photo Cart Pro */
+				esc_html__( 'These add-ons use your %s license key:', 'sunshine-photo-cart' ),
+				esc_html( $plan->get_name() )
+			) . '</p><ul><li>' . implode( '</li><li>', array_map( 'esc_html', $fields[ $key ]['addon_names'] ) ) . '</li></ul>';
+			return $fields;
+		}
 
 		$status      = $this->get_status();
 		$expiration  = $this->get_expiration();
@@ -306,12 +337,17 @@ class SPC_License {
 					SPC()->notices->add_admin( $this->id . '_license_activated', sprintf( __( 'License for %s has been activated', 'sunshine-photo-cart' ), $this->name ) );
 				}
 				SPC()->update_option( 'license_' . $this->id, $license_key );
+				$this->license_key = $license_key;
 				SPC()->update_option( 'license_expiration_' . $this->id, $license_data->expires );
 				SPC()->update_option( 'license_url_' . $this->id, home_url() );
 				$status_code = $license_data->license;
 			}
 
 			SPC()->update_option( 'license_status_' . $this->id, $status_code );
+
+			if ( $result && $this->requires ) {
+				do_action( 'sunshine_plan_activated', $this );
+			}
 
 			return $result;
 
@@ -409,6 +445,10 @@ class SPC_License {
 
 	public function check_license() {
 
+		if ( $this->switch_to_plan_key() ) {
+			return;
+		}
+
 		// No license key, nothing to check.
 		if ( empty( $this->get_license_key() ) ) {
 			SPC()->log( 'No license key, nothing to check for ' . $this->name );
@@ -417,20 +457,53 @@ class SPC_License {
 
 		SPC()->log( 'Checking license for ' . $this->name );
 
-		// Data to send to the API
-		$api_params = array(
-			'edd_action' => 'check_license',
-			'license'    => $this->get_license_key(),
-			'item_id'    => $this->item_id,
-			'url'        => home_url(),
-		);
+		$license_data = $this->request_license_data( $this->get_license_key() );
 
-		// Call the API
+		if ( is_wp_error( $license_data ) ) {
+
+			$message = $license_data->get_error_message();
+
+			SPC()->log( 'License check failed for ' . $this->name . ': ' . $message );
+
+			/* translators: %1$s is the product name, %2$s is the error message */
+			SPC()->notices->add_admin( $this->id . '_license_update_fail', sprintf( __( 'License for %1$s failed to be updated: %2$s', 'sunshine-photo-cart' ), $this->name, $message ) );
+
+		} else {
+
+			if ( false !== $license_data->success ) {
+				/* translators: %s is the product name */
+				SPC()->notices->add_admin( $this->id . '_license_updated', sprintf( __( 'License for %s has been updated', 'sunshine-photo-cart' ), $this->name ) );
+			}
+
+			$this->save_license_data( $license_data );
+
+			// The saved status looked fine before this check, so try the plan key now rather than next week.
+			if ( 'valid' !== $license_data->license ) {
+				$this->switch_to_plan_key();
+			}
+
+		}
+
+	}
+
+	/**
+	 * Ask the store about a license key for this product on this site.
+	 *
+	 * @param string $license_key The license key to check.
+	 * @return object|WP_Error The store's license data, or an error when the check did not get through.
+	 */
+	private function request_license_data( $license_key ) {
+
 		$response = wp_remote_post(
 			SUNSHINE_PHOTO_CART_STORE_URL . '?time=' . time(),
 			array(
-				'timeout'   => 15,
-				'body'      => $api_params,
+				'timeout' => 15,
+				'body'    => array(
+					'edd_action' => 'check_license',
+					'license'    => $license_key,
+					'item_id'    => $this->item_id,
+					'url'        => home_url(),
+				),
 			)
 		);
 
@@ -442,32 +515,105 @@ class SPC_License {
 		}
 
 		if ( ! is_object( $license_data ) || ! isset( $license_data->license ) ) {
-
 			if ( is_wp_error( $response ) ) {
-				$message = $response->get_error_message();
-			} else {
-				$message = __( 'Unknown error occured', 'sunshine-photo-cart' );
+				return $response;
 			}
-
-			SPC()->log( 'License check failed for ' . $this->name . ': ' . $message );
-
-			/* translators: %1$s is the product name, %2$s is the error message */
-			SPC()->notices->add_admin( $this->id . '_license_update_fail', sprintf( __( 'License for %1$s failed to be updated: %2$s', 'sunshine-photo-cart' ), $this->name, $message ) );
-
-		} else {
-
-			if ( false === $license_data->success ) {
-				SPC()->update_option( 'license_expiration_' . $this->id, '' );
-			} else {
-				/* translators: %s is the product name */
-				SPC()->notices->add_admin( $this->id . '_license_updated', sprintf( __( 'License for %s has been updated', 'sunshine-photo-cart' ), $this->name ) );
-				SPC()->update_option( 'license_expiration_' . $this->id, $license_data->expires );
-			}
-
-			SPC()->update_option( 'license_status_' . $this->id, $license_data->license );
-			SPC()->update_option( 'license_data_' . $this->id, $license_data );
-
+			return new WP_Error( 'sunshine_license_check_failed', __( 'Unknown error occured', 'sunshine-photo-cart' ) );
 		}
+
+		return $license_data;
+
+	}
+
+	/**
+	 * Save what the store said about this license.
+	 *
+	 * @param object $license_data The store's license data.
+	 */
+	private function save_license_data( $license_data ) {
+		SPC()->update_option( 'license_expiration_' . $this->id, ( false === $license_data->success ) ? '' : $license_data->expires );
+		SPC()->update_option( 'license_status_' . $this->id, $license_data->license );
+		SPC()->update_option( 'license_data_' . $this->id, $license_data );
+	}
+
+	/**
+	 * Product names as a short list for the admin bar: the first three, then "and more".
+	 *
+	 * @param array $names Product names.
+	 * @return string
+	 */
+	public static function names_for_notice( $names ) {
+		if ( count( $names ) > 3 ) {
+			/* translators: %s is a list of the first three add-on names */
+			return sprintf( __( '%s and more', 'sunshine-photo-cart' ), join( ', ', array_slice( $names, 0, 3 ) ) );
+		}
+		return join( ', ', $names );
+	}
+
+	/**
+	 * The plan (Pro, Plus or Basic) with a valid license on this site, if any.
+	 *
+	 * @return SPC_License|false
+	 */
+	public static function get_valid_plan() {
+		if ( empty( SPC()->plans ) ) {
+			return false;
+		}
+		foreach ( SPC()->plans as $plan ) {
+			if ( $plan->is_valid() ) {
+				return $plan;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Whether this add-on uses the key of the site's valid plan.
+	 *
+	 * @return bool
+	 */
+	public function is_covered_by_plan() {
+		if ( $this->requires || ! $this->get_license_key() || ! $this->is_valid() ) {
+			return false;
+		}
+		$plan = self::get_valid_plan();
+		return $plan && $this->get_license_key() === $plan->get_license_key();
+	}
+
+	/**
+	 * Switch this add-on to the site's plan key when the plan covers it.
+	 *
+	 * Sites set up before they had a plan can still hold a separate key for each
+	 * add-on. Those keys expire on their own schedule, so once one stops working the
+	 * plan key replaces it, after the store confirms the plan covers this add-on.
+	 * A key that still works (a lifetime key, say) is left alone.
+	 *
+	 * @return bool True when this add-on was switched to the plan key.
+	 */
+	public function switch_to_plan_key() {
+
+		if ( $this->requires || ( $this->is_valid() && ! $this->is_expired() ) ) {
+			return false;
+		}
+
+		$plan = self::get_valid_plan();
+		if ( ! $plan || $plan->is_expired() || ! $plan->get_license_key() || $plan->get_license_key() === $this->get_license_key() ) {
+			return false;
+		}
+
+		$license_data = $this->request_license_data( $plan->get_license_key() );
+		if ( is_wp_error( $license_data ) || 'valid' !== $license_data->license ) {
+			return false;
+		}
+
+		$this->license_key = $plan->get_license_key();
+		SPC()->update_option( 'license_' . $this->id, $this->license_key );
+		SPC()->update_option( 'license_url_' . $this->id, home_url() );
+		$this->save_license_data( $license_data );
+
+		SPC()->log( $this->name . ' now uses the ' . $plan->get_name() . ' license key' );
+
+		return true;
 
 	}
 
@@ -507,10 +653,38 @@ class SPC_License {
 	}
 
 	public function expired_addons( $expired_addons ) {
-		if ( $this->license_key && $this->is_expired() ) {
+		if ( $this->license_key && ! $this->is_replaced_by_other_plan() && $this->is_expired() && in_array( $this->get_status(), array( 'expired', 'valid' ), true ) ) {
 			$expired_addons[ $this->id ] = $this->name;
 		}
 		return $expired_addons;
+	}
+
+	/**
+	 * Add this product when its saved key was turned down for a reason other than
+	 * its end date (wrong key, wrong site, disabled).
+	 *
+	 * @param array $problem_addons Product names keyed by ID.
+	 * @return array
+	 */
+	public function problem_addons( $problem_addons ) {
+		// No status means the key was deactivated on purpose, or never checked.
+		if ( $this->license_key && ! $this->is_replaced_by_other_plan() && ! in_array( $this->get_status(), array( '', false, 'valid', 'expired' ), true ) ) {
+			$problem_addons[ $this->id ] = $this->name;
+		}
+		return $problem_addons;
+	}
+
+	/**
+	 * Whether this is a plan the site no longer uses, because a different plan is valid.
+	 *
+	 * @return bool
+	 */
+	private function is_replaced_by_other_plan() {
+		if ( ! $this->requires ) {
+			return false;
+		}
+		$plan = self::get_valid_plan();
+		return $plan && $plan !== $this;
 	}
 
 	public function active_addons( $active_addons ) {

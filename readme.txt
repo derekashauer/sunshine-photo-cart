@@ -243,6 +243,10 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.8.2 =
+* Change: Add-ons covered by your Pro, Plus or Basic plan now use the plan's license key, and the Licenses screen lists them under the plan instead of asking for a key for each one. Older sites that still had a separate, expired key for each add-on switch over by themselves. Add-ons bought on their own keep their own key
+* Fix: The license bar no longer says an add-on expired when the real problem is a wrong key or a different site. It names the problem and links to the Licenses screen
+
 = 3.8.1 - November 5, 2026 =
 * Security: Add-on updates are refused unless they're signed by Sunshine Photo Cart, so a hacked update server can't push a bad add-on to your site
 * Change: Sunshine now needs WordPress 5.9 or newer. Image uploads did not work on older WordPress versions running PHP 7
