@@ -462,6 +462,7 @@ input:checked + .sunshine-switch-slider:before {
 #sunshine-admin-meta-box-tab-link-general:before { content: "\f124"; }
 #sunshine-admin-meta-box-tab-link-products:before { content: "\f125"; }
 #sunshine-admin-meta-box-tab-link-email:before { content: "\f126"; }
+#sunshine-admin-meta-box-tab-link-terms:before { content: "\f135"; }
 #sunshine-admin-meta-box-tab-link-product-options:before { content: "\f137"; }
 #sunshine-admin-meta-box-tab-link-download:before { content: "\f107"; }
 #sunshine-admin-meta-box-tab-link-downloads:before { content: "\f107"; }

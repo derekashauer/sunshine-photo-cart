@@ -61,6 +61,7 @@ class SPC_Privacy {
 		'favorites_count',
 		'action',
 		'last_login',
+		'gallery_terms_agreement',
 	);
 
 	public function __construct() {

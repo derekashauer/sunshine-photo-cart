@@ -35,6 +35,27 @@
 	}
 	?>
 
+	<?php
+	if ( ! empty( $terms ) ) {
+		do_action( 'sunshine_gallery_terms_before', $gallery );
+		?>
+		<div class="sunshine--form--field sunshine--form--field-terms">
+			<div class="sunshine--gallery--terms"><?php echo wp_kses_post( wpautop( sunshine_get_gallery_terms_text() ) ); ?></div>
+			<?php
+			echo sunshine_form_field( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				'sunshine_gallery_terms',
+				array(
+					'type' => 'checkbox',
+					'name' => esc_html__( 'I have read and agree to these terms', 'sunshine-photo-cart' ),
+				),
+			);
+			?>
+		</div>
+		<?php
+		do_action( 'sunshine_gallery_terms_after', $gallery );
+	}
+	?>
+
 	<div class="sunshine--form--field sunshine--form--field-submit">
 		<button type="submit" class="sunshine--button"><?php esc_html_e( 'Submit', 'sunshine-photo-cart' ); ?></button>
 	</div>

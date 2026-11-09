@@ -491,6 +491,32 @@ function sunshine_get_settings_fields() {
 		'description' => __( 'Enabling this option will attempt to block search engine bots from crawling and indexing galleries and images', 'sunshine-photo-cart' ),
 	);
 
+	$galleries_fields['1600'] = array(
+		'id'          => 'gallery_terms_header',
+		'name'        => __( 'Gallery Terms', 'sunshine-photo-cart' ),
+		'type'        => 'header',
+		'description' => __( 'Ask visitors to agree to your terms before they see a gallery\'s photos, and keep a record of who agreed and when. This discourages people from saving photos or removing watermarks, but it can\'t stop someone from taking a screenshot or using an AI tool.', 'sunshine-photo-cart' ),
+	);
+	$galleries_fields['1610'] = array(
+		'name'        => __( 'Require terms by default', 'sunshine-photo-cart' ),
+		'id'          => 'gallery_terms',
+		'type'        => 'checkbox',
+		'description' => __( 'Galleries set to "Default" ask visitors to agree to the terms below. Each gallery can also turn this on or off for itself.', 'sunshine-photo-cart' ),
+	);
+	$galleries_fields['1620'] = array(
+		'name'        => __( 'Terms', 'sunshine-photo-cart' ),
+		'id'          => 'gallery_terms_text',
+		'type'        => 'wysiwyg',
+		'default'     => sunshine_get_gallery_terms_default_text(),
+		'description' => __( 'Changing this asks everyone to agree again, since they agreed to different wording.', 'sunshine-photo-cart' ),
+	);
+	$galleries_fields['1630'] = array(
+		'name'        => __( 'Don\'t ask guests for an email', 'sunshine-photo-cart' ),
+		'id'          => 'gallery_terms_no_email',
+		'type'        => 'checkbox',
+		'description' => __( 'By default, visitors who aren\'t logged in also give their email address when they agree, so every agreement shows who it was. Without an email, Sunshine can\'t record who agreed.', 'sunshine-photo-cart' ),
+	);
+
 	$galleries_fields['2000'] = array(
 		'id'   => 'display_options',
 		'name' => __( 'Display Options', 'sunshine-photo-cart' ),

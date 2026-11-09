@@ -118,6 +118,10 @@ class SPC_Gallery extends Sunshine_Data {
 			return false;
 		}
 
+		if ( $this->terms_required() ) {
+			return false;
+		}
+
 		if ( $this->is_expired() ) {
 			return false;
 		}
@@ -539,6 +543,49 @@ class SPC_Gallery extends Sunshine_Data {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Does this gallery ask visitors to agree to the gallery terms before they see the photos.
+	 *
+	 * @return bool
+	 */
+	public function requires_terms() {
+		$setting = $this->get_meta_value( 'terms' );
+		if ( 'required' === $setting ) {
+			return true;
+		}
+		if ( 'not_required' === $setting ) {
+			return false;
+		}
+		return (bool) SPC()->get_option( 'gallery_terms' );
+	}
+
+	/**
+	 * Does the current visitor still have to agree to the gallery terms.
+	 *
+	 * @return bool
+	 */
+	public function terms_required() {
+		if ( current_user_can( 'sunshine_manage_options' ) ) {
+			return false;
+		}
+		if ( ! $this->requires_terms() ) {
+			return false;
+		}
+		return ! sunshine_has_agreed_to_gallery_terms();
+	}
+
+	/**
+	 * Every terms agreement made on this gallery.
+	 *
+	 * @return array
+	 */
+	public function get_terms_agreements() {
+		if ( ! $this->get_id() ) {
+			return array();
+		}
+		return get_post_meta( $this->get_id(), 'terms_agreement', false );
 	}
 
 	public function get_emails() {
