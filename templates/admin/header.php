@@ -2,7 +2,18 @@
 
 	<?php
 	$expired_addons = apply_filters( 'sunshine_expired_addons', array() );
-	if ( ! empty( $expired_addons ) ) {
+	$problem_addons = apply_filters( 'sunshine_license_problem_addons', array() );
+	if ( empty( $expired_addons ) && ! empty( $problem_addons ) ) {
+		if ( count( $problem_addons ) > 3 ) {
+			$problem_addons_string = join( ', ', array_slice( $problem_addons, 0, 3 ) ) . ' (and more) ';
+		} else {
+			$problem_addons_string = join( ', ', $problem_addons );
+		}
+		echo '<div class="sunshine-header--notice" id="sunshine-header--notice--expired-addons">';
+		/* translators: %s is the list of add-ons */
+		echo sprintf( esc_html__( 'There is a problem with your license for %s', 'sunshine-photo-cart' ), esc_html( $problem_addons_string ) ) . ' <a href="' . esc_url( admin_url( 'admin.php?page=sunshine&section=license' ) ) . '" class="button alt">' . esc_html__( 'View licenses', 'sunshine-photo-cart' ) . '</a>';
+		echo '</div>';
+	} elseif ( ! empty( $expired_addons ) ) {
 		echo '<div class="sunshine-header--notice" id="sunshine-header--notice--expired-addons">';
 		if ( array_key_exists( 'sunshine-photo-cart-pro', $expired_addons ) ) {
 			/* translators: %s is the addon name */

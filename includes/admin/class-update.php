@@ -134,6 +134,9 @@ class SPC_Update {
 		}
 		if ( ! wp_next_scheduled( 'sunshine_license_check' ) ) {
 			wp_schedule_event( time(), 'weekly', 'sunshine_license_check' );
+		} else {
+			// Check right away so add-ons still on their own older keys switch to the plan key.
+			wp_schedule_single_event( time(), 'sunshine_license_check' );
 		}
 		if ( ! wp_next_scheduled( 'sunshine_tracking_send' ) ) {
 			wp_schedule_event( time() + DAY_IN_SECONDS, 'weekly', 'sunshine_tracking_send' );
