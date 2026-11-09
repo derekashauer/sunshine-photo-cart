@@ -251,6 +251,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: Turning an add-on back on keeps the key you bought it with, instead of always switching it to your plan's key
 * Fix: Pressing Activate on the Licenses screen only activates that one license, and a server error or firewall page no longer shows as a successful activation
 * Change: With a Basic or Plus license, the Licenses screen still shows the Plus and Pro fields, so you can enter an upgraded key
+* Dev: New filter sunshine_add_to_cart_meta and JavaScript event sunshine_add_to_cart_data let an add-on save its own data on a cart line from the product window. The data is in place before the cart looks for a matching line, so lines that only differ in it stay separate
 
 = 3.8.1 - November 5, 2026 =
 * Security: Add-on updates are refused unless they're signed by Sunshine Photo Cart, so a hacked update server can't push a bad add-on to your site
