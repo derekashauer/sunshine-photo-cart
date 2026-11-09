@@ -580,7 +580,7 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 						$url      = wp_nonce_url( add_query_arg( 'check_license', $field['addon'], $base_url ), 'sunshine_check_license_' . $field['addon'], 'sunshine_check_license' );
 						$html    .= ' <a href="' . esc_url( $url ) . '" class="button">' . esc_html__( 'Refresh license', 'sunshine-photo-cart' ) . '</a>';
 					} else {
-						$html .= '<button class="button">' . esc_html__( 'Activate', 'sunshine-photo-cart' ) . '</button>';
+						$html .= '<button class="button" name="sunshine_license_activate" value="' . esc_attr( $field['addon'] ) . '">' . esc_html__( 'Activate', 'sunshine-photo-cart' ) . '</button>';
 					}
 					$this->show_submit = true;
 					break;

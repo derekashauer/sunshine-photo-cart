@@ -87,8 +87,8 @@ class SPC_License {
 
 		$plan = self::get_valid_plan();
 
-		// With a valid plan, only that plan's key is shown.
-		if ( $this->is_replaced_by_other_plan() ) {
+		// With a valid plan, lower plans are hidden. Higher plans stay, so there is a place to enter an upgraded key.
+		if ( $this->is_replaced_by_other_plan() && self::plan_rank( $this ) < self::plan_rank( $plan ) ) {
 			return $fields;
 		}
 
@@ -125,11 +125,15 @@ class SPC_License {
 			switch ( $status ) {
 
 				case 'expired':
-					$description = sprintf(
-						/* translators: the license key expiration date */
-						__( 'Your license key expired on %s.', 'sunshine-photo-cart' ),
-						date_i18n( get_option( 'date_format' ), strtotime( $expiration, current_time( 'timestamp' ) ) )
-					);
+					if ( $expiration ) {
+						$description = sprintf(
+							/* translators: the license key expiration date */
+							__( 'Your license key expired on %s.', 'sunshine-photo-cart' ),
+							date_i18n( get_option( 'date_format' ), strtotime( $expiration, current_time( 'timestamp' ) ) )
+						);
+					} else {
+						$description = __( 'Your license key has expired.', 'sunshine-photo-cart' );
+					}
 					break;
 
 				case 'disabled':
@@ -244,7 +248,11 @@ class SPC_License {
 				return;
 			}
 
-			$license_key = sanitize_text_field( $_POST[ $key ] );
+			// Every key is sent with the form, so only activate the one whose button was pressed, or a key just typed in.
+			$pressed = isset( $_POST['sunshine_license_activate'] ) ? sanitize_text_field( wp_unslash( $_POST['sunshine_license_activate'] ) ) : '';
+			if ( $pressed !== $this->id && $license_key === $this->get_license_key() ) {
+				return;
+			}
 
 			// Let's try activating this license!
 			$this->activate( $license_key );
@@ -286,63 +294,36 @@ class SPC_License {
 			$license_key = $this->get_license_key();
 		}
 
-		// Data to send to the API
-		$api_params = array(
-			'edd_action'  => 'activate_license',
-			'license'     => $license_key,
-			'item_id'     => $this->item_id,
-			// 'item_name'   => rawurlencode( $this->name ),
-			'url'         => home_url(),
-			'environment' => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
-		);
+		$license_data = self::api_request( 'activate_license', $license_key, $this->item_id );
 
-		// Call the API
-		$response = wp_remote_post(
-			SUNSHINE_PHOTO_CART_STORE_URL . '?time=' . time(),
-			array(
-				'timeout'   => 15,
-				'body'      => $api_params,
-			)
-		);
-
-		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-
-			if ( is_wp_error( $response ) ) {
-				$message = $response->get_error_message();
-			} else {
-				$message = __( 'Unknown error occured', 'sunshine-photo-cart' );
-			}
+		if ( is_wp_error( $license_data ) ) {
 
 			if ( ! $hide_notice ) {
 				/* translators: %1$s is the product name, %2$s is the error message */
-				SPC()->notices->add_admin( $this->id . '_license_activation_fail', sprintf( __( 'License for %1$s failed to be activated: %2$s', 'sunshine-photo-cart' ), $this->name, $message ) );
+				SPC()->notices->add_admin( $this->id . '_license_activation_fail', sprintf( __( 'License for %1$s failed to be activated: %2$s', 'sunshine-photo-cart' ), $this->name, $license_data->get_error_message() ) );
 			}
 
 			return false;
 
 		} else {
 
-			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-
 			if ( false === $license_data->success ) {
 				$result = false;
-				SPC()->update_option( 'license_expiration_' . $this->id, '' );
 				// EDD returns failure-specific codes (e.g. no_activations_left) in `error`, not `license`.
 				$status_code = ! empty( $license_data->error ) ? $license_data->error : $license_data->license;
 			} else {
 				$result = true;
-				SPC()->update_option( 'license_expiration_' . $this->id, $license_key );
 				if ( ! $hide_notice ) {
 					/* translators: %s is the product name */
 					SPC()->notices->add_admin( $this->id . '_license_activated', sprintf( __( 'License for %s has been activated', 'sunshine-photo-cart' ), $this->name ) );
 				}
 				SPC()->update_option( 'license_' . $this->id, $license_key );
 				$this->license_key = $license_key;
-				SPC()->update_option( 'license_expiration_' . $this->id, $license_data->expires );
 				SPC()->update_option( 'license_url_' . $this->id, home_url() );
 				$status_code = $license_data->license;
 			}
 
+			SPC()->update_option( 'license_expiration_' . $this->id, self::expiration_from( $license_data ) );
 			SPC()->update_option( 'license_status_' . $this->id, $status_code );
 
 			if ( $result && $this->requires ) {
@@ -357,41 +338,22 @@ class SPC_License {
 
 	public function deactivate() {
 
-		// Data to send to the API
-		$api_params = array(
-			'edd_action' => 'deactivate_license',
-			'license'    => $this->get_license_key(),
-			'item_name'  => urlencode( $this->name ),
-			'url'        => home_url(),
-		);
-
-		// Call the custom API.
-		$response = wp_remote_post(
-			SUNSHINE_PHOTO_CART_STORE_URL,
-			array(
-				'timeout'   => 15,
-				'body'      => $api_params,
-			)
-		);
-
-		// make sure the response came back okay
-		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-
-			if ( is_wp_error( $response ) ) {
-				$message = $response->get_error_message();
-			} else {
-				$message = __( 'An error occurred, please try again.', 'sunshine-photo-cart' );
-			}
-
-			if ( ! $hide_notice ) {
-				SPC()->notices->add_admin( $this->id . '_license_error', $message, 'error' );
-			}
+		// An add-on on a plan key only stops using it here. Telling the store would take the site off the whole plan.
+		if ( ! $this->requires && self::is_plan_key( $this->get_license_key() ) ) {
+			SPC()->update_option( 'license_status_' . $this->id, '' );
+			SPC()->update_option( 'license_expiration_' . $this->id, '' );
+			SPC()->update_option( 'license_url_' . $this->id, '' );
+			/* translators: %s is the product name */
+			SPC()->notices->add_admin( $this->id . '_license_deactivated', sprintf( __( 'License for %s has been deactivated', 'sunshine-photo-cart' ), $this->name ) );
 			return;
-
 		}
 
-		// decode the license data
-		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+		$license_data = self::api_request( 'deactivate_license', $this->get_license_key(), $this->item_id );
+
+		if ( is_wp_error( $license_data ) ) {
+			SPC()->notices->add_admin( $this->id . '_license_error', $license_data->get_error_message(), 'error' );
+			return;
+		}
 
 		// $license_data->license will be either "deactivated" or "failed"
 
@@ -493,22 +455,35 @@ class SPC_License {
 	 * @return object|WP_Error The store's license data, or an error when the check did not get through.
 	 */
 	private function request_license_data( $license_key ) {
+		return self::api_request( 'check_license', $license_key, $this->item_id );
+	}
+
+	/**
+	 * Send a license request to the store for this site.
+	 *
+	 * @param string $action      The store action: activate_license, deactivate_license or check_license.
+	 * @param string $license_key The license key.
+	 * @param int    $item_id     The store product ID.
+	 * @return object|WP_Error The store's license data, or an error when the request did not get through.
+	 */
+	public static function api_request( $action, $license_key, $item_id ) {
 
 		$response = wp_remote_post(
 			SUNSHINE_PHOTO_CART_STORE_URL . '?time=' . time(),
 			array(
 				'timeout' => 15,
 				'body'    => array(
-					'edd_action' => 'check_license',
-					'license'    => $license_key,
-					'item_id'    => $this->item_id,
-					'url'        => home_url(),
+					'edd_action'  => $action,
+					'license'     => $license_key,
+					'item_id'     => $item_id,
+					'url'         => home_url(),
+					'environment' => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
 				),
 			)
 		);
 
 		// A 200 that isn't license data (a firewall challenge or maintenance page) is a
-		// failed check too. Treating it as a success would wipe the saved license status.
+		// failed request too. Treating it as a success would wipe or fake the license status.
 		$license_data = null;
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
@@ -518,11 +493,45 @@ class SPC_License {
 			if ( is_wp_error( $response ) ) {
 				return $response;
 			}
-			return new WP_Error( 'sunshine_license_check_failed', __( 'Unknown error occured', 'sunshine-photo-cart' ) );
+			return new WP_Error( 'sunshine_license_request_failed', __( 'Unknown error occured', 'sunshine-photo-cart' ) );
 		}
 
 		return $license_data;
 
+	}
+
+	/**
+	 * The end date the store sent, or blank when it sent none.
+	 *
+	 * The store sends the end date even when it turns down an expired key, so the
+	 * Licenses screen can say when it expired.
+	 *
+	 * @param object $license_data The store's license data.
+	 * @return string
+	 */
+	public static function expiration_from( $license_data ) {
+		return ( ! empty( $license_data->expires ) && is_string( $license_data->expires ) ) ? $license_data->expires : '';
+	}
+
+	/**
+	 * Whether a key is one of the site's plan keys (Pro, Plus or Basic).
+	 *
+	 * One activation of a plan key covers every add-on on the site, so deactivating
+	 * any add-on with that key would take the site off the whole plan.
+	 *
+	 * @param string $license_key The license key.
+	 * @return bool
+	 */
+	public static function is_plan_key( $license_key ) {
+		if ( empty( $license_key ) ) {
+			return false;
+		}
+		foreach ( array( 'pro', 'plus', 'basic' ) as $plan ) {
+			if ( SPC()->get_option( 'license_sunshine-photo-cart-' . $plan ) === $license_key ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -531,7 +540,7 @@ class SPC_License {
 	 * @param object $license_data The store's license data.
 	 */
 	private function save_license_data( $license_data ) {
-		SPC()->update_option( 'license_expiration_' . $this->id, ( false === $license_data->success ) ? '' : $license_data->expires );
+		SPC()->update_option( 'license_expiration_' . $this->id, self::expiration_from( $license_data ) );
 		SPC()->update_option( 'license_status_' . $this->id, $license_data->license );
 		SPC()->update_option( 'license_data_' . $this->id, $license_data );
 	}
@@ -672,6 +681,21 @@ class SPC_License {
 			$problem_addons[ $this->id ] = $this->name;
 		}
 		return $problem_addons;
+	}
+
+	/**
+	 * How far up the plans this one is: Basic 1, Plus 2, Pro 3, and 0 for an add-on.
+	 *
+	 * @param SPC_License $license A plan license.
+	 * @return int
+	 */
+	private static function plan_rank( $license ) {
+		$ranks = array(
+			'basic' => 1,
+			'plus'  => 2,
+			'pro'   => 3,
+		);
+		return isset( $ranks[ $license->requires ] ) ? $ranks[ $license->requires ] : 0;
 	}
 
 	/**

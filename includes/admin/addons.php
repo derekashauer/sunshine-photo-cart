@@ -26,115 +26,65 @@ function is_sunshine_addon_active( $addon ) {
 
 function sunshine_addon_activation( $file, $name, $item_id ) {
 
-	$plugin_basename = plugin_basename( $file );
-	$filename        = basename( $file, '.php' );
-	$license_key     = sunshine_addon_get_license_key( $filename );
+	$filename  = basename( $file, '.php' );
+	$saved_key = SPC()->get_option( 'license_' . $filename );
+	$plan_key  = sunshine_addon_get_license_key( $filename );
 
-	if ( ! $license_key ) {
+	// An add-on bought on its own keeps its own key. The plan key is used when there is none, or it no longer works.
+	$keys = array();
+	if ( $saved_key && ! SPC_License::is_plan_key( $saved_key ) ) {
+		$keys[] = $saved_key;
+	}
+	if ( $plan_key ) {
+		$keys[] = $plan_key;
+	}
+
+	if ( empty( $keys ) ) {
 		/* translators: %s is the addon name */
 		SPC()->notices->add_admin( 'sunshine_license_invalid_' . $filename, sprintf( __( 'Could not automatically retrieve the license key for %s', 'sunshine-photo-cart' ), $name ), 'error' );
 		return;
 	}
 
-	SPC()->update_option( 'license_' . $filename, $license_key );
+	foreach ( $keys as $license_key ) {
 
-	// Data to send to the API.
-	$api_params = array(
-		'edd_action'  => 'activate_license',
-		'license'     => $license_key,
-		'item_id'     => $item_id,
-		'url'         => home_url(),
-		'environment' => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
-	);
+		$license_data = SPC_License::api_request( 'activate_license', $license_key, $item_id );
 
-	// Call the API.
-	$response = wp_remote_post(
-		SUNSHINE_PHOTO_CART_STORE_URL,
-		array(
-			'timeout'   => 15,
-			'body'      => $api_params,
-		)
-	);
+		if ( is_wp_error( $license_data ) ) {
+			/* translators: %s is the error message */
+			SPC()->notices->add_admin( 'sunshine_license_no_connection', sprintf( __( 'Your licenses could not be activated because your server failed to connect to SunshinePhotoCart.com: %s', 'sunshine-photo-cart' ), $license_data->get_error_message() ), 'error' );
+			return;
+		}
 
-	// Make sure there are no errors.
-	if ( is_wp_error( $response ) ) {
-		/* translators: %s is the error message */
-		SPC()->notices->add_admin( 'sunshine_license_no_connection', sprintf( __( 'Your licenses could not be activated because your server failed to connect to SunshinePhotoCart.com: %s', 'sunshine-photo-cart' ), $response->get_error_message() ), 'error' );
-		return;
+		SPC()->update_option( 'license_' . $filename, $license_key );
+		SPC()->update_option( 'license_expiration_' . $filename, SPC_License::expiration_from( $license_data ) );
+		SPC()->update_option( 'license_status_' . $filename, ( false === $license_data->success && ! empty( $license_data->error ) ) ? $license_data->error : $license_data->license );
+
+		if ( 'valid' === $license_data->license ) {
+			break;
+		}
 	}
 
 	// Tell WordPress to look for updates.
 	set_site_transient( 'update_plugins', null );
 
-	$message = '';
-
-	if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-
-		if ( is_wp_error( $response ) ) {
-			$message = $response->get_error_message();
-		} else {
-			$message = __( 'Unknown error occured', 'sunshine-photo-cart' );
-		}
-
-		/* translators: %1$s is the addon name, %2$s is the error message */
-		SPC()->notices->add_admin( $item_id . '_license_activation_fail', sprintf( __( 'License for %1$s failed to be activated: %2$s', 'sunshine-photo-cart' ), $name, $message ) );
-
-	} else {
-
-		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-		if ( false === $license_data->success ) {
-			SPC()->update_option( 'license_expiration_' . $filename, '' );
-		} else {
-			SPC()->update_option( 'license_expiration_' . $filename, $license_data->expires );
-		}
-
-		SPC()->update_option( 'license_status_' . $filename, $license_data->license );
-
-	}
-
 }
 
 function sunshine_addon_deactivation( $file, $name, $item_id ) {
 
-	$plugin_basename = plugin_basename( $file );
-	$filename        = basename( $file, '.php' );
-	$license_key     = SPC()->get_option( 'license_' . $filename );
+	$filename    = basename( $file, '.php' );
+	$license_key = SPC()->get_option( 'license_' . $filename );
 
 	if ( empty( $license_key ) ) {
 		return;
 	}
 
-	// Data to send to the API
-	$api_params = array(
-		'edd_action'  => 'deactivate_license',
-		'license'     => $license_key,
-		'item_id'     => $item_id,
-		'url'         => home_url(),
-		'environment' => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
-	);
-
-	// Call the custom API.
-	$response = wp_remote_post(
-		SUNSHINE_PHOTO_CART_STORE_URL,
-		array(
-			'timeout'   => 15,
-			'body'      => $api_params,
-		)
-	);
-
-	// make sure the response came back okay
-	if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-
-		if ( is_wp_error( $response ) ) {
-			$message = $response->get_error_message();
-		} else {
-			$message = __( 'An error occurred, please try again.', 'sunshine-photo-cart' );
+	// A plan key is only cleared here. Deactivating it with the store would take the site off the whole plan.
+	if ( ! SPC_License::is_plan_key( $license_key ) ) {
+		$license_data = SPC_License::api_request( 'deactivate_license', $license_key, $item_id );
+		if ( is_wp_error( $license_data ) ) {
+			SPC()->notices->add_admin( $item_id . '_license_error', $license_data->get_error_message(), 'error' );
+			return;
 		}
-
-		SPC()->notices->add_admin( $item_id . '_license_error', $message, 'error' );
-		return;
-
 	}
 
 	SPC()->update_option( 'license_status_' . $filename, '' );
