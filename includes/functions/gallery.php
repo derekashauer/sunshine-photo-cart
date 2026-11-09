@@ -756,7 +756,9 @@ function sunshine_get_known_visitor_email() {
  */
 function sunshine_has_agreed_to_gallery_terms() {
 	$version = sunshine_get_gallery_terms_version();
-	if ( SPC()->session->get( 'gallery_terms' ) === $version ) {
+	// The session copy only counts for the same person, so another customer logging in on this browser is asked again.
+	$session_agreement = SPC()->session->get( 'gallery_terms' );
+	if ( is_array( $session_agreement ) && isset( $session_agreement['version'], $session_agreement['user_id'] ) && $session_agreement['version'] === $version && get_current_user_id() === (int) $session_agreement['user_id'] ) {
 		return true;
 	}
 	if ( is_user_logged_in() ) {
@@ -778,7 +780,13 @@ function sunshine_has_agreed_to_gallery_terms() {
  */
 function sunshine_record_gallery_terms_agreement( $gallery, $email = '' ) {
 	$version = sunshine_get_gallery_terms_version();
-	SPC()->session->set( 'gallery_terms', $version );
+	SPC()->session->set(
+		'gallery_terms',
+		array(
+			'version' => $version,
+			'user_id' => get_current_user_id(),
+		)
+	);
 
 	$user_id = get_current_user_id();
 	if ( empty( $email ) ) {

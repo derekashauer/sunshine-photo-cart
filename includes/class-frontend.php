@@ -1177,12 +1177,17 @@ class SPC_Frontend {
 				SPC()->notices->add( __( 'Invalid gallery', 'sunshine-photo-cart' ), 'error' );
 				return;
 			}
-			if ( sunshine_is_rate_limited( 'gallery_terms', 20 ) ) {
+			if ( sunshine_is_rate_limited( 'gallery_terms', 200 ) ) {
 				SPC()->notices->add( __( 'Too many attempts, please try again later', 'sunshine-photo-cart' ), 'error' );
 				return;
 			}
 			if ( empty( $_POST['sunshine_gallery_terms'] ) ) {
 				SPC()->notices->add( __( 'Please agree to the terms to view this gallery', 'sunshine-photo-cart' ), 'error' );
+				return;
+			}
+			// The wording changed after the form was shown, so they never saw what they would be agreeing to.
+			if ( ! isset( $_POST['sunshine_gallery_terms_version'] ) || sanitize_text_field( wp_unslash( $_POST['sunshine_gallery_terms_version'] ) ) !== sunshine_get_gallery_terms_version() ) {
+				SPC()->notices->add( __( 'The terms changed since this page loaded. Please read them again.', 'sunshine-photo-cart' ), 'error' );
 				return;
 			}
 			if ( sunshine_gallery_terms_ask_email() && ! sunshine_get_known_visitor_email() ) {
