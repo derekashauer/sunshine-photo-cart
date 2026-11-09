@@ -1173,6 +1173,14 @@ class SPC_Frontend {
 		$terms_required = ! empty( $gallery ) && $gallery->terms_required();
 		$terms_email    = '';
 		if ( $terms_required ) {
+			if ( 'publish' !== $gallery->get_data_value( 'post_status' ) || ! $gallery->can_view() || $gallery->is_expired() || ( 'account' === $gallery->get_access_type() && ! is_user_logged_in() ) ) {
+				SPC()->notices->add( __( 'Invalid gallery', 'sunshine-photo-cart' ), 'error' );
+				return;
+			}
+			if ( sunshine_is_rate_limited( 'gallery_terms', 20 ) ) {
+				SPC()->notices->add( __( 'Too many attempts, please try again later', 'sunshine-photo-cart' ), 'error' );
+				return;
+			}
 			if ( empty( $_POST['sunshine_gallery_terms'] ) ) {
 				SPC()->notices->add( __( 'Please agree to the terms to view this gallery', 'sunshine-photo-cart' ), 'error' );
 				return;
@@ -1251,6 +1259,7 @@ class SPC_Frontend {
 		}
 
 		if ( $terms_required ) {
+			sunshine_add_rate_limit_attempt( 'gallery_terms', HOUR_IN_SECONDS );
 			sunshine_record_gallery_terms_agreement( $gallery, $terms_email );
 			$redirect = true;
 		}

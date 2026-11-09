@@ -552,6 +552,15 @@ class SPC_Gallery extends Sunshine_Data {
 	 */
 	public function requires_terms() {
 		$setting = $this->get_meta_value( 'terms' );
+		if ( empty( $setting ) && $this->get_data_value( 'post_parent' ) ) {
+			// A sub-gallery on Default follows the nearest gallery above it that has its own setting.
+			foreach ( get_post_ancestors( $this->get_id() ) as $ancestor_id ) {
+				$setting = get_post_meta( $ancestor_id, 'terms', true );
+				if ( $setting ) {
+					break;
+				}
+			}
+		}
 		if ( 'required' === $setting ) {
 			return true;
 		}

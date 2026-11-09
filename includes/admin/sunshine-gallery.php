@@ -1977,8 +1977,9 @@ function sunshine_meta_gallery_terms_agreements_display() {
 	global $post;
 	$gallery    = sunshine_get_gallery( $post->ID );
 	$agreements = $gallery->get_terms_agreements();
+	echo '<p class="description">' . esc_html__( 'People who agreed while entering this gallery. Visitors agree once for all galleries, so someone who already agreed on another gallery is not asked again and is listed there instead.', 'sunshine-photo-cart' ) . '</p>';
 	if ( empty( $agreements ) ) {
-		esc_html_e( 'Nobody has agreed to the terms for this gallery yet', 'sunshine-photo-cart' );
+		esc_html_e( 'Nobody has agreed to the terms while entering this gallery yet', 'sunshine-photo-cart' );
 		return;
 	}
 	echo wp_kses_post( sunshine_gallery_terms_agreements_table( $agreements ) );

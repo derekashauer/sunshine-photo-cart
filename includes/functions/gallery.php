@@ -81,7 +81,7 @@ function sunshine_get_galleries( $custom_args = array(), $conditional_method = '
 function sunshine_get_gallery_visibility_meta( $gallery_ids ) {
 	global $wpdb;
 
-	$meta_keys = apply_filters( 'sunshine_gallery_visibility_meta_keys', array( 'status', 'private_users', 'access_type', 'end_date' ) );
+	$meta_keys = apply_filters( 'sunshine_gallery_visibility_meta_keys', array( 'status', 'private_users', 'access_type', 'end_date', 'terms' ) );
 	$meta      = array_fill_keys( array_map( 'intval', $gallery_ids ), array_fill_keys( $meta_keys, '' ) );
 
 	foreach ( array_chunk( array_map( 'intval', $gallery_ids ), 500 ) as $chunk ) {
@@ -722,7 +722,9 @@ function sunshine_get_gallery_terms_text() {
  * @return string
  */
 function sunshine_get_gallery_terms_version() {
-	return substr( md5( trim( sunshine_get_gallery_terms_text() ) ), 0, 12 );
+	// Tags become spaces so a paragraph break and a line break read the same.
+	$words = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( preg_replace( '/<[^>]*>/', ' ', sunshine_get_gallery_terms_text() ) ) ) );
+	return substr( md5( $words ), 0, 12 );
 }
 
 /**
@@ -787,6 +789,11 @@ function sunshine_record_gallery_terms_agreement( $gallery, $email = '' ) {
 		return;
 	}
 
+	// The starter text is rebuilt from translations and the site name, so save it once people start agreeing to it.
+	if ( ! SPC()->get_option( 'gallery_terms_text' ) ) {
+		SPC()->update_option( 'gallery_terms_text', sunshine_get_gallery_terms_text() );
+	}
+
 	// Keep the exact wording of each version, so a record always shows what was agreed to.
 	$versions = get_option( 'sunshine_gallery_terms_versions', array() );
 	if ( ! is_array( $versions ) ) {
@@ -807,7 +814,16 @@ function sunshine_record_gallery_terms_agreement( $gallery, $email = '' ) {
 		'user_id'    => $user_id,
 		'email'      => $email,
 	);
-	$gallery->add_meta_value( 'terms_agreement', $agreement );
+	$already_recorded = false;
+	foreach ( $gallery->get_terms_agreements() as $existing ) {
+		if ( $existing['version'] === $version && $existing['email'] === $email && (int) $existing['user_id'] === $user_id ) {
+			$already_recorded = true;
+			break;
+		}
+	}
+	if ( ! $already_recorded ) {
+		$gallery->add_meta_value( 'terms_agreement', $agreement );
+	}
 	if ( $user_id ) {
 		add_user_meta( $user_id, SPC()->prefix . 'gallery_terms_agreement', $agreement );
 	}
