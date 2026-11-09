@@ -45,7 +45,7 @@ function sunshine_addon_activation( $file, $name, $item_id ) {
 		return;
 	}
 
-	foreach ( $keys as $license_key ) {
+	foreach ( $keys as $i => $license_key ) {
 
 		$license_data = SPC_License::api_request( 'activate_license', $license_key, $item_id );
 
@@ -55,9 +55,10 @@ function sunshine_addon_activation( $file, $name, $item_id ) {
 			return;
 		}
 
-		SPC()->update_option( 'license_' . $filename, $license_key );
-		SPC()->update_option( 'license_expiration_' . $filename, SPC_License::expiration_from( $license_data ) );
-		SPC()->update_option( 'license_status_' . $filename, ( false === $license_data->success && ! empty( $license_data->error ) ) ? $license_data->error : $license_data->license );
+		// Save the first key's answer whatever it is. A later plan key only replaces it when the store accepts it.
+		if ( 0 === $i || 'valid' === $license_data->license ) {
+			SPC_License::save_activation( $filename, $license_key, $license_data );
+		}
 
 		if ( 'valid' === $license_data->license ) {
 			break;

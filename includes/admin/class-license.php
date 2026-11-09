@@ -1,6 +1,13 @@
 <?php
 class SPC_License {
 
+	// The plans, lowest first, with how far up each one is.
+	const PLAN_RANKS = array(
+		'basic' => 1,
+		'plus'  => 2,
+		'pro'   => 3,
+	);
+
 	private $id;
 	private $item_id;
 	private $name;
@@ -87,8 +94,9 @@ class SPC_License {
 
 		$plan = self::get_valid_plan();
 
-		// With a valid plan, lower plans are hidden. Higher plans stay, so there is a place to enter an upgraded key.
-		if ( $this->is_replaced_by_other_plan() && self::plan_rank( $this ) < self::plan_rank( $plan ) ) {
+		// With a valid plan, lower plans are hidden. Higher plans stay, so there is a place to enter an
+		// upgraded key, unless they hold an expired key from before the site moved down a plan.
+		if ( $this->is_replaced_by_other_plan() && ( self::plan_rank( $this ) < self::plan_rank( $plan ) || 'expired' === $this->get_status() ) ) {
 			return $fields;
 		}
 
@@ -199,6 +207,8 @@ class SPC_License {
 				'type'             => 'license',
 				'addon'            => $this->id,
 				'status'           => $status,
+				// Deactivating an add-on on a plan key would take the site off the whole plan.
+				'can_deactivate'   => $this->requires || ! self::is_plan_key( $license_key ),
 				'disabled'         => ( $this->is_valid() ) ? 'valid' : 'invalid',
 				'description'      => $description,
 				'hide_system_info' => true,
@@ -307,24 +317,14 @@ class SPC_License {
 
 		} else {
 
-			if ( false === $license_data->success ) {
-				$result = false;
-				// EDD returns failure-specific codes (e.g. no_activations_left) in `error`, not `license`.
-				$status_code = ! empty( $license_data->error ) ? $license_data->error : $license_data->license;
-			} else {
-				$result = true;
+			$result = self::save_activation( $this->id, $license_key, $license_data );
+			if ( $result ) {
+				$this->license_key = $license_key;
 				if ( ! $hide_notice ) {
 					/* translators: %s is the product name */
 					SPC()->notices->add_admin( $this->id . '_license_activated', sprintf( __( 'License for %s has been activated', 'sunshine-photo-cart' ), $this->name ) );
 				}
-				SPC()->update_option( 'license_' . $this->id, $license_key );
-				$this->license_key = $license_key;
-				SPC()->update_option( 'license_url_' . $this->id, home_url() );
-				$status_code = $license_data->license;
 			}
-
-			SPC()->update_option( 'license_expiration_' . $this->id, self::expiration_from( $license_data ) );
-			SPC()->update_option( 'license_status_' . $this->id, $status_code );
 
 			if ( $result && $this->requires ) {
 				do_action( 'sunshine_plan_activated', $this );
@@ -526,12 +526,33 @@ class SPC_License {
 		if ( empty( $license_key ) ) {
 			return false;
 		}
-		foreach ( array( 'pro', 'plus', 'basic' ) as $plan ) {
+		foreach ( array_keys( self::PLAN_RANKS ) as $plan ) {
 			if ( SPC()->get_option( 'license_sunshine-photo-cart-' . $plan ) === $license_key ) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Save what the store said when a key was activated.
+	 *
+	 * @param string $id           The product's license ID, like advanced-shipping.
+	 * @param string $license_key  The key that was activated.
+	 * @param object $license_data The store's license data.
+	 * @return bool True when the store activated the key.
+	 */
+	public static function save_activation( $id, $license_key, $license_data ) {
+		$activated = false !== $license_data->success;
+		SPC()->update_option( 'license_' . $id, $license_key );
+		if ( $activated ) {
+			// Only on success, so a failed try on a moved site keeps the old address for the "activated on" message.
+			SPC()->update_option( 'license_url_' . $id, home_url() );
+		}
+		SPC()->update_option( 'license_expiration_' . $id, self::expiration_from( $license_data ) );
+		// EDD returns failure-specific codes (e.g. no_activations_left) in `error`, not `license`.
+		SPC()->update_option( 'license_status_' . $id, ( ! $activated && ! empty( $license_data->error ) ) ? $license_data->error : $license_data->license );
+		return $activated;
 	}
 
 	/**
@@ -595,13 +616,14 @@ class SPC_License {
 	 * Sites set up before they had a plan can still hold a separate key for each
 	 * add-on. Those keys expire on their own schedule, so once one stops working the
 	 * plan key replaces it, after the store confirms the plan covers this add-on.
-	 * A key that still works (a lifetime key, say) is left alone.
+	 * An add-on bought on its own whose key still works (a lifetime key, say) is left
+	 * alone. One still on an older plan's key, from before the site upgraded, moves over.
 	 *
 	 * @return bool True when this add-on was switched to the plan key.
 	 */
 	public function switch_to_plan_key() {
 
-		if ( $this->requires || ( $this->is_valid() && ! $this->is_expired() ) ) {
+		if ( $this->requires || ( $this->is_valid() && ! $this->is_expired() && ! self::is_plan_key( $this->get_license_key() ) ) ) {
 			return false;
 		}
 
@@ -690,12 +712,7 @@ class SPC_License {
 	 * @return int
 	 */
 	private static function plan_rank( $license ) {
-		$ranks = array(
-			'basic' => 1,
-			'plus'  => 2,
-			'pro'   => 3,
-		);
-		return isset( $ranks[ $license->requires ] ) ? $ranks[ $license->requires ] : 0;
+		return isset( self::PLAN_RANKS[ $license->requires ] ) ? self::PLAN_RANKS[ $license->requires ] : 0;
 	}
 
 	/**
