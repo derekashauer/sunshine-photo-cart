@@ -246,6 +246,11 @@ Security is important to us. Please report security bugs through the [Patchstack
 = 3.8.2 =
 * Change: Add-ons covered by your Pro, Plus or Basic plan now use the plan's license key, and the Licenses screen lists them under the plan instead of asking for a key for each one. Older sites that still had a separate, expired key for each add-on switch over by themselves. Add-ons bought on their own keep their own key
 * Fix: The license bar no longer says an add-on expired when the real problem is a wrong key or a different site. It names the problem and links to the Licenses screen
+* Fix: Turning off one add-on no longer takes your site off your Pro, Plus or Basic license, which made every add-on show as unlicensed
+* Fix: An expired license shows the date it really expired, not today's date
+* Fix: Turning an add-on back on keeps the key you bought it with, instead of always switching it to your plan's key
+* Fix: Pressing Activate on the Licenses screen only activates that one license, and a server error or firewall page no longer shows as a successful activation
+* Change: With a Basic or Plus license, the Licenses screen still shows the Plus and Pro fields, so you can enter an upgraded key
 
 = 3.8.1 - November 5, 2026 =
 * Security: Add-on updates are refused unless they're signed by Sunshine Photo Cart, so a hacked update server can't push a bad add-on to your site
