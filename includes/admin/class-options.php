@@ -574,13 +574,15 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 					$html .= '<input id="' . esc_attr( $field['id'] ) . '" size="40" type="text" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" value="' . esc_attr( $option_value ) . '" ' . ( ( $field['required'] ) ? 'required' : '' ) . ' ' . ( ( isset( $field['status'] ) && $field['status'] == 'valid' ) ? 'readonly' : '' ) . ' />' . "\n";
 					if ( $option_value && isset( $field['status'] ) && $field['status'] == 'valid' ) {
 						$base_url = admin_url( 'admin.php?page=sunshine&section=license' );
-						$url      = wp_nonce_url( $base_url, 'sunshine_addon_deactivate_' . $field['addon'], 'sunshine_addon_deactivate', );
-						$url      = add_query_arg( 'addon', $field['addon'], $url );
-						$html    .= '<a href="' . esc_url( $url ) . '" class="button">' . esc_html__( 'Deactivate', 'sunshine-photo-cart' ) . '</a>';
-						$url      = wp_nonce_url( add_query_arg( 'check_license', $field['addon'], $base_url ), 'sunshine_check_license_' . $field['addon'], 'sunshine_check_license' );
-						$html    .= ' <a href="' . esc_url( $url ) . '" class="button">' . esc_html__( 'Refresh license', 'sunshine-photo-cart' ) . '</a>';
+						if ( ! isset( $field['can_deactivate'] ) || $field['can_deactivate'] ) {
+							$url   = wp_nonce_url( $base_url, 'sunshine_addon_deactivate_' . $field['addon'], 'sunshine_addon_deactivate', );
+							$url   = add_query_arg( 'addon', $field['addon'], $url );
+							$html .= '<a href="' . esc_url( $url ) . '" class="button">' . esc_html__( 'Deactivate', 'sunshine-photo-cart' ) . '</a> ';
+						}
+						$url   = wp_nonce_url( add_query_arg( 'check_license', $field['addon'], $base_url ), 'sunshine_check_license_' . $field['addon'], 'sunshine_check_license' );
+						$html .= '<a href="' . esc_url( $url ) . '" class="button">' . esc_html__( 'Refresh license', 'sunshine-photo-cart' ) . '</a>';
 					} else {
-						$html .= '<button class="button">' . esc_html__( 'Activate', 'sunshine-photo-cart' ) . '</button>';
+						$html .= '<button class="button" name="sunshine_license_activate" value="' . esc_attr( $field['addon'] ) . '">' . esc_html__( 'Activate', 'sunshine-photo-cart' ) . '</button>';
 					}
 					$this->show_submit = true;
 					break;
