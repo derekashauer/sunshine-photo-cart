@@ -469,6 +469,8 @@ input:checked + .sunshine-switch-slider:before {
 #sunshine-admin-meta-box-tab-link-multi-image:before { content: "\f123"; }
 #sunshine-admin-meta-box-tab-link-package:before { content: "\f13d"; }
 #sunshine-admin-meta-box-tab-link-analytics:before { content: "\f148"; }
+#sunshine-admin-meta-box-tab-link-crop-wall-size:before { content: "\f14e"; }
+#sunshine-admin-meta-box-tab-link-quantity-discounts:before { content: "\f14f"; }
 
 .sunshine-admin-meta-box-tab-links a:last-of-type { border: none; }
 .sunshine-admin-meta-box-tab-links a.active { font-weight: bold; color: var(--accent) !important; background: #FFF; border-right: 1px solid #FFF; margin-right: -1px; }

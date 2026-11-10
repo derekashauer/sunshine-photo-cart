@@ -94,6 +94,8 @@
 .sunshine--icon--add-shopping-cart:before,
 .sunshine--icon--add-shopping-cart-2:before,
 .sunshine--icon--cloud:before,
+.sunshine--icon--ruler:before,
+.sunshine--icon--discount:before,
 .icons8,
 [data-icons8]:before {
   display: inline-block;
@@ -329,4 +331,10 @@
 }
 .sunshine--icon--cloud:before {
   content: "\f14d";
+}
+.sunshine--icon--ruler:before {
+  content: "\f14e";
+}
+.sunshine--icon--discount:before {
+  content: "\f14f";
 }
