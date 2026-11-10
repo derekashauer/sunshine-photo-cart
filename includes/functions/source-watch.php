@@ -694,7 +694,11 @@ function sunshine_source_watch_import_queue( &$batch ) {
 
 		$image_id = sunshine_source_watch_import_item( $item );
 
-		if ( is_wp_error( $image_id ) || empty( $image_id ) ) {
+		if ( is_wp_error( $image_id ) && 'sunshine_print_crop' === $image_id->get_error_code() ) {
+			// Never a gallery photo, so trying again later can't help.
+			unset( $queue[ $queue_key ] );
+			$handled[ $gallery_id ][] = $item['key'];
+		} elseif ( is_wp_error( $image_id ) || empty( $image_id ) ) {
 			$message = is_wp_error( $image_id ) ? $image_id->get_error_message() : 'unknown error';
 			SPC()->log( 'Source watch: could not add ' . $item['file'] . ' to gallery ' . $gallery_id . ': ' . $message );
 		} else {
@@ -811,7 +815,7 @@ function sunshine_source_watch_import_item( $item ) {
 		$names  = array();
 		$result = sunshine_gallery_import_file( $item['file'], $gallery_id, $item['watermark'], $names );
 		if ( empty( $result['success'] ) ) {
-			return new WP_Error( 'import_failed', isset( $result['error'] ) ? $result['error'] : '' );
+			return new WP_Error( ! empty( $result['code'] ) ? $result['code'] : 'import_failed', isset( $result['error'] ) ? $result['error'] : '' );
 		}
 		$image_id = (int) $result['image_id'];
 	}

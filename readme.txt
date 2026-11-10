@@ -244,6 +244,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.8.2 =
+* New: A cropped copy made in Lightroom for a customer's print order is never added to a gallery, even if it lands in a folder Sunshine checks for new photos or is uploaded by hand
 * Change: Add-ons covered by your Pro, Plus or Basic plan now use the plan's license key, and the Licenses screen lists them under the plan instead of asking for a key for each one. Older sites that still had a separate, expired key for each add-on switch over by themselves. Add-ons bought on their own keep their own key
 * Fix: The license bar no longer says an add-on expired when the real problem is a wrong key or a different site. It names the problem and links to the Licenses screen
 * Fix: Turning off one add-on no longer takes your site off your Pro, Plus or Basic license, which made every add-on show as unlicensed
