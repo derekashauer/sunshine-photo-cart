@@ -251,6 +251,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: Turning an add-on back on keeps the key you bought it with, instead of always switching it to your plan's key
 * Fix: Pressing Activate on the Licenses screen only activates that one license, and a server error or firewall page no longer shows as a successful activation
 * Fix: On sites with thousands of galleries, the Media Library could show "No media files found" on hosts that limit how long a database query can be, such as WP Engine
+* Fix: Images added to a page, post or shop product no longer get extra copies at Sunshine's gallery sizes, which nothing shows and which used up server space. Pick one as a gallery's featured image and Sunshine makes its sizes then
 * Change: With a Basic or Plus license, the Licenses screen still shows the Plus and Pro fields, so you can enter an upgraded key
 
 = 3.8.1 - November 5, 2026 =
