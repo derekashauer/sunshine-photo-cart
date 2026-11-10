@@ -53,16 +53,30 @@ function sunshine_file_xmp_packets( $file_path ) {
 
 	if ( "\xFF\xD8" === fread( $handle, 2 ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
 		while ( ! feof( $handle ) ) {
-			$head = fread( $handle, 4 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
-			if ( strlen( $head ) < 4 || "\xFF" !== $head[0] ) {
+			if ( "\xFF" !== fread( $handle, 1 ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
 				break;
 			}
-			$marker = ord( $head[1] );
+			// Any number of extra 0xFF fill bytes may come before a section's marker.
+			do {
+				$byte = fread( $handle, 1 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+			} while ( "\xFF" === $byte );
+			if ( 1 !== strlen( $byte ) ) {
+				break;
+			}
+			$marker = ord( $byte );
 			// The picture itself starts here; nothing after it is read.
 			if ( 0xDA === $marker || 0xD9 === $marker ) {
 				break;
 			}
-			$length = unpack( 'n', substr( $head, 2, 2 ) )[1] - 2;
+			// These markers have no length after them.
+			if ( 0x01 === $marker || ( $marker >= 0xD0 && $marker <= 0xD7 ) ) {
+				continue;
+			}
+			$size = fread( $handle, 2 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+			if ( 2 !== strlen( $size ) ) {
+				break;
+			}
+			$length = unpack( 'n', $size )[1] - 2;
 			if ( $length < 0 ) {
 				break;
 			}
