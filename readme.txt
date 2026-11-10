@@ -244,6 +244,8 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.8.2 =
+* New: An Order Shipped email tells customers their order is on the way, in place of the general status update. Edit its subject and message under Email, and use [carrier], [tracking_number] and [tracking_url] to include the tracking a print lab sends back
+* Change: Print lab add-ons can say what went wrong at checkout when no shipping method can be offered, such as the lab being unreachable, instead of always asking the customer to check their address
 * Change: Add-ons covered by your Pro, Plus or Basic plan now use the plan's license key, and the Licenses screen lists them under the plan instead of asking for a key for each one. Older sites that still had a separate, expired key for each add-on switch over by themselves. Add-ons bought on their own keep their own key
 * Fix: The license bar no longer says an add-on expired when the real problem is a wrong key or a different site. It names the problem and links to the Licenses screen
 * Fix: Turning off one add-on no longer takes your site off your Pro, Plus or Basic license, which made every add-on show as unlicensed

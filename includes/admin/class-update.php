@@ -15,7 +15,7 @@ class SPC_Update {
 			$this->need_update = true;
 		}
 
-		$this->update_actions = array( '3.0', '3.0.17', '3.0.18', '3.5.6', '3.6.0', '3.6.2', '3.6.3', '3.6.10', '3.6.10.1', '3.6.12' );
+		$this->update_actions = array( '3.0', '3.0.17', '3.0.18', '3.5.6', '3.6.0', '3.6.2', '3.6.3', '3.6.10', '3.6.10.1', '3.6.12', '3.8.2' );
 
 		add_action( 'admin_init', array( $this, 'update_check' ) );
 		add_action( 'admin_menu', array( $this, 'menu' ) );
@@ -43,6 +43,7 @@ class SPC_Update {
 		add_action( 'sunshine_update_3.6.10', array( $this, 'update_3_6_10' ) );
 		add_action( 'sunshine_update_3.6.10.1', array( $this, 'update_3_6_10_1' ) );
 		add_action( 'sunshine_update_3.6.12', array( $this, 'update_3_6_12' ) );
+		add_action( 'sunshine_update_3.8.2', array( $this, 'update_3_8_2' ) );
 
 		add_action( 'activated_plugin', array( $this, 'check_plugin_activation' ), 10, 2 );
 		add_action( 'admin_notices', array( $this, 'show_deactivation_notice' ), 10, 2 );
@@ -213,6 +214,17 @@ class SPC_Update {
 		global $wpdb;
 		// Delete all usermeta with key "sunshine_customer_notes"
 		$wpdb->query( "DELETE FROM {$wpdb->prefix}usermeta WHERE meta_key = 'sunshine_customer_notes'" );
+	}
+
+	/**
+	 * Order Shipped is new. It starts the way the store has its Order Status Update email, which
+	 * used to tell customers their order shipped, so a store that turned that off isn't
+	 * suddenly emailing customers.
+	 */
+	function update_3_8_2() {
+		if ( false === get_option( 'sunshine_email_order-shipped_active' ) ) {
+			update_option( 'sunshine_email_order-shipped_active', SPC()->get_option( 'email_order-status_active' ) ? 1 : '', false );
+		}
 	}
 
 	function update_3_6_12() {

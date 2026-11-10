@@ -29,28 +29,46 @@ class SPC_Email_Order_Status extends SPC_Email {
 
 	public function trigger( $order ) {
 
+		// The Order Shipped email tells the customer about this change instead.
+		if ( SPC_Email_Order_Shipped::applies_to( $order ) ) {
+			return;
+		}
+
+		if ( $this->prepare( $order ) ) {
+			$this->send();
+		}
+
+	}
+
+	/**
+	 * Set up the email for an order: its template, the customer as recipient, and the tags.
+	 * Order Shipped uses this too.
+	 *
+	 * @param SPC_Order $order The order.
+	 * @return bool False when the order has no email address to send to.
+	 */
+	protected function prepare( $order ) {
+
 		$customer_email_address = $order->get_email();
-		if ( ! empty( $customer_email_address ) ) {
+		if ( empty( $customer_email_address ) ) {
+			return false;
+		}
 
-			$this->set_template( $this->id );
-			$this->set_subject( $this->get_subject() );
+		$this->set_template( $this->id );
+		$this->set_subject( $this->get_subject() );
+		$this->set_recipients( $customer_email_address );
+		$this->add_args( array( 'order' => $order ) );
 
-			$this->set_recipients( $customer_email_address );
-
-			$args = array(
-				'order' => $order,
-			);
-			$this->add_args( $args );
-
-			$galleries     = $order->get_galleries();
-			$gallery_names = array();
-			if ( ! empty( $galleries ) ) {
-				foreach ( $galleries as $gallery_id ) {
-					$gallery_names[] = get_the_title( $gallery_id );
-				}
+		$gallery_names = array();
+		$galleries     = $order->get_galleries();
+		if ( ! empty( $galleries ) ) {
+			foreach ( $galleries as $gallery_id ) {
+				$gallery_names[] = get_the_title( $gallery_id );
 			}
+		}
 
-			$search_replace = array(
+		$this->add_search_replace(
+			array(
 				'order_id'      => $order->get_id(),
 				'order_number'  => $order->get_order_number(),
 				'order_name'    => $order->get_name(),
@@ -58,13 +76,10 @@ class SPC_Email_Order_Status extends SPC_Email {
 				'last_name'     => $order->get_customer_last_name(),
 				'status'        => $order->get_status_name(),
 				'gallery_names' => join( ', ', $gallery_names ),
-			);
-			$this->add_search_replace( $search_replace );
+			)
+		);
 
-			// Send email
-			$result = $this->send();
-
-		}
+		return true;
 
 	}
 
