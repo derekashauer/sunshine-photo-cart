@@ -157,6 +157,69 @@ function sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $file_pa
 }
 
 /**
+ * Sizes only Sunshine shows. Add-ons that register their own sizes for gallery photos add them here.
+ *
+ * @return array Image size names.
+ */
+function sunshine_gallery_only_image_sizes() {
+	return apply_filters( 'sunshine_gallery_only_image_sizes', array( 'sunshine-thumbnail', 'sunshine-large' ) );
+}
+
+/**
+ * Skip Sunshine's sizes for images that belong to something else, such as a shop product, page or
+ * post. WordPress makes every registered size for every upload, so each of those images would
+ * otherwise get extra copies that nothing ever shows. Unattached images keep every size, since
+ * they can still be picked for a gallery later.
+ *
+ * @param array $sizes         Sizes WordPress is about to make.
+ * @param array $image_meta    The image's metadata.
+ * @param int   $attachment_id The attachment ID.
+ * @return array The sizes to make.
+ */
+add_filter( 'intermediate_image_sizes_advanced', 'sunshine_skip_gallery_sizes_for_other_images', 10, 3 );
+function sunshine_skip_gallery_sizes_for_other_images( $sizes, $image_meta = array(), $attachment_id = 0 ) {
+	$parent_id = $attachment_id ? wp_get_post_parent_id( $attachment_id ) : 0;
+	if ( ! $parent_id || 0 === strpos( (string) get_post_type( $parent_id ), 'sunshine-' ) ) {
+		return $sizes;
+	}
+
+	foreach ( sunshine_gallery_only_image_sizes() as $size_name ) {
+		unset( $sizes[ $size_name ] );
+	}
+
+	return $sizes;
+}
+
+/**
+ * A gallery's featured image can be any image in the Media Library, including one that skipped
+ * Sunshine's sizes above. Make them when it is picked, so it shows like the gallery's own photos.
+ *
+ * @param int    $meta_id    Meta ID.
+ * @param int    $post_id    Post ID.
+ * @param string $meta_key   Meta key.
+ * @param mixed  $meta_value Meta value.
+ */
+add_action( 'added_post_meta', 'sunshine_featured_image_gallery_sizes', 10, 4 );
+add_action( 'updated_post_meta', 'sunshine_featured_image_gallery_sizes', 10, 4 );
+function sunshine_featured_image_gallery_sizes( $meta_id, $post_id, $meta_key, $meta_value ) {
+	if ( '_thumbnail_id' !== $meta_key || 'sunshine-gallery' !== get_post_type( $post_id ) ) {
+		return;
+	}
+
+	$attachment_id = absint( $meta_value );
+	$metadata      = wp_get_attachment_metadata( $attachment_id );
+	if ( empty( $metadata ) || ! is_array( $metadata ) ) {
+		return;
+	}
+
+	// Sizes the image already has are left alone, so this does nothing for the gallery's own photos.
+	$updated = sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, get_attached_file( $attachment_id ) );
+	if ( $updated !== $metadata ) {
+		wp_update_attachment_metadata( $attachment_id, $updated );
+	}
+}
+
+/**
  * Give each resized copy of a photo its own random file name when secure file names are on.
  *
  * WordPress names resized copies after the original plus "-WxH". With secure file names the
