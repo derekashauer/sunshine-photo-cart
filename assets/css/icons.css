@@ -2,10 +2,10 @@
   font-family: "SunshineIcons";
   src: url("../fonts/SunshineIcons.eot");
   src: url("../fonts/SunshineIcons.eot?#iefix") format("embedded-opentype"),
-  url("../fonts/SunshineIcons.woff2?v=2") format("woff2"),
-  url("../fonts/SunshineIcons.woff?v=2") format("woff"),
-  url("../fonts/SunshineIcons.ttf?v=2") format("truetype"),
-  url("../fonts/SunshineIcons.svg?v=2#font") format("svg");
+  url("../fonts/SunshineIcons.woff2?v=3") format("woff2"),
+  url("../fonts/SunshineIcons.woff?v=3") format("woff"),
+  url("../fonts/SunshineIcons.ttf?v=3") format("truetype"),
+  url("../fonts/SunshineIcons.svg?v=3#font") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -13,7 +13,7 @@
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   @font-face {
 	font-family: "SunshineIcons";
-	src: url("../fonts/SunshineIcons.svg?v=2#SunshineIcons") format("svg");
+	src: url("../fonts/SunshineIcons.svg?v=3#SunshineIcons") format("svg");
   }
 }
 
@@ -95,6 +95,7 @@
 .sunshine--icon--add-shopping-cart-2:before,
 .sunshine--icon--cloud:before,
 .sunshine--icon--sparkling:before,
+.sunshine--icon--webhook:before,
 .icons8,
 [data-icons8]:before {
   display: inline-block;
@@ -333,4 +334,7 @@
 }
 .sunshine--icon--sparkling:before {
   content: "\f14e";
+}
+.sunshine--icon--webhook:before {
+  content: "\f14f";
 }

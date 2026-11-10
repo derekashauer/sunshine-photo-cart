@@ -290,6 +290,7 @@ body.sunshine #wpbody .wp-list-table tbody span.sunshine--id { color: var(--medi
 #sunshine-settings-menu li#sunshine-settings-menu-data a:before { content: "\f148"; }
 #sunshine-settings-menu li#sunshine-settings-menu-cloud_storage a:before { content: "\f14d"; }
 #sunshine-settings-menu li#sunshine-settings-menu-ai a:before { content: "\f14e"; }
+#sunshine-settings-menu li#sunshine-settings-menu-webhooks a:before { content: "\f14f"; }
 #sunshine-settings-menu li#sunshine-settings-menu-privacy a:before { content: "\f105"; }
 
 /*
