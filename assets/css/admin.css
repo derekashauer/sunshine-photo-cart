@@ -1047,3 +1047,18 @@ a.sunshine-install--continue { text-decoration: none; border: 1px solid #CCC; bo
 .sunshine-settings-promo li:before { position: absolute; left: 0; top: 0; content: "\f117"; font-family: "SunshineIcons"; color: var(--accent); }
 .sunshine-settings-promo-links { margin-top: 15px !important; }
 .sunshine-settings-promo-links .button { margin-right: 10px; }
+
+/* Segmented control: a row of choices on a light track, the chosen one a white pill.
+   Put .sunshine-segmented on the wrapper and .is-active (or aria-pressed="true") on the
+   chosen button. Works on plain <button>s and on WordPress .button ones. */
+.sunshine-segmented { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 8px; background: var(--light); }
+.sunshine-segmented button,
+.wp-core-ui .sunshine-segmented .button { min-height: 0; margin: 0; padding: 5px 12px; border: 0; border-radius: 6px; background: transparent; box-shadow: none; color: var(--medium); font-size: 12px; font-weight: 500; line-height: 1.5; cursor: pointer; transition: color .15s ease, background .15s ease; }
+.sunshine-segmented button:hover,
+.wp-core-ui .sunshine-segmented .button:hover { background: rgba(255, 255, 255, .6); color: var(--strong); }
+.sunshine-segmented button:focus-visible,
+.wp-core-ui .sunshine-segmented .button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; box-shadow: none; }
+.sunshine-segmented button.is-active,
+.sunshine-segmented button[aria-pressed="true"],
+.wp-core-ui .sunshine-segmented .button.is-active,
+.wp-core-ui .sunshine-segmented .button[aria-pressed="true"] { background: #fff; box-shadow: 0 1px 2px rgba(35, 45, 57, .1); color: var(--accent); font-weight: 600; }
