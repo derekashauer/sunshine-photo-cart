@@ -244,6 +244,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.8.2 =
+* New: Gallery terms. Visitors can be asked to agree to your terms before they see a gallery's photos, such as not saving them or removing watermarks (Settings > Galleries > Gallery Terms, and a Terms option on each gallery). Sunshine keeps a record of who agreed, when, and to which wording, on the gallery and the customer's screen. Guests also give their email when they agree, unless you turn that off. This discourages copying, but it can't stop a screenshot
 * New: A cropped copy made in Lightroom for a customer's print order is never added to a gallery, even if it lands in a folder Sunshine checks for new photos or is uploaded by hand
 * Fix: On sites where WP-CLI runs scheduled tasks, such as SiteGround with its Security plugin, a folder check no longer stops the next one from running for 10 minutes
 * Change: Add-ons covered by your Pro, Plus or Basic plan now use the plan's license key, and the Licenses screen lists them under the plan instead of asking for a key for each one. Older sites that still had a separate, expired key for each add-on switch over by themselves. Add-ons bought on their own keep their own key

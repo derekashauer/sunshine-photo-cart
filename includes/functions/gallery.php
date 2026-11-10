@@ -81,7 +81,7 @@ function sunshine_get_galleries( $custom_args = array(), $conditional_method = '
 function sunshine_get_gallery_visibility_meta( $gallery_ids ) {
 	global $wpdb;
 
-	$meta_keys = apply_filters( 'sunshine_gallery_visibility_meta_keys', array( 'status', 'private_users', 'access_type', 'end_date' ) );
+	$meta_keys = apply_filters( 'sunshine_gallery_visibility_meta_keys', array( 'status', 'private_users', 'access_type', 'end_date', 'terms' ) );
 	$meta      = array_fill_keys( array_map( 'intval', $gallery_ids ), array_fill_keys( $meta_keys, '' ) );
 
 	foreach ( array_chunk( array_map( 'intval', $gallery_ids ), 500 ) as $chunk ) {
@@ -687,4 +687,174 @@ function sunshine_check_galleries_ready() {
 			delete_post_meta( $gallery_id, SUNSHINE_GALLERY_LAST_IMAGE_META );
 		}
 	}
+}
+
+/**
+ * The starter text for gallery terms, used until the photographer writes their own.
+ *
+ * @return string
+ */
+function sunshine_get_gallery_terms_default_text() {
+	$business = get_bloginfo( 'name' );
+	/* translators: %s is the photographer's business (site) name */
+	$text  = '<p>' . sprintf( __( 'The photos in this gallery are copyrighted by %s and are shown as proofs for viewing and ordering only.', 'sunshine-photo-cart' ), $business ) . '</p>';
+	$text .= '<p>' . __( 'You may not download, screenshot, copy, share or print these proofs, or remove, crop out or edit away any watermark, including with AI tools. Doing so is a copyright violation and may break the law.', 'sunshine-photo-cart' ) . '</p>';
+	$text .= '<p>' . __( 'Clean, full-quality versions are available when you order them.', 'sunshine-photo-cart' ) . '</p>';
+	return $text;
+}
+
+/**
+ * The gallery terms visitors agree to.
+ *
+ * @return string
+ */
+function sunshine_get_gallery_terms_text() {
+	$text = SPC()->get_option( 'gallery_terms_text' );
+	if ( empty( $text ) ) {
+		$text = sunshine_get_gallery_terms_default_text();
+	}
+	return $text;
+}
+
+/**
+ * A short ID for the current wording of the terms. Changing the wording changes it, so everyone is asked again.
+ *
+ * @return string
+ */
+function sunshine_get_gallery_terms_version() {
+	// Tags become spaces so a paragraph break and a line break read the same.
+	$words = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( preg_replace( '/<[^>]*>/', ' ', sunshine_get_gallery_terms_text() ) ) ) );
+	return substr( md5( $words ), 0, 12 );
+}
+
+/**
+ * Whether guests are asked for an email address when they agree to the terms.
+ *
+ * @return bool
+ */
+function sunshine_gallery_terms_ask_email() {
+	return ! SPC()->get_option( 'gallery_terms_no_email' );
+}
+
+/**
+ * The email address Sunshine already knows for the current visitor, if any.
+ *
+ * @return string
+ */
+function sunshine_get_known_visitor_email() {
+	if ( is_user_logged_in() ) {
+		return wp_get_current_user()->user_email;
+	}
+	$email = SPC()->session->get( 'email' );
+	return is_email( $email ) ? $email : '';
+}
+
+/**
+ * Has the current visitor agreed to the current version of the gallery terms.
+ *
+ * @return bool
+ */
+function sunshine_has_agreed_to_gallery_terms() {
+	$version = sunshine_get_gallery_terms_version();
+	// The session copy only counts for the same person, so another customer logging in on this browser is asked again.
+	$session_agreement = SPC()->session->get( 'gallery_terms' );
+	if ( is_array( $session_agreement ) && isset( $session_agreement['version'], $session_agreement['user_id'] ) && $session_agreement['version'] === $version && get_current_user_id() === (int) $session_agreement['user_id'] ) {
+		return true;
+	}
+	if ( is_user_logged_in() ) {
+		$agreements = get_user_meta( get_current_user_id(), SPC()->prefix . 'gallery_terms_agreement', false );
+		foreach ( $agreements as $agreement ) {
+			if ( is_array( $agreement ) && isset( $agreement['version'] ) && $agreement['version'] === $version ) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+/**
+ * Remember that the current visitor agreed to the gallery terms, and keep a record when we know who they are.
+ *
+ * @param SPC_Gallery $gallery The gallery they were entering.
+ * @param string      $email   The email they gave, if any.
+ */
+function sunshine_record_gallery_terms_agreement( $gallery, $email = '' ) {
+	$version = sunshine_get_gallery_terms_version();
+	SPC()->session->set(
+		'gallery_terms',
+		array(
+			'version' => $version,
+			'user_id' => get_current_user_id(),
+		)
+	);
+
+	$user_id = get_current_user_id();
+	if ( empty( $email ) ) {
+		$email = sunshine_get_known_visitor_email();
+	}
+	if ( ! $user_id && empty( $email ) ) {
+		// No way to tell who this was, so a record would prove nothing.
+		return;
+	}
+
+	// The starter text is rebuilt from translations and the site name, so save it once people start agreeing to it.
+	if ( ! SPC()->get_option( 'gallery_terms_text' ) ) {
+		SPC()->update_option( 'gallery_terms_text', sunshine_get_gallery_terms_text() );
+	}
+
+	// Keep the exact wording of each version, so a record always shows what was agreed to.
+	$versions = get_option( 'sunshine_gallery_terms_versions', array() );
+	if ( ! is_array( $versions ) ) {
+		$versions = array();
+	}
+	if ( ! isset( $versions[ $version ] ) ) {
+		$versions[ $version ] = array(
+			'text' => sunshine_get_gallery_terms_text(),
+			'time' => time(),
+		);
+		update_option( 'sunshine_gallery_terms_versions', $versions, false );
+	}
+
+	$agreement = array(
+		'time'       => time(),
+		'version'    => $version,
+		'gallery_id' => $gallery->get_id(),
+		'user_id'    => $user_id,
+		'email'      => $email,
+	);
+	$already_recorded = false;
+	foreach ( $gallery->get_terms_agreements() as $existing ) {
+		if ( $existing['version'] === $version && $existing['email'] === $email && (int) $existing['user_id'] === $user_id ) {
+			$already_recorded = true;
+			break;
+		}
+	}
+	if ( ! $already_recorded ) {
+		$gallery->add_meta_value( 'terms_agreement', $agreement );
+	}
+	if ( $user_id ) {
+		add_user_meta( $user_id, SPC()->prefix . 'gallery_terms_agreement', $agreement );
+	}
+	SPC()->log( 'Gallery terms agreed for ' . $gallery->get_name() . ( $email ? ': ' . $email : '' ) );
+	do_action( 'sunshine_gallery_terms_agreed', $agreement, $gallery );
+}
+
+/**
+ * What the current visitor still has to fill in before entering a gallery.
+ *
+ * @param SPC_Gallery $gallery    The gallery.
+ * @param bool        $skip_email Skip the email gate (a favorited image was already reached once).
+ * @return array password, email and terms, each true when needed. All false means nothing is needed.
+ */
+function sunshine_get_gallery_access_fields( $gallery, $skip_email = false ) {
+	$terms = $gallery->terms_required();
+	$email = ! $skip_email && $gallery->email_required();
+	if ( $terms && sunshine_gallery_terms_ask_email() && ! sunshine_get_known_visitor_email() ) {
+		$email = true;
+	}
+	return array(
+		'password' => $gallery->password_required(),
+		'email'    => $email,
+		'terms'    => $terms,
+	);
 }

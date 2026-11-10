@@ -35,6 +35,20 @@
 	}
 	?>
 
+	<?php
+	if ( ! empty( $terms ) ) {
+		do_action( 'sunshine_gallery_terms_before', $gallery );
+		?>
+		<div class="sunshine--form--field sunshine--form--field-terms">
+			<div class="sunshine--gallery--terms"><?php echo wp_kses_post( wpautop( sunshine_get_gallery_terms_text() ) ); ?></div>
+			<input type="hidden" name="sunshine_gallery_terms_version" value="<?php echo esc_attr( sunshine_get_gallery_terms_version() ); ?>" />
+			<label><input id="sunshine_gallery_terms" type="checkbox" name="sunshine_gallery_terms" value="yes" required="required" /> <?php esc_html_e( 'I have read and agree to these terms', 'sunshine-photo-cart' ); ?></label>
+		</div>
+		<?php
+		do_action( 'sunshine_gallery_terms_after', $gallery );
+	}
+	?>
+
 	<div class="sunshine--form--field sunshine--form--field-submit">
 		<button type="submit" class="sunshine--button"><?php esc_html_e( 'Submit', 'sunshine-photo-cart' ); ?></button>
 	</div>

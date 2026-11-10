@@ -1170,6 +1170,36 @@ class SPC_Frontend {
 		$gallery_id = intval( $_POST['sunshine_gallery_id'] );
 		$gallery    = sunshine_get_gallery( $gallery_id );
 
+		// Terms, and the email that goes with them, are checked before anything is saved, so a right password alone opens nothing.
+		$terms_required = ! empty( $gallery ) && $gallery->terms_required();
+		$terms_email    = '';
+		if ( $terms_required ) {
+			if ( 'publish' !== $gallery->get_data_value( 'post_status' ) || ! $gallery->can_view() || $gallery->is_expired() || ( 'account' === $gallery->get_access_type() && ! is_user_logged_in() ) ) {
+				SPC()->notices->add( __( 'Invalid gallery', 'sunshine-photo-cart' ), 'error' );
+				return;
+			}
+			if ( sunshine_is_rate_limited( 'gallery_terms', 200 ) ) {
+				SPC()->notices->add( __( 'Too many attempts, please try again later', 'sunshine-photo-cart' ), 'error' );
+				return;
+			}
+			if ( empty( $_POST['sunshine_gallery_terms'] ) ) {
+				SPC()->notices->add( __( 'Please agree to the terms to view this gallery', 'sunshine-photo-cart' ), 'error' );
+				return;
+			}
+			// The wording changed after the form was shown, so they never saw what they would be agreeing to.
+			if ( ! isset( $_POST['sunshine_gallery_terms_version'] ) || sanitize_text_field( wp_unslash( $_POST['sunshine_gallery_terms_version'] ) ) !== sunshine_get_gallery_terms_version() ) {
+				SPC()->notices->add( __( 'The terms changed since this page loaded. Please read them again.', 'sunshine-photo-cart' ), 'error' );
+				return;
+			}
+			if ( sunshine_gallery_terms_ask_email() && ! sunshine_get_known_visitor_email() ) {
+				$terms_email = isset( $_POST['sunshine_gallery_email'] ) ? sanitize_email( wp_unslash( $_POST['sunshine_gallery_email'] ) ) : '';
+				if ( ! is_email( $terms_email ) ) {
+					SPC()->notices->add( __( 'Not a valid email address', 'sunshine-photo-cart' ), 'error' );
+					return;
+				}
+			}
+		}
+
 		if ( isset( $_POST['sunshine_gallery_password'] ) ) {
 
 			// Check password against gallery
@@ -1232,6 +1262,12 @@ class SPC_Frontend {
 				SPC()->notices->add( __( 'Not a valid email address', 'sunshine-photo-cart' ), 'error' );
 				SPC()->log( 'Invalid email address provided for ' . $gallery->get_name() . ': ' . $email );
 			}
+		}
+
+		if ( $terms_required ) {
+			sunshine_add_rate_limit_attempt( 'gallery_terms', HOUR_IN_SECONDS );
+			sunshine_record_gallery_terms_agreement( $gallery, $terms_email );
+			$redirect = true;
 		}
 
 		if ( $redirect ) {

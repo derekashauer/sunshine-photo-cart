@@ -202,6 +202,8 @@
 
 /* Access Form */
 #sunshine--gallery--access { max-width: 500px; margin: 0 auto; }
+#sunshine--gallery--access .sunshine--gallery--terms { max-height: 240px; overflow-y: auto; padding: 10px 15px; margin-bottom: 10px; border: 1px solid rgba(0,0,0,.15); font-size: 14px; }
+#sunshine--gallery--access .sunshine--gallery--terms p { margin: 0 0 10px 0; }
 
 /* Action Menu */
 #sunshine .sunshine--action-menu { background: #FFF; }

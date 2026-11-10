@@ -128,6 +128,14 @@ function sunshine_customer_tab_profile( $customer ) {
 	<?php } ?>
 
 	<?php
+	$terms_agreements = $customer->get_meta( 'gallery_terms_agreement', false );
+	if ( $terms_agreements ) {
+		?>
+		<h3><?php esc_html_e( 'Gallery Terms Agreements', 'sunshine-photo-cart' ); ?></h3>
+		<?php echo wp_kses_post( sunshine_gallery_terms_agreements_table( $terms_agreements, true ) ); ?>
+	<?php } ?>
+
+	<?php
 }
 
 add_action( 'sunshine_customer_tab_orders', 'sunshine_customer_tab_orders' );
