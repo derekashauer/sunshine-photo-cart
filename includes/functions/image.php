@@ -166,10 +166,38 @@ function sunshine_gallery_only_image_sizes() {
 }
 
 /**
- * Skip Sunshine's sizes for images that belong to something else, such as a shop product, page or
- * post. WordPress makes every registered size for every upload, so each of those images would
- * otherwise get extra copies that nothing ever shows. Unattached images keep every size, since
- * they can still be picked for a gallery later.
+ * Whether an image belongs to something other than Sunshine, such as a shop product, page or post.
+ * Unattached images don't: they can still be picked for a gallery or a Sunshine setting later.
+ *
+ * @param int $attachment_id The attachment ID.
+ * @return bool
+ */
+function sunshine_image_belongs_elsewhere( $attachment_id ) {
+	$parent_id = $attachment_id ? wp_get_post_parent_id( $attachment_id ) : 0;
+	return $parent_id && 0 !== strpos( (string) get_post_type( $parent_id ), 'sunshine-' );
+}
+
+/**
+ * Whether an image is the featured image of any gallery.
+ *
+ * @param int $attachment_id The attachment ID.
+ * @return bool
+ */
+function sunshine_is_gallery_featured_image( $attachment_id ) {
+	global $wpdb;
+	return (bool) $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT 1 FROM {$wpdb->postmeta} pm JOIN {$wpdb->posts} p ON p.ID = pm.post_id WHERE pm.meta_key = '_thumbnail_id' AND pm.meta_value = %s AND p.post_type = 'sunshine-gallery' LIMIT 1",
+			(string) $attachment_id
+		)
+	);
+}
+
+/**
+ * Skip Sunshine's sizes for images that belong to something else. WordPress makes every
+ * registered size for every image, so each of those would otherwise get extra copies that
+ * nothing ever shows. Runs both when an image is uploaded and when WordPress makes sizes it
+ * missed, such as after an upload that timed out.
  *
  * @param array $sizes         Sizes WordPress is about to make.
  * @param array $image_meta    The image's metadata.
@@ -177,13 +205,15 @@ function sunshine_gallery_only_image_sizes() {
  * @return array The sizes to make.
  */
 add_filter( 'intermediate_image_sizes_advanced', 'sunshine_skip_gallery_sizes_for_other_images', 10, 3 );
+add_filter( 'wp_get_missing_image_subsizes', 'sunshine_skip_gallery_sizes_for_other_images', 10, 3 );
 function sunshine_skip_gallery_sizes_for_other_images( $sizes, $image_meta = array(), $attachment_id = 0 ) {
-	$parent_id = $attachment_id ? wp_get_post_parent_id( $attachment_id ) : 0;
-	if ( ! $parent_id || 0 === strpos( (string) get_post_type( $parent_id ), 'sunshine-' ) ) {
+	if ( ! sunshine_image_belongs_elsewhere( $attachment_id ) || sunshine_is_gallery_featured_image( $attachment_id ) ) {
 		return $sizes;
 	}
 
-	foreach ( sunshine_gallery_only_image_sizes() as $size_name ) {
+	// WordPress's own sizes are never skipped, even if an add-on's size shares a name with one.
+	$skip = array_diff( sunshine_gallery_only_image_sizes(), array( 'thumbnail', 'medium', 'medium_large', 'large', '1536x1536', '2048x2048' ) );
+	foreach ( $skip as $size_name ) {
 		unset( $sizes[ $size_name ] );
 	}
 
@@ -206,13 +236,19 @@ function sunshine_featured_image_gallery_sizes( $meta_id, $post_id, $meta_key, $
 		return;
 	}
 
+	// Only images that skipped the sizes. A gallery's own photos get theirs, watermark included,
+	// when Sunshine processes them.
 	$attachment_id = absint( $meta_value );
-	$metadata      = wp_get_attachment_metadata( $attachment_id );
+	if ( ! sunshine_image_belongs_elsewhere( $attachment_id ) ) {
+		return;
+	}
+
+	$metadata = wp_get_attachment_metadata( $attachment_id );
 	if ( empty( $metadata ) || ! is_array( $metadata ) ) {
 		return;
 	}
 
-	// Sizes the image already has are left alone, so this does nothing for the gallery's own photos.
+	// Sizes the image already has are left alone.
 	$updated = sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, get_attached_file( $attachment_id ) );
 	if ( $updated !== $metadata ) {
 		wp_update_attachment_metadata( $attachment_id, $updated );
