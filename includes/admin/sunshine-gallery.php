@@ -1205,6 +1205,16 @@ function sunshine_gallery_admin_ajax_upload() {
 
 function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json', $watermark = true ) {
 
+	// A customer's print crop must never become a gallery photo, however it got here.
+	$refused = sunshine_print_crop_refusal( $file_path );
+	if ( $refused ) {
+		wp_delete_file( $file_path );
+		if ( 'json' === $result ) {
+			wp_send_json_error( array( 'error' => $refused->get_error_message() ) );
+		}
+		return $refused;
+	}
+
 	$file_type          = wp_check_filetype( $file_path );
 	$file_name          = basename( $file_path );
 	$original_file_name = $file_name; // Store original for title processing
@@ -1851,8 +1861,10 @@ function sunshine_ajax_gallery_import() {
 	$done = ( $index >= $total );
 	$last = end( $results );
 
-	// Only clear the folder once the last photo made it in, as it always has.
-	if ( $done && ! empty( $last['success'] ) && SPC()->get_option( 'delete_images_folder' ) ) {
+	// Only clear the folder once the last photo made it in, as it always has. A print
+	// crop is never let in, so one that happens to come last doesn't keep the folder.
+	$last_ok = ! empty( $last['success'] ) || ( isset( $last['code'] ) && 'sunshine_print_crop' === $last['code'] );
+	if ( $done && $last_ok && SPC()->get_option( 'delete_images_folder' ) ) {
 
 		foreach ( $images as $image_file_path ) {
 			@unlink( $image_file_path ); // Delete the file
@@ -1918,6 +1930,15 @@ function sunshine_gallery_import_file( $file_path, $gallery_id, $watermark, &$ex
 	@ chmod( $new_file_path, $perms );
 
 	$data = sunshine_insert_gallery_image( $new_file_path, $gallery_id, 'data', $watermark );
+
+	if ( is_wp_error( $data ) ) {
+		return array(
+			'success' => false,
+			'file'    => $file_name,
+			'error'   => $data->get_error_message(),
+			'code'    => $data->get_error_code(),
+		);
+	}
 
 	if ( empty( $data ) ) {
 		return array(
