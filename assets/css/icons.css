@@ -1,21 +1,4 @@
-@font-face {
-  font-family: "SunshineIcons";
-  src: url("../fonts/SunshineIcons.eot");
-  src: url("../fonts/SunshineIcons.eot?#iefix") format("embedded-opentype"),
-  url("../fonts/SunshineIcons.woff2") format("woff2"),
-  url("../fonts/SunshineIcons.woff") format("woff"),
-  url("../fonts/SunshineIcons.ttf") format("truetype"),
-  url("../fonts/SunshineIcons.svg#font") format("svg");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  @font-face {
-	font-family: "SunshineIcons";
-	src: url("../fonts/SunshineIcons.svg#SunshineIcons") format("svg");
-  }
-}
+/* The @font-face rules are printed by sunshine_icons_font_css() so each font address carries the plugin version. */
 
 [data-sunshine-icon]:before {
   content: attr(data-sunshine-icon);
@@ -94,6 +77,10 @@
 .sunshine--icon--add-shopping-cart:before,
 .sunshine--icon--add-shopping-cart-2:before,
 .sunshine--icon--cloud:before,
+.sunshine--icon--ruler:before,
+.sunshine--icon--discount:before,
+.sunshine--icon--sparkling:before,
+.sunshine--icon--webhook:before,
 .icons8,
 [data-icons8]:before {
   display: inline-block;
@@ -329,4 +316,16 @@
 }
 .sunshine--icon--cloud:before {
   content: "\f14d";
+}
+.sunshine--icon--ruler:before {
+  content: "\f150";
+}
+.sunshine--icon--discount:before {
+  content: "\f151";
+}
+.sunshine--icon--sparkling:before {
+  content: "\f14e";
+}
+.sunshine--icon--webhook:before {
+  content: "\f14f";
 }

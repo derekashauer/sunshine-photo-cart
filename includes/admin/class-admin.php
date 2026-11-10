@@ -290,8 +290,9 @@ class Sunshine_Admin {
 
 	public function admin_enqueue_scripts() {
 
-		wp_enqueue_style( 'sunshine-icons', SUNSHINE_PHOTO_CART_URL . 'assets/css/icons.css' );
-		wp_enqueue_style( 'sunshine-admin', SUNSHINE_PHOTO_CART_URL . 'assets/css/admin.css' );
+		wp_enqueue_style( 'sunshine-icons', SUNSHINE_PHOTO_CART_URL . 'assets/css/icons.css', '', SUNSHINE_PHOTO_CART_VERSION );
+		wp_add_inline_style( 'sunshine-icons', sunshine_icons_font_css() );
+		wp_enqueue_style( 'sunshine-admin', SUNSHINE_PHOTO_CART_URL . 'assets/css/admin.css', '', SUNSHINE_PHOTO_CART_VERSION );
 
 		wp_register_script( 'ajaxq', SUNSHINE_PHOTO_CART_URL . 'assets/js/ajaxq.js', array( 'jquery' ), SUNSHINE_PHOTO_CART_VERSION );
 		wp_register_script( 'chartjs', SUNSHINE_PHOTO_CART_URL . 'assets/js/chart.min.js', '', '3.8' );
@@ -497,17 +498,10 @@ class Sunshine_Admin {
 			return $query;
 		}
 
+		// A subquery, not a list of every gallery ID: with thousands of galleries that list made
+		// the query longer than some hosts allow, and the Media Library came up empty.
 		if ( ! SPC()->get_option( 'show_media_library' ) ) {
-			$args        = array(
-				'post_type'   => 'sunshine-gallery',
-				'nopaging'    => true,
-				'post_status' => 'publish,private,trash',
-				'fields'      => 'ids',
-			);
-			$gallery_ids = get_posts( $args );
-			if ( ! empty( $gallery_ids ) ) {
-				$query['post_parent__not_in'] = $gallery_ids;
-			}
+			$query['sunshine_hide_gallery_images'] = true;
 		}
 		return $query;
 
@@ -517,16 +511,7 @@ class Sunshine_Admin {
 		if ( $query->is_main_query() && ! SPC()->get_option( 'show_media_library' ) ) {
 			$screen = get_current_screen();
 			if ( ! empty( $screen ) && $screen->base == 'upload' ) {
-				$args        = array(
-					'post_type'   => 'sunshine-gallery',
-					'nopaging'    => true,
-					'post_status' => array( 'publish', 'private', 'trash', 'draft', 'future' ),
-					'fields'      => 'ids',
-				);
-				$gallery_ids = get_posts( $args );
-				if ( ! empty( $gallery_ids ) ) {
-					$query->set( 'post_parent__not_in', $gallery_ids );
-				}
+				$query->set( 'sunshine_hide_gallery_images', true );
 			}
 		}
 	}

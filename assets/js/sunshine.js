@@ -487,6 +487,9 @@ jQuery( document ).ready(function($){
 				}
 			}
 
+			// Lets add-ons put their own values on the request.
+			$( document ).trigger( 'sunshine_add_to_cart_data', [ data ] );
+
             // Then run ajax request
             $.ajax({
                 type: 'POST',

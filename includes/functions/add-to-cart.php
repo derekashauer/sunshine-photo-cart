@@ -116,7 +116,7 @@ function sunshine_modal_add_items_to_cart( $product, $product_id, $image_id, $ga
 				SPC()->log( 'Add to cart - Skipping invalid image ID provided: ' . $selected_image_id );
 				continue;
 			}
-			$add_to_cart_result = SPC()->cart->add_item( $product_id, $selected_image_id, $selected_image->get_gallery_id(), $selected_image->get_price_level(), ( ! empty( $options ) ) ? $options : '', intval( $qty ), $comments );
+			$add_to_cart_result = SPC()->cart->add_item( $product_id, $selected_image_id, $selected_image->get_gallery_id(), $selected_image->get_price_level(), ( ! empty( $options ) ) ? $options : '', intval( $qty ), $comments, false, sunshine_get_add_to_cart_meta( $product, $selected_image_id ) );
 		}
 		return $add_to_cart_result;
 	}
@@ -125,7 +125,22 @@ function sunshine_modal_add_items_to_cart( $product, $product_id, $image_id, $ga
 		$options['images'] = $image_ids_option;
 	}
 
-	return SPC()->cart->add_item( $product_id, $image_id, $gallery_id, $price_level, ( ! empty( $options ) ) ? $options : '', intval( $qty ), $comments );
+	return SPC()->cart->add_item( $product_id, $image_id, $gallery_id, $price_level, ( ! empty( $options ) ) ? $options : '', intval( $qty ), $comments, false, sunshine_get_add_to_cart_meta( $product, $image_id ) );
+}
+
+/**
+ * Extra data add-ons save on a cart line as it's added from the product window.
+ *
+ * It goes in before the cart checks for a matching line, so two lines that only differ in this
+ * data stay separate instead of being merged into one.
+ *
+ * @param SPC_Product $product  The product being added.
+ * @param int         $image_id The photo on this line, or 0.
+ * @return array
+ */
+function sunshine_get_add_to_cart_meta( $product, $image_id ) {
+	$meta = apply_filters( 'sunshine_add_to_cart_meta', array(), $product, intval( $image_id ) );
+	return is_array( $meta ) ? $meta : array();
 }
 
 

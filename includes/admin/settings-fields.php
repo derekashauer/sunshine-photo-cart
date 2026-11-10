@@ -1522,9 +1522,11 @@ function sunshine_get_settings_fields() {
 		ksort( $license_fields );
 	}
 
-	$description = '';
+	// Pressing Enter in a key field uses the form's first button. This one does nothing, so Enter
+	// only activates a key that was just typed in, not whichever Activate button comes first.
+	$description = '<button type="submit" style="display: none;"></button>';
 	if ( isset( $_GET['license_reminder'] ) ) {
-		$description = '<div style="border: 1px solid #CCC; padding: 5px 20px;">' . __( 'Please enter your license key in order to enable your add-ons', 'sunshine-photo-cart' ) . '</div>';
+		$description .= '<div style="border: 1px solid #CCC; padding: 5px 20px;">' . __( 'Please enter your license key in order to enable your add-ons', 'sunshine-photo-cart' ) . '</div>';
 	}
 	$settings[] = array(
 		'id'          => 'license',

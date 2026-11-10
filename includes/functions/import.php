@@ -106,6 +106,7 @@ function sunshine_import_lock( $key ) {
 		}
 	}
 
+	$GLOBALS['sunshine_import_locks'][ $option ] = $value;
 	register_shutdown_function(
 		function () use ( $wpdb, $option, $value ) {
 			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $option, $value ) );
@@ -113,6 +114,28 @@ function sunshine_import_lock( $key ) {
 	);
 
 	return true;
+}
+
+/**
+ * Let go of a claim this request made with sunshine_import_lock().
+ *
+ * The claim also ends with the request, but not when another plugin stops the
+ * request first. SiteGround Security calls exit in its own shutdown code under
+ * WP-CLI, which left the claim for 10 minutes, so the next run was turned away.
+ * Work that can run from WP-CLI lets go itself when it is done.
+ *
+ * @param string $key Same key the claim was made with.
+ */
+function sunshine_import_unlock( $key ) {
+	global $wpdb;
+
+	$option = 'sunshine_import_lock_' . md5( $key );
+	if ( empty( $GLOBALS['sunshine_import_locks'][ $option ] ) ) {
+		return;
+	}
+
+	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $option, $GLOBALS['sunshine_import_locks'][ $option ] ) );
+	unset( $GLOBALS['sunshine_import_locks'][ $option ] );
 }
 
 /**

@@ -245,8 +245,19 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 = 3.8.2 =
 * New: Gallery terms. Visitors can be asked to agree to your terms before they see a gallery's photos, such as not saving them or removing watermarks (Settings > Galleries > Gallery Terms, and a Terms option on each gallery). Sunshine keeps a record of who agreed, when, and to which wording, on the gallery and the customer's screen. Guests also give their email when they agree, unless you turn that off. This discourages copying, but it can't stop a screenshot
+* New: A cropped copy made in Lightroom for a customer's print order is never added to a gallery, even if it lands in a folder Sunshine checks for new photos or is uploaded by hand
+* Fix: On sites where WP-CLI runs scheduled tasks, such as SiteGround with its Security plugin, a folder check no longer stops the next one from running for 10 minutes
 * Change: Add-ons covered by your Pro, Plus or Basic plan now use the plan's license key, and the Licenses screen lists them under the plan instead of asking for a key for each one. Older sites that still had a separate, expired key for each add-on switch over by themselves. Add-ons bought on their own keep their own key
 * Fix: The license bar no longer says an add-on expired when the real problem is a wrong key or a different site. It names the problem and links to the Licenses screen
+* Fix: Turning off one add-on no longer takes your site off your Pro, Plus or Basic license, which made every add-on show as unlicensed
+* Fix: An expired license shows the date it really expired, not today's date
+* Fix: Turning an add-on back on keeps the key you bought it with, instead of always switching it to your plan's key
+* Fix: Pressing Activate on the Licenses screen only activates that one license, and a server error or firewall page no longer shows as a successful activation
+* Fix: On sites with thousands of galleries, the Media Library could show "No media files found" on hosts that limit how long a database query can be, such as WP Engine
+* Fix: Images added to a page, post or shop product no longer get extra copies at Sunshine's gallery sizes, which nothing shows and which used up server space. Pick one as a gallery's featured image and Sunshine makes its sizes then
+* Change: With a Basic or Plus license, the Licenses screen still shows the Plus and Pro fields, so you can enter an upgraded key
+* Dev: New filter sunshine_add_to_cart_meta and JavaScript event sunshine_add_to_cart_data let an add-on save its own data on a cart line from the product window. The data is in place before the cart looks for a matching line, so lines that only differ in it stay separate
+* Fix: On phones, details add-ons show on a cart line, like the photos in a package, line up under the product name instead of slipping to the left edge
 
 = 3.8.1 - November 5, 2026 =
 * Security: Add-on updates are refused unless they're signed by Sunshine Photo Cart, so a hacked update server can't push a bad add-on to your site
