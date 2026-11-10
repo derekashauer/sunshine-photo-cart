@@ -79,6 +79,8 @@
 .sunshine--icon--cloud:before,
 .sunshine--icon--ruler:before,
 .sunshine--icon--discount:before,
+.sunshine--icon--sparkling:before,
+.sunshine--icon--webhook:before,
 .icons8,
 [data-icons8]:before {
   display: inline-block;
@@ -316,8 +318,14 @@
   content: "\f14d";
 }
 .sunshine--icon--ruler:before {
-  content: "\f14e";
+  content: "\f150";
 }
 .sunshine--icon--discount:before {
+  content: "\f151";
+}
+.sunshine--icon--sparkling:before {
+  content: "\f14e";
+}
+.sunshine--icon--webhook:before {
   content: "\f14f";
 }

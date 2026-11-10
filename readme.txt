@@ -244,12 +244,15 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.8.2 =
+* New: A cropped copy made in Lightroom for a customer's print order is never added to a gallery, even if it lands in a folder Sunshine checks for new photos or is uploaded by hand
 * Change: Add-ons covered by your Pro, Plus or Basic plan now use the plan's license key, and the Licenses screen lists them under the plan instead of asking for a key for each one. Older sites that still had a separate, expired key for each add-on switch over by themselves. Add-ons bought on their own keep their own key
 * Fix: The license bar no longer says an add-on expired when the real problem is a wrong key or a different site. It names the problem and links to the Licenses screen
 * Fix: Turning off one add-on no longer takes your site off your Pro, Plus or Basic license, which made every add-on show as unlicensed
 * Fix: An expired license shows the date it really expired, not today's date
 * Fix: Turning an add-on back on keeps the key you bought it with, instead of always switching it to your plan's key
 * Fix: Pressing Activate on the Licenses screen only activates that one license, and a server error or firewall page no longer shows as a successful activation
+* Fix: On sites with thousands of galleries, the Media Library could show "No media files found" on hosts that limit how long a database query can be, such as WP Engine
+* Fix: Images added to a page, post or shop product no longer get extra copies at Sunshine's gallery sizes, which nothing shows and which used up server space. Pick one as a gallery's featured image and Sunshine makes its sizes then
 * Change: With a Basic or Plus license, the Licenses screen still shows the Plus and Pro fields, so you can enter an upgraded key
 * Dev: New filter sunshine_add_to_cart_meta and JavaScript event sunshine_add_to_cart_data let an add-on save its own data on a cart line from the product window. The data is in place before the cart looks for a matching line, so lines that only differ in it stay separate
 * Fix: On phones, details add-ons show on a cart line, like the photos in a package, line up under the product name instead of slipping to the left edge

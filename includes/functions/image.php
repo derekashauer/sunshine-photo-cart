@@ -1,6 +1,171 @@
 <?php
 
 /**
+ * Whether a photo file is a print crop made for an order, not a gallery photo.
+ *
+ * Sunshine's Lightroom plugin puts "sunshine-print-crop" in the Job Identifier of
+ * the cropped copies it makes for orders. Lightroom writes that into the files it
+ * exports (IPTC and XMP), so the mark arrives with the file however it reaches the
+ * site: a synced or FTP folder, a cloud folder, an upload or the API. Only that
+ * field counts: the same words in a caption or keyword don't.
+ *
+ * @param string $file_path Full path to the photo.
+ * @return bool
+ */
+function sunshine_is_print_crop_file( $file_path ) {
+	$mark = 'sunshine-print-crop';
+
+	// IPTC, which PHP reads from JPEG files.
+	$info = array();
+	if ( @getimagesize( $file_path, $info ) && ! empty( $info['APP13'] ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$iptc = iptcparse( $info['APP13'] );
+		if ( ! empty( $iptc['2#103'] ) && in_array( $mark, array_map( 'trim', (array) $iptc['2#103'] ), true ) ) {
+			return true;
+		}
+	}
+
+	foreach ( sunshine_file_xmp_packets( $file_path ) as $xmp ) {
+		if ( in_array( $mark, sunshine_xmp_job_identifiers( $xmp ), true ) ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * The XMP packets in a photo file.
+ *
+ * A JPEG keeps them in its own sections before the picture, so those sections are
+ * stepped through, however much other information (like a large color profile)
+ * comes first. Other kinds of file are read to the end, a part at a time.
+ *
+ * @param string $file_path Full path to the photo.
+ * @return array XMP packets as text.
+ */
+function sunshine_file_xmp_packets( $file_path ) {
+	$handle = @fopen( $file_path, 'rb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+	if ( ! $handle ) {
+		return array();
+	}
+
+	$packets = array();
+	$xmp_id  = "http://ns.adobe.com/xap/1.0/\0";
+
+	if ( "\xFF\xD8" === fread( $handle, 2 ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+		while ( ! feof( $handle ) ) {
+			if ( "\xFF" !== fread( $handle, 1 ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+				break;
+			}
+			// Any number of extra 0xFF fill bytes may come before a section's marker.
+			do {
+				$byte = fread( $handle, 1 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+			} while ( "\xFF" === $byte );
+			if ( 1 !== strlen( $byte ) ) {
+				break;
+			}
+			$marker = ord( $byte );
+			// The picture itself starts here; nothing after it is read.
+			if ( 0xDA === $marker || 0xD9 === $marker ) {
+				break;
+			}
+			// These markers have no length after them.
+			if ( 0x01 === $marker || ( $marker >= 0xD0 && $marker <= 0xD7 ) ) {
+				continue;
+			}
+			$size = fread( $handle, 2 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+			if ( 2 !== strlen( $size ) ) {
+				break;
+			}
+			$length = unpack( 'n', $size )[1] - 2;
+			if ( $length < 0 ) {
+				break;
+			}
+			if ( 0xE1 === $marker && $length > strlen( $xmp_id ) ) {
+				$data = fread( $handle, $length ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+				if ( 0 === strpos( $data, $xmp_id ) ) {
+					$packets[] = substr( $data, strlen( $xmp_id ) );
+				}
+			} else {
+				fseek( $handle, $length, SEEK_CUR );
+			}
+		}
+	} else {
+		// A packet can cross from one part into the next, so an open one is carried over.
+		$buffer = '';
+		while ( ! feof( $handle ) ) {
+			$buffer .= fread( $handle, MB_IN_BYTES ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+			$open    = strpos( $buffer, '<x:xmpmeta' );
+			while ( false !== $open ) {
+				$close = strpos( $buffer, '</x:xmpmeta>', $open );
+				if ( false === $close ) {
+					break;
+				}
+				$packets[] = substr( $buffer, $open, $close + 12 - $open );
+				$buffer    = substr( $buffer, $close + 12 );
+				$open      = strpos( $buffer, '<x:xmpmeta' );
+			}
+			$open   = strpos( $buffer, '<x:xmpmeta' );
+			$buffer = false === $open ? substr( $buffer, -20 ) : substr( $buffer, $open, 4 * MB_IN_BYTES );
+		}
+	}
+
+	fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+	return $packets;
+}
+
+/**
+ * The Job Identifier values (photoshop:TransmissionReference) in an XMP packet.
+ *
+ * Read as XML, so text in another field that looks like the property doesn't count.
+ *
+ * @param string $xmp XMP packet.
+ * @return array Values, trimmed.
+ */
+function sunshine_xmp_job_identifiers( $xmp ) {
+	$start = strpos( $xmp, '<x:xmpmeta' );
+	$end   = strrpos( $xmp, '</x:xmpmeta>' );
+	if ( false === $start || false === $end || ! class_exists( 'DOMDocument' ) ) {
+		return array();
+	}
+
+	$dom      = new DOMDocument();
+	$previous = libxml_use_internal_errors( true );
+	$loaded   = $dom->loadXML( substr( $xmp, $start, $end + 12 - $start ), LIBXML_NONET );
+	libxml_clear_errors();
+	libxml_use_internal_errors( $previous );
+	if ( ! $loaded ) {
+		return array();
+	}
+
+	$xpath = new DOMXPath( $dom );
+	$xpath->registerNamespace( 'photoshop', 'http://ns.adobe.com/photoshop/1.0/' );
+	$values = array();
+	foreach ( $xpath->query( '//@photoshop:TransmissionReference | //photoshop:TransmissionReference' ) as $node ) {
+		$values[] = trim( $node->textContent ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+	}
+	return $values;
+}
+
+/**
+ * The refusal for a print crop, or null when the file may become a gallery photo.
+ *
+ * Every way a photo is added to a gallery asks this first, and passes the refusal on.
+ *
+ * @param string $file_path Full path to the photo.
+ * @param string $name      Name to show, when the file checked is a downloaded copy.
+ * @return WP_Error|null
+ */
+function sunshine_print_crop_refusal( $file_path, $name = '' ) {
+	if ( ! sunshine_is_print_crop_file( $file_path ) ) {
+		return null;
+	}
+	/* translators: %s: file name */
+	$message = sprintf( __( '%s is a print crop made for an order, so it was not added to the gallery.', 'sunshine-photo-cart' ), $name ? $name : basename( $file_path ) );
+	SPC()->log( $message );
+	return new WP_Error( 'sunshine_print_crop', $message );
+}
+
+/**
  * Fix EXIF orientation on an image file by physically rotating the pixels.
  *
  * WordPress relies on PHP's exif extension for orientation detection during
@@ -154,6 +319,105 @@ function sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, $file_pa
 	}
 
 	return $metadata;
+}
+
+/**
+ * Sizes only Sunshine shows. Add-ons that register their own sizes for gallery photos add them here.
+ *
+ * @return array Image size names.
+ */
+function sunshine_gallery_only_image_sizes() {
+	return apply_filters( 'sunshine_gallery_only_image_sizes', array( 'sunshine-thumbnail', 'sunshine-large' ) );
+}
+
+/**
+ * Whether an image belongs to something other than Sunshine, such as a shop product, page or post.
+ * Unattached images don't: they can still be picked for a gallery or a Sunshine setting later.
+ *
+ * @param int $attachment_id The attachment ID.
+ * @return bool
+ */
+function sunshine_image_belongs_elsewhere( $attachment_id ) {
+	$parent_id = $attachment_id ? wp_get_post_parent_id( $attachment_id ) : 0;
+	return $parent_id && 0 !== strpos( (string) get_post_type( $parent_id ), 'sunshine-' );
+}
+
+/**
+ * Whether an image is the featured image of any gallery.
+ *
+ * @param int $attachment_id The attachment ID.
+ * @return bool
+ */
+function sunshine_is_gallery_featured_image( $attachment_id ) {
+	global $wpdb;
+	return (bool) $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT 1 FROM {$wpdb->postmeta} pm JOIN {$wpdb->posts} p ON p.ID = pm.post_id WHERE pm.meta_key = '_thumbnail_id' AND pm.meta_value = %s AND p.post_type = 'sunshine-gallery' LIMIT 1",
+			(string) $attachment_id
+		)
+	);
+}
+
+/**
+ * Skip Sunshine's sizes for images that belong to something else. WordPress makes every
+ * registered size for every image, so each of those would otherwise get extra copies that
+ * nothing ever shows. Runs both when an image is uploaded and when WordPress makes sizes it
+ * missed, such as after an upload that timed out.
+ *
+ * @param array $sizes         Sizes WordPress is about to make.
+ * @param array $image_meta    The image's metadata.
+ * @param int   $attachment_id The attachment ID.
+ * @return array The sizes to make.
+ */
+add_filter( 'intermediate_image_sizes_advanced', 'sunshine_skip_gallery_sizes_for_other_images', 10, 3 );
+add_filter( 'wp_get_missing_image_subsizes', 'sunshine_skip_gallery_sizes_for_other_images', 10, 3 );
+function sunshine_skip_gallery_sizes_for_other_images( $sizes, $image_meta = array(), $attachment_id = 0 ) {
+	if ( ! sunshine_image_belongs_elsewhere( $attachment_id ) || sunshine_is_gallery_featured_image( $attachment_id ) ) {
+		return $sizes;
+	}
+
+	// WordPress's own sizes are never skipped, even if an add-on's size shares a name with one.
+	$skip = array_diff( sunshine_gallery_only_image_sizes(), array( 'thumbnail', 'medium', 'medium_large', 'large', '1536x1536', '2048x2048' ) );
+	foreach ( $skip as $size_name ) {
+		unset( $sizes[ $size_name ] );
+	}
+
+	return $sizes;
+}
+
+/**
+ * A gallery's featured image can be any image in the Media Library, including one that skipped
+ * Sunshine's sizes above. Make them when it is picked, so it shows like the gallery's own photos.
+ *
+ * @param int    $meta_id    Meta ID.
+ * @param int    $post_id    Post ID.
+ * @param string $meta_key   Meta key.
+ * @param mixed  $meta_value Meta value.
+ */
+add_action( 'added_post_meta', 'sunshine_featured_image_gallery_sizes', 10, 4 );
+add_action( 'updated_post_meta', 'sunshine_featured_image_gallery_sizes', 10, 4 );
+function sunshine_featured_image_gallery_sizes( $meta_id, $post_id, $meta_key, $meta_value ) {
+	if ( '_thumbnail_id' !== $meta_key || 'sunshine-gallery' !== get_post_type( $post_id ) ) {
+		return;
+	}
+
+	// Only images that skipped the sizes. A gallery's own photos get theirs, watermark included,
+	// when Sunshine processes them.
+	$attachment_id = absint( $meta_value );
+	if ( ! sunshine_image_belongs_elsewhere( $attachment_id ) ) {
+		return;
+	}
+
+	$metadata = wp_get_attachment_metadata( $attachment_id );
+	if ( empty( $metadata ) || ! is_array( $metadata ) ) {
+		return;
+	}
+
+	// Sizes the image already has are left alone.
+	$updated = sunshine_ensure_intermediate_sizes( $attachment_id, $metadata, get_attached_file( $attachment_id ) );
+	if ( $updated !== $metadata ) {
+		wp_update_attachment_metadata( $attachment_id, $updated );
+	}
 }
 
 /**
