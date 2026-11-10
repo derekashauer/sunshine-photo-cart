@@ -52,14 +52,15 @@ function sunshine_is_print_crop_file( $file_path ) {
  * Every way a photo is added to a gallery asks this first, and passes the refusal on.
  *
  * @param string $file_path Full path to the photo.
+ * @param string $name      Name to show, when the file checked is a downloaded copy.
  * @return WP_Error|null
  */
-function sunshine_print_crop_refusal( $file_path ) {
+function sunshine_print_crop_refusal( $file_path, $name = '' ) {
 	if ( ! sunshine_is_print_crop_file( $file_path ) ) {
 		return null;
 	}
 	/* translators: %s: file name */
-	$message = sprintf( __( '%s is a print crop made for an order, so it was not added to the gallery.', 'sunshine-photo-cart' ), basename( $file_path ) );
+	$message = sprintf( __( '%s is a print crop made for an order, so it was not added to the gallery.', 'sunshine-photo-cart' ), $name ? $name : basename( $file_path ) );
 	SPC()->log( $message );
 	return new WP_Error( 'sunshine_print_crop', $message );
 }
