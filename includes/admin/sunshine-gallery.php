@@ -1205,6 +1205,18 @@ function sunshine_gallery_admin_ajax_upload() {
 
 function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json', $watermark = true ) {
 
+	// A customer's print crop must never become a gallery photo, however it got here.
+	if ( sunshine_is_print_crop_file( $file_path ) ) {
+		/* translators: %s: file name */
+		$message = sprintf( __( '%s is a print crop made for an order, so it was not added to the gallery.', 'sunshine-photo-cart' ), basename( $file_path ) );
+		SPC()->log( $message );
+		wp_delete_file( $file_path );
+		if ( 'json' === $result ) {
+			wp_send_json_error( array( 'error' => $message ) );
+		}
+		return new WP_Error( 'sunshine_print_crop', $message );
+	}
+
 	$file_type          = wp_check_filetype( $file_path );
 	$file_name          = basename( $file_path );
 	$original_file_name = $file_name; // Store original for title processing
@@ -1918,6 +1930,15 @@ function sunshine_gallery_import_file( $file_path, $gallery_id, $watermark, &$ex
 	@ chmod( $new_file_path, $perms );
 
 	$data = sunshine_insert_gallery_image( $new_file_path, $gallery_id, 'data', $watermark );
+
+	if ( is_wp_error( $data ) ) {
+		return array(
+			'success' => false,
+			'file'    => $file_name,
+			'error'   => $data->get_error_message(),
+			'code'    => $data->get_error_code(),
+		);
+	}
 
 	if ( empty( $data ) ) {
 		return array(

@@ -1,6 +1,28 @@
 <?php
 
 /**
+ * Whether a photo file is a print crop made for an order, not a gallery photo.
+ *
+ * Sunshine's Lightroom plugin puts "sunshine-print-crop" in the Job Identifier of
+ * the cropped copies it makes for orders. Lightroom writes that into the files it
+ * exports, so the mark arrives with the file however it reaches the site: a synced
+ * or FTP folder, a cloud folder, an upload or the API. Photo details sit at the
+ * start of the file, so only the first part is read.
+ *
+ * @param string $file_path Full path to the photo.
+ * @return bool
+ */
+function sunshine_is_print_crop_file( $file_path ) {
+	$handle = @fopen( $file_path, 'rb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+	if ( ! $handle ) {
+		return false;
+	}
+	$head = fread( $handle, MB_IN_BYTES ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+	fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+	return false !== strpos( (string) $head, 'sunshine-print-crop' );
+}
+
+/**
  * Fix EXIF orientation on an image file by physically rotating the pixels.
  *
  * WordPress relies on PHP's exif extension for orientation detection during
