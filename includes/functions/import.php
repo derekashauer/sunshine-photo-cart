@@ -72,8 +72,11 @@ function sunshine_import_batch_has_time( &$batch ) {
  * then bring the same photo in twice. The browser is told to wait instead, and
  * tries again in a few seconds.
  *
- * Released at the end of the request, even when it stops with an error. A claim
- * older than the longest a request may run counts as left over and is taken.
+ * A MySQL named lock, which MySQL lets go of by itself when the request's
+ * database connection closes. So the claim always ends with the request, however
+ * it ends: an error, a host stopping it, or another plugin calling exit in its own
+ * shutdown code. SiteGround Security does that under WP-CLI, which used to leave
+ * the claim held for 10 minutes after every WP-CLI import or folder check.
  *
  * @param string $key Which import, for example the gallery or import run.
  * @return bool Whether this request has it.
@@ -81,38 +84,7 @@ function sunshine_import_batch_has_time( &$batch ) {
 function sunshine_import_lock( $key ) {
 	global $wpdb;
 
-	$option = 'sunshine_import_lock_' . md5( $key );
-
-	// When it was claimed, and a token only this request knows, so it only ever
-	// lets go of its own claim. A request that ran so long its claim was taken
-	// over must not then release the claim of the request that took it.
-	$value = time() . '|' . wp_generate_password( 20, false );
-
-	// A plain insert either adds the row or finds it there already, in one step,
-	// so two requests can never both win.
-	$claim = function () use ( $wpdb, $option, $value ) {
-		return (bool) $wpdb->query( $wpdb->prepare( "INSERT IGNORE INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, %s, 'no')", $option, $value ) );
-	};
-
-	if ( ! $claim() ) {
-		$held  = (string) $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $option ) );
-		$since = (int) strtok( $held, '|' );
-		if ( $since > time() - 10 * MINUTE_IN_SECONDS ) {
-			return false;
-		}
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $option, $held ) );
-		if ( ! $claim() ) {
-			return false;
-		}
-	}
-
-	register_shutdown_function(
-		function () use ( $wpdb, $option, $value ) {
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $option, $value ) );
-		}
-	);
-
-	return true;
+	return '1' === (string) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK( %s, 0 )', 'sunshine_import_' . md5( $key ) ) );
 }
 
 /**
