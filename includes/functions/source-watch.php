@@ -148,6 +148,8 @@ function sunshine_source_watch_run() {
 			wp_schedule_single_event( min( wp_list_pluck( $tries, 'retry_after' ) ), 'sunshine_source_watch_continue' );
 		}
 	}
+
+	sunshine_import_unlock( 'source_watch' );
 }
 
 /**
