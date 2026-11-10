@@ -254,6 +254,8 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: On sites with thousands of galleries, the Media Library could show "No media files found" on hosts that limit how long a database query can be, such as WP Engine
 * Fix: Images added to a page, post or shop product no longer get extra copies at Sunshine's gallery sizes, which nothing shows and which used up server space. Pick one as a gallery's featured image and Sunshine makes its sizes then
 * Change: With a Basic or Plus license, the Licenses screen still shows the Plus and Pro fields, so you can enter an upgraded key
+* Dev: New filter sunshine_add_to_cart_meta and JavaScript event sunshine_add_to_cart_data let an add-on save its own data on a cart line from the product window. The data is in place before the cart looks for a matching line, so lines that only differ in it stay separate
+* Fix: On phones, details add-ons show on a cart line, like the photos in a package, line up under the product name instead of slipping to the left edge
 
 = 3.8.1 - November 5, 2026 =
 * Security: Add-on updates are refused unless they're signed by Sunshine Photo Cart, so a hacked update server can't push a bad add-on to your site

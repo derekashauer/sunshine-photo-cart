@@ -416,6 +416,7 @@ class SPC_Frontend {
 
 		wp_register_style( 'sunshine-photo-cart', SUNSHINE_PHOTO_CART_URL . 'assets/css/sunshine.css', '', SUNSHINE_PHOTO_CART_VERSION );
 		wp_register_style( 'sunshine-photo-cart-icons', SUNSHINE_PHOTO_CART_URL . 'assets/css/icons.css', '', SUNSHINE_PHOTO_CART_VERSION );
+		wp_add_inline_style( 'sunshine-photo-cart-icons', sunshine_icons_font_css() );
 
 		if ( is_sunshine() ) {
 
