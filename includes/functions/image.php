@@ -5,21 +5,63 @@
  *
  * Sunshine's Lightroom plugin puts "sunshine-print-crop" in the Job Identifier of
  * the cropped copies it makes for orders. Lightroom writes that into the files it
- * exports, so the mark arrives with the file however it reaches the site: a synced
- * or FTP folder, a cloud folder, an upload or the API. Photo details sit at the
- * start of the file, so only the first part is read.
+ * exports (IPTC and XMP), so the mark arrives with the file however it reaches the
+ * site: a synced or FTP folder, a cloud folder, an upload or the API. Only that
+ * field counts, so the words in a caption or keyword don't.
  *
  * @param string $file_path Full path to the photo.
  * @return bool
  */
 function sunshine_is_print_crop_file( $file_path ) {
+	$mark = 'sunshine-print-crop';
+
+	// IPTC, which PHP reads from JPEG files.
+	$info = array();
+	if ( @getimagesize( $file_path, $info ) && ! empty( $info['APP13'] ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+		$iptc = iptcparse( $info['APP13'] );
+		if ( ! empty( $iptc['2#103'] ) && in_array( $mark, array_map( 'trim', (array) $iptc['2#103'] ), true ) ) {
+			return true;
+		}
+	}
+
+	// XMP. A JPEG keeps it before the picture, so its first part is enough. Other
+	// kinds of file can keep it at the end, so all of it is read, a part at a time.
 	$handle = @fopen( $file_path, 'rb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 	if ( ! $handle ) {
 		return false;
 	}
-	$head = fread( $handle, MB_IN_BYTES ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+	$jpeg    = "\xFF\xD8" === fread( $handle, 2 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+	$pattern = '/photoshop:TransmissionReference\s*(?:=\s*["\']|>)\s*' . preg_quote( $mark, '/' ) . '\s*["\'<]/';
+	$found   = false;
+	$tail    = '';
+	while ( ! $found && ! feof( $handle ) ) {
+		$part  = $tail . fread( $handle, MB_IN_BYTES ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+		$found = (bool) preg_match( $pattern, $part );
+		$tail  = substr( $part, -200 );
+		if ( $jpeg ) {
+			break;
+		}
+	}
 	fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
-	return false !== strpos( (string) $head, 'sunshine-print-crop' );
+	return $found;
+}
+
+/**
+ * The refusal for a print crop, or null when the file may become a gallery photo.
+ *
+ * Every way a photo is added to a gallery asks this first, and passes the refusal on.
+ *
+ * @param string $file_path Full path to the photo.
+ * @return WP_Error|null
+ */
+function sunshine_print_crop_refusal( $file_path ) {
+	if ( ! sunshine_is_print_crop_file( $file_path ) ) {
+		return null;
+	}
+	/* translators: %s: file name */
+	$message = sprintf( __( '%s is a print crop made for an order, so it was not added to the gallery.', 'sunshine-photo-cart' ), basename( $file_path ) );
+	SPC()->log( $message );
+	return new WP_Error( 'sunshine_print_crop', $message );
 }
 
 /**

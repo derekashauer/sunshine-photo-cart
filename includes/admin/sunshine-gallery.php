@@ -1206,15 +1206,13 @@ function sunshine_gallery_admin_ajax_upload() {
 function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json', $watermark = true ) {
 
 	// A customer's print crop must never become a gallery photo, however it got here.
-	if ( sunshine_is_print_crop_file( $file_path ) ) {
-		/* translators: %s: file name */
-		$message = sprintf( __( '%s is a print crop made for an order, so it was not added to the gallery.', 'sunshine-photo-cart' ), basename( $file_path ) );
-		SPC()->log( $message );
+	$refused = sunshine_print_crop_refusal( $file_path );
+	if ( $refused ) {
 		wp_delete_file( $file_path );
 		if ( 'json' === $result ) {
-			wp_send_json_error( array( 'error' => $message ) );
+			wp_send_json_error( array( 'error' => $refused->get_error_message() ) );
 		}
-		return new WP_Error( 'sunshine_print_crop', $message );
+		return $refused;
 	}
 
 	$file_type          = wp_check_filetype( $file_path );
@@ -1863,8 +1861,10 @@ function sunshine_ajax_gallery_import() {
 	$done = ( $index >= $total );
 	$last = end( $results );
 
-	// Only clear the folder once the last photo made it in, as it always has.
-	if ( $done && ! empty( $last['success'] ) && SPC()->get_option( 'delete_images_folder' ) ) {
+	// Only clear the folder once the last photo made it in, as it always has. A print
+	// crop is never let in, so one that happens to come last doesn't keep the folder.
+	$last_ok = ! empty( $last['success'] ) || ( isset( $last['code'] ) && 'sunshine_print_crop' === $last['code'] );
+	if ( $done && $last_ok && SPC()->get_option( 'delete_images_folder' ) ) {
 
 		foreach ( $images as $image_file_path ) {
 			@unlink( $image_file_path ); // Delete the file
