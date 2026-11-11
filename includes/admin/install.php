@@ -98,13 +98,13 @@ function maybe_sunshine_create_custom_tables() {
 			`agreement_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			`gallery_id` bigint(20) unsigned NOT NULL,
 			`user_id` bigint(20) unsigned NOT NULL DEFAULT 0,
-			`email` varchar(100) NOT NULL DEFAULT '',
+			`email` varchar(254) NOT NULL DEFAULT '',
 			`version` varchar(32) NOT NULL,
 			`time` bigint(20) unsigned NOT NULL,
 			PRIMARY KEY (`agreement_id`),
 			KEY `gallery_id` (`gallery_id`),
 			KEY `user_id` (`user_id`),
-			KEY `email` (`email`)
+			KEY `email` (`email`(100))
 		) $collate;"
 	);
 
