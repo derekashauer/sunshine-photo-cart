@@ -2040,7 +2040,11 @@ msgid ""
 "keep a record of who agreed and when. This discourages people from saving "
 "photos or removing watermarks, but it can't stop someone from taking a "
 "screenshot or using an AI tool."
-msgstr "Vraag bezoekers akkoord te gaan met je voorwaarden voordat ze de foto's in een galerij zien, en houd bij wie akkoord ging en wanneer. Dit ontmoedigt mensen om foto's op te slaan of watermerken te verwijderen, maar het kan niet voorkomen dat iemand een screenshot maakt of een AI-tool gebruikt."
+msgstr ""
+"Vraag bezoekers akkoord te gaan met je voorwaarden voordat ze de foto's in "
+"een galerij zien, en houd bij wie akkoord ging en wanneer. Dit ontmoedigt "
+"mensen om foto's op te slaan of watermerken te verwijderen, maar het kan "
+"niet voorkomen dat iemand een screenshot maakt of een AI-tool gebruikt."
 
 #: includes/admin/settings-fields.php:501
 msgid "Require terms by default"
@@ -2050,7 +2054,9 @@ msgstr "Voorwaarden standaard verplicht"
 msgid ""
 "Galleries set to \"Default\" ask visitors to agree to the terms below. Each "
 "gallery can also turn this on or off for itself."
-msgstr "Galerijen die op \"Standaard\" staan, vragen bezoekers akkoord te gaan met de voorwaarden hieronder. Elke galerij kan dit ook zelf aan- of uitzetten."
+msgstr ""
+"Galerijen die op \"Standaard\" staan, vragen bezoekers akkoord te gaan met "
+"de voorwaarden hieronder. Elke galerij kan dit ook zelf aan- of uitzetten."
 
 #: includes/admin/settings-fields.php:507
 #: includes/admin/sunshine-gallery.php:136
@@ -2062,7 +2068,9 @@ msgstr "Voorwaarden"
 msgid ""
 "Changing this asks everyone to agree again, since they agreed to different "
 "wording."
-msgstr "Als je dit wijzigt, moet iedereen opnieuw akkoord gaan, omdat ze met een andere tekst akkoord gingen."
+msgstr ""
+"Als je dit wijzigt, moet iedereen opnieuw akkoord gaan, omdat ze met een "
+"andere tekst akkoord gingen."
 
 #: includes/admin/settings-fields.php:514
 msgid "Don't ask guests for an email"
@@ -2073,7 +2081,10 @@ msgid ""
 "By default, visitors who aren't logged in also give their email address when "
 "they agree, so every agreement shows who it was. Without an email, Sunshine "
 "can't record who agreed."
-msgstr "Standaard geven bezoekers die niet zijn ingelogd ook hun e-mailadres als ze akkoord gaan, zodat bij elk akkoord te zien is van wie het is. Zonder e-mailadres kan Sunshine niet vastleggen wie akkoord ging."
+msgstr ""
+"Standaard geven bezoekers die niet zijn ingelogd ook hun e-mailadres als ze "
+"akkoord gaan, zodat bij elk akkoord te zien is van wie het is. Zonder e-"
+"mailadres kan Sunshine niet vastleggen wie akkoord ging."
 
 #: includes/admin/settings-fields.php:522
 msgid "Display Options"
@@ -3041,7 +3052,9 @@ msgstr "Niet verplicht"
 
 #: includes/admin/sunshine-gallery.php:144
 msgid "Ask visitors to agree to your gallery terms before they see the photos."
-msgstr "Vraag bezoekers akkoord te gaan met je galerijvoorwaarden voordat ze de foto's zien."
+msgstr ""
+"Vraag bezoekers akkoord te gaan met je galerijvoorwaarden voordat ze de "
+"foto's zien."
 
 #: includes/admin/sunshine-gallery.php:150 class-authorizenet.php:142
 msgid "Expiration"
@@ -3322,11 +3335,16 @@ msgid ""
 "People who agreed while entering this gallery. Visitors agree once for all "
 "galleries, so someone who already agreed on another gallery is not asked "
 "again and is listed there instead."
-msgstr "Mensen die akkoord gingen toen ze deze galerij binnengingen. Bezoekers gaan één keer akkoord voor alle galerijen, dus wie al bij een andere galerij akkoord ging, krijgt de vraag niet opnieuw en staat daar vermeld."
+msgstr ""
+"Mensen die akkoord gingen toen ze deze galerij binnengingen. Bezoekers gaan "
+"één keer akkoord voor alle galerijen, dus wie al bij een andere galerij "
+"akkoord ging, krijgt de vraag niet opnieuw en staat daar vermeld."
 
 #: includes/admin/sunshine-gallery.php:2004
 msgid "Nobody has agreed to the terms while entering this gallery yet"
-msgstr "Nog niemand is akkoord gegaan met de voorwaarden bij het binnengaan van deze galerij"
+msgstr ""
+"Nog niemand is akkoord gegaan met de voorwaarden bij het binnengaan van deze "
+"galerij"
 
 #: includes/admin/sunshine-gallery.php:2028
 msgid "Who"
@@ -13367,7 +13385,8 @@ msgstr "Ga akkoord met de voorwaarden om deze galerij te bekijken"
 
 #: includes/class-frontend.php:1191
 msgid "The terms changed since this page loaded. Please read them again."
-msgstr "De voorwaarden zijn gewijzigd sinds deze pagina is geladen. Lees ze opnieuw."
+msgstr ""
+"De voorwaarden zijn gewijzigd sinds deze pagina is geladen. Lees ze opnieuw."
 
 #: includes/class-frontend.php:1197 includes/class-frontend.php:1262
 msgid "Not a valid email address"
@@ -14369,14 +14388,20 @@ msgstr "Elke minuut"
 msgid ""
 "The photos in this gallery are copyrighted by %s and are shown as proofs for "
 "viewing and ordering only."
-msgstr "Op de foto's in deze galerij rust auteursrecht van %s. Ze worden alleen getoond als proefafdrukken om te bekijken en te bestellen."
+msgstr ""
+"Op de foto's in deze galerij rust auteursrecht van %s. Ze worden alleen "
+"getoond als proefafdrukken om te bekijken en te bestellen."
 
 #: includes/functions/gallery.php:701
 msgid ""
 "You may not download, screenshot, copy, share or print these proofs, or "
 "remove, crop out or edit away any watermark, including with AI tools. Doing "
 "so is a copyright violation and may break the law."
-msgstr "Je mag deze proefafdrukken niet downloaden, screenshotten, kopiëren, delen of afdrukken, en je mag geen watermerk verwijderen, wegsnijden of wegbewerken, ook niet met AI-tools. Dat is een schending van het auteursrecht en kan in strijd zijn met de wet."
+msgstr ""
+"Je mag deze proefafdrukken niet downloaden, screenshotten, kopiëren, delen "
+"of afdrukken, en je mag geen watermerk verwijderen, wegsnijden of "
+"wegbewerken, ook niet met AI-tools. Dat is een schending van het "
+"auteursrecht en kan in strijd zijn met de wet."
 
 #: includes/functions/gallery.php:702
 msgid "Clean, full-quality versions are available when you order them."
@@ -14387,7 +14412,9 @@ msgstr "Schone versies in volledige kwaliteit krijg je als je ze bestelt."
 #, php-format
 msgid ""
 "%s is a print crop made for an order, so it was not added to the gallery."
-msgstr "%s is een afdrukuitsnede die voor een bestelling is gemaakt, dus is hij niet aan de galerij toegevoegd."
+msgstr ""
+"%s is een afdrukuitsnede die voor een bestelling is gemaakt, dus is hij niet "
+"aan de galerij toegevoegd."
 
 #: includes/functions/misc.php:270
 msgid "United Arab Emirates dirham"
@@ -17611,7 +17638,9 @@ msgstr "Tijdlijn"
 
 #: customer.php:59
 msgid "Older activity could not be loaded. Reload the page and try again."
-msgstr "Oudere activiteit kon niet worden geladen. Laad de pagina opnieuw en probeer het nog eens."
+msgstr ""
+"Oudere activiteit kon niet worden geladen. Laad de pagina opnieuw en probeer "
+"het nog eens."
 
 #: customer.php:145
 msgid "No activity"
@@ -17716,13 +17745,17 @@ msgstr "Klantreis"
 
 #: order-journey.php:24
 msgid "What this customer did before placing this order, oldest first."
-msgstr "Wat deze klant deed voordat de bestelling werd geplaatst, oudste eerst."
+msgstr ""
+"Wat deze klant deed voordat de bestelling werd geplaatst, oudste eerst."
 
 #: order-journey.php:27
 msgid ""
 "No activity was recorded before this order. Orders placed before journeys "
 "were recorded, and orders from visitors who declined tracking, have none."
-msgstr "Er is geen activiteit vastgelegd vóór deze bestelling. Bestellingen van voordat klantreizen werden vastgelegd, en bestellingen van bezoekers die tracking weigerden, hebben er geen."
+msgstr ""
+"Er is geen activiteit vastgelegd vóór deze bestelling. Bestellingen van "
+"voordat klantreizen werden vastgelegd, en bestellingen van bezoekers die "
+"tracking weigerden, hebben er geen."
 
 #: profit.php:10
 msgid "Cost"
@@ -17761,7 +17794,10 @@ msgid ""
 "Leave blank to keep every view. When there are more than this, the oldest "
 "guest views are removed first, then the oldest views by customers who have "
 "not ordered."
-msgstr "Laat leeg om alle weergaven te bewaren. Zijn het er meer dan dit, dan worden eerst de oudste weergaven van gasten verwijderd en daarna de oudste weergaven van klanten die nog niet hebben besteld."
+msgstr ""
+"Laat leeg om alle weergaven te bewaren. Zijn het er meer dan dit, dan worden "
+"eerst de oudste weergaven van gasten verwijderd en daarna de oudste "
+"weergaven van klanten die nog niet hebben besteld."
 
 #. translators: %s: number of gallery and image view records currently stored
 #: retention.php:25
@@ -17785,7 +17821,10 @@ msgstr "Weergaven bewaren gedurende"
 msgid ""
 "Leave blank to keep views no matter how old they are. Older guest views, and "
 "older views by customers who have not ordered, are removed."
-msgstr "Laat leeg om weergaven te bewaren, hoe oud ze ook zijn. Oudere weergaven van gasten, en oudere weergaven van klanten die nog niet hebben besteld, worden verwijderd."
+msgstr ""
+"Laat leeg om weergaven te bewaren, hoe oud ze ook zijn. Oudere weergaven van "
+"gasten, en oudere weergaven van klanten die nog niet hebben besteld, worden "
+"verwijderd."
 
 #. translators: %s: date
 #: retention.php:431
@@ -17795,7 +17834,11 @@ msgid ""
 "limits in Sunshine > Settings > Privacy & Data, so view numbers before then "
 "are lower than the real ones. The Views totals on galleries and photos are "
 "not affected."
-msgstr "Sommige weergaven van galerijen en foto's van vóór %s zijn verwijderd door de limieten voor weergaven in Sunshine > Instellingen > Privacy & gegevens, dus de aantallen weergaven van vóór die datum zijn lager dan de echte. De totalen bij Weergaven op galerijen en foto's veranderen niet."
+msgstr ""
+"Sommige weergaven van galerijen en foto's van vóór %s zijn verwijderd door "
+"de limieten voor weergaven in Sunshine > Instellingen > Privacy & gegevens, "
+"dus de aantallen weergaven van vóór die datum zijn lager dan de echte. De "
+"totalen bij Weergaven op galerijen en foto's veranderen niet."
 
 #. translators: 1: number of customer activity records, 2: settings page URL
 #: retention.php:463
@@ -17819,7 +17862,11 @@ msgid ""
 "Privacy & Data right away, instead of a batch at a time each day. Views kept "
 "by those settings, such as views by customers who have ordered, are never "
 "removed."
-msgstr "Verwijdert meteen de weergaven van galerijen en foto's boven de limieten die zijn ingesteld bij Instellingen > Privacy & gegevens, in plaats van elke dag een deel. Weergaven die door die instellingen worden bewaard, zoals weergaven van klanten die hebben besteld, worden nooit verwijderd."
+msgstr ""
+"Verwijdert meteen de weergaven van galerijen en foto's boven de limieten die "
+"zijn ingesteld bij Instellingen > Privacy & gegevens, in plaats van elke dag "
+"een deel. Weergaven die door die instellingen worden bewaard, zoals "
+"weergaven van klanten die hebben besteld, worden nooit verwijderd."
 
 #: tools/clean-activity.php:29
 msgid "Clean up customer activity"
@@ -17832,7 +17879,10 @@ msgid ""
 "No limits are set yet. Set a maximum number of view records or how long to "
 "keep them in <a href=\"%s\">Settings > Privacy & Data</a>, then come back "
 "here."
-msgstr "Er zijn nog geen limieten ingesteld. Stel een maximaal aantal weergaven in of hoe lang je ze bewaart in <a href=\"%s\">Instellingen > Privacy & gegevens</a> en kom dan hier terug."
+msgstr ""
+"Er zijn nog geen limieten ingesteld. Stel een maximaal aantal weergaven in "
+"of hoe lang je ze bewaart in <a href=\"%s\">Instellingen > Privacy & "
+"gegevens</a> en kom dan hier terug."
 
 #. translators: %s: number of gallery and image view records
 #: tools/clean-activity.php:52
@@ -17844,7 +17894,9 @@ msgstr "Je hebt ongeveer %s weergaven opgeslagen."
 msgid ""
 "It is recommended to make a backup before running this tool. Removed records "
 "cannot be brought back."
-msgstr "Maak een back-up voordat je deze tool gebruikt. Verwijderde gegevens kunnen niet worden teruggehaald."
+msgstr ""
+"Maak een back-up voordat je deze tool gebruikt. Verwijderde gegevens kunnen "
+"niet worden teruggehaald."
 
 #: tools/clean-activity.php:99
 msgid "Removing view records..."
@@ -17863,7 +17915,10 @@ msgid ""
 "Your database keeps the space from removed records until the table is "
 "optimized. Ask your host to optimize the sunshine_actions table to get that "
 "disk space back."
-msgstr "Je database houdt de ruimte van verwijderde gegevens vast tot de tabel is geoptimaliseerd. Vraag je hostingprovider de tabel sunshine_actions te optimaliseren om die schijfruimte terug te krijgen."
+msgstr ""
+"Je database houdt de ruimte van verwijderde gegevens vast tot de tabel is "
+"geoptimaliseerd. Vraag je hostingprovider de tabel sunshine_actions te "
+"optimaliseren om die schijfruimte terug te krijgen."
 
 #. translators: %s: number of view records still over the limit
 #: tools/clean-activity.php:115
@@ -17873,7 +17928,9 @@ msgstr "(nog ongeveer %s boven de limiet)"
 
 #: tools/clean-activity.php:129 tools/clean-activity.php:146
 msgid "The cleanup stopped. Reload this page to try again."
-msgstr "Het opschonen is gestopt. Laad deze pagina opnieuw om het nog eens te proberen."
+msgstr ""
+"Het opschonen is gestopt. Laad deze pagina opnieuw om het nog eens te "
+"proberen."
 
 #: update.php:16
 msgid "Update Report Data"
@@ -24482,7 +24539,9 @@ msgstr "Sunshine Photo Cart - Connect"
 msgid ""
 "Connect Sunshine Photo Cart to Lightroom, AI apps like Claude, and tools "
 "like Zapier: REST API, AI tools and signed webhooks."
-msgstr "Koppel Sunshine Photo Cart aan Lightroom, AI-apps zoals Claude en tools zoals Zapier: REST API, AI-tools en ondertekende webhooks."
+msgstr ""
+"Koppel Sunshine Photo Cart aan Lightroom, AI-apps zoals Claude en tools "
+"zoals Zapier: REST API, AI-tools en ondertekende webhooks."
 
 #: admin/class-admin-ai.php:59
 msgid "AI"
@@ -24496,17 +24555,23 @@ msgstr "Je kunt op deze site geen plugins aanzetten."
 msgid ""
 "This site doesn't allow installing plugins here. Get MCP Adapter from "
 "WordPress.org and upload it."
-msgstr "Deze site staat het installeren van plugins hier niet toe. Download MCP Adapter van WordPress.org en upload hem."
+msgstr ""
+"Deze site staat het installeren van plugins hier niet toe. Download MCP "
+"Adapter van WordPress.org en upload hem."
 
 #: admin/class-admin-ai.php:161
 msgid ""
 "MCP Adapter couldn't be installed. Get it from WordPress.org and upload it."
-msgstr "MCP Adapter kon niet worden geïnstalleerd. Download hem van WordPress.org en upload hem."
+msgstr ""
+"MCP Adapter kon niet worden geïnstalleerd. Download hem van WordPress.org en "
+"upload hem."
 
 #: admin/class-admin-ai.php:166
 msgid ""
 "MCP Adapter was installed but couldn't be found. Turn it on under Plugins."
-msgstr "MCP Adapter is geïnstalleerd maar kon niet worden gevonden. Zet hem aan bij Plugins."
+msgstr ""
+"MCP Adapter is geïnstalleerd maar kon niet worden gevonden. Zet hem aan bij "
+"Plugins."
 
 #: admin/class-admin-ai.php:233
 msgid "App passwords are turned off on this site."
@@ -24528,11 +24593,15 @@ msgstr "MCP Adapter staat aan."
 
 #: admin/class-admin-ai.php:317
 msgid "App password removed. AI apps using it can't sign in anymore."
-msgstr "App-wachtwoord verwijderd. AI-apps die het gebruikten kunnen niet meer inloggen."
+msgstr ""
+"App-wachtwoord verwijderd. AI-apps die het gebruikten kunnen niet meer "
+"inloggen."
 
 #: admin/class-admin-ai.php:318
 msgid "The app password couldn't be removed. Remove it on your profile page."
-msgstr "Het app-wachtwoord kon niet worden verwijderd. Verwijder het op je profielpagina."
+msgstr ""
+"Het app-wachtwoord kon niet worden verwijderd. Verwijder het op je "
+"profielpagina."
 
 #: admin/class-admin-ai.php:342 includes/admin-rooms.php:365
 #: includes/admin-rooms.php:439
@@ -24563,7 +24632,11 @@ msgid ""
 "then add a request header. If you can't pick Authorization, go back and "
 "check No sign-in. It then works in the Claude website, desktop app, phone "
 "app and Claude Code."
-msgstr "Open in Claude Instellingen, Connectors, Aangepaste connector toevoegen. Kies Geen aanmelding en voeg dan een request-header toe. Als je Authorization niet kunt kiezen, ga dan terug en vink Geen aanmelding aan. Daarna werkt het op de Claude-website, in de desktop-app, de telefoon-app en Claude Code."
+msgstr ""
+"Open in Claude Settings, Connectors, Add custom connector. Kies No sign-in "
+"en voeg dan een request-header toe. Als je Authorization niet kunt kiezen, "
+"ga dan terug en vink No sign-in aan. Daarna werkt het op de Claude-website, "
+"in de desktop-app, de telefoon-app en Claude Code."
 
 #: admin/class-admin-ai.php:428
 msgid "URL"
@@ -24585,7 +24658,9 @@ msgstr "Claude Code (terminal)"
 msgid ""
 "Run this in a terminal. You don't need it if you added the Claude connector "
 "and sign in to Claude Code with your Claude account."
-msgstr "Voer dit uit in een terminal. Je hebt het niet nodig als je de Claude-connector hebt toegevoegd en in Claude Code inlogt met je Claude-account."
+msgstr ""
+"Voer dit uit in een terminal. Je hebt het niet nodig als je de Claude-"
+"connector hebt toegevoegd en in Claude Code inlogt met je Claude-account."
 
 #: admin/class-admin-ai.php:439
 msgid "Cursor"
@@ -24595,7 +24670,9 @@ msgstr "Cursor"
 msgid ""
 "In Cursor, open Settings, Tools & MCPs, New MCP Server. Add this, then save "
 "and restart Cursor."
-msgstr "Open in Cursor Settings, Tools & MCPs, New MCP Server. Voeg dit toe, sla op en start Cursor opnieuw."
+msgstr ""
+"Open in Cursor Settings, Tools & MCPs, New MCP Server. Voeg dit toe, sla op "
+"en start Cursor opnieuw."
 
 #: admin/class-admin-ai.php:453
 msgid "VS Code"
@@ -24606,7 +24683,10 @@ msgid ""
 "In the Command Palette, run MCP: Open User Configuration. Add this, then "
 "save and restart VS Code. Keep it out of project files, which can end up in "
 "git."
-msgstr "Voer in het Command Palette MCP: Open User Configuration uit. Voeg dit toe, sla op en start VS Code opnieuw. Houd het buiten projectbestanden, want die kunnen in git terechtkomen."
+msgstr ""
+"Voer in het Command Palette MCP: Open User Configuration uit. Voeg dit toe, "
+"sla op en start VS Code opnieuw. Houd het buiten projectbestanden, want die "
+"kunnen in git terechtkomen."
 
 #: admin/class-admin-ai.php:468
 msgid "ChatGPT / Codex"
@@ -24616,7 +24696,9 @@ msgstr "ChatGPT / Codex"
 msgid ""
 "Add this to ~/.codex/config.toml, then restart the ChatGPT app. Use its Work "
 "side, not Chat."
-msgstr "Voeg dit toe aan ~/.codex/config.toml en start daarna de ChatGPT-app opnieuw. Gebruik de Work-kant, niet Chat."
+msgstr ""
+"Voeg dit toe aan ~/.codex/config.toml en start daarna de ChatGPT-app "
+"opnieuw. Gebruik de Work-kant, niet Chat."
 
 #: admin/class-admin-ai.php:473
 msgid "Gemini CLI"
@@ -24634,7 +24716,9 @@ msgstr "Koppel je AI"
 msgid ""
 "Ask Claude or another AI to manage your galleries, get orders ready for your "
 "print lab, or tell you how sales are going."
-msgstr "Vraag Claude of een andere AI om je galerijen te beheren, bestellingen klaar te maken voor je fotolab of je te vertellen hoe de verkoop gaat."
+msgstr ""
+"Vraag Claude of een andere AI om je galerijen te beheren, bestellingen klaar "
+"te maken voor je fotolab of je te vertellen hoe de verkoop gaat."
 
 #: admin/class-admin-ai.php:513
 msgid "MCP Adapter plugin"
@@ -24681,7 +24765,9 @@ msgstr "%1$s, %2$s"
 #: admin/class-admin-ai.php:541
 msgid ""
 "AI apps using the old password will stop connecting until you update them."
-msgstr "AI-apps die het oude wachtwoord gebruiken, maken geen verbinding meer tot je ze bijwerkt."
+msgstr ""
+"AI-apps die het oude wachtwoord gebruiken, maken geen verbinding meer tot je "
+"ze bijwerkt."
 
 #: admin/class-admin-ai.php:541
 msgid "New password"
@@ -24731,7 +24817,8 @@ msgstr "Kopieer dit nu. Het wordt niet nog een keer getoond."
 
 #: admin/class-admin-ai.php:577
 msgid "It has the same access as your admin account, so keep it private."
-msgstr "Het heeft dezelfde toegang als je beheerdersaccount, dus houd het geheim."
+msgstr ""
+"Het heeft dezelfde toegang als je beheerdersaccount, dus houd het geheim."
 
 #: admin/class-admin-ai.php:581
 msgid "Admin username"
@@ -24745,7 +24832,9 @@ msgstr "Het app-wachtwoord ervan"
 msgid ""
 "This only fills in the details below. It stays in your browser and is never "
 "saved or sent anywhere."
-msgstr "Dit vult alleen de gegevens hieronder in. Het blijft in je browser en wordt nooit opgeslagen of ergens naartoe gestuurd."
+msgstr ""
+"Dit vult alleen de gegevens hieronder in. Het blijft in je browser en wordt "
+"nooit opgeslagen of ergens naartoe gestuurd."
 
 #: admin/class-admin-ai.php:590
 msgid "AI app"
@@ -24759,7 +24848,9 @@ msgstr "AI-skill"
 msgid ""
 "Teaches your AI app how Sunshine works, so it can upload photos, get orders "
 "ready for your lab and read your sales."
-msgstr "Leert je AI-app hoe Sunshine werkt, zodat hij foto's kan uploaden, bestellingen klaar kan maken voor je lab en je verkoop kan lezen."
+msgstr ""
+"Leert je AI-app hoe Sunshine werkt, zodat hij foto's kan uploaden, "
+"bestellingen klaar kan maken voor je lab en je verkoop kan lezen."
 
 #: admin/class-admin-ai.php:620
 msgid "Download skill"
@@ -24791,8 +24882,12 @@ msgid ""
 msgid_plural ""
 "%1$d Sunshine webhook endpoints were disabled after repeated delivery "
 "failures. <a href=\"%2$s\">Review webhooks</a>."
-msgstr[0] "%1$d Sunshine-webhook-endpoint is uitgeschakeld na herhaalde mislukte leveringen. <a href=\"%2$s\">Bekijk webhooks</a>."
-msgstr[1] "%1$d Sunshine-webhook-endpoints zijn uitgeschakeld na herhaalde mislukte leveringen. <a href=\"%2$s\">Bekijk webhooks</a>."
+msgstr[0] ""
+"%1$d Sunshine-webhook-endpoint is uitgeschakeld na herhaalde mislukte "
+"leveringen. <a href=\"%2$s\">Bekijk webhooks</a>."
+msgstr[1] ""
+"%1$d Sunshine-webhook-endpoints zijn uitgeschakeld na herhaalde mislukte "
+"leveringen. <a href=\"%2$s\">Bekijk webhooks</a>."
 
 #: admin/class-admin-webhooks.php:98 admin/class-admin-webhooks.php:272
 msgid "Add endpoint"
@@ -24802,7 +24897,10 @@ msgstr "Endpoint toevoegen"
 msgid ""
 "Send signed order events to external services. Deliveries run in the "
 "background and retry automatically when an endpoint is unavailable."
-msgstr "Stuur ondertekende bestelgebeurtenissen naar externe diensten. Leveringen lopen op de achtergrond en worden automatisch opnieuw geprobeerd als een endpoint niet bereikbaar is."
+msgstr ""
+"Stuur ondertekende bestelgebeurtenissen naar externe diensten. Leveringen "
+"lopen op de achtergrond en worden automatisch opnieuw geprobeerd als een "
+"endpoint niet bereikbaar is."
 
 #: admin/class-admin-webhooks.php:102
 msgid "Endpoints"
@@ -24902,7 +25000,9 @@ msgstr "Payloadversie"
 msgid ""
 "This endpoint stays pinned to the selected payload shape when newer versions "
 "are introduced."
-msgstr "Dit endpoint blijft vastgezet op de gekozen payloadvorm als er nieuwere versies komen."
+msgstr ""
+"Dit endpoint blijft vastgezet op de gekozen payloadvorm als er nieuwere "
+"versies komen."
 
 #: admin/class-admin-webhooks.php:272
 msgid "Save endpoint"
@@ -24921,7 +25021,9 @@ msgstr "Endpoint-acties"
 msgid ""
 "Rotating the signing secret immediately invalidates the previous secret. "
 "Pending attempts use the new secret."
-msgstr "Als je het ondertekeningsgeheim vernieuwt, is het vorige geheim meteen ongeldig. Openstaande pogingen gebruiken het nieuwe geheim."
+msgstr ""
+"Als je het ondertekeningsgeheim vernieuwt, is het vorige geheim meteen "
+"ongeldig. Openstaande pogingen gebruiken het nieuwe geheim."
 
 #: admin/class-admin-webhooks.php:280
 msgid "Rotate signing secret"
@@ -24985,13 +25087,19 @@ msgid ""
 "SHA256 over the timestamp, a period, and the exact raw request body using "
 "the endpoint signing secret. Reject old timestamps and compare signatures in "
 "constant time."
-msgstr "Lees de timestamp en de v1-handtekening uit Sunshine-Signature. Bereken HMAC-SHA256 over de timestamp, een punt en de exacte ruwe request-body met het ondertekeningsgeheim van het endpoint. Weiger oude timestamps en vergelijk handtekeningen in constante tijd."
+msgstr ""
+"Lees de timestamp en de v1-handtekening uit Sunshine-Signature. Bereken HMAC-"
+"SHA256 over de timestamp, een punt en de exacte ruwe request-body met het "
+"ondertekeningsgeheim van het endpoint. Weiger oude timestamps en vergelijk "
+"handtekeningen in constante tijd."
 
 #: admin/class-admin-webhooks.php:345
 msgid ""
 "Webhook endpoint created. Copy the signing secret now; it will not be shown "
 "again."
-msgstr "Webhook-endpoint aangemaakt. Kopieer het ondertekeningsgeheim nu; het wordt niet nog een keer getoond."
+msgstr ""
+"Webhook-endpoint aangemaakt. Kopieer het ondertekeningsgeheim nu; het wordt "
+"niet nog een keer getoond."
 
 #: admin/class-admin-webhooks.php:365
 msgid "Webhook endpoint updated."
@@ -25012,7 +25120,9 @@ msgstr "Webhook-endpoint verwijderd. De leveringsgeschiedenis is bewaard."
 #: admin/class-admin-webhooks.php:391
 msgid ""
 "Signing secret rotated. Copy the new secret now; it will not be shown again."
-msgstr "Ondertekeningsgeheim vernieuwd. Kopieer het nieuwe geheim nu; het wordt niet nog een keer getoond."
+msgstr ""
+"Ondertekeningsgeheim vernieuwd. Kopieer het nieuwe geheim nu; het wordt niet "
+"nog een keer getoond."
 
 #: admin/class-admin-webhooks.php:402
 msgid "Test event sent."
@@ -25035,7 +25145,9 @@ msgstr "%s geleden"
 #: includes/class-api-permissions.php:110
 msgid ""
 "Sign in with a WordPress username and app password to use the Sunshine API."
-msgstr "Log in met een WordPress-gebruikersnaam en app-wachtwoord om de Sunshine API te gebruiken."
+msgstr ""
+"Log in met een WordPress-gebruikersnaam en app-wachtwoord om de Sunshine API "
+"te gebruiken."
 
 #. translators: 1: action, 2: resource
 #: includes/class-api-permissions.php:118
@@ -25111,7 +25223,8 @@ msgstr "Kies minstens één gebeurtenis."
 
 #: includes/class-api-webhooks.php:750
 msgid "OpenSSL is required to store webhook signing secrets securely."
-msgstr "OpenSSL is nodig om ondertekeningsgeheimen van webhooks veilig op te slaan."
+msgstr ""
+"OpenSSL is nodig om ondertekeningsgeheimen van webhooks veilig op te slaan."
 
 #: includes/class-api-webhooks.php:757
 msgid "Could not encrypt the webhook signing secret."
@@ -25121,11 +25234,15 @@ msgstr "Het ondertekeningsgeheim van de webhook kon niet worden versleuteld."
 msgid ""
 "The webhook signing secret cannot be decrypted. Rotate the secret and try "
 "again."
-msgstr "Het ondertekeningsgeheim van de webhook kan niet worden ontsleuteld. Vernieuw het geheim en probeer het opnieuw."
+msgstr ""
+"Het ondertekeningsgeheim van de webhook kan niet worden ontsleuteld. "
+"Vernieuw het geheim en probeer het opnieuw."
 
 #: includes/class-api-webhooks.php:768
 msgid "The webhook signing secret is invalid. Rotate the secret and try again."
-msgstr "Het ondertekeningsgeheim van de webhook is ongeldig. Vernieuw het geheim en probeer het opnieuw."
+msgstr ""
+"Het ondertekeningsgeheim van de webhook is ongeldig. Vernieuw het geheim en "
+"probeer het opnieuw."
 
 #: includes/class-api-webhooks.php:806
 msgid "Could not queue the redelivery."
@@ -25137,7 +25254,8 @@ msgstr "Unieke ID van het item."
 
 #: includes/class-rest-controller.php:75
 msgid "Whether to bypass the trash and force deletion."
-msgstr "Of de prullenbak moet worden overgeslagen en het item definitief verwijderd."
+msgstr ""
+"Of de prullenbak moet worden overgeslagen en het item definitief verwijderd."
 
 #: includes/class-rest-controller.php:172
 msgid "Sort collection by object attribute."
@@ -25167,7 +25285,9 @@ msgstr "De klant kon niet worden verwijderd."
 msgid ""
 "That price level doesn't exist. Use an id from the price levels list, or 0 "
 "for the default."
-msgstr "Dat prijsniveau bestaat niet. Gebruik een id uit de lijst met prijsniveaus, of 0 voor het standaardniveau."
+msgstr ""
+"Dat prijsniveau bestaat niet. Gebruik een id uit de lijst met prijsniveaus, "
+"of 0 voor het standaardniveau."
 
 #. translators: %s: the end_date value the caller sent
 #: includes/controllers/v1/class-rest-galleries-controller.php:190
@@ -25175,7 +25295,9 @@ msgstr "Dat prijsniveau bestaat niet. Gebruik een id uit de lijst met prijsnivea
 msgid ""
 "end_date \"%s\" is not a date. Send a Unix timestamp or a date like "
 "2026-12-31."
-msgstr "end_date \"%s\" is geen datum. Stuur een Unix-timestamp of een datum zoals 2026-12-31."
+msgstr ""
+"end_date \"%s\" is geen datum. Stuur een Unix-timestamp of een datum zoals "
+"2026-12-31."
 
 #: includes/controllers/v1/class-rest-galleries-controller.php:207
 msgid "images must be a list of image ids."
@@ -25204,7 +25326,9 @@ msgstr "Beperk de resultaten tot subgalerijen van een bepaalde galerij."
 #: includes/controllers/v1/class-rest-galleries-controller.php:345
 msgid ""
 "Limit results to galleries whose title or content matches the search string."
-msgstr "Beperk de resultaten tot galerijen waarvan de titel of inhoud overeenkomt met de zoekterm."
+msgstr ""
+"Beperk de resultaten tot galerijen waarvan de titel of inhoud overeenkomt "
+"met de zoekterm."
 
 #: includes/controllers/v1/class-rest-images-controller.php:83
 #: includes/controllers/v1/class-rest-images-controller.php:112
@@ -25239,7 +25363,9 @@ msgstr "De bestandsextensie is geen ondersteund afbeeldingstype."
 msgid ""
 "No file payload supplied. Send multipart `file`, JSON `src` URL, or JSON "
 "`data` + `filename`."
-msgstr "Geen bestand meegestuurd. Stuur multipart `file`, een JSON `src`-URL of JSON `data` + `filename`."
+msgstr ""
+"Geen bestand meegestuurd. Stuur multipart `file`, een JSON `src`-URL of JSON "
+"`data` + `filename`."
 
 #. translators: %s: the error the image's address gave, like "Not Found".
 #: includes/controllers/v1/class-rest-images-controller.php:389
@@ -25247,11 +25373,14 @@ msgstr "Geen bestand meegestuurd. Stuur multipart `file`, een JSON `src`-URL of 
 msgid ""
 "The image couldn't be downloaded from that address (%s). Upload the file "
 "instead."
-msgstr "De afbeelding kon niet van dat adres worden gedownload (%s). Upload het bestand in plaats daarvan."
+msgstr ""
+"De afbeelding kon niet van dat adres worden gedownload (%s). Upload het "
+"bestand in plaats daarvan."
 
 #: includes/controllers/v1/class-rest-images-controller.php:394
 msgid "The downloaded image exceeds the maximum allowed upload size."
-msgstr "De gedownloade afbeelding is groter dan de maximaal toegestane uploadgrootte."
+msgstr ""
+"De gedownloade afbeelding is groter dan de maximaal toegestane uploadgrootte."
 
 #: includes/controllers/v1/class-rest-images-controller.php:430
 msgid "Image URL is missing a host or scheme."
@@ -25284,7 +25413,10 @@ msgstr "Afbeelding niet gevonden."
 msgid ""
 "The %1$s file (%2$s) doesn't fit this photo (%3$s). Send a copy no bigger "
 "than the original and close to the site's size settings."
-msgstr "Het %1$s-bestand (%2$s) past niet bij deze foto (%3$s). Stuur een kopie die niet groter is dan het origineel en dicht bij de formaatinstellingen van de site ligt."
+msgstr ""
+"Het %1$s-bestand (%2$s) past niet bij deze foto (%3$s). Stuur een kopie die "
+"niet groter is dan het origineel en dicht bij de formaatinstellingen van de "
+"site ligt."
 
 #. translators: 1: size name sent by the caller, 2: comma-separated list of allowed size names
 #: includes/controllers/v1/class-rest-images-controller.php:837
@@ -25309,7 +25441,9 @@ msgstr "De afbeelding kon niet worden verwijderd."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:89
 msgid "Include each file's download link. The manifest link works either way."
-msgstr "Neem de downloadlink van elk bestand op. De link naar het overzicht werkt hoe dan ook."
+msgstr ""
+"Neem de downloadlink van elk bestand op. De link naar het overzicht werkt "
+"hoe dan ook."
 
 #. translators: %d: current Unix timestamp
 #: includes/controllers/v1/class-rest-orders-controller.php:212
@@ -25341,7 +25475,9 @@ msgstr "Terugbetalingen van %1$s zijn meer dan het besteltotaal van %2$s."
 msgid ""
 "\"%s\" is not an order status on this site. Use a slug from GET /order-"
 "statuses."
-msgstr "\"%s\" is geen bestelstatus op deze site. Gebruik een slug uit GET /order-statuses."
+msgstr ""
+"\"%s\" is geen bestelstatus op deze site. Gebruik een slug uit GET /order-"
+"statuses."
 
 #. translators: %s: database error message
 #: includes/controllers/v1/class-rest-orders-controller.php:754
@@ -25362,12 +25498,17 @@ msgid ""
 "When the order was placed (ISO 8601). Give it when creating an order to "
 "bring in an older order: an order created with a date is an import and sends "
 "no webhooks."
-msgstr "Wanneer de bestelling is geplaatst (ISO 8601). Geef dit op bij het aanmaken van een bestelling om een oudere bestelling over te zetten: een bestelling die met een datum wordt aangemaakt is een import en verstuurt geen webhooks."
+msgstr ""
+"Wanneer de bestelling is geplaatst (ISO 8601). Geef dit op bij het aanmaken "
+"van een bestelling om een oudere bestelling over te zetten: een bestelling "
+"die met een datum wordt aangemaakt is een import en verstuurt geen webhooks."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:924
 msgid ""
 "Store credit used on the order. The total is what is left to pay after it."
-msgstr "Tegoed dat voor de bestelling is gebruikt. Het totaal is wat daarna nog betaald moet worden."
+msgstr ""
+"Tegoed dat voor de bestelling is gebruikt. Het totaal is wat daarna nog "
+"betaald moet worden."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:951
 msgid "Limit to orders for a customer (user id)."
@@ -25375,7 +25516,8 @@ msgstr "Beperk tot bestellingen van een klant (gebruikers-id)."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:952
 msgid "Limit to the order with this order number (the number customers see)."
-msgstr "Beperk tot de bestelling met dit bestelnummer (het nummer dat klanten zien)."
+msgstr ""
+"Beperk tot de bestelling met dit bestelnummer (het nummer dat klanten zien)."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:953
 msgid "Filter by order-status slug."
@@ -25393,13 +25535,18 @@ msgstr "ISO 8601-datum: alleen bestellingen hiervoor."
 msgid ""
 "Gallery id (or comma-separated list of ids). Returns only orders whose line "
 "items reference at least one of these galleries."
-msgstr "Galerij-id (of een door komma's gescheiden lijst met id's). Geeft alleen bestellingen terug waarvan de orderregels naar minstens één van deze galerijen verwijzen."
+msgstr ""
+"Galerij-id (of een door komma's gescheiden lijst met id's). Geeft alleen "
+"bestellingen terug waarvan de orderregels naar minstens één van deze "
+"galerijen verwijzen."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:963
 msgid ""
 "When `gallery` is set, also include orders touching any descendant gallery "
 "(sub-galleries at any depth)."
-msgstr "Als `gallery` is ingesteld, neem dan ook bestellingen mee die een onderliggende galerij raken (subgalerijen op elk niveau)."
+msgstr ""
+"Als `gallery` is ingesteld, neem dan ook bestellingen mee die een "
+"onderliggende galerij raken (subgalerijen op elk niveau)."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:139
 #: includes/controllers/v1/class-rest-product-categories-controller.php:83
@@ -25409,7 +25556,9 @@ msgstr "Er is een `name` nodig."
 #: includes/controllers/v1/class-rest-price-levels-controller.php:157
 msgid ""
 "`percent` must be a number above -100 (for example 10 for +10%, -5 for -5%)."
-msgstr "`percent` moet een getal boven -100 zijn (bijvoorbeeld 10 voor +10%, -5 voor -5%)."
+msgstr ""
+"`percent` moet een getal boven -100 zijn (bijvoorbeeld 10 voor +10%, -5 voor "
+"-5%)."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:213
 msgid "The price level could not be deleted."
@@ -25419,7 +25568,9 @@ msgstr "Het prijsniveau kon niet worden verwijderd."
 msgid ""
 "A `products` array of product ids (or an `items` array of per-product "
 "entries) is required."
-msgstr "Er is een `products`-array met product-id's (of een `items`-array met gegevens per product) nodig."
+msgstr ""
+"Er is een `products`-array met product-id's (of een `items`-array met "
+"gegevens per product) nodig."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:292
 msgid "Provide `price` and/or `shipping` to set."
@@ -25427,13 +25578,17 @@ msgstr "Geef `price` en/of `shipping` op om in te stellen."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:357
 msgid "A numeric `percent` is required (use a negative number to decrease)."
-msgstr "Er is een numeriek `percent` nodig (gebruik een negatief getal om te verlagen)."
+msgstr ""
+"Er is een numeriek `percent` nodig (gebruik een negatief getal om te "
+"verlagen)."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:361
 msgid ""
 "`percent` must be above -100. A cut of 100% or more would make prices free "
 "or below zero."
-msgstr "`percent` moet boven -100 liggen. Een verlaging van 100% of meer zou prijzen gratis of lager dan nul maken."
+msgstr ""
+"`percent` moet boven -100 liggen. Een verlaging van 100% of meer zou prijzen "
+"gratis of lager dan nul maken."
 
 #. translators: %s: field name, price or shipping
 #: includes/controllers/v1/class-rest-price-levels-controller.php:500
@@ -25487,20 +25642,30 @@ msgid ""
 "unpaid orders are excluded from revenue. Pass any slug from /order-statuses "
 "to override (e.g. \"completed,refunded\" to include refunded gross in "
 "revenue)."
-msgstr "Door komma's gescheiden slugs van bestelstatussen om mee te nemen. Standaard de betaalde statussen (new, processing, pickup, shipped, completed), zodat terugbetaalde, geannuleerde en onbetaalde bestellingen niet in de omzet meetellen. Geef een slug uit /order-statuses op om dit te wijzigen (bijv. \"completed,refunded\" om terugbetaalde bruto-omzet mee te tellen)."
+msgstr ""
+"Door komma's gescheiden slugs van bestelstatussen om mee te nemen. Standaard "
+"de betaalde statussen (new, processing, pickup, shipped, completed), zodat "
+"terugbetaalde, geannuleerde en onbetaalde bestellingen niet in de omzet "
+"meetellen. Geef een slug uit /order-statuses op om dit te wijzigen (bijv. "
+"\"completed,refunded\" om terugbetaalde bruto-omzet mee te tellen)."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:109
 msgid ""
 "Gallery id (or comma-separated list of ids). Narrows the report to line "
 "items from these galleries only. Use this to answer \"how much did gallery X "
 "make me?\" in one call."
-msgstr "Galerij-id (of een door komma's gescheiden lijst met id's). Beperkt het rapport tot orderregels uit alleen deze galerijen. Gebruik dit om \"hoeveel heeft galerij X me opgeleverd?\" in één aanroep te beantwoorden."
+msgstr ""
+"Galerij-id (of een door komma's gescheiden lijst met id's). Beperkt het "
+"rapport tot orderregels uit alleen deze galerijen. Gebruik dit om \"hoeveel "
+"heeft galerij X me opgeleverd?\" in één aanroep te beantwoorden."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:114
 msgid ""
 "When `gallery` is set, also include descendant galleries at any depth (sub-"
 "galleries)."
-msgstr "Als `gallery` is ingesteld, neem dan ook onderliggende galerijen op elk niveau mee (subgalerijen)."
+msgstr ""
+"Als `gallery` is ingesteld, neem dan ook onderliggende galerijen op elk "
+"niveau mee (subgalerijen)."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:120
 msgid "Sales summary"
@@ -25512,7 +25677,12 @@ msgid ""
 "month. Revenue is NET — order-level refunds are subtracted. Only paid "
 "statuses are included by default (override via `status`). The response also "
 "breaks out `gross_revenue`, `refunds`, `tax`, and `shipping`."
-msgstr "Aantal bestellingen en omzet over een periode, eventueel gegroepeerd per dag/week/maand. Omzet is NETTO: terugbetalingen op bestelniveau worden afgetrokken. Standaard tellen alleen betaalde statussen mee (wijzig dit met `status`). Het antwoord splitst ook `gross_revenue`, `refunds`, `tax` en `shipping` uit."
+msgstr ""
+"Aantal bestellingen en omzet over een periode, eventueel gegroepeerd per dag/"
+"week/maand. Omzet is NETTO: terugbetalingen op bestelniveau worden "
+"afgetrokken. Standaard tellen alleen betaalde statussen mee (wijzig dit met "
+"`status`). Het antwoord splitst ook `gross_revenue`, `refunds`, `tax` en "
+"`shipping` uit."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:123
 msgid "ISO 8601 start date."
@@ -25530,7 +25700,9 @@ msgstr "Bestellingen per status"
 msgid ""
 "Count of orders in each `sunshine-order-status` slug. Reports across all "
 "statuses — this report is the one place to see the full breakdown."
-msgstr "Aantal bestellingen per `sunshine-order-status`-slug. Telt over alle statussen: dit rapport is de enige plek om de volledige verdeling te zien."
+msgstr ""
+"Aantal bestellingen per `sunshine-order-status`-slug. Telt over alle "
+"statussen: dit rapport is de enige plek om de volledige verdeling te zien."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:140
 msgid "Top-selling products"
@@ -25543,7 +25715,13 @@ msgid ""
 "order does not inflate product totals. Only paid statuses are included by "
 "default (override via `status`). Pass `gallery` to scope the report to one "
 "or more galleries."
-msgstr "Producten gerangschikt op verkochte aantallen. Omzet is NETTO: terugbetalingen op bestelniveau worden naar verhouding over de orderregels van elke bestelling verdeeld, zodat een terugbetaalde bestelling de producttotalen niet opblaast. Standaard tellen alleen betaalde statussen mee (wijzig dit met `status`). Geef `gallery` op om het rapport te beperken tot een of meer galerijen."
+msgstr ""
+"Producten gerangschikt op verkochte aantallen. Omzet is NETTO: "
+"terugbetalingen op bestelniveau worden naar verhouding over de orderregels "
+"van elke bestelling verdeeld, zodat een terugbetaalde bestelling de "
+"producttotalen niet opblaast. Standaard tellen alleen betaalde statussen mee "
+"(wijzig dit met `status`). Geef `gallery` op om het rapport te beperken tot "
+"een of meer galerijen."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:154
 msgid "Top-selling galleries"
@@ -25557,13 +25735,21 @@ msgid ""
 "(override via `status`). Pass `gallery` to scope the report to a specific "
 "gallery — the response then contains one row per gallery in the input, so "
 "\"how much did gallery X make me?\" is a one-call answer."
-msgstr "Galerijen gerangschikt op netto-omzet. Terugbetalingen op bestelniveau worden naar verhouding over de orderregels van elke bestelling verdeeld, zodat een terugbetaalde galerijbestelling het totaal niet opblaast. Standaard tellen alleen betaalde statussen mee (wijzig dit met `status`). Geef `gallery` op om het rapport te beperken tot een bepaalde galerij: het antwoord bevat dan één rij per opgegeven galerij, dus \"hoeveel heeft galerij X me opgeleverd?\" is met één aanroep te beantwoorden."
+msgstr ""
+"Galerijen gerangschikt op netto-omzet. Terugbetalingen op bestelniveau "
+"worden naar verhouding over de orderregels van elke bestelling verdeeld, "
+"zodat een terugbetaalde galerijbestelling het totaal niet opblaast. "
+"Standaard tellen alleen betaalde statussen mee (wijzig dit met `status`). "
+"Geef `gallery` op om het rapport te beperken tot een bepaalde galerij: het "
+"antwoord bevat dan één rij per opgegeven galerij, dus \"hoeveel heeft "
+"galerij X me opgeleverd?\" is met één aanroep te beantwoorden."
 
 #. translators: 1: list of unknown keys, 2: settings group
 #: includes/controllers/v1/class-rest-settings-controller.php:152
 #, php-format
 msgid "Unknown option key(s) for group \"%2$s\": %1$s. Nothing was saved."
-msgstr "Onbekende optiesleutel(s) voor groep \"%2$s\": %1$s. Er is niets opgeslagen."
+msgstr ""
+"Onbekende optiesleutel(s) voor groep \"%2$s\": %1$s. Er is niets opgeslagen."
 
 #. translators: %s: list of setting keys
 #: includes/controllers/v1/class-rest-settings-controller.php:199
@@ -25571,7 +25757,9 @@ msgstr "Onbekende optiesleutel(s) voor groep \"%2$s\": %1$s. Er is niets opgesla
 msgid ""
 "Not one of the allowed values for: %s. Nothing was saved. Allowed values are "
 "in each setting's enum."
-msgstr "Geen van de toegestane waarden voor: %s. Er is niets opgeslagen. De toegestane waarden staan in de enum van elke instelling."
+msgstr ""
+"Geen van de toegestane waarden voor: %s. Er is niets opgeslagen. De "
+"toegestane waarden staan in de enum van elke instelling."
 
 #: includes/controllers/v1/class-rest-settings-controller.php:227
 msgid "This setting cannot be modified via the API."
@@ -25980,11 +26168,15 @@ msgstr "Een onderhoudstool uitvoeren"
 #: includes/mcp/class-sunshine-ai-skill.php:67
 #: includes/mcp/class-sunshine-ai-skill.php:149
 msgid "The skill file is missing from this copy of the plugin. Reinstall it."
-msgstr "Het skill-bestand ontbreekt in deze kopie van de plugin. Installeer hem opnieuw."
+msgstr ""
+"Het skill-bestand ontbreekt in deze kopie van de plugin. Installeer hem "
+"opnieuw."
 
 #: includes/mcp/class-sunshine-ai-skill.php:70
 msgid "This server can't make zip files. Copy the skill text instead."
-msgstr "Deze server kan geen zip-bestanden maken. Kopieer in plaats daarvan de skill-tekst."
+msgstr ""
+"Deze server kan geen zip-bestanden maken. Kopieer in plaats daarvan de skill-"
+"tekst."
 
 #: includes/mcp/class-sunshine-ai-skill.php:75
 msgid "The zip file couldn't be made."
@@ -25994,7 +26186,9 @@ msgstr "Het zip-bestand kon niet worden gemaakt."
 msgid ""
 "Work on this photo store: galleries and photo uploads, orders and print lab "
 "files, or sales."
-msgstr "Werk aan deze fotowinkel: galerijen en foto-uploads, bestellingen en afdrukbestanden voor het lab, of verkoop."
+msgstr ""
+"Werk aan deze fotowinkel: galerijen en foto-uploads, bestellingen en "
+"afdrukbestanden voor het lab, of verkoop."
 
 #: includes/mcp/class-sunshine-ai-skill.php:106
 msgid "What to do"
@@ -26004,13 +26198,17 @@ msgstr "Wat te doen"
 msgid ""
 "Like \"Get order 1052 ready for the lab\" or \"Make a password gallery for "
 "the Smith wedding\"."
-msgstr "Bijvoorbeeld \"Maak bestelling 1052 klaar voor het lab\" of \"Maak een galerij met wachtwoord voor de bruiloft van Smith\"."
+msgstr ""
+"Bijvoorbeeld \"Maak bestelling 1052 klaar voor het lab\" of \"Maak een "
+"galerij met wachtwoord voor de bruiloft van Smith\"."
 
 #: includes/mcp/class-sunshine-mcp.php:85
 msgid ""
 "Galleries, photos, products, orders, customers and sales reports from "
 "Sunshine Photo Cart."
-msgstr "Galerijen, foto's, producten, bestellingen, klanten en verkooprapporten uit Sunshine Photo Cart."
+msgstr ""
+"Galerijen, foto's, producten, bestellingen, klanten en verkooprapporten uit "
+"Sunshine Photo Cart."
 
 #. Plugin Name of the plugin
 #: crop-wall-preview.php
@@ -26022,7 +26220,9 @@ msgstr "Sunshine Photo Cart - Crop & Wall Preview"
 msgid ""
 "Let customers pick the exact crop for each print and see it on a wall at "
 "true size"
-msgstr "Laat klanten de exacte uitsnede voor elke afdruk kiezen en zie hem op ware grootte aan een muur hangen"
+msgstr ""
+"Laat klanten de exacte uitsnede voor elke afdruk kiezen en zie hem op ware "
+"grootte aan een muur hangen"
 
 #: includes/admin-order.php:37 includes/cart.php:214
 msgid "Save crop"
@@ -26060,7 +26260,9 @@ msgstr "Breedte"
 msgid ""
 "The front of the print. Leave empty if this product has no set size, and "
 "customers won't see the crop step for it."
-msgstr "De voorkant van de afdruk. Laat leeg als dit product geen vast formaat heeft; klanten zien dan de stap voor de uitsnede niet."
+msgstr ""
+"De voorkant van de afdruk. Laat leeg als dit product geen vast formaat "
+"heeft; klanten zien dan de stap voor de uitsnede niet."
 
 #: includes/admin-product.php:36
 msgid "Height"
@@ -26078,7 +26280,9 @@ msgstr "Rand"
 msgid ""
 "For canvas and similar prints. When the photo wraps around the sides, "
 "customers crop a bigger area that includes the sides."
-msgstr "Voor canvas en soortgelijke afdrukken. Als de foto om de zijkanten loopt, snijden klanten een groter deel uit, inclusief de zijkanten."
+msgstr ""
+"Voor canvas en soortgelijke afdrukken. Als de foto om de zijkanten loopt, "
+"snijden klanten een groter deel uit, inclusief de zijkanten."
 
 #: includes/admin-product.php:68
 msgid "Edge Depth"
@@ -26102,11 +26306,14 @@ msgstr "Deze foto gebruiken"
 msgid ""
 "The box on the wall is a %s print. If it looks too big or too small, measure "
 "again."
-msgstr "Het vak aan de muur is een afdruk van %s. Lijkt het te groot of te klein, meet dan opnieuw."
+msgstr ""
+"Het vak aan de muur is een afdruk van %s. Lijkt het te groot of te klein, "
+"meet dan opnieuw."
 
 #: includes/admin-rooms.php:65
 msgid "A sample print shows on the wall once steps 1 and 2 are done."
-msgstr "Er verschijnt een voorbeeldafdruk aan de muur zodra stap 1 en 2 klaar zijn."
+msgstr ""
+"Er verschijnt een voorbeeldafdruk aan de muur zodra stap 1 en 2 klaar zijn."
 
 #: includes/admin-rooms.php:66
 msgid "16 x 20 in"
@@ -26148,7 +26355,9 @@ msgstr "Kamer verwijderd."
 msgid ""
 "The room was not saved. It needs a name, a photo, a measurement and a hang "
 "point."
-msgstr "De kamer is niet opgeslagen. Er zijn een naam, een foto, een meting en een ophangpunt nodig."
+msgstr ""
+"De kamer is niet opgeslagen. Er zijn een naam, een foto, een meting en een "
+"ophangpunt nodig."
 
 #: includes/admin-rooms.php:92
 msgid "That room could not be found."
@@ -26170,7 +26379,9 @@ msgstr "Kamer bewerken"
 msgid ""
 "Take it straight at the wall, at eye level, with empty wall where art can "
 "hang."
-msgstr "Maak de foto recht voor de muur, op ooghoogte, met een lege muur waar kunst kan hangen."
+msgstr ""
+"Maak de foto recht voor de muur, op ooghoogte, met een lege muur waar kunst "
+"kan hangen."
 
 #: includes/admin-rooms.php:304
 msgid "Change photo"
@@ -26188,7 +26399,9 @@ msgstr "Meet iets"
 msgid ""
 "Click both ends of something flat on the wall that you know the size of, "
 "like a door or a window."
-msgstr "Klik op beide uiteinden van iets plats op de muur waarvan je de maat weet, zoals een deur of een raam."
+msgstr ""
+"Klik op beide uiteinden van iets plats op de muur waarvan je de maat weet, "
+"zoals een deur of een raam."
 
 #: includes/admin-rooms.php:320
 msgid "How long is it?"
@@ -26224,12 +26437,15 @@ msgstr "`print_size` moet een object zijn, of null om het te verwijderen."
 
 #: includes/api.php:131
 msgid "`print_size` can only be set on products of type print."
-msgstr "`print_size` kan alleen worden ingesteld op producten van het type print."
+msgstr ""
+"`print_size` kan alleen worden ingesteld op producten van het type print."
 
 #: includes/api.php:137
 msgid ""
 "`print_size` needs a width and height above zero. Send null to remove it."
-msgstr "`print_size` heeft een breedte en hoogte boven nul nodig. Stuur null om het te verwijderen."
+msgstr ""
+"`print_size` heeft een breedte en hoogte boven nul nodig. Stuur null om het "
+"te verwijderen."
 
 #. translators: %s: the allowed units, like "in, cm".
 #: includes/api.php:143
@@ -26247,7 +26463,9 @@ msgstr "`print_size.edge` moet een van deze zijn: %s."
 msgid ""
 "`print_size.edge_depth` only applies with an edge. Set `edge` too, or leave "
 "the depth out."
-msgstr "`print_size.edge_depth` werkt alleen met een rand. Stel ook `edge` in, of laat de diepte weg."
+msgstr ""
+"`print_size.edge_depth` werkt alleen met een rand. Stel ook `edge` in, of "
+"laat de diepte weg."
 
 #: includes/api.php:159
 msgid "`print_size.edge_depth` must be a number above zero."
@@ -26259,7 +26477,10 @@ msgstr "`print_size.edge_depth` moet een getal boven nul zijn."
 msgid ""
 "The customer or photographer chose this crop, but the cropped file can't be "
 "made on this site: %s Crop the original to the pixels box before printing."
-msgstr "De klant of fotograaf heeft deze uitsnede gekozen, maar het bijgesneden bestand kan op deze site niet worden gemaakt: %s Snijd het origineel bij tot het pixelkader voordat je afdrukt."
+msgstr ""
+"De klant of fotograaf heeft deze uitsnede gekozen, maar het bijgesneden "
+"bestand kan op deze site niet worden gemaakt: %s Snijd het origineel bij tot "
+"het pixelkader voordat je afdrukt."
 
 #: includes/cart.php:152 includes/functions.php:1011
 msgid "Crop: set by you"
@@ -26319,7 +26540,9 @@ msgstr "Uitsneden"
 #, php-format
 msgid ""
 "%1$s: %2$s, %3$s, %4$s, left %5$s%%, top %6$s%%, width %7$s%%, height %8$s%%"
-msgstr "%1$s: %2$s, %3$s, %4$s, links %5$s%%, boven %6$s%%, breedte %7$s%%, hoogte %8$s%%"
+msgstr ""
+"%1$s: %2$s, %3$s, %4$s, links %5$s%%, boven %6$s%%, breedte %7$s%%, hoogte "
+"%8$s%%"
 
 #: includes/files.php:37 includes/files.php:54 includes/files.php:202
 msgid "The photo file could not be found."
@@ -26337,7 +26560,9 @@ msgstr "Dit item heeft geen uitsnede."
 msgid ""
 "This server can't edit this kind of photo file, so the cropped file can't be "
 "made."
-msgstr "Deze server kan dit soort fotobestand niet bewerken, dus het bijgesneden bestand kan niet worden gemaakt."
+msgstr ""
+"Deze server kan dit soort fotobestand niet bewerken, dus het bijgesneden "
+"bestand kan niet worden gemaakt."
 
 #: includes/files.php:324
 msgid "You are not allowed to download this file."
@@ -26484,7 +26709,9 @@ msgstr "Geüploade foto: %1$s x %2$s px"
 #, php-format
 msgid ""
 "Low resolution: %s pixels per inch at this size, so the print may look soft"
-msgstr "Lage resolutie: %s pixels per inch op dit formaat, dus de afdruk kan onscherp zijn"
+msgstr ""
+"Lage resolutie: %s pixels per inch op dit formaat, dus de afdruk kan "
+"onscherp zijn"
 
 #. translators: %s: pixels per inch
 #: includes/order.php:314
@@ -26544,7 +26771,9 @@ msgstr "Kamers"
 msgid ""
 "Customers can see their photo hanging on the wall in the rooms turned on "
 "here."
-msgstr "Klanten kunnen hun foto aan de muur zien hangen in de kamers die je hier aanzet."
+msgstr ""
+"Klanten kunnen hun foto aan de muur zien hangen in de kamers die je hier "
+"aanzet."
 
 #: includes/rooms.php:379
 msgid "Room"
@@ -26552,7 +26781,8 @@ msgstr "Kamer"
 
 #: includes/settings.php:21
 msgid "Customers get a centered crop and can't move it."
-msgstr "Klanten krijgen een gecentreerde uitsnede en kunnen die niet verschuiven."
+msgstr ""
+"Klanten krijgen een gecentreerde uitsnede en kunnen die niet verschuiven."
 
 #: includes/settings.php:26
 msgid "Turn off customer cropping"
@@ -26574,7 +26804,10 @@ msgstr "Crop & Wall Preview"
 msgid ""
 "Crop & Wall Preview: customer cropping needs Sunshine Photo Cart 3.8.2 or "
 "newer. Update Sunshine Photo Cart to turn it on. The wall preview works now."
-msgstr "Crop & Wall Preview: uitsnijden door klanten vereist Sunshine Photo Cart 3.8.2 of nieuwer. Werk Sunshine Photo Cart bij om het aan te zetten. Het muurvoorbeeld werkt nu al."
+msgstr ""
+"Crop & Wall Preview: uitsnijden door klanten vereist Sunshine Photo Cart "
+"3.8.2 of nieuwer. Werk Sunshine Photo Cart bij om het aan te zetten. Het "
+"muurvoorbeeld werkt nu al."
 
 #~ msgid "An error occurred, please try again."
 #~ msgstr "Er is een fout opgetreden, probeer het opnieuw."

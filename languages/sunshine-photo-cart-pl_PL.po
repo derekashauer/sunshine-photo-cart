@@ -2043,7 +2043,11 @@ msgid ""
 "keep a record of who agreed and when. This discourages people from saving "
 "photos or removing watermarks, but it can't stop someone from taking a "
 "screenshot or using an AI tool."
-msgstr "Poproś odwiedzających o zaakceptowanie twoich warunków, zanim zobaczą zdjęcia w galerii, i zapisuj, kto i kiedy je zaakceptował. To zniechęca do zapisywania zdjęć i usuwania znaków wodnych, ale nie powstrzyma nikogo przed zrobieniem zrzutu ekranu ani użyciem narzędzia AI."
+msgstr ""
+"Poproś odwiedzających o zaakceptowanie twoich warunków, zanim zobaczą "
+"zdjęcia w galerii, i zapisuj, kto i kiedy je zaakceptował. To zniechęca do "
+"zapisywania zdjęć i usuwania znaków wodnych, ale nie powstrzyma nikogo przed "
+"zrobieniem zrzutu ekranu ani użyciem narzędzia AI."
 
 #: includes/admin/settings-fields.php:501
 msgid "Require terms by default"
@@ -2053,7 +2057,9 @@ msgstr "Domyślnie wymagaj warunków"
 msgid ""
 "Galleries set to \"Default\" ask visitors to agree to the terms below. Each "
 "gallery can also turn this on or off for itself."
-msgstr "Galerie ustawione na „Domyślnie” proszą odwiedzających o zaakceptowanie poniższych warunków. Każda galeria może też sama to włączyć lub wyłączyć."
+msgstr ""
+"Galerie ustawione na „Domyślnie” proszą odwiedzających o zaakceptowanie "
+"poniższych warunków. Każda galeria może też sama to włączyć lub wyłączyć."
 
 #: includes/admin/settings-fields.php:507
 #: includes/admin/sunshine-gallery.php:136
@@ -2065,7 +2071,9 @@ msgstr "Warunki"
 msgid ""
 "Changing this asks everyone to agree again, since they agreed to different "
 "wording."
-msgstr "Zmiana tego sprawi, że wszyscy będą musieli zaakceptować warunki ponownie, bo zgodzili się na inną treść."
+msgstr ""
+"Zmiana tego sprawi, że wszyscy będą musieli zaakceptować warunki ponownie, "
+"bo zgodzili się na inną treść."
 
 #: includes/admin/settings-fields.php:514
 msgid "Don't ask guests for an email"
@@ -2076,7 +2084,10 @@ msgid ""
 "By default, visitors who aren't logged in also give their email address when "
 "they agree, so every agreement shows who it was. Without an email, Sunshine "
 "can't record who agreed."
-msgstr "Domyślnie odwiedzający, którzy nie są zalogowani, podają też swój adres e-mail przy akceptacji, więc przy każdej akceptacji widać, kto to był. Bez adresu e-mail Sunshine nie może zapisać, kto zaakceptował warunki."
+msgstr ""
+"Domyślnie odwiedzający, którzy nie są zalogowani, podają też swój adres e-"
+"mail przy akceptacji, więc przy każdej akceptacji widać, kto to był. Bez "
+"adresu e-mail Sunshine nie może zapisać, kto zaakceptował warunki."
 
 #: includes/admin/settings-fields.php:522
 msgid "Display Options"
@@ -3044,7 +3055,9 @@ msgstr "Niewymagane"
 
 #: includes/admin/sunshine-gallery.php:144
 msgid "Ask visitors to agree to your gallery terms before they see the photos."
-msgstr "Poproś odwiedzających o zaakceptowanie warunków galerii, zanim zobaczą zdjęcia."
+msgstr ""
+"Poproś odwiedzających o zaakceptowanie warunków galerii, zanim zobaczą "
+"zdjęcia."
 
 #: includes/admin/sunshine-gallery.php:150 class-authorizenet.php:142
 msgid "Expiration"
@@ -3326,7 +3339,10 @@ msgid ""
 "People who agreed while entering this gallery. Visitors agree once for all "
 "galleries, so someone who already agreed on another gallery is not asked "
 "again and is listed there instead."
-msgstr "Osoby, które zaakceptowały warunki przy wejściu do tej galerii. Odwiedzający akceptują warunki raz dla wszystkich galerii, więc ktoś, kto zrobił to już w innej galerii, nie jest pytany ponownie i jest wymieniony tam."
+msgstr ""
+"Osoby, które zaakceptowały warunki przy wejściu do tej galerii. Odwiedzający "
+"akceptują warunki raz dla wszystkich galerii, więc ktoś, kto zrobił to już w "
+"innej galerii, nie jest pytany ponownie i jest wymieniony tam."
 
 #: includes/admin/sunshine-gallery.php:2004
 msgid "Nobody has agreed to the terms while entering this gallery yet"
@@ -13377,7 +13393,8 @@ msgstr "Zaakceptuj warunki, aby zobaczyć tę galerię"
 
 #: includes/class-frontend.php:1191
 msgid "The terms changed since this page loaded. Please read them again."
-msgstr "Warunki zmieniły się od załadowania tej strony. Przeczytaj je jeszcze raz."
+msgstr ""
+"Warunki zmieniły się od załadowania tej strony. Przeczytaj je jeszcze raz."
 
 #: includes/class-frontend.php:1197 includes/class-frontend.php:1262
 msgid "Not a valid email address"
@@ -14381,14 +14398,20 @@ msgstr "Co minutę"
 msgid ""
 "The photos in this gallery are copyrighted by %s and are shown as proofs for "
 "viewing and ordering only."
-msgstr "Prawa autorskie do zdjęć w tej galerii należą do %s. Zdjęcia są pokazywane jako podglądy wyłącznie do oglądania i zamawiania."
+msgstr ""
+"Prawa autorskie do zdjęć w tej galerii należą do %s. Zdjęcia są pokazywane "
+"jako podglądy wyłącznie do oglądania i zamawiania."
 
 #: includes/functions/gallery.php:701
 msgid ""
 "You may not download, screenshot, copy, share or print these proofs, or "
 "remove, crop out or edit away any watermark, including with AI tools. Doing "
 "so is a copyright violation and may break the law."
-msgstr "Nie możesz pobierać, robić zrzutów ekranu, kopiować, udostępniać ani drukować tych podglądów, ani usuwać, wycinać lub retuszować znaku wodnego, także za pomocą narzędzi AI. To naruszenie praw autorskich i może być niezgodne z prawem."
+msgstr ""
+"Nie możesz pobierać, robić zrzutów ekranu, kopiować, udostępniać ani "
+"drukować tych podglądów, ani usuwać, wycinać lub retuszować znaku wodnego, "
+"także za pomocą narzędzi AI. To naruszenie praw autorskich i może być "
+"niezgodne z prawem."
 
 #: includes/functions/gallery.php:702
 msgid "Clean, full-quality versions are available when you order them."
@@ -14399,7 +14422,9 @@ msgstr "Czyste wersje w pełnej jakości dostaniesz, gdy je zamówisz."
 #, php-format
 msgid ""
 "%s is a print crop made for an order, so it was not added to the gallery."
-msgstr "%s to kadr do wydruku utworzony dla zamówienia, więc nie został dodany do galerii."
+msgstr ""
+"%s to kadr do wydruku utworzony dla zamówienia, więc nie został dodany do "
+"galerii."
 
 #: includes/functions/misc.php:270
 msgid "United Arab Emirates dirham"
@@ -17632,7 +17657,8 @@ msgstr "Oś Czasu"
 
 #: customer.php:59
 msgid "Older activity could not be loaded. Reload the page and try again."
-msgstr "Nie udało się wczytać starszej aktywności. Odśwież stronę i spróbuj ponownie."
+msgstr ""
+"Nie udało się wczytać starszej aktywności. Odśwież stronę i spróbuj ponownie."
 
 #: customer.php:145
 msgid "No activity"
@@ -17742,7 +17768,10 @@ msgstr "Co ten klient robił przed złożeniem tego zamówienia, od najstarszych
 msgid ""
 "No activity was recorded before this order. Orders placed before journeys "
 "were recorded, and orders from visitors who declined tracking, have none."
-msgstr "Przed tym zamówieniem nie zapisano żadnej aktywności. Zamówienia złożone, zanim zaczęto zapisywać ścieżki klientów, oraz zamówienia od odwiedzających, którzy odmówili śledzenia, jej nie mają."
+msgstr ""
+"Przed tym zamówieniem nie zapisano żadnej aktywności. Zamówienia złożone, "
+"zanim zaczęto zapisywać ścieżki klientów, oraz zamówienia od odwiedzających, "
+"którzy odmówili śledzenia, jej nie mają."
 
 #: profit.php:10
 msgid "Cost"
@@ -17781,7 +17810,10 @@ msgid ""
 "Leave blank to keep every view. When there are more than this, the oldest "
 "guest views are removed first, then the oldest views by customers who have "
 "not ordered."
-msgstr "Zostaw puste, aby zachować wszystkie odsłony. Gdy jest ich więcej, najpierw usuwane są najstarsze odsłony gości, a potem najstarsze odsłony klientów, którzy nic nie zamówili."
+msgstr ""
+"Zostaw puste, aby zachować wszystkie odsłony. Gdy jest ich więcej, najpierw "
+"usuwane są najstarsze odsłony gości, a potem najstarsze odsłony klientów, "
+"którzy nic nie zamówili."
 
 #. translators: %s: number of gallery and image view records currently stored
 #: retention.php:25
@@ -17805,7 +17837,9 @@ msgstr "Przechowuj zapisy odsłon przez"
 msgid ""
 "Leave blank to keep views no matter how old they are. Older guest views, and "
 "older views by customers who have not ordered, are removed."
-msgstr "Zostaw puste, aby zachować odsłony bez względu na ich wiek. Starsze odsłony gości oraz starsze odsłony klientów, którzy nic nie zamówili, są usuwane."
+msgstr ""
+"Zostaw puste, aby zachować odsłony bez względu na ich wiek. Starsze odsłony "
+"gości oraz starsze odsłony klientów, którzy nic nie zamówili, są usuwane."
 
 #. translators: %s: date
 #: retention.php:431
@@ -17815,7 +17849,11 @@ msgid ""
 "limits in Sunshine > Settings > Privacy & Data, so view numbers before then "
 "are lower than the real ones. The Views totals on galleries and photos are "
 "not affected."
-msgstr "Część odsłon galerii i zdjęć sprzed %s została usunięta przez limity zapisów odsłon w Sunshine > Ustawienia > Prywatność i dane, więc liczby odsłon sprzed tej daty są niższe niż w rzeczywistości. Nie ma to wpływu na sumy Odsłon w galeriach i zdjęciach."
+msgstr ""
+"Część odsłon galerii i zdjęć sprzed %s została usunięta przez limity zapisów "
+"odsłon w Sunshine > Ustawienia > Prywatność i dane, więc liczby odsłon "
+"sprzed tej daty są niższe niż w rzeczywistości. Nie ma to wpływu na sumy "
+"Odsłon w galeriach i zdjęciach."
 
 #. translators: 1: number of customer activity records, 2: settings page URL
 #: retention.php:463
@@ -17839,7 +17877,11 @@ msgid ""
 "Privacy & Data right away, instead of a batch at a time each day. Views kept "
 "by those settings, such as views by customers who have ordered, are never "
 "removed."
-msgstr "Od razu usuwa zapisy odsłon galerii i zdjęć ponad limity ustawione w Ustawienia > Prywatność i dane, zamiast po trochu każdego dnia. Odsłony zachowywane przez te ustawienia, na przykład odsłony klientów, którzy złożyli zamówienie, nigdy nie są usuwane."
+msgstr ""
+"Od razu usuwa zapisy odsłon galerii i zdjęć ponad limity ustawione w "
+"Ustawienia > Prywatność i dane, zamiast po trochu każdego dnia. Odsłony "
+"zachowywane przez te ustawienia, na przykład odsłony klientów, którzy "
+"złożyli zamówienie, nigdy nie są usuwane."
 
 #: tools/clean-activity.php:29
 msgid "Clean up customer activity"
@@ -17852,7 +17894,10 @@ msgid ""
 "No limits are set yet. Set a maximum number of view records or how long to "
 "keep them in <a href=\"%s\">Settings > Privacy & Data</a>, then come back "
 "here."
-msgstr "Nie ustawiono jeszcze żadnych limitów. Ustaw maksymalną liczbę zapisów odsłon albo czas ich przechowywania w <a href=\"%s\">Ustawienia > Prywatność i dane</a>, a potem wróć tutaj."
+msgstr ""
+"Nie ustawiono jeszcze żadnych limitów. Ustaw maksymalną liczbę zapisów "
+"odsłon albo czas ich przechowywania w <a href=\"%s\">Ustawienia > Prywatność "
+"i dane</a>, a potem wróć tutaj."
 
 #. translators: %s: number of gallery and image view records
 #: tools/clean-activity.php:52
@@ -17864,7 +17909,9 @@ msgstr "Masz około %s zapisów odsłon."
 msgid ""
 "It is recommended to make a backup before running this tool. Removed records "
 "cannot be brought back."
-msgstr "Przed uruchomieniem tego narzędzia warto zrobić kopię zapasową. Usuniętych zapisów nie da się przywrócić."
+msgstr ""
+"Przed uruchomieniem tego narzędzia warto zrobić kopię zapasową. Usuniętych "
+"zapisów nie da się przywrócić."
 
 #: tools/clean-activity.php:99
 msgid "Removing view records..."
@@ -17883,7 +17930,10 @@ msgid ""
 "Your database keeps the space from removed records until the table is "
 "optimized. Ask your host to optimize the sunshine_actions table to get that "
 "disk space back."
-msgstr "Baza danych zajmuje miejsce po usuniętych zapisach, dopóki tabela nie zostanie zoptymalizowana. Poproś swój hosting o optymalizację tabeli sunshine_actions, aby odzyskać to miejsce na dysku."
+msgstr ""
+"Baza danych zajmuje miejsce po usuniętych zapisach, dopóki tabela nie "
+"zostanie zoptymalizowana. Poproś swój hosting o optymalizację tabeli "
+"sunshine_actions, aby odzyskać to miejsce na dysku."
 
 #. translators: %s: number of view records still over the limit
 #: tools/clean-activity.php:115
@@ -17893,7 +17943,8 @@ msgstr "(około %s ponad limit)"
 
 #: tools/clean-activity.php:129 tools/clean-activity.php:146
 msgid "The cleanup stopped. Reload this page to try again."
-msgstr "Czyszczenie zostało zatrzymane. Odśwież tę stronę, aby spróbować ponownie."
+msgstr ""
+"Czyszczenie zostało zatrzymane. Odśwież tę stronę, aby spróbować ponownie."
 
 #: update.php:16
 msgid "Update Report Data"
@@ -24531,7 +24582,9 @@ msgstr "Sunshine Photo Cart - Connect"
 msgid ""
 "Connect Sunshine Photo Cart to Lightroom, AI apps like Claude, and tools "
 "like Zapier: REST API, AI tools and signed webhooks."
-msgstr "Połącz Sunshine Photo Cart z Lightroom, aplikacjami AI takimi jak Claude i narzędziami takimi jak Zapier: REST API, narzędzia AI i podpisane webhooki."
+msgstr ""
+"Połącz Sunshine Photo Cart z Lightroom, aplikacjami AI takimi jak Claude i "
+"narzędziami takimi jak Zapier: REST API, narzędzia AI i podpisane webhooki."
 
 #: admin/class-admin-ai.php:59
 msgid "AI"
@@ -24545,17 +24598,22 @@ msgstr "Nie możesz włączać wtyczek na tej stronie."
 msgid ""
 "This site doesn't allow installing plugins here. Get MCP Adapter from "
 "WordPress.org and upload it."
-msgstr "Ta strona nie pozwala tutaj instalować wtyczek. Pobierz MCP Adapter z WordPress.org i wgraj go."
+msgstr ""
+"Ta strona nie pozwala tutaj instalować wtyczek. Pobierz MCP Adapter z "
+"WordPress.org i wgraj go."
 
 #: admin/class-admin-ai.php:161
 msgid ""
 "MCP Adapter couldn't be installed. Get it from WordPress.org and upload it."
-msgstr "Nie udało się zainstalować MCP Adapter. Pobierz go z WordPress.org i wgraj."
+msgstr ""
+"Nie udało się zainstalować MCP Adapter. Pobierz go z WordPress.org i wgraj."
 
 #: admin/class-admin-ai.php:166
 msgid ""
 "MCP Adapter was installed but couldn't be found. Turn it on under Plugins."
-msgstr "MCP Adapter został zainstalowany, ale nie można go znaleźć. Włącz go w sekcji Wtyczki."
+msgstr ""
+"MCP Adapter został zainstalowany, ale nie można go znaleźć. Włącz go w "
+"sekcji Wtyczki."
 
 #: admin/class-admin-ai.php:233
 msgid "App passwords are turned off on this site."
@@ -24577,11 +24635,14 @@ msgstr "MCP Adapter jest włączony."
 
 #: admin/class-admin-ai.php:317
 msgid "App password removed. AI apps using it can't sign in anymore."
-msgstr "Hasło aplikacji zostało usunięte. Aplikacje AI, które go używały, nie mogą się już logować."
+msgstr ""
+"Hasło aplikacji zostało usunięte. Aplikacje AI, które go używały, nie mogą "
+"się już logować."
 
 #: admin/class-admin-ai.php:318
 msgid "The app password couldn't be removed. Remove it on your profile page."
-msgstr "Nie udało się usunąć hasła aplikacji. Usuń je na stronie swojego profilu."
+msgstr ""
+"Nie udało się usunąć hasła aplikacji. Usuń je na stronie swojego profilu."
 
 #: admin/class-admin-ai.php:342 includes/admin-rooms.php:365
 #: includes/admin-rooms.php:439
@@ -24612,7 +24673,11 @@ msgid ""
 "then add a request header. If you can't pick Authorization, go back and "
 "check No sign-in. It then works in the Claude website, desktop app, phone "
 "app and Claude Code."
-msgstr "W Claude otwórz Ustawienia, Konektory, Dodaj własny konektor. Wybierz Bez logowania, a potem dodaj nagłówek żądania. Jeśli nie możesz wybrać Authorization, wróć i zaznacz Bez logowania. Potem działa to na stronie Claude, w aplikacji na komputer, w aplikacji na telefon i w Claude Code."
+msgstr ""
+"W Claude otwórz Settings, Connectors, Add custom connector. Wybierz No sign-"
+"in, a potem dodaj nagłówek żądania. Jeśli nie możesz wybrać Authorization, "
+"wróć i zaznacz No sign-in. Potem działa to na stronie Claude, w aplikacji na "
+"komputer, w aplikacji na telefon i w Claude Code."
 
 #: admin/class-admin-ai.php:428
 msgid "URL"
@@ -24634,7 +24699,9 @@ msgstr "Claude Code (terminal)"
 msgid ""
 "Run this in a terminal. You don't need it if you added the Claude connector "
 "and sign in to Claude Code with your Claude account."
-msgstr "Uruchom to w terminalu. Nie potrzebujesz tego, jeśli konektor Claude jest już dodany i logujesz się do Claude Code kontem Claude."
+msgstr ""
+"Uruchom to w terminalu. Nie potrzebujesz tego, jeśli konektor Claude jest "
+"już dodany i logujesz się do Claude Code kontem Claude."
 
 #: admin/class-admin-ai.php:439
 msgid "Cursor"
@@ -24644,7 +24711,9 @@ msgstr "Cursor"
 msgid ""
 "In Cursor, open Settings, Tools & MCPs, New MCP Server. Add this, then save "
 "and restart Cursor."
-msgstr "W Cursor otwórz Settings, Tools & MCPs, New MCP Server. Dodaj to, zapisz i uruchom Cursor ponownie."
+msgstr ""
+"W Cursor otwórz Settings, Tools & MCPs, New MCP Server. Dodaj to, zapisz i "
+"uruchom Cursor ponownie."
 
 #: admin/class-admin-ai.php:453
 msgid "VS Code"
@@ -24655,7 +24724,10 @@ msgid ""
 "In the Command Palette, run MCP: Open User Configuration. Add this, then "
 "save and restart VS Code. Keep it out of project files, which can end up in "
 "git."
-msgstr "W Command Palette uruchom MCP: Open User Configuration. Dodaj to, zapisz i uruchom VS Code ponownie. Trzymaj to poza plikami projektu, bo mogą trafić do git."
+msgstr ""
+"W Command Palette uruchom MCP: Open User Configuration. Dodaj to, zapisz i "
+"uruchom VS Code ponownie. Trzymaj to poza plikami projektu, bo mogą trafić "
+"do git."
 
 #: admin/class-admin-ai.php:468
 msgid "ChatGPT / Codex"
@@ -24665,7 +24737,9 @@ msgstr "ChatGPT / Codex"
 msgid ""
 "Add this to ~/.codex/config.toml, then restart the ChatGPT app. Use its Work "
 "side, not Chat."
-msgstr "Dodaj to do ~/.codex/config.toml, a potem uruchom ponownie aplikację ChatGPT. Używaj jej części Work, nie Chat."
+msgstr ""
+"Dodaj to do ~/.codex/config.toml, a potem uruchom ponownie aplikację "
+"ChatGPT. Używaj jej części Work, nie Chat."
 
 #: admin/class-admin-ai.php:473
 msgid "Gemini CLI"
@@ -24683,7 +24757,9 @@ msgstr "Połącz swoje AI"
 msgid ""
 "Ask Claude or another AI to manage your galleries, get orders ready for your "
 "print lab, or tell you how sales are going."
-msgstr "Poproś Claude lub inne AI, żeby zarządzało twoimi galeriami, przygotowywało zamówienia dla laboratorium albo mówiło ci, jak idzie sprzedaż."
+msgstr ""
+"Poproś Claude lub inne AI, żeby zarządzało twoimi galeriami, przygotowywało "
+"zamówienia dla laboratorium albo mówiło ci, jak idzie sprzedaż."
 
 #: admin/class-admin-ai.php:513
 msgid "MCP Adapter plugin"
@@ -24730,7 +24806,9 @@ msgstr "%1$s, %2$s"
 #: admin/class-admin-ai.php:541
 msgid ""
 "AI apps using the old password will stop connecting until you update them."
-msgstr "Aplikacje AI używające starego hasła przestaną się łączyć, dopóki ich nie zaktualizujesz."
+msgstr ""
+"Aplikacje AI używające starego hasła przestaną się łączyć, dopóki ich nie "
+"zaktualizujesz."
 
 #: admin/class-admin-ai.php:541
 msgid "New password"
@@ -24780,7 +24858,9 @@ msgstr "Skopiuj to teraz. Nie zostanie pokazane ponownie."
 
 #: admin/class-admin-ai.php:577
 msgid "It has the same access as your admin account, so keep it private."
-msgstr "Ma takie same uprawnienia jak twoje konto administratora, więc zachowaj je dla siebie."
+msgstr ""
+"Ma takie same uprawnienia jak twoje konto administratora, więc zachowaj je "
+"dla siebie."
 
 #: admin/class-admin-ai.php:581
 msgid "Admin username"
@@ -24794,7 +24874,9 @@ msgstr "Jego hasło aplikacji"
 msgid ""
 "This only fills in the details below. It stays in your browser and is never "
 "saved or sent anywhere."
-msgstr "To tylko wypełnia poniższe dane. Zostaje w twojej przeglądarce i nigdy nie jest zapisywane ani nigdzie wysyłane."
+msgstr ""
+"To tylko wypełnia poniższe dane. Zostaje w twojej przeglądarce i nigdy nie "
+"jest zapisywane ani nigdzie wysyłane."
 
 #: admin/class-admin-ai.php:590
 msgid "AI app"
@@ -24808,7 +24890,9 @@ msgstr "Umiejętność AI"
 msgid ""
 "Teaches your AI app how Sunshine works, so it can upload photos, get orders "
 "ready for your lab and read your sales."
-msgstr "Uczy twoją aplikację AI, jak działa Sunshine, żeby mogła wgrywać zdjęcia, przygotowywać zamówienia dla laboratorium i odczytywać sprzedaż."
+msgstr ""
+"Uczy twoją aplikację AI, jak działa Sunshine, żeby mogła wgrywać zdjęcia, "
+"przygotowywać zamówienia dla laboratorium i odczytywać sprzedaż."
 
 #: admin/class-admin-ai.php:620
 msgid "Download skill"
@@ -24840,9 +24924,16 @@ msgid ""
 msgid_plural ""
 "%1$d Sunshine webhook endpoints were disabled after repeated delivery "
 "failures. <a href=\"%2$s\">Review webhooks</a>."
-msgstr[0] "%1$d punkt końcowy webhooka Sunshine został wyłączony po powtarzających się błędach dostarczenia. <a href=\"%2$s\">Sprawdź webhooki</a>."
-msgstr[1] "%1$d punkty końcowe webhooków Sunshine zostały wyłączone po powtarzających się błędach dostarczenia. <a href=\"%2$s\">Sprawdź webhooki</a>."
-msgstr[2] "%1$d punktów końcowych webhooków Sunshine zostało wyłączonych po powtarzających się błędach dostarczenia. <a href=\"%2$s\">Sprawdź webhooki</a>."
+msgstr[0] ""
+"%1$d punkt końcowy webhooka Sunshine został wyłączony po powtarzających się "
+"błędach dostarczenia. <a href=\"%2$s\">Sprawdź webhooki</a>."
+msgstr[1] ""
+"%1$d punkty końcowe webhooków Sunshine zostały wyłączone po powtarzających "
+"się błędach dostarczenia. <a href=\"%2$s\">Sprawdź webhooki</a>."
+msgstr[2] ""
+"%1$d punktów końcowych webhooków Sunshine zostało wyłączonych po "
+"powtarzających się błędach dostarczenia. <a href=\"%2$s\">Sprawdź webhooki</"
+"a>."
 
 #: admin/class-admin-webhooks.php:98 admin/class-admin-webhooks.php:272
 msgid "Add endpoint"
@@ -24852,7 +24943,10 @@ msgstr "Dodaj punkt końcowy"
 msgid ""
 "Send signed order events to external services. Deliveries run in the "
 "background and retry automatically when an endpoint is unavailable."
-msgstr "Wysyłaj podpisane zdarzenia zamówień do zewnętrznych usług. Dostarczanie działa w tle i automatycznie ponawia próby, gdy punkt końcowy jest niedostępny."
+msgstr ""
+"Wysyłaj podpisane zdarzenia zamówień do zewnętrznych usług. Dostarczanie "
+"działa w tle i automatycznie ponawia próby, gdy punkt końcowy jest "
+"niedostępny."
 
 #: admin/class-admin-webhooks.php:102
 msgid "Endpoints"
@@ -24952,7 +25046,9 @@ msgstr "Wersja danych"
 msgid ""
 "This endpoint stays pinned to the selected payload shape when newer versions "
 "are introduced."
-msgstr "Ten punkt końcowy pozostaje przypięty do wybranego kształtu danych, gdy pojawią się nowsze wersje."
+msgstr ""
+"Ten punkt końcowy pozostaje przypięty do wybranego kształtu danych, gdy "
+"pojawią się nowsze wersje."
 
 #: admin/class-admin-webhooks.php:272
 msgid "Save endpoint"
@@ -24971,7 +25067,9 @@ msgstr "Działania punktu końcowego"
 msgid ""
 "Rotating the signing secret immediately invalidates the previous secret. "
 "Pending attempts use the new secret."
-msgstr "Zmiana sekretu podpisu od razu unieważnia poprzedni sekret. Oczekujące próby używają nowego sekretu."
+msgstr ""
+"Zmiana sekretu podpisu od razu unieważnia poprzedni sekret. Oczekujące próby "
+"używają nowego sekretu."
 
 #: admin/class-admin-webhooks.php:280
 msgid "Rotate signing secret"
@@ -25035,13 +25133,19 @@ msgid ""
 "SHA256 over the timestamp, a period, and the exact raw request body using "
 "the endpoint signing secret. Reject old timestamps and compare signatures in "
 "constant time."
-msgstr "Odczytaj znacznik czasu i podpis v1 z Sunshine-Signature. Oblicz HMAC-SHA256 ze znacznika czasu, kropki i dokładnej, surowej treści żądania, używając sekretu podpisu punktu końcowego. Odrzucaj stare znaczniki czasu i porównuj podpisy w stałym czasie."
+msgstr ""
+"Odczytaj znacznik czasu i podpis v1 z Sunshine-Signature. Oblicz HMAC-SHA256 "
+"ze znacznika czasu, kropki i dokładnej, surowej treści żądania, używając "
+"sekretu podpisu punktu końcowego. Odrzucaj stare znaczniki czasu i porównuj "
+"podpisy w stałym czasie."
 
 #: admin/class-admin-webhooks.php:345
 msgid ""
 "Webhook endpoint created. Copy the signing secret now; it will not be shown "
 "again."
-msgstr "Punkt końcowy webhooka został utworzony. Skopiuj teraz sekret podpisu; nie zostanie pokazany ponownie."
+msgstr ""
+"Punkt końcowy webhooka został utworzony. Skopiuj teraz sekret podpisu; nie "
+"zostanie pokazany ponownie."
 
 #: admin/class-admin-webhooks.php:365
 msgid "Webhook endpoint updated."
@@ -25057,12 +25161,16 @@ msgstr "Punkt końcowy webhooka został wyłączony."
 
 #: admin/class-admin-webhooks.php:381
 msgid "Webhook endpoint deleted. Delivery history was retained."
-msgstr "Punkt końcowy webhooka został usunięty. Historia dostarczeń została zachowana."
+msgstr ""
+"Punkt końcowy webhooka został usunięty. Historia dostarczeń została "
+"zachowana."
 
 #: admin/class-admin-webhooks.php:391
 msgid ""
 "Signing secret rotated. Copy the new secret now; it will not be shown again."
-msgstr "Sekret podpisu został zmieniony. Skopiuj teraz nowy sekret; nie zostanie pokazany ponownie."
+msgstr ""
+"Sekret podpisu został zmieniony. Skopiuj teraz nowy sekret; nie zostanie "
+"pokazany ponownie."
 
 #: admin/class-admin-webhooks.php:402
 msgid "Test event sent."
@@ -25085,7 +25193,9 @@ msgstr "%s temu"
 #: includes/class-api-permissions.php:110
 msgid ""
 "Sign in with a WordPress username and app password to use the Sunshine API."
-msgstr "Zaloguj się nazwą użytkownika WordPress i hasłem aplikacji, aby korzystać z Sunshine API."
+msgstr ""
+"Zaloguj się nazwą użytkownika WordPress i hasłem aplikacji, aby korzystać z "
+"Sunshine API."
 
 #. translators: 1: action, 2: resource
 #: includes/class-api-permissions.php:118
@@ -25161,7 +25271,9 @@ msgstr "Wybierz co najmniej jedno zdarzenie."
 
 #: includes/class-api-webhooks.php:750
 msgid "OpenSSL is required to store webhook signing secrets securely."
-msgstr "OpenSSL jest wymagany do bezpiecznego przechowywania sekretów podpisu webhooków."
+msgstr ""
+"OpenSSL jest wymagany do bezpiecznego przechowywania sekretów podpisu "
+"webhooków."
 
 #: includes/class-api-webhooks.php:757
 msgid "Could not encrypt the webhook signing secret."
@@ -25171,11 +25283,14 @@ msgstr "Nie udało się zaszyfrować sekretu podpisu webhooka."
 msgid ""
 "The webhook signing secret cannot be decrypted. Rotate the secret and try "
 "again."
-msgstr "Nie można odszyfrować sekretu podpisu webhooka. Zmień sekret i spróbuj ponownie."
+msgstr ""
+"Nie można odszyfrować sekretu podpisu webhooka. Zmień sekret i spróbuj "
+"ponownie."
 
 #: includes/class-api-webhooks.php:768
 msgid "The webhook signing secret is invalid. Rotate the secret and try again."
-msgstr "Sekret podpisu webhooka jest nieprawidłowy. Zmień sekret i spróbuj ponownie."
+msgstr ""
+"Sekret podpisu webhooka jest nieprawidłowy. Zmień sekret i spróbuj ponownie."
 
 #: includes/class-api-webhooks.php:806
 msgid "Could not queue the redelivery."
@@ -25217,7 +25332,9 @@ msgstr "Nie udało się usunąć klienta."
 msgid ""
 "That price level doesn't exist. Use an id from the price levels list, or 0 "
 "for the default."
-msgstr "Taki poziom cen nie istnieje. Użyj id z listy poziomów cen albo 0 dla domyślnego."
+msgstr ""
+"Taki poziom cen nie istnieje. Użyj id z listy poziomów cen albo 0 dla "
+"domyślnego."
 
 #. translators: %s: the end_date value the caller sent
 #: includes/controllers/v1/class-rest-galleries-controller.php:190
@@ -25225,7 +25342,9 @@ msgstr "Taki poziom cen nie istnieje. Użyj id z listy poziomów cen albo 0 dla 
 msgid ""
 "end_date \"%s\" is not a date. Send a Unix timestamp or a date like "
 "2026-12-31."
-msgstr "end_date „%s” nie jest datą. Wyślij znacznik czasu Unix albo datę w formacie 2026-12-31."
+msgstr ""
+"end_date „%s” nie jest datą. Wyślij znacznik czasu Unix albo datę w formacie "
+"2026-12-31."
 
 #: includes/controllers/v1/class-rest-galleries-controller.php:207
 msgid "images must be a list of image ids."
@@ -25254,7 +25373,9 @@ msgstr "Ogranicz wyniki do podgalerii wskazanej galerii."
 #: includes/controllers/v1/class-rest-galleries-controller.php:345
 msgid ""
 "Limit results to galleries whose title or content matches the search string."
-msgstr "Ogranicz wyniki do galerii, których tytuł lub treść pasuje do wyszukiwanej frazy."
+msgstr ""
+"Ogranicz wyniki do galerii, których tytuł lub treść pasuje do wyszukiwanej "
+"frazy."
 
 #: includes/controllers/v1/class-rest-images-controller.php:83
 #: includes/controllers/v1/class-rest-images-controller.php:112
@@ -25289,7 +25410,9 @@ msgstr "Rozszerzenie pliku nie jest obsługiwanym typem obrazu."
 msgid ""
 "No file payload supplied. Send multipart `file`, JSON `src` URL, or JSON "
 "`data` + `filename`."
-msgstr "Nie przesłano pliku. Wyślij multipart `file`, adres URL w JSON `src` albo JSON `data` + `filename`."
+msgstr ""
+"Nie przesłano pliku. Wyślij multipart `file`, adres URL w JSON `src` albo "
+"JSON `data` + `filename`."
 
 #. translators: %s: the error the image's address gave, like "Not Found".
 #: includes/controllers/v1/class-rest-images-controller.php:389
@@ -25297,7 +25420,8 @@ msgstr "Nie przesłano pliku. Wyślij multipart `file`, adres URL w JSON `src` a
 msgid ""
 "The image couldn't be downloaded from that address (%s). Upload the file "
 "instead."
-msgstr "Nie udało się pobrać obrazu z tego adresu (%s). Prześlij plik zamiast tego."
+msgstr ""
+"Nie udało się pobrać obrazu z tego adresu (%s). Prześlij plik zamiast tego."
 
 #: includes/controllers/v1/class-rest-images-controller.php:394
 msgid "The downloaded image exceeds the maximum allowed upload size."
@@ -25334,7 +25458,9 @@ msgstr "Nie znaleziono obrazu."
 msgid ""
 "The %1$s file (%2$s) doesn't fit this photo (%3$s). Send a copy no bigger "
 "than the original and close to the site's size settings."
-msgstr "Plik %1$s (%2$s) nie pasuje do tego zdjęcia (%3$s). Wyślij kopię nie większą niż oryginał i zbliżoną do ustawień rozmiarów strony."
+msgstr ""
+"Plik %1$s (%2$s) nie pasuje do tego zdjęcia (%3$s). Wyślij kopię nie większą "
+"niż oryginał i zbliżoną do ustawień rozmiarów strony."
 
 #. translators: 1: size name sent by the caller, 2: comma-separated list of allowed size names
 #: includes/controllers/v1/class-rest-images-controller.php:837
@@ -25359,7 +25485,9 @@ msgstr "Nie udało się usunąć obrazu."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:89
 msgid "Include each file's download link. The manifest link works either way."
-msgstr "Dołącz link do pobrania każdego pliku. Link do zestawienia działa w obu przypadkach."
+msgstr ""
+"Dołącz link do pobrania każdego pliku. Link do zestawienia działa w obu "
+"przypadkach."
 
 #. translators: %d: current Unix timestamp
 #: includes/controllers/v1/class-rest-orders-controller.php:212
@@ -25391,7 +25519,9 @@ msgstr "Zwroty w wysokości %1$s przekraczają sumę zamówienia %2$s."
 msgid ""
 "\"%s\" is not an order status on this site. Use a slug from GET /order-"
 "statuses."
-msgstr "„%s” nie jest statusem zamówienia na tej stronie. Użyj sluga z GET /order-statuses."
+msgstr ""
+"„%s” nie jest statusem zamówienia na tej stronie. Użyj sluga z GET /order-"
+"statuses."
 
 #. translators: %s: database error message
 #: includes/controllers/v1/class-rest-orders-controller.php:754
@@ -25412,12 +25542,17 @@ msgid ""
 "When the order was placed (ISO 8601). Give it when creating an order to "
 "bring in an older order: an order created with a date is an import and sends "
 "no webhooks."
-msgstr "Kiedy złożono zamówienie (ISO 8601). Podaj to przy tworzeniu zamówienia, aby przenieść starsze zamówienie: zamówienie utworzone z datą jest importem i nie wysyła webhooków."
+msgstr ""
+"Kiedy złożono zamówienie (ISO 8601). Podaj to przy tworzeniu zamówienia, aby "
+"przenieść starsze zamówienie: zamówienie utworzone z datą jest importem i "
+"nie wysyła webhooków."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:924
 msgid ""
 "Store credit used on the order. The total is what is left to pay after it."
-msgstr "Środki na koncie użyte w zamówieniu. Suma to kwota, która zostaje do zapłaty po ich odjęciu."
+msgstr ""
+"Środki na koncie użyte w zamówieniu. Suma to kwota, która zostaje do zapłaty "
+"po ich odjęciu."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:951
 msgid "Limit to orders for a customer (user id)."
@@ -25443,13 +25578,17 @@ msgstr "Data ISO 8601: tylko zamówienia przed nią."
 msgid ""
 "Gallery id (or comma-separated list of ids). Returns only orders whose line "
 "items reference at least one of these galleries."
-msgstr "Id galerii (lub lista id oddzielonych przecinkami). Zwraca tylko zamówienia, których pozycje odnoszą się do co najmniej jednej z tych galerii."
+msgstr ""
+"Id galerii (lub lista id oddzielonych przecinkami). Zwraca tylko zamówienia, "
+"których pozycje odnoszą się do co najmniej jednej z tych galerii."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:963
 msgid ""
 "When `gallery` is set, also include orders touching any descendant gallery "
 "(sub-galleries at any depth)."
-msgstr "Gdy ustawiono `gallery`, uwzględnij też zamówienia dotyczące dowolnej galerii podrzędnej (podgalerie na każdym poziomie)."
+msgstr ""
+"Gdy ustawiono `gallery`, uwzględnij też zamówienia dotyczące dowolnej "
+"galerii podrzędnej (podgalerie na każdym poziomie)."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:139
 #: includes/controllers/v1/class-rest-product-categories-controller.php:83
@@ -25459,7 +25598,9 @@ msgstr "Wymagane jest pole `name`."
 #: includes/controllers/v1/class-rest-price-levels-controller.php:157
 msgid ""
 "`percent` must be a number above -100 (for example 10 for +10%, -5 for -5%)."
-msgstr "`percent` musi być liczbą większą niż -100 (na przykład 10 dla +10%, -5 dla -5%)."
+msgstr ""
+"`percent` musi być liczbą większą niż -100 (na przykład 10 dla +10%, -5 dla "
+"-5%)."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:213
 msgid "The price level could not be deleted."
@@ -25469,7 +25610,9 @@ msgstr "Nie udało się usunąć poziomu cen."
 msgid ""
 "A `products` array of product ids (or an `items` array of per-product "
 "entries) is required."
-msgstr "Wymagana jest tablica `products` z id produktów (lub tablica `items` z danymi dla każdego produktu)."
+msgstr ""
+"Wymagana jest tablica `products` z id produktów (lub tablica `items` z "
+"danymi dla każdego produktu)."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:292
 msgid "Provide `price` and/or `shipping` to set."
@@ -25477,19 +25620,24 @@ msgstr "Podaj `price` i/lub `shipping` do ustawienia."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:357
 msgid "A numeric `percent` is required (use a negative number to decrease)."
-msgstr "Wymagana jest liczbowa wartość `percent` (użyj liczby ujemnej, aby obniżyć)."
+msgstr ""
+"Wymagana jest liczbowa wartość `percent` (użyj liczby ujemnej, aby obniżyć)."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:361
 msgid ""
 "`percent` must be above -100. A cut of 100% or more would make prices free "
 "or below zero."
-msgstr "`percent` musi być większe niż -100. Obniżka o 100% lub więcej sprawiłaby, że ceny byłyby darmowe lub ujemne."
+msgstr ""
+"`percent` musi być większe niż -100. Obniżka o 100% lub więcej sprawiłaby, "
+"że ceny byłyby darmowe lub ujemne."
 
 #. translators: %s: field name, price or shipping
 #: includes/controllers/v1/class-rest-price-levels-controller.php:500
 #, php-format
 msgid "`%s` must be a number, or blank for not sold at this level."
-msgstr "`%s` musi być liczbą albo pustym polem, jeśli produkt nie jest sprzedawany na tym poziomie."
+msgstr ""
+"`%s` musi być liczbą albo pustym polem, jeśli produkt nie jest sprzedawany "
+"na tym poziomie."
 
 #. translators: %s: field name, price or shipping
 #: includes/controllers/v1/class-rest-price-levels-controller.php:505
@@ -25537,20 +25685,30 @@ msgid ""
 "unpaid orders are excluded from revenue. Pass any slug from /order-statuses "
 "to override (e.g. \"completed,refunded\" to include refunded gross in "
 "revenue)."
-msgstr "Slugi statusów zamówień do uwzględnienia, oddzielone przecinkami. Domyślnie statusy opłacone (new, processing, pickup, shipped, completed), więc zamówienia zwrócone, anulowane i nieopłacone nie wliczają się do przychodu. Podaj dowolny slug z /order-statuses, aby to zmienić (np. „completed,refunded”, aby wliczyć zwrócone kwoty brutto do przychodu)."
+msgstr ""
+"Slugi statusów zamówień do uwzględnienia, oddzielone przecinkami. Domyślnie "
+"statusy opłacone (new, processing, pickup, shipped, completed), więc "
+"zamówienia zwrócone, anulowane i nieopłacone nie wliczają się do przychodu. "
+"Podaj dowolny slug z /order-statuses, aby to zmienić (np. "
+"„completed,refunded”, aby wliczyć zwrócone kwoty brutto do przychodu)."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:109
 msgid ""
 "Gallery id (or comma-separated list of ids). Narrows the report to line "
 "items from these galleries only. Use this to answer \"how much did gallery X "
 "make me?\" in one call."
-msgstr "Id galerii (lub lista id oddzielonych przecinkami). Zawęża raport do pozycji tylko z tych galerii. Użyj tego, aby jednym wywołaniem odpowiedzieć na pytanie „ile zarobiłem na galerii X?”."
+msgstr ""
+"Id galerii (lub lista id oddzielonych przecinkami). Zawęża raport do pozycji "
+"tylko z tych galerii. Użyj tego, aby jednym wywołaniem odpowiedzieć na "
+"pytanie „ile zarobiłem na galerii X?”."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:114
 msgid ""
 "When `gallery` is set, also include descendant galleries at any depth (sub-"
 "galleries)."
-msgstr "Gdy ustawiono `gallery`, uwzględnij też galerie podrzędne na każdym poziomie (podgalerie)."
+msgstr ""
+"Gdy ustawiono `gallery`, uwzględnij też galerie podrzędne na każdym poziomie "
+"(podgalerie)."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:120
 msgid "Sales summary"
@@ -25562,7 +25720,12 @@ msgid ""
 "month. Revenue is NET — order-level refunds are subtracted. Only paid "
 "statuses are included by default (override via `status`). The response also "
 "breaks out `gross_revenue`, `refunds`, `tax`, and `shipping`."
-msgstr "Liczba zamówień i przychód w zakresie dat, opcjonalnie pogrupowane według dnia/tygodnia/miesiąca. Przychód jest NETTO: zwroty na poziomie zamówienia są odejmowane. Domyślnie uwzględniane są tylko statusy opłacone (zmień przez `status`). Odpowiedź osobno podaje też `gross_revenue`, `refunds`, `tax` i `shipping`."
+msgstr ""
+"Liczba zamówień i przychód w zakresie dat, opcjonalnie pogrupowane według "
+"dnia/tygodnia/miesiąca. Przychód jest NETTO: zwroty na poziomie zamówienia "
+"są odejmowane. Domyślnie uwzględniane są tylko statusy opłacone (zmień przez "
+"`status`). Odpowiedź osobno podaje też `gross_revenue`, `refunds`, `tax` i "
+"`shipping`."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:123
 msgid "ISO 8601 start date."
@@ -25580,7 +25743,9 @@ msgstr "Zamówienia według statusu"
 msgid ""
 "Count of orders in each `sunshine-order-status` slug. Reports across all "
 "statuses — this report is the one place to see the full breakdown."
-msgstr "Liczba zamówień dla każdego sluga `sunshine-order-status`. Obejmuje wszystkie statusy: to jedyne miejsce, w którym widać pełny podział."
+msgstr ""
+"Liczba zamówień dla każdego sluga `sunshine-order-status`. Obejmuje "
+"wszystkie statusy: to jedyne miejsce, w którym widać pełny podział."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:140
 msgid "Top-selling products"
@@ -25593,7 +25758,12 @@ msgid ""
 "order does not inflate product totals. Only paid statuses are included by "
 "default (override via `status`). Pass `gallery` to scope the report to one "
 "or more galleries."
-msgstr "Produkty uszeregowane według sprzedanej ilości. Przychód jest NETTO: zwroty na poziomie zamówienia są rozkładane proporcjonalnie na pozycje każdego zamówienia, więc zwrócone zamówienie nie zawyża sum produktów. Domyślnie uwzględniane są tylko statusy opłacone (zmień przez `status`). Podaj `gallery`, aby zawęzić raport do jednej lub kilku galerii."
+msgstr ""
+"Produkty uszeregowane według sprzedanej ilości. Przychód jest NETTO: zwroty "
+"na poziomie zamówienia są rozkładane proporcjonalnie na pozycje każdego "
+"zamówienia, więc zwrócone zamówienie nie zawyża sum produktów. Domyślnie "
+"uwzględniane są tylko statusy opłacone (zmień przez `status`). Podaj "
+"`gallery`, aby zawęzić raport do jednej lub kilku galerii."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:154
 msgid "Top-selling galleries"
@@ -25607,13 +25777,21 @@ msgid ""
 "(override via `status`). Pass `gallery` to scope the report to a specific "
 "gallery — the response then contains one row per gallery in the input, so "
 "\"how much did gallery X make me?\" is a one-call answer."
-msgstr "Galerie uszeregowane według przychodu netto. Zwroty na poziomie zamówienia są rozkładane proporcjonalnie na pozycje każdego zamówienia, więc zwrócone zamówienie z galerii nie zawyża sumy. Domyślnie uwzględniane są tylko statusy opłacone (zmień przez `status`). Podaj `gallery`, aby zawęzić raport do konkretnej galerii: odpowiedź zawiera wtedy jeden wiersz na każdą podaną galerię, więc na pytanie „ile zarobiłem na galerii X?” odpowiada jedno wywołanie."
+msgstr ""
+"Galerie uszeregowane według przychodu netto. Zwroty na poziomie zamówienia "
+"są rozkładane proporcjonalnie na pozycje każdego zamówienia, więc zwrócone "
+"zamówienie z galerii nie zawyża sumy. Domyślnie uwzględniane są tylko "
+"statusy opłacone (zmień przez `status`). Podaj `gallery`, aby zawęzić raport "
+"do konkretnej galerii: odpowiedź zawiera wtedy jeden wiersz na każdą podaną "
+"galerię, więc na pytanie „ile zarobiłem na galerii X?” odpowiada jedno "
+"wywołanie."
 
 #. translators: 1: list of unknown keys, 2: settings group
 #: includes/controllers/v1/class-rest-settings-controller.php:152
 #, php-format
 msgid "Unknown option key(s) for group \"%2$s\": %1$s. Nothing was saved."
-msgstr "Nieznane klucze opcji dla grupy „%2$s”: %1$s. Nic nie zostało zapisane."
+msgstr ""
+"Nieznane klucze opcji dla grupy „%2$s”: %1$s. Nic nie zostało zapisane."
 
 #. translators: %s: list of setting keys
 #: includes/controllers/v1/class-rest-settings-controller.php:199
@@ -25621,7 +25799,9 @@ msgstr "Nieznane klucze opcji dla grupy „%2$s”: %1$s. Nic nie zostało zapis
 msgid ""
 "Not one of the allowed values for: %s. Nothing was saved. Allowed values are "
 "in each setting's enum."
-msgstr "Niedozwolona wartość dla: %s. Nic nie zostało zapisane. Dozwolone wartości są w enum każdego ustawienia."
+msgstr ""
+"Niedozwolona wartość dla: %s. Nic nie zostało zapisane. Dozwolone wartości "
+"są w enum każdego ustawienia."
 
 #: includes/controllers/v1/class-rest-settings-controller.php:227
 msgid "This setting cannot be modified via the API."
@@ -26030,11 +26210,14 @@ msgstr "Uruchom narzędzie konserwacyjne"
 #: includes/mcp/class-sunshine-ai-skill.php:67
 #: includes/mcp/class-sunshine-ai-skill.php:149
 msgid "The skill file is missing from this copy of the plugin. Reinstall it."
-msgstr "W tej kopii wtyczki brakuje pliku umiejętności. Zainstaluj ją ponownie."
+msgstr ""
+"W tej kopii wtyczki brakuje pliku umiejętności. Zainstaluj ją ponownie."
 
 #: includes/mcp/class-sunshine-ai-skill.php:70
 msgid "This server can't make zip files. Copy the skill text instead."
-msgstr "Ten serwer nie może tworzyć plików zip. Skopiuj zamiast tego tekst umiejętności."
+msgstr ""
+"Ten serwer nie może tworzyć plików zip. Skopiuj zamiast tego tekst "
+"umiejętności."
 
 #: includes/mcp/class-sunshine-ai-skill.php:75
 msgid "The zip file couldn't be made."
@@ -26044,7 +26227,9 @@ msgstr "Nie udało się utworzyć pliku zip."
 msgid ""
 "Work on this photo store: galleries and photo uploads, orders and print lab "
 "files, or sales."
-msgstr "Pracuj nad tym sklepem fotograficznym: galerie i wgrywanie zdjęć, zamówienia i pliki do druku dla laboratorium albo sprzedaż."
+msgstr ""
+"Pracuj nad tym sklepem fotograficznym: galerie i wgrywanie zdjęć, zamówienia "
+"i pliki do druku dla laboratorium albo sprzedaż."
 
 #: includes/mcp/class-sunshine-ai-skill.php:106
 msgid "What to do"
@@ -26054,13 +26239,17 @@ msgstr "Co zrobić"
 msgid ""
 "Like \"Get order 1052 ready for the lab\" or \"Make a password gallery for "
 "the Smith wedding\"."
-msgstr "Na przykład „Przygotuj zamówienie 1052 dla laboratorium” albo „Utwórz galerię z hasłem na ślub Smithów”."
+msgstr ""
+"Na przykład „Przygotuj zamówienie 1052 dla laboratorium” albo „Utwórz "
+"galerię z hasłem na ślub Smithów”."
 
 #: includes/mcp/class-sunshine-mcp.php:85
 msgid ""
 "Galleries, photos, products, orders, customers and sales reports from "
 "Sunshine Photo Cart."
-msgstr "Galerie, zdjęcia, produkty, zamówienia, klienci i raporty sprzedaży z Sunshine Photo Cart."
+msgstr ""
+"Galerie, zdjęcia, produkty, zamówienia, klienci i raporty sprzedaży z "
+"Sunshine Photo Cart."
 
 #. Plugin Name of the plugin
 #: crop-wall-preview.php
@@ -26072,7 +26261,9 @@ msgstr "Sunshine Photo Cart - Crop & Wall Preview"
 msgid ""
 "Let customers pick the exact crop for each print and see it on a wall at "
 "true size"
-msgstr "Pozwól klientom wybrać dokładny kadr każdego wydruku i zobaczyć go na ścianie w prawdziwym rozmiarze"
+msgstr ""
+"Pozwól klientom wybrać dokładny kadr każdego wydruku i zobaczyć go na "
+"ścianie w prawdziwym rozmiarze"
 
 #: includes/admin-order.php:37 includes/cart.php:214
 msgid "Save crop"
@@ -26110,7 +26301,9 @@ msgstr "Szerokość"
 msgid ""
 "The front of the print. Leave empty if this product has no set size, and "
 "customers won't see the crop step for it."
-msgstr "Przód wydruku. Zostaw puste, jeśli ten produkt nie ma ustalonego rozmiaru; klienci nie zobaczą wtedy dla niego kroku kadrowania."
+msgstr ""
+"Przód wydruku. Zostaw puste, jeśli ten produkt nie ma ustalonego rozmiaru; "
+"klienci nie zobaczą wtedy dla niego kroku kadrowania."
 
 #: includes/admin-product.php:36
 msgid "Height"
@@ -26128,7 +26321,9 @@ msgstr "Krawędź"
 msgid ""
 "For canvas and similar prints. When the photo wraps around the sides, "
 "customers crop a bigger area that includes the sides."
-msgstr "Dla płótna i podobnych wydruków. Gdy zdjęcie zawija się na boki, klienci kadrują większy obszar, który obejmuje boki."
+msgstr ""
+"Dla płótna i podobnych wydruków. Gdy zdjęcie zawija się na boki, klienci "
+"kadrują większy obszar, który obejmuje boki."
 
 #: includes/admin-product.php:68
 msgid "Edge Depth"
@@ -26152,7 +26347,9 @@ msgstr "Użyj tego zdjęcia"
 msgid ""
 "The box on the wall is a %s print. If it looks too big or too small, measure "
 "again."
-msgstr "Ramka na ścianie to wydruk %s. Jeśli wygląda na za dużą lub za małą, zmierz jeszcze raz."
+msgstr ""
+"Ramka na ścianie to wydruk %s. Jeśli wygląda na za dużą lub za małą, zmierz "
+"jeszcze raz."
 
 #: includes/admin-rooms.php:65
 msgid "A sample print shows on the wall once steps 1 and 2 are done."
@@ -26198,7 +26395,9 @@ msgstr "Pokój został usunięty."
 msgid ""
 "The room was not saved. It needs a name, a photo, a measurement and a hang "
 "point."
-msgstr "Pokój nie został zapisany. Potrzebuje nazwy, zdjęcia, pomiaru i punktu zawieszenia."
+msgstr ""
+"Pokój nie został zapisany. Potrzebuje nazwy, zdjęcia, pomiaru i punktu "
+"zawieszenia."
 
 #: includes/admin-rooms.php:92
 msgid "That room could not be found."
@@ -26220,7 +26419,9 @@ msgstr "Edytuj pokój"
 msgid ""
 "Take it straight at the wall, at eye level, with empty wall where art can "
 "hang."
-msgstr "Zrób zdjęcie na wprost ściany, na wysokości oczu, z pustą ścianą, na której może zawisnąć obraz."
+msgstr ""
+"Zrób zdjęcie na wprost ściany, na wysokości oczu, z pustą ścianą, na której "
+"może zawisnąć obraz."
 
 #: includes/admin-rooms.php:304
 msgid "Change photo"
@@ -26238,7 +26439,9 @@ msgstr "Zmierz coś"
 msgid ""
 "Click both ends of something flat on the wall that you know the size of, "
 "like a door or a window."
-msgstr "Kliknij oba końce czegoś płaskiego na ścianie, czego rozmiar znasz, na przykład drzwi albo okna."
+msgstr ""
+"Kliknij oba końce czegoś płaskiego na ścianie, czego rozmiar znasz, na "
+"przykład drzwi albo okna."
 
 #: includes/admin-rooms.php:320
 msgid "How long is it?"
@@ -26279,7 +26482,9 @@ msgstr "`print_size` można ustawić tylko dla produktów typu print."
 #: includes/api.php:137
 msgid ""
 "`print_size` needs a width and height above zero. Send null to remove it."
-msgstr "`print_size` wymaga szerokości i wysokości większych od zera. Wyślij null, aby go usunąć."
+msgstr ""
+"`print_size` wymaga szerokości i wysokości większych od zera. Wyślij null, "
+"aby go usunąć."
 
 #. translators: %s: the allowed units, like "in, cm".
 #: includes/api.php:143
@@ -26297,7 +26502,9 @@ msgstr "`print_size.edge` musi mieć jedną z wartości: %s."
 msgid ""
 "`print_size.edge_depth` only applies with an edge. Set `edge` too, or leave "
 "the depth out."
-msgstr "`print_size.edge_depth` działa tylko z krawędzią. Ustaw też `edge` albo pomiń głębokość."
+msgstr ""
+"`print_size.edge_depth` działa tylko z krawędzią. Ustaw też `edge` albo "
+"pomiń głębokość."
 
 #: includes/api.php:159
 msgid "`print_size.edge_depth` must be a number above zero."
@@ -26309,7 +26516,9 @@ msgstr "`print_size.edge_depth` musi być liczbą większą od zera."
 msgid ""
 "The customer or photographer chose this crop, but the cropped file can't be "
 "made on this site: %s Crop the original to the pixels box before printing."
-msgstr "Klient lub fotograf wybrał ten kadr, ale na tej stronie nie można utworzyć przyciętego pliku: %s Przytnij oryginał do ramki w pikselach przed drukiem."
+msgstr ""
+"Klient lub fotograf wybrał ten kadr, ale na tej stronie nie można utworzyć "
+"przyciętego pliku: %s Przytnij oryginał do ramki w pikselach przed drukiem."
 
 #: includes/cart.php:152 includes/functions.php:1011
 msgid "Crop: set by you"
@@ -26369,7 +26578,9 @@ msgstr "Kadry"
 #, php-format
 msgid ""
 "%1$s: %2$s, %3$s, %4$s, left %5$s%%, top %6$s%%, width %7$s%%, height %8$s%%"
-msgstr "%1$s: %2$s, %3$s, %4$s, od lewej %5$s%%, od góry %6$s%%, szerokość %7$s%%, wysokość %8$s%%"
+msgstr ""
+"%1$s: %2$s, %3$s, %4$s, od lewej %5$s%%, od góry %6$s%%, szerokość %7$s%%, "
+"wysokość %8$s%%"
 
 #: includes/files.php:37 includes/files.php:54 includes/files.php:202
 msgid "The photo file could not be found."
@@ -26387,7 +26598,9 @@ msgstr "Ta pozycja nie ma kadru."
 msgid ""
 "This server can't edit this kind of photo file, so the cropped file can't be "
 "made."
-msgstr "Ten serwer nie może edytować tego rodzaju pliku zdjęcia, więc nie można utworzyć przyciętego pliku."
+msgstr ""
+"Ten serwer nie może edytować tego rodzaju pliku zdjęcia, więc nie można "
+"utworzyć przyciętego pliku."
 
 #: includes/files.php:324
 msgid "You are not allowed to download this file."
@@ -26534,7 +26747,9 @@ msgstr "Przesłane zdjęcie: %1$s x %2$s px"
 #, php-format
 msgid ""
 "Low resolution: %s pixels per inch at this size, so the print may look soft"
-msgstr "Niska rozdzielczość: %s pikseli na cal w tym rozmiarze, więc wydruk może być nieostry"
+msgstr ""
+"Niska rozdzielczość: %s pikseli na cal w tym rozmiarze, więc wydruk może być "
+"nieostry"
 
 #. translators: %s: pixels per inch
 #: includes/order.php:314
@@ -26594,7 +26809,9 @@ msgstr "Pokoje"
 msgid ""
 "Customers can see their photo hanging on the wall in the rooms turned on "
 "here."
-msgstr "Klienci mogą zobaczyć swoje zdjęcie wiszące na ścianie w pokojach, które tu włączysz."
+msgstr ""
+"Klienci mogą zobaczyć swoje zdjęcie wiszące na ścianie w pokojach, które tu "
+"włączysz."
 
 #: includes/rooms.php:379
 msgid "Room"
@@ -26624,7 +26841,10 @@ msgstr "Crop & Wall Preview"
 msgid ""
 "Crop & Wall Preview: customer cropping needs Sunshine Photo Cart 3.8.2 or "
 "newer. Update Sunshine Photo Cart to turn it on. The wall preview works now."
-msgstr "Crop & Wall Preview: kadrowanie przez klientów wymaga Sunshine Photo Cart 3.8.2 lub nowszego. Zaktualizuj Sunshine Photo Cart, aby je włączyć. Podgląd na ścianie działa już teraz."
+msgstr ""
+"Crop & Wall Preview: kadrowanie przez klientów wymaga Sunshine Photo Cart "
+"3.8.2 lub nowszego. Zaktualizuj Sunshine Photo Cart, aby je włączyć. Podgląd "
+"na ścianie działa już teraz."
 
 #~ msgid "An error occurred, please try again."
 #~ msgstr "Wystąpił błąd, spróbuj ponownie."

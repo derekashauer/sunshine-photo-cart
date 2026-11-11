@@ -2039,7 +2039,12 @@ msgid ""
 "keep a record of who agreed and when. This discourages people from saving "
 "photos or removing watermarks, but it can't stop someone from taking a "
 "screenshot or using an AI tool."
-msgstr "Kérd meg a látogatókat, hogy fogadják el a feltételeidet, mielőtt meglátják egy galéria fotóit, és tarts nyilván, ki és mikor fogadta el őket. Ez elriasztja az embereket a fotók mentésétől vagy a vízjelek eltávolításától, de nem tudja megakadályozni, hogy valaki képernyőképet készítsen vagy AI-eszközt használjon."
+msgstr ""
+"Kérd meg a látogatókat, hogy fogadják el a feltételeidet, mielőtt meglátják "
+"egy galéria fotóit, és tarts nyilván, ki és mikor fogadta el őket. Ez "
+"elriasztja az embereket a fotók mentésétől vagy a vízjelek eltávolításától, "
+"de nem tudja megakadályozni, hogy valaki képernyőképet készítsen vagy AI-"
+"eszközt használjon."
 
 #: includes/admin/settings-fields.php:501
 msgid "Require terms by default"
@@ -2049,7 +2054,10 @@ msgstr "Feltételek alapértelmezett megkövetelése"
 msgid ""
 "Galleries set to \"Default\" ask visitors to agree to the terms below. Each "
 "gallery can also turn this on or off for itself."
-msgstr "Az „Alapértelmezett” beállítású galériák arra kérik a látogatókat, hogy fogadják el az alábbi feltételeket. Minden galéria saját magának is be- vagy kikapcsolhatja ezt."
+msgstr ""
+"Az „Alapértelmezett” beállítású galériák arra kérik a látogatókat, hogy "
+"fogadják el az alábbi feltételeket. Minden galéria saját magának is be- vagy "
+"kikapcsolhatja ezt."
 
 #: includes/admin/settings-fields.php:507
 #: includes/admin/sunshine-gallery.php:136
@@ -2061,7 +2069,9 @@ msgstr "Feltételek"
 msgid ""
 "Changing this asks everyone to agree again, since they agreed to different "
 "wording."
-msgstr "Ha ezt módosítod, mindenkinek újra el kell fogadnia, mert más szövegezést fogadtak el."
+msgstr ""
+"Ha ezt módosítod, mindenkinek újra el kell fogadnia, mert más szövegezést "
+"fogadtak el."
 
 #: includes/admin/settings-fields.php:514
 msgid "Don't ask guests for an email"
@@ -2072,7 +2082,10 @@ msgid ""
 "By default, visitors who aren't logged in also give their email address when "
 "they agree, so every agreement shows who it was. Without an email, Sunshine "
 "can't record who agreed."
-msgstr "Alapértelmezés szerint a be nem jelentkezett látogatók is megadják az e-mail-címüket, amikor elfogadják a feltételeket, így minden elfogadásnál látszik, ki volt az. E-mail nélkül a Sunshine nem tudja rögzíteni, ki fogadta el."
+msgstr ""
+"Alapértelmezés szerint a be nem jelentkezett látogatók is megadják az e-mail-"
+"címüket, amikor elfogadják a feltételeket, így minden elfogadásnál látszik, "
+"ki volt az. E-mail nélkül a Sunshine nem tudja rögzíteni, ki fogadta el."
 
 #: includes/admin/settings-fields.php:522
 msgid "Display Options"
@@ -3043,7 +3056,9 @@ msgstr "Nem kötelező"
 
 #: includes/admin/sunshine-gallery.php:144
 msgid "Ask visitors to agree to your gallery terms before they see the photos."
-msgstr "Kérd meg a látogatókat, hogy fogadják el a galériafeltételeidet, mielőtt meglátják a fotókat."
+msgstr ""
+"Kérd meg a látogatókat, hogy fogadják el a galériafeltételeidet, mielőtt "
+"meglátják a fotókat."
 
 #: includes/admin/sunshine-gallery.php:150 class-authorizenet.php:142
 msgid "Expiration"
@@ -3323,7 +3338,10 @@ msgid ""
 "People who agreed while entering this gallery. Visitors agree once for all "
 "galleries, so someone who already agreed on another gallery is not asked "
 "again and is listed there instead."
-msgstr "Azok, akik a galériába belépve fogadták el a feltételeket. A látogatók egyszer fogadják el az összes galériára, így aki egy másik galériában már elfogadta, azt nem kérdezzük újra, és ott szerepel ehelyett."
+msgstr ""
+"Azok, akik a galériába belépve fogadták el a feltételeket. A látogatók "
+"egyszer fogadják el az összes galériára, így aki egy másik galériában már "
+"elfogadta, azt nem kérdezzük újra, és ott szerepel ehelyett."
 
 #: includes/admin/sunshine-gallery.php:2004
 msgid "Nobody has agreed to the terms while entering this gallery yet"
@@ -13359,7 +13377,8 @@ msgstr "Fogadd el a feltételeket a galéria megtekintéséhez"
 
 #: includes/class-frontend.php:1191
 msgid "The terms changed since this page loaded. Please read them again."
-msgstr "A feltételek megváltoztak, mióta az oldal betöltődött. Olvasd el őket újra."
+msgstr ""
+"A feltételek megváltoztak, mióta az oldal betöltődött. Olvasd el őket újra."
 
 #: includes/class-frontend.php:1197 includes/class-frontend.php:1262
 msgid "Not a valid email address"
@@ -14352,25 +14371,34 @@ msgstr "Percenként"
 msgid ""
 "The photos in this gallery are copyrighted by %s and are shown as proofs for "
 "viewing and ordering only."
-msgstr "A galéria fotóinak szerzői joga %s tulajdona, és csak megtekintésre és rendelésre szolgáló próbaképként jelennek meg."
+msgstr ""
+"A galéria fotóinak szerzői joga %s tulajdona, és csak megtekintésre és "
+"rendelésre szolgáló próbaképként jelennek meg."
 
 #: includes/functions/gallery.php:701
 msgid ""
 "You may not download, screenshot, copy, share or print these proofs, or "
 "remove, crop out or edit away any watermark, including with AI tools. Doing "
 "so is a copyright violation and may break the law."
-msgstr "Nem töltheted le, nem készíthetsz róluk képernyőképet, nem másolhatod, oszthatod meg vagy nyomtathatod ki ezeket a próbaképeket, és nem távolíthatsz el, vághatsz ki vagy szerkeszthetsz le róluk vízjelet, AI-eszközökkel sem. Ez szerzői jogsértés, és törvénybe ütközhet."
+msgstr ""
+"Nem töltheted le, nem készíthetsz róluk képernyőképet, nem másolhatod, "
+"oszthatod meg vagy nyomtathatod ki ezeket a próbaképeket, és nem "
+"távolíthatsz el, vághatsz ki vagy szerkeszthetsz le róluk vízjelet, AI-"
+"eszközökkel sem. Ez szerzői jogsértés, és törvénybe ütközhet."
 
 #: includes/functions/gallery.php:702
 msgid "Clean, full-quality versions are available when you order them."
-msgstr "A tiszta, teljes minőségű változatokat megkapod, amikor megrendeled őket."
+msgstr ""
+"A tiszta, teljes minőségű változatokat megkapod, amikor megrendeled őket."
 
 #. translators: %s: file name
 #: includes/functions/image.php:163
 #, php-format
 msgid ""
 "%s is a print crop made for an order, so it was not added to the gallery."
-msgstr "A(z) %s egy rendeléshez készült nyomtatási kivágás, ezért nem került be a galériába."
+msgstr ""
+"A(z) %s egy rendeléshez készült nyomtatási kivágás, ezért nem került be a "
+"galériába."
 
 #: includes/functions/misc.php:270
 msgid "United Arab Emirates dirham"
@@ -17605,7 +17633,9 @@ msgstr "Idővonal"
 
 #: customer.php:59
 msgid "Older activity could not be loaded. Reload the page and try again."
-msgstr "A régebbi tevékenységet nem sikerült betölteni. Töltsd újra az oldalt, és próbáld újra."
+msgstr ""
+"A régebbi tevékenységet nem sikerült betölteni. Töltsd újra az oldalt, és "
+"próbáld újra."
 
 #: customer.php:145
 msgid "No activity"
@@ -17709,13 +17739,17 @@ msgstr "Útvonal"
 
 #: order-journey.php:24
 msgid "What this customer did before placing this order, oldest first."
-msgstr "Mit csinált ez a vásárló a rendelés leadása előtt, a legrégebbitől kezdve."
+msgstr ""
+"Mit csinált ez a vásárló a rendelés leadása előtt, a legrégebbitől kezdve."
 
 #: order-journey.php:27
 msgid ""
 "No activity was recorded before this order. Orders placed before journeys "
 "were recorded, and orders from visitors who declined tracking, have none."
-msgstr "A rendelés előtt nem rögzült tevékenység. Azoknál a rendeléseknél, amelyek az útvonalak rögzítése előtt készültek, és azoknál, ahol a látogató elutasította a követést, nincs ilyen."
+msgstr ""
+"A rendelés előtt nem rögzült tevékenység. Azoknál a rendeléseknél, amelyek "
+"az útvonalak rögzítése előtt készültek, és azoknál, ahol a látogató "
+"elutasította a követést, nincs ilyen."
 
 #: profit.php:10
 msgid "Cost"
@@ -17754,7 +17788,10 @@ msgid ""
 "Leave blank to keep every view. When there are more than this, the oldest "
 "guest views are removed first, then the oldest views by customers who have "
 "not ordered."
-msgstr "Hagyd üresen, ha minden megtekintést meg akarsz tartani. Ha ennél több van, először a legrégebbi vendégmegtekintések törlődnek, aztán a még nem rendelt vásárlók legrégebbi megtekintései."
+msgstr ""
+"Hagyd üresen, ha minden megtekintést meg akarsz tartani. Ha ennél több van, "
+"először a legrégebbi vendégmegtekintések törlődnek, aztán a még nem rendelt "
+"vásárlók legrégebbi megtekintései."
 
 #. translators: %s: number of gallery and image view records currently stored
 #: retention.php:25
@@ -17778,7 +17815,10 @@ msgstr "Megtekintési adatok megőrzése"
 msgid ""
 "Leave blank to keep views no matter how old they are. Older guest views, and "
 "older views by customers who have not ordered, are removed."
-msgstr "Hagyd üresen, ha a megtekintéseket koruktól függetlenül meg akarod tartani. A régebbi vendégmegtekintések és a még nem rendelt vásárlók régebbi megtekintései törlődnek."
+msgstr ""
+"Hagyd üresen, ha a megtekintéseket koruktól függetlenül meg akarod tartani. "
+"A régebbi vendégmegtekintések és a még nem rendelt vásárlók régebbi "
+"megtekintései törlődnek."
 
 #. translators: %s: date
 #: retention.php:431
@@ -17788,7 +17828,11 @@ msgid ""
 "limits in Sunshine > Settings > Privacy & Data, so view numbers before then "
 "are lower than the real ones. The Views totals on galleries and photos are "
 "not affected."
-msgstr "A(z) %s előtti galéria- és fotómegtekintések egy részét törölték a Sunshine > Beállítások > Adatvédelem és adatok alatti megtekintési adatkorlátok, ezért az addigi megtekintési számok alacsonyabbak a valósnál. A galériák és fotók összesített megtekintéseit ez nem érinti."
+msgstr ""
+"A(z) %s előtti galéria- és fotómegtekintések egy részét törölték a Sunshine "
+"> Beállítások > Adatvédelem és adatok alatti megtekintési adatkorlátok, "
+"ezért az addigi megtekintési számok alacsonyabbak a valósnál. A galériák és "
+"fotók összesített megtekintéseit ez nem érinti."
 
 #. translators: 1: number of customer activity records, 2: settings page URL
 #: retention.php:463
@@ -17812,7 +17856,11 @@ msgid ""
 "Privacy & Data right away, instead of a batch at a time each day. Views kept "
 "by those settings, such as views by customers who have ordered, are never "
 "removed."
-msgstr "Azonnal törli a Beállítások > Adatvédelem és adatok alatt megadott korlátokon felüli galéria- és fotómegtekintési adatokat, ahelyett hogy naponta egy adagot törölne. Az ezek a beállítások szerint megőrzött megtekintések, például a rendelt vásárlók megtekintései, soha nem törlődnek."
+msgstr ""
+"Azonnal törli a Beállítások > Adatvédelem és adatok alatt megadott "
+"korlátokon felüli galéria- és fotómegtekintési adatokat, ahelyett hogy "
+"naponta egy adagot törölne. Az ezek a beállítások szerint megőrzött "
+"megtekintések, például a rendelt vásárlók megtekintései, soha nem törlődnek."
 
 #: tools/clean-activity.php:29
 msgid "Clean up customer activity"
@@ -17825,7 +17873,10 @@ msgid ""
 "No limits are set yet. Set a maximum number of view records or how long to "
 "keep them in <a href=\"%s\">Settings > Privacy & Data</a>, then come back "
 "here."
-msgstr "Még nincs korlát beállítva. Állítsd be a megtekintési adatok maximális számát vagy azt, hogy meddig őrizzük meg őket, itt: <a href=\"%s\">Beállítások > Adatvédelem és adatok</a>, aztán gyere vissza ide."
+msgstr ""
+"Még nincs korlát beállítva. Állítsd be a megtekintési adatok maximális "
+"számát vagy azt, hogy meddig őrizzük meg őket, itt: <a "
+"href=\"%s\">Beállítások > Adatvédelem és adatok</a>, aztán gyere vissza ide."
 
 #. translators: %s: number of gallery and image view records
 #: tools/clean-activity.php:52
@@ -17837,7 +17888,9 @@ msgstr "Körülbelül %s megtekintési adatod van."
 msgid ""
 "It is recommended to make a backup before running this tool. Removed records "
 "cannot be brought back."
-msgstr "Az eszköz futtatása előtt érdemes biztonsági mentést készíteni. A törölt adatokat nem lehet visszahozni."
+msgstr ""
+"Az eszköz futtatása előtt érdemes biztonsági mentést készíteni. A törölt "
+"adatokat nem lehet visszahozni."
 
 #: tools/clean-activity.php:99
 msgid "Removing view records..."
@@ -17856,7 +17909,10 @@ msgid ""
 "Your database keeps the space from removed records until the table is "
 "optimized. Ask your host to optimize the sunshine_actions table to get that "
 "disk space back."
-msgstr "Az adatbázisod a törölt adatok helyét addig megtartja, amíg a táblát nem optimalizálják. Kérd meg a tárhelyszolgáltatódat, hogy optimalizálja a sunshine_actions táblát, így visszakapod a lemezterületet."
+msgstr ""
+"Az adatbázisod a törölt adatok helyét addig megtartja, amíg a táblát nem "
+"optimalizálják. Kérd meg a tárhelyszolgáltatódat, hogy optimalizálja a "
+"sunshine_actions táblát, így visszakapod a lemezterületet."
 
 #. translators: %s: number of view records still over the limit
 #: tools/clean-activity.php:115
@@ -24487,7 +24543,10 @@ msgstr "Sunshine Photo Cart - Connect"
 msgid ""
 "Connect Sunshine Photo Cart to Lightroom, AI apps like Claude, and tools "
 "like Zapier: REST API, AI tools and signed webhooks."
-msgstr "Kapcsold össze a Sunshine Photo Cartot a Lightroommal, AI-alkalmazásokkal, például a Claude-dal, és olyan eszközökkel, mint a Zapier: REST API, AI-eszközök és aláírt webhookok."
+msgstr ""
+"Kapcsold össze a Sunshine Photo Cartot a Lightroommal, AI-alkalmazásokkal, "
+"például a Claude-dal, és olyan eszközökkel, mint a Zapier: REST API, AI-"
+"eszközök és aláírt webhookok."
 
 #: admin/class-admin-ai.php:59
 msgid "AI"
@@ -24501,17 +24560,23 @@ msgstr "Ezen az oldalon nem kapcsolhatsz be bővítményeket."
 msgid ""
 "This site doesn't allow installing plugins here. Get MCP Adapter from "
 "WordPress.org and upload it."
-msgstr "Ez az oldal nem engedi itt a bővítmények telepítését. Töltsd le az MCP Adaptert a WordPress.org-ról, és töltsd fel."
+msgstr ""
+"Ez az oldal nem engedi itt a bővítmények telepítését. Töltsd le az MCP "
+"Adaptert a WordPress.org-ról, és töltsd fel."
 
 #: admin/class-admin-ai.php:161
 msgid ""
 "MCP Adapter couldn't be installed. Get it from WordPress.org and upload it."
-msgstr "Az MCP Adaptert nem sikerült telepíteni. Töltsd le a WordPress.org-ról, és töltsd fel."
+msgstr ""
+"Az MCP Adaptert nem sikerült telepíteni. Töltsd le a WordPress.org-ról, és "
+"töltsd fel."
 
 #: admin/class-admin-ai.php:166
 msgid ""
 "MCP Adapter was installed but couldn't be found. Turn it on under Plugins."
-msgstr "Az MCP Adapter telepítve lett, de nem található. Kapcsold be a Bővítmények alatt."
+msgstr ""
+"Az MCP Adapter telepítve lett, de nem található. Kapcsold be a Bővítmények "
+"alatt."
 
 #: admin/class-admin-ai.php:233
 msgid "App passwords are turned off on this site."
@@ -24533,7 +24598,9 @@ msgstr "Az MCP Adapter be van kapcsolva."
 
 #: admin/class-admin-ai.php:317
 msgid "App password removed. AI apps using it can't sign in anymore."
-msgstr "Az alkalmazásjelszó törölve. Az ezt használó AI-alkalmazások már nem tudnak bejelentkezni."
+msgstr ""
+"Az alkalmazásjelszó törölve. Az ezt használó AI-alkalmazások már nem tudnak "
+"bejelentkezni."
 
 #: admin/class-admin-ai.php:318
 msgid "The app password couldn't be removed. Remove it on your profile page."
@@ -24568,7 +24635,12 @@ msgid ""
 "then add a request header. If you can't pick Authorization, go back and "
 "check No sign-in. It then works in the Claude website, desktop app, phone "
 "app and Claude Code."
-msgstr "A Claude-ban nyisd meg a Beállítások, Csatlakozók, Egyéni csatlakozó hozzáadása menüt. Válaszd a Bejelentkezés nélkül lehetőséget, majd adj hozzá egy kérésfejlécet. Ha nem tudod kiválasztani az Authorization lehetőséget, lépj vissza, és jelöld be a Bejelentkezés nélkül lehetőséget. Ezután működik a Claude webhelyén, az asztali alkalmazásban, a telefonos alkalmazásban és a Claude Code-ban."
+msgstr ""
+"A Claude-ban nyisd meg a Settings, Connectors, Add custom connector menüt. "
+"Válaszd a No sign-in lehetőséget, majd adj hozzá egy kérésfejlécet. Ha nem "
+"tudod kiválasztani az Authorization lehetőséget, lépj vissza, és jelöld be a "
+"No sign-in lehetőséget. Ezután működik a Claude webhelyén, az asztali "
+"alkalmazásban, a telefonos alkalmazásban és a Claude Code-ban."
 
 #: admin/class-admin-ai.php:428
 msgid "URL"
@@ -24590,7 +24662,9 @@ msgstr "Claude Code (terminál)"
 msgid ""
 "Run this in a terminal. You don't need it if you added the Claude connector "
 "and sign in to Claude Code with your Claude account."
-msgstr "Futtasd ezt egy terminálban. Nincs rá szükséged, ha hozzáadtad a Claude-csatlakozót, és a Claude-fiókoddal jelentkezel be a Claude Code-ba."
+msgstr ""
+"Futtasd ezt egy terminálban. Nincs rá szükséged, ha hozzáadtad a Claude-"
+"csatlakozót, és a Claude-fiókoddal jelentkezel be a Claude Code-ba."
 
 #: admin/class-admin-ai.php:439
 msgid "Cursor"
@@ -24600,7 +24674,9 @@ msgstr "Cursor"
 msgid ""
 "In Cursor, open Settings, Tools & MCPs, New MCP Server. Add this, then save "
 "and restart Cursor."
-msgstr "A Cursorban nyisd meg a Settings, Tools & MCPs, New MCP Server menüt. Add hozzá ezt, majd mentsd el, és indítsd újra a Cursort."
+msgstr ""
+"A Cursorban nyisd meg a Settings, Tools & MCPs, New MCP Server menüt. Add "
+"hozzá ezt, majd mentsd el, és indítsd újra a Cursort."
 
 #: admin/class-admin-ai.php:453
 msgid "VS Code"
@@ -24611,7 +24687,10 @@ msgid ""
 "In the Command Palette, run MCP: Open User Configuration. Add this, then "
 "save and restart VS Code. Keep it out of project files, which can end up in "
 "git."
-msgstr "A Command Palette-ben futtasd az MCP: Open User Configuration parancsot. Add hozzá ezt, majd mentsd el, és indítsd újra a VS Code-ot. Tartsd távol a projektfájloktól, mert azok bekerülhetnek a gitbe."
+msgstr ""
+"A Command Palette-ben futtasd az MCP: Open User Configuration parancsot. Add "
+"hozzá ezt, majd mentsd el, és indítsd újra a VS Code-ot. Tartsd távol a "
+"projektfájloktól, mert azok bekerülhetnek a gitbe."
 
 #: admin/class-admin-ai.php:468
 msgid "ChatGPT / Codex"
@@ -24621,7 +24700,9 @@ msgstr "ChatGPT / Codex"
 msgid ""
 "Add this to ~/.codex/config.toml, then restart the ChatGPT app. Use its Work "
 "side, not Chat."
-msgstr "Add hozzá ezt a ~/.codex/config.toml fájlhoz, majd indítsd újra a ChatGPT alkalmazást. A Work részét használd, ne a Chatet."
+msgstr ""
+"Add hozzá ezt a ~/.codex/config.toml fájlhoz, majd indítsd újra a ChatGPT "
+"alkalmazást. A Work részét használd, ne a Chatet."
 
 #: admin/class-admin-ai.php:473
 msgid "Gemini CLI"
@@ -24639,7 +24720,10 @@ msgstr "Kapcsold össze az AI-odat"
 msgid ""
 "Ask Claude or another AI to manage your galleries, get orders ready for your "
 "print lab, or tell you how sales are going."
-msgstr "Kérd meg a Claude-ot vagy egy másik AI-t, hogy kezelje a galériáidat, készítse elő a rendeléseket a fotólaborodnak, vagy mondja el, hogy mennek az eladások."
+msgstr ""
+"Kérd meg a Claude-ot vagy egy másik AI-t, hogy kezelje a galériáidat, "
+"készítse elő a rendeléseket a fotólaborodnak, vagy mondja el, hogy mennek az "
+"eladások."
 
 #: admin/class-admin-ai.php:513
 msgid "MCP Adapter plugin"
@@ -24686,7 +24770,9 @@ msgstr "%1$s, %2$s"
 #: admin/class-admin-ai.php:541
 msgid ""
 "AI apps using the old password will stop connecting until you update them."
-msgstr "A régi jelszót használó AI-alkalmazások nem tudnak csatlakozni, amíg nem frissíted őket."
+msgstr ""
+"A régi jelszót használó AI-alkalmazások nem tudnak csatlakozni, amíg nem "
+"frissíted őket."
 
 #: admin/class-admin-ai.php:541
 msgid "New password"
@@ -24694,7 +24780,8 @@ msgstr "Új jelszó"
 
 #: admin/class-admin-ai.php:543
 msgid "AI apps using this password will stop connecting."
-msgstr "Az ezt a jelszót használó AI-alkalmazások nem fognak tudni csatlakozni."
+msgstr ""
+"Az ezt a jelszót használó AI-alkalmazások nem fognak tudni csatlakozni."
 
 #: admin/class-admin-ai.php:546
 msgid "App passwords need HTTPS"
@@ -24736,7 +24823,8 @@ msgstr "Másold ki most. Többé nem fog megjelenni."
 
 #: admin/class-admin-ai.php:577
 msgid "It has the same access as your admin account, so keep it private."
-msgstr "Ugyanolyan hozzáférése van, mint az adminfiókodnak, ezért tartsd titokban."
+msgstr ""
+"Ugyanolyan hozzáférése van, mint az adminfiókodnak, ezért tartsd titokban."
 
 #: admin/class-admin-ai.php:581
 msgid "Admin username"
@@ -24750,7 +24838,9 @@ msgstr "Az alkalmazásjelszava"
 msgid ""
 "This only fills in the details below. It stays in your browser and is never "
 "saved or sent anywhere."
-msgstr "Ez csak kitölti az alábbi adatokat. A böngésződben marad, és soha nem kerül mentésre vagy elküldésre."
+msgstr ""
+"Ez csak kitölti az alábbi adatokat. A böngésződben marad, és soha nem kerül "
+"mentésre vagy elküldésre."
 
 #: admin/class-admin-ai.php:590
 msgid "AI app"
@@ -24764,7 +24854,10 @@ msgstr "AI-készség"
 msgid ""
 "Teaches your AI app how Sunshine works, so it can upload photos, get orders "
 "ready for your lab and read your sales."
-msgstr "Megtanítja az AI-alkalmazásodnak, hogyan működik a Sunshine, hogy fotókat tudjon feltölteni, előkészítse a rendeléseket a laborodnak, és olvassa az eladásaidat."
+msgstr ""
+"Megtanítja az AI-alkalmazásodnak, hogyan működik a Sunshine, hogy fotókat "
+"tudjon feltölteni, előkészítse a rendeléseket a laborodnak, és olvassa az "
+"eladásaidat."
 
 #: admin/class-admin-ai.php:620
 msgid "Download skill"
@@ -24796,8 +24889,12 @@ msgid ""
 msgid_plural ""
 "%1$d Sunshine webhook endpoints were disabled after repeated delivery "
 "failures. <a href=\"%2$s\">Review webhooks</a>."
-msgstr[0] "%1$d Sunshine webhook-végpont ki lett kapcsolva ismétlődő kézbesítési hibák miatt. <a href=\"%2$s\">Webhookok ellenőrzése</a>."
-msgstr[1] "%1$d Sunshine webhook-végpont ki lett kapcsolva ismétlődő kézbesítési hibák miatt. <a href=\"%2$s\">Webhookok ellenőrzése</a>."
+msgstr[0] ""
+"%1$d Sunshine webhook-végpont ki lett kapcsolva ismétlődő kézbesítési hibák "
+"miatt. <a href=\"%2$s\">Webhookok ellenőrzése</a>."
+msgstr[1] ""
+"%1$d Sunshine webhook-végpont ki lett kapcsolva ismétlődő kézbesítési hibák "
+"miatt. <a href=\"%2$s\">Webhookok ellenőrzése</a>."
 
 #: admin/class-admin-webhooks.php:98 admin/class-admin-webhooks.php:272
 msgid "Add endpoint"
@@ -24807,7 +24904,10 @@ msgstr "Végpont hozzáadása"
 msgid ""
 "Send signed order events to external services. Deliveries run in the "
 "background and retry automatically when an endpoint is unavailable."
-msgstr "Aláírt rendelési eseményeket küld külső szolgáltatásoknak. A kézbesítések a háttérben futnak, és automatikusan újrapróbálkoznak, ha egy végpont nem érhető el."
+msgstr ""
+"Aláírt rendelési eseményeket küld külső szolgáltatásoknak. A kézbesítések a "
+"háttérben futnak, és automatikusan újrapróbálkoznak, ha egy végpont nem "
+"érhető el."
 
 #: admin/class-admin-webhooks.php:102
 msgid "Endpoints"
@@ -24907,7 +25007,9 @@ msgstr "Adatformátum verziója"
 msgid ""
 "This endpoint stays pinned to the selected payload shape when newer versions "
 "are introduced."
-msgstr "Ez a végpont a kiválasztott adatformátumnál marad, amikor újabb verziók jelennek meg."
+msgstr ""
+"Ez a végpont a kiválasztott adatformátumnál marad, amikor újabb verziók "
+"jelennek meg."
 
 #: admin/class-admin-webhooks.php:272
 msgid "Save endpoint"
@@ -24926,7 +25028,9 @@ msgstr "Végpont műveletei"
 msgid ""
 "Rotating the signing secret immediately invalidates the previous secret. "
 "Pending attempts use the new secret."
-msgstr "Az aláírási titok cseréje azonnal érvényteleníti az előző titkot. A függőben lévő próbálkozások az új titkot használják."
+msgstr ""
+"Az aláírási titok cseréje azonnal érvényteleníti az előző titkot. A függőben "
+"lévő próbálkozások az új titkot használják."
 
 #: admin/class-admin-webhooks.php:280
 msgid "Rotate signing secret"
@@ -24990,13 +25094,19 @@ msgid ""
 "SHA256 over the timestamp, a period, and the exact raw request body using "
 "the endpoint signing secret. Reject old timestamps and compare signatures in "
 "constant time."
-msgstr "Olvasd ki az időbélyeget és a v1 aláírást a Sunshine-Signature fejlécből. Számíts HMAC-SHA256-ot az időbélyegre, egy pontra és a pontos, nyers kéréstörzsre a végpont aláírási titkával. Utasítsd el a régi időbélyegeket, és az aláírásokat állandó idejű összehasonlítással vesd össze."
+msgstr ""
+"Olvasd ki az időbélyeget és a v1 aláírást a Sunshine-Signature fejlécből. "
+"Számíts HMAC-SHA256-ot az időbélyegre, egy pontra és a pontos, nyers "
+"kéréstörzsre a végpont aláírási titkával. Utasítsd el a régi időbélyegeket, "
+"és az aláírásokat állandó idejű összehasonlítással vesd össze."
 
 #: admin/class-admin-webhooks.php:345
 msgid ""
 "Webhook endpoint created. Copy the signing secret now; it will not be shown "
 "again."
-msgstr "A webhook-végpont létrejött. Másold ki most az aláírási titkot, többé nem fog megjelenni."
+msgstr ""
+"A webhook-végpont létrejött. Másold ki most az aláírási titkot, többé nem "
+"fog megjelenni."
 
 #: admin/class-admin-webhooks.php:365
 msgid "Webhook endpoint updated."
@@ -25017,7 +25127,9 @@ msgstr "A webhook-végpont törölve. A kézbesítési előzmények megmaradtak.
 #: admin/class-admin-webhooks.php:391
 msgid ""
 "Signing secret rotated. Copy the new secret now; it will not be shown again."
-msgstr "Az aláírási titok lecserélve. Másold ki most az új titkot, többé nem fog megjelenni."
+msgstr ""
+"Az aláírási titok lecserélve. Másold ki most az új titkot, többé nem fog "
+"megjelenni."
 
 #: admin/class-admin-webhooks.php:402
 msgid "Test event sent."
@@ -25040,7 +25152,9 @@ msgstr "%s ezelőtt"
 #: includes/class-api-permissions.php:110
 msgid ""
 "Sign in with a WordPress username and app password to use the Sunshine API."
-msgstr "A Sunshine API használatához jelentkezz be egy WordPress-felhasználónévvel és alkalmazásjelszóval."
+msgstr ""
+"A Sunshine API használatához jelentkezz be egy WordPress-felhasználónévvel "
+"és alkalmazásjelszóval."
 
 #. translators: 1: action, 2: resource
 #: includes/class-api-permissions.php:118
@@ -25116,7 +25230,8 @@ msgstr "Válassz legalább egy eseményt."
 
 #: includes/class-api-webhooks.php:750
 msgid "OpenSSL is required to store webhook signing secrets securely."
-msgstr "A webhookok aláírási titkainak biztonságos tárolásához OpenSSL szükséges."
+msgstr ""
+"A webhookok aláírási titkainak biztonságos tárolásához OpenSSL szükséges."
 
 #: includes/class-api-webhooks.php:757
 msgid "Could not encrypt the webhook signing secret."
@@ -25126,11 +25241,14 @@ msgstr "Nem sikerült titkosítani a webhook aláírási titkát."
 msgid ""
 "The webhook signing secret cannot be decrypted. Rotate the secret and try "
 "again."
-msgstr "A webhook aláírási titkát nem lehet visszafejteni. Cseréld le a titkot, és próbáld újra."
+msgstr ""
+"A webhook aláírási titkát nem lehet visszafejteni. Cseréld le a titkot, és "
+"próbáld újra."
 
 #: includes/class-api-webhooks.php:768
 msgid "The webhook signing secret is invalid. Rotate the secret and try again."
-msgstr "A webhook aláírási titka érvénytelen. Cseréld le a titkot, és próbáld újra."
+msgstr ""
+"A webhook aláírási titka érvénytelen. Cseréld le a titkot, és próbáld újra."
 
 #: includes/class-api-webhooks.php:806
 msgid "Could not queue the redelivery."
@@ -25172,7 +25290,9 @@ msgstr "A vásárlót nem sikerült törölni."
 msgid ""
 "That price level doesn't exist. Use an id from the price levels list, or 0 "
 "for the default."
-msgstr "Ez az árszint nem létezik. Használj egy azonosítót az árszintek listájából, vagy 0-t az alapértelmezetthez."
+msgstr ""
+"Ez az árszint nem létezik. Használj egy azonosítót az árszintek listájából, "
+"vagy 0-t az alapértelmezetthez."
 
 #. translators: %s: the end_date value the caller sent
 #: includes/controllers/v1/class-rest-galleries-controller.php:190
@@ -25180,7 +25300,9 @@ msgstr "Ez az árszint nem létezik. Használj egy azonosítót az árszintek li
 msgid ""
 "end_date \"%s\" is not a date. Send a Unix timestamp or a date like "
 "2026-12-31."
-msgstr "Az end_date „%s” értéke nem dátum. Küldj Unix-időbélyeget vagy egy dátumot, például 2026-12-31."
+msgstr ""
+"Az end_date „%s” értéke nem dátum. Küldj Unix-időbélyeget vagy egy dátumot, "
+"például 2026-12-31."
 
 #: includes/controllers/v1/class-rest-galleries-controller.php:207
 msgid "images must be a list of image ids."
@@ -25209,7 +25331,9 @@ msgstr "Az eredmények szűkítése egy adott galéria algalériáira."
 #: includes/controllers/v1/class-rest-galleries-controller.php:345
 msgid ""
 "Limit results to galleries whose title or content matches the search string."
-msgstr "Az eredmények szűkítése azokra a galériákra, amelyek címe vagy tartalma egyezik a keresett szöveggel."
+msgstr ""
+"Az eredmények szűkítése azokra a galériákra, amelyek címe vagy tartalma "
+"egyezik a keresett szöveggel."
 
 #: includes/controllers/v1/class-rest-images-controller.php:83
 #: includes/controllers/v1/class-rest-images-controller.php:112
@@ -25244,7 +25368,9 @@ msgstr "A fájlnév kiterjesztése nem támogatott képtípus."
 msgid ""
 "No file payload supplied. Send multipart `file`, JSON `src` URL, or JSON "
 "`data` + `filename`."
-msgstr "Nincs megadva fájl. Küldj multipart `file` mezőt, JSON `src` URL-t, vagy JSON `data` + `filename` párost."
+msgstr ""
+"Nincs megadva fájl. Küldj multipart `file` mezőt, JSON `src` URL-t, vagy "
+"JSON `data` + `filename` párost."
 
 #. translators: %s: the error the image's address gave, like "Not Found".
 #: includes/controllers/v1/class-rest-images-controller.php:389
@@ -25252,7 +25378,9 @@ msgstr "Nincs megadva fájl. Küldj multipart `file` mezőt, JSON `src` URL-t, v
 msgid ""
 "The image couldn't be downloaded from that address (%s). Upload the file "
 "instead."
-msgstr "A képet nem sikerült letölteni erről a címről (%s). Töltsd fel inkább a fájlt."
+msgstr ""
+"A képet nem sikerült letölteni erről a címről (%s). Töltsd fel inkább a "
+"fájlt."
 
 #: includes/controllers/v1/class-rest-images-controller.php:394
 msgid "The downloaded image exceeds the maximum allowed upload size."
@@ -25289,7 +25417,10 @@ msgstr "A kép nem található."
 msgid ""
 "The %1$s file (%2$s) doesn't fit this photo (%3$s). Send a copy no bigger "
 "than the original and close to the site's size settings."
-msgstr "A(z) %1$s fájl (%2$s) nem illik ehhez a fotóhoz (%3$s). Küldj egy olyan másolatot, amely nem nagyobb az eredetinél, és közel áll az oldal méretbeállításaihoz."
+msgstr ""
+"A(z) %1$s fájl (%2$s) nem illik ehhez a fotóhoz (%3$s). Küldj egy olyan "
+"másolatot, amely nem nagyobb az eredetinél, és közel áll az oldal "
+"méretbeállításaihoz."
 
 #. translators: 1: size name sent by the caller, 2: comma-separated list of allowed size names
 #: includes/controllers/v1/class-rest-images-controller.php:837
@@ -25314,7 +25445,9 @@ msgstr "A képet nem sikerült törölni."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:89
 msgid "Include each file's download link. The manifest link works either way."
-msgstr "Minden fájl letöltési linkjének hozzáadása. A manifest linkje mindenképp működik."
+msgstr ""
+"Minden fájl letöltési linkjének hozzáadása. A manifest linkje mindenképp "
+"működik."
 
 #. translators: %d: current Unix timestamp
 #: includes/controllers/v1/class-rest-orders-controller.php:212
@@ -25338,7 +25471,9 @@ msgstr "A visszatérítés összege nem lehet nulla alatt."
 #: includes/controllers/v1/class-rest-orders-controller.php:540
 #, php-format
 msgid "Refunds of %1$s are more than the order total of %2$s."
-msgstr "A(z) %1$s összegű visszatérítések meghaladják a(z) %2$s rendelési végösszeget."
+msgstr ""
+"A(z) %1$s összegű visszatérítések meghaladják a(z) %2$s rendelési "
+"végösszeget."
 
 #. translators: %s: the order status slug that was sent
 #: includes/controllers/v1/class-rest-orders-controller.php:649
@@ -25346,7 +25481,9 @@ msgstr "A(z) %1$s összegű visszatérítések meghaladják a(z) %2$s rendelési
 msgid ""
 "\"%s\" is not an order status on this site. Use a slug from GET /order-"
 "statuses."
-msgstr "A(z) „%s” nem rendelési állapot ezen az oldalon. Használj egy slugot a GET /order-statuses válaszából."
+msgstr ""
+"A(z) „%s” nem rendelési állapot ezen az oldalon. Használj egy slugot a GET /"
+"order-statuses válaszából."
 
 #. translators: %s: database error message
 #: includes/controllers/v1/class-rest-orders-controller.php:754
@@ -25367,12 +25504,17 @@ msgid ""
 "When the order was placed (ISO 8601). Give it when creating an order to "
 "bring in an older order: an order created with a date is an import and sends "
 "no webhooks."
-msgstr "A rendelés leadásának ideje (ISO 8601). Add meg rendelés létrehozásakor, ha egy régebbi rendelést hozol be: a dátummal létrehozott rendelés importnak számít, és nem küld webhookot."
+msgstr ""
+"A rendelés leadásának ideje (ISO 8601). Add meg rendelés létrehozásakor, ha "
+"egy régebbi rendelést hozol be: a dátummal létrehozott rendelés importnak "
+"számít, és nem küld webhookot."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:924
 msgid ""
 "Store credit used on the order. The total is what is left to pay after it."
-msgstr "A rendelésnél felhasznált bolti jóváírás. A végösszeg az, ami ezután még fizetendő."
+msgstr ""
+"A rendelésnél felhasznált bolti jóváírás. A végösszeg az, ami ezután még "
+"fizetendő."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:951
 msgid "Limit to orders for a customer (user id)."
@@ -25380,7 +25522,9 @@ msgstr "Szűkítés egy vásárló rendeléseire (felhasználói azonosító)."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:952
 msgid "Limit to the order with this order number (the number customers see)."
-msgstr "Szűkítés az ezzel a rendelésszámmal rendelkező rendelésre (az a szám, amit a vásárlók látnak)."
+msgstr ""
+"Szűkítés az ezzel a rendelésszámmal rendelkező rendelésre (az a szám, amit a "
+"vásárlók látnak)."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:953
 msgid "Filter by order-status slug."
@@ -25398,13 +25542,18 @@ msgstr "ISO 8601 dátum — csak az ezelőtti rendelések."
 msgid ""
 "Gallery id (or comma-separated list of ids). Returns only orders whose line "
 "items reference at least one of these galleries."
-msgstr "Galériaazonosító (vagy azonosítók vesszővel elválasztott listája). Csak azokat a rendeléseket adja vissza, amelyek tételei legalább egy ilyen galériára hivatkoznak."
+msgstr ""
+"Galériaazonosító (vagy azonosítók vesszővel elválasztott listája). Csak "
+"azokat a rendeléseket adja vissza, amelyek tételei legalább egy ilyen "
+"galériára hivatkoznak."
 
 #: includes/controllers/v1/class-rest-orders-controller.php:963
 msgid ""
 "When `gallery` is set, also include orders touching any descendant gallery "
 "(sub-galleries at any depth)."
-msgstr "Ha a `gallery` meg van adva, azokat a rendeléseket is tartalmazza, amelyek bármely leszármazott galériát érintik (bármilyen mélységű algalériák)."
+msgstr ""
+"Ha a `gallery` meg van adva, azokat a rendeléseket is tartalmazza, amelyek "
+"bármely leszármazott galériát érintik (bármilyen mélységű algalériák)."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:139
 #: includes/controllers/v1/class-rest-product-categories-controller.php:83
@@ -25414,7 +25563,9 @@ msgstr "Kötelező megadni egy `name` értéket."
 #: includes/controllers/v1/class-rest-price-levels-controller.php:157
 msgid ""
 "`percent` must be a number above -100 (for example 10 for +10%, -5 for -5%)."
-msgstr "A `percent` értékének -100-nál nagyobb számnak kell lennie (például 10 a +10%-hoz, -5 a -5%-hoz)."
+msgstr ""
+"A `percent` értékének -100-nál nagyobb számnak kell lennie (például 10 a "
+"+10%-hoz, -5 a -5%-hoz)."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:213
 msgid "The price level could not be deleted."
@@ -25424,7 +25575,9 @@ msgstr "Az árszintet nem sikerült törölni."
 msgid ""
 "A `products` array of product ids (or an `items` array of per-product "
 "entries) is required."
-msgstr "Kötelező egy `products` tömb termékazonosítókkal (vagy egy `items` tömb termékenkénti bejegyzésekkel)."
+msgstr ""
+"Kötelező egy `products` tömb termékazonosítókkal (vagy egy `items` tömb "
+"termékenkénti bejegyzésekkel)."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:292
 msgid "Provide `price` and/or `shipping` to set."
@@ -25432,13 +25585,17 @@ msgstr "Add meg a beállítandó `price` és/vagy `shipping` értéket."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:357
 msgid "A numeric `percent` is required (use a negative number to decrease)."
-msgstr "Kötelező egy számszerű `percent` érték (csökkentéshez használj negatív számot)."
+msgstr ""
+"Kötelező egy számszerű `percent` érték (csökkentéshez használj negatív "
+"számot)."
 
 #: includes/controllers/v1/class-rest-price-levels-controller.php:361
 msgid ""
 "`percent` must be above -100. A cut of 100% or more would make prices free "
 "or below zero."
-msgstr "A `percent` értékének -100 felett kell lennie. A 100%-os vagy nagyobb csökkentés ingyenessé vagy nulla alattivá tenné az árakat."
+msgstr ""
+"A `percent` értékének -100 felett kell lennie. A 100%-os vagy nagyobb "
+"csökkentés ingyenessé vagy nulla alattivá tenné az árakat."
 
 #. translators: %s: field name, price or shipping
 #: includes/controllers/v1/class-rest-price-levels-controller.php:500
@@ -25471,7 +25628,9 @@ msgstr "Szabad szöveges keresés."
 
 #: includes/controllers/v1/class-rest-products-controller.php:297
 msgid "Limit to products in any of the given category term ids."
-msgstr "Szűkítés a megadott kategóriák (kifejezésazonosítók) bármelyikébe tartozó termékekre."
+msgstr ""
+"Szűkítés a megadott kategóriák (kifejezésazonosítók) bármelyikébe tartozó "
+"termékekre."
 
 #: includes/controllers/v1/class-rest-products-controller.php:299
 msgid "Filter by product type meta (e.g. print, download, package)."
@@ -25492,20 +25651,31 @@ msgid ""
 "unpaid orders are excluded from revenue. Pass any slug from /order-statuses "
 "to override (e.g. \"completed,refunded\" to include refunded gross in "
 "revenue)."
-msgstr "A belefoglalandó rendelésiállapot-slugok vesszővel elválasztva. Alapértelmezés szerint a fizetett állapotok (new, processing, pickup, shipped, completed), így a visszatérített, törölt és nem fizetett rendelések nem számítanak bele a bevételbe. Bármelyik slugot megadhatod a /order-statuses listájából a felülíráshoz (pl. \"completed,refunded\", hogy a visszatérített bruttó is beleszámítson a bevételbe)."
+msgstr ""
+"A belefoglalandó rendelésiállapot-slugok vesszővel elválasztva. "
+"Alapértelmezés szerint a fizetett állapotok (new, processing, pickup, "
+"shipped, completed), így a visszatérített, törölt és nem fizetett rendelések "
+"nem számítanak bele a bevételbe. Bármelyik slugot megadhatod a /order-"
+"statuses listájából a felülíráshoz (pl. \"completed,refunded\", hogy a "
+"visszatérített bruttó is beleszámítson a bevételbe)."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:109
 msgid ""
 "Gallery id (or comma-separated list of ids). Narrows the report to line "
 "items from these galleries only. Use this to answer \"how much did gallery X "
 "make me?\" in one call."
-msgstr "Galériaazonosító (vagy azonosítók vesszővel elválasztott listája). A jelentést csak ezeknek a galériáknak a rendelési tételeire szűkíti. Így egyetlen hívással megválaszolható, hogy „mennyit hozott nekem az X galéria?”."
+msgstr ""
+"Galériaazonosító (vagy azonosítók vesszővel elválasztott listája). A "
+"jelentést csak ezeknek a galériáknak a rendelési tételeire szűkíti. Így "
+"egyetlen hívással megválaszolható, hogy „mennyit hozott nekem az X galéria?”."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:114
 msgid ""
 "When `gallery` is set, also include descendant galleries at any depth (sub-"
 "galleries)."
-msgstr "Ha a `gallery` meg van adva, a leszármazott galériákat is tartalmazza bármilyen mélységben (algalériák)."
+msgstr ""
+"Ha a `gallery` meg van adva, a leszármazott galériákat is tartalmazza "
+"bármilyen mélységben (algalériák)."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:120
 msgid "Sales summary"
@@ -25517,7 +25687,12 @@ msgid ""
 "month. Revenue is NET — order-level refunds are subtracted. Only paid "
 "statuses are included by default (override via `status`). The response also "
 "breaks out `gross_revenue`, `refunds`, `tax`, and `shipping`."
-msgstr "Rendelések száma és bevétel egy időszakban, igény szerint napra/hétre/hónapra csoportosítva. A bevétel NETTÓ: a rendelésszintű visszatérítések le vannak vonva. Alapértelmezés szerint csak a fizetett állapotok számítanak (a `status` segítségével felülírható). A válasz külön tartalmazza a `gross_revenue`, `refunds`, `tax` és `shipping` értékeket is."
+msgstr ""
+"Rendelések száma és bevétel egy időszakban, igény szerint napra/hétre/"
+"hónapra csoportosítva. A bevétel NETTÓ: a rendelésszintű visszatérítések le "
+"vannak vonva. Alapértelmezés szerint csak a fizetett állapotok számítanak (a "
+"`status` segítségével felülírható). A válasz külön tartalmazza a "
+"`gross_revenue`, `refunds`, `tax` és `shipping` értékeket is."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:123
 msgid "ISO 8601 start date."
@@ -25535,7 +25710,9 @@ msgstr "Rendelések állapot szerint"
 msgid ""
 "Count of orders in each `sunshine-order-status` slug. Reports across all "
 "statuses — this report is the one place to see the full breakdown."
-msgstr "A rendelések száma minden `sunshine-order-status` slugnál. Minden állapotot tartalmaz: ez az egyetlen jelentés, ahol a teljes bontás látható."
+msgstr ""
+"A rendelések száma minden `sunshine-order-status` slugnál. Minden állapotot "
+"tartalmaz: ez az egyetlen jelentés, ahol a teljes bontás látható."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:140
 msgid "Top-selling products"
@@ -25548,7 +25725,13 @@ msgid ""
 "order does not inflate product totals. Only paid statuses are included by "
 "default (override via `status`). Pass `gallery` to scope the report to one "
 "or more galleries."
-msgstr "Termékek eladott mennyiség szerint rangsorolva. A bevétel NETTÓ: a rendelésszintű visszatérítések arányosan oszlanak el az egyes rendelések tételei között, így egy visszatérített rendelés nem növeli a termékek összegeit. Alapértelmezés szerint csak a fizetett állapotok számítanak (a `status` segítségével felülírható). Add meg a `gallery` paramétert, hogy a jelentést egy vagy több galériára szűkítsd."
+msgstr ""
+"Termékek eladott mennyiség szerint rangsorolva. A bevétel NETTÓ: a "
+"rendelésszintű visszatérítések arányosan oszlanak el az egyes rendelések "
+"tételei között, így egy visszatérített rendelés nem növeli a termékek "
+"összegeit. Alapértelmezés szerint csak a fizetett állapotok számítanak (a "
+"`status` segítségével felülírható). Add meg a `gallery` paramétert, hogy a "
+"jelentést egy vagy több galériára szűkítsd."
 
 #: includes/controllers/v1/class-rest-reports-controller.php:154
 msgid "Top-selling galleries"
@@ -25562,13 +25745,23 @@ msgid ""
 "(override via `status`). Pass `gallery` to scope the report to a specific "
 "gallery — the response then contains one row per gallery in the input, so "
 "\"how much did gallery X make me?\" is a one-call answer."
-msgstr "Galériák nettó bevétel szerint rangsorolva. A rendelésszintű visszatérítések arányosan oszlanak el az egyes rendelések tételei között, így egy visszatérített galériarendelés nem növeli az összeget. Alapértelmezés szerint csak a fizetett állapotok számítanak (a `status` segítségével felülírható). Add meg a `gallery` paramétert, hogy a jelentést egy adott galériára szűkítsd: a válasz ekkor minden megadott galériához egy sort tartalmaz, így a „mennyit hozott nekem az X galéria?” kérdés egyetlen hívással megválaszolható."
+msgstr ""
+"Galériák nettó bevétel szerint rangsorolva. A rendelésszintű visszatérítések "
+"arányosan oszlanak el az egyes rendelések tételei között, így egy "
+"visszatérített galériarendelés nem növeli az összeget. Alapértelmezés "
+"szerint csak a fizetett állapotok számítanak (a `status` segítségével "
+"felülírható). Add meg a `gallery` paramétert, hogy a jelentést egy adott "
+"galériára szűkítsd: a válasz ekkor minden megadott galériához egy sort "
+"tartalmaz, így a „mennyit hozott nekem az X galéria?” kérdés egyetlen "
+"hívással megválaszolható."
 
 #. translators: 1: list of unknown keys, 2: settings group
 #: includes/controllers/v1/class-rest-settings-controller.php:152
 #, php-format
 msgid "Unknown option key(s) for group \"%2$s\": %1$s. Nothing was saved."
-msgstr "Ismeretlen beállításkulcs(ok) a(z) „%2$s” csoportban: %1$s. Semmi nem lett mentve."
+msgstr ""
+"Ismeretlen beállításkulcs(ok) a(z) „%2$s” csoportban: %1$s. Semmi nem lett "
+"mentve."
 
 #. translators: %s: list of setting keys
 #: includes/controllers/v1/class-rest-settings-controller.php:199
@@ -25576,7 +25769,9 @@ msgstr "Ismeretlen beállításkulcs(ok) a(z) „%2$s” csoportban: %1$s. Semmi
 msgid ""
 "Not one of the allowed values for: %s. Nothing was saved. Allowed values are "
 "in each setting's enum."
-msgstr "Nem a megengedett értékek egyike ennél: %s. Semmi nem lett mentve. A megengedett értékek az egyes beállítások enum mezőjében vannak."
+msgstr ""
+"Nem a megengedett értékek egyike ennél: %s. Semmi nem lett mentve. A "
+"megengedett értékek az egyes beállítások enum mezőjében vannak."
 
 #: includes/controllers/v1/class-rest-settings-controller.php:227
 msgid "This setting cannot be modified via the API."
@@ -25752,7 +25947,8 @@ msgstr "Téma"
 
 #: includes/controllers/v1/class-rest-tools-controller.php:116
 msgid "You do not have permission to run this tool via the API."
-msgstr "Nincs jogosultságod ennek az eszköznek a futtatásához az API-n keresztül."
+msgstr ""
+"Nincs jogosultságod ennek az eszköznek a futtatásához az API-n keresztül."
 
 #: includes/mcp/abilities/class-sunshine-abilities-customers.php:21
 msgid "List customers"
@@ -25989,7 +26185,9 @@ msgstr "A készségfájl hiányzik a bővítmény ezen példányából. Telepít
 
 #: includes/mcp/class-sunshine-ai-skill.php:70
 msgid "This server can't make zip files. Copy the skill text instead."
-msgstr "Ez a szerver nem tud zip-fájlokat készíteni. Másold ki inkább a készség szövegét."
+msgstr ""
+"Ez a szerver nem tud zip-fájlokat készíteni. Másold ki inkább a készség "
+"szövegét."
 
 #: includes/mcp/class-sunshine-ai-skill.php:75
 msgid "The zip file couldn't be made."
@@ -25999,7 +26197,9 @@ msgstr "A zip-fájlt nem sikerült elkészíteni."
 msgid ""
 "Work on this photo store: galleries and photo uploads, orders and print lab "
 "files, or sales."
-msgstr "Munka ezzel a fotóbolttal: galériák és fotófeltöltések, rendelések és fájlok a nyomtatólabornak, vagy eladások."
+msgstr ""
+"Munka ezzel a fotóbolttal: galériák és fotófeltöltések, rendelések és fájlok "
+"a nyomtatólabornak, vagy eladások."
 
 #: includes/mcp/class-sunshine-ai-skill.php:106
 msgid "What to do"
@@ -26009,13 +26209,17 @@ msgstr "Mit csináljon"
 msgid ""
 "Like \"Get order 1052 ready for the lab\" or \"Make a password gallery for "
 "the Smith wedding\"."
-msgstr "Például: „Készítsd elő az 1052-es rendelést a labornak” vagy „Csinálj egy jelszavas galériát a Kovács esküvőhöz”."
+msgstr ""
+"Például: „Készítsd elő az 1052-es rendelést a labornak” vagy „Csinálj egy "
+"jelszavas galériát a Kovács esküvőhöz”."
 
 #: includes/mcp/class-sunshine-mcp.php:85
 msgid ""
 "Galleries, photos, products, orders, customers and sales reports from "
 "Sunshine Photo Cart."
-msgstr "Galériák, fotók, termékek, rendelések, vásárlók és eladási jelentések a Sunshine Photo Cartból."
+msgstr ""
+"Galériák, fotók, termékek, rendelések, vásárlók és eladási jelentések a "
+"Sunshine Photo Cartból."
 
 #. Plugin Name of the plugin
 #: crop-wall-preview.php
@@ -26027,7 +26231,9 @@ msgstr "Sunshine Photo Cart - Crop & Wall Preview"
 msgid ""
 "Let customers pick the exact crop for each print and see it on a wall at "
 "true size"
-msgstr "Hadd válasszák ki a vásárlók minden nyomat pontos kivágását, és lássák valós méretben a falon"
+msgstr ""
+"Hadd válasszák ki a vásárlók minden nyomat pontos kivágását, és lássák valós "
+"méretben a falon"
 
 #: includes/admin-order.php:37 includes/cart.php:214
 msgid "Save crop"
@@ -26065,7 +26271,9 @@ msgstr "Szélesség"
 msgid ""
 "The front of the print. Leave empty if this product has no set size, and "
 "customers won't see the crop step for it."
-msgstr "A nyomat eleje. Hagyd üresen, ha ennek a terméknek nincs rögzített mérete; ekkor a vásárlók nem látják hozzá a kivágási lépést."
+msgstr ""
+"A nyomat eleje. Hagyd üresen, ha ennek a terméknek nincs rögzített mérete; "
+"ekkor a vásárlók nem látják hozzá a kivágási lépést."
 
 #: includes/admin-product.php:36
 msgid "Height"
@@ -26083,7 +26291,9 @@ msgstr "Szél"
 msgid ""
 "For canvas and similar prints. When the photo wraps around the sides, "
 "customers crop a bigger area that includes the sides."
-msgstr "Vászonképekhez és hasonló nyomatokhoz. Ha a fotó körbefut az oldalakon, a vásárlók egy nagyobb, az oldalakat is tartalmazó területet vágnak ki."
+msgstr ""
+"Vászonképekhez és hasonló nyomatokhoz. Ha a fotó körbefut az oldalakon, a "
+"vásárlók egy nagyobb, az oldalakat is tartalmazó területet vágnak ki."
 
 #: includes/admin-product.php:68
 msgid "Edge Depth"
@@ -26091,7 +26301,8 @@ msgstr "Szél mélysége"
 
 #: includes/admin-product.php:73
 msgid "How far the edge goes around each side, in the same unit."
-msgstr "Mennyire fut körbe a szél az egyes oldalakon, ugyanabban a mértékegységben."
+msgstr ""
+"Mennyire fut körbe a szél az egyes oldalakon, ugyanabban a mértékegységben."
 
 #: includes/admin-rooms.php:61 includes/admin-rooms.php:290
 msgid "Choose a room photo"
@@ -26107,7 +26318,9 @@ msgstr "Ezt a fotót használom"
 msgid ""
 "The box on the wall is a %s print. If it looks too big or too small, measure "
 "again."
-msgstr "A falon lévő keret egy %s méretű nyomat. Ha túl nagynak vagy túl kicsinek tűnik, mérj újra."
+msgstr ""
+"A falon lévő keret egy %s méretű nyomat. Ha túl nagynak vagy túl kicsinek "
+"tűnik, mérj újra."
 
 #: includes/admin-rooms.php:65
 msgid "A sample print shows on the wall once steps 1 and 2 are done."
@@ -26153,7 +26366,8 @@ msgstr "Szoba törölve."
 msgid ""
 "The room was not saved. It needs a name, a photo, a measurement and a hang "
 "point."
-msgstr "A szoba nem lett mentve. Kell hozzá név, fotó, mérés és felakasztási pont."
+msgstr ""
+"A szoba nem lett mentve. Kell hozzá név, fotó, mérés és felakasztási pont."
 
 #: includes/admin-rooms.php:92
 msgid "That room could not be found."
@@ -26175,7 +26389,9 @@ msgstr "Szoba szerkesztése"
 msgid ""
 "Take it straight at the wall, at eye level, with empty wall where art can "
 "hang."
-msgstr "Egyenesen a fal felé fényképezd, szemmagasságból, egy olyan üres falrésszel, ahová képet lehet akasztani."
+msgstr ""
+"Egyenesen a fal felé fényképezd, szemmagasságból, egy olyan üres falrésszel, "
+"ahová képet lehet akasztani."
 
 #: includes/admin-rooms.php:304
 msgid "Change photo"
@@ -26193,7 +26409,9 @@ msgstr "Mérj meg valamit"
 msgid ""
 "Click both ends of something flat on the wall that you know the size of, "
 "like a door or a window."
-msgstr "Kattints egy olyan lapos tárgy két végére a falon, aminek ismered a méretét, például egy ajtóéra vagy egy ablakéra."
+msgstr ""
+"Kattints egy olyan lapos tárgy két végére a falon, aminek ismered a méretét, "
+"például egy ajtóéra vagy egy ablakéra."
 
 #: includes/admin-rooms.php:320
 msgid "How long is it?"
@@ -26234,7 +26452,9 @@ msgstr "A `print_size` csak print típusú termékeknél állítható be."
 #: includes/api.php:137
 msgid ""
 "`print_size` needs a width and height above zero. Send null to remove it."
-msgstr "A `print_size` értékéhez nullánál nagyobb szélesség és magasság kell. Küldj null értéket az eltávolításhoz."
+msgstr ""
+"A `print_size` értékéhez nullánál nagyobb szélesség és magasság kell. Küldj "
+"null értéket az eltávolításhoz."
 
 #. translators: %s: the allowed units, like "in, cm".
 #: includes/api.php:143
@@ -26252,7 +26472,9 @@ msgstr "A `print_size.edge` értéke ezek egyike legyen: %s."
 msgid ""
 "`print_size.edge_depth` only applies with an edge. Set `edge` too, or leave "
 "the depth out."
-msgstr "A `print_size.edge_depth` csak szél megadásával érvényes. Állítsd be az `edge` értéket is, vagy hagyd ki a mélységet."
+msgstr ""
+"A `print_size.edge_depth` csak szél megadásával érvényes. Állítsd be az "
+"`edge` értéket is, vagy hagyd ki a mélységet."
 
 #: includes/api.php:159
 msgid "`print_size.edge_depth` must be a number above zero."
@@ -26264,7 +26486,10 @@ msgstr "A `print_size.edge_depth` értéke nullánál nagyobb szám legyen."
 msgid ""
 "The customer or photographer chose this crop, but the cropped file can't be "
 "made on this site: %s Crop the original to the pixels box before printing."
-msgstr "A vásárló vagy a fotós kiválasztotta ezt a kivágást, de a kivágott fájlt nem lehet elkészíteni ezen az oldalon: %s Nyomtatás előtt vágd ki az eredetit a pixelkeret szerint."
+msgstr ""
+"A vásárló vagy a fotós kiválasztotta ezt a kivágást, de a kivágott fájlt nem "
+"lehet elkészíteni ezen az oldalon: %s Nyomtatás előtt vágd ki az eredetit a "
+"pixelkeret szerint."
 
 #: includes/cart.php:152 includes/functions.php:1011
 msgid "Crop: set by you"
@@ -26324,7 +26549,9 @@ msgstr "Kivágások"
 #, php-format
 msgid ""
 "%1$s: %2$s, %3$s, %4$s, left %5$s%%, top %6$s%%, width %7$s%%, height %8$s%%"
-msgstr "%1$s: %2$s, %3$s, %4$s, balról %5$s%%, felülről %6$s%%, szélesség %7$s%%, magasság %8$s%%"
+msgstr ""
+"%1$s: %2$s, %3$s, %4$s, balról %5$s%%, felülről %6$s%%, szélesség %7$s%%, "
+"magasság %8$s%%"
 
 #: includes/files.php:37 includes/files.php:54 includes/files.php:202
 msgid "The photo file could not be found."
@@ -26342,7 +26569,9 @@ msgstr "Ennek a tételnek nincs kivágása."
 msgid ""
 "This server can't edit this kind of photo file, so the cropped file can't be "
 "made."
-msgstr "Ez a szerver nem tudja szerkeszteni ezt a fajta fotófájlt, ezért a kivágott fájlt nem lehet elkészíteni."
+msgstr ""
+"Ez a szerver nem tudja szerkeszteni ezt a fajta fotófájlt, ezért a kivágott "
+"fájlt nem lehet elkészíteni."
 
 #: includes/files.php:324
 msgid "You are not allowed to download this file."
@@ -26489,7 +26718,9 @@ msgstr "Feltöltött fotó: %1$s x %2$s px"
 #, php-format
 msgid ""
 "Low resolution: %s pixels per inch at this size, so the print may look soft"
-msgstr "Alacsony felbontás: %s pixel hüvelykenként ebben a méretben, ezért a nyomat elmosódott lehet"
+msgstr ""
+"Alacsony felbontás: %s pixel hüvelykenként ebben a méretben, ezért a nyomat "
+"elmosódott lehet"
 
 #. translators: %s: pixels per inch
 #: includes/order.php:314
@@ -26579,7 +26810,10 @@ msgstr "Crop & Wall Preview"
 msgid ""
 "Crop & Wall Preview: customer cropping needs Sunshine Photo Cart 3.8.2 or "
 "newer. Update Sunshine Photo Cart to turn it on. The wall preview works now."
-msgstr "Crop & Wall Preview: a vásárlói kivágáshoz Sunshine Photo Cart 3.8.2 vagy újabb kell. Frissítsd a Sunshine Photo Cartot a bekapcsolásához. A falon való előnézet már most működik."
+msgstr ""
+"Crop & Wall Preview: a vásárlói kivágáshoz Sunshine Photo Cart 3.8.2 vagy "
+"újabb kell. Frissítsd a Sunshine Photo Cartot a bekapcsolásához. A falon "
+"való előnézet már most működik."
 
 #~ msgid "An error occurred, please try again."
 #~ msgstr "Hiba történt. Kérjük, próbáld újra később."
