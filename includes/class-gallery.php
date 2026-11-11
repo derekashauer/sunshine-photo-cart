@@ -164,7 +164,8 @@ class SPC_Gallery extends Sunshine_Data {
 
 	/**
 	 * @param bool $ignore_password True to skip the placeholder shown to visitors who
-	 *                              haven't entered the password yet.
+	 *                              haven't entered this gallery's password yet. Never
+	 *                              applies to sub-galleries.
 	 */
 	public function get_featured_image_id( $ignore_password = false ) {
 
@@ -184,7 +185,9 @@ class SPC_Gallery extends Sunshine_Data {
 			$child_galleries = $this->get_child_galleries();
 			if ( ! empty( $child_galleries ) ) {
 				foreach ( $child_galleries as $child_gallery ) {
-					$child_featured_image_id = $child_gallery->get_featured_image_id( $ignore_password );
+					// Each sub-gallery keeps its own password placeholder: being able to open this
+					// gallery says nothing about its sub-galleries.
+					$child_featured_image_id = $child_gallery->get_featured_image_id();
 					if ( $child_featured_image_id ) {
 						return $child_featured_image_id;
 					}
