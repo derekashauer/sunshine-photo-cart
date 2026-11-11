@@ -762,15 +762,80 @@ function sunshine_has_agreed_to_gallery_terms() {
 		return true;
 	}
 	if ( is_user_logged_in() ) {
-		$agreements = get_user_meta( get_current_user_id(), SPC()->prefix . 'gallery_terms_agreement', false );
-		foreach ( $agreements as $agreement ) {
-			if ( is_array( $agreement ) && isset( $agreement['version'] ) && $agreement['version'] === $version ) {
-				return true;
-			}
+		$agreements = sunshine_get_gallery_terms_agreements(
+			array(
+				'user_id' => get_current_user_id(),
+				'version' => $version,
+				'limit'   => 1,
+			)
+		);
+		if ( $agreements ) {
+			return true;
 		}
 	}
 	return false;
 }
+
+/**
+ * Gallery terms agreement records, newest first.
+ *
+ * @param array $args gallery_id, user_id, email and version narrow the list (an email also
+ *                    finds rows saved under the account that has it now); limit caps it.
+ * @return array Each record has agreement_id, gallery_id, user_id, email, version and time.
+ */
+function sunshine_get_gallery_terms_agreements( $args = array() ) {
+	global $wpdb;
+
+	$args  = wp_parse_args(
+		$args,
+		array(
+			'gallery_id' => 0,
+			'user_id'    => 0,
+			'email'      => '',
+			'version'    => '',
+			'limit'      => 0,
+		)
+	);
+	$where = array();
+	if ( $args['gallery_id'] ) {
+		$where[] = $wpdb->prepare( 'gallery_id = %d', $args['gallery_id'] );
+	}
+	if ( $args['user_id'] ) {
+		$where[] = $wpdb->prepare( 'user_id = %d', $args['user_id'] );
+	}
+	if ( $args['email'] ) {
+		$user    = get_user_by( 'email', $args['email'] );
+		$where[] = $user ? $wpdb->prepare( '( email = %s OR user_id = %d )', $args['email'], $user->ID ) : $wpdb->prepare( 'email = %s', $args['email'] );
+	}
+	if ( $args['version'] ) {
+		$where[] = $wpdb->prepare( 'version = %s', $args['version'] );
+	}
+	if ( ! $where ) {
+		return array();
+	}
+
+	$sql = "SELECT * FROM {$wpdb->prefix}sunshine_terms_agreements WHERE " . implode( ' AND ', $where ) . ' ORDER BY time DESC, agreement_id DESC';
+	if ( $args['limit'] ) {
+		$sql .= $wpdb->prepare( ' LIMIT %d', $args['limit'] );
+	}
+	$rows = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- each part is prepared above.
+
+	return is_array( $rows ) ? $rows : array();
+}
+
+/**
+ * Remove a gallery's terms agreements when the gallery is deleted, as its other data is.
+ *
+ * @param int $post_id The post being deleted.
+ */
+function sunshine_delete_gallery_terms_agreements( $post_id ) {
+	global $wpdb;
+	if ( 'sunshine-gallery' !== get_post_type( $post_id ) ) {
+		return;
+	}
+	$wpdb->delete( $wpdb->prefix . 'sunshine_terms_agreements', array( 'gallery_id' => $post_id ), array( '%d' ) );
+}
+add_action( 'before_delete_post', 'sunshine_delete_gallery_terms_agreements' );
 
 /**
  * Remember that the current visitor agreed to the gallery terms, and keep a record when we know who they are.
@@ -815,25 +880,20 @@ function sunshine_record_gallery_terms_agreement( $gallery, $email = '' ) {
 		update_option( 'sunshine_gallery_terms_versions', $versions, false );
 	}
 
+	global $wpdb;
 	$agreement = array(
-		'time'       => time(),
-		'version'    => $version,
 		'gallery_id' => $gallery->get_id(),
 		'user_id'    => $user_id,
 		'email'      => $email,
+		'version'    => $version,
+		'time'       => time(),
 	);
-	$already_recorded = false;
-	foreach ( $gallery->get_terms_agreements() as $existing ) {
-		if ( $existing['version'] === $version && $existing['email'] === $email && (int) $existing['user_id'] === $user_id ) {
-			$already_recorded = true;
-			break;
-		}
-	}
-	if ( ! $already_recorded ) {
-		$gallery->add_meta_value( 'terms_agreement', $agreement );
-	}
-	if ( $user_id ) {
-		add_user_meta( $user_id, SPC()->prefix . 'gallery_terms_agreement', $agreement );
+	$table     = $wpdb->prefix . 'sunshine_terms_agreements';
+	$exists    = $wpdb->get_var( $wpdb->prepare( "SELECT agreement_id FROM {$table} WHERE gallery_id = %d AND user_id = %d AND email = %s AND version = %s LIMIT 1", $agreement['gallery_id'], $user_id, $email, $version ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	if ( ! $exists && false === $wpdb->insert( $table, $agreement ) ) {
+		// Right after an update the table can be missing until an admin opens wp-admin, so make it now.
+		maybe_sunshine_create_custom_tables();
+		$wpdb->insert( $table, $agreement );
 	}
 	SPC()->log( 'Gallery terms agreed for ' . $gallery->get_name() . ( $email ? ': ' . $email : '' ) );
 	do_action( 'sunshine_gallery_terms_agreed', $agreement, $gallery );

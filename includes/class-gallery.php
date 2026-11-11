@@ -552,7 +552,9 @@ class SPC_Gallery extends Sunshine_Data {
 	 */
 	public function requires_terms() {
 		$setting = $this->get_meta_value( 'terms' );
-		if ( empty( $setting ) && $this->get_data_value( 'post_parent' ) ) {
+		// Ancestors are looked up from the post itself, since galleries built for a list can
+		// arrive without their parent filled in.
+		if ( empty( $setting ) ) {
 			// A sub-gallery on Default follows the nearest gallery above it that has its own setting.
 			foreach ( get_post_ancestors( $this->get_id() ) as $ancestor_id ) {
 				$setting = get_post_meta( $ancestor_id, 'terms', true );
@@ -594,7 +596,7 @@ class SPC_Gallery extends Sunshine_Data {
 		if ( ! $this->get_id() ) {
 			return array();
 		}
-		return get_post_meta( $this->get_id(), 'terms_agreement', false );
+		return sunshine_get_gallery_terms_agreements( array( 'gallery_id' => $this->get_id() ) );
 	}
 
 	public function get_emails() {

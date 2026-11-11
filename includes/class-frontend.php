@@ -1240,7 +1240,12 @@ class SPC_Frontend {
 
 		}
 
-		if ( isset( $_POST['sunshine_gallery_email'] ) ) {
+		if ( $terms_email && ! empty( $gallery ) && 'email' !== $gallery->get_access_type() ) {
+			// The email was only asked for the terms record, so it isn't added to the gallery's
+			// email list or passed to email marketing add-ons. It is remembered so other galleries
+			// don't ask for it again.
+			SPC()->session->set( 'email', $terms_email );
+		} elseif ( isset( $_POST['sunshine_gallery_email'] ) ) {
 
 			$email = sanitize_email( $_POST['sunshine_gallery_email'] );
 			if ( is_email( $email ) ) {
