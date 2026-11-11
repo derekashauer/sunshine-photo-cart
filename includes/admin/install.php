@@ -90,6 +90,24 @@ function maybe_sunshine_create_custom_tables() {
 		) $collate;"
 	);
 
+	// One row per gallery terms agreement. Kept off the gallery's own data, which WordPress
+	// loads in full on every gallery page, so a gallery with thousands of agreements stays fast.
+	$created = maybe_create_table(
+		"{$wpdb->prefix}sunshine_terms_agreements",
+		"CREATE TABLE `{$wpdb->prefix}sunshine_terms_agreements` (
+			`agreement_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			`gallery_id` bigint(20) unsigned NOT NULL,
+			`user_id` bigint(20) unsigned NOT NULL DEFAULT 0,
+			`email` varchar(100) NOT NULL DEFAULT '',
+			`version` varchar(32) NOT NULL,
+			`time` bigint(20) unsigned NOT NULL,
+			PRIMARY KEY (`agreement_id`),
+			KEY `gallery_id` (`gallery_id`),
+			KEY `user_id` (`user_id`),
+			KEY `email` (`email`)
+		) $collate;"
+	);
+
 }
 
 add_action( 'admin_init', 'sunshine_install_redirect' );

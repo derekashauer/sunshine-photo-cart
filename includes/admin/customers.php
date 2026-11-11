@@ -128,7 +128,7 @@ function sunshine_customer_tab_profile( $customer ) {
 	<?php } ?>
 
 	<?php
-	$terms_agreements = $customer->get_meta( 'gallery_terms_agreement', false );
+	$terms_agreements = sunshine_get_gallery_terms_agreements( array( 'user_id' => $customer->get_id() ) );
 	if ( $terms_agreements ) {
 		?>
 		<h3><?php esc_html_e( 'Gallery Terms Agreements', 'sunshine-photo-cart' ); ?></h3>
