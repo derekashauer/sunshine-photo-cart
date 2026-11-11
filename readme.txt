@@ -243,6 +243,10 @@ Security is important to us. Please report security bugs through the [Patchstack
 
 == Changelog ==
 
+= 3.8.3 =
+* New: Home screen app. Clients can add a gallery to their phone's home screen, where it opens full screen with its own icon, like an app (Settings > Galleries > Home screen app). Each gallery can have its own App Icon, or uses its featured image
+* Fix: On the settings screen, picking a second image (like the logo after another image) no longer puts it in the first image's spot
+
 = 3.8.2 - November 11, 2026 =
 * New: Gallery terms. Visitors can be asked to agree to your terms before they see a gallery's photos, such as not saving them or removing watermarks (Settings > Galleries > Gallery Terms, and a Terms option on each gallery). Sunshine keeps a record of who agreed, when, and to which wording, on the gallery and the customer's screen. Guests also give their email when they agree, unless you turn that off. This discourages copying, but it can't stop a screenshot
 * New: A cropped copy made in Lightroom for a customer's print order is never added to a gallery, even if it lands in a folder Sunshine checks for new photos or is uploaded by hand
