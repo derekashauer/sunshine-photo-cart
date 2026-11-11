@@ -162,9 +162,13 @@ class SPC_Gallery extends Sunshine_Data {
 		return $this->get_meta_value( 'disable_products', $parent );
 	}
 
-	public function get_featured_image_id() {
+	/**
+	 * @param bool $ignore_password True to skip the placeholder shown to visitors who
+	 *                              haven't entered the password yet.
+	 */
+	public function get_featured_image_id( $ignore_password = false ) {
 
-		if ( $this->password_required() && SPC()->get_option( 'password_featured_image' ) ) {
+		if ( ! $ignore_password && $this->password_required() && SPC()->get_option( 'password_featured_image' ) ) {
 			return SPC()->get_option( 'password_featured_image' );
 		} elseif ( has_post_thumbnail( $this->get_id() ) ) {
 			return get_post_thumbnail_id( $this->get_id() );
@@ -180,7 +184,7 @@ class SPC_Gallery extends Sunshine_Data {
 			$child_galleries = $this->get_child_galleries();
 			if ( ! empty( $child_galleries ) ) {
 				foreach ( $child_galleries as $child_gallery ) {
-					$child_featured_image_id = $child_gallery->get_featured_image_id();
+					$child_featured_image_id = $child_gallery->get_featured_image_id( $ignore_password );
 					if ( $child_featured_image_id ) {
 						return $child_featured_image_id;
 					}

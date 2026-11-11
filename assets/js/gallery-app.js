@@ -37,11 +37,21 @@
 		document.body.classList.remove( 'sunshine--app-prompt-open' );
 	}
 
-	document.getElementById( 'sunshine--app-prompt--close' ).addEventListener( 'click', function() {
-		hide();
+	function remember_closed() {
 		try {
 			window.localStorage.setItem( storage_key, '1' );
 		} catch ( e ) {}
+	}
+
+	document.getElementById( 'sunshine--app-prompt--close' ).addEventListener( 'click', function() {
+		hide();
+		remember_closed();
+	} );
+
+	window.addEventListener( 'resize', function() {
+		if ( ! prompt.hidden ) {
+			document.body.style.setProperty( '--sunshine--app-prompt-height', prompt.offsetHeight + 'px' );
+		}
 	} );
 
 	var is_ios = /iPhone|iPad|iPod/.test( navigator.userAgent ) || ( 'MacIntel' === navigator.platform && navigator.maxTouchPoints > 1 );
@@ -68,9 +78,11 @@
 			return;
 		}
 		install_event.prompt();
+		// Added or turned down, don't ask again in this gallery.
 		install_event.userChoice.then( function() {
 			install_event = null;
 			hide();
+			remember_closed();
 		} );
 	} );
 

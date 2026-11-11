@@ -15,12 +15,20 @@ defined( 'ABSPATH' ) || exit;
  * @return SPC_Gallery|false The gallery, or false.
  */
 function sunshine_gallery_app_current_gallery() {
-	if ( ! SPC()->get_option( 'gallery_app' ) || empty( SPC()->frontend ) || ! SPC()->frontend->is_gallery() ) {
-		return false;
+	static $result = null;
+	if ( null !== $result ) {
+		return $result;
 	}
-	$gallery = SPC()->frontend->current_gallery;
-	if ( empty( $gallery ) || ! $gallery->can_access() ) {
-		return false;
+	$gallery = false;
+	if ( SPC()->get_option( 'gallery_app' ) && ! empty( SPC()->frontend ) && SPC()->frontend->is_gallery() ) {
+		$gallery = SPC()->frontend->current_gallery;
+		if ( empty( $gallery ) || ! $gallery->can_access() ) {
+			$gallery = false;
+		}
+	}
+	// Only remember the answer once WordPress knows which page this is.
+	if ( did_action( 'wp' ) ) {
+		$result = $gallery;
 	}
 	return $gallery;
 }
@@ -28,6 +36,9 @@ function sunshine_gallery_app_current_gallery() {
 /**
  * The image a gallery's app icon is made from: the gallery's own App Icon (or one
  * set on a parent gallery), then the gallery's featured image.
+ *
+ * The password placeholder image is skipped: only people who can open the gallery
+ * get its app, and browsers fetch the manifest without the visitor's session.
  *
  * @param SPC_Gallery $gallery The gallery.
  * @return int Attachment ID, or 0.
@@ -37,7 +48,7 @@ function sunshine_gallery_app_icon_source_id( $gallery ) {
 	if ( $icon_id && wp_attachment_is_image( $icon_id ) ) {
 		return $icon_id;
 	}
-	return intval( $gallery->get_featured_image_id() );
+	return intval( $gallery->get_featured_image_id( true ) );
 }
 
 /**
@@ -52,22 +63,33 @@ function sunshine_gallery_app_icon_source_id( $gallery ) {
  */
 function sunshine_gallery_app_icons( $gallery ) {
 
+	static $cache = array();
+	if ( isset( $cache[ $gallery->get_id() ] ) ) {
+		return $cache[ $gallery->get_id() ];
+	}
+
 	$attachment_id = sunshine_gallery_app_icon_source_id( $gallery );
-	if ( ! $attachment_id ) {
-		return array();
-	}
-
-	$source = wp_get_attachment_image_src( $attachment_id, 'sunshine-large' );
+	$source        = $attachment_id ? wp_get_attachment_image_src( $attachment_id, 'sunshine-large' ) : false;
 	if ( empty( $source[0] ) ) {
+		$cache[ $gallery->get_id() ] = array();
 		return array();
 	}
 
-	$upload_dir = wp_upload_dir();
-	$folder     = $upload_dir['basedir'] . '/sunshine/app-icons';
-	$folder_url = $upload_dir['baseurl'] . '/sunshine/app-icons';
-	// The source URL changes when the photo or its size changes, so the icons are remade then.
-	$key   = $attachment_id . '-' . substr( wp_hash( $source[0] ), 0, 10 );
-	$sizes = apply_filters( 'sunshine_gallery_app_icon_sizes', array( 180, 192, 512 ) );
+	$upload_dir  = wp_upload_dir();
+	$folder      = $upload_dir['basedir'] . '/sunshine/app-icons';
+	$folder_url  = $upload_dir['baseurl'] . '/sunshine/app-icons';
+	$source_url  = strtok( $source[0], '?' ); // Cloud storage signs URLs differently on every request.
+	$source_file = '';
+	if ( 0 === strpos( $source_url, $upload_dir['baseurl'] ) ) {
+		$source_file = $upload_dir['basedir'] . substr( $source_url, strlen( $upload_dir['baseurl'] ) );
+	}
+	$local = $source_file && file_exists( $source_file );
+
+	// New icons are made when the image file, its sizes or its watermark change.
+	$fingerprint = $source_url . wp_json_encode( wp_get_attachment_metadata( $attachment_id ) ) . ( $local ? filemtime( $source_file ) . filesize( $source_file ) : '' );
+	$key         = $attachment_id . '-' . substr( wp_hash( $fingerprint ), 0, 10 );
+	$sizes       = array_map( 'intval', apply_filters( 'sunshine_gallery_app_icon_sizes', array( 180, 192, 512 ) ) );
+	rsort( $sizes );
 
 	$icons   = array();
 	$missing = array();
@@ -83,57 +105,61 @@ function sunshine_gallery_app_icons( $gallery ) {
 		}
 	}
 
-	if ( empty( $missing ) ) {
+	// Don't try again on every page view when making the icons just failed.
+	$failed_key = 'sunshine_app_icon_failed_' . $key;
+	if ( empty( $missing ) || get_transient( $failed_key ) ) {
+		ksort( $icons );
+		$cache[ $gallery->get_id() ] = $icons;
 		return $icons;
 	}
 
-	// Find the source on disk, or download it when it lives on cloud storage.
-	$source_file = '';
-	$temp_file   = '';
-	if ( 0 === strpos( $source[0], $upload_dir['baseurl'] ) ) {
-		$source_file = $upload_dir['basedir'] . substr( $source[0], strlen( $upload_dir['baseurl'] ) );
-	}
-	if ( ! $source_file || ! file_exists( $source_file ) ) {
+	// The image lives on cloud storage: download it.
+	$temp_file = '';
+	if ( ! $local ) {
 		if ( ! function_exists( 'download_url' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 		}
-		$temp_file = download_url( $source[0], 30 );
+		$temp_file = download_url( $source[0], 15 );
 		if ( is_wp_error( $temp_file ) ) {
 			SPC()->log( 'Could not download image for gallery app icon: ' . $temp_file->get_error_message() );
+			set_transient( $failed_key, 1, HOUR_IN_SECONDS );
+			$cache[ $gallery->get_id() ] = $icons;
 			return $icons;
 		}
 		$source_file = $temp_file;
 	}
 
-	wp_mkdir_p( $folder );
-
-	foreach ( $missing as $size ) {
-		$editor = wp_get_image_editor( $source_file );
-		if ( is_wp_error( $editor ) ) {
-			SPC()->log( 'Could not open image for gallery app icon: ' . $editor->get_error_message() );
-			break;
-		}
-		// Crop to a square from the middle, then size it.
+	$editor = wp_get_image_editor( $source_file );
+	if ( is_wp_error( $editor ) ) {
+		SPC()->log( 'Could not open image for gallery app icon: ' . $editor->get_error_message() );
+		set_transient( $failed_key, 1, HOUR_IN_SECONDS );
+	} else {
+		wp_mkdir_p( $folder );
+		// Crop a square from the middle at the largest size, then make each smaller size from it.
 		$dimensions = $editor->get_size();
 		$square     = min( $dimensions['width'], $dimensions['height'] );
-		$editor->crop(
-			( $dimensions['width'] - $square ) / 2,
-			( $dimensions['height'] - $square ) / 2,
-			$square,
-			$square,
-			$size,
-			$size
-		);
-		$file  = $folder . '/' . $key . '-' . $size . '.png';
-		$saved = $editor->save( $file, 'image/png' );
-		if ( is_wp_error( $saved ) ) {
-			SPC()->log( 'Could not save gallery app icon: ' . $saved->get_error_message() );
-			continue;
+		$editor->crop( intval( ( $dimensions['width'] - $square ) / 2 ), intval( ( $dimensions['height'] - $square ) / 2 ), $square, $square, $sizes[0], $sizes[0] );
+		foreach ( $sizes as $size ) {
+			if ( $size !== $sizes[0] ) {
+				$editor->resize( $size, $size, true );
+			}
+			if ( ! in_array( $size, $missing, true ) ) {
+				continue;
+			}
+			$file  = $folder . '/' . $key . '-' . $size . '.png';
+			$saved = $editor->save( $file, 'image/png' );
+			if ( is_wp_error( $saved ) ) {
+				SPC()->log( 'Could not save gallery app icon: ' . $saved->get_error_message() );
+				set_transient( $failed_key, 1, HOUR_IN_SECONDS );
+				continue;
+			}
+			$icons[ $size ] = array(
+				'url'  => $folder_url . '/' . basename( $file ),
+				'size' => $size,
+			);
 		}
-		$icons[ $size ] = array(
-			'url'  => $folder_url . '/' . basename( $file ),
-			'size' => $size,
-		);
+		// Icons made from an older version of this image are no longer used.
+		sunshine_gallery_app_delete_icons( $attachment_id, $key );
 	}
 
 	if ( $temp_file ) {
@@ -141,6 +167,7 @@ function sunshine_gallery_app_icons( $gallery ) {
 	}
 
 	ksort( $icons );
+	$cache[ $gallery->get_id() ] = $icons;
 	return $icons;
 
 }
@@ -191,7 +218,13 @@ function sunshine_gallery_app_head() {
  */
 add_filter( 'site_icon_meta_tags', 'sunshine_gallery_app_site_icon_meta_tags' );
 function sunshine_gallery_app_site_icon_meta_tags( $tags ) {
-	if ( ! sunshine_gallery_app_current_gallery() ) {
+	$gallery = sunshine_gallery_app_current_gallery();
+	// Only when the gallery has its own icon to use instead.
+	if ( ! $gallery ) {
+		return $tags;
+	}
+	$icons = sunshine_gallery_app_icons( $gallery );
+	if ( empty( $icons[180] ) ) {
 		return $tags;
 	}
 	return array_filter(
@@ -258,11 +291,14 @@ function sunshine_gallery_app_manifest() {
  * Remove an image's app icons when the image is deleted.
  */
 add_action( 'delete_attachment', 'sunshine_gallery_app_delete_icons' );
-function sunshine_gallery_app_delete_icons( $attachment_id ) {
+function sunshine_gallery_app_delete_icons( $attachment_id, $keep_key = '' ) {
 	$upload_dir = wp_upload_dir();
 	$files      = glob( $upload_dir['basedir'] . '/sunshine/app-icons/' . intval( $attachment_id ) . '-*.png' );
 	if ( $files ) {
 		foreach ( $files as $file ) {
+			if ( $keep_key && 0 === strpos( basename( $file ), $keep_key . '-' ) ) {
+				continue;
+			}
 			wp_delete_file( $file );
 		}
 	}
