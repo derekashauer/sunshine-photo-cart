@@ -500,7 +500,7 @@ function sunshine_get_settings_fields() {
 		'name'        => __( 'App Icon', 'sunshine-photo-cart' ),
 		'id'          => 'gallery_app_icon',
 		'type'        => 'image',
-		'description' => __( 'Shown on the home screen for a gallery with no featured image. Use a square image at least 512 pixels wide. Without one, your site icon is used.', 'sunshine-photo-cart' ),
+		'description' => __( 'Shown on the home screen for every gallery. Use a square image at least 512 pixels wide. Without one, each gallery uses its featured image.', 'sunshine-photo-cart' ),
 		'conditions'  => array(
 			array(
 				'compare' => '==',

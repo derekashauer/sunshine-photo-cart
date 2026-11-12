@@ -244,7 +244,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.8.3 =
-* New: Home screen app. Clients can add a gallery to their phone's home screen, where it opens full screen with its own icon, like an app (Settings > Galleries > Home screen app). The icon is the gallery's featured image, then the App Icon setting, then your site icon
+* New: Home screen app. Clients can add a gallery to their phone's home screen, where it opens full screen with its own icon, like an app (Settings > Galleries > Home screen app). The icon is the App Icon setting, then the gallery's featured image, then your site icon
 * Fix: On the settings screen, picking a second image (like the logo after another image) no longer puts it in the first image's spot
 
 = 3.8.2 - November 11, 2026 =

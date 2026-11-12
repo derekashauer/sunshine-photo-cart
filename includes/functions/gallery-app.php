@@ -34,8 +34,8 @@ function sunshine_gallery_app_current_gallery() {
 }
 
 /**
- * The image a gallery's app icon is made from: the gallery's featured image, then
- * the App Icon setting, then the site icon from Settings > General.
+ * The image a gallery's app icon is made from: the App Icon setting, then the
+ * gallery's featured image, then the site icon from Settings > General.
  *
  * The password placeholder image is skipped: only people who can open the gallery
  * get its app, and browsers fetch the manifest without the visitor's session.
@@ -45,8 +45,8 @@ function sunshine_gallery_app_current_gallery() {
  */
 function sunshine_gallery_app_icon_source_id( $gallery ) {
 	$candidates = array(
-		$gallery->get_featured_image_id( true ),
 		SPC()->get_option( 'gallery_app_icon' ),
+		$gallery->get_featured_image_id( true ),
 		get_option( 'site_icon' ),
 	);
 	foreach ( $candidates as $icon_id ) {
