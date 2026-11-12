@@ -34,8 +34,8 @@ function sunshine_gallery_app_current_gallery() {
 }
 
 /**
- * The image a gallery's app icon is made from: the gallery's own App Icon (or one
- * set on a parent gallery), then the gallery's featured image.
+ * The image a gallery's app icon is made from: the gallery's featured image, then
+ * the App Icon setting, then the site icon from Settings > General.
  *
  * The password placeholder image is skipped: only people who can open the gallery
  * get its app, and browsers fetch the manifest without the visitor's session.
@@ -44,11 +44,18 @@ function sunshine_gallery_app_current_gallery() {
  * @return int Attachment ID, or 0.
  */
 function sunshine_gallery_app_icon_source_id( $gallery ) {
-	$icon_id = intval( $gallery->get_meta_value( 'app_icon', true ) );
-	if ( $icon_id && wp_attachment_is_image( $icon_id ) ) {
-		return $icon_id;
+	$candidates = array(
+		$gallery->get_featured_image_id( true ),
+		SPC()->get_option( 'gallery_app_icon' ),
+		get_option( 'site_icon' ),
+	);
+	foreach ( $candidates as $icon_id ) {
+		$icon_id = intval( $icon_id );
+		if ( $icon_id && wp_attachment_is_image( $icon_id ) ) {
+			return $icon_id;
+		}
 	}
-	return intval( $gallery->get_featured_image_id( true ) );
+	return 0;
 }
 
 /**

@@ -496,6 +496,20 @@ function sunshine_get_settings_fields() {
 		'type'        => 'checkbox',
 		'description' => __( 'Clients can add a gallery to their phone\'s home screen. It opens full screen with its own icon, like an app.', 'sunshine-photo-cart' ),
 	);
+	$galleries_fields['1596'] = array(
+		'name'        => __( 'App Icon', 'sunshine-photo-cart' ),
+		'id'          => 'gallery_app_icon',
+		'type'        => 'image',
+		'description' => __( 'Shown on the home screen for a gallery with no featured image. Use a square image at least 512 pixels wide. Without one, your site icon is used.', 'sunshine-photo-cart' ),
+		'conditions'  => array(
+			array(
+				'compare' => '==',
+				'value'   => '1',
+				'field'   => 'gallery_app',
+				'action'  => 'show',
+			),
+		),
+	);
 
 	$galleries_fields['1600'] = array(
 		'id'          => 'gallery_terms_header',

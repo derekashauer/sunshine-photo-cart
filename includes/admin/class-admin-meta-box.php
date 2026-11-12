@@ -622,16 +622,13 @@ class Sunshine_Admin_Meta_Boxes {
 				break;
 
 			case 'image':
-				$html .= '<div id="' . esc_attr( $meta_key ) . '_preview" class="sunshine-image-preview">';
+				$image_thumb = '';
 				if ( $meta_value ) {
-					$image_thumb = wp_get_attachment_image_src( $meta_value, 'medium' );
-					if ( $image_thumb ) {
-						$html .= '<img src="' . esc_url( $image_thumb[0] ) . '" />';
-					}
+					$image_thumb = wp_get_attachment_thumb_url( $data );
 				}
-				$html .= '</div>' . "\n";
-				$html .= '<input id="' . esc_attr( $meta_key ) . '_button" type="button" data-uploader_title="' . esc_attr__( 'Upload an image', 'sunshine-photo-cart' ) . '" data-uploader_button_text="' . esc_attr__( 'Use image', 'sunshine-photo-cart' ) . '" class="image_upload_button button" value="' . esc_attr__( 'Upload new image', 'sunshine-photo-cart' ) . '" />' . "\n";
-				$html .= '<input id="' . esc_attr( $meta_key ) . '_delete" type="button" class="image_delete_button button delete" data-field="' . esc_attr( $meta_key ) . '" style="display: ' . ( ( $meta_value ) ? 'inline-block' : 'none' ) . '" value="' . esc_attr__( 'Remove image', 'sunshine-photo-cart' ) . '" />' . "\n";
+				$html .= '<img id="' . esc_attr( $meta_key ) . '_preview" class="image_preview" src="' . esc_attr( $image_thumb ) . '" /><br/>' . "\n";
+				$html .= '<input id="' . esc_attr( $meta_key ) . '_button" type="button" data-uploader_title="' . esc_html__( 'Upload an image', 'sunshine-photo-cart' ) . '" data-uploader_button_text="' . esc_html__( 'Use image', 'sunshine-photo-cart' ) . '" class="image_upload_button button" value="' . esc_html__( 'Upload new image', 'sunshine-photo-cart' ) . '" />' . "\n";
+				$html .= '<input id="' . esc_attr( $meta_key ) . '_delete" type="button" class="image_delete_button button" value="' . esc_html__( 'Remove image', 'sunshine-photo-cart' ) . '" />' . "\n";
 				$html .= '<input id="' . esc_attr( $meta_key ) . '" class="image_data_field" type="hidden" name="' . esc_attr( $meta_key ) . '" value="' . esc_attr( $meta_value ) . '"/>' . "\n";
 				break;
 

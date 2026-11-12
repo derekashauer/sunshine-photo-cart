@@ -272,15 +272,6 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 
 		);
 
-		if ( SPC()->get_option( 'gallery_app' ) ) {
-			$options['sunshine-gallery-options']['1000']['fields'][] = array(
-				'id'          => 'app_icon',
-				'name'        => __( 'App Icon', 'sunshine-photo-cart' ),
-				'type'        => 'image',
-				'description' => __( 'Shown on the home screen when a client adds this gallery. Use a square image at least 512 pixels wide. Without one, the featured image is used.', 'sunshine-photo-cart' ),
-			);
-		}
-
 		return $options;
 	}
 
@@ -292,7 +283,6 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 
 		wp_enqueue_script( 'plupload-all' );
 		wp_enqueue_media();
-		wp_enqueue_script( 'sunshine-admin-image-field' );
 
 	}
 
