@@ -188,6 +188,7 @@
 #sunshine--app-prompt #sunshine--app-prompt--close:focus { padding: 4px 6px; background: transparent; color: #555; border: 0; border-radius: 0; font-size: 24px; font-weight: normal; }
 #sunshine--app-prompt [hidden] { display: none !important; }
 body.sunshine--app-prompt-open #sunshine--selection-tray-widget { bottom: calc( var(--sunshine--app-prompt-height, 80px) + 20px ); }
+body.sunshine--app-prompt-open #sunshine--selection-tray-minimized { bottom: calc( var(--sunshine--app-prompt-height, 80px) + 20px ); border-radius: 8px; }
 #sunshine--selection-tray-widget--images::-webkit-scrollbar { width: 2px; height: 5px; }
 #sunshine--selection-tray-widget--images::-webkit-scrollbar-track { background: var(--sunshine--light-gray); }
 #sunshine--selection-tray-widget--images::-webkit-scrollbar-thumb { background: var(--sunshine--gray); }
