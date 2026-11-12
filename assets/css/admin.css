@@ -319,7 +319,7 @@ body.sunshine #wpbody .wp-list-table tbody span.sunshine--id { color: var(--medi
 
 .sunshine-settings-section-description { margin-top: 40px; font-size: 16px; line-height: 1.5; }
 
-.sunshine-settings-section .sunshine-image-preview img { padding: 15px; background: #CCC; max-height: 125px; width: auto;  }
+.sunshine-image-preview img { padding: 15px; background: #CCC; max-height: 125px; width: auto;  }
 .sunshine-settings-section .sunshine-file-preview:has(a) { margin: 0 0 15px 0; }
 
 .sunshine .notice { margin: 0 0 30px 0; border-radius: 3px; }
