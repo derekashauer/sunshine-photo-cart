@@ -603,6 +603,92 @@ class SPC_Admin_Order {
 		<?php
 	}
 
+	/**
+	 * Tracking fields for an order that ships, or one that already has tracking. Leaving every
+	 * field of a package empty removes it.
+	 *
+	 * @param SPC_Order $order The order.
+	 */
+	public function tracking_fields( $order ) {
+		$tracking = $order->get_tracking();
+		if ( empty( $tracking ) && ( $order->is_pickup_order() || ! $order->has_shipping_address() ) ) {
+			return;
+		}
+		$rows = empty( $tracking ) ? array( array() ) : $tracking; // An empty one to fill in at first.
+		?>
+		<div id="sunshine-order-tracking">
+			<h3><?php esc_html_e( 'Tracking', 'sunshine-photo-cart' ); ?></h3>
+			<input type="hidden" name="sunshine_tracking_count" value="<?php echo esc_attr( count( $tracking ) ); ?>" />
+			<?php foreach ( $rows as $index => $package ) { ?>
+				<div class="sunshine-order-tracking-package">
+					<input type="hidden" name="sunshine_tracking[<?php echo esc_attr( $index ); ?>][key]" value="<?php echo esc_attr( isset( $tracking[ $index ] ) ? $index : '' ); ?>" />
+					<label><?php esc_html_e( 'Carrier', 'sunshine-photo-cart' ); ?>
+						<input type="text" name="sunshine_tracking[<?php echo esc_attr( $index ); ?>][carrier]" value="<?php echo esc_attr( isset( $package['carrier'] ) ? $package['carrier'] : '' ); ?>" />
+					</label>
+					<label><?php esc_html_e( 'Tracking number', 'sunshine-photo-cart' ); ?>
+						<input type="text" name="sunshine_tracking[<?php echo esc_attr( $index ); ?>][tracking_number]" value="<?php echo esc_attr( isset( $package['tracking_number'] ) ? $package['tracking_number'] : '' ); ?>" />
+					</label>
+					<label><?php esc_html_e( 'Tracking link', 'sunshine-photo-cart' ); ?>
+						<input type="url" name="sunshine_tracking[<?php echo esc_attr( $index ); ?>][tracking_url]" value="<?php echo esc_attr( isset( $package['tracking_url'] ) ? $package['tracking_url'] : '' ); ?>" />
+					</label>
+				</div>
+			<?php } ?>
+			<p><a href="#" id="sunshine-order-tracking-add"><?php esc_html_e( 'Add another package', 'sunshine-photo-cart' ); ?></a></p>
+			<script>
+				jQuery( '#sunshine-order-tracking-add' ).on( 'click', function() {
+					var packages = jQuery( '#sunshine-order-tracking .sunshine-order-tracking-package' );
+					var row = packages.last().clone();
+					var index = packages.length;
+					row.find( 'input' ).each( function() {
+						this.name = this.name.replace( /\[\d+\]/, '[' + index + ']' );
+						this.value = '';
+					});
+					packages.last().after( row );
+					return false;
+				});
+			</script>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Save the tracking fields. A package a print lab added after the screen was opened is kept.
+	 *
+	 * @param SPC_Order $order The order.
+	 */
+	private function save_tracking( $order ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- save_post() checks the nonce first.
+		if ( ! isset( $_POST['sunshine_tracking_count'] ) || empty( $_POST['sunshine_tracking'] ) || ! is_array( $_POST['sunshine_tracking'] ) ) {
+			return;
+		}
+
+		$saved    = $order->get_tracking();
+		$packages = array();
+		foreach ( wp_unslash( $_POST['sunshine_tracking'] ) as $row ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each field is sanitized below.
+			$package = array(
+				'carrier'         => isset( $row['carrier'] ) ? sanitize_text_field( $row['carrier'] ) : '',
+				'tracking_number' => isset( $row['tracking_number'] ) ? sanitize_text_field( $row['tracking_number'] ) : '',
+				'tracking_url'    => isset( $row['tracking_url'] ) ? esc_url_raw( trim( $row['tracking_url'] ) ) : '',
+			);
+			if ( '' === implode( '', $package ) ) {
+				continue;
+			}
+			// Keep what a lab saved that isn't on the screen, like the ship date.
+			$key = ( isset( $row['key'] ) && '' !== $row['key'] ) ? intval( $row['key'] ) : -1;
+			if ( isset( $saved[ $key ] ) ) {
+				$package = array_merge( $saved[ $key ], $package );
+			}
+			$packages[] = $package;
+		}
+		$packages = array_merge( $packages, array_slice( $saved, intval( $_POST['sunshine_tracking_count'] ) ) );
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+		if ( $packages !== $saved ) {
+			$order->set_tracking( $packages );
+			$order->add_log( __( 'Tracking updated', 'sunshine-photo-cart' ) );
+		}
+	}
+
 	function get_order_actions() {
 		global $post;
 		$post_id = '';
@@ -713,6 +799,7 @@ class SPC_Admin_Order {
 				<?php } else { ?>
 					<p><?php esc_html_e( 'No shipping address collected for this order', 'sunshine-photo-cart' ); ?>
 				<?php } ?>
+				<?php $this->tracking_fields( $order ); ?>
 				<?php do_action( 'sunshine_admin_after_order_shipping', $order ); ?>
 			</div>
 			<div id="sunshine-order-billing">
@@ -1182,6 +1269,9 @@ class SPC_Admin_Order {
 		if ( ! current_user_can( 'edit_post', $post_id ) || empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'update-post_' . $post_id ) ) {
 			return;
 		}
+
+		// Before the status, so a status email has the tracking.
+		$this->save_tracking( new SPC_Order( $post_id ) );
 
 		// Update order status
 		if ( ! empty( $_POST['order_status'] ) ) {
