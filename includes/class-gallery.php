@@ -118,6 +118,10 @@ class SPC_Gallery extends Sunshine_Data {
 			return false;
 		}
 
+		if ( $this->terms_required() ) {
+			return false;
+		}
+
 		if ( $this->is_expired() ) {
 			return false;
 		}
@@ -158,9 +162,14 @@ class SPC_Gallery extends Sunshine_Data {
 		return $this->get_meta_value( 'disable_products', $parent );
 	}
 
-	public function get_featured_image_id() {
+	/**
+	 * @param bool $ignore_password True to skip the placeholder shown to visitors who
+	 *                              haven't entered this gallery's password yet. Never
+	 *                              applies to sub-galleries.
+	 */
+	public function get_featured_image_id( $ignore_password = false ) {
 
-		if ( $this->password_required() && SPC()->get_option( 'password_featured_image' ) ) {
+		if ( ! $ignore_password && $this->password_required() && SPC()->get_option( 'password_featured_image' ) ) {
 			return SPC()->get_option( 'password_featured_image' );
 		} elseif ( has_post_thumbnail( $this->get_id() ) ) {
 			return get_post_thumbnail_id( $this->get_id() );
@@ -176,6 +185,8 @@ class SPC_Gallery extends Sunshine_Data {
 			$child_galleries = $this->get_child_galleries();
 			if ( ! empty( $child_galleries ) ) {
 				foreach ( $child_galleries as $child_gallery ) {
+					// Each sub-gallery keeps its own password placeholder: being able to open this
+					// gallery says nothing about its sub-galleries.
 					$child_featured_image_id = $child_gallery->get_featured_image_id();
 					if ( $child_featured_image_id ) {
 						return $child_featured_image_id;
@@ -539,6 +550,60 @@ class SPC_Gallery extends Sunshine_Data {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Does this gallery ask visitors to agree to the gallery terms before they see the photos.
+	 *
+	 * @return bool
+	 */
+	public function requires_terms() {
+		$setting = $this->get_meta_value( 'terms' );
+		// Ancestors are looked up from the post itself, since galleries built for a list can
+		// arrive without their parent filled in.
+		if ( empty( $setting ) ) {
+			// A sub-gallery on Default follows the nearest gallery above it that has its own setting.
+			foreach ( get_post_ancestors( $this->get_id() ) as $ancestor_id ) {
+				$setting = get_post_meta( $ancestor_id, 'terms', true );
+				if ( $setting ) {
+					break;
+				}
+			}
+		}
+		if ( 'required' === $setting ) {
+			return true;
+		}
+		if ( 'not_required' === $setting ) {
+			return false;
+		}
+		return (bool) SPC()->get_option( 'gallery_terms' );
+	}
+
+	/**
+	 * Does the current visitor still have to agree to the gallery terms.
+	 *
+	 * @return bool
+	 */
+	public function terms_required() {
+		if ( current_user_can( 'sunshine_manage_options' ) ) {
+			return false;
+		}
+		if ( ! $this->requires_terms() ) {
+			return false;
+		}
+		return ! sunshine_has_agreed_to_gallery_terms();
+	}
+
+	/**
+	 * Every terms agreement made on this gallery.
+	 *
+	 * @return array
+	 */
+	public function get_terms_agreements() {
+		if ( ! $this->get_id() ) {
+			return array();
+		}
+		return sunshine_get_gallery_terms_agreements( array( 'gallery_id' => $this->get_id() ) );
 	}
 
 	public function get_emails() {

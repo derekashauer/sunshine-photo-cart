@@ -132,6 +132,20 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						*/
 					),
 					array(
+						'id'          => 'terms',
+						'name'        => __( 'Terms', 'sunshine-photo-cart' ),
+						'type'        => 'radio',
+						'options'     => array(
+							/* translators: %s is the site-wide setting for gallery terms, "Required" or "Not required" */
+							''             => sprintf( __( 'Default (%s)', 'sunshine-photo-cart' ), SPC()->get_option( 'gallery_terms' ) ? __( 'Required', 'sunshine-photo-cart' ) : __( 'Not required', 'sunshine-photo-cart' ) ),
+							'required'     => __( 'Required', 'sunshine-photo-cart' ),
+							'not_required' => __( 'Not required', 'sunshine-photo-cart' ),
+						),
+						'description' => __( 'Ask visitors to agree to your gallery terms before they see the photos.', 'sunshine-photo-cart' ),
+						'quick_edit'  => true,
+						'bulk_edit'   => true,
+					),
+					array(
 						'id'            => 'end_date',
 						'name'          => __( 'Expiration', 'sunshine-photo-cart' ),
 						'type'          => 'date_time',
@@ -240,6 +254,18 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						'id'   => 'provided_emails',
 						'name' => __( 'Provided Emails', 'sunshine-photo-cart' ),
 						'type' => 'gallery_emails',
+					),
+				),
+			),
+			'9100' => array(
+				'id'     => 'terms',
+				'name'   => __( 'Terms Agreements', 'sunshine-photo-cart' ),
+				'icon'   => SUNSHINE_PHOTO_CART_PATH . 'assets/images/icons/settings.svg',
+				'fields' => array(
+					array(
+						'id'   => 'terms_agreements',
+						'name' => __( 'Terms Agreements', 'sunshine-photo-cart' ),
+						'type' => 'gallery_terms_agreements',
 					),
 				),
 			),
@@ -1205,6 +1231,16 @@ function sunshine_gallery_admin_ajax_upload() {
 
 function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json', $watermark = true ) {
 
+	// A customer's print crop must never become a gallery photo, however it got here.
+	$refused = sunshine_print_crop_refusal( $file_path );
+	if ( $refused ) {
+		wp_delete_file( $file_path );
+		if ( 'json' === $result ) {
+			wp_send_json_error( array( 'error' => $refused->get_error_message() ) );
+		}
+		return $refused;
+	}
+
 	$file_type          = wp_check_filetype( $file_path );
 	$file_name          = basename( $file_path );
 	$original_file_name = $file_name; // Store original for title processing
@@ -1851,8 +1887,10 @@ function sunshine_ajax_gallery_import() {
 	$done = ( $index >= $total );
 	$last = end( $results );
 
-	// Only clear the folder once the last photo made it in, as it always has.
-	if ( $done && ! empty( $last['success'] ) && SPC()->get_option( 'delete_images_folder' ) ) {
+	// Only clear the folder once the last photo made it in, as it always has. A print
+	// crop is never let in, so one that happens to come last doesn't keep the folder.
+	$last_ok = ! empty( $last['success'] ) || ( isset( $last['code'] ) && 'sunshine_print_crop' === $last['code'] );
+	if ( $done && $last_ok && SPC()->get_option( 'delete_images_folder' ) ) {
 
 		foreach ( $images as $image_file_path ) {
 			@unlink( $image_file_path ); // Delete the file
@@ -1919,6 +1957,15 @@ function sunshine_gallery_import_file( $file_path, $gallery_id, $watermark, &$ex
 
 	$data = sunshine_insert_gallery_image( $new_file_path, $gallery_id, 'data', $watermark );
 
+	if ( is_wp_error( $data ) ) {
+		return array(
+			'success' => false,
+			'file'    => $file_name,
+			'error'   => $data->get_error_message(),
+			'code'    => $data->get_error_code(),
+		);
+	}
+
 	if ( empty( $data ) ) {
 		return array(
 			'success' => false,
@@ -1942,6 +1989,70 @@ function sunshine_meta_gallery_emails_display() {
 	} else {
 		esc_html_e( 'No emails collected yet', 'sunshine-photo-cart' );
 	}
+}
+
+add_action( 'sunshine_meta_gallery_terms_agreements_display', 'sunshine_meta_gallery_terms_agreements_display' );
+/**
+ * Show who agreed to the gallery terms on the gallery edit screen.
+ */
+function sunshine_meta_gallery_terms_agreements_display() {
+	global $post;
+	$gallery    = sunshine_get_gallery( $post->ID );
+	$agreements = $gallery->get_terms_agreements();
+	echo '<p class="description">' . esc_html__( 'People who agreed while entering this gallery. Visitors agree once for all galleries, so someone who already agreed on another gallery is not asked again and is listed there instead.', 'sunshine-photo-cart' ) . '</p>';
+	if ( empty( $agreements ) ) {
+		esc_html_e( 'Nobody has agreed to the terms while entering this gallery yet', 'sunshine-photo-cart' );
+		return;
+	}
+	echo wp_kses_post( sunshine_gallery_terms_agreements_table( $agreements ) );
+}
+
+/**
+ * A table of gallery terms agreements, newest first, for the gallery and customer admin screens.
+ *
+ * @param array $agreements Agreement records.
+ * @param bool  $show_gallery Add a column for the gallery (used on the customer screen).
+ * @return string HTML.
+ */
+function sunshine_gallery_terms_agreements_table( $agreements, $show_gallery = false ) {
+	$versions        = get_option( 'sunshine_gallery_terms_versions', array() );
+	$current_version = sunshine_get_gallery_terms_version();
+	usort(
+		$agreements,
+		function ( $a, $b ) {
+			return $b['time'] <=> $a['time'];
+		}
+	);
+	$html  = '<table class="widefat striped"><thead><tr>';
+	$html .= '<th>' . esc_html__( 'Date', 'sunshine-photo-cart' ) . '</th>';
+	$html .= '<th>' . esc_html__( 'Who', 'sunshine-photo-cart' ) . '</th>';
+	if ( $show_gallery ) {
+		$html .= '<th>' . esc_html__( 'Gallery', 'sunshine-photo-cart' ) . '</th>';
+	}
+	$html .= '<th>' . esc_html__( 'Terms', 'sunshine-photo-cart' ) . '</th>';
+	$html .= '</tr></thead><tbody>';
+	foreach ( $agreements as $agreement ) {
+		$html .= '<tr><td>' . esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $agreement['time'] ) ) . '</td>';
+		$who   = esc_html( $agreement['email'] );
+		if ( ! empty( $agreement['user_id'] ) ) {
+			$who = '<a href="' . esc_url( admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-customers&customer=' . $agreement['user_id'] ) ) . '">' . $who . '</a>';
+		}
+		$html .= '<td>' . $who . '</td>';
+		if ( $show_gallery ) {
+			$gallery_name = get_the_title( $agreement['gallery_id'] );
+			$html        .= '<td><a href="' . esc_url( admin_url( 'post.php?post=' . $agreement['gallery_id'] . '&action=edit' ) ) . '">' . esc_html( $gallery_name ) . '</a></td>';
+		}
+		$label = ( $agreement['version'] === $current_version ) ? __( 'Current terms', 'sunshine-photo-cart' ) : __( 'Earlier terms', 'sunshine-photo-cart' );
+		$html .= '<td>';
+		if ( ! empty( $versions[ $agreement['version'] ]['text'] ) ) {
+			$html .= '<details><summary>' . esc_html( $label ) . '</summary>' . wp_kses_post( wpautop( $versions[ $agreement['version'] ]['text'] ) ) . '</details>';
+		} else {
+			$html .= esc_html( $label );
+		}
+		$html .= '</td></tr>';
+	}
+	$html .= '</tbody></table>';
+	return $html;
 }
 
 // Can't get this to work with regeneration, so hold off for now.

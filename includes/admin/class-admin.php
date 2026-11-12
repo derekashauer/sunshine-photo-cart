@@ -290,11 +290,13 @@ class Sunshine_Admin {
 
 	public function admin_enqueue_scripts() {
 
-		wp_enqueue_style( 'sunshine-icons', SUNSHINE_PHOTO_CART_URL . 'assets/css/icons.css' );
-		wp_enqueue_style( 'sunshine-admin', SUNSHINE_PHOTO_CART_URL . 'assets/css/admin.css' );
+		wp_enqueue_style( 'sunshine-icons', SUNSHINE_PHOTO_CART_URL . 'assets/css/icons.css', '', SUNSHINE_PHOTO_CART_VERSION );
+		wp_add_inline_style( 'sunshine-icons', sunshine_icons_font_css() );
+		wp_enqueue_style( 'sunshine-admin', SUNSHINE_PHOTO_CART_URL . 'assets/css/admin.css', '', SUNSHINE_PHOTO_CART_VERSION );
 
 		wp_register_script( 'ajaxq', SUNSHINE_PHOTO_CART_URL . 'assets/js/ajaxq.js', array( 'jquery' ), SUNSHINE_PHOTO_CART_VERSION );
 		wp_register_script( 'chartjs', SUNSHINE_PHOTO_CART_URL . 'assets/js/chart.min.js', '', '3.8' );
+		wp_register_script( 'sunshine-admin-image-field', SUNSHINE_PHOTO_CART_URL . 'assets/js/admin-image-field.js', array( 'jquery' ), SUNSHINE_PHOTO_CART_VERSION, true );
 
 		wp_register_script( 'select2', SUNSHINE_PHOTO_CART_URL . 'assets/js/select2/select2.min.js', array( 'jquery' ), '4.0.13' );
 		wp_register_style( 'select2', SUNSHINE_PHOTO_CART_URL . 'assets/js/select2/select2.min.css', '4.0.13' );

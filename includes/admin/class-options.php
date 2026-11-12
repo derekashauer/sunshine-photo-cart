@@ -835,6 +835,7 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 			if ( ! isset( $_GET['page'] ) || $_GET['page'] != $this->key ) {
 				return;
 			}
+			wp_enqueue_script( 'sunshine-admin-image-field' );
 			?>
 		<script>
 		jQuery(document).ready(function($) {
@@ -861,77 +862,6 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 				});
 			});
 			*/
-
-
-			/***** Uploading images *****/
-
-			var file_frame;
-
-			jQuery.fn.uploadMediaFile = function( button, preview_media ) {
-				var button_id = button.attr('id');
-				var field_id = button_id.replace( '_button', '' );
-				var preview_id = button_id.replace( '_button', '_preview' );
-				var media_type = button.data( 'media_type' );
-
-				// If the media frame already exists, reopen it.
-				if ( file_frame ) {
-				  file_frame.open();
-				  return;
-				}
-
-				// Create the media frame.
-				file_frame = wp.media.frames.file_frame = wp.media({
-				  title: jQuery( this ).data( 'uploader_title' ),
-				  button: {
-					text: jQuery( this ).data( 'uploader_button_text' ),
-				  },
-					library: {
-						type: media_type
-					},
-				  multiple: false
-				});
-
-				// When an image is selected, run a callback.
-				file_frame.on( 'select', function() {
-				  attachment = file_frame.state().get( 'selection' ).first().toJSON();
-				  jQuery( "#" + field_id ).val( attachment.id );
-				  if ( preview_media ) {
-					  if ( !jQuery( '#' + preview_id + ' img' ).length ) {
-						  var img = jQuery( '<img />' ).appendTo( '#' + preview_id );
-					  }
-					  jQuery( '#' + preview_id + ' img' ).attr( 'src', attachment.sizes.full.url );
-				  } else {
-					jQuery( "#" + field_id + "_file" ).html( '<a href="' + attachment.url + '" target="_blank">' + attachment.filename + '</a>' );
-				  }
-				  jQuery( '#' + field_id + '_delete' ).show();
-				});
-
-				// Finally, open the modal
-				file_frame.open();
-			}
-
-			jQuery('.image_upload_button').click(function() {
-				jQuery.fn.uploadMediaFile( jQuery(this), true );
-			});
-			jQuery('.file_upload_button').click(function() {
-				jQuery.fn.uploadMediaFile( jQuery(this), false );
-			});
-
-			jQuery('.image_delete_button').click(function() {
-				var field_id = $( this ).data( 'field' );
-				jQuery(this).closest('td').find( '.image_data_field' ).val( '' );
-				jQuery( '#' + field_id + '_preview img' ).remove();
-				jQuery( '#' + field_id + '_delete' ).hide();
-				return false;
-			});
-
-			jQuery('.file_delete_button').click(function() {
-				var field_id = $( this ).data( 'field' );
-				jQuery(this).closest('td').find( '.file_data_field' ).val( '' );
-				jQuery( '#' + field_id + '_file' ).html( '' );
-				jQuery( '#' + field_id + '_delete' ).hide();
-				return false;
-			});
 
 
 		});

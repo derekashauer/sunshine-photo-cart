@@ -14,7 +14,6 @@ class SPC_Emails {
 			'SPC_Email_Admin_Receipt',
 			'SPC_Email_Admin_Payment_Problem',
 			'SPC_Email_Order_Status',
-			'SPC_Email_Order_Shipped',
 			'SPC_Email_Order_Comment',
 			'SPC_Email_Admin_Favorites',
 			'SPC_Email_Custom_Favorites',

@@ -107,14 +107,16 @@ function sunshine_display_locked_gallery( $gallery, $redirect_to ) {
 		);
 		return true;
 	}
-	if ( $gallery->password_required() || $gallery->email_required() ) {
+	$access_fields = sunshine_get_gallery_access_fields( $gallery );
+	if ( array_filter( $access_fields ) ) {
 		sunshine_get_template(
 			'gallery/access',
-			array(
-				'gallery'     => $gallery,
-				'password'    => $gallery->password_required(),
-				'email'       => $gallery->email_required(),
-				'redirect_to' => $redirect_to,
+			array_merge(
+				$access_fields,
+				array(
+					'gallery'     => $gallery,
+					'redirect_to' => $redirect_to,
+				)
 			)
 		);
 		return true;
@@ -176,16 +178,16 @@ function sunshine_single_gallery_display( $gallery = '' ) {
 			return;
 		}
 
-		$password_required = $gallery->password_required();
-		$email_required    = $gallery->email_required();
-		if ( $password_required || $email_required ) {
+		$access_fields = sunshine_get_gallery_access_fields( $gallery );
+		if ( array_filter( $access_fields ) ) {
 			sunshine_get_template(
 				'gallery/access',
-				array(
-					'gallery'  => $gallery,
-					'password' => $password_required,
-					'email'    => $email_required,
-				),
+				array_merge(
+					$access_fields,
+					array(
+						'gallery' => $gallery,
+					)
+				)
 			);
 			return;
 		} else {
@@ -258,17 +260,17 @@ function sunshine_single_image_display() {
 			);
 			return;
 		}
-		$password_required = $gallery->password_required();
 		// A favorited image was already reached once, so do not ask for the email again just for that image.
-		$email_required    = $gallery->email_required() && ! $image->is_favorite();
-		if ( $password_required || $email_required ) {
+		$access_fields = sunshine_get_gallery_access_fields( $gallery, $image->is_favorite() );
+		if ( array_filter( $access_fields ) ) {
 			sunshine_get_template(
 				'gallery/access',
-				array(
-					'gallery'     => $gallery,
-					'password'    => $password_required,
-					'email'       => $email_required,
-					'redirect_to' => $image->get_permalink(),
+				array_merge(
+					$access_fields,
+					array(
+						'gallery'     => $gallery,
+						'redirect_to' => $image->get_permalink(),
+					)
 				)
 			);
 			return;

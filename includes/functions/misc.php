@@ -816,3 +816,33 @@ function sunshine_validate_import_subdirectory( $dir ) {
 
 	return $candidate;
 }
+
+/**
+ * The @font-face rules for the SunshineIcons font, with the plugin version on every font address.
+ *
+ * The font files keep the same names when icons are added, so the version makes browsers fetch
+ * the new font after an update. Printed after icons.css wherever that stylesheet loads.
+ *
+ * @return string
+ */
+function sunshine_icons_font_css() {
+	$fonts   = SUNSHINE_PHOTO_CART_URL . 'assets/fonts/SunshineIcons';
+	$version = '?ver=' . SUNSHINE_PHOTO_CART_VERSION;
+	return '@font-face {
+  font-family: "SunshineIcons";
+  src: url("' . $fonts . '.eot' . $version . '");
+  src: url("' . $fonts . '.eot' . $version . '#iefix") format("embedded-opentype"),
+  url("' . $fonts . '.woff2' . $version . '") format("woff2"),
+  url("' . $fonts . '.woff' . $version . '") format("woff"),
+  url("' . $fonts . '.ttf' . $version . '") format("truetype"),
+  url("' . $fonts . '.svg' . $version . '#font") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  @font-face {
+	font-family: "SunshineIcons";
+	src: url("' . $fonts . '.svg' . $version . '#SunshineIcons") format("svg");
+  }
+}';
+}

@@ -81,6 +81,10 @@ class SPC_Privacy {
 			'eraser_friendly_name' => __( 'Sunshine Photo Cart Order Data', 'sunshine-photo-cart' ),
 			'callback'             => array( $this, 'order_data_eraser' ),
 		);
+		$erasers['sunshine-gallery-terms'] = array(
+			'eraser_friendly_name' => __( 'Sunshine Photo Cart Gallery Terms Agreements', 'sunshine-photo-cart' ),
+			'callback'             => array( $this, 'gallery_terms_eraser' ),
+		);
 		return $erasers;
 	}
 
@@ -95,6 +99,10 @@ class SPC_Privacy {
 		$exporters['sunshine-order-data'] = array(
 			'exporter_friendly_name' => __( 'Sunshine Photo Cart Order Data', 'sunshine-photo-cart' ),
 			'callback'               => array( $this, 'order_data_exporter' ),
+		);
+		$exporters['sunshine-gallery-terms'] = array(
+			'exporter_friendly_name' => __( 'Sunshine Photo Cart Gallery Terms Agreements', 'sunshine-photo-cart' ),
+			'callback'               => array( $this, 'gallery_terms_exporter' ),
 		);
 		return $exporters;
 	}
@@ -372,6 +380,65 @@ class SPC_Privacy {
 	/**
 	 * Daily retention cleanup.
 	 */
+	/**
+	 * Export gallery terms agreements for an email address.
+	 *
+	 * @param string $email_address The email address.
+	 * @param int    $page          Page number (everything fits on one page).
+	 * @return array
+	 */
+	public function gallery_terms_exporter( $email_address, $page = 1 ) {
+		$export_data = array();
+		foreach ( sunshine_get_gallery_terms_agreements( array( 'email' => $email_address ) ) as $agreement ) {
+			$export_data[] = array(
+				'group_id'    => 'sunshine-gallery-terms',
+				'group_label' => __( 'Sunshine Photo Cart Gallery Terms Agreements', 'sunshine-photo-cart' ),
+				'item_id'     => 'sunshine-gallery-terms-' . $agreement['agreement_id'],
+				'data'        => array(
+					array(
+						'name'  => __( 'Gallery', 'sunshine-photo-cart' ),
+						'value' => get_the_title( $agreement['gallery_id'] ),
+					),
+					array(
+						'name'  => __( 'Date', 'sunshine-photo-cart' ),
+						'value' => wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $agreement['time'] ),
+					),
+					array(
+						'name'  => __( 'Email', 'sunshine-photo-cart' ),
+						'value' => $agreement['email'],
+					),
+				),
+			);
+		}
+		return array(
+			'data' => $export_data,
+			'done' => true,
+		);
+	}
+
+	/**
+	 * Erase gallery terms agreements for an email address.
+	 *
+	 * @param string $email_address The email address.
+	 * @param int    $page          Page number (everything fits on one page).
+	 * @return array
+	 */
+	public function gallery_terms_eraser( $email_address, $page = 1 ) {
+		global $wpdb;
+		$items_removed = false;
+		foreach ( sunshine_get_gallery_terms_agreements( array( 'email' => $email_address ) ) as $agreement ) {
+			if ( $wpdb->delete( $wpdb->prefix . 'sunshine_terms_agreements', array( 'agreement_id' => $agreement['agreement_id'] ) ) ) {
+				$items_removed = true;
+			}
+		}
+		return array(
+			'items_removed'  => $items_removed,
+			'items_retained' => false,
+			'messages'       => array(),
+			'done'           => true,
+		);
+	}
+
 	public function retention_cleanup() {
 		$this->cleanup_inactive_accounts();
 		$this->cleanup_old_orders();

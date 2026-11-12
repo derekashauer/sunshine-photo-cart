@@ -25,6 +25,12 @@ Brand:            Sunshine Photo Cart, Sunshine, WP Sunshine
 Payment gateways: Stripe, Square, PayPal, Authorize.Net, Mollie, PayFast,
                   Paystack, Mercado Pago, QuickPay
 Fulfillment/other proper nouns: WHCC, Mailchimp, Campaign Monitor, Lightroom
+Add-on names:     Connect, Crop & Wall Preview, Lightroom Plug-in
+Other apps:       Claude, ChatGPT, Codex, Cursor, VS Code, Gemini CLI, Zapier,
+                  Make, n8n, MCP Adapter, and the menu, button and setting names
+                  inside those apps (e.g. "Settings, Connectors, Add custom
+                  connector", "No sign-in", "Command Palette", "Tools & MCPs").
+                  Keep them in English exactly as the source writes them.
 Technical tokens: any shortcode like [sunshine], HTML tags/attributes, URLs,
                   file extensions, and code identifiers.
 
