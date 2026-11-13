@@ -192,6 +192,7 @@ final class Sunshine_Photo_Cart {
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/tools/unused-image-sizes.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/tools/reinstall.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/tools/square-reconcile.php';
+		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/tools/import-tracking.php';
 
 		// Various admin functions
 		if ( is_admin() ) {
