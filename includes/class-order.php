@@ -728,6 +728,38 @@ class SPC_Order extends Sunshine_Data {
 		$this->update_meta_value( 'shipment_tracking', array_values( $packages ) );
 	}
 
+	/**
+	 * Whether a tracking number is already on this order, ignoring case and spaces.
+	 *
+	 * @param string $number Tracking number.
+	 * @return bool
+	 */
+	public function has_tracking_number( $number ) {
+		$number = strtoupper( preg_replace( '/\s+/', '', (string) $number ) );
+		foreach ( $this->get_tracking() as $package ) {
+			if ( ! empty( $package['tracking_number'] ) && strtoupper( preg_replace( '/\s+/', '', $package['tracking_number'] ) ) === $number ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Add one package to the order's tracking, unless its number is already there.
+	 *
+	 * @param array $package carrier, tracking_number and tracking_url.
+	 * @return bool False when the number was already on the order.
+	 */
+	public function add_tracking( $package ) {
+		if ( empty( $package['tracking_number'] ) || $this->has_tracking_number( $package['tracking_number'] ) ) {
+			return false;
+		}
+		$tracking   = $this->get_tracking();
+		$tracking[] = $package;
+		$this->set_tracking( $tracking );
+		return true;
+	}
+
 	public function get_payment_method() {
 		return $this->get_meta_value( 'payment_method' );
 	}

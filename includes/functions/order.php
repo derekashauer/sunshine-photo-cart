@@ -386,6 +386,63 @@ function sunshine_get_tracking_url( $package ) {
 }
 
 /**
+ * The carrier a tracking number or a carrier's name points to, for text from a shipping app such
+ * as "USPS Priority Mail", "fedex_ground" or "stamps_com". When the text names none of
+ * sunshine_get_tracking_carriers(), the number's pattern is tried.
+ *
+ * @param string $text   Carrier or service name, can be empty.
+ * @param string $number Tracking number, can be empty.
+ * @return string A name from sunshine_get_tracking_carriers(), or ''.
+ */
+function sunshine_guess_tracking_carrier( $text, $number = '' ) {
+	$name = sunshine_get_tracking_carrier( $text );
+	if ( $name ) {
+		return $name;
+	}
+	$words = array(
+		'USPS'  => array( 'usps', 'stampscom', 'postalservice' ),
+		'FedEx' => array( 'fedex' ),
+		'DHL'   => array( 'dhl' ),
+		'UPS'   => array( 'ups' ),
+	);
+	$plain = preg_replace( '/[^a-z]/', '', strtolower( (string) $text ) );
+	foreach ( $words as $carrier => $list ) {
+		foreach ( $list as $word ) {
+			if ( '' !== $plain && 0 === strpos( $plain, $word ) ) {
+				return sunshine_get_tracking_carrier( $carrier );
+			}
+		}
+	}
+	if ( '' !== trim( (string) $text ) ) {
+		return '';
+	}
+	$number   = strtoupper( preg_replace( '/\s+/', '', (string) $number ) );
+	$patterns = array(
+		'UPS'   => '/^1Z[0-9A-Z]{16}$/',
+		'USPS'  => '/^(420\d{5})?9[1-5]\d{18,24}$/',
+		'FedEx' => '/^(\d{12}|\d{15})$/',
+		'DHL'   => '/^\d{10}$/',
+	);
+	foreach ( $patterns as $carrier => $pattern ) {
+		if ( preg_match( $pattern, $number ) ) {
+			return sunshine_get_tracking_carrier( $carrier );
+		}
+	}
+	return '';
+}
+
+/**
+ * Whether an order is at a point where tracking means something: not waiting for payment, and
+ * not failed, cancelled or refunded.
+ *
+ * @param SPC_Order $order The order.
+ * @return bool
+ */
+function sunshine_order_can_show_tracking( $order ) {
+	return ! in_array( $order->get_status(), array( 'pending', 'failed', 'cancelled', 'refunded' ), true );
+}
+
+/**
  * Tracking in the Order Status Update email and a resent receipt, when the order has some. Left
  * out while an order is waiting for payment, or once it failed, was cancelled or refunded.
  *
@@ -393,7 +450,7 @@ function sunshine_get_tracking_url( $package ) {
  */
 function sunshine_email_order_tracking( $order ) {
 	$tracking = $order->get_tracking();
-	if ( empty( $tracking ) || in_array( $order->get_status(), array( 'pending', 'failed', 'cancelled', 'refunded' ), true ) ) {
+	if ( empty( $tracking ) || ! sunshine_order_can_show_tracking( $order ) ) {
 		return;
 	}
 	sunshine_get_template( 'email/order-tracking', array( 'tracking' => $tracking ) );
