@@ -619,30 +619,50 @@ class SPC_Admin_Order {
 		<div id="sunshine-order-tracking">
 			<h3><?php esc_html_e( 'Tracking', 'sunshine-photo-cart' ); ?></h3>
 			<input type="hidden" name="sunshine_tracking_count" value="<?php echo esc_attr( count( $tracking ) ); ?>" />
-			<?php foreach ( $rows as $index => $package ) { ?>
+			<?php
+			foreach ( $rows as $index => $package ) {
+				$carrier = isset( $package['carrier'] ) ? $package['carrier'] : '';
+				$known   = sunshine_get_tracking_carrier( $carrier );
+				$choice  = $known ? $known : ( '' === $carrier ? '' : 'other' );
+				?>
 				<div class="sunshine-order-tracking-package">
 					<input type="hidden" name="sunshine_tracking[<?php echo esc_attr( $index ); ?>][key]" value="<?php echo esc_attr( isset( $tracking[ $index ] ) ? $index : '' ); ?>" />
 					<label><?php esc_html_e( 'Carrier', 'sunshine-photo-cart' ); ?>
-						<input type="text" name="sunshine_tracking[<?php echo esc_attr( $index ); ?>][carrier]" value="<?php echo esc_attr( isset( $package['carrier'] ) ? $package['carrier'] : '' ); ?>" />
+						<select name="sunshine_tracking[<?php echo esc_attr( $index ); ?>][carrier]" class="sunshine-order-tracking-carrier">
+							<option value=""></option>
+							<?php foreach ( array_keys( sunshine_get_tracking_carriers() ) as $name ) { ?>
+								<option value="<?php echo esc_attr( $name ); ?>" <?php selected( $choice, $name ); ?>><?php echo esc_html( $name ); ?></option>
+							<?php } ?>
+							<option value="other" <?php selected( $choice, 'other' ); ?>><?php esc_html_e( 'Other', 'sunshine-photo-cart' ); ?></option>
+						</select>
 					</label>
 					<label><?php esc_html_e( 'Tracking number', 'sunshine-photo-cart' ); ?>
 						<input type="text" name="sunshine_tracking[<?php echo esc_attr( $index ); ?>][tracking_number]" value="<?php echo esc_attr( isset( $package['tracking_number'] ) ? $package['tracking_number'] : '' ); ?>" />
 					</label>
-					<label><?php esc_html_e( 'Tracking link', 'sunshine-photo-cart' ); ?>
-						<input type="url" name="sunshine_tracking[<?php echo esc_attr( $index ); ?>][tracking_url]" value="<?php echo esc_attr( isset( $package['tracking_url'] ) ? $package['tracking_url'] : '' ); ?>" />
-					</label>
+					<div class="sunshine-order-tracking-other" <?php echo ( 'other' === $choice ) ? '' : 'style="display:none;"'; ?>>
+						<label><?php esc_html_e( 'Carrier name', 'sunshine-photo-cart' ); ?>
+							<input type="text" name="sunshine_tracking[<?php echo esc_attr( $index ); ?>][carrier_other]" value="<?php echo esc_attr( 'other' === $choice ? $carrier : '' ); ?>" />
+						</label>
+						<label><?php esc_html_e( 'Tracking link', 'sunshine-photo-cart' ); ?>
+							<input type="url" name="sunshine_tracking[<?php echo esc_attr( $index ); ?>][tracking_url]" value="<?php echo esc_attr( isset( $package['tracking_url'] ) ? $package['tracking_url'] : '' ); ?>" />
+						</label>
+					</div>
 				</div>
 			<?php } ?>
 			<p><a href="#" id="sunshine-order-tracking-add"><?php esc_html_e( 'Add another package', 'sunshine-photo-cart' ); ?></a></p>
 			<script>
+				jQuery( '#sunshine-order-tracking' ).on( 'change', '.sunshine-order-tracking-carrier', function() {
+					jQuery( this ).closest( '.sunshine-order-tracking-package' ).find( '.sunshine-order-tracking-other' ).toggle( 'other' === this.value );
+				});
 				jQuery( '#sunshine-order-tracking-add' ).on( 'click', function() {
 					var packages = jQuery( '#sunshine-order-tracking .sunshine-order-tracking-package' );
 					var row = packages.last().clone();
 					var index = packages.length;
-					row.find( 'input' ).each( function() {
+					row.find( 'input, select' ).each( function() {
 						this.name = this.name.replace( /\[\d+\]/, '[' + index + ']' );
-						this.value = '';
+						jQuery( this ).val( '' );
 					});
+					row.find( '.sunshine-order-tracking-other' ).hide();
 					packages.last().after( row );
 					return false;
 				});
@@ -665,17 +685,25 @@ class SPC_Admin_Order {
 		$saved    = $order->get_tracking();
 		$packages = array();
 		foreach ( wp_unslash( $_POST['sunshine_tracking'] ) as $row ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each field is sanitized below.
+			$carrier = isset( $row['carrier'] ) ? sanitize_text_field( $row['carrier'] ) : '';
+			$other   = ( 'other' === $carrier );
 			$package = array(
-				'carrier'         => isset( $row['carrier'] ) ? sanitize_text_field( $row['carrier'] ) : '',
+				'carrier'         => $other ? ( isset( $row['carrier_other'] ) ? sanitize_text_field( $row['carrier_other'] ) : '' ) : $carrier,
 				'tracking_number' => isset( $row['tracking_number'] ) ? sanitize_text_field( $row['tracking_number'] ) : '',
-				'tracking_url'    => isset( $row['tracking_url'] ) ? esc_url_raw( trim( $row['tracking_url'] ) ) : '',
+				'tracking_url'    => ( $other && isset( $row['tracking_url'] ) ) ? esc_url_raw( trim( $row['tracking_url'] ) ) : '',
 			);
 			if ( '' === implode( '', $package ) ) {
 				continue;
 			}
-			// Keep what a lab saved that isn't on the screen, like the ship date.
 			$key = ( isset( $row['key'] ) && '' !== $row['key'] ) ? intval( $row['key'] ) : -1;
 			if ( isset( $saved[ $key ] ) ) {
+				// A carrier from the list gets its link built from the number. A link a lab saved
+				// stays only while the carrier and number are the ones it was saved with.
+				if ( ! $other && isset( $saved[ $key ]['tracking_number'], $saved[ $key ]['carrier'] ) && $saved[ $key ]['tracking_number'] === $package['tracking_number'] && sunshine_get_tracking_carrier( $saved[ $key ]['carrier'] ) === $carrier ) {
+					$package['carrier']      = $saved[ $key ]['carrier'];
+					$package['tracking_url'] = isset( $saved[ $key ]['tracking_url'] ) ? $saved[ $key ]['tracking_url'] : '';
+				}
+				// Keep what a lab saved that isn't on the screen, like the ship date.
 				$package = array_merge( $saved[ $key ], $package );
 			}
 			$packages[] = $package;

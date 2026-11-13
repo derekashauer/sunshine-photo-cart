@@ -24,8 +24,9 @@ $count = count( $tracking );
 				<?php /* translators: %s: tracking number */ ?>
 				<?php echo esc_html( sprintf( __( 'Tracking number: %s', 'sunshine-photo-cart' ), $package['tracking_number'] ) ); ?><br />
 			<?php } ?>
-			<?php if ( ! empty( $package['tracking_url'] ) ) { ?>
-				<a href="<?php echo esc_url( $package['tracking_url'] ); ?>"><?php esc_html_e( 'Track package', 'sunshine-photo-cart' ); ?></a>
+			<?php $tracking_url = sunshine_get_tracking_url( $package ); ?>
+			<?php if ( $tracking_url ) { ?>
+				<a href="<?php echo esc_url( $tracking_url ); ?>"><?php esc_html_e( 'Track package', 'sunshine-photo-cart' ); ?></a>
 			<?php } ?>
 		</p>
 	<?php } ?>

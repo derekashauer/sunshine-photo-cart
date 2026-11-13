@@ -633,7 +633,8 @@ tr.sunshine-meta-field-upgrade td:before { content: "\f133"; font-family: "Sunsh
 #sunshine-order-tracking { margin-top: 20px; }
 .sunshine-order-tracking-package { margin-bottom: 15px; }
 .sunshine-order-tracking-package label { margin-bottom: 5px; }
-.sunshine-order-tracking-package input { display: block; width: 100%; }
+.sunshine-order-tracking-package input,
+.sunshine-order-tracking-package select { display: block; width: 100%; max-width: none; }
 
 #sunshine-order-sidebar { background: none; border: none; }
 #sunshine-order-sidebar .postbox-header { display: none; }
