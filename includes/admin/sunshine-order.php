@@ -618,6 +618,24 @@ class SPC_Admin_Order {
 		?>
 		<div id="sunshine-order-tracking">
 			<h3><?php esc_html_e( 'Tracking', 'sunshine-photo-cart' ); ?></h3>
+			<div id="sunshine-order-tracking-view">
+				<?php foreach ( $tracking as $package ) { ?>
+					<p>
+						<?php
+						echo esc_html( isset( $package['carrier'] ) ? $package['carrier'] : '' ) . ' ';
+						$number = isset( $package['tracking_number'] ) ? $package['tracking_number'] : '';
+						$url    = sunshine_get_tracking_url( $package );
+						if ( $url ) {
+							echo '<a href="' . esc_url( $url ) . '" target="_blank">' . esc_html( '' !== $number ? $number : __( 'Track package', 'sunshine-photo-cart' ) ) . '</a>';
+						} else {
+							echo esc_html( $number );
+						}
+						?>
+					</p>
+				<?php } ?>
+				<p><a href="#" id="sunshine-order-tracking-edit-link"><?php echo empty( $tracking ) ? esc_html__( 'Add tracking', 'sunshine-photo-cart' ) : esc_html__( 'Edit', 'sunshine-photo-cart' ); ?></a></p>
+			</div>
+			<div id="sunshine-order-tracking-edit" style="display:none;">
 			<input type="hidden" name="sunshine_tracking_count" value="<?php echo esc_attr( count( $tracking ) ); ?>" />
 			<?php
 			foreach ( $rows as $index => $package ) {
@@ -650,7 +668,13 @@ class SPC_Admin_Order {
 				</div>
 			<?php } ?>
 			<p><a href="#" id="sunshine-order-tracking-add"><?php esc_html_e( 'Add another package', 'sunshine-photo-cart' ); ?></a></p>
+			</div>
 			<script>
+				jQuery( '#sunshine-order-tracking-edit-link' ).on( 'click', function() {
+					jQuery( '#sunshine-order-tracking-view' ).hide();
+					jQuery( '#sunshine-order-tracking-edit' ).show();
+					return false;
+				});
 				jQuery( '#sunshine-order-tracking' ).on( 'change', '.sunshine-order-tracking-carrier', function() {
 					jQuery( this ).closest( '.sunshine-order-tracking-package' ).find( '.sunshine-order-tracking-other' ).toggle( 'other' === this.value );
 				});

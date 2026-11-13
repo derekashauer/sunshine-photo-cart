@@ -635,6 +635,7 @@ tr.sunshine-meta-field-upgrade td:before { content: "\f133"; font-family: "Sunsh
 .sunshine-order-tracking-package label { margin-bottom: 5px; }
 .sunshine-order-tracking-package input,
 .sunshine-order-tracking-package select { display: block; width: 100%; max-width: none; }
+#sunshine-order-tracking-view p { margin: 0 0 5px; }
 
 #sunshine-order-sidebar { background: none; border: none; }
 #sunshine-order-sidebar .postbox-header { display: none; }
