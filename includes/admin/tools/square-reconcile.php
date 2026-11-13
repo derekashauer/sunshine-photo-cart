@@ -10,6 +10,8 @@
  */
 class SPC_Tool_Square_Reconcile extends SPC_Tool {
 
+	protected $category = 'orders';
+
 	protected $is_chunked = true;
 	protected $batch_size = 10;
 

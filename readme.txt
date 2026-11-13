@@ -247,6 +247,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * New: Home screen app. Clients can add a gallery to their phone's home screen, where it opens full screen with its own icon, like an app (Settings > Galleries > Home screen app). The icon is the App Icon setting, then the gallery's featured image, then your site icon
 * Fix: On the settings screen, picking a second image (like the logo after another image) no longer puts it in the first image's spot
 * Fix: An order whose product and photo were both deleted no longer causes a critical error on the order screen. It shows a placeholder image instead
+* Change: The Tools screen now shows its tools in a grid of boxes, like the Add-ons screen, with buttons along the top to show one group at a time (Images, Clean Up, Cloud Storage, Orders, Setup)
 
 = 3.8.2 - November 11, 2026 =
 * New: Gallery terms. Visitors can be asked to agree to your terms before they see a gallery's photos, such as not saving them or removing watermarks (Settings > Galleries > Gallery Terms, and a Terms option on each gallery). Sunshine keeps a record of who agreed, when, and to which wording, on the gallery and the customer's screen. Guests also give their email when they agree, unless you turn that off. This discourages copying, but it can't stop a screenshot

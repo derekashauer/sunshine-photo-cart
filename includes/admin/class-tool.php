@@ -32,6 +32,15 @@ class SPC_Tool {
 	protected $button_label;
 
 	/**
+	 * Which group the tool is listed under on the Tools screen, a key from
+	 * sunshine_get_tool_categories(). Tools without one are listed last and
+	 * only show under "All".
+	 *
+	 * @var string
+	 */
+	protected $category = '';
+
+	/**
 	 * Default number of units processed per `process_batch()` call when the
 	 * caller doesn't ask for a specific size. Tools override per their
 	 * server-cost profile:
@@ -77,6 +86,10 @@ class SPC_Tool {
 
 	function get_button_label() {
 		return $this->button_label;
+	}
+
+	function get_category() {
+		return $this->category;
 	}
 
 	/**

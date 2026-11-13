@@ -13,6 +13,8 @@
  */
 class SPC_Tool_Unused_Images extends SPC_Tool {
 
+	protected $category = 'cleanup';
+
 	protected $is_chunked = true;
 	protected $batch_size = 25;
 

@@ -12,6 +12,8 @@
  */
 class SPC_Tool_Regenerate extends SPC_Tool {
 
+	protected $category = 'images';
+
 	private $remove_image_sizes = false;
 
 	protected $is_chunked = true;
