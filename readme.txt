@@ -248,6 +248,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: On the settings screen, picking a second image (like the logo after another image) no longer puts it in the first image's spot
 * New: Tracking on every order. Pick the carrier and add the tracking number to any shipped order, and it shows in the Order Status Update email with a link to track the package. UPS, USPS, FedEx and DHL links are made from the number; for other carriers, add the link yourself. Tracking from a print lab add-on shows in the same place
 * Change: Print lab add-ons can say what went wrong at checkout when no shipping method can be offered, such as the lab being unreachable, instead of always asking the customer to check their address
+* Fix: An order whose product and photo were both deleted no longer causes a critical error on the order screen. It shows a placeholder image instead
 
 = 3.8.2 - November 11, 2026 =
 * New: Gallery terms. Visitors can be asked to agree to your terms before they see a gallery's photos, such as not saving them or removing watermarks (Settings > Galleries > Gallery Terms, and a Terms option on each gallery). Sunshine keeps a record of who agreed, when, and to which wording, on the gallery and the customer's screen. Guests also give their email when they agree, unless you turn that off. This discourages copying, but it can't stop a screenshot

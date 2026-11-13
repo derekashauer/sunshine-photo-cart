@@ -330,7 +330,7 @@ class SPC_Cart_Item {
 		if ( ! empty( $this->image ) ) {
 			$image_url = $this->image->get_image_url( $size );
 		}
-		if ( empty( $image_url ) && $this->product->exists() ) {
+		if ( empty( $image_url ) && ! empty( $this->product ) && $this->product->exists() ) {
 			$image_url = $this->product->get_image_url( $size );
 		}
 		$image_url = apply_filters( 'sunshine_cart_item_image_url', $image_url, $this );
