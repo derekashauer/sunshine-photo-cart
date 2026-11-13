@@ -1419,6 +1419,17 @@ class SPC_Cart {
 		return false;
 	}
 
+	/**
+	 * What the customer is told when no shipping method can be offered. A method that prices
+	 * shipping live, such as a print lab's, can say when the lab couldn't be reached, so the
+	 * customer isn't told to fix an address that is fine.
+	 *
+	 * @return string
+	 */
+	public function get_shipping_unavailable_message() {
+		return apply_filters( 'sunshine_checkout_shipping_unavailable_message', __( 'Sorry, shipping is not available to the address you entered. Please double check the address or try a different shipping address.', 'sunshine-photo-cart' ) );
+	}
+
 	public function needs_shipping() {
 
 		if ( empty( $this->cart ) ) {
@@ -1938,7 +1949,7 @@ class SPC_Cart {
 						array(
 							'id'   => 'shipping_method_unavailable_notice',
 							'type' => 'html',
-							'html' => '<p class="sunshine--checkout--shipping-method-unavailable">' . esc_html__( 'Sorry, shipping is not available to the address you entered. Please double check the address or try a different shipping address.', 'sunshine-photo-cart' ) . '</p>',
+							'html' => '<p class="sunshine--checkout--shipping-method-unavailable">' . esc_html( $this->get_shipping_unavailable_message() ) . '</p>',
 						),
 					),
 				);
@@ -2450,7 +2461,7 @@ class SPC_Cart {
 				}
 			}
 			if ( ! $has_ship_option ) {
-				$this->add_error( __( 'Sorry, shipping is not available to the address you entered. Please double check the address or try a different shipping address.', 'sunshine-photo-cart' ) );
+				$this->add_error( $this->get_shipping_unavailable_message() );
 			}
 		}
 

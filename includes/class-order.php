@@ -707,6 +707,27 @@ class SPC_Order extends Sunshine_Data {
 		return false;
 	}
 
+	/**
+	 * Tracking for the packages the order went out in. A print lab add-on saves it when the lab
+	 * ships, and the photographer can add or change it on the order screen. Each package has a
+	 * carrier, tracking_number and tracking_url. A lab can save more, like ship_date.
+	 *
+	 * @return array
+	 */
+	public function get_tracking() {
+		$tracking = $this->get_meta_value( 'shipment_tracking' );
+		return is_array( $tracking ) ? array_values( $tracking ) : array();
+	}
+
+	/**
+	 * Replace the order's tracking.
+	 *
+	 * @param array $packages Packages, as get_tracking() returns them.
+	 */
+	public function set_tracking( $packages ) {
+		$this->update_meta_value( 'shipment_tracking', array_values( $packages ) );
+	}
+
 	public function get_payment_method() {
 		return $this->get_meta_value( 'payment_method' );
 	}

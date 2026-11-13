@@ -335,3 +335,68 @@ function sunshine_delete_order_lines( $post_id ) {
 	$wpdb->delete( $wpdb->prefix . 'sunshine_order_items', array( 'order_id' => $post_id ), array( '%d' ) );
 }
 add_action( 'before_delete_post', 'sunshine_delete_order_lines' );
+
+/**
+ * Carriers whose tracking page can be linked from the tracking number alone, as name => link,
+ * with %s where the number goes.
+ *
+ * @return array
+ */
+function sunshine_get_tracking_carriers() {
+	$carriers = array(
+		'UPS'   => 'https://www.ups.com/track?tracknum=%s',
+		'USPS'  => 'https://tools.usps.com/go/TrackConfirmAction?tLabels=%s',
+		'FedEx' => 'https://www.fedex.com/fedextrack/?trknbr=%s',
+		'DHL'   => 'https://www.dhl.com/global-en/home/tracking.html?tracking-id=%s',
+	);
+	return apply_filters( 'sunshine_tracking_carriers', $carriers );
+}
+
+/**
+ * The name in sunshine_get_tracking_carriers() that matches a carrier, ignoring case.
+ *
+ * @param string $carrier Carrier name.
+ * @return string The matching name, or '' when there's no link for it.
+ */
+function sunshine_get_tracking_carrier( $carrier ) {
+	foreach ( array_keys( sunshine_get_tracking_carriers() ) as $name ) {
+		if ( 0 === strcasecmp( $name, trim( (string) $carrier ) ) ) {
+			return $name;
+		}
+	}
+	return '';
+}
+
+/**
+ * The link to track a package: the one saved with it, or one built from its carrier and number.
+ *
+ * @param array $package A package from SPC_Order::get_tracking().
+ * @return string
+ */
+function sunshine_get_tracking_url( $package ) {
+	if ( ! empty( $package['tracking_url'] ) ) {
+		return $package['tracking_url'];
+	}
+	if ( empty( $package['carrier'] ) || empty( $package['tracking_number'] ) ) {
+		return '';
+	}
+	$carriers = sunshine_get_tracking_carriers();
+	$name     = sunshine_get_tracking_carrier( $package['carrier'] );
+	return $name ? sprintf( $carriers[ $name ], rawurlencode( trim( $package['tracking_number'] ) ) ) : '';
+}
+
+/**
+ * Tracking in the Order Status Update email and a resent receipt, when the order has some. Left
+ * out while an order is waiting for payment, or once it failed, was cancelled or refunded.
+ *
+ * @param SPC_Order $order The order.
+ */
+function sunshine_email_order_tracking( $order ) {
+	$tracking = $order->get_tracking();
+	if ( empty( $tracking ) || in_array( $order->get_status(), array( 'pending', 'failed', 'cancelled', 'refunded' ), true ) ) {
+		return;
+	}
+	sunshine_get_template( 'email/order-tracking', array( 'tracking' => $tracking ) );
+}
+add_action( 'sunshine_email_order_status', 'sunshine_email_order_tracking' );
+add_action( 'sunshine_email_order_receipt', 'sunshine_email_order_tracking' );

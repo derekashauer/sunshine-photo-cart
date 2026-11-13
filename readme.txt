@@ -246,6 +246,8 @@ Security is important to us. Please report security bugs through the [Patchstack
 = 3.8.3 =
 * New: Home screen app. Clients can add a gallery to their phone's home screen, where it opens full screen with its own icon, like an app (Settings > Galleries > Home screen app). The icon is the App Icon setting, then the gallery's featured image, then your site icon
 * Fix: On the settings screen, picking a second image (like the logo after another image) no longer puts it in the first image's spot
+* New: Tracking on every order. Pick the carrier and add the tracking number to any shipped order, and it shows in the Order Status Update email with a link to track the package. UPS, USPS, FedEx and DHL links are made from the number; for other carriers, add the link yourself. Tracking from a print lab add-on shows in the same place
+* Change: Print lab add-ons can say what went wrong at checkout when no shipping method can be offered, such as the lab being unreachable, instead of always asking the customer to check their address
 * Fix: An order whose product and photo were both deleted no longer causes a critical error on the order screen. It shows a placeholder image instead
 * Change: The Tools screen now shows its tools in a grid of boxes, like the Add-ons screen, with buttons along the top to show one group at a time (Images, Clean Up, Cloud Storage, Orders, Setup)
 
