@@ -1,6 +1,6 @@
 <?php
 /**
- * Tools > Import > Sunshine tracking numbers: add tracking to many orders from a CSV file, such as
+ * Sunshine > Tools > Import tracking numbers: add tracking to many orders from a CSV file, such as
  * one exported from a shipping app. The columns can be named anything; Sunshine guesses which is
  * which and the photographer can change it before anything is saved.
  *
@@ -10,14 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The tracking importer.
+ * The tracking importer, on Sunshine's Tools screen.
  */
-class SPC_Import_Tracking {
-
-	/**
-	 * Importer id, used in the screen's address.
-	 */
-	const ID = 'sunshine-tracking';
+class SPC_Tool_Import_Tracking extends SPC_Tool {
 
 	/**
 	 * The fields a row can fill, as field => label.
@@ -35,41 +30,50 @@ class SPC_Import_Tracking {
 	}
 
 	/**
-	 * Hook in.
+	 * Add the tool.
 	 */
 	public function __construct() {
-		add_action( 'admin_init', array( $this, 'register' ) );
+		parent::__construct(
+			__( 'Import tracking numbers', 'sunshine-photo-cart' ),
+			'import-tracking',
+			__( 'Add tracking to many orders at once from a CSV file, like one exported from your shipping app. You see what each row will do before anything is saved.', 'sunshine-photo-cart' ),
+			__( 'Import tracking', 'sunshine-photo-cart' )
+		);
 	}
 
 	/**
-	 * Add the importer to Tools > Import.
+	 * The address of one step. The tool's nonce goes with it, because the Tools screen checks it
+	 * before showing any tool.
+	 *
+	 * @param string $step upload, check or import.
+	 * @return string
 	 */
-	public function register() {
-		if ( ! defined( 'WP_LOAD_IMPORTERS' ) ) {
-			return;
-		}
-		require_once ABSPATH . 'wp-admin/includes/import.php';
-		register_importer(
-			self::ID,
-			__( 'Sunshine tracking numbers', 'sunshine-photo-cart' ),
-			__( 'Add tracking to many Sunshine Photo Cart orders at once from a CSV file, like one exported from your shipping app.', 'sunshine-photo-cart' ),
-			array( $this, 'screen' )
+	private function url( $step = '' ) {
+		return add_query_arg(
+			array(
+				'post_type' => 'sunshine-gallery',
+				'page'      => 'sunshine-tools',
+				'tool'      => $this->get_key(),
+				'step'      => $step,
+				'_wpnonce'  => wp_create_nonce( 'sunshine_tool_' . $this->get_key() ),
+			),
+			admin_url( 'edit.php' )
 		);
 	}
 
 	/**
 	 * The importer's three steps: upload, check, import.
 	 */
-	public function screen() {
-		echo '<div class="wrap" id="sunshine-import-tracking">';
-		echo '<h1>' . esc_html__( 'Import tracking numbers', 'sunshine-photo-cart' ) . '</h1>';
+	protected function do_process() {
+		require_once ABSPATH . 'wp-admin/includes/import.php';
+		echo '<div id="sunshine-import-tracking">';
 
 		if ( ! current_user_can( 'edit_sunshine_orders' ) ) {
 			echo '<p>' . esc_html__( 'You need to be able to edit orders to import tracking.', 'sunshine-photo-cart' ) . '</p></div>';
 			return;
 		}
 
-		$step = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- each step checks its own nonce.
+		$step = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- process() checked the tool's nonce, and each step checks its own.
 		if ( 'check' === $step ) {
 			$this->check_step();
 		} elseif ( 'import' === $step ) {
@@ -87,18 +91,23 @@ class SPC_Import_Tracking {
 	private function upload_step() {
 		echo '<p>' . esc_html__( 'Upload a CSV file with an order number and a tracking number on each row, like the one your shipping app exports. The columns can have any names. You\'ll see what will change before anything is saved.', 'sunshine-photo-cart' ) . '</p>';
 		echo '<p>' . esc_html__( 'A file with no order numbers works too, when it has the customer\'s email and that customer has one order waiting to ship.', 'sunshine-photo-cart' ) . '</p>';
-		wp_import_upload_form( admin_url( 'admin.php?import=' . self::ID . '&step=check' ) );
+		?>
+		<form enctype="multipart/form-data" method="post" action="<?php echo esc_url( $this->url( 'check' ) ); ?>">
+			<?php wp_nonce_field( 'sunshine_import_tracking', 'sunshine_import_nonce' ); ?>
+			<p><input type="file" name="import" accept=".csv,text/csv" required /></p>
+			<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Upload and check', 'sunshine-photo-cart' ); ?></button></p>
+		</form>
+		<?php
 	}
 
 	/**
 	 * Step 2: say what each row will do, and let the photographer fix which column is which.
 	 */
 	private function check_step() {
+		check_admin_referer( 'sunshine_import_tracking', 'sunshine_import_nonce' );
 		if ( isset( $_POST['file_id'] ) ) {
-			check_admin_referer( 'sunshine_import_tracking' );
 			$file_id = intval( $_POST['file_id'] );
 		} else {
-			check_admin_referer( 'import-upload' );
 			$upload = wp_import_handle_upload();
 			if ( isset( $upload['error'] ) ) {
 				$this->error( $upload['error'] );
@@ -116,7 +125,6 @@ class SPC_Import_Tracking {
 		$plan    = $this->plan( $csv['rows'], $columns );
 		$ready   = count( array_filter( wp_list_pluck( $plan, 'package' ) ) );
 		$orders  = count( array_unique( wp_list_pluck( array_filter( $plan, array( $this, 'is_ready' ) ), 'order_id' ) ) );
-		$action  = admin_url( 'admin.php?import=' . self::ID . '&step=' );
 		?>
 		<style>
 			#sunshine-import-tracking .sunshine-import-columns th { width: 160px; text-align: left; font-weight: normal; padding: 6px 10px 6px 0; }
@@ -126,8 +134,8 @@ class SPC_Import_Tracking {
 			#sunshine-import-tracking .sunshine-import-skip { color: #b32d2e; }
 			#sunshine-import-tracking .sunshine-import-note { color: #646970; }
 		</style>
-		<form method="post" action="<?php echo esc_url( $action . 'check' ); ?>" id="sunshine-import-tracking-form">
-			<?php wp_nonce_field( 'sunshine_import_tracking' ); ?>
+		<form method="post" action="<?php echo esc_url( $this->url( 'check' ) ); ?>" id="sunshine-import-tracking-form">
+			<?php wp_nonce_field( 'sunshine_import_tracking', 'sunshine_import_nonce' ); ?>
 			<input type="hidden" name="file_id" value="<?php echo esc_attr( $file_id ); ?>" />
 
 			<h2><?php esc_html_e( 'Which column is which', 'sunshine-photo-cart' ); ?></h2>
@@ -198,8 +206,8 @@ class SPC_Import_Tracking {
 		</table>
 
 		<?php if ( $ready ) { ?>
-			<form method="post" action="<?php echo esc_url( $action . 'import' ); ?>">
-				<?php wp_nonce_field( 'sunshine_import_tracking' ); ?>
+			<form method="post" action="<?php echo esc_url( $this->url( 'import' ) ); ?>">
+				<?php wp_nonce_field( 'sunshine_import_tracking', 'sunshine_import_nonce' ); ?>
 				<input type="hidden" name="file_id" value="<?php echo esc_attr( $file_id ); ?>" />
 				<?php foreach ( $columns as $field => $index ) { ?>
 					<input type="hidden" name="columns[<?php echo esc_attr( $field ); ?>]" value="<?php echo esc_attr( $index ); ?>" />
@@ -211,7 +219,7 @@ class SPC_Import_Tracking {
 		<?php } else { ?>
 			<p><?php esc_html_e( 'Nothing in this file can be added yet. Check the columns above, or fix the file and upload it again.', 'sunshine-photo-cart' ); ?></p>
 		<?php } ?>
-		<p><a href="<?php echo esc_url( admin_url( 'admin.php?import=' . self::ID ) ); ?>"><?php esc_html_e( 'Upload a different file', 'sunshine-photo-cart' ); ?></a></p>
+		<p><a href="<?php echo esc_url( $this->url() ); ?>"><?php esc_html_e( 'Upload a different file', 'sunshine-photo-cart' ); ?></a></p>
 		<?php
 	}
 
@@ -220,7 +228,7 @@ class SPC_Import_Tracking {
 	 * screen is trusted.
 	 */
 	private function import_step() {
-		check_admin_referer( 'sunshine_import_tracking' );
+		check_admin_referer( 'sunshine_import_tracking', 'sunshine_import_nonce' );
 		$file_id = isset( $_POST['file_id'] ) ? intval( $_POST['file_id'] ) : 0;
 		$csv     = $this->read( $file_id );
 		if ( is_wp_error( $csv ) ) {
@@ -559,8 +567,8 @@ class SPC_Import_Tracking {
 	 */
 	private function error( $message ) {
 		echo '<div class="notice notice-error inline"><p>' . esc_html( $message ) . '</p></div>';
-		echo '<p><a href="' . esc_url( admin_url( 'admin.php?import=' . self::ID ) ) . '">' . esc_html__( 'Upload a file', 'sunshine-photo-cart' ) . '</a></p>';
+		echo '<p><a href="' . esc_url( $this->url() ) . '">' . esc_html__( 'Upload a file', 'sunshine-photo-cart' ) . '</a></p>';
 	}
 }
 
-new SPC_Import_Tracking();
+$spc_tool_import_tracking = new SPC_Tool_Import_Tracking();
