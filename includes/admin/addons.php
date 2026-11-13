@@ -139,7 +139,7 @@ function sunshine_addons_page() {
 		}
 		if ( ! empty( $categories ) ) {
 			?>
-		<p id="sunshine--addons--categories">
+		<p id="sunshine--addons--categories" class="sunshine--filters" data-boxes="#sunshine--addons">
 			<a href="#all" data-category="all" class="active">All</a>
 			<?php foreach ( $categories as $key => $name ) { ?>
 				<a href="#<?php echo esc_attr( $key ); ?>" data-category="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $name ); ?></a>
@@ -150,17 +150,6 @@ function sunshine_addons_page() {
 			<?php } ?>
 		</p>
 		<script>
-		jQuery( '#sunshine--addons--categories a[data-category]' ).on( 'click', function(){
-			jQuery( '#sunshine--addons--categories a' ).removeClass( 'active' );
-			jQuery( this ).addClass( 'active' );
-			var category = jQuery( this ).data( 'category' );
-			if ( category == 'all' ) {
-				jQuery( '#sunshine--addons li' ).show();
-			} else {
-				jQuery( '#sunshine--addons li' ).hide();
-				jQuery( '#sunshine--addons li.' + category ).show();
-			}
-		});
 		jQuery( '#sunshine--addons--categories a[data-plan]' ).on( 'click', function(){
 			jQuery( '#sunshine--addons--categories a' ).removeClass( 'active' );
 			jQuery( this ).addClass( 'active' );
@@ -174,9 +163,9 @@ function sunshine_addons_page() {
 		});
 		</script>
 		<?php } ?>
-		<ul id="sunshine--addons" class="<?php echo esc_attr( $current_plan ); ?>">
+		<ul id="sunshine--addons" class="sunshine--boxes <?php echo esc_attr( $current_plan ); ?>">
 			<?php foreach ( $addons as $addon ) { ?>
-				<li class="<?php echo esc_attr( $addon['plan'] ); ?> <?php echo ( ! empty( $addon['category'] ) ) ? esc_attr( $addon['category'] ) : ''; ?>">
+				<li class="sunshine--box <?php echo esc_attr( $addon['plan'] ); ?>" data-category="<?php echo ( ! empty( $addon['category'] ) ) ? esc_attr( $addon['category'] ) : ''; ?>">
 					<?php
 					if (
 						$current_plan == 'free'
@@ -187,14 +176,14 @@ function sunshine_addons_page() {
 						echo '<div class="sunshine--addon--needs-upgrade" data-addon="' . esc_attr( $addon['slug'] ) . '">' . esc_html( sprintf( __( 'Upgrade to %s', 'sunshine-photo-cart' ), $addon['plan'] ) ) . '</div>';
 					}
 					?>
-					<div class="sunshine--addon--content">
+					<div class="sunshine--box--content sunshine--addon--content">
 						<h2>
 							<img src="<?php echo esc_url( $addon['image'] ); ?>" alt="<?php echo esc_attr( $addon['title'] ); ?>" />
 							<?php echo esc_html( $addon['title'] ); ?>
 						 </h2>
 						<p><?php echo esc_html( $addon['excerpt'] ); ?></p>
 					</div>
-					<div class="sunshine--addon--actions">
+					<div class="sunshine--box--actions sunshine--addon--actions">
 						<label class="sunshine-switch">
 							  <input type="checkbox" name="addon" value="<?php echo esc_attr( $addon['slug'] ); ?>" class="<?php echo esc_attr( $addon['plan'] ); ?>" <?php checked( 1, is_sunshine_addon_active( $addon['slug'] ) ); ?> />
 							  <span class="sunshine-switch-slider"></span>

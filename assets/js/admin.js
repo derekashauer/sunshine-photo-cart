@@ -20,6 +20,20 @@ jQuery( document ).ready(function($) {
         $( this ).closest( 'tr' ).find( 'input[type="checkbox"]' ).remove();
     });
 
+	// Filters: show only the boxes in the clicked group (Add-ons, Tools).
+	$( '.sunshine--filters a[data-category]' ).on( 'click', function(){
+		var filters = $( this ).closest( '.sunshine--filters' );
+		var boxes = $( filters.data( 'boxes' ) ).children( '.sunshine--box' );
+		var category = $( this ).data( 'category' );
+		filters.find( 'a' ).removeClass( 'active' );
+		$( this ).addClass( 'active' );
+		if ( 'all' === category ) {
+			boxes.show();
+		} else {
+			boxes.hide().filter( '[data-category="' + category + '"]' ).show();
+		}
+	});
+
 	// Add-ons.
 	$( '#sunshine--addons.free input[name="addon"], #sunshine--addons.plus input[name="addon"].pro' ).on( 'change', function( event ){
 

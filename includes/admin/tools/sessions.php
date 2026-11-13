@@ -1,9 +1,11 @@
 <?php
 class SPC_Tool_Sessions extends SPC_Tool {
 
+	protected $category = 'cleanup';
+
 	function __construct() {
 		parent::__construct(
-			__( 'Clear Sesssions', 'sunshine-photo-cart' ),
+			__( 'Clear Sessions', 'sunshine-photo-cart' ),
 			'clear-sessions',
 			__( 'Sunshine stores information about user carts in sessions which are saved to the database. If your database is too big, you can clear all the session data here.', 'sunshine-photo-cart' ),
 			__( 'Clear sessions', 'sunshine-photo-cart' )

@@ -542,9 +542,6 @@ tr.sunshine-meta-field-upgrade td:before { content: "\f133"; font-family: "Sunsh
 #sunshine-meta-fields-qty_discount td { padding: 5px; }
 #sunshine-meta-fields-qty_discount td input[type="number"] { width: 80px; }
 
-/* Tools */
-.sunshine-tool { border: 1px solid #F5EDE4; box-shadow: 0 1px 4px rgb(18 25 97 / 8%); border-radius: 3px; background: #FFF; margin: 40px 0 0 0; padding: 20px 40px; }
-
 #sunshine-system-info { background: #FFF; }
 
 #sunshine-progress-bar, .sunshine-progress-bar { background: var(--medium-light); height: 30px; position: relative; }
@@ -575,15 +572,28 @@ tr.sunshine-meta-field-upgrade td:before { content: "\f133"; font-family: "Sunsh
 #sunshine-footer--content p { color: #FFF; font-size: 24px; }
 #sunshine-footer--image { flex-basis: 30%; }
 
+/* Boxes: a grid of boxes, each with content on top and an actions bar at the bottom (Add-ons, Tools) */
+.sunshine--boxes { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-top: 30px; }
+.sunshine--box { background: #FFF; border-radius: 5px; box-shadow: 0 1px 4px rgb(18 25 97 / 8%); display: flex; flex-direction: column; justify-content: space-between; }
+.sunshine--box--content { padding: 15px 35px; }
+.sunshine--box--content h2 svg,
+.sunshine--box--content h2 img { height: 26px; margin: 0 7px 0 0; vertical-align: middle; }
+.sunshine--box--content p { font-size: 16px; }
+.sunshine--box--actions { padding: 15px 35px; border-top: 1px solid var(--light); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+@media screen and (max-width: 1280px) {
+	.sunshine--boxes { grid-template-columns: 1fr 1fr; }
+}
+@media screen and (max-width: 782px) {
+	.sunshine--boxes { grid-template-columns: 1fr; }
+}
+
+/* Filters: a row of buttons that show one group of boxes at a time */
+.sunshine--filters { font-size: 14px; display: flex; flex-wrap: wrap; gap: 10px; }
+.sunshine--filters a { background: var(--light); text-decoration: none; border-radius: 5px; display: block; padding: 5px 15px; }
+.sunshine--filters a.active { background: var(--accent); color: #FFF; }
+
 /* Add-ons page */
-#sunshine--addons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; margin-top: 30px; }
-#sunshine--addons li { background: #FFF; border-radius: 5px; box-shadow: 0 1px 4px rgb(18 25 97 / 8%); display: flex; flex-direction: column; justify-content: space-between; }
 #sunshine--addons .sunshine--addon--needs-upgrade { color: var(--accent); background: var(--light); font-weight: bold; padding: 5px 15px; text-align: center; display: block; font-size: 13px; text-transform: uppercase; border-radius: 5px 5px 0 0; cursor: pointer; }
-#sunshine--addons .sunshine--addon--content { padding: 15px 35px; }
-#sunshine--addons .sunshine--addon--content h2 svg,
-#sunshine--addons .sunshine--addon--content h2 img { height: 26px; margin: 0 7px 0 0; vertical-align: middle; }
-#sunshine--addons .sunshine--addon--content p { font-size: 16px; }
-#sunshine--addons .sunshine--addon--actions { padding: 15px 35px; border-top: 1px solid var(--light); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }
 #sunshine--addons .sunshine--addon--error { color: red; font-weight: bold; flex-basis: 100%; }
 
 .sunshine--addons--upgrade-modal { display: none; position: fixed; z-index: 999; top: 0; right: 0; bottom: 0; left: 130px; overflow-y: scroll; }
@@ -606,9 +616,6 @@ tr.sunshine-meta-field-upgrade td:before { content: "\f133"; font-family: "Sunsh
 .sunshine--addons--upgrade-modal--content--divider:before,
 .sunshine--addons--upgrade-modal--content--divider:after { content: ""; width: 200px; border-top: 1px solid #ABB3BF; height: 1px; }
 
-#sunshine--addons--categories { font-size: 14px; display: flex; gap: 10px; }
-#sunshine--addons--categories a { background: var(--light); text-decoration: none; border-radius: 5px; display: block; padding: 5px 15px; }
-#sunshine--addons--categories a.active { background: var(--accent); color: #FFF; }
 #sunshine--addons--categories a.sunshine--addons--plan-filter { background: #f08c24; color: #FFF; margin-left: 5px; }
 #sunshine--addons--categories a.sunshine--addons--plan-filter.active { background: #d47315; }
 

@@ -17,6 +17,8 @@
  */
 class SPC_Tool_Refresh_Photo_Details extends SPC_Tool {
 
+	protected $category = 'images';
+
 	protected $is_chunked = true;
 	protected $batch_size = 1;
 

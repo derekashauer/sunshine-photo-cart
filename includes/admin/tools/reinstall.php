@@ -1,6 +1,8 @@
 <?php
 class SPC_Tool_Reinstall extends SPC_Tool {
 
+	protected $category = 'setup';
+
 	function __construct() {
 		parent::__construct(
 			__( 'Install process', 'sunshine-photo-cart' ),
