@@ -102,6 +102,37 @@ function sunshine_get_order( $order_id = 0 ) {
 	return new SPC_Order( $order_id );
 }
 
+/**
+ * The order with a given order number, the one customers see as "Order #1234". A store using
+ * Settings' next order number keeps that number in order_number; other orders use their ID.
+ *
+ * @param int|string $number The order number.
+ * @return SPC_Order|false
+ */
+function sunshine_get_order_by_number( $number ) {
+	$number = absint( $number );
+	if ( ! $number ) {
+		return false;
+	}
+	$ids = get_posts(
+		array(
+			'post_type'      => 'sunshine-order',
+			'post_status'    => 'any',
+			'fields'         => 'ids',
+			'posts_per_page' => 2,
+			'meta_key'       => 'order_number', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_query_meta_key
+			'meta_value'     => $number, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_query_meta_value
+		)
+	);
+	if ( 1 === count( $ids ) ) {
+		return new SPC_Order( $ids[0] );
+	}
+	if ( 'sunshine-order' === get_post_type( $number ) && ! get_post_meta( $number, 'order_number', true ) ) {
+		return new SPC_Order( $number );
+	}
+	return false;
+}
+
 function sunshine_get_order_statuses( $format = 'key' ) {
 	$terms = get_terms(
 		array(

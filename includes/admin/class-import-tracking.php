@@ -490,13 +490,10 @@ class SPC_Import_Tracking {
 	 * @return SPC_Order|string The order, or why none was found.
 	 */
 	private function find_order( $order_text, $email ) {
+		// A row that names an order is only ever matched by that number, never by email.
 		if ( '' !== trim( $order_text ) ) {
-			if ( preg_match( '/\d+/', $order_text, $match ) && 'sunshine-order' === get_post_type( intval( $match[0] ) ) ) {
-				return new SPC_Order( intval( $match[0] ) );
-			}
-			if ( '' === trim( $email ) ) {
-				return __( 'Skipped: no order with this number', 'sunshine-photo-cart' );
-			}
+			$order = preg_match( '/\d+/', $order_text, $match ) ? sunshine_get_order_by_number( $match[0] ) : false;
+			return $order ? $order : __( 'Skipped: no order with this number', 'sunshine-photo-cart' );
 		}
 		$email = sanitize_email( $email );
 		if ( ! $email ) {
