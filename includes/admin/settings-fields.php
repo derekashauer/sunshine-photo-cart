@@ -1522,6 +1522,57 @@ function sunshine_get_settings_fields() {
 		'fields' => $integration_fields,
 	);
 
+	/* PRINT LABS */
+
+	// One tab for every print lab add-on, laid out like Payments: a list of the labs, and each lab's
+	// own settings on its page (&print_lab=whcc). Fields of the labs not being viewed are hidden.
+	$print_labs  = sunshine_get_print_labs();
+	$current_lab = ( isset( $_GET['print_lab'] ) ) ? sanitize_key( $_GET['print_lab'] ) : '';
+	if ( ! isset( $print_labs[ $current_lab ] ) ) {
+		$current_lab = '';
+	}
+
+	$print_lab_fields = array();
+	if ( ! empty( $print_labs ) && '' === $current_lab ) {
+		$print_lab_fields[] = array(
+			'name'    => '',
+			'id'      => 'print_labs_wrapper',
+			'type'    => 'print_labs',
+			'options' => $print_labs,
+		);
+	}
+	foreach ( $print_labs as $lab_id => $lab ) {
+		$lab_fields = apply_filters( 'sunshine_options_print_lab_' . $lab_id, array() );
+		if ( empty( $lab_fields ) || ! is_array( $lab_fields ) ) {
+			continue;
+		}
+		ksort( $lab_fields );
+		array_unshift(
+			$lab_fields,
+			array(
+				'id'   => 'print_lab_' . $lab_id . '_header',
+				'name' => ! empty( $lab['name'] ) ? $lab['name'] : $lab_id,
+				'type' => 'header',
+			)
+		);
+		foreach ( $lab_fields as $field ) {
+			if ( $lab_id !== $current_lab ) {
+				$field['class'] = ( ! empty( $field['class'] ) ) ? $field['class'] . ' hidden' : 'hidden';
+			}
+			$print_lab_fields[] = $field;
+		}
+	}
+
+	// Promos for lab add-ons that aren't active are added here (see promos.php).
+	$print_lab_fields = apply_filters( 'sunshine_options_print_labs', $print_lab_fields, $print_labs, $current_lab );
+	if ( ! empty( $print_lab_fields ) ) {
+		$settings[] = array(
+			'id'     => 'print_labs',
+			'title'  => __( 'Print Labs', 'sunshine-photo-cart' ),
+			'fields' => $print_lab_fields,
+		);
+	}
+
 	$settings = apply_filters( 'sunshine_options_extra', $settings );
 
 	$license_fields = array();

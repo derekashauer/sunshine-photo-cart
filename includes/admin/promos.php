@@ -259,3 +259,41 @@ function sunshine_cloud_storage_promo_tab( $options ) {
 	return $options;
 
 }
+
+// Print Labs settings tab promos: every lab add-on that isn't active. With no lab active, the
+// promos are the whole tab; with one, they sit under the list of labs.
+add_filter( 'sunshine_options_print_labs', 'sunshine_print_labs_promos', 100, 3 );
+function sunshine_print_labs_promos( $fields, $print_labs, $current_lab ) {
+
+	if ( ( SPC()->get_option( 'promos_hide' ) && SPC()->has_plan() ) || '' !== $current_lab ) {
+		return $fields;
+	}
+
+	$lab_addons = array(
+		'whcc'    => 'https://www.sunshinephotocart.com/addon/whcc/',
+		'prodigi' => 'https://www.sunshinephotocart.com/addon/prodigi/',
+	);
+	$lab_addons = array_diff_key( $lab_addons, $print_labs );
+	if ( empty( $lab_addons ) ) {
+		return $fields;
+	}
+
+	if ( ! empty( $print_labs ) ) {
+		$fields[] = array(
+			'id'   => 'print_labs_promo_header',
+			'name' => __( 'More print labs', 'sunshine-photo-cart' ),
+			'type' => 'header',
+		);
+	}
+	foreach ( $lab_addons as $id => $url ) {
+		$fields[] = array(
+			'id'          => $id . '_promo',
+			'type'        => 'promo',
+			'url'         => $url,
+			'description' => sunshine_get_template_html( 'admin/promo/' . $id ),
+		);
+	}
+
+	return $fields;
+
+}
