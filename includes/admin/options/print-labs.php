@@ -12,10 +12,7 @@ add_action( 'sunshine_print_labs_display', 'sunshine_print_labs_display' );
  * @param array $field The settings field; 'options' holds the labs.
  */
 function sunshine_print_labs_display( $field ) {
-	$print_labs = ! empty( $field['options'] ) ? $field['options'] : sunshine_get_print_labs();
-	if ( empty( $print_labs ) ) {
-		return;
-	}
+	$print_labs = $field['options'];
 	?>
 	<table id="sunshine-print-labs" class="sunshine-table">
 		<tbody>

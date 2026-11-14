@@ -281,7 +281,12 @@ function sunshine_print_labs_promos( $fields, $print_labs, $current_lab ) {
 			'coming_soon' => true,
 		),
 	);
-	$lab_addons = array_diff_key( $lab_addons, $print_labs );
+	// Skip labs on the list, and lab add-ons that are active but still keep their own settings tab.
+	foreach ( array_keys( $lab_addons ) as $id ) {
+		if ( isset( $print_labs[ $id ] ) || is_sunshine_addon_active( $id ) ) {
+			unset( $lab_addons[ $id ] );
+		}
+	}
 	if ( empty( $lab_addons ) ) {
 		return $fields;
 	}

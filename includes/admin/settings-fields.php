@@ -1,4 +1,20 @@
 <?php
+
+/**
+ * Hide every field in a list. Tabs with one page per item (payment methods, shipping methods,
+ * emails, print labs) keep every item's fields in the form, so saving one item's page doesn't
+ * erase the others' settings, and hide all but the item being viewed.
+ *
+ * @param array $fields Settings fields.
+ * @return array The same fields with the hidden class added.
+ */
+function sunshine_settings_hide_fields( $fields ) {
+	foreach ( $fields as $key => $field ) {
+		$fields[ $key ]['class'] = ( ! empty( $field['class'] ) ) ? $field['class'] . ' hidden' : 'hidden';
+	}
+	return $fields;
+}
+
 function sunshine_get_settings_fields() {
 	/* GENERAL */
 
@@ -1081,10 +1097,8 @@ function sunshine_get_settings_fields() {
 		foreach ( $payment_methods as $id => $payment_method ) {
 			$payment_method_fields = apply_filters( 'sunshine_options_payment_method_' . $id, array() );
 			if ( ! empty( $payment_method_fields ) ) {
-				foreach ( $payment_method_fields as &$field ) {
-					if ( empty( $_GET['payment_method'] ) || ( isset( $_GET['payment_method'] ) && $_GET['payment_method'] != $id ) ) {
-						$field['class'] = ( ! empty( $field['class'] ) ) ? $field['class'] . ' hidden' : 'hidden';
-					}
+				if ( empty( $_GET['payment_method'] ) || ( isset( $_GET['payment_method'] ) && $_GET['payment_method'] != $id ) ) {
+					$payment_method_fields = sunshine_settings_hide_fields( $payment_method_fields );
 				}
 			}
 			$payment_fields = array_merge( $payment_fields, $payment_method_fields );
@@ -1123,10 +1137,8 @@ function sunshine_get_settings_fields() {
 		foreach ( $available_shipping_methods as $instance_id => $shipping_method ) {
 			$shipping_method_fields = apply_filters( 'sunshine_options_shipping_method_' . $shipping_method['id'], array(), $instance_id );
 			if ( ! empty( $shipping_method_fields ) ) {
-				foreach ( $shipping_method_fields as &$field ) {
-					if ( empty( $_GET['instance_id'] ) || ( isset( $_GET['instance_id'] ) && $_GET['instance_id'] != $instance_id ) ) {
-						$field['class'] = ( ! empty( $field['class'] ) ) ? $field['class'] . ' hidden' : 'hidden';
-					}
+				if ( empty( $_GET['instance_id'] ) || ( isset( $_GET['instance_id'] ) && $_GET['instance_id'] != $instance_id ) ) {
+					$shipping_method_fields = sunshine_settings_hide_fields( $shipping_method_fields );
 				}
 			}
 			$shipping_fields = array_merge( $shipping_fields, $shipping_method_fields );
@@ -1474,10 +1486,8 @@ function sunshine_get_settings_fields() {
 		foreach ( $emails as $id => $email ) {
 			$email_item_fields = apply_filters( 'sunshine_options_email_' . $id, array() );
 			if ( ! empty( $email_item_fields ) ) {
-				foreach ( $email_item_fields as &$field ) {
-					if ( empty( $_GET['email'] ) || ( isset( $_GET['email'] ) && $_GET['email'] != $id ) ) {
-						$field['class'] = ( ! empty( $field['class'] ) ) ? $field['class'] . ' hidden' : 'hidden';
-					}
+				if ( empty( $_GET['email'] ) || ( isset( $_GET['email'] ) && $_GET['email'] != $id ) ) {
+					$email_item_fields = sunshine_settings_hide_fields( $email_item_fields );
 				}
 			}
 			$email_fields = array_merge( $email_fields, $email_item_fields );
@@ -1555,12 +1565,10 @@ function sunshine_get_settings_fields() {
 				'type' => 'header',
 			)
 		);
-		foreach ( $lab_fields as $field ) {
-			if ( $lab_id !== $current_lab ) {
-				$field['class'] = ( ! empty( $field['class'] ) ) ? $field['class'] . ' hidden' : 'hidden';
-			}
-			$print_lab_fields[] = $field;
+		if ( $lab_id !== $current_lab ) {
+			$lab_fields = sunshine_settings_hide_fields( $lab_fields );
 		}
+		$print_lab_fields = array_merge( $print_lab_fields, array_values( $lab_fields ) );
 	}
 
 	// Promos for lab add-ons that aren't active are added here (see promos.php).
