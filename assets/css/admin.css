@@ -1065,6 +1065,7 @@ a.sunshine-install--continue { text-decoration: none; border: 1px solid #CCC; bo
 .sunshine-settings-promo li:before { position: absolute; left: 0; top: 0; content: "\f117"; font-family: "SunshineIcons"; color: var(--accent); }
 .sunshine-settings-promo-links { margin-top: 15px !important; }
 .sunshine-settings-promo-links .button { margin-right: 10px; }
+.sunshine-settings-promo-soon { color: var(--accent); }
 
 /* Segmented control: a row of choices on a light track, the chosen one a white pill.
    Put .sunshine-segmented on the wrapper and .is-active (or aria-pressed="true") on the

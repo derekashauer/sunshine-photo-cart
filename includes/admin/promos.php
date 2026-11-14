@@ -269,9 +269,17 @@ function sunshine_print_labs_promos( $fields, $print_labs, $current_lab ) {
 		return $fields;
 	}
 
+	// coming_soon: not for sale yet, so the promo has no store link or activate button.
+	// Set it to false when the add-on is released.
 	$lab_addons = array(
-		'whcc'    => 'https://www.sunshinephotocart.com/addon/whcc/',
-		'prodigi' => 'https://www.sunshinephotocart.com/addon/prodigi/',
+		'whcc'    => array(
+			'url'         => 'https://www.sunshinephotocart.com/addon/whcc/',
+			'coming_soon' => true,
+		),
+		'prodigi' => array(
+			'url'         => 'https://www.sunshinephotocart.com/addon/prodigi/',
+			'coming_soon' => true,
+		),
 	);
 	$lab_addons = array_diff_key( $lab_addons, $print_labs );
 	if ( empty( $lab_addons ) ) {
@@ -285,11 +293,12 @@ function sunshine_print_labs_promos( $fields, $print_labs, $current_lab ) {
 			'type' => 'header',
 		);
 	}
-	foreach ( $lab_addons as $id => $url ) {
+	foreach ( $lab_addons as $id => $lab_addon ) {
 		$fields[] = array(
 			'id'          => $id . '_promo',
 			'type'        => 'promo',
-			'url'         => $url,
+			'url'         => $lab_addon['url'],
+			'coming_soon' => $lab_addon['coming_soon'],
 			'description' => sunshine_get_template_html( 'admin/promo/' . $id ),
 		);
 	}

@@ -556,14 +556,17 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 					$html .= '<div class="sunshine-settings-promo">';
 					$html .= wp_kses_post( $field['description'] );
 					$html .= '<p class="sunshine-settings-promo-links">';
-					if ( ! SPC()->has_plan() ) {
+					if ( ! empty( $field['coming_soon'] ) ) {
+						// An add-on that isn't for sale yet: no store link or activate button.
+						$html .= '<strong class="sunshine-settings-promo-soon">' . esc_html__( 'Coming soon', 'sunshine-photo-cart' ) . '</strong>';
+					} elseif ( ! SPC()->has_plan() ) {
 						if ( ! empty( $field['url'] ) ) {
 							$html .= '<a href="' . esc_url( $field['url'] ) . '?utm_source=plugin&utm_medium=link&utm_campaign=settingspromo" target="_blank" class="button-primary">' . esc_html__( 'See upgrade options', 'sunshine-photo-cart' ) . '</a>';
 						}
 					} else {
 						$html .= '<a href="' . esc_url( admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-addons' ) ) . '" class="button-primary">' . esc_html__( 'Activate this add-on', 'sunshine-photo-cart' ) . '</a>';
 					}
-					if ( ! empty( $field['url'] ) ) {
+					if ( ! empty( $field['url'] ) && empty( $field['coming_soon'] ) ) {
 						$html .= ' <a href="' . esc_url( $field['url'] ) . '" target="_blank" class="button">' . esc_html__( 'Learn more', 'sunshine-photo-cart' ) . '</a>';
 					}
 					$html .= '</p>';
