@@ -75,6 +75,7 @@ final class Sunshine_Photo_Cart {
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/delivery-methods.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/shipping-methods.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/payment-methods.php';
+		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/print-labs.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/template.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/store.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/account.php';
@@ -218,6 +219,7 @@ final class Sunshine_Photo_Cart {
 			include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/class-options.php';
 			include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/options/shipping-methods.php';
 			include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/options/payment-methods.php';
+			include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/options/print-labs.php';
 			include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/options/taxes.php';
 			include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/options/emails.php';
 

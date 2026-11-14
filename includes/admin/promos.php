@@ -259,3 +259,55 @@ function sunshine_cloud_storage_promo_tab( $options ) {
 	return $options;
 
 }
+
+// Print Labs settings tab promos: every lab add-on that isn't active. With no lab active, the
+// promos are the whole tab; with one, they sit under the list of labs.
+add_filter( 'sunshine_options_print_labs', 'sunshine_print_labs_promos', 100, 3 );
+function sunshine_print_labs_promos( $fields, $print_labs, $current_lab ) {
+
+	if ( ( SPC()->get_option( 'promos_hide' ) && SPC()->has_plan() ) || '' !== $current_lab ) {
+		return $fields;
+	}
+
+	// coming_soon: not for sale yet, so the promo has no store link or activate button.
+	// Set it to false when the add-on is released.
+	$lab_addons = array(
+		'whcc'    => array(
+			'url'         => 'https://www.sunshinephotocart.com/addon/whcc/',
+			'coming_soon' => true,
+		),
+		'prodigi' => array(
+			'url'         => 'https://www.sunshinephotocart.com/addon/prodigi/',
+			'coming_soon' => true,
+		),
+	);
+	// Skip labs on the list, and lab add-ons that are active but still keep their own settings tab.
+	foreach ( array_keys( $lab_addons ) as $id ) {
+		if ( isset( $print_labs[ $id ] ) || is_sunshine_addon_active( $id ) ) {
+			unset( $lab_addons[ $id ] );
+		}
+	}
+	if ( empty( $lab_addons ) ) {
+		return $fields;
+	}
+
+	if ( ! empty( $print_labs ) ) {
+		$fields[] = array(
+			'id'   => 'print_labs_promo_header',
+			'name' => __( 'More print labs', 'sunshine-photo-cart' ),
+			'type' => 'header',
+		);
+	}
+	foreach ( $lab_addons as $id => $lab_addon ) {
+		$fields[] = array(
+			'id'          => $id . '_promo',
+			'type'        => 'promo',
+			'url'         => $lab_addon['url'],
+			'coming_soon' => $lab_addon['coming_soon'],
+			'description' => sunshine_get_template_html( 'admin/promo/' . $id ),
+		);
+	}
+
+	return $fields;
+
+}
