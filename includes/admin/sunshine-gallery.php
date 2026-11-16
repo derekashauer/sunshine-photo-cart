@@ -1661,7 +1661,7 @@ function sunshine_directory_to_options( $path = __DIR__, $selected_dir = '', $le
 					$this_folder_path_array = array_slice( $path_array, 0, $level + 1 );
 					$value                  = join( '/', array_reverse( $this_folder_path_array ) );
 					/* translators: %d: number of photos in the folder */
-					$count_label            = sprintf( _n( '%d image', '%d images', $count, 'sunshine-photo-cart' ), $count );
+					$count_label = sprintf( _n( '%d image', '%d images', $count, 'sunshine-photo-cart' ), $count );
 					/**
 					 * Filters the count shown in brackets after a folder name in the FTP folder list.
 					 *
