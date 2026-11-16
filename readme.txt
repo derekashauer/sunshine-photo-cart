@@ -251,6 +251,9 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Change: Print lab add-ons can say what went wrong at checkout when no shipping method can be offered, such as the lab being unreachable, instead of always asking the customer to check their address
 * Fix: An order whose product and photo were both deleted no longer causes a critical error on the order screen. It shows a placeholder image instead
 * Change: The Tools screen now shows its tools in a grid of boxes, like the Add-ons screen, with buttons along the top to show one group at a time (Images, Clean Up, Cloud Storage, Orders, Setup)
+* Security: WordPress embeds of a gallery or photo link (and the oEmbed link behind them) now only show galleries and photos the visitor can already open, following the gallery's password, email, terms, login and expiry settings
+* Security: A shared favorites link only shows favorites when it has a valid share key
+* Change: With the Page Builder setting on, or a block theme, photo pages use the theme's regular post template instead of a photo template of its own, so the gallery's access screens always come first
 
 = 3.8.2 - November 11, 2026 =
 * New: Gallery terms. Visitors can be asked to agree to your terms before they see a gallery's photos, such as not saving them or removing watermarks (Settings > Galleries > Gallery Terms, and a Terms option on each gallery). Sunshine keeps a record of who agreed, when, and to which wording, on the gallery and the customer's screen. Guests also give their email when they agree, unless you turn that off. This discourages copying, but it can't stop a screenshot

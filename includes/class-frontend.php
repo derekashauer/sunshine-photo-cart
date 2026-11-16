@@ -50,6 +50,7 @@ class SPC_Frontend {
 		// TODO: Somehow create a single-gallery.html FSE template like WooCommerce does
 		if ( ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() && 'theme' == SPC()->get_option( 'theme' ) ) || SPC()->get_option( 'page_builder' ) ) {
 			add_filter( 'the_content', array( $this, 'the_content' ) );
+			add_filter( 'attachment_template_hierarchy', array( $this, 'skip_theme_photo_templates' ) );
 		} else {
 			add_filter( 'template_include', array( $this, 'template_include' ), 999 );
 		}
@@ -108,6 +109,23 @@ class SPC_Frontend {
 
 	}
 
+	/**
+	 * Gallery photos skip the theme's own photo templates (image.php, attachment.php, or a block
+	 * theme's Attachment template). Those can print the photo themselves, before the page content
+	 * where Sunshine shows the photo page and its password, email and login screens. The theme's
+	 * single post template is used instead.
+	 *
+	 * @param array $templates Template file names, most specific first.
+	 * @return array
+	 */
+	public function skip_theme_photo_templates( $templates ) {
+		if ( $this->is_image() ) {
+			// Not an empty list: block themes would then look for an "attachment" template.
+			return array( 'single.php', 'singular.php' );
+		}
+		return $templates;
+	}
+
 	public function the_content( $content ) {
 
 		if ( $this->is_search() ) {
@@ -155,11 +173,18 @@ class SPC_Frontend {
 					if ( 'publish' !== $parent->post_status && ! current_user_can( 'edit_post', $parent->ID ) ) {
 						$this->die();
 					}
+					// The embed view can't show the password, email or login screens that the photo page does.
+					if ( is_embed() && ! sunshine_can_show_outside_sunshine( $post ) ) {
+						$this->die();
+					}
 					do_action( 'sunshine_view_image', $this->current_image );
 				}
 			}
 		} elseif ( is_singular( 'sunshine-gallery' ) ) {
 			$this->current_gallery = sunshine_get_gallery( $post->ID );
+			if ( is_embed() && ! sunshine_can_show_outside_sunshine( $post ) ) {
+				$this->die();
+			}
 			/*
 			if ( ! $this->current_gallery->can_view() ) {
 				$this->die();
@@ -211,8 +236,7 @@ class SPC_Frontend {
 			}
 		}
 
-		// Favorite keys come from wp_generate_password( 20, false ), so letters and numbers only
-		if ( is_sunshine_page( 'favorites' ) && isset( $_GET['key'] ) && is_string( $_GET['key'] ) && preg_match( '/^[A-Za-z0-9]+$/', $_GET['key'] ) ) {
+		if ( is_sunshine_page( 'favorites' ) && isset( $_GET['key'] ) && sunshine_is_favorites_key( $_GET['key'] ) ) {
 			SPC()->session->set( 'favorite_key', sanitize_text_field( $_GET['key'] ) );
 		}
 

@@ -918,3 +918,41 @@ function sunshine_get_gallery_access_fields( $gallery, $skip_email = false ) {
 		'terms'    => $terms,
 	);
 }
+
+/**
+ * Whether WordPress may show a gallery or gallery photo outside Sunshine's own pages: the
+ * embed view (?embed=true) and the oEmbed endpoint. Those can't show the password, email,
+ * terms, login or expiry screens, and they show a gallery's real cover photo and description,
+ * so they only show what the visitor can already open.
+ *
+ * @param int|WP_Post $post Any post.
+ * @return bool True for anything that isn't a gallery or a gallery photo.
+ */
+function sunshine_can_show_outside_sunshine( $post ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return true;
+	}
+	if ( 'sunshine-gallery' === $post->post_type ) {
+		return sunshine_get_gallery( $post )->can_access();
+	}
+	if ( 'attachment' === $post->post_type && sunshine_rest_is_gallery_image( $post->ID ) ) {
+		return sunshine_get_image( $post )->can_access();
+	}
+	return true;
+}
+
+add_filter( 'oembed_response_data', 'sunshine_oembed_response_data', 10, 2 );
+/**
+ * The oEmbed endpoint hands out a link to the photo, so it follows the same rule as the embed view.
+ *
+ * @param array   $data The oEmbed response.
+ * @param WP_Post $post The post being embedded.
+ * @return array|false False makes the endpoint answer "not found".
+ */
+function sunshine_oembed_response_data( $data, $post ) {
+	if ( ! sunshine_can_show_outside_sunshine( $post ) ) {
+		return false;
+	}
+	return $data;
+}

@@ -445,7 +445,24 @@ function sunshine_create_guest_favorites_share_key() {
 	return $key;
 }
 
+/**
+ * Whether a value looks like a favorites share key: letters and numbers, never empty.
+ * Keys come from wp_generate_password( 20, false ).
+ *
+ * @param mixed $key The value to check.
+ * @return bool
+ */
+function sunshine_is_favorites_key( $key ) {
+	return is_string( $key ) && 1 === preg_match( '/^[A-Za-z0-9]+$/', $key );
+}
+
 function sunshine_get_favorites_by_key( $key, $ids = true ) {
+
+	// An empty key must never reach get_users(): it drops an empty meta_value and
+	// would return the first customer who has any share key.
+	if ( ! sunshine_is_favorites_key( $key ) ) {
+		return false;
+	}
 
 	// Check registered users first.
 	$args  = array(
