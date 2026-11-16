@@ -936,7 +936,7 @@ function sunshine_can_show_outside_sunshine( $post ) {
 	if ( 'sunshine-gallery' === $post->post_type ) {
 		return sunshine_get_gallery( $post )->can_access();
 	}
-	if ( 'attachment' === $post->post_type && $post->post_parent && 'sunshine-gallery' === get_post_type( $post->post_parent ) ) {
+	if ( 'attachment' === $post->post_type && sunshine_rest_is_gallery_image( $post->ID ) ) {
 		return sunshine_get_image( $post )->can_access();
 	}
 	return true;

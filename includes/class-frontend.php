@@ -110,16 +110,18 @@ class SPC_Frontend {
 	}
 
 	/**
-	 * Gallery photos skip the theme's own photo templates (image.php, attachment.php). Those print
-	 * the photo themselves, before the page content where Sunshine shows the photo page and its
-	 * password, email and login screens. The theme's single post template is used instead.
+	 * Gallery photos skip the theme's own photo templates (image.php, attachment.php, or a block
+	 * theme's Attachment template). Those can print the photo themselves, before the page content
+	 * where Sunshine shows the photo page and its password, email and login screens. The theme's
+	 * single post template is used instead.
 	 *
 	 * @param array $templates Template file names, most specific first.
 	 * @return array
 	 */
 	public function skip_theme_photo_templates( $templates ) {
 		if ( $this->is_image() ) {
-			return array();
+			// Not an empty list: block themes would then look for an "attachment" template.
+			return array( 'single.php', 'singular.php' );
 		}
 		return $templates;
 	}

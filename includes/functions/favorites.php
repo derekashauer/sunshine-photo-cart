@@ -446,14 +446,14 @@ function sunshine_create_guest_favorites_share_key() {
 }
 
 /**
- * Whether a value looks like a favorites share key. Keys come from wp_generate_password( 20, false ),
- * so they're always 20 letters and numbers.
+ * Whether a value looks like a favorites share key: letters and numbers, never empty.
+ * Keys come from wp_generate_password( 20, false ).
  *
  * @param mixed $key The value to check.
  * @return bool
  */
 function sunshine_is_favorites_key( $key ) {
-	return is_string( $key ) && 1 === preg_match( '/^[A-Za-z0-9]{20}$/', $key );
+	return is_string( $key ) && 1 === preg_match( '/^[A-Za-z0-9]+$/', $key );
 }
 
 function sunshine_get_favorites_by_key( $key, $ids = true ) {
@@ -466,14 +466,8 @@ function sunshine_get_favorites_by_key( $key, $ids = true ) {
 
 	// Check registered users first.
 	$args  = array(
-		'meta_query' => array(
-			array(
-				'key'     => 'sunshine_favorite_key',
-				'value'   => $key,
-				'compare' => '=',
-			),
-		),
-		'number'     => 1,
+		'meta_key'   => 'sunshine_favorite_key',
+		'meta_value' => $key,
 	);
 	$users = get_users( $args );
 	if ( ! empty( $users ) ) {
