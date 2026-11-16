@@ -57,6 +57,28 @@ function sunshine_get_allowed_shipping_methods() {
 	return $final_shipping_methods;
 }
 
+/**
+ * The allowed shipping methods that ship to an address: the rates on the Shipping Method step.
+ * Pickup locations are left out, since checkout offers them as their own delivery methods.
+ *
+ * @since 3.8.3
+ * @param array|null $allowed_shipping_methods What sunshine_get_allowed_shipping_methods() returned,
+ *                                             when the caller already has it. Worked out if not.
+ * @return array Instance ID => shipping method object.
+ */
+function sunshine_get_allowed_ship_to_address_methods( $allowed_shipping_methods = null ) {
+	if ( null === $allowed_shipping_methods ) {
+		$allowed_shipping_methods = sunshine_get_allowed_shipping_methods();
+	}
+	$ship_methods = array();
+	foreach ( array_keys( (array) $allowed_shipping_methods ) as $instance_id ) {
+		$method = sunshine_get_shipping_method_by_instance( $instance_id );
+		if ( $method && $method->needs_shipping_address() ) {
+			$ship_methods[ $instance_id ] = $method;
+		}
+	}
+	return $ship_methods;
+}
 
 function sunshine_get_shipping_method_by_id( $id, $instance_id = 0 ) {
 	$shipping_methods = sunshine_get_shipping_methods();
