@@ -154,13 +154,19 @@ class SPC_Cart {
 
 			if ( array_key_exists( 'shipping_method', $this->data ) && array_key_exists( $this->data['shipping_method'], $allowed_shipping_methods ) ) {
 				$this->set_shipping_method( $this->data['shipping_method'] );
-			} elseif ( $this->needs_shipping() && array_key_exists( 'shipping', $delivery_methods ) && $this->delivery_method && $this->delivery_method->get_id() === 'shipping' && count( $allowed_shipping_methods ) === 1 ) {
-				$only_instance_id = array_key_first( $allowed_shipping_methods );
-				$only_method      = sunshine_get_shipping_method_by_instance( $only_instance_id );
-				// Don't auto-select a pickup-style method when the customer chose Ship —
-				// pickup instances are their own delivery method options.
-				if ( $only_method && $only_method->needs_shipping_address() ) {
-					$this->set_shipping_method( $only_instance_id );
+			} elseif ( $this->needs_shipping() && array_key_exists( 'shipping', $delivery_methods ) && $this->delivery_method && $this->delivery_method->get_id() === 'shipping' ) {
+				// When the customer chose Ship and only one shipping rate fits, pick it, as the
+				// Shipping Method step does, so the order summary shows its price right away.
+				// Pickup locations are their own delivery method options, so they don't count.
+				$ship_instance_ids = array();
+				foreach ( array_keys( $allowed_shipping_methods ) as $instance_id ) {
+					$method = sunshine_get_shipping_method_by_instance( $instance_id );
+					if ( $method && $method->needs_shipping_address() ) {
+						$ship_instance_ids[] = $instance_id;
+					}
+				}
+				if ( 1 === count( $ship_instance_ids ) ) {
+					$this->set_shipping_method( $ship_instance_ids[0] );
 				}
 			}
 		}
