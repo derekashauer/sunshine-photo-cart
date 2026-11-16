@@ -363,6 +363,7 @@ function sunshine_display_favorites() {
 
 	// If we have a custom key, let's pull from that.
 	if ( isset( $_GET['favorites_key'] ) ) {
+		// A missing or malformed key shows nothing, never someone else's favorites.
 		$images = sunshine_get_favorites_by_key( sanitize_text_field( $_GET['favorites_key'] ), false );
 	} else {
 		// Works for both logged-in users and guests.
