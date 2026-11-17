@@ -257,6 +257,10 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Fix: A ZIP+4 code like 80202-1234 matches a zip code rule for 80202, in tax rates, Local Delivery and Advanced Shipping. Before, only zip ranges and wildcards matched it
 * Fix: When only one shipping rate is offered, the checkout order summary shows it and its price right away, instead of "Select shipping method" until the customer clicks Next Step. Before, offering a pickup location too stopped it from being picked
 * Change: Add-ons can change the photo count shown after each folder in the FTP folder list, so Volume Galleries can count the photos in the folders inside it. A folder with one photo says "1 image", not "1 images"
+* Fix: Add-ons that use your Pro, Plus or Basic license key now always show that plan's end date, so the license bar no longer says they expired after your plan renewed. When the plan does expire, the bar names the plan instead of every add-on
+* New: Refresh license on your plan checks every license on the site at once, including the add-ons that use the plan's key
+* New: The Licenses screen shows which site each key is activated for and when it was last checked. When your site hasn't been able to reach sunshinephotocart.com to check a license for two weeks, it says so with the reason, and the license bar links there
+* New: The Sunshine Photo Cart part of Tools > Site Health > Info now shows each license's status, end date, last check and the site it's activated for, instead of only saying a key is there, so they're included when you copy your system info for a support ticket. Only the last 4 characters of a key are shown
 
 = 3.8.2 - November 11, 2026 =
 * New: Gallery terms. Visitors can be asked to agree to your terms before they see a gallery's photos, such as not saving them or removing watermarks (Settings > Galleries > Gallery Terms, and a Terms option on each gallery). Sunshine keeps a record of who agreed, when, and to which wording, on the gallery and the customer's screen. Guests also give their email when they agree, unless you turn that off. This discourages copying, but it can't stop a screenshot

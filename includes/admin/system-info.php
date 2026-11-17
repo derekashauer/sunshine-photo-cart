@@ -28,6 +28,11 @@ function sunshine_site_health_info( $debug_info ) {
 
 	$fields = sunshine_get_settings_fields();
 	foreach ( $fields as $section ) :
+		// The Licenses screen's fields would only say "Hidden, but present". Show what each license has saved instead.
+		if ( 'license' === $section['id'] ) {
+			$debug_info['sunshine-photo-cart']['fields'] += SPC_License::system_info_fields();
+			continue;
+		}
 		foreach ( $section['fields'] as $field ) {
 			if ( empty( $field['id'] ) ) {
 				$field['id'] = $field['name'];
