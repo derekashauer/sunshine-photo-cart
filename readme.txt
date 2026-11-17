@@ -255,6 +255,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Security: A shared favorites link only shows favorites when it has a valid share key
 * Change: With the Page Builder setting on, or a block theme, photo pages use the theme's regular post template instead of a photo template of its own, so the gallery's access screens always come first
 * Fix: When only one shipping rate is offered, the checkout order summary shows it and its price right away, instead of "Select shipping method" until the customer clicks Next Step. Before, offering a pickup location too stopped it from being picked
+* Change: Add-ons can change the photo count shown after each folder in the FTP folder list, so Volume Galleries can count the photos in the folders inside it. A folder with one photo says "1 image", not "1 images"
 
 = 3.8.2 - November 11, 2026 =
 * New: Gallery terms. Visitors can be asked to agree to your terms before they see a gallery's photos, such as not saving them or removing watermarks (Settings > Galleries > Gallery Terms, and a Terms option on each gallery). Sunshine keeps a record of who agreed, when, and to which wording, on the gallery and the customer's screen. Guests also give their email when they agree, unless you turn that off. This discourages copying, but it can't stop a screenshot
