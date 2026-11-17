@@ -50,7 +50,7 @@ $whcc_test(
 // WHCC with that photo and opens WHCC's editor, the editor sends them back, and it's in the cart.
 $whcc_test(
 	'choosing a WHCC product on a photo builds it at WHCC and opens WHCC\'s editor',
-	function () use ( $t, &$whcc_lab, $whcc_product, $whcc_gallery, $whcc_sent, $whcc_return, $whcc_line ) {
+	function () use ( $t, &$whcc_lab, $whcc_product, $whcc_gallery, $whcc_sent, $whcc_return, $whcc_line, $whcc_window_text ) {
 		$product = $whcc_product( null, false );
 		$ref     = get_post_meta( $product, 'whcc_product', true );
 		$gallery = $whcc_gallery( sunshine_get_default_price_level_id() );
@@ -60,9 +60,13 @@ $whcc_test(
 		global $wp_filter;
 		$site_photo_filter = isset( $wp_filter['sunshine_whcc_image_url'] ) ? $wp_filter['sunshine_whcc_image_url'] : null;
 		unset( $wp_filter['sunshine_whcc_image_url'] );
+		// The product window asks from the page the customer is on: here, the gallery.
+		$gallery_url             = get_permalink( $gallery['id'] );
+		$_SERVER['HTTP_REFERER'] = $gallery_url;
 		try {
 			$result = sunshine_whcc_product_details( array( 'html' => '' ), sunshine_get_product( $product, $image->get_price_level() ), $image );
 		} finally {
+			unset( $_SERVER['HTTP_REFERER'] );
 			if ( $site_photo_filter ) {
 				$wp_filter['sunshine_whcc_image_url'] = $site_photo_filter;
 			}
@@ -101,12 +105,21 @@ $whcc_test(
 		$t::same( true, ! empty( $link['settings']['disableUploads'] ), 'no other photos can be uploaded' );
 		$t::same( false, isset( $link['settings']['productSwitcher'] ) ? $link['settings']['productSwitcher'] : null, 'no switching to another product' );
 		$complete = isset( $link['redirects']['complete']['url'] ) ? $link['redirects']['complete']['url'] : '';
-		$t::same( true, false !== strpos( $complete, 'whcc_item=' . rawurlencode( $id ) ), 'finishing in the editor comes back with the item' );
+		$t::same( add_query_arg( 'whcc_item', rawurlencode( $id ), $gallery_url ), $complete, 'finishing in the editor comes back to the gallery the customer was on, with the item' );
+		$t::same( 'Continue', isset( $link['redirects']['complete']['text'] ) ? $link['redirects']['complete']['text'] : null, 'the editor\'s button says Continue: the item is not in the cart yet' );
+		$cancel = isset( $link['redirects']['cancel']['url'] ) ? $link['redirects']['cancel']['url'] : '';
+		$t::same( 0, strpos( $cancel, $gallery_url ), 'leaving the editor also comes back to the gallery' );
 
 		$remembered = sunshine_whcc_get_remembered_item( $id );
 		$t::same( (int) $product, $remembered ? (int) $remembered['product_id'] : null, 'this visitor built it, for this product' );
 
-		// Back from the editor: the item is added at WHCC's price plus the markup.
+		// Back from the editor: a window shows the price, and nothing is in the cart yet.
+		$t::same( null, $whcc_return( $id, null, false ), 'not in the cart before Add to cart is pressed' );
+		$shown = html_entity_decode( wp_strip_all_tags( sunshine_price( 15 ) ), ENT_QUOTES, 'UTF-8' );
+		$t::same( true, false !== strpos( $whcc_window_text(), $shown ), 'the window shows the price, 10.00 + 50% (' . $shown . '): ' . $whcc_window_text() );
+		$t::same( true, false !== strpos( $whcc_window_text(), $whcc_lab['items'][ $id ]['name'] ), 'and what WHCC calls the item' );
+
+		// Add to cart: the item is added at WHCC's price plus the markup.
 		$item = $whcc_return( $id );
 		$t::same( true, ! empty( $item ), 'the item is in the cart' );
 		$t::same( (int) $gallery['photo'], $item ? (int) $item['image_id'] : null, 'with the photo it was made from' );
@@ -137,28 +150,54 @@ $whcc_test(
 // built can come into this cart, or one customer could buy another's item at their price.
 $whcc_test(
 	'an item this visitor did not build is not added',
-	function () use ( $t, $whcc_product, $whcc_item, $whcc_return, $whcc_sent, $whcc_notices ) {
+	function () use ( $t, $whcc_product, $whcc_item, $whcc_return, $whcc_sent, $whcc_refusal, $whcc_window_text ) {
 		$product = $whcc_product( null, false );
 		$id      = $whcc_item( $product, 6.00, 1 );
 		$item    = $whcc_return( $id );
 		$t::same( null, $item, 'not in the cart' );
 		$t::same( 0, count( $whcc_sent( 'POST', 'commerce/submissions/calculate' ) ), 'WHCC is not even asked' );
-		$t::same( true, in_array( 'error: Could not add item to cart', $whcc_notices(), true ), 'the customer is told' );
+		$t::same( 'Could not add item to cart', $whcc_window_text(), 'the window shows no price, only that it can\'t be added' );
+		$t::same( 'Could not add item to cart', $whcc_refusal(), 'and Add to cart refuses it' );
 	}
 );
 
-// The back button or a reload opens the same "back from the editor" link again.
+// The back button or a reload opens the same "back from the editor" link again, or Add to cart
+// is pressed twice.
 $whcc_test(
 	'coming back from the editor twice adds the item once',
 	function () use ( $t, $whcc_product, $whcc_buy, $whcc_return, $whcc_sent ) {
 		$product = $whcc_product( null, false );
 		$id      = $whcc_buy( $product, 6.00, 3 );
 		$asked   = count( $whcc_sent( 'POST', 'commerce/submissions/calculate' ) );
+
+		// The page opens the price window only for an item not in the cart yet.
+		// The add-on's script rides on Sunshine's own, which only loads on a page.
+		$core_registered = wp_script_is( 'sunshine-photo-cart', 'registered' );
+		if ( ! $core_registered ) {
+			wp_register_script( 'sunshine-photo-cart', false, array(), '1', true );
+		}
+		wp_enqueue_script( 'sunshine-photo-cart' );
+		$_GET['whcc_item'] = $id;
+		try {
+			sunshine_whcc_enqueue_scripts();
+			$data = (string) wp_scripts()->get_data( 'sunshine-whcc', 'data' );
+		} finally {
+			unset( $_GET['whcc_item'] );
+			wp_dequeue_script( 'sunshine-whcc' );
+			wp_deregister_script( 'sunshine-whcc' );
+			wp_dequeue_style( 'sunshine-whcc' );
+			wp_dequeue_script( 'sunshine-photo-cart' );
+			if ( ! $core_registered ) {
+				wp_deregister_script( 'sunshine-photo-cart' );
+			}
+		}
+		$t::same( true, false !== strpos( $data, '"open_item":""' ), 'the window does not open again: ' . $data );
+
+		$whcc_return( $id, null, false );
 		$whcc_return( $id );
 		$cart = $t::calculate();
 		$t::same( 1, count( (array) $cart->get_cart() ), 'one line' );
 		$t::money( 27.00, $cart->get_total(), 'still 3 x 9.00' );
-		$t::same( $asked, count( $whcc_sent( 'POST', 'commerce/submissions/calculate' ) ), 'WHCC is not asked again' );
 	}
 );
 
@@ -244,7 +283,7 @@ $whcc_test(
 // product in galleries at that level.
 $whcc_test(
 	'a product with no markup at a gallery\'s price level is not sold there',
-	function () use ( $t, $whcc_product, $whcc_item, $whcc_return, $whcc_other_level, $whcc_notices, $whcc_sent ) {
+	function () use ( $t, $whcc_product, $whcc_item, $whcc_return, $whcc_other_level, $whcc_refusal, $whcc_sent ) {
 		$other   = $whcc_other_level();
 		$product = $whcc_product( array( sunshine_get_default_price_level_id() => '50' ), false );
 		$id      = $whcc_item( $product, 10.00, 1 );
@@ -258,9 +297,10 @@ $whcc_test(
 			)
 		);
 		$t::same( null, $item, 'not added' );
-		// WHCC priced it and found nothing wrong, so the missing markup is what refused it.
-		$t::same( 1, count( $whcc_sent( 'POST', 'commerce/submissions/calculate' ) ), 'WHCC priced the item' );
-		$t::same( true, in_array( 'error: Could not add item to cart', $whcc_notices(), true ), 'the customer is told' );
+		// WHCC priced it and found nothing wrong, so the missing markup is what refused it. The
+		// window and its Add to cart each ask WHCC.
+		$t::same( 2, count( $whcc_sent( 'POST', 'commerce/submissions/calculate' ) ), 'WHCC priced the item' );
+		$t::same( 'Could not add item to cart', $whcc_refusal(), 'the customer is told' );
 	}
 );
 

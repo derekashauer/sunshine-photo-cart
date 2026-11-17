@@ -896,7 +896,7 @@ $combo_make_line = function ( $index, $line, $recipe, &$context ) use ( $t, $com
 
 		case 'whcc print':
 			$t::require_plugin( 'sunshine_whcc_init', 'WHCC add-on' );
-			if ( ! function_exists( 'sunshine_whcc_return_from_editor' ) ) {
+			if ( ! function_exists( 'sunshine_whcc_ajax_add_to_cart' ) ) {
 				$t::skip( 'WHCC add-on did not load' );
 			}
 			$context['whcc'] = true;

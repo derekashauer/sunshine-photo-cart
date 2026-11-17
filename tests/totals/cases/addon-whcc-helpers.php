@@ -680,7 +680,7 @@ $whcc_test = function ( $name, $callback ) use ( $t, &$whcc_lab, $whcc_open, $wh
 		function () use ( $t, &$whcc_lab, $whcc_open, $whcc_close, $whcc_hook_ids, $whcc_hook_trim, $callback ) {
 			$hooks_before = $whcc_hook_ids();
 			$t::require_plugin( 'sunshine_whcc_init', 'WHCC add-on' );
-			if ( ! function_exists( 'sunshine_whcc_return_from_editor' ) || ! class_exists( 'SPC_WHCC_Quotes' ) ) {
+			if ( ! function_exists( 'sunshine_whcc_ajax_add_to_cart' ) || ! class_exists( 'SPC_WHCC_Quotes' ) ) {
 				$t::skip( 'WHCC add-on did not load' );
 			}
 			$whcc_open();
@@ -899,32 +899,84 @@ $whcc_line = function ( $configured_id ) {
 	return null;
 };
 
+// Run an AJAX handler the way admin-ajax.php does and return its JSON reply.
+$whcc_ajax = function ( $handler ) {
+	$die = function () {
+		return function () {
+			throw new SPC_Totals_Test_Done();
+		};
+	};
+	add_filter( 'wp_doing_ajax', '__return_true' );
+	add_filter( 'wp_die_ajax_handler', $die );
+	ob_start();
+	try {
+		$handler();
+	} catch ( SPC_Totals_Test_Done $e ) {
+		// The handler always ends by sending a JSON reply.
+	} finally {
+		$output = ob_get_clean();
+		remove_filter( 'wp_doing_ajax', '__return_true' );
+		remove_filter( 'wp_die_ajax_handler', $die );
+	}
+	return json_decode( $output, true );
+};
+
+// What the add-on's two answers said the last time a customer came back from the editor: the
+// price window ('window') and its Add to cart ('add'). Each is the JSON reply, or null when the
+// step wasn't reached.
+$whcc_replies = array(
+	'window' => null,
+	'add'    => null,
+);
+
 /**
- * The customer finishes in WHCC's editor and WHCC sends them back with ?whcc_item=..., which
- * runs the add-on's real add to cart. The item must have been built by this visitor, which
- * $remember says (what the add-on keeps when it opens the editor): the product, photo, gallery
- * and price level it was picked on. Returns the new cart line, or null if it was not added.
+ * The customer finishes in WHCC's editor and WHCC sends them back to the page with
+ * ?whcc_item=..., which opens the price window. Nothing is in the cart until they press its Add
+ * to cart. Both are the add-on's real AJAX answers. The item must have been built by this visitor,
+ * which $remember says (what the add-on keeps when it opens the editor): the product, photo,
+ * gallery and price level it was picked on. $add false stops at the window. Returns the new cart
+ * line, or null if it was not added; the replies are in $whcc_replies.
  */
-$whcc_return = function ( $configured_id, $remember = null ) use ( $whcc_until_redirect, $whcc_cart_line, $whcc_forget_page ) {
+$whcc_return = function ( $configured_id, $remember = null, $add = true ) use ( $whcc_ajax, $whcc_cart_line, $whcc_forget_page, &$whcc_replies ) {
 	if ( is_array( $remember ) ) {
 		sunshine_whcc_remember_item( $configured_id, $remember );
 	}
-	$_GET['whcc_item'] = $configured_id;
+	$whcc_replies = array(
+		'window' => null,
+		'add'    => null,
+	);
+	$_POST['item']     = $configured_id;
+	$_POST['security'] = wp_create_nonce( 'sunshinephotocart' );
 	try {
-		$whcc_until_redirect( 'sunshine_whcc_return_from_editor' );
+		$whcc_replies['window'] = $whcc_ajax( 'sunshine_whcc_modal_item' );
+		if ( $add ) {
+			// Pressing Add to cart is a new request.
+			$whcc_forget_page();
+			$whcc_replies['add'] = $whcc_ajax( 'sunshine_whcc_ajax_add_to_cart' );
+		}
 	} finally {
-		unset( $_GET['whcc_item'] );
+		unset( $_POST['item'], $_POST['security'] );
 	}
-	// The redirect is a new page load.
 	$whcc_forget_page();
 	return $whcc_cart_line( $configured_id );
+};
+
+// The price window's text, without tags.
+$whcc_window_text = function () use ( &$whcc_replies ) {
+	$html = isset( $whcc_replies['window']['data']['html'] ) ? $whcc_replies['window']['data']['html'] : '';
+	return trim( preg_replace( '/\s+/', ' ', html_entity_decode( wp_strip_all_tags( $html ), ENT_QUOTES, 'UTF-8' ) ) );
+};
+
+// Why the price window's Add to cart refused the item, as the customer reads it.
+$whcc_refusal = function () use ( &$whcc_replies ) {
+	return isset( $whcc_replies['add']['data']['message'] ) ? $whcc_replies['add']['data']['message'] : null;
 };
 
 /**
  * Put a WHCC item in the cart the way a customer does (built by them, back from the editor).
  * Returns the configured product id. $prices and $qty are as for $whcc_item.
  */
-$whcc_buy = function ( $product_id, $prices, $qty = 1, $where = array(), $extra = array() ) use ( $whcc_item, $whcc_return ) {
+$whcc_buy = function ( $product_id, $prices, $qty = 1, $where = array(), $extra = array() ) use ( $whcc_item, $whcc_return, &$whcc_replies ) {
 	$id   = $whcc_item( $product_id, $prices, $qty, $extra );
 	$line = $whcc_return(
 		$id,
@@ -939,7 +991,7 @@ $whcc_buy = function ( $product_id, $prices, $qty = 1, $where = array(), $extra 
 		)
 	);
 	if ( ! $line ) {
-		throw new Exception( 'The WHCC item was not added: ' . wp_json_encode( SPC()->session->get( 'notices' ) ) );
+		throw new Exception( 'The WHCC item was not added: ' . wp_json_encode( $whcc_replies ) );
 	}
 	return $id;
 };
@@ -1076,28 +1128,6 @@ $whcc_notices = function () {
 		}
 	}
 	return $texts;
-};
-
-// Run an AJAX handler the way admin-ajax.php does and return its JSON reply.
-$whcc_ajax = function ( $handler ) {
-	$die = function () {
-		return function () {
-			throw new SPC_Totals_Test_Done();
-		};
-	};
-	add_filter( 'wp_doing_ajax', '__return_true' );
-	add_filter( 'wp_die_ajax_handler', $die );
-	ob_start();
-	try {
-		$handler();
-	} catch ( SPC_Totals_Test_Done $e ) {
-		// The handler always ends by sending a JSON reply.
-	} finally {
-		$output = ob_get_clean();
-		remove_filter( 'wp_doing_ajax', '__return_true' );
-		remove_filter( 'wp_die_ajax_handler', $die );
-	}
-	return json_decode( $output, true );
 };
 
 /**
