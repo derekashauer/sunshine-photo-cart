@@ -237,6 +237,31 @@ $t::test(
 	}
 );
 
+// A customer who types their ZIP+4 lives in that 5 digit ZIP, so an exact zip rate covers them
+// too, whether they type the dash or not. A ZIP+4 listed in a rate still only matches itself.
+$t::test(
+	'Tax location: a ZIP+4 code gets the rate for its 5 digit zip',
+	function () use ( $t, $tax_locations_rates, $tax_locations_rate, $tax_locations_ship_to ) {
+		$tax_locations_rates(
+			array(
+				$tax_locations_rate( 'US', 'CO', '80202, 80205-1111', 8.81 ),
+				$tax_locations_rate( 'US', 'CO', '', 2.9 ),
+			)
+		);
+		$t::add( $t::product( 100 ) );
+		$tax_locations_ship_to( 'US', 'CO', '80202-1234' );
+		$t::money( 8.81, $t::calculate()->get_tax(), '80202-1234 gets the 80202 rate' );
+		$tax_locations_ship_to( 'US', 'CO', '802021234' );
+		$t::money( 8.81, $t::calculate()->get_tax(), '802021234, no dash, gets it too' );
+		$tax_locations_ship_to( 'US', 'CO', '80205-1111' );
+		$t::money( 8.81, $t::calculate()->get_tax(), 'a listed ZIP+4 matches itself' );
+		$tax_locations_ship_to( 'US', 'CO', '80205-2222' );
+		$t::money( 2.9, $t::calculate()->get_tax(), 'another ZIP+4 in 80205 does not' );
+		$tax_locations_ship_to( 'US', 'CO', '80203-1234' );
+		$t::money( 2.9, $t::calculate()->get_tax(), 'a nearby zip does not' );
+	}
+);
+
 // The docs: "Rates are matched from top to bottom, the first matching rate wins."
 $t::test(
 	'Tax location: the first matching rate wins, top to bottom',
