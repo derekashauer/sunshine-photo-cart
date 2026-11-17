@@ -1142,6 +1142,9 @@ button.sunshine--multi-image-select--open { visibility: hidden; }
 
 	/* TODO: RESPONSIVE GALLERY STYLES */
 
+	/* Price list: one category per row, whatever the columns setting */
+	.sunshine--price-list--categories { grid-template-columns: 1fr; }
+
 	/* Cart */
 	#sunshine--cart--items th { display: none; }
 	#sunshine--cart--items td { display: block; text-align: left !important; padding: 10px 0; border: none; }
