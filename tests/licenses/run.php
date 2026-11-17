@@ -324,7 +324,7 @@ spc_lt_check( 'the add-on is turned off', ! $is_on() && 'off' === $addon->get_st
 spc_lt_check( 'the store was asked once, about the plan, not once per add-on', 1 === $requests );
 spc_lt_check( 'the bar says when it stopped', sprintf( 'Your license for %s expired, so its add-ons stopped working on %s', $plan_name, $fmt( $now ) ) === SPC_License::stop_headline( $group_for( $addon ) ) );
 ob_start();
-SPC_License::plugin_row( $addon_file );
+$addon->plugin_row( $addon_file );
 $row = ob_get_clean();
 spc_lt_check( 'the Plugins screen row says it was turned off', false !== strpos( $row, 'was turned off on ' . $fmt( $now ) . ' because its license expired' ) );
 spc_lt_check( 'System Info says it was turned off', false !== strpos( SPC_License::system_info_fields()[ 'license_info_' . $addon_id ]['value'], 'turned off:' ) );
@@ -398,6 +398,51 @@ foreach ( array_slice( $addons, 1 ) as $a ) {
 $requests = 0;
 SPC_License::daily_check();
 spc_lt_check( 'only the license ending in 2 days is checked (' . $requests . ' requests)', 1 === $requests );
+
+WP_CLI::log( 'Someone who cannot see license keys (a Sunshine Manager)' );
+spc_lt_set( $addon, '', '', '' );
+( function () {
+	$this->loaded = false;
+} )->call( $addon );
+spc_lt_check( 'is never told an add-on has no license', '' === $addon->get_stop_phase() );
+( function () {
+	$this->loaded = true;
+} )->call( $addon );
+
+WP_CLI::log( 'An add-on with no key on a site with a valid plan, when the store cannot be reached' );
+spc_lt_set( $plan, $pro_key, 'valid', gmdate( 'Y-m-d 23:59:59', $now + 365 * DAY_IN_SECONDS ) );
+SPC()->update_option( 'license_unlicensed_since_' . $addon_id, $now - 20 * DAY_IN_SECONDS );
+$store = array( 'mode' => 'fail' );
+SPC_License::enforce( true );
+spc_lt_check( 'it is not turned off because of a request that did not get through', $is_on() );
+$store = array( 'mode' => 'valid', 'expires' => gmdate( 'Y-m-d 23:59:59', $now + 365 * DAY_IN_SECONDS ) );
+SPC_License::enforce( true );
+spc_lt_check( 'once the store answers, it moves to the plan key and keeps working', $is_on() && $pro_key === $addon->get_license_key() && '' === $addon->get_stop_phase() );
+
+WP_CLI::log( 'Several add-ons due when the store cannot be reached' );
+spc_lt_set( $plan, '', '', '' );
+foreach ( $addons as $a ) {
+	spc_lt_set( $a, $own_key, 'expired', $ran_out, array( 'time' => $now - 5 * DAY_IN_SECONDS, 'ok' => true, 'error' => '', 'last_ok' => $now - 5 * DAY_IN_SECONDS, 'first_fail' => 0 ) );
+}
+$store    = array( 'mode' => 'fail' );
+$requests = 0;
+SPC_License::enforce( true );
+spc_lt_check( 'the store is asked once, not once per add-on (' . $requests . ' requests)', 1 === $requests && $is_on() );
+$store = array( 'mode' => 'valid', 'expires' => gmdate( 'Y-m-d 23:59:59', $now + 365 * DAY_IN_SECONDS ) );
+
+WP_CLI::log( 'The store said expired but sent no end date' );
+spc_lt_set( $plan, $pro_key, 'expired', '' );
+foreach ( $addons as $a ) {
+	spc_lt_set( $a, $pro_key, 'expired', '' );
+}
+$now   = $start - DAY_IN_SECONDS;
+$group = $group_for( $addon );
+$text  = $group ? SPC_License::stop_sentence( $group ) : '';
+ob_start();
+$addon->plugin_row( $addon_file );
+$row = ob_get_clean();
+spc_lt_check( 'the notice has no empty date', $text && false === strpos( $text, ' on ,' ) && false !== strpos( $text, 'license has expired, so these add-ons will stop working on ' . $fmt( $start ) ) );
+spc_lt_check( 'the Plugins screen row has no empty date', $row && false === strpos( $row, ' on ,' ) && false !== strpos( $row, 'has expired, so it will stop working on ' . $fmt( $start ) ) );
 
 remove_filter( 'pre_http_request', $count, 0 );
 update_option( 'active_plugins', $active_before );

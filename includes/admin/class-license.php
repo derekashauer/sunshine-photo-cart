@@ -21,6 +21,14 @@ class SPC_License {
 	private $data;
 
 	/**
+	 * Whether this license's key and data were loaded. They are only loaded for users who can
+	 * manage options, and in cron, so nobody else is told an add-on has no license.
+	 *
+	 * @var bool
+	 */
+	private $loaded = false;
+
+	/**
 	 * Every license on the site, keyed by ID, for the System Info report.
 	 *
 	 * @var SPC_License[]
@@ -98,6 +106,8 @@ class SPC_License {
 		if ( ! current_user_can( 'manage_options' ) && ! $doing_cron ) {
 			return;
 		}
+
+		$this->loaded = true;
 
 		$this->data = SPC()->get_option( 'license_data_' . $this->id );
 
@@ -971,7 +981,12 @@ class SPC_License {
 		}
 
 		$license_data = $this->request_license_data( $plan->get_license_key() );
-		if ( is_wp_error( $license_data ) || 'valid' !== $license_data->license ) {
+		if ( is_wp_error( $license_data ) ) {
+			// Recorded, so a try that didn't get through is never taken as the store turning the key down.
+			self::record_check( $this->id, $license_data );
+			return false;
+		}
+		if ( 'valid' !== $license_data->license ) {
 			return false;
 		}
 
@@ -1132,7 +1147,11 @@ class SPC_License {
 		add_action( 'sunshine_license_check', array( __CLASS__, 'cron_enforce' ), 99 );
 		add_action( 'sunshine_license_enforce', array( __CLASS__, 'cron_enforce' ) );
 		add_action( 'sunshine_daily', array( __CLASS__, 'daily_check' ) );
-		add_action( 'after_plugin_row', array( __CLASS__, 'plugin_row' ) );
+		foreach ( self::$all as $license ) {
+			if ( $license->is_addon() ) {
+				add_action( 'after_plugin_row_' . plugin_basename( $license->file ), array( $license, 'plugin_row' ) );
+			}
+		}
 		add_action( 'admin_notices', array( __CLASS__, 'stop_admin_notice' ) );
 	}
 
@@ -1152,7 +1171,7 @@ class SPC_License {
 	 * @return string
 	 */
 	public function get_stop_reason() {
-		if ( ! $this->is_addon() || 'lifetime' === $this->get_expiration() ) {
+		if ( ! $this->is_addon() || ! $this->loaded || 'lifetime' === $this->get_expiration() ) {
 			return '';
 		}
 		if ( ! $this->get_license_key() ) {
@@ -1237,7 +1256,9 @@ class SPC_License {
 			}
 			// Turned back on by hand: the add-on set up its own license.
 			if ( ! isset( self::$all[ $id ] ) ) {
-				new SPC_License( $record['item_id'], $record['name'], $record['version'], $file );
+				// The file's own version: it may have been updated while it was off.
+				$header = get_file_data( $file, array( 'Version' => 'Version' ) );
+				new SPC_License( $record['item_id'], $record['name'], $header['Version'] ? $header['Version'] : $record['version'], $file );
 			}
 		}
 		if ( $kept !== $records ) {
@@ -1324,13 +1345,19 @@ class SPC_License {
 	 * @param array $record What was saved when it was turned off.
 	 */
 	private function switch_back_on( $record ) {
+		if ( ! is_plugin_active( $record['plugin'] ) ) {
+			// Silent: the add-on's own activation step would ask the store to activate the key again.
+			$result = activate_plugin( $record['plugin'], '', ! empty( $record['network'] ), true );
+			// WordPress can return an error after turning it on (it printed output), so check.
+			if ( ! is_plugin_active( $record['plugin'] ) ) {
+				// Kept, so the next run tries again.
+				SPC()->log( $this->name . ' could not be turned back on: ' . ( is_wp_error( $result ) ? $result->get_error_message() : 'unknown error' ) );
+				return;
+			}
+		}
 		$records = self::get_switched_off();
 		unset( $records[ $this->id ] );
 		SPC()->update_option( 'license_switched_off', $records );
-		if ( ! is_plugin_active( $record['plugin'] ) ) {
-			// Silent: the add-on's own activation step would ask the store to activate the key again.
-			activate_plugin( $record['plugin'], '', ! empty( $record['network'] ), true );
-		}
 		SPC()->log( $this->name . ' was turned back on because its license is active again' );
 	}
 
@@ -1348,6 +1375,7 @@ class SPC_License {
 
 		$records     = self::get_switched_off();
 		$needs_store = false;
+		$store_down  = false;
 		self::$quiet = true;
 
 		foreach ( self::plans_first() as $license ) {
@@ -1367,9 +1395,13 @@ class SPC_License {
 			if ( $stop > self::now() ) {
 				continue;
 			}
-			$active = is_plugin_active( plugin_basename( $license->file ) );
-			if ( ! $active ) {
+			$plugin = plugin_basename( $license->file );
+			if ( ! is_plugin_active( $plugin ) ) {
 				// Already off: turned off by core, or by the site owner.
+				continue;
+			}
+			// One site's licenses don't decide for every site on a network.
+			if ( is_multisite() && is_plugin_active_for_network( $plugin ) ) {
 				continue;
 			}
 			// With a record, it was turned back on by hand while its license still doesn't work: off
@@ -1377,14 +1409,27 @@ class SPC_License {
 			// add-on with no key tries the site's plan key, in case the weekly check never got to it.
 			$no_key_plan = ! $license->get_license_key() && self::get_valid_plan();
 			if ( ! $record && ( $no_key_plan || ! $license->is_stop_confirmed() ) ) {
-				if ( ! $can_ask_store ) {
+				if ( ! $can_ask_store || $store_down ) {
 					$needs_store = true;
 					continue;
 				}
+				$started = self::now();
 				if ( $no_key_plan ) {
 					$license->switch_to_plan_key();
 				} else {
 					$license->refresh_for_stop();
+				}
+				// The store didn't answer: the rest would each wait out the same timeout, so stop asking this run.
+				$check   = $license->get_last_check();
+				$plan_id = $license->get_followed_plan_id();
+				if ( $plan_id && isset( self::$all[ $plan_id ] ) ) {
+					$check = self::$all[ $plan_id ]->get_last_check();
+				}
+				if ( $check && ! $check['ok'] && $check['time'] >= $started ) {
+					$store_down = true;
+					if ( $no_key_plan ) {
+						continue;
+					}
 				}
 				$stop = $license->get_stop_time();
 				if ( ! $stop || $stop > self::now() || ! $license->is_stop_confirmed() ) {
@@ -1452,7 +1497,13 @@ class SPC_License {
 			if ( $check && $check['time'] > self::now() - 12 * HOUR_IN_SECONDS ) {
 				continue;
 			}
+			$started = self::now();
 			$license->check_license();
+			$check = $license->get_last_check();
+			if ( $check && ! $check['ok'] && $check['time'] >= $started ) {
+				// The store can't be reached: don't wait out the timeout for every license.
+				break;
+			}
 		}
 		self::$quiet = false;
 		self::enforce( true );
@@ -1513,7 +1564,8 @@ class SPC_License {
 	 * @return string
 	 */
 	private static function stop_date( $date ) {
-		return wp_date( get_option( 'date_format' ), is_numeric( $date ) ? (int) $date : strtotime( $date ) );
+		$timestamp = is_numeric( $date ) ? (int) $date : strtotime( (string) $date );
+		return $timestamp ? wp_date( get_option( 'date_format' ), $timestamp ) : '';
 	}
 
 	/**
@@ -1590,12 +1642,21 @@ class SPC_License {
 				/* translators: %1$s is a date, %2$s is a plan name, like Sunshine Photo Cart Pro, %3$s is a list of add-on names */
 				return sprintf( __( 'These add-ons were turned off on %1$s because your %2$s license expired: %3$s.', 'sunshine-photo-cart' ), $date, $group['plan'], $names );
 			}
-			if ( 'due' === $group['phase'] ) {
+			$ran_out = self::stop_date( $group['ran_out'] );
+			if ( 'due' === $group['phase'] && $ran_out ) {
 				/* translators: %1$s is a plan name, like Sunshine Photo Cart Pro, %2$s is a date, %3$s is a list of add-on names */
-				return sprintf( __( 'Your %1$s license expired on %2$s, so these add-ons are about to stop working: %3$s.', 'sunshine-photo-cart' ), $group['plan'], self::stop_date( $group['ran_out'] ), $names );
+				return sprintf( __( 'Your %1$s license expired on %2$s, so these add-ons are about to stop working: %3$s.', 'sunshine-photo-cart' ), $group['plan'], $ran_out, $names );
 			}
-			/* translators: %1$s is a plan name, like Sunshine Photo Cart Pro, %2$s is the date it expired, %3$s is the date the add-ons stop, %4$s is a list of add-on names */
-			return sprintf( __( 'Your %1$s license expired on %2$s, so these add-ons will stop working on %3$s: %4$s.', 'sunshine-photo-cart' ), $group['plan'], self::stop_date( $group['ran_out'] ), $date, $names );
+			if ( 'due' === $group['phase'] ) {
+				/* translators: %1$s is a plan name, like Sunshine Photo Cart Pro, %2$s is a list of add-on names */
+				return sprintf( __( 'Your %1$s license has expired, so these add-ons are about to stop working: %2$s.', 'sunshine-photo-cart' ), $group['plan'], $names );
+			}
+			if ( $ran_out ) {
+				/* translators: %1$s is a plan name, like Sunshine Photo Cart Pro, %2$s is the date it expired, %3$s is the date the add-ons stop, %4$s is a list of add-on names */
+				return sprintf( __( 'Your %1$s license expired on %2$s, so these add-ons will stop working on %3$s: %4$s.', 'sunshine-photo-cart' ), $group['plan'], $ran_out, $date, $names );
+			}
+			/* translators: %1$s is a plan name, like Sunshine Photo Cart Pro, %2$s is the date the add-ons stop, %3$s is a list of add-on names */
+			return sprintf( __( 'Your %1$s license has expired, so these add-ons will stop working on %2$s: %3$s.', 'sunshine-photo-cart' ), $group['plan'], $date, $names );
 		}
 
 		if ( 'expired' === $group['reason'] ) {
@@ -1615,7 +1676,12 @@ class SPC_License {
 			/* translators: %1$s is a list of add-on names, %2$s is a date */
 			return sprintf( _n( '%1$s was turned off on %2$s because it does not have an active license.', '%1$s were turned off on %2$s because they do not have an active license.', $count, 'sunshine-photo-cart' ), $names, $date );
 		}
-		return self::stop_headline( $group ) . '.';
+		if ( 'due' === $group['phase'] ) {
+			/* translators: %s is a list of add-on names */
+			return sprintf( _n( '%s does not have an active license, so it is about to stop working.', '%s do not have an active license, so they are about to stop working.', $count, 'sunshine-photo-cart' ), $names );
+		}
+		/* translators: %1$s is a list of add-on names, %2$s is a date */
+		return sprintf( _n( '%1$s does not have an active license, so it will stop working on %2$s.', '%1$s do not have an active license, so they will stop working on %2$s.', $count, 'sunshine-photo-cart' ), $names, $date );
 	}
 
 	/**
@@ -1637,8 +1703,9 @@ class SPC_License {
 	}
 
 	/**
-	 * The notice on the Dashboard and Plugins screens. Each phase and date has its own dismiss
-	 * key, so closing the warning doesn't hide the notice that the add-ons were turned off.
+	 * The notice on the Dashboard and Plugins screens. Its dismiss key is made from what it says
+	 * (each phase, date and add-on), so closing the warning doesn't hide the notice that the
+	 * add-ons were turned off, or a warning about a different add-on.
 	 */
 	public static function stop_admin_notice() {
 		$screen = get_current_screen();
@@ -1649,7 +1716,7 @@ class SPC_License {
 		if ( ! $groups ) {
 			return;
 		}
-		$key     = 'license_stop_' . $groups[0]['phase'] . '_' . wp_date( 'Ymd', $groups[0]['date'] );
+		$key     = 'license_stop_' . $groups[0]['phase'] . '_' . md5( wp_json_encode( $groups ) );
 		$notices = SPC()->notices->get_admin_notices();
 		if ( ! empty( $notices[ $key ]['dismissed'] ) ) {
 			return;
@@ -1679,53 +1746,53 @@ class SPC_License {
 	}
 
 	/**
-	 * A line under an add-on's row on the Plugins screen.
+	 * A line under this add-on's row on the Plugins screen.
 	 *
 	 * @param string $plugin_file The plugin's basename.
 	 */
-	public static function plugin_row( $plugin_file ) {
-		foreach ( self::$all as $license ) {
-			if ( ! $license->is_addon() || plugin_basename( $license->file ) !== $plugin_file ) {
-				continue;
-			}
-			$phase = $license->get_stop_phase();
-			if ( ! $phase ) {
-				return;
-			}
-			$name = $license->get_name();
-			$date = self::stop_date( 'off' === $phase ? $license->get_switched_off_time() : $license->get_stop_time() );
-			if ( 'expired' === $license->get_stop_reason() ) {
-				$link = '<a href="' . esc_url( self::renew_url() ) . '" target="_blank">' . esc_html__( 'Renew your license', 'sunshine-photo-cart' ) . '</a>';
-				$ran  = self::stop_date( $license->get_expiration() );
-				if ( 'off' === $phase ) {
-					/* translators: %1$s is the add-on name, %2$s is a date, %3$s is a "Renew your license" link */
-					$text = sprintf( esc_html__( '%1$s was turned off on %2$s because its license expired. Your settings are kept. %3$s to turn it back on.', 'sunshine-photo-cart' ), esc_html( $name ), esc_html( $date ), $link );
-				} elseif ( 'due' === $phase ) {
-					/* translators: %1$s is the add-on name, %2$s is the date its license expired, %3$s is a "Renew your license" link */
-					$text = sprintf( esc_html__( 'The license for %1$s expired on %2$s, so it is about to stop working. %3$s to keep it running.', 'sunshine-photo-cart' ), esc_html( $name ), esc_html( $ran ), $link );
-				} else {
-					/* translators: %1$s is the add-on name, %2$s is the date its license expired, %3$s is the date it stops, %4$s is a "Renew your license" link */
-					$text = sprintf( esc_html__( 'The license for %1$s expired on %2$s, so it will stop working on %3$s. %4$s to keep it running.', 'sunshine-photo-cart' ), esc_html( $name ), esc_html( $ran ), esc_html( $date ), $link );
-				}
-			} else {
-				$link = '<a href="' . esc_url( admin_url( 'admin.php?page=sunshine&section=license' ) ) . '">' . esc_html__( 'Enter your license key', 'sunshine-photo-cart' ) . '</a>';
-				if ( 'off' === $phase ) {
-					/* translators: %1$s is the add-on name, %2$s is a date, %3$s is an "Enter your license key" link */
-					$text = sprintf( esc_html__( '%1$s was turned off on %2$s because it does not have an active license. %3$s to turn it back on.', 'sunshine-photo-cart' ), esc_html( $name ), esc_html( $date ), $link );
-				} elseif ( 'due' === $phase ) {
-					/* translators: %1$s is the add-on name, %2$s is an "Enter your license key" link */
-					$text = sprintf( esc_html__( '%1$s does not have an active license, so it is about to stop working. %2$s to keep it running.', 'sunshine-photo-cart' ), esc_html( $name ), $link );
-				} else {
-					/* translators: %1$s is the add-on name, %2$s is a date, %3$s is an "Enter your license key" link */
-					$text = sprintf( esc_html__( '%1$s does not have an active license, so it will stop working on %2$s. %3$s to keep it running.', 'sunshine-photo-cart' ), esc_html( $name ), esc_html( $date ), $link );
-				}
-			}
-			global $wp_list_table;
-			$active  = is_plugin_active( $plugin_file );
-			$columns = ( $wp_list_table && method_exists( $wp_list_table, 'get_column_count' ) ) ? $wp_list_table->get_column_count() : 3;
-			echo '<tr class="plugin-update-tr' . ( $active ? ' active' : '' ) . '"><td colspan="' . (int) $columns . '" class="plugin-update colspanchange"><div class="update-message notice inline notice-error notice-alt"><p>' . wp_kses_post( $text ) . '</p></div></td></tr>';
+	public function plugin_row( $plugin_file ) {
+		$phase = $this->get_stop_phase();
+		if ( ! $phase ) {
 			return;
 		}
+		$name = $this->get_name();
+		$date = self::stop_date( 'off' === $phase ? $this->get_switched_off_time() : $this->get_stop_time() );
+		if ( 'expired' === $this->get_stop_reason() ) {
+			$link = '<a href="' . esc_url( self::renew_url() ) . '" target="_blank">' . esc_html__( 'Renew your license', 'sunshine-photo-cart' ) . '</a>';
+			$ran  = self::stop_date( $this->get_expiration() );
+			if ( 'off' === $phase ) {
+				/* translators: %1$s is the add-on name, %2$s is a date, %3$s is a "Renew your license" link */
+				$text = sprintf( esc_html__( '%1$s was turned off on %2$s because its license expired. Your settings are kept. %3$s to turn it back on.', 'sunshine-photo-cart' ), esc_html( $name ), esc_html( $date ), $link );
+			} elseif ( 'due' === $phase && $ran ) {
+				/* translators: %1$s is the add-on name, %2$s is the date its license expired, %3$s is a "Renew your license" link */
+				$text = sprintf( esc_html__( 'The license for %1$s expired on %2$s, so it is about to stop working. %3$s to keep it running.', 'sunshine-photo-cart' ), esc_html( $name ), esc_html( $ran ), $link );
+			} elseif ( 'due' === $phase ) {
+				/* translators: %1$s is the add-on name, %2$s is a "Renew your license" link */
+				$text = sprintf( esc_html__( 'The license for %1$s has expired, so it is about to stop working. %2$s to keep it running.', 'sunshine-photo-cart' ), esc_html( $name ), $link );
+			} elseif ( $ran ) {
+				/* translators: %1$s is the add-on name, %2$s is the date its license expired, %3$s is the date it stops, %4$s is a "Renew your license" link */
+				$text = sprintf( esc_html__( 'The license for %1$s expired on %2$s, so it will stop working on %3$s. %4$s to keep it running.', 'sunshine-photo-cart' ), esc_html( $name ), esc_html( $ran ), esc_html( $date ), $link );
+			} else {
+				/* translators: %1$s is the add-on name, %2$s is the date it stops, %3$s is a "Renew your license" link */
+				$text = sprintf( esc_html__( 'The license for %1$s has expired, so it will stop working on %2$s. %3$s to keep it running.', 'sunshine-photo-cart' ), esc_html( $name ), esc_html( $date ), $link );
+			}
+		} else {
+			$link = '<a href="' . esc_url( admin_url( 'admin.php?page=sunshine&section=license' ) ) . '">' . esc_html__( 'Enter your license key', 'sunshine-photo-cart' ) . '</a>';
+			if ( 'off' === $phase ) {
+				/* translators: %1$s is the add-on name, %2$s is a date, %3$s is an "Enter your license key" link */
+				$text = sprintf( esc_html__( '%1$s was turned off on %2$s because it does not have an active license. %3$s to turn it back on.', 'sunshine-photo-cart' ), esc_html( $name ), esc_html( $date ), $link );
+			} elseif ( 'due' === $phase ) {
+				/* translators: %1$s is the add-on name, %2$s is an "Enter your license key" link */
+				$text = sprintf( esc_html__( '%1$s does not have an active license, so it is about to stop working. %2$s to keep it running.', 'sunshine-photo-cart' ), esc_html( $name ), $link );
+			} else {
+				/* translators: %1$s is the add-on name, %2$s is a date, %3$s is an "Enter your license key" link */
+				$text = sprintf( esc_html__( '%1$s does not have an active license, so it will stop working on %2$s. %3$s to keep it running.', 'sunshine-photo-cart' ), esc_html( $name ), esc_html( $date ), $link );
+			}
+		}
+		global $wp_list_table;
+		$active  = is_plugin_active( $plugin_file );
+		$columns = ( $wp_list_table && method_exists( $wp_list_table, 'get_column_count' ) ) ? $wp_list_table->get_column_count() : 3;
+		echo '<tr class="plugin-update-tr' . ( $active ? ' active' : '' ) . '"><td colspan="' . (int) $columns . '" class="plugin-update colspanchange"><div class="update-message notice inline notice-error notice-alt"><p>' . wp_kses_post( $text ) . '</p></div></td></tr>';
 	}
 
 	/**
