@@ -387,7 +387,7 @@ class SPC_Cart_Item {
 	public function get_max_qty() {
 		$max_qty = null;
 		$product = $this->get_product();
-		if ( $product->exists() ) {
+		if ( $product && $product->exists() ) {
 			$product_max_qty = $product->get_max_qty();
 			if ( $product_max_qty ) {
 				$max_qty = $product_max_qty;
@@ -399,7 +399,7 @@ class SPC_Cart_Item {
 	public function get_min_qty() {
 		$min_qty = null;
 		$product = $this->get_product();
-		if ( $product->exists() ) {
+		if ( $product && $product->exists() ) {
 			$product_min_qty = $product->get_min_qty();
 			if ( $product_min_qty ) {
 				$min_qty = $product_min_qty;
