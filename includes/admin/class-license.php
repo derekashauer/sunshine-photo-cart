@@ -985,7 +985,7 @@ class SPC_License {
 	/**
 	 * Add this product when its license has expired.
 	 *
-	 * An add-on on a plan key is left out: the plan is listed for it. So is a license whose
+	 * An add-on following a plan is left out: the plan is listed for it. So is a license whose
 	 * last check didn't get through, as its saved end date may be out of date; it is listed
 	 * as a problem instead, which links to the Licenses screen with the reason.
 	 *
@@ -993,7 +993,7 @@ class SPC_License {
 	 * @return array
 	 */
 	public function expired_addons( $expired_addons ) {
-		if ( $this->license_key && ! $this->is_replaced_by_other_plan() && ( $this->requires || ! self::is_plan_key( $this->license_key ) ) && ! $this->is_check_stale() && $this->is_expired() && in_array( $this->get_status(), array( 'expired', 'valid' ), true ) ) {
+		if ( $this->license_key && ! $this->is_replaced_by_other_plan() && ( $this->requires || ! $this->get_followed_plan_id() ) && ! $this->is_check_stale() && $this->is_expired() && in_array( $this->get_status(), array( 'expired', 'valid' ), true ) ) {
 			$expired_addons[ $this->id ] = $this->name;
 		}
 		return $expired_addons;

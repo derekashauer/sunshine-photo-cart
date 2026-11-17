@@ -165,6 +165,13 @@ if ( $basic ) {
 	$addon->check_license();
 	spc_lt_check( 'the next check moves it to the Pro key', $pro_key === $addon->get_license_key() && $addon->is_covered_by_plan() );
 	spc_lt_set( $basic, '', '', '' );
+
+	WP_CLI::log( 'The site moved down to Basic, which does not cover an add-on still on the expired Pro key' );
+	spc_lt_set( $basic, $basic_key, 'valid', $future );
+	spc_lt_set( $plan, $pro_key, 'expired', $past );
+	spc_lt_set( $addon, $pro_key, 'expired', $past );
+	spc_lt_check( 'the red bar names the add-on as expired', array_key_exists( $addon_id, $expired() ) );
+	spc_lt_set( $basic, '', '', '' );
 }
 
 WP_CLI::log( 'An add-on bought on its own keeps its own end date' );
