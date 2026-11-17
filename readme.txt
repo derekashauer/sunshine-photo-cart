@@ -254,6 +254,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Security: WordPress embeds of a gallery or photo link (and the oEmbed link behind them) now only show galleries and photos the visitor can already open, following the gallery's password, email, terms, login and expiry settings
 * Security: A shared favorites link only shows favorites when it has a valid share key
 * Change: With the Page Builder setting on, or a block theme, photo pages use the theme's regular post template instead of a photo template of its own, so the gallery's access screens always come first
+* Fix: A ZIP+4 code like 80202-1234 matches a zip code rule for 80202, in tax rates, Local Delivery and Advanced Shipping. Before, only zip ranges and wildcards matched it
 
 = 3.8.2 - November 11, 2026 =
 * New: Gallery terms. Visitors can be asked to agree to your terms before they see a gallery's photos, such as not saving them or removing watermarks (Settings > Galleries > Gallery Terms, and a Terms option on each gallery). Sunshine keeps a record of who agreed, when, and to which wording, on the gallery and the customer's screen. Guests also give their email when they agree, unless you turn that off. This discourages copying, but it can't stop a screenshot
