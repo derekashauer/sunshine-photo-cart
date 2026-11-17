@@ -226,8 +226,19 @@ spc_lt_check( 'a refresh that cannot reach the store stops after one try', 1 ===
 
 WP_CLI::log( 'System Info' );
 $info = SPC_License::system_info_fields();
-spc_lt_check( 'there is a line for the plan and the add-on', isset( $info['sunshine-photo-cart-pro'], $info[ $addon_id ] ) );
-spc_lt_check( 'it shows the end of the key but never the whole key', false !== strpos( $info['sunshine-photo-cart-pro']['value'], '...a1b2' ) && false === strpos( wp_json_encode( $info ), $pro_key ) );
+spc_lt_check( 'there is a line for the plan and the add-on', isset( $info['license_info_sunshine-photo-cart-pro'], $info[ 'license_info_' . $addon_id ] ) );
+spc_lt_check( 'it shows the end of the key but never the whole key', false !== strpos( $info['license_info_sunshine-photo-cart-pro']['value'], '...a1b2' ) && false === strpos( wp_json_encode( $info ), $pro_key ) );
+spc_lt_check( 'it says whether the weekly check is scheduled and WP-Cron is on', isset( $info['license_info_schedule'] ) );
+// System Info is only loaded in wp-admin.
+if ( ! function_exists( 'sunshine_site_health_info' ) ) {
+	include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/system-info.php';
+}
+if ( ! function_exists( 'sunshine_get_settings_fields' ) ) {
+	include_once SUNSHINE_PHOTO_CART_PATH . 'includes/admin/settings-fields.php';
+}
+$site_info = sunshine_site_health_info( array() );
+spc_lt_check( 'the license lines are in the Sunshine Photo Cart section, not a section of their own', isset( $site_info['sunshine-photo-cart']['fields']['license_info_sunshine-photo-cart-pro'] ) && ! isset( $site_info['sunshine-photo-cart-licenses'] ) );
+spc_lt_check( 'the old "Hidden, but present" license lines are gone', ! isset( $site_info['sunshine-photo-cart']['fields']['license_sunshine-photo-cart-pro'] ) );
 
 // Put every license option back.
 $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE 'sunshine\\_license%'" );

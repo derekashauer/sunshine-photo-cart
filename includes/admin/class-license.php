@@ -535,14 +535,38 @@ class SPC_License {
 	}
 
 	/**
-	 * One line per license for System Info, so a support ticket shows what the site has
-	 * saved. Shows the last 4 characters of a key, never the whole key.
+	 * The Licenses part of the Sunshine Photo Cart section in System Info, so a support
+	 * ticket shows what the site has saved and whether its checks get through. Shows the
+	 * last 4 characters of a key, never the whole key. Times are UTC.
 	 *
-	 * @return array Site Health fields, keyed by license ID.
+	 * @return array Site Health fields, keyed by ID.
 	 */
 	public static function system_info_fields() {
 
-		$fields = array();
+		$time   = function ( $timestamp ) {
+			return $timestamp ? gmdate( 'Y-m-d H:i', $timestamp ) : 'never';
+		};
+		$plan   = self::get_valid_plan();
+		$next   = wp_next_scheduled( 'sunshine_license_check' );
+		$fields = array(
+			'license_info_header'   => array(
+				'label' => 'LICENSES',
+				'value' => '================================',
+			),
+			'license_info_plan'     => array(
+				'label' => 'Plan in use',
+				'value' => $plan ? $plan->get_name() : 'None',
+			),
+			'license_info_site'     => array(
+				'label' => 'This site',
+				'value' => home_url(),
+			),
+			'license_info_schedule' => array(
+				'label' => 'Weekly license check',
+				'value' => ( $next ? 'next ' . $time( $next ) : 'not scheduled' ) . ', WP-Cron ' . ( defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON ? 'turned off (DISABLE_WP_CRON)' : 'on' ),
+			),
+		);
+
 		foreach ( self::$all as $license ) {
 
 			$key = $license->get_license_key();
@@ -554,32 +578,36 @@ class SPC_License {
 					'status: ' . ( $license->get_status() ? $license->get_status() : 'none' ),
 					'expires: ' . ( $license->get_expiration() ? $license->get_expiration() : 'none' ),
 					'key: ...' . substr( $key, -4 ),
+					'item ID: ' . $license->item_id,
 				);
 				if ( ! $license->requires ) {
-					$parts[] = 'uses: ' . ( $plan_id ? $plan_id . ' key' : 'own key' );
-					if ( $license->get_followed_plan_id() ) {
-						$parts[] = 'follows plan';
-					} elseif ( $plan_id ) {
-						$parts[] = 'own status: ' . SPC()->get_option( 'license_status_' . $license->id );
+					$parts[] = 'uses: ' . ( $plan_id ? str_replace( 'sunshine-photo-cart-', '', $plan_id ) . ' plan key' : 'own key' );
+					if ( $plan_id ) {
+						// The add-on's own saved copy, which a plan key add-on doesn't use while it follows the plan.
+						$parts[] = ( $license->get_followed_plan_id() ? 'follows the plan, own copy: ' : 'does not follow the plan, own: ' ) . ( SPC()->get_option( 'license_status_' . $license->id ) ? SPC()->get_option( 'license_status_' . $license->id ) : 'none' ) . ' / ' . ( SPC()->get_option( 'license_expiration_' . $license->id ) ? SPC()->get_option( 'license_expiration_' . $license->id ) : 'no date' );
 					}
+				}
+				if ( $license->is_trial() ) {
+					$parts[] = 'trial';
 				}
 				$url = SPC()->get_option( 'license_url_' . $license->id );
 				if ( $url ) {
-					$parts[] = 'activated for: ' . $url;
+					$parts[] = 'activated for: ' . $url . ( untrailingslashit( $url ) !== untrailingslashit( home_url() ) ? ' (not this site\'s address)' : '' );
 				}
 				$check = $license->get_last_check();
 				if ( $check ) {
-					$parts[] = 'last check: ' . gmdate( 'Y-m-d H:i', $check['time'] ) . ' UTC ' . ( $check['ok'] ? 'ok' : 'failed (' . $check['error'] . ')' );
+					$parts[] = 'last check: ' . $time( $check['time'] ) . ' ' . ( $check['ok'] ? 'ok' : 'failed: ' . $check['error'] );
 					if ( ! $check['ok'] ) {
-						$parts[] = 'last ok: ' . ( $check['last_ok'] ? gmdate( 'Y-m-d H:i', $check['last_ok'] ) . ' UTC' : 'never' );
+						$parts[] = 'last ok: ' . $time( $check['last_ok'] );
+						$parts[] = 'failing since: ' . $time( $check['first_fail'] ?? 0 );
 					}
 				} else {
-					$parts[] = 'last check: not recorded';
+					$parts[] = 'last check: not recorded yet';
 				}
 				$value = implode( ', ', $parts );
 			}
 
-			$fields[ $license->id ] = array(
+			$fields[ 'license_info_' . $license->id ] = array(
 				'label' => $license->get_name(),
 				'value' => $value,
 			);
