@@ -887,9 +887,10 @@ $whcc_test(
 	}
 );
 
-// What WHCC charges for an order, for reports that take it off the profit.
+// What WHCC charges for shipping, for reports that take it off the profit. WHCC's product price is
+// not offered: each line's cost already holds it, so offering it too would take it off twice.
 $whcc_test(
-	'order: WHCC\'s charges are offered to profit reports',
+	'order: WHCC\'s shipping is offered to profit reports, its product price is not',
 	function () use ( $t, $whcc_product, $whcc_buy, $whcc_ship_setup, $whcc_ship_with, $whcc_pay ) {
 		$whcc_buy( $whcc_product( null, false ), 6.00, 3 );
 		$whcc_ship_setup( array( 'lowest_cost' ) );
@@ -900,7 +901,8 @@ $whcc_test(
 
 		$order      = $whcc_pay( $order );
 		$deductions = apply_filters( 'sunshine_order_profit_deductions', array(), $order );
-		$t::money( 18.00, isset( $deductions['whcc_products']['amount'] ) ? $deductions['whcc_products']['amount'] : null, 'WHCC products: 3 x 6.00' );
+		$t::same( false, isset( $deductions['whcc_products'] ), 'WHCC products are not offered: the lines\' cost already holds 3 x 6.00' );
+		$t::money( 18.00, $order->get_meta_value( 'whcc_products_cost' ), 'WHCC\'s product price is still kept on the order' );
 		$t::money( 8.00, isset( $deductions['whcc_shipping']['amount'] ) ? $deductions['whcc_shipping']['amount'] : null, 'WHCC shipping' );
 	}
 );
