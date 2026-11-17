@@ -486,3 +486,41 @@ $dl_test(
 		$t::same( 2, $dl_download_credits( $customer_id ), 'no credit used' );
 	}
 );
+
+/*
+ * Orders whose product was deleted later.
+ */
+
+// Photographers delete products that old orders still point at. Those order lines have no
+// product. Download all checks every line with sunshine_product_is_download(), so a line with
+// no product has to come back as "not a download", not stop the page with a critical error.
+// It is the same for the line's min and max quantity (issue #65).
+$dl_test(
+	'Order: a line whose product was deleted is skipped by Download all',
+	function () use ( $t, $dl_gallery, $dl_product, $dl_print, $dl_add_photo, $dl_finish ) {
+		$gallery  = $dl_gallery( 2 );
+		$download = $dl_product( 15 );
+		$print    = $dl_print( 20 );
+		$dl_add_photo( $print, $gallery['photos'][0] );
+		$dl_add_photo( $download, $gallery['photos'][1] );
+		$t::flat_shipping( 8 );
+		$t::checkout_address();
+		$t::calculate();
+		$order = $dl_finish( $t::place_order() );
+
+		wp_delete_post( $print, true );
+		$order = sunshine_get_order( $order->get_id() );
+
+		$downloads = array();
+		foreach ( $order->get_items() as $item ) {
+			$downloads[ (int) $item->get_product_id() ] = sunshine_product_is_download( $item->get_product() );
+			if ( (int) $item->get_product_id() === $print ) {
+				$t::same( null, $item->get_product(), 'the deleted print has no product' );
+				$t::same( null, $item->get_max_qty(), 'no max quantity for the deleted print' );
+				$t::same( null, $item->get_min_qty(), 'no min quantity for the deleted print' );
+			}
+		}
+		$t::same( false, $downloads[ $print ], 'the deleted print is not a download' );
+		$t::same( true, $downloads[ $download ], 'the download on the same order still is' );
+	}
+);
