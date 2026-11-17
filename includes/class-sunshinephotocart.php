@@ -301,6 +301,7 @@ final class Sunshine_Photo_Cart {
 					break;
 				}
 			}
+			SPC_License::init_stops();
 		}
 
 		// TODO: move to function

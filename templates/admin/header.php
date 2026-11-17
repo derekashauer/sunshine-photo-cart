@@ -3,7 +3,13 @@
 	<?php
 	$expired_addons = apply_filters( 'sunshine_expired_addons', array() );
 	$problem_addons = apply_filters( 'sunshine_license_problem_addons', array() );
-	if ( empty( $expired_addons ) && ! empty( $problem_addons ) ) {
+	$stop_notice    = SPC_License::get_header_notice();
+	if ( $stop_notice ) {
+		// Add-ons that will stop working, or were turned off, come before every other license message.
+		echo '<div class="sunshine-header--notice" id="sunshine-header--notice--expired-addons">';
+		echo esc_html( $stop_notice['text'] ) . ' <a href="' . esc_url( $stop_notice['url'] ) . '"' . ( 0 === strpos( $stop_notice['url'], 'http' ) && false === strpos( $stop_notice['url'], admin_url() ) ? ' target="_blank"' : '' ) . ' class="button alt">' . esc_html( $stop_notice['button'] ) . '</a>';
+		echo '</div>';
+	} elseif ( empty( $expired_addons ) && ! empty( $problem_addons ) ) {
 		echo '<div class="sunshine-header--notice" id="sunshine-header--notice--expired-addons">';
 		/* translators: %s is the list of add-ons */
 		echo sprintf( esc_html__( 'There is a problem with your license for %s', 'sunshine-photo-cart' ), esc_html( SPC_License::names_for_notice( $problem_addons ) ) ) . ' <a href="' . esc_url( admin_url( 'admin.php?page=sunshine&section=license' ) ) . '" class="button alt">' . esc_html__( 'View licenses', 'sunshine-photo-cart' ) . '</a>';
