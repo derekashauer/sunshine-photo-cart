@@ -116,11 +116,20 @@ $whcc_test(
 
 		// When WHCC can't fetch the photo, the editor would open blank. The customer is told,
 		// and nothing is remembered for the cart.
+		// Every editor link asked for so far, for any item: the failed build has a new item id.
+		$edit_links        = function () use ( &$whcc_lab ) {
+			return count( preg_grep( '#/edit-link$#', array_column( $whcc_lab['requests'], 'endpoint' ) ) );
+		};
+		$links_before      = $edit_links();
+		$items_before      = array_keys( $whcc_lab['items'] );
 		$whcc_lab['build'] = 'failed';
 		$result            = sunshine_whcc_product_details( array( 'html' => '' ), sunshine_get_product( $product, $image->get_price_level() ), $image );
+		$failed_id         = current( array_diff( array_keys( $whcc_lab['items'] ), $items_before ) );
+		$t::same( true, false !== $failed_id, 'WHCC was asked to build it' );
 		$t::same( true, empty( $result['url'] ), 'the editor does not open when WHCC could not fetch the photo' );
 		$t::same( true, ! empty( $result['html'] ), 'the customer is told' );
-		$t::same( 1, count( $whcc_sent( 'POST', 'commerce/configured-products/' . rawurlencode( $id ) . '/edit-link' ) ), 'no editor link was asked for' );
+		$t::same( $links_before, $edit_links(), 'no editor link was asked for' );
+		$t::same( false, (bool) sunshine_whcc_get_remembered_item( $failed_id ), 'the failed item is not remembered for the cart' );
 	}
 );
 
@@ -235,7 +244,7 @@ $whcc_test(
 // product in galleries at that level.
 $whcc_test(
 	'a product with no markup at a gallery\'s price level is not sold there',
-	function () use ( $t, $whcc_product, $whcc_item, $whcc_return, $whcc_other_level, $whcc_notices ) {
+	function () use ( $t, $whcc_product, $whcc_item, $whcc_return, $whcc_other_level, $whcc_notices, $whcc_sent ) {
 		$other   = $whcc_other_level();
 		$product = $whcc_product( array( sunshine_get_default_price_level_id() => '50' ), false );
 		$id      = $whcc_item( $product, 10.00, 1 );
@@ -249,6 +258,8 @@ $whcc_test(
 			)
 		);
 		$t::same( null, $item, 'not added' );
+		// WHCC priced it and found nothing wrong, so the missing markup is what refused it.
+		$t::same( 1, count( $whcc_sent( 'POST', 'commerce/submissions/calculate' ) ), 'WHCC priced the item' );
 		$t::same( true, in_array( 'error: Could not add item to cart', $whcc_notices(), true ), 'the customer is told' );
 	}
 );
@@ -314,11 +325,13 @@ $whcc_test(
 
 $whcc_test(
 	'if WHCC cannot be reached, the cart keeps the price it had',
-	function () use ( $t, &$whcc_lab, $whcc_product, $whcc_buy, $whcc_line, $whcc_update_cart ) {
+	function () use ( $t, &$whcc_lab, $whcc_product, $whcc_buy, $whcc_line, $whcc_update_cart, $whcc_sent ) {
 		$id                    = $whcc_buy( $whcc_product( null, false ), 6.00, 3 );
 		$whcc_lab['calculate'] = 500;
+		$asked                 = count( $whcc_sent( 'POST', 'commerce/submissions/calculate' ) );
 		$cart                  = $whcc_update_cart();
 		$line                  = $whcc_line( $id );
+		$t::same( true, count( $whcc_sent( 'POST', 'commerce/submissions/calculate' ) ) > $asked, 'the cart update asked WHCC' );
 		$t::money( 27.00, $cart->get_total(), 'total is still 3 x 9.00' );
 		$t::money( 6.00, $line ? $line->get_meta_value( 'whcc_unit_cost' ) : null, "WHCC's price is kept" );
 	}

@@ -25,6 +25,9 @@ if ( isset( $whcc_test ) ) {
 
 $t = 'SPC_Totals_Test';
 
+// The made-up key the tests save. The made-up WHCC refuses any request without it, as WHCC does.
+$whcc_key = 'spc-totals-offline-key';
+
 // Every WHCC product and item made here is new, so nothing from an earlier run can match it.
 $whcc_run     = 'spcwhcc' . wp_rand( 100000, 999999 );
 $whcc_counter = 0;
@@ -151,10 +154,29 @@ $whcc_price_basket = function ( $rows ) use ( &$whcc_lab, $whcc_money, $whcc_uni
 
 // The lab's answer to one request: array( status code, body ), a WP_Error when the answer is
 // lost, or null for "not a call WHCC knows".
-$whcc_reply = function ( $method, $path, $query, $body, $headers ) use ( &$whcc_lab, $whcc_methods, $whcc_money, $whcc_price_basket ) {
+$whcc_reply = function ( $method, $path, $query, $body, $headers ) use ( &$whcc_lab, $whcc_methods, $whcc_money, $whcc_price_basket, $whcc_key ) {
+
+	// WHCC refuses a request without the key, and the add-on is built against API version
+	// 2026-10. A change to either has to be a deliberate change to this check too.
+	$auth    = isset( $headers['Authorization'] ) ? $headers['Authorization'] : '';
+	$version = isset( $headers['WHCC-API-Version'] ) ? $headers['WHCC-API-Version'] : '';
+	if ( 'Bearer ' . $whcc_key !== $auth || '2026-10' !== $version ) {
+		return array(
+			401,
+			array(
+				'title'  => 'Unauthorized',
+				'status' => 401,
+			),
+		);
+	}
+
+	// 'unit' and 'group' are the lab's own notes on a catalog product, not WHCC fields.
+	$catalog_entry = function ( $entry ) {
+		return array_diff_key( $entry, array_flip( array( 'unit', 'group' ) ) );
+	};
 
 	if ( 'GET' === $method && 'catalog/products' === $path ) {
-		return array( 200, array( 'products' => array_values( $whcc_lab['catalog'] ) ) );
+		return array( 200, array( 'products' => array_values( array_map( $catalog_entry, $whcc_lab['catalog'] ) ) ) );
 	}
 	if ( 'GET' === $method && preg_match( '#^catalog/products/([^/]+)$#', $path, $match ) ) {
 		$ref = rawurldecode( $match[1] );
@@ -167,7 +189,7 @@ $whcc_reply = function ( $method, $path, $query, $body, $headers ) use ( &$whcc_
 				),
 			);
 		}
-		return array( 200, $whcc_lab['catalog'][ $ref ] );
+		return array( 200, $catalog_entry( $whcc_lab['catalog'][ $ref ] ) );
 	}
 
 	if ( 'POST' === $method && 'commerce/configured-products' === $path ) {
@@ -206,10 +228,12 @@ $whcc_reply = function ( $method, $path, $query, $body, $headers ) use ( &$whcc_
 		parse_str( $query, $args );
 		$items = array();
 		foreach ( explode( ',', isset( $args['ids'] ) ? $args['ids'] : '' ) as $id ) {
-			$items[] = array(
-				'configuredProductId' => $id,
-				'status'              => isset( $whcc_lab['items'][ $id ] ) ? $whcc_lab['items'][ $id ]['status'] : 'not-found',
-			);
+			if ( isset( $whcc_lab['items'][ $id ] ) ) {
+				$items[] = array(
+					'configuredProductId' => $id,
+					'status'              => $whcc_lab['items'][ $id ]['status'],
+				);
+			}
 		}
 		return array( 200, array( 'items' => $items ) );
 	}
@@ -276,10 +300,7 @@ $whcc_reply = function ( $method, $path, $query, $body, $headers ) use ( &$whcc_
 			$first     = key( $whcc_lab['shipping'] );
 			$breakdown = array();
 			foreach ( $packages as $package ) {
-				$breakdown[] = array(
-					'label' => $package,
-					'value' => $whcc_lab['shipping'][ $first ],
-				);
+				$breakdown[] = array_merge( array( 'label' => $package ), $whcc_money( $whcc_lab['shipping'][ $first ] ) );
 			}
 			$reply['totalPrice']['subtotals']['shipping'] = array_merge(
 				array( 'label' => $whcc_methods[ $first ][0] ),
@@ -446,7 +467,6 @@ $whcc_http = function ( $preempt, $args, $url ) use ( &$whcc_lab, $whcc_reply ) 
 			'query'    => isset( $parts[1] ) ? $parts[1] : '',
 			'body'     => $body,
 			'headers'  => $headers,
-			'timeout'  => isset( $args['timeout'] ) ? $args['timeout'] : null,
 		);
 		$reply = $whcc_reply( $method, $parts[0], isset( $parts[1] ) ? $parts[1] : '', is_array( $body ) ? $body : array(), $headers );
 	}
@@ -501,16 +521,6 @@ $whcc_note_transient = function ( $transient ) use ( &$whcc_transients ) {
 // WordPress 6.8 renamed the hook that says a transient was saved.
 $whcc_transient_hook = version_compare( get_bloginfo( 'version' ), '6.8', '>=' ) ? 'set_transient' : 'setted_transient';
 
-// "15 minutes later": the saved shipping quotes have run out.
-$whcc_forget_quotes = function () use ( &$whcc_transients, $whcc_forget_page ) {
-	foreach ( array_keys( $whcc_transients ) as $transient ) {
-		if ( 0 === strpos( $transient, 'sunshine_whcc_quote_' ) ) {
-			delete_transient( $transient );
-		}
-	}
-	$whcc_forget_page();
-};
-
 // Jobs the add-on scheduled (reading a sent order back a minute later). They are kept here
 // instead of in WP-Cron, so nothing runs later on the test site.
 $whcc_scheduled = array();
@@ -521,6 +531,23 @@ $whcc_schedule  = function ( $pre, $event ) use ( &$whcc_scheduled ) {
 	}
 	return $pre;
 };
+
+// Clears what the customer would be told, so a test only sees its own messages.
+$whcc_clear_notices = function () {
+	SPC()->session->set( 'notices', array() );
+	$notices = new ReflectionProperty( 'SPC_Notices', 'notices' );
+	$notices->setAccessible( true );
+	$notices->setValue( SPC()->notices, array() );
+};
+
+// Listeners switched off while a test runs, and the visitor's IP address, put back at the end.
+// Analytics and the automated email queue write to shared tables on add to cart and don't touch
+// the money math. The WHCC rate limit counts visitors by IP address and saves the count, and
+// WP-CLI reports 127.0.0.1, so the address is left out.
+$whcc_paused = array(
+	'listeners'   => array(),
+	'remote_addr' => null,
+);
 
 // Writes the add-on makes to its own settings while a test runs, kept out of the database.
 $whcc_keep_option = function ( $value, $old_value ) {
@@ -534,13 +561,33 @@ $whcc_kept_options = array( 'sunshine_whcc_sandbox_last_event_at', 'sunshine_whc
  * itself and passes WHCC's on to $whcc_http), mail stopped, and anything the add-on saves
  * noted so $whcc_close() can take it away.
  */
-$whcc_open = function ( $own_http = false ) use ( $t, &$whcc_lab, $whcc_lab_reset, $whcc_http, &$whcc_transients, $whcc_note_transient, $whcc_transient_hook, &$whcc_scheduled, $whcc_schedule, $whcc_forget_page, $whcc_keep_option, $whcc_kept_options ) {
+$whcc_open = function ( $own_http = false ) use ( $t, &$whcc_lab, $whcc_lab_reset, $whcc_http, &$whcc_transients, $whcc_note_transient, $whcc_transient_hook, &$whcc_scheduled, $whcc_schedule, $whcc_forget_page, $whcc_keep_option, $whcc_kept_options, $whcc_key, $whcc_clear_notices, &$whcc_paused ) {
 	$whcc_lab_reset();
 	$whcc_transients = array();
 	$whcc_scheduled  = array();
+	$whcc_clear_notices();
+
+	$whcc_paused = array(
+		'listeners'   => array(),
+		'remote_addr' => isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : null,
+	);
+	$listeners   = array(
+		'sunshine_add_cart_item' => array( 'sunshine_adv_reports_add_to_cart', 'sunshine_email_queue_after_cart' ),
+		'sunshine_cart_update'   => array( 'sunshine_adv_reports_cart_update' ),
+	);
+	foreach ( $listeners as $hook => $callbacks ) {
+		foreach ( $callbacks as $callback ) {
+			$priority = has_action( $hook, $callback );
+			if ( false !== $priority ) {
+				remove_action( $hook, $callback, $priority );
+				$whcc_paused['listeners'][] = array( $hook, $callback, $priority );
+			}
+		}
+	}
+	unset( $_SERVER['REMOTE_ADDR'] );
 
 	$t::option( 'whcc_environment', 'sandbox' );
-	$t::option( 'whcc_sandbox_api_key', 'spc-totals-offline-key' );
+	$t::option( 'whcc_sandbox_api_key', $whcc_key );
 	$t::option( 'whcc_production_api_key', '' );
 	$t::option( 'whcc_sandbox_webhook_secret', 'spc-totals-webhook-secret' );
 	$t::option( 'whcc_production_webhook_secret', '' );
@@ -559,7 +606,17 @@ $whcc_open = function ( $own_http = false ) use ( $t, &$whcc_lab, $whcc_lab_rese
 	$whcc_forget_page();
 };
 
-$whcc_close = function ( $own_http = false ) use ( &$whcc_transients, $whcc_note_transient, $whcc_transient_hook, $whcc_http, $whcc_schedule, $whcc_forget_page, $whcc_keep_option, $whcc_kept_options ) {
+$whcc_close = function ( $own_http = false ) use ( &$whcc_transients, $whcc_note_transient, $whcc_transient_hook, $whcc_http, $whcc_schedule, $whcc_forget_page, $whcc_keep_option, $whcc_kept_options, &$whcc_paused ) {
+	foreach ( $whcc_paused['listeners'] as $listener ) {
+		add_action( $listener[0], $listener[1], $listener[2] );
+	}
+	if ( null !== $whcc_paused['remote_addr'] ) {
+		$_SERVER['REMOTE_ADDR'] = $whcc_paused['remote_addr'];
+	}
+	$whcc_paused = array(
+		'listeners'   => array(),
+		'remote_addr' => null,
+	);
 	if ( ! $own_http ) {
 		remove_filter( 'pre_http_request', $whcc_http, PHP_INT_MAX );
 	}
@@ -628,28 +685,6 @@ $whcc_test = function ( $name, $callback ) use ( $t, &$whcc_lab, $whcc_open, $wh
 			}
 			$whcc_open();
 
-			// Analytics and the automated email queue write to shared tables on add to cart.
-			// Neither touches the money math, so they are switched off while a test runs.
-			$quiet = array();
-			$hooks = array(
-				'sunshine_add_cart_item' => array( 'sunshine_adv_reports_add_to_cart', 'sunshine_email_queue_after_cart' ),
-				'sunshine_cart_update'   => array( 'sunshine_adv_reports_cart_update' ),
-			);
-			foreach ( $hooks as $hook => $callbacks ) {
-				foreach ( $callbacks as $hook_callback ) {
-					$priority = has_action( $hook, $hook_callback );
-					if ( false !== $priority ) {
-						remove_action( $hook, $hook_callback, $priority );
-						$quiet[] = array( $hook, $hook_callback, $priority );
-					}
-				}
-			}
-
-			// The WHCC rate limit counts visitors by IP address and saves the count. WP-CLI
-			// reports 127.0.0.1, so leave the address out while testing.
-			$remote_addr = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : null;
-			unset( $_SERVER['REMOTE_ADDR'] );
-
 			// PHP warnings and notices from the code under test (deprecations still print).
 			$warnings = array();
 			set_error_handler(
@@ -667,12 +702,6 @@ $whcc_test = function ( $name, $callback ) use ( $t, &$whcc_lab, $whcc_open, $wh
 			} finally {
 				restore_error_handler();
 				$whcc_close();
-				foreach ( $quiet as $hook ) {
-					add_action( $hook[0], $hook[1], $hook[2] );
-				}
-				if ( null !== $remote_addr ) {
-					$_SERVER['REMOTE_ADDR'] = $remote_addr;
-				}
 				$whcc_hook_trim( $hooks_before );
 			}
 
@@ -1047,12 +1076,6 @@ $whcc_notices = function () {
 		}
 	}
 	return $texts;
-};
-$whcc_clear_notices = function () {
-	SPC()->session->set( 'notices', array() );
-	$notices = new ReflectionProperty( 'SPC_Notices', 'notices' );
-	$notices->setAccessible( true );
-	$notices->setValue( SPC()->notices, array() );
 };
 
 // Run an AJAX handler the way admin-ajax.php does and return its JSON reply.

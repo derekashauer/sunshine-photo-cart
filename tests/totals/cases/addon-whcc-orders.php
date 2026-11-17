@@ -150,7 +150,7 @@ $whcc_test(
 		$t::money( 44.00, $cart->get_total(), 'cart total: 33.00 + 11.00, tax inside' );
 		$seen  = $whcc_cart_snapshot();
 		$tried = $whcc_try_order();
-		$t::same( true, $tried['placed'], 'the order is placed [bug: the check before payment (cart.php) compares the price with tax inside, 11.00, to the cart line\'s price before tax, 10.00, so it always says the price changed]' );
+		$t::same( true, $tried['placed'], 'the order is placed: the check before payment compares the price as set, not the line\'s price with the tax taken out' );
 		if ( $tried['placed'] ) {
 			$whcc_order_matches_cart( sunshine_get_order( $tried['order_id'] ), $seen );
 		}
@@ -733,7 +733,7 @@ $whcc_test(
 			remove_action( 'sunshine_admin_order_status_update', $count );
 		}
 		$t::same( 'processing', $whcc_reload( $order )->get_status(), 'still processing' );
-		$t::same( 1, $told, 'the customer is told once [bug: core SPC_Order::has_status() reads ->slug from a string, so it is always false]' );
+		$t::same( 1, $told, 'the customer is told once' );
 	}
 );
 
@@ -829,7 +829,7 @@ $whcc_test(
 		$whcc_deliver( $whcc_update( $order, $first, 'shipped', array( 'ShippingInfo' => array( array( 'TrackingNumber' => 'TRACK-1' ) ) ) ) );
 		$whcc_deliver( $whcc_update( $order, $first, 'accepted' ) );
 		$t::same( 'shipped', $whcc_part_status( $order, $first ), 'a late "accepted" leaves it shipped' );
-		$t::same( 'shipped', $whcc_reload( $order )->get_status(), 'the order stays shipped [bug: core SPC_Order::has_status() is always false, so a late acceptance moves it back to processing]' );
+		$t::same( 'shipped', $whcc_reload( $order )->get_status(), 'the order stays shipped: a late acceptance does not move it back to processing' );
 
 		$rejected = $whcc_update(
 			$order,
@@ -901,7 +901,7 @@ $whcc_test(
 
 		$order      = $whcc_pay( $order );
 		$deductions = apply_filters( 'sunshine_order_profit_deductions', array(), $order );
-		$t::same( false, isset( $deductions['whcc_products'] ), 'WHCC products are not offered: the lines\' cost already holds 3 x 6.00' );
+		$t::same( array( 'whcc_shipping' ), array_keys( $deductions ), 'only WHCC shipping is offered: the lines\' cost already holds the products\' 3 x 6.00' );
 		$t::money( 18.00, $order->get_meta_value( 'whcc_products_cost' ), 'WHCC\'s product price is still kept on the order' );
 		$t::money( 8.00, isset( $deductions['whcc_shipping']['amount'] ) ? $deductions['whcc_shipping']['amount'] : null, 'WHCC shipping' );
 	}

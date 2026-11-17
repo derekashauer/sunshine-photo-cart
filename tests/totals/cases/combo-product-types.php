@@ -181,7 +181,15 @@ $combo_describe = function ( $recipe ) use ( $combo_variant_text ) {
 	if ( $recipe['credits'] ) {
 		$parts[] = 'credits ' . $recipe['credits'];
 	}
-	if ( 'none' !== $recipe['shipping'] ) {
+	$has_whcc = false;
+	foreach ( $recipe['lines'] as $line ) {
+		$has_whcc = $has_whcc || 'whcc print' === $line[0];
+	}
+	if ( $has_whcc ) {
+		// A cart with WHCC items always ships with WHCC Economy; only whether it's taxed comes
+		// from the recipe (see $combo_build).
+		$parts[] = 'WHCC Economy shipping' . ( false !== strpos( $recipe['shipping'], 'taxed' ) ? ' taxed' : '' );
+	} elseif ( 'none' !== $recipe['shipping'] ) {
 		$parts[] = 'shipping ' . $recipe['shipping'];
 	}
 	if ( 'none' !== $recipe['fee'] ) {
@@ -237,27 +245,11 @@ $combo_test           = function ( $name, $callback ) use ( $t, $combo_http, &$c
 			add_filter( 'pre_http_request', $combo_http, PHP_INT_MAX, 3 );
 			add_filter( 'pre_wp_mail', '__return_false', PHP_INT_MAX );
 			add_filter( 'sunshine_checkout_allow_order_notify', '__return_false', PHP_INT_MAX );
-			$quiet     = array();
-			$listeners = array(
-				'sunshine_add_cart_item' => array( 'sunshine_adv_reports_add_to_cart', 'sunshine_email_queue_after_cart' ),
-				'sunshine_cart_update'   => array( 'sunshine_adv_reports_cart_update' ),
-			);
-			foreach ( $listeners as $hook => $callbacks ) {
-				foreach ( $callbacks as $hook_callback ) {
-					$priority = has_action( $hook, $hook_callback );
-					if ( false !== $priority ) {
-						remove_action( $hook, $hook_callback, $priority );
-						$quiet[] = array( $hook, $hook_callback, $priority );
-					}
-				}
-			}
 			// The made-up WHCC, with WHCC's settings at their defaults and a made-up key so the
-			// real one is never used. Requests reach it through $combo_http.
+			// real one is never used. Requests reach it through $combo_http. It also switches off
+			// the analytics and email listeners and leaves out the IP address (see $whcc_open).
 			$whcc_open( true );
 			$t::option( 'proofing', '' );
-			// The WHCC rate limit counts visitors by IP address and saves the count.
-			$remote_addr = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : null;
-			unset( $_SERVER['REMOTE_ADDR'] );
 
 			$warnings = array();
 			set_error_handler(
@@ -277,12 +269,6 @@ $combo_test           = function ( $name, $callback ) use ( $t, $combo_http, &$c
 				remove_filter( 'pre_http_request', $combo_http, PHP_INT_MAX );
 				remove_filter( 'pre_wp_mail', '__return_false', PHP_INT_MAX );
 				remove_filter( 'sunshine_checkout_allow_order_notify', '__return_false', PHP_INT_MAX );
-				foreach ( $quiet as $hook ) {
-					add_action( $hook[0], $hook[1], $hook[2] );
-				}
-				if ( null !== $remote_addr ) {
-					$_SERVER['REMOTE_ADDR'] = $remote_addr;
-				}
 				$whcc_close( true );
 				$combo_blocked = array_merge( $combo_blocked, $whcc_lab['blocked'] );
 				foreach ( $hooks as $hook ) {
