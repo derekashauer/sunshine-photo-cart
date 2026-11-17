@@ -5,7 +5,8 @@
 
 /* Photos can't be dragged out or saved with press-and-hold */
 #sunshine img,
-#sunshine--modal img {
+#sunshine--modal img,
+.lg-container img {
 	-webkit-touch-callout: none;
 	-webkit-user-drag: none;
 	-webkit-user-select: none;
@@ -18,7 +19,9 @@ html.sunshine--protection-cover #sunshine--modal img,
 html.sunshine--protection-cover #sunshine--selection-tray-widget img,
 html.sunshine--protection-away #sunshine img,
 html.sunshine--protection-away #sunshine--modal img,
-html.sunshine--protection-away #sunshine--selection-tray-widget img {
+html.sunshine--protection-away #sunshine--selection-tray-widget img,
+html.sunshine--protection-cover .lg-container img,
+html.sunshine--protection-away .lg-container img {
 	filter: blur(40px) !important;
 	transition: none !important;
 }
@@ -144,7 +147,8 @@ html.sunshine--blur-single #sunshine--image--content--display img {
 }
 html.sunshine--blur-grid #sunshine--image-items figure.sunshine--image-item > a::after,
 html.sunshine--blur-single #sunshine--image--content--display::after,
-#sunshine-protection-preview--photo::after {
+#sunshine-protection-preview--photo::after,
+.sunshine--protection-blur-layer {
 	content: '';
 	position: absolute;
 	top: 0;
@@ -157,6 +161,11 @@ html.sunshine--blur-single #sunshine--image--content--display::after,
 	backdrop-filter: blur(16px);
 	-webkit-mask-image: var(--sunshine-blur-mask);
 	mask-image: var(--sunshine-blur-mask);
+}
+
+/* The blur layer the script lays over each photo in the Lightbox add-on's popup */
+.sunshine--protection-blur-layer {
+	display: block;
 }
 
 /* The note that explains the blur. Hidden until the script places it above the photos. */

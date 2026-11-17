@@ -99,11 +99,22 @@
 	var recorded = {};
 	var hoveredImageId = 0;
 	var lastPointerType = '';
+	// The photo showing in the Lightbox add-on's popup, which it announces on every slide.
+	var lightboxImageId = 0;
+	if ( window.jQuery ) {
+		window.jQuery( document ).on( 'sunshine_lightbox_image', function ( event, image ) {
+			lightboxImageId = ( image && parseInt( image.image_id, 10 ) ) || 0;
+		} );
+	}
 
 	/**
-	 * The photo an element belongs to: a gallery thumbnail, or the photo on its own page.
+	 * The photo an element belongs to: a gallery thumbnail, the photo in the Lightbox, or the
+	 * photo on its own page.
 	 */
 	function imageIdFrom( element ) {
+		if ( element && element.closest && element.closest( '.lg-container' ) && lightboxImageId ) {
+			return lightboxImageId;
+		}
 		var item = ( element && element.closest ) ? element.closest( '.sunshine--image-item' ) : null;
 		if ( item && item.id ) {
 			return parseInt( item.id.replace( 'sunshine--image-', '' ), 10 ) || 0;
@@ -360,8 +371,11 @@
 	var display = document.getElementById( 'sunshine--image--content--display' );
 	var blurGrid = parseInt( blur.grid, 10 ) && document.getElementById( 'sunshine--image-items' );
 	var blurSingle = parseInt( blur.single, 10 ) && display;
+	// The Lightbox add-on shows one photo at a time, so it follows the photo page setting. Its
+	// popup is added after this script runs, so the layer is set up whenever the setting is on.
+	var blurLightbox = parseInt( blur.single, 10 );
 
-	if ( touchScreen && ( blurGrid || blurSingle ) ) {
+	if ( touchScreen && ( blurGrid || blurSingle || blurLightbox ) ) {
 		var amount = parseInt( blur.amount, 10 ) || 50;
 		var start = blurStart( blur.type );
 		root.style.setProperty( '--sunshine-blur-mask', blurMask( blur.type, amount, start[0], start[1] ) );
@@ -375,6 +389,10 @@
 			} );
 		}
 
+		if ( blurLightbox ) {
+			blurLightboxPhotos( blur.type, amount );
+		}
+
 		var banner = document.getElementById( 'sunshine--protection-banner' );
 		// Right above the photos, so it lines up with them in any theme.
 		var photos = document.getElementById( 'sunshine--image-items' ) || document.getElementById( 'sunshine--image--content' );
@@ -382,7 +400,8 @@
 		try {
 			dismissed = !! window.sessionStorage.getItem( 'sunshine_protection_banner' );
 		} catch ( e ) {}
-		if ( banner && photos && ! dismissed ) {
+		// Only where the page's own photos are blurred, not for the Lightbox alone.
+		if ( banner && photos && ! dismissed && ( blurGrid || blurSingle ) ) {
 			photos.parentNode.insertBefore( banner, photos );
 			banner.classList.add( 'sunshine--open' );
 			document.getElementById( 'sunshine--protection-banner--close' ).addEventListener( 'click', function () {
@@ -392,6 +411,54 @@
 				} catch ( e ) {}
 			} );
 		}
+	}
+
+	/**
+	 * The Lightbox's photo sits in wrappers that fill the screen, so a blur layer is laid exactly
+	 * over each photo and kept there as photos load, the screen turns or the photo zooms.
+	 * Tapping the photo moves the blur, like on a photo's own page.
+	 */
+	function blurLightboxPhotos( type, amount ) {
+		function layerFor( img ) {
+			var layer = img.nextElementSibling;
+			if ( ! layer || ! layer.classList.contains( 'sunshine--protection-blur-layer' ) ) {
+				layer = document.createElement( 'span' );
+				layer.className = 'sunshine--protection-blur-layer';
+				img.parentNode.insertBefore( layer, img.nextSibling );
+			}
+			return layer;
+		}
+		function place( img ) {
+			if ( ! img.offsetWidth ) {
+				return;
+			}
+			var layer = layerFor( img );
+			var style = window.getComputedStyle( img );
+			layer.style.left = img.offsetLeft + 'px';
+			layer.style.top = img.offsetTop + 'px';
+			layer.style.width = img.offsetWidth + 'px';
+			layer.style.height = img.offsetHeight + 'px';
+			layer.style.transform = style.transform;
+			layer.style.transformOrigin = style.transformOrigin;
+		}
+		function placeAll() {
+			document.querySelectorAll( '.lg-container img.lg-object' ).forEach( place );
+		}
+		document.addEventListener( 'load', function ( event ) {
+			if ( event.target.matches && event.target.matches( '.lg-container img.lg-object' ) ) {
+				place( event.target );
+			}
+		}, true );
+		document.addEventListener( 'transitionend', placeAll, true );
+		window.addEventListener( 'resize', placeAll );
+		// A swipe to the next photo also starts with a touch, so only a tap moves the blur.
+		document.addEventListener( 'click', function ( event ) {
+			var img = event.target.closest && event.target.closest( '.lg-container picture' );
+			img = img ? img.querySelector( 'img.lg-object' ) : null;
+			if ( img ) {
+				moveBlur( layerFor( img ), event, type, amount );
+			}
+		}, true );
 	}
 
 } )();
