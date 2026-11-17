@@ -467,6 +467,54 @@ $shipmethods_test(
 	}
 );
 
+// Issue #56: with one shipping rate and a pickup location, the Shipping Method step pre-checks
+// the rate, so the order summary has to charge it too. Before, the pickup location was counted
+// as a second rate and nothing was picked, so the summary said "Select shipping method".
+$shipmethods_test(
+	'One shipping rate next to a pickup location is picked for the summary',
+	function () use ( $t, $shipmethods_flat_and_pickup, $shipmethods_chosen ) {
+		$t::add( $t::product( 100, array( 'taxable' => false ) ) );
+		$shipmethods_flat_and_pickup( 0 );
+		$t::checkout_address();
+		SPC()->cart->set_delivery_method( 'shipping' );
+		$cart = $t::new_request();
+		$t::same( 'spcshipflat', $shipmethods_chosen(), 'the only rate is picked, not the pickup location' );
+		$t::money( 10, $cart->get_shipping(), 'its price is in the summary' );
+		$t::money( 110, $cart->get_total(), 'and in the total' );
+	}
+);
+
+$shipmethods_test(
+	'Two shipping rates next to a pickup location: the customer picks',
+	function () use ( $t, $shipmethods_setup, $shipmethods_chosen ) {
+		$t::add( $t::product( 100, array( 'taxable' => false ) ) );
+		$shipmethods_setup(
+			array(
+				'spcshipflat'   => array(
+					'id'         => 'flat_rate',
+					'price'      => '10',
+					'price_type' => 'cart',
+				),
+				'spcshipflat2'  => array(
+					'id'         => 'flat_rate',
+					'price'      => '25',
+					'price_type' => 'cart',
+				),
+				'spcshippickup' => array(
+					'id'       => 'pickup',
+					'price'    => '0',
+					'location' => '1 Studio Lane',
+				),
+			)
+		);
+		$t::checkout_address();
+		SPC()->cart->set_delivery_method( 'shipping' );
+		$cart = $t::new_request();
+		$t::same( '', $shipmethods_chosen(), 'no rate picked for them' );
+		$t::money( 0, $cart->get_shipping(), 'no shipping charged until they pick' );
+	}
+);
+
 $shipmethods_test(
 	'Only downloads in the cart: no shipping is charged',
 	function () use ( $t, $shipmethods_setup, $shipmethods_ship_with, $shipmethods_saved_choice ) {
