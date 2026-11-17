@@ -367,6 +367,9 @@ $t::test(
 			);
 			$after = $snapshot();
 			$t::same( $status, sunshine_get_order( $order->get_id() )->get_status(), 'status is ' . $status );
+			// Add-ons ask has_status() before acting on an order (like not moving a shipped order back).
+			$t::same( true, sunshine_get_order( $order->get_id() )->has_status( $status ), 'has_status( ' . $status . ' ) agrees' );
+			$t::same( false, sunshine_get_order( $order->get_id() )->has_status( 'new' === $status ? 'shipped' : 'new' ), 'has_status() is false for another status after ' . $status );
 			foreach ( array( 'subtotal', 'discount', 'shipping', 'tax', 'total' ) as $key ) {
 				$t::money( $before[ $key ], $after[ $key ], $key . ' after ' . $status );
 			}

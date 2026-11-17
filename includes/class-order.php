@@ -149,11 +149,7 @@ class SPC_Order extends Sunshine_Data {
 	}
 
 	public function has_status( $status ) {
-		$current_status = $this->get_status();
-		if ( $current_status && $current_status->slug == $status ) {
-			return true;
-		}
-		return false;
+		return $this->get_status() === $status;
 	}
 
 	public function is_paid() {
