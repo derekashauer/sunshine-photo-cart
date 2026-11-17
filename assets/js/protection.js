@@ -71,6 +71,8 @@
 	var root = document.documentElement;
 	var notice = document.getElementById( 'sunshine--protection-notice' );
 	var lastReported = {};
+	// Whether the last attempt of each kind was really saved, so the notice only says so when it was.
+	var recorded = {};
 	var hoveredImageId = 0;
 	var lastPointerType = '';
 
@@ -90,14 +92,17 @@
 	 * since holding keys down repeats them.
 	 */
 	function report( type, imageId ) {
-		if ( ! parseInt( config.record, 10 ) ) {
+		if ( ! parseInt( config.record, 10 ) || ! window.fetch ) {
 			return;
 		}
 		var now = Date.now();
 		if ( lastReported[ type ] && now - lastReported[ type ] < 5000 ) {
+			showRecorded( recorded[ type ] );
 			return;
 		}
 		lastReported[ type ] = now;
+		recorded[ type ] = false;
+		showRecorded( false );
 
 		var data = new FormData();
 		data.append( 'action', 'sunshine_protection_attempt' );
@@ -106,11 +111,24 @@
 		data.append( 'gallery_id', config.gallery_id );
 		// On a photo's own page, that photo is the one, even if the mouse hasn't moved over it.
 		data.append( 'image_id', imageId || parseInt( config.image_id, 10 ) || 0 );
-		// A beacon still goes out when the page is printing or being left.
-		if ( navigator.sendBeacon ) {
-			navigator.sendBeacon( config.ajax_url, data );
-		} else if ( window.fetch ) {
-			fetch( config.ajax_url, { method: 'POST', body: data, credentials: 'same-origin', keepalive: true } );
+		// keepalive lets the request finish while the page prints or closes.
+		fetch( config.ajax_url, { method: 'POST', body: data, credentials: 'same-origin', keepalive: true } )
+			.then( function ( response ) {
+				return response.json();
+			} )
+			.then( function ( result ) {
+				recorded[ type ] = !! ( result && result.success );
+				showRecorded( recorded[ type ] );
+			} )
+			.catch( function () {} );
+	}
+
+	/**
+	 * The "This attempt has been recorded" line, shown only once the server saved it.
+	 */
+	function showRecorded( on ) {
+		if ( notice ) {
+			notice.classList.toggle( 'sunshine--recorded', !! on );
 		}
 	}
 
@@ -179,7 +197,7 @@
 		if ( command && ! event.shiftKey && ! event.altKey && 'KeyS' === code ) {
 			return 'save';
 		}
-		if ( command && ! event.altKey && 'KeyP' === code ) {
+		if ( command && ! event.shiftKey && ! event.altKey && 'KeyP' === code ) {
 			return 'print';
 		}
 		if ( 'f12' === key ) {
@@ -251,6 +269,17 @@
 			}
 		}, 300 );
 	}
+
+	// A screenshot tool that takes focus swallows the key release, so the page decides when it
+	// gets focus back: held screenshot keys and then a lost focus count as a screenshot.
+	window.addEventListener( 'focus', function () {
+		if ( screenshotModifiers ) {
+			screenshotModifiers = false;
+			showNotice( 'screenshot', hoveredImageId );
+		} else if ( ! notice || ! notice.classList.contains( 'sunshine--open' ) ) {
+			cover( false );
+		}
+	} );
 
 	/* Right-click, press-and-hold and dragging */
 

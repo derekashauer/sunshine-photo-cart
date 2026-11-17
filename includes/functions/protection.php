@@ -97,23 +97,48 @@ function sunshine_get_protection_blur_type() {
 }
 
 /**
+ * The gallery shown on this page: the gallery or photo being viewed, or one embedded with the
+ * [sunshine_gallery] shortcode.
+ *
+ * @return SPC_Gallery|null
+ */
+function sunshine_protection_gallery() {
+	global $post;
+	if ( ! empty( SPC()->frontend->current_gallery ) ) {
+		return SPC()->frontend->current_gallery;
+	}
+	if ( ! empty( $post->post_content ) && has_shortcode( $post->post_content, 'sunshine_gallery' ) && preg_match_all( '/' . get_shortcode_regex( array( 'sunshine_gallery' ) ) . '/', $post->post_content, $matches, PREG_SET_ORDER ) ) {
+		foreach ( $matches as $match ) {
+			$atts = shortcode_parse_atts( $match[3] );
+			if ( ! empty( $atts['id'] ) && 'sunshine-gallery' === get_post_type( (int) $atts['id'] ) ) {
+				return sunshine_get_gallery( (int) $atts['id'] );
+			}
+		}
+	}
+	return null;
+}
+
+/**
  * Is photo protection on for the page being shown.
  *
- * Order pages are left out so customers can still print their receipts.
+ * Only pages that show photos are protected. Cart, checkout, account and order pages are left
+ * alone so customers can still print them.
  *
  * @return bool
  */
 function sunshine_protection_is_active() {
-	if ( ! is_sunshine() || SPC()->frontend->is_order() ) {
+	if ( ! is_sunshine() || current_user_can( 'sunshine_manage_options' ) ) {
 		return false;
 	}
-	if ( current_user_can( 'sunshine_manage_options' ) ) {
-		return false;
+	$gallery = sunshine_protection_gallery();
+	if ( $gallery ) {
+		return $gallery->is_protected();
 	}
-	if ( ! empty( SPC()->frontend->current_gallery ) ) {
-		return SPC()->frontend->current_gallery->is_protected();
+	// Pages showing photos from many galleries follow the site setting.
+	if ( is_sunshine_page( 'home' ) || is_sunshine_page( 'favorites' ) || SPC()->frontend->is_search() ) {
+		return (bool) SPC()->get_option( 'disable_right_click' );
 	}
-	return (bool) SPC()->get_option( 'disable_right_click' );
+	return false;
 }
 
 add_action( 'wp_enqueue_scripts', 'sunshine_protection_enqueue_scripts', 20 );
@@ -130,6 +155,7 @@ function sunshine_protection_enqueue_scripts() {
 	wp_enqueue_script( 'sunshine-photo-cart-protection', SUNSHINE_PHOTO_CART_URL . 'assets/js/protection.js', array(), SUNSHINE_PHOTO_CART_VERSION, true );
 
 	$frontend = SPC()->frontend;
+	$gallery  = sunshine_protection_gallery();
 	$blur     = SPC()->get_option( 'protection_blur' );
 	wp_localize_script(
 		'sunshine-photo-cart-protection',
@@ -137,7 +163,7 @@ function sunshine_protection_enqueue_scripts() {
 		array(
 			'ajax_url'   => admin_url( 'admin-ajax.php' ),
 			'security'   => wp_create_nonce( 'sunshinephotocart' ),
-			'gallery_id' => ! empty( $frontend->current_gallery ) ? $frontend->current_gallery->get_id() : 0,
+			'gallery_id' => $gallery ? $gallery->get_id() : 0,
 			'image_id'   => ! empty( $frontend->current_image ) ? $frontend->current_image->get_id() : 0,
 			'record'     => SPC()->get_option( 'protection_log' ) ? 1 : 0,
 			'focus_blur' => SPC()->get_option( 'protection_focus_blur' ) ? 1 : 0,
@@ -167,6 +193,7 @@ function sunshine_protection_footer_markup() {
 		<div id="sunshine--protection-notice--box">
 			<div id="sunshine--protection-notice--text"><?php echo wp_kses_post( wpautop( sunshine_get_protection_notice_text() ) ); ?></div>
 			<?php if ( SPC()->get_option( 'protection_log' ) ) { ?>
+				<?php // Shown by the script once the attempt is really saved. ?>
 				<p id="sunshine--protection-notice--recorded"><?php esc_html_e( 'This attempt has been recorded.', 'sunshine-photo-cart' ); ?></p>
 			<?php } ?>
 			<button type="button" id="sunshine--protection-notice--close"><?php esc_html_e( 'I understand', 'sunshine-photo-cart' ); ?></button>
@@ -268,7 +295,7 @@ function sunshine_record_protection_attempt( $type, $gallery_id, $image_id = 0 )
 function sunshine_get_protection_attempts( $args = array() ) {
 	global $wpdb;
 
-	$where = sunshine_protection_attempts_where( $args );
+	$where = sunshine_person_records_where( $args );
 	if ( ! $where ) {
 		return array();
 	}
@@ -291,42 +318,11 @@ function sunshine_get_protection_attempts( $args = array() ) {
 function sunshine_count_protection_attempts( $args = array() ) {
 	global $wpdb;
 
-	$where = sunshine_protection_attempts_where( $args );
+	$where = sunshine_person_records_where( $args );
 	if ( ! $where ) {
 		return 0;
 	}
 	return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}sunshine_protection_log WHERE {$where}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- each part is prepared.
-}
-
-/**
- * The prepared WHERE clause shared by the attempt lookups.
- *
- * @param array $args gallery_id, user_id and email.
- * @return string Empty when nothing narrows the list.
- */
-function sunshine_protection_attempts_where( $args ) {
-	global $wpdb;
-
-	$args  = wp_parse_args(
-		$args,
-		array(
-			'gallery_id' => 0,
-			'user_id'    => 0,
-			'email'      => '',
-		)
-	);
-	$where = array();
-	if ( $args['gallery_id'] ) {
-		$where[] = $wpdb->prepare( 'gallery_id = %d', $args['gallery_id'] );
-	}
-	if ( $args['user_id'] ) {
-		$where[] = $wpdb->prepare( 'user_id = %d', $args['user_id'] );
-	}
-	if ( $args['email'] ) {
-		$user    = get_user_by( 'email', $args['email'] );
-		$where[] = $user ? $wpdb->prepare( '( email = %s OR user_id = %d )', $args['email'], $user->ID ) : $wpdb->prepare( 'email = %s', $args['email'] );
-	}
-	return implode( ' AND ', $where );
 }
 
 add_action( 'before_delete_post', 'sunshine_delete_gallery_protection_attempts' );
@@ -388,7 +384,8 @@ function sunshine_protection_privacy_policy_content() {
  * @return string HTML.
  */
 function sunshine_protection_blur_preview_html() {
-	if ( ! is_admin() ) {
+	// The settings fields are built on every admin request, so only look up a photo where the preview shows.
+	if ( ! is_admin() || wp_doing_ajax() || ! isset( $_GET['page'] ) || 'sunshine' !== $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only picks the screen.
 		return '';
 	}
 	// A photo from one of the newest galleries, so the preview shows the photographer's own work.

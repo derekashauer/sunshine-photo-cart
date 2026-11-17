@@ -67,7 +67,11 @@ html.sunshine--protection-away #sunshine--selection-tray-widget img {
 	font-size: 1em;
 }
 #sunshine--protection-notice #sunshine--protection-notice--recorded {
+	display: none;
 	font-weight: bold;
+}
+#sunshine--protection-notice.sunshine--recorded #sunshine--protection-notice--recorded {
+	display: block;
 }
 #sunshine--protection-notice #sunshine--protection-notice--text a {
 	color: #000;
@@ -155,7 +159,10 @@ html.sunshine--blur-single #sunshine--image--content--display::after,
 	mask-image: var(--sunshine-blur-mask);
 }
 
-/* The note that explains the blur */
+/* The note that explains the blur. Hidden until the script places it above the photos. */
+#sunshine--protection-banner {
+	display: none;
+}
 #sunshine #sunshine--protection-banner {
 	display: none;
 	align-items: flex-start;

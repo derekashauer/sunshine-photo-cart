@@ -504,14 +504,10 @@ class SPC_Privacy {
 	 */
 	public function protection_log_eraser( $email_address, $page = 1 ) {
 		global $wpdb;
-		$items_removed = false;
-		foreach ( sunshine_get_protection_attempts( array( 'email' => $email_address ) ) as $attempt ) {
-			if ( $wpdb->delete( $wpdb->prefix . 'sunshine_protection_log', array( 'log_id' => $attempt['log_id'] ) ) ) {
-				$items_removed = true;
-			}
-		}
+		$where   = sunshine_person_records_where( array( 'email' => $email_address ) );
+		$removed = $where ? $wpdb->query( "DELETE FROM {$wpdb->prefix}sunshine_protection_log WHERE {$where}" ) : 0; // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- the clause is prepared.
 		return array(
-			'items_removed'  => $items_removed,
+			'items_removed'  => (bool) $removed,
 			'items_retained' => false,
 			'messages'       => array(),
 			'done'           => true,

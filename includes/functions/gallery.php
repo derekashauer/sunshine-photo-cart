@@ -796,17 +796,7 @@ function sunshine_get_gallery_terms_agreements( $args = array() ) {
 			'limit'      => 0,
 		)
 	);
-	$where = array();
-	if ( $args['gallery_id'] ) {
-		$where[] = $wpdb->prepare( 'gallery_id = %d', $args['gallery_id'] );
-	}
-	if ( $args['user_id'] ) {
-		$where[] = $wpdb->prepare( 'user_id = %d', $args['user_id'] );
-	}
-	if ( $args['email'] ) {
-		$user    = get_user_by( 'email', $args['email'] );
-		$where[] = $user ? $wpdb->prepare( '( email = %s OR user_id = %d )', $args['email'], $user->ID ) : $wpdb->prepare( 'email = %s', $args['email'] );
-	}
+	$where = array_filter( array( sunshine_person_records_where( $args ) ) );
 	if ( $args['version'] ) {
 		$where[] = $wpdb->prepare( 'version = %s', $args['version'] );
 	}
@@ -821,6 +811,39 @@ function sunshine_get_gallery_terms_agreements( $args = array() ) {
 	$rows = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- each part is prepared above.
 
 	return is_array( $rows ) ? $rows : array();
+}
+
+/**
+ * The prepared WHERE clause for records kept per person and gallery, like terms agreements and
+ * screenshot attempts. Each table has gallery_id, user_id and email columns.
+ *
+ * @param array $args gallery_id, user_id and email. An email also finds rows saved under the
+ *                    account that has that email now.
+ * @return string Empty when nothing narrows the list.
+ */
+function sunshine_person_records_where( $args ) {
+	global $wpdb;
+
+	$args  = wp_parse_args(
+		$args,
+		array(
+			'gallery_id' => 0,
+			'user_id'    => 0,
+			'email'      => '',
+		)
+	);
+	$where = array();
+	if ( $args['gallery_id'] ) {
+		$where[] = $wpdb->prepare( 'gallery_id = %d', $args['gallery_id'] );
+	}
+	if ( $args['user_id'] ) {
+		$where[] = $wpdb->prepare( 'user_id = %d', $args['user_id'] );
+	}
+	if ( $args['email'] ) {
+		$user    = get_user_by( 'email', $args['email'] );
+		$where[] = $user ? $wpdb->prepare( '( email = %s OR user_id = %d )', $args['email'], $user->ID ) : $wpdb->prepare( 'email = %s', $args['email'] );
+	}
+	return implode( ' AND ', $where );
 }
 
 /**

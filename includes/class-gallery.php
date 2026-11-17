@@ -586,16 +586,8 @@ class SPC_Gallery extends Sunshine_Data {
 	 * @return bool
 	 */
 	public function is_protected() {
-		$setting = $this->get_meta_value( 'protection' );
-		if ( empty( $setting ) ) {
-			// A sub-gallery on Default follows the nearest gallery above it that has its own setting.
-			foreach ( get_post_ancestors( $this->get_id() ) as $ancestor_id ) {
-				$setting = get_post_meta( $ancestor_id, 'protection', true );
-				if ( $setting ) {
-					break;
-				}
-			}
-		}
+		// A sub-gallery on Default follows the nearest gallery above it that has its own setting.
+		$setting = $this->get_meta_value( 'protection', true );
 		if ( 'on' === $setting ) {
 			return true;
 		}
