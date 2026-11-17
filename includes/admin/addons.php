@@ -49,6 +49,8 @@ function sunshine_addon_activation( $file, $name, $item_id ) {
 
 		$license_data = SPC_License::api_request( 'activate_license', $license_key, $item_id );
 
+		SPC_License::record_check( $filename, $license_data );
+
 		if ( is_wp_error( $license_data ) ) {
 			/* translators: %s is the error message */
 			SPC()->notices->add_admin( 'sunshine_license_no_connection', sprintf( __( 'Your licenses could not be activated because your server failed to connect to SunshinePhotoCart.com: %s', 'sunshine-photo-cart' ), $license_data->get_error_message() ), 'error' );

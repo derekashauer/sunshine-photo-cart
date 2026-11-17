@@ -20,6 +20,23 @@ class SPC_License {
 	private $requires;
 	private $data;
 
+	/**
+	 * Every license on the site, keyed by ID, for the System Info report.
+	 *
+	 * @var SPC_License[]
+	 */
+	private static $all = array();
+
+	/**
+	 * True while one check runs for every license, so each one doesn't add its own notice.
+	 *
+	 * @var bool
+	 */
+	private static $quiet = false;
+
+	// A check that worked longer ago than this is worth telling the site owner about.
+	const STALE_AFTER = 14 * DAY_IN_SECONDS;
+
 	public function __construct( $item_id, $name, $version, $file = '', $requires = false ) {
 
 		$this->item_id  = $item_id;
@@ -33,6 +50,8 @@ class SPC_License {
 		} else {
 			$this->id = sanitize_title( $name );
 		}
+
+		self::$all[ $this->id ] = $this;
 
 		$this->init();
 
@@ -196,6 +215,8 @@ class SPC_License {
 					break;
 
 			}
+
+			$description .= $this->check_description();
 		}
 
 		// if ( empty( SPC()->plan ) || ! SPC()->plan->get_license_key() || ( SPC()->plan->get_license_key() && in_array( $this->get_id(), array( 'pro', 'plus', 'basic' ) ) ) ) {
@@ -219,12 +240,60 @@ class SPC_License {
 
 	}
 
+	/**
+	 * Lines for the Licenses screen: the site the key was activated for, when it was last
+	 * checked, and a warning when checks have not got through for a while.
+	 *
+	 * @return string HTML.
+	 */
+	private function check_description() {
+
+		$lines = array();
+
+		$url = SPC()->get_option( 'license_url_' . $this->id );
+		if ( $url ) {
+			/* translators: %s is a site address, like www.example.com */
+			$lines[] = sprintf( esc_html__( 'Activated for %s', 'sunshine-photo-cart' ), '<code>' . esc_html( untrailingslashit( preg_replace( '#^https?://#', '', $url ) ) ) . '</code>' );
+		}
+
+		$check = $this->get_last_check();
+		if ( $check ) {
+			$format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+			if ( $this->is_check_stale() ) {
+				$lines[] = '<strong>' . ( $check['last_ok']
+					? sprintf(
+						/* translators: %1$s is a date, %2$s is an error message */
+						esc_html__( 'This site has not been able to reach sunshinephotocart.com to check this license since %1$s, so the status above may be out of date. The last try said: %2$s', 'sunshine-photo-cart' ),
+						esc_html( wp_date( $format, $check['last_ok'] ) ),
+						esc_html( $check['error'] )
+					)
+					: sprintf(
+						/* translators: %s is an error message */
+						esc_html__( 'This site has not been able to reach sunshinephotocart.com to check this license, so the status above may be out of date. The last try said: %s', 'sunshine-photo-cart' ),
+						esc_html( $check['error'] )
+					) ) . '</strong>';
+			} else {
+				/* translators: %s is a date and time */
+				$lines[] = sprintf( esc_html__( 'Last checked %s', 'sunshine-photo-cart' ), esc_html( wp_date( $format, $check['time'] ) ) );
+			}
+		}
+
+		return $lines ? '<br>' . implode( '<br>', $lines ) : '';
+
+	}
+
 	public function get_license_key() {
 		return $this->license_key;
 	}
 
+	/**
+	 * The license status. An add-on that follows a plan has the plan's status.
+	 *
+	 * @return string
+	 */
 	public function get_status() {
-		return SPC()->get_option( 'license_status_' . $this->id );
+		$plan_id = $this->get_followed_plan_id();
+		return SPC()->get_option( 'license_status_' . ( $plan_id ? $plan_id : $this->id ) );
 	}
 
 	public function is_valid() {
@@ -232,8 +301,50 @@ class SPC_License {
 		return $valid;
 	}
 
+	/**
+	 * The license end date. An add-on that follows a plan has the plan's end date.
+	 *
+	 * @return string
+	 */
 	public function get_expiration() {
-		return SPC()->get_option( 'license_expiration_' . $this->id );
+		$plan_id = $this->get_followed_plan_id();
+		return SPC()->get_option( 'license_expiration_' . ( $plan_id ? $plan_id : $this->id ) );
+	}
+
+	/**
+	 * The plan this add-on follows, like sunshine-photo-cart-pro, or blank.
+	 *
+	 * An add-on on a plan's key, once the store has confirmed the plan covers it, has no
+	 * status or end date of its own: it reads the plan's. Its own saved copy could go
+	 * stale when its check didn't get through, and then say it expired while the plan
+	 * was renewed. This reads saved options, not SPC()->plans, because the list of active
+	 * add-ons is built before the plans are.
+	 *
+	 * @return string
+	 */
+	private function get_followed_plan_id() {
+		if ( $this->requires || ! $this->license_key || 'valid' !== SPC()->get_option( 'license_status_' . $this->id ) ) {
+			return '';
+		}
+		return self::plan_id_for_key( $this->license_key );
+	}
+
+	/**
+	 * The ID of the plan that uses a key, like sunshine-photo-cart-pro, or blank.
+	 *
+	 * @param string $license_key The license key.
+	 * @return string
+	 */
+	private static function plan_id_for_key( $license_key ) {
+		if ( empty( $license_key ) ) {
+			return '';
+		}
+		foreach ( array_keys( self::PLAN_RANKS ) as $plan ) {
+			if ( SPC()->get_option( 'license_sunshine-photo-cart-' . $plan ) === $license_key ) {
+				return 'sunshine-photo-cart-' . $plan;
+			}
+		}
+		return '';
 	}
 
 	public function listener() {
@@ -305,6 +416,8 @@ class SPC_License {
 		}
 
 		$license_data = self::api_request( 'activate_license', $license_key, $this->item_id );
+
+		self::record_check( $this->id, $license_data );
 
 		if ( is_wp_error( $license_data ) ) {
 
@@ -398,10 +511,95 @@ class SPC_License {
 			return;
 		}
 
-		$this->check_license();
+		if ( $this->requires ) {
+			// A plan's Refresh checks every license on the site, so add-ons on its key are refreshed too.
+			self::check_all();
+		} else {
+			$this->check_license();
+		}
 
 		wp_redirect( admin_url( 'admin.php?page=sunshine&section=license' ) );
 		exit;
+
+	}
+
+	/**
+	 * One line per license for System Info, so a support ticket shows what the site has
+	 * saved. Shows the last 4 characters of a key, never the whole key.
+	 *
+	 * @return array Site Health fields, keyed by license ID.
+	 */
+	public static function system_info_fields() {
+
+		$fields = array();
+		foreach ( self::$all as $license ) {
+
+			$key = $license->get_license_key();
+			if ( ! $key ) {
+				$value = 'No key';
+			} else {
+				$plan_id = self::plan_id_for_key( $key );
+				$parts   = array(
+					'status: ' . ( $license->get_status() ? $license->get_status() : 'none' ),
+					'expires: ' . ( $license->get_expiration() ? $license->get_expiration() : 'none' ),
+					'key: ...' . substr( $key, -4 ),
+				);
+				if ( ! $license->requires ) {
+					$parts[] = 'uses: ' . ( $plan_id ? $plan_id . ' key' : 'own key' );
+					if ( $license->get_followed_plan_id() ) {
+						$parts[] = 'follows plan';
+					} elseif ( $plan_id ) {
+						$parts[] = 'own status: ' . SPC()->get_option( 'license_status_' . $license->id );
+					}
+				}
+				$url = SPC()->get_option( 'license_url_' . $license->id );
+				if ( $url ) {
+					$parts[] = 'activated for: ' . $url;
+				}
+				$check = $license->get_last_check();
+				if ( $check ) {
+					$parts[] = 'last check: ' . gmdate( 'Y-m-d H:i', $check['time'] ) . ' UTC ' . ( $check['ok'] ? 'ok' : 'failed (' . $check['error'] . ')' );
+					if ( ! $check['ok'] ) {
+						$parts[] = 'last ok: ' . ( $check['last_ok'] ? gmdate( 'Y-m-d H:i', $check['last_ok'] ) . ' UTC' : 'never' );
+					}
+				} else {
+					$parts[] = 'last check: not recorded';
+				}
+				$value = implode( ', ', $parts );
+			}
+
+			$fields[ $license->id ] = array(
+				'label' => $license->get_name(),
+				'value' => $value,
+			);
+		}
+		return $fields;
+
+	}
+
+	/**
+	 * Check every license on the site now, with one notice for the lot.
+	 */
+	public static function check_all() {
+
+		self::$quiet = true;
+		do_action( 'sunshine_license_check' );
+		self::$quiet = false;
+
+		$failed = array();
+		foreach ( self::$all as $license ) {
+			$check = $license->get_last_check();
+			if ( $license->get_license_key() && $check && ! $check['ok'] && $check['time'] >= time() - MINUTE_IN_SECONDS ) {
+				$failed[] = $license->get_name();
+			}
+		}
+
+		if ( $failed ) {
+			/* translators: %s is a list of product names */
+			SPC()->notices->add_admin( 'sunshine_license_check_all', sprintf( __( 'Could not reach sunshinephotocart.com to check the license for %s. Try again in a few minutes.', 'sunshine-photo-cart' ), self::names_for_notice( $failed ) ), 'error' );
+		} else {
+			SPC()->notices->add_admin( 'sunshine_license_check_all', __( 'Your licenses have been checked', 'sunshine-photo-cart' ) );
+		}
 
 	}
 
@@ -421,18 +619,21 @@ class SPC_License {
 
 		$license_data = $this->request_license_data( $this->get_license_key() );
 
+		self::record_check( $this->id, $license_data );
+
 		if ( is_wp_error( $license_data ) ) {
 
 			$message = $license_data->get_error_message();
 
 			SPC()->log( 'License check failed for ' . $this->name . ': ' . $message );
 
-			/* translators: %1$s is the product name, %2$s is the error message */
-			SPC()->notices->add_admin( $this->id . '_license_update_fail', sprintf( __( 'License for %1$s failed to be updated: %2$s', 'sunshine-photo-cart' ), $this->name, $message ) );
-
+			if ( ! self::$quiet ) {
+				/* translators: %1$s is the product name, %2$s is the error message */
+				SPC()->notices->add_admin( $this->id . '_license_update_fail', sprintf( __( 'License for %1$s failed to be updated: %2$s', 'sunshine-photo-cart' ), $this->name, $message ) );
+			}
 		} else {
 
-			if ( false !== $license_data->success ) {
+			if ( false !== $license_data->success && ! self::$quiet ) {
 				/* translators: %s is the product name */
 				SPC()->notices->add_admin( $this->id . '_license_updated', sprintf( __( 'License for %s has been updated', 'sunshine-photo-cart' ), $this->name ) );
 			}
@@ -528,15 +729,7 @@ class SPC_License {
 	 * @return bool
 	 */
 	public static function is_plan_key( $license_key ) {
-		if ( empty( $license_key ) ) {
-			return false;
-		}
-		foreach ( array_keys( self::PLAN_RANKS ) as $plan ) {
-			if ( SPC()->get_option( 'license_sunshine-photo-cart-' . $plan ) === $license_key ) {
-				return true;
-			}
-		}
-		return false;
+		return '' !== self::plan_id_for_key( $license_key );
 	}
 
 	/**
@@ -569,6 +762,48 @@ class SPC_License {
 		SPC()->update_option( 'license_expiration_' . $this->id, self::expiration_from( $license_data ) );
 		SPC()->update_option( 'license_status_' . $this->id, $license_data->license );
 		SPC()->update_option( 'license_data_' . $this->id, $license_data );
+	}
+
+	/**
+	 * Save when a license was last checked with the store and whether the check got through.
+	 *
+	 * A check that doesn't get through keeps the old status and end date, so without this
+	 * nobody can tell the saved ones might be out of date.
+	 *
+	 * @param string          $id     The product's license ID, like advanced-shipping.
+	 * @param object|WP_Error $result The store's license data, or the error from the request.
+	 */
+	public static function record_check( $id, $result ) {
+		$previous = SPC()->get_option( 'license_check_' . $id );
+		$check    = array(
+			'time'    => time(),
+			'ok'      => ! is_wp_error( $result ),
+			'error'   => is_wp_error( $result ) ? $result->get_error_message() : '',
+			'last_ok' => is_wp_error( $result ) ? ( is_array( $previous ) && ! empty( $previous['last_ok'] ) ? $previous['last_ok'] : 0 ) : time(),
+		);
+		SPC()->update_option( 'license_check_' . $id, $check );
+	}
+
+	/**
+	 * The last check with the store: time, ok, error and last_ok (when one last got through), or false.
+	 *
+	 * @return array|false
+	 */
+	public function get_last_check() {
+		$check = SPC()->get_option( 'license_check_' . $this->id );
+		return is_array( $check ) ? $check : false;
+	}
+
+	/**
+	 * Whether checks with the store have not got through for a while, so the saved
+	 * status and end date may be out of date. One failed check is not enough: the next
+	 * weekly one usually gets through.
+	 *
+	 * @return bool
+	 */
+	public function is_check_stale() {
+		$check = $this->get_last_check();
+		return $check && ! $check['ok'] && $check['last_ok'] < time() - self::STALE_AFTER;
 	}
 
 	/**
@@ -646,6 +881,7 @@ class SPC_License {
 		SPC()->update_option( 'license_' . $this->id, $this->license_key );
 		SPC()->update_option( 'license_url_' . $this->id, home_url() );
 		$this->save_license_data( $license_data );
+		self::record_check( $this->id, $license_data );
 
 		SPC()->log( $this->name . ' now uses the ' . $plan->get_name() . ' license key' );
 
@@ -688,8 +924,18 @@ class SPC_License {
 		return false;
 	}
 
+	/**
+	 * Add this product when its license has expired.
+	 *
+	 * An add-on on a plan key is left out: the plan is listed for it. So is a license whose
+	 * last check didn't get through, as its saved end date may be out of date; it is listed
+	 * as a problem instead, which links to the Licenses screen with the reason.
+	 *
+	 * @param array $expired_addons Product names keyed by ID.
+	 * @return array
+	 */
 	public function expired_addons( $expired_addons ) {
-		if ( $this->license_key && ! $this->is_replaced_by_other_plan() && $this->is_expired() && in_array( $this->get_status(), array( 'expired', 'valid' ), true ) ) {
+		if ( $this->license_key && ! $this->is_replaced_by_other_plan() && ( $this->requires || ! self::is_plan_key( $this->license_key ) ) && ! $this->is_check_stale() && $this->is_expired() && in_array( $this->get_status(), array( 'expired', 'valid' ), true ) ) {
 			$expired_addons[ $this->id ] = $this->name;
 		}
 		return $expired_addons;
@@ -697,14 +943,19 @@ class SPC_License {
 
 	/**
 	 * Add this product when its saved key was turned down for a reason other than
-	 * its end date (wrong key, wrong site, disabled).
+	 * its end date (wrong key, wrong site, disabled), or its last check didn't get through.
+	 *
+	 * An add-on following a plan is left out: the plan is listed for it.
 	 *
 	 * @param array $problem_addons Product names keyed by ID.
 	 * @return array
 	 */
 	public function problem_addons( $problem_addons ) {
+		if ( ! $this->license_key || $this->is_replaced_by_other_plan() || $this->get_followed_plan_id() ) {
+			return $problem_addons;
+		}
 		// No status means the key was deactivated on purpose, or never checked.
-		if ( $this->license_key && ! $this->is_replaced_by_other_plan() && ! in_array( $this->get_status(), array( '', false, 'valid', 'expired' ), true ) ) {
+		if ( $this->is_check_stale() || ! in_array( $this->get_status(), array( '', false, 'valid', 'expired' ), true ) ) {
 			$problem_addons[ $this->id ] = $this->name;
 		}
 		return $problem_addons;

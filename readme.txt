@@ -254,6 +254,10 @@ Security is important to us. Please report security bugs through the [Patchstack
 * Security: WordPress embeds of a gallery or photo link (and the oEmbed link behind them) now only show galleries and photos the visitor can already open, following the gallery's password, email, terms, login and expiry settings
 * Security: A shared favorites link only shows favorites when it has a valid share key
 * Change: With the Page Builder setting on, or a block theme, photo pages use the theme's regular post template instead of a photo template of its own, so the gallery's access screens always come first
+* Fix: Add-ons that use your Pro, Plus or Basic license key now always show that plan's end date, so the license bar no longer says they expired after your plan renewed. When the plan does expire, the bar names the plan instead of every add-on
+* New: Refresh license on your plan checks every license on the site at once, including the add-ons that use the plan's key
+* New: The Licenses screen shows which site each key is activated for and when it was last checked. When your site hasn't been able to reach sunshinephotocart.com to check a license for two weeks, it says so with the reason, and the license bar links there
+* New: The license details (status, end date, last check) are in Tools > Site Health > Info, so they're included when you copy your system info for a support ticket. Only the last 4 characters of a key are shown
 
 = 3.8.2 - November 11, 2026 =
 * New: Gallery terms. Visitors can be asked to agree to your terms before they see a gallery's photos, such as not saving them or removing watermarks (Settings > Galleries > Gallery Terms, and a Terms option on each gallery). Sunshine keeps a record of who agreed, when, and to which wording, on the gallery and the customer's screen. Guests also give their email when they agree, unless you turn that off. This discourages copying, but it can't stop a screenshot

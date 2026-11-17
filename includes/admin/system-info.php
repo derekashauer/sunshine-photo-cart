@@ -65,6 +65,11 @@ function sunshine_site_health_info( $debug_info ) {
 		}
 	endforeach;
 
+	$debug_info['sunshine-photo-cart-licenses'] = array(
+		'label'  => 'Sunshine Photo Cart Licenses',
+		'fields' => SPC_License::system_info_fields(),
+	);
+
 	return $debug_info;
 }
 add_filter( 'debug_information', 'sunshine_site_health_info' );
