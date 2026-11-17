@@ -1660,7 +1660,18 @@ function sunshine_directory_to_options( $path = __DIR__, $selected_dir = '', $le
 					$path_array             = array_reverse( explode( '/', $fullpath ) );
 					$this_folder_path_array = array_slice( $path_array, 0, $level + 1 );
 					$value                  = join( '/', array_reverse( $this_folder_path_array ) );
-					echo '<option value="' . esc_attr( $value ) . '" data-count="' . intval( $count ) . '" ' . selected( $selected_dir, $value, 0 ) . '>' . esc_html( $name ) . ' (' . esc_html( $count ) . ' ' . esc_html__( 'images', 'sunshine-photo-cart' ) . ')</option>';
+					/* translators: %d: number of photos in the folder */
+					$count_label = sprintf( _n( '%d image', '%d images', $count, 'sunshine-photo-cart' ), $count );
+					/**
+					 * Filters the count shown in brackets after a folder name in the FTP folder list.
+					 *
+					 * @since 3.8.3
+					 * @param string $count_label Default label: photos directly in this folder.
+					 * @param string $fullpath    Full path to the folder.
+					 * @param int    $count       Number of photos directly in this folder.
+					 */
+					$count_label = apply_filters( 'sunshine_directory_option_count_label', $count_label, $fullpath, $count );
+					echo '<option value="' . esc_attr( $value ) . '" data-count="' . intval( $count ) . '" ' . selected( $selected_dir, $value, 0 ) . '>' . esc_html( $name ) . ' (' . esc_html( $count_label ) . ')</option>';
 				// }
 				sunshine_directory_to_options( $fullpath, $selected_dir, $level + 1 );
 			}

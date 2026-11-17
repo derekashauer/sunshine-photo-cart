@@ -44,7 +44,7 @@ class Sunshine_Admin_Meta_Boxes_Product extends Sunshine_Admin_Meta_Boxes {
 			'quick_edit' => true,
 			'upgrade'    => array(
 				'addon' => 'price-levels',
-				'label' => __( 'Manage more price levels to offer different pricing in across galleries for the same product', 'sunshine-photo-cart' ),
+				'label' => __( 'Manage more price levels to offer different pricing across galleries for the same product', 'sunshine-photo-cart' ),
 				'url'   => 'https://www.sunshinephotocart.com/addon/price-levels/',
 			),
 		);
