@@ -154,13 +154,13 @@ class SPC_Cart {
 
 			if ( array_key_exists( 'shipping_method', $this->data ) && array_key_exists( $this->data['shipping_method'], $allowed_shipping_methods ) ) {
 				$this->set_shipping_method( $this->data['shipping_method'] );
-			} elseif ( $this->needs_shipping() && array_key_exists( 'shipping', $delivery_methods ) && $this->delivery_method && $this->delivery_method->get_id() === 'shipping' && count( $allowed_shipping_methods ) === 1 ) {
-				$only_instance_id = array_key_first( $allowed_shipping_methods );
-				$only_method      = sunshine_get_shipping_method_by_instance( $only_instance_id );
-				// Don't auto-select a pickup-style method when the customer chose Ship —
-				// pickup instances are their own delivery method options.
-				if ( $only_method && $only_method->needs_shipping_address() ) {
-					$this->set_shipping_method( $only_instance_id );
+			} elseif ( $this->needs_shipping() && array_key_exists( 'shipping', $delivery_methods ) && $this->delivery_method && $this->delivery_method->get_id() === 'shipping' ) {
+				// When the customer chose Ship and only one shipping rate is offered, pick it, as the
+				// Shipping Method step does, so the order summary shows its price right away.
+				// Pickup locations don't count: they are their own delivery method options.
+				$ship_methods = sunshine_get_allowed_ship_to_address_methods( $allowed_shipping_methods );
+				if ( 1 === count( $ship_methods ) ) {
+					$this->set_shipping_method( reset( $ship_methods ) );
 				}
 			}
 		}
@@ -2452,15 +2452,7 @@ class SPC_Cart {
 		// so without this the customer could carry on to payment and only be stopped there,
 		// away from the message telling them what to do about it.
 		if ( 'shipping_method' === $this->active_section && $this->needs_shipping() ) {
-			$has_ship_option = false;
-			foreach ( (array) sunshine_get_allowed_shipping_methods() as $instance_id => $allowed_shipping_method ) {
-				$this_shipping_method = sunshine_get_shipping_method_by_instance( $instance_id );
-				if ( $this_shipping_method && $this_shipping_method->needs_shipping_address() ) {
-					$has_ship_option = true;
-					break;
-				}
-			}
-			if ( ! $has_ship_option ) {
+			if ( ! sunshine_get_allowed_ship_to_address_methods() ) {
 				$this->add_error( $this->get_shipping_unavailable_message() );
 			}
 		}
