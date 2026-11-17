@@ -297,20 +297,27 @@ function sunshine_record_protection_attempt( $type, $gallery_id, $image_id = 0 )
  * Recorded attempts, newest first.
  *
  * @param array $args gallery_id, user_id and email narrow the list (an email also finds rows
- *                    saved under the account that has it now); limit caps it.
+ *                    saved under the account that has it now), or all => true lists every record;
+ *                    limit and offset page through it.
  * @return array Each record has log_id, gallery_id, image_id, user_id, email, ip, type and time.
  */
 function sunshine_get_protection_attempts( $args = array() ) {
 	global $wpdb;
 
-	$where = sunshine_person_records_where( $args );
+	$where = sunshine_protection_attempts_where( $args );
 	if ( ! $where ) {
 		return array();
 	}
-	$args = wp_parse_args( $args, array( 'limit' => 0 ) );
+	$args = wp_parse_args(
+		$args,
+		array(
+			'limit'  => 0,
+			'offset' => 0,
+		)
+	);
 	$sql  = "SELECT * FROM {$wpdb->prefix}sunshine_protection_log WHERE {$where} ORDER BY time DESC, log_id DESC";
 	if ( $args['limit'] ) {
-		$sql .= $wpdb->prepare( ' LIMIT %d', $args['limit'] );
+		$sql .= $wpdb->prepare( ' LIMIT %d OFFSET %d', $args['limit'], $args['offset'] );
 	}
 	$rows = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- each part is prepared.
 
@@ -326,11 +333,25 @@ function sunshine_get_protection_attempts( $args = array() ) {
 function sunshine_count_protection_attempts( $args = array() ) {
 	global $wpdb;
 
-	$where = sunshine_person_records_where( $args );
+	$where = sunshine_protection_attempts_where( $args );
 	if ( ! $where ) {
 		return 0;
 	}
 	return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}sunshine_protection_log WHERE {$where}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- each part is prepared.
+}
+
+/**
+ * The WHERE clause for looking up attempts. Empty when nothing narrows the list and every record
+ * wasn't asked for, so a missing ID never lists everyone's records by mistake.
+ *
+ * @param array $args See sunshine_get_protection_attempts().
+ * @return string
+ */
+function sunshine_protection_attempts_where( $args ) {
+	if ( ! empty( $args['all'] ) ) {
+		return '1=1';
+	}
+	return sunshine_person_records_where( $args );
 }
 
 add_action( 'before_delete_post', 'sunshine_delete_gallery_protection_attempts' );

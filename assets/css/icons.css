@@ -82,6 +82,7 @@
 .sunshine--icon--sparkling:before,
 .sunshine--icon--webhook:before,
 .sunshine--icon--print:before,
+.sunshine--icon--shield:before,
 .icons8,
 [data-icons8]:before {
   display: inline-block;
@@ -332,4 +333,7 @@
 }
 .sunshine--icon--print:before {
   content: "\f152";
+}
+.sunshine--icon--shield:before {
+  content: "\f153";
 }

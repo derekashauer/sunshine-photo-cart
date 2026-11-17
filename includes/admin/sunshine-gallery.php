@@ -2121,8 +2121,64 @@ function sunshine_meta_gallery_protection_log_display() {
 		/* translators: %s is the number of attempts */
 		echo esc_html( sprintf( _n( '%s attempt', '%s attempts', $total, 'sunshine-photo-cart' ), number_format_i18n( $total ) ) );
 	}
+	echo ' <a href="' . esc_url( admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-protection-log' ) ) . '">' . esc_html__( 'See all galleries', 'sunshine-photo-cart' ) . '</a>';
 	echo '</p>';
 	echo wp_kses_post( sunshine_protection_log_table( $attempts ) );
+}
+
+/**
+ * The Protection Log page under the Sunshine menu: every recorded attempt, newest first.
+ */
+function sunshine_protection_log_page() {
+	$per_page = 50;
+	$paged    = isset( $_GET['paged'] ) ? max( 1, absint( $_GET['paged'] ) ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only picks the page.
+	$total    = sunshine_count_protection_attempts( array( 'all' => true ) );
+	$attempts = sunshine_get_protection_attempts(
+		array(
+			'all'    => true,
+			'limit'  => $per_page,
+			'offset' => ( $paged - 1 ) * $per_page,
+		)
+	);
+	$pages    = paginate_links(
+		array(
+			'base'    => add_query_arg( 'paged', '%#%' ),
+			'format'  => '',
+			'current' => $paged,
+			'total'   => (int) ceil( $total / $per_page ),
+		)
+	);
+	?>
+	<div class="wrap">
+		<h1><?php esc_html_e( 'Protection Log', 'sunshine-photo-cart' ); ?></h1>
+		<p>
+			<?php
+			echo esc_html__( 'Screenshot, save and print attempts in protected galleries, newest first.', 'sunshine-photo-cart' ) . ' ';
+			/* translators: %s is a link to the help doc */
+			printf( esc_html__( 'A record means a key or click was noticed, not that a screenshot was taken. %s', 'sunshine-photo-cart' ), '<a href="https://www.sunshinephotocart.com/docs/image-protection/" target="_blank">' . esc_html__( 'Learn more', 'sunshine-photo-cart' ) . '</a>' );
+			?>
+		</p>
+		<?php if ( empty( $attempts ) ) { ?>
+			<p><?php esc_html_e( 'Nobody has tried to take a screenshot, save or print photos yet', 'sunshine-photo-cart' ); ?></p>
+		<?php } else { ?>
+			<div class="tablenav top">
+				<div class="tablenav-pages">
+					<span class="displaying-num">
+						<?php
+						/* translators: %s is the number of attempts */
+						echo esc_html( sprintf( _n( '%s attempt', '%s attempts', $total, 'sunshine-photo-cart' ), number_format_i18n( $total ) ) );
+						?>
+					</span>
+					<?php echo wp_kses_post( (string) $pages ); ?>
+				</div>
+			</div>
+			<?php echo wp_kses_post( sunshine_protection_log_table( $attempts, true ) ); ?>
+			<div class="tablenav bottom">
+				<div class="tablenav-pages"><?php echo wp_kses_post( (string) $pages ); ?></div>
+			</div>
+		<?php } ?>
+	</div>
+	<?php
 }
 
 /**
