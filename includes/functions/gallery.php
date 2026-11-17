@@ -717,13 +717,23 @@ function sunshine_get_gallery_terms_text() {
 }
 
 /**
+ * The terms as visitors see them: the photographer's terms plus any lines Sunshine adds, like the
+ * note that attempts to screenshot photos are recorded.
+ *
+ * @return string
+ */
+function sunshine_get_gallery_terms_shown_text() {
+	return sunshine_get_gallery_terms_text() . sunshine_get_protection_terms_text();
+}
+
+/**
  * A short ID for the current wording of the terms. Changing the wording changes it, so everyone is asked again.
  *
  * @return string
  */
 function sunshine_get_gallery_terms_version() {
 	// Tags become spaces so a paragraph break and a line break read the same.
-	$words = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( preg_replace( '/<[^>]*>/', ' ', sunshine_get_gallery_terms_text() ) ) ) );
+	$words = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( preg_replace( '/<[^>]*>/', ' ', sunshine_get_gallery_terms_shown_text() ) ) ) );
 	return substr( md5( $words ), 0, 12 );
 }
 
@@ -897,7 +907,7 @@ function sunshine_record_gallery_terms_agreement( $gallery, $email = '' ) {
 	}
 	if ( ! isset( $versions[ $version ] ) ) {
 		$versions[ $version ] = array(
-			'text' => sunshine_get_gallery_terms_text(),
+			'text' => sunshine_get_gallery_terms_shown_text(),
 			'time' => time(),
 		);
 		update_option( 'sunshine_gallery_terms_versions', $versions, false );

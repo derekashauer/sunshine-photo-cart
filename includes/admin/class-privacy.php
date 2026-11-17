@@ -86,7 +86,7 @@ class SPC_Privacy {
 			'callback'             => array( $this, 'gallery_terms_eraser' ),
 		);
 		$erasers['sunshine-protection-log'] = array(
-			'eraser_friendly_name' => __( 'Sunshine Photo Cart Screenshot Attempts', 'sunshine-photo-cart' ),
+			'eraser_friendly_name' => __( 'Sunshine Photo Cart Image Protection Records', 'sunshine-photo-cart' ),
 			'callback'             => array( $this, 'protection_log_eraser' ),
 		);
 		return $erasers;
@@ -109,7 +109,7 @@ class SPC_Privacy {
 			'callback'               => array( $this, 'gallery_terms_exporter' ),
 		);
 		$exporters['sunshine-protection-log'] = array(
-			'exporter_friendly_name' => __( 'Sunshine Photo Cart Screenshot Attempts', 'sunshine-photo-cart' ),
+			'exporter_friendly_name' => __( 'Sunshine Photo Cart Image Protection Records', 'sunshine-photo-cart' ),
 			'callback'               => array( $this, 'protection_log_exporter' ),
 		);
 		return $exporters;
@@ -484,7 +484,7 @@ class SPC_Privacy {
 			}
 			$export_data[] = array(
 				'group_id'    => 'sunshine-protection-log',
-				'group_label' => __( 'Sunshine Photo Cart Screenshot Attempts', 'sunshine-photo-cart' ),
+				'group_label' => __( 'Sunshine Photo Cart Image Protection Records', 'sunshine-photo-cart' ),
 				'item_id'     => 'sunshine-protection-log-' . $attempt['log_id'],
 				'data'        => $data,
 			);

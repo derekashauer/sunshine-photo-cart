@@ -18,12 +18,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function sunshine_get_protection_attempt_types() {
 	return array(
-		'screenshot'  => __( 'Screenshot keys', 'sunshine-photo-cart' ),
+		// Each label says what was detected, not what the visitor meant to do: a key press can be an accident.
+		'screenshot'  => __( 'Screenshot keys pressed', 'sunshine-photo-cart' ),
 		'right_click' => __( 'Right-click on a photo', 'sunshine-photo-cart' ),
-		'long_press'  => __( 'Pressed and held a photo', 'sunshine-photo-cart' ),
-		'save'        => __( 'Save page keys', 'sunshine-photo-cart' ),
-		'print'       => __( 'Print', 'sunshine-photo-cart' ),
-		'devtools'    => __( 'Browser developer tools keys', 'sunshine-photo-cart' ),
+		'long_press'  => __( 'Press and hold on a photo', 'sunshine-photo-cart' ),
+		'save'        => __( 'Save page keys pressed', 'sunshine-photo-cart' ),
+		'print'       => __( 'Print started', 'sunshine-photo-cart' ),
+		'devtools'    => __( 'Developer tools keys pressed', 'sunshine-photo-cart' ),
 	);
 }
 
@@ -197,7 +198,7 @@ function sunshine_protection_footer_markup() {
 			<div id="sunshine--protection-notice--text"><?php echo wp_kses_post( wpautop( sunshine_get_protection_notice_text() ) ); ?></div>
 			<?php if ( SPC()->get_option( 'protection_log' ) ) { ?>
 				<?php // Shown by the script once the attempt is really saved. ?>
-				<p id="sunshine--protection-notice--recorded"><?php esc_html_e( 'This attempt has been recorded.', 'sunshine-photo-cart' ); ?></p>
+				<p id="sunshine--protection-notice--recorded"><?php esc_html_e( 'This has been recorded. If it was an accident, there\'s nothing to worry about.', 'sunshine-photo-cart' ); ?></p>
 			<?php } ?>
 			<button type="button" id="sunshine--protection-notice--close"><?php esc_html_e( 'I understand', 'sunshine-photo-cart' ); ?></button>
 		</div>
@@ -275,10 +276,14 @@ function sunshine_record_protection_attempt( $type, $gallery_id, $image_id = 0 )
 		'image_id'   => (int) $image_id,
 		'user_id'    => get_current_user_id(),
 		'email'      => sunshine_get_known_visitor_email(),
-		'ip'         => ( SPC()->get_option( 'protection_log_ip' ) && isset( $_SERVER['REMOTE_ADDR'] ) ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '',
+		'ip'         => '',
 		'type'       => $type,
 		'time'       => time(),
 	);
+	// The IP address is only kept for guests nobody can name, since an account or email already says who it was.
+	if ( ! $attempt['user_id'] && ! $attempt['email'] && SPC()->get_option( 'protection_log_ip' ) && isset( $_SERVER['REMOTE_ADDR'] ) ) {
+		$attempt['ip'] = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+	}
 	$table   = $wpdb->prefix . 'sunshine_protection_log';
 	if ( false === $wpdb->insert( $table, $attempt ) ) {
 		// Right after an update the table can be missing until an admin opens wp-admin, so make it now.
@@ -371,14 +376,94 @@ function sunshine_protection_privacy_policy_content() {
 	if ( ! function_exists( 'wp_add_privacy_policy_content' ) || ! SPC()->get_option( 'protection_log' ) ) {
 		return;
 	}
-	$text = '<p class="privacy-policy-tutorial">' . __( 'Sunshine Photo Cart is recording attempts to screenshot, save or print protected photos. Add something like this to your privacy policy.', 'sunshine-photo-cart' ) . '</p>';
+	$text = '<p class="privacy-policy-tutorial">' . __( 'Sunshine Photo Cart is recording attempts to screenshot, save or print protected photos. Add something like this to your privacy policy, and fill in how people can contact you.', 'sunshine-photo-cart' ) . '</p>';
 	if ( SPC()->get_option( 'protection_log_ip' ) ) {
-		$what = __( 'When you try to take a screenshot of, save or print photos in a protected gallery, we record which gallery and photo it was, the date and time, your account or the email address you gave to see the gallery, and your IP address.', 'sunshine-photo-cart' );
+		$what = __( 'In protected galleries, if you use a screenshot, save or print shortcut, or right-click a photo, we record which gallery and photo it was, what kind of action it was, the date and time, and your account or the email address you gave to view the gallery. If we don\'t have either, we record your IP address instead.', 'sunshine-photo-cart' );
 	} else {
-		$what = __( 'When you try to take a screenshot of, save or print photos in a protected gallery, we record which gallery and photo it was, the date and time, and your account or the email address you gave to see the gallery.', 'sunshine-photo-cart' );
+		$what = __( 'In protected galleries, if you use a screenshot, save or print shortcut, or right-click a photo, we record which gallery and photo it was, what kind of action it was, the date and time, and your account or the email address you gave to view the gallery.', 'sunshine-photo-cart' );
 	}
-	$text .= '<p>' . $what . ' ' . __( 'We keep these records to protect the copyright of our photos.', 'sunshine-photo-cart' ) . '</p>';
+	$text     .= '<p>' . $what . ' ' . __( 'We do this to protect the copyright in our photos. Our legal basis is our legitimate interest in protecting our work. Only we see these records, and we don\'t share them unless we need to for a copyright claim.', 'sunshine-photo-cart' ) . '</p>';
+	$retention = sunshine_get_protection_log_retention_text();
+	if ( $retention ) {
+		/* translators: %s is how long records are kept, like "12 months" */
+		$text .= '<p>' . sprintf( __( 'We keep these records for %s, then delete them automatically, unless we need them for an open dispute.', 'sunshine-photo-cart' ), $retention ) . '</p>';
+	}
+	$text .= '<p>' . __( 'You can ask to see or delete these records, or object to this recording, by contacting us. Some of these actions can happen by accident, so we treat a record as a reason to look into something, not as proof.', 'sunshine-photo-cart' ) . '</p>';
 	wp_add_privacy_policy_content( 'Sunshine Photo Cart: ' . __( 'Image Protection', 'sunshine-photo-cart' ), wp_kses_post( $text ) );
+}
+
+/**
+ * How long recorded attempts are kept, like "12 months", or empty when they're kept until deleted by hand.
+ *
+ * @return string
+ */
+function sunshine_get_protection_log_retention_text() {
+	$value  = SPC()->get_option( 'privacy_retain_protection_log' );
+	$number = ( is_array( $value ) && ! empty( $value['number'] ) ) ? absint( $value['number'] ) : 0;
+	if ( ! $number ) {
+		return '';
+	}
+	switch ( isset( $value['unit'] ) ? $value['unit'] : 'months' ) {
+		case 'days':
+			/* translators: %d is a number of days */
+			return sprintf( _n( '%d day', '%d days', $number, 'sunshine-photo-cart' ), $number );
+		case 'weeks':
+			/* translators: %d is a number of weeks */
+			return sprintf( _n( '%d week', '%d weeks', $number, 'sunshine-photo-cart' ), $number );
+		case 'years':
+			/* translators: %d is a number of years */
+			return sprintf( _n( '%d year', '%d years', $number, 'sunshine-photo-cart' ), $number );
+		default:
+			/* translators: %d is a number of months */
+			return sprintf( _n( '%d month', '%d months', $number, 'sunshine-photo-cart' ), $number );
+	}
+}
+
+add_action( 'add_option_sunshine_protection_log', 'sunshine_protection_log_default_retention', 10, 2 );
+add_action( 'update_option_sunshine_protection_log', 'sunshine_protection_log_default_retention', 10, 2 );
+/**
+ * When recording is turned on and no keep time is set, keep records for 12 months.
+ *
+ * @param mixed $old_value The value before, or the option name when the option is first added.
+ * @param mixed $value     The new value.
+ */
+function sunshine_protection_log_default_retention( $old_value, $value ) {
+	if ( 'sunshine_protection_log' === $old_value ) {
+		$old_value = false;
+	}
+	if ( empty( $value ) || ! empty( $old_value ) ) {
+		return;
+	}
+	$retention = SPC()->get_option( 'privacy_retain_protection_log' );
+	if ( empty( $retention['number'] ) ) {
+		SPC()->update_option(
+			'privacy_retain_protection_log',
+			array(
+				'number' => 12,
+				'unit'   => 'months',
+			)
+		);
+	}
+}
+
+/**
+ * The line added to the gallery terms while attempts are recorded, so visitors know before
+ * they agree. Empty when recording is off.
+ *
+ * @return string HTML.
+ */
+function sunshine_get_protection_terms_text() {
+	if ( ! SPC()->get_option( 'protection_log' ) ) {
+		return '';
+	}
+	/* translators: %s is the photographer's business (site) name */
+	$text = sprintf( __( 'If you use a screenshot, save or print shortcut, or right-click a photo, %s may keep a record of it with your account or email, the gallery and photo, and the time, to protect their copyright.', 'sunshine-photo-cart' ), get_bloginfo( 'name' ) );
+	$url  = get_privacy_policy_url();
+	if ( $url ) {
+		/* translators: %s is a link to the site's privacy policy */
+		$text .= ' ' . sprintf( __( 'See the %s for details.', 'sunshine-photo-cart' ), '<a href="' . esc_url( $url ) . '" target="_blank">' . esc_html__( 'privacy policy', 'sunshine-photo-cart' ) . '</a>' );
+	}
+	return '<p>' . $text . '</p>';
 }
 
 /**

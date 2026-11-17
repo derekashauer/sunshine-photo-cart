@@ -536,7 +536,7 @@ function sunshine_get_settings_fields() {
 		'id'          => 'gallery_terms_text',
 		'type'        => 'wysiwyg',
 		'default'     => sunshine_get_gallery_terms_default_text(),
-		'description' => __( 'Changing this asks everyone to agree again, since they agreed to different wording.', 'sunshine-photo-cart' ),
+		'description' => __( 'Changing this asks everyone to agree again, since they agreed to different wording. While Image Protection records attempts, a line saying so is added to the end of these terms.', 'sunshine-photo-cart' ),
 	);
 	$galleries_fields['1630'] = array(
 		'name'        => __( 'Don\'t ask guests for an email', 'sunshine-photo-cart' ),
@@ -563,14 +563,21 @@ function sunshine_get_settings_fields() {
 		'name'        => __( 'Record attempts', 'sunshine-photo-cart' ),
 		'id'          => 'protection_log',
 		'type'        => 'checkbox',
-		'description' => __( 'Saves each try with the date, the gallery and photo, and who it was: the customer\'s account, or the email a guest gave to see the gallery. Your notice also tells visitors their attempt was recorded.', 'sunshine-photo-cart' ) . ' ' . sunshine_protection_privacy_policy_reminder(),
+		'description' => __( 'Saves each try with the date, the gallery and photo, and who it was: the customer\'s account, or the email a guest gave to see the gallery. Your notice also tells visitors it was recorded.', 'sunshine-photo-cart' )
+			. ' ' . __( 'Turn on Gallery Terms too: a line about this is added to your terms, so visitors know before they see any photos.', 'sunshine-photo-cart' )
+			. ' ' . sunshine_protection_privacy_policy_reminder()
+			. ' ' . sprintf(
+				/* translators: %s is a link to the help doc */
+				__( 'In the EU or UK, privacy rules for this are stricter. Read %s before turning it on.', 'sunshine-photo-cart' ),
+				'<a href="https://www.sunshinephotocart.com/docs/image-protection/#recording-attempts-in-the-eu-and-uk" target="_blank">' . esc_html__( 'the notes for EU and UK photographers', 'sunshine-photo-cart' ) . '</a>'
+			),
 		'options'     => array( 1 ),
 	);
 	$galleries_fields['1714'] = array(
 		'name'        => __( 'Save IP addresses', 'sunshine-photo-cart' ),
 		'id'          => 'protection_log_ip',
 		'type'        => 'checkbox',
-		'description' => __( 'Also saves the visitor\'s IP address, which can help tell guests apart when they didn\'t give an email.', 'sunshine-photo-cart' ),
+		'description' => __( 'Saves the IP address of guests who didn\'t log in or give an email, which can help tell them apart. It\'s never saved when Sunshine already knows who it was.', 'sunshine-photo-cart' ),
 		'options'     => array( 1 ),
 		'conditions'  => array(
 			array(
@@ -1801,7 +1808,7 @@ function sunshine_get_settings_fields() {
 		'id'          => 'privacy_retain_protection_log',
 		'name'        => __( 'Retain records of screenshot attempts', 'sunshine-photo-cart' ),
 		'type'        => 'duration',
-		'description' => __( 'From Image Protection in the Galleries settings.', 'sunshine-photo-cart' ),
+		'description' => __( 'From Image Protection in the Galleries settings. Set to 12 months when recording is turned on, if blank. Leave blank to keep records until you delete them.', 'sunshine-photo-cart' ),
 	);
 	$privacy_fields['3300'] = array(
 		'id'          => 'privacy_delete_expired_galleries',
