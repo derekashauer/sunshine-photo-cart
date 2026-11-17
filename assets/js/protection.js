@@ -23,18 +23,42 @@
 			var size = Math.sqrt( sharp / Math.PI ) * 100 / 0.85;
 			return 'radial-gradient(ellipse ' + size + '% ' + size + '% at ' + x + '% ' + y + '%, transparent 70%, #000 100%)';
 		}
-		var angle, stop;
-		if ( 'diagonal' === type ) {
-			// The sharp corner is the one nearest where the visitor tapped.
-			angle = ( x + y < 100 ) ? 135 : 315;
-			// Along a corner-to-corner line, area grows with the square of the distance.
-			stop = sharp <= 0.5 ? Math.sqrt( sharp / 2 ) : 1 - Math.sqrt( ( 1 - sharp ) / 2 );
-		} else {
-			angle = ( x < 50 ) ? 90 : 270;
-			stop  = sharp;
+		// A sharp strip across the photo, centered where the visitor tapped, so every part can be seen.
+		var diagonal = ( 'diagonal' === type );
+		var center = diagonal ? ( x + y ) / 200 : x / 100;
+		// How much of the photo lies before a point on the line: straight for one side, and
+		// growing with the square of the distance from a corner for a corner-to-corner line.
+		var area = function ( t ) {
+			t = Math.min( 1, Math.max( 0, t ) );
+			if ( ! diagonal ) {
+				return t;
+			}
+			return t <= 0.5 ? 2 * t * t : 1 - 2 * ( 1 - t ) * ( 1 - t );
+		};
+		// Widen the strip around the tap until it holds the sharp share of the photo.
+		var low = 0, high = 1, half = 0.5;
+		for ( var i = 0; i < 30; i++ ) {
+			half = ( low + high ) / 2;
+			if ( area( center + half ) - area( center - half ) < sharp ) {
+				low = half;
+			} else {
+				high = half;
+			}
 		}
-		stop = stop * 100;
-		return 'linear-gradient(' + angle + 'deg, transparent ' + ( stop - 5 ) + '%, #000 ' + ( stop + 5 ) + '%)';
+		var start = Math.max( 0, center - half ) * 100;
+		var end = Math.min( 1, center + half ) * 100;
+		var stops = [];
+		if ( start > 0 ) {
+			stops.push( '#000 ' + Math.max( 0, start - 5 ) + '%', 'transparent ' + ( start + 5 ) + '%' );
+		} else {
+			stops.push( 'transparent 0%' );
+		}
+		if ( end < 100 ) {
+			stops.push( 'transparent ' + ( end - 5 ) + '%', '#000 ' + Math.min( 100, end + 5 ) + '%' );
+		} else {
+			stops.push( 'transparent 100%' );
+		}
+		return 'linear-gradient(' + ( diagonal ? 135 : 90 ) + 'deg, ' + stops.join( ', ' ) + ')';
 	}
 
 	/**

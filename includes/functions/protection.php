@@ -134,8 +134,11 @@ function sunshine_protection_is_active() {
 	if ( $gallery ) {
 		return $gallery->is_protected();
 	}
-	// Pages showing photos from many galleries follow the site setting.
-	if ( is_sunshine_page( 'home' ) || is_sunshine_page( 'favorites' ) || SPC()->frontend->is_search() ) {
+	// Pages showing photos from many galleries follow the site setting, including a gallery list
+	// or search placed on any page with a shortcode.
+	global $post;
+	$content = ! empty( $post->post_content ) ? $post->post_content : '';
+	if ( is_sunshine_page( 'home' ) || is_sunshine_page( 'favorites' ) || SPC()->frontend->is_search() || has_shortcode( $content, 'sunshine_galleries' ) || has_shortcode( $content, 'sunshine_search' ) ) {
 		return (bool) SPC()->get_option( 'disable_right_click' );
 	}
 	return false;
