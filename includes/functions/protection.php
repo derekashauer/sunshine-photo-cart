@@ -348,24 +348,14 @@ function sunshine_delete_gallery_protection_attempts( $post_id ) {
 }
 
 /**
- * A reminder to mention recorded attempts in the site's privacy policy, linking to it when there is one.
+ * A link to edit the site's privacy policy, or to set one up when there isn't one.
  *
  * @return string HTML.
  */
-function sunshine_protection_privacy_policy_reminder() {
+function sunshine_protection_privacy_policy_link() {
 	$policy_id = (int) get_option( 'wp_page_for_privacy_policy' );
-	if ( $policy_id && 'publish' === get_post_status( $policy_id ) ) {
-		return sprintf(
-			/* translators: %s is a link to edit the site's privacy policy */
-			__( 'Mention this in your %s. Suggested wording is in the WordPress privacy policy guide.', 'sunshine-photo-cart' ),
-			'<a href="' . esc_url( get_edit_post_link( $policy_id ) ) . '">' . esc_html__( 'privacy policy', 'sunshine-photo-cart' ) . '</a>'
-		);
-	}
-	return sprintf(
-		/* translators: %s is a link to the WordPress privacy settings */
-		__( 'If you have a privacy policy, mention this in it. You can set one up in %s.', 'sunshine-photo-cart' ),
-		'<a href="' . esc_url( admin_url( 'options-privacy.php' ) ) . '">' . esc_html__( 'Settings > Privacy', 'sunshine-photo-cart' ) . '</a>'
-	);
+	$url       = ( $policy_id && 'publish' === get_post_status( $policy_id ) ) ? get_edit_post_link( $policy_id ) : admin_url( 'options-privacy.php' );
+	return '<a href="' . esc_url( $url ) . '">' . esc_html__( 'your privacy policy', 'sunshine-photo-cart' ) . '</a>';
 }
 
 add_action( 'admin_init', 'sunshine_protection_privacy_policy_content' );

@@ -536,146 +536,13 @@ function sunshine_get_settings_fields() {
 		'id'          => 'gallery_terms_text',
 		'type'        => 'wysiwyg',
 		'default'     => sunshine_get_gallery_terms_default_text(),
-		'description' => __( 'Changing this asks everyone to agree again, since they agreed to different wording. While Image Protection records attempts, a line saying so is added to the end of these terms.', 'sunshine-photo-cart' ),
+		'description' => __( 'Changing this asks everyone to agree again. While Image Protection records attempts, a line about it is added at the end.', 'sunshine-photo-cart' ),
 	);
 	$galleries_fields['1630'] = array(
 		'name'        => __( 'Don\'t ask guests for an email', 'sunshine-photo-cart' ),
 		'id'          => 'gallery_terms_no_email',
 		'type'        => 'checkbox',
 		'description' => __( 'By default, visitors who aren\'t logged in also give their email address when they agree, so every agreement shows who it was. Without an email, Sunshine can\'t record who agreed.', 'sunshine-photo-cart' ),
-	);
-
-	$galleries_fields['1700'] = array(
-		'id'          => 'image_protection_header',
-		'name'        => __( 'Image Protection', 'sunshine-photo-cart' ),
-		'type'        => 'header',
-		'description' => __( 'Remind visitors your photos are protected when they try to take a screenshot, save or print them, and keep a record of who tried. No website can fully stop a screenshot, but most people stop once they see the notice. You won\'t see any of this while logged in as an admin.', 'sunshine-photo-cart' ),
-	);
-	$galleries_fields['1710'] = array(
-		'name'          => __( 'Protect photos by default', 'sunshine-photo-cart' ),
-		'id'            => 'disable_right_click',
-		'type'          => 'checkbox',
-		'description'   => __( 'Blocks right-clicking and dragging photos, and shows your notice when someone tries to take a screenshot, save the page or print. Each try is recorded on the gallery and the customer. Galleries set to "Default" use this, and each gallery can turn it on or off for itself.', 'sunshine-photo-cart' ),
-		'options'       => array( 1 ),
-		'documentation' => 'https://www.sunshinephotocart.com/docs/image-protection/',
-	);
-	$galleries_fields['1712'] = array(
-		'name'        => __( 'Record attempts', 'sunshine-photo-cart' ),
-		'id'          => 'protection_log',
-		'type'        => 'checkbox',
-		'description' => __( 'Saves each try with the date, the gallery and photo, and who it was: the customer\'s account, or the email a guest gave to see the gallery. Your notice also tells visitors it was recorded.', 'sunshine-photo-cart' )
-			. ' ' . __( 'Turn on Gallery Terms too: a line about this is added to your terms, so visitors know before they see any photos.', 'sunshine-photo-cart' )
-			. ' ' . sunshine_protection_privacy_policy_reminder()
-			. ' ' . sprintf(
-				/* translators: %s is a link to the help doc */
-				__( 'In the EU or UK, privacy rules for this are stricter. Read %s before turning it on.', 'sunshine-photo-cart' ),
-				'<a href="https://www.sunshinephotocart.com/docs/image-protection/#recording-attempts-in-the-eu-and-uk" target="_blank">' . esc_html__( 'the notes for EU and UK photographers', 'sunshine-photo-cart' ) . '</a>'
-			),
-		'options'     => array( 1 ),
-	);
-	$galleries_fields['1714'] = array(
-		'name'        => __( 'Save IP addresses', 'sunshine-photo-cart' ),
-		'id'          => 'protection_log_ip',
-		'type'        => 'checkbox',
-		'description' => __( 'Saves the IP address of guests who didn\'t log in or give an email, which can help tell them apart. It\'s never saved when Sunshine already knows who it was.', 'sunshine-photo-cart' ),
-		'options'     => array( 1 ),
-		'conditions'  => array(
-			array(
-				'compare' => '==',
-				'value'   => '1',
-				'field'   => 'protection_log',
-				'action'  => 'show',
-			),
-		),
-	);
-	$galleries_fields['1720'] = array(
-		'name'        => __( 'Notice', 'sunshine-photo-cart' ),
-		'id'          => 'protection_notice',
-		'type'        => 'wysiwyg',
-		'default'     => sunshine_get_protection_notice_default_text(),
-		'description' => __( 'Shown when someone tries to take a screenshot, save or print, and printed in place of the page.', 'sunshine-photo-cart' ),
-	);
-	$galleries_fields['1730'] = array(
-		'name'        => __( 'Blur photos when the page is in the background', 'sunshine-photo-cart' ),
-		'id'          => 'protection_focus_blur',
-		'type'        => 'checkbox',
-		'description' => __( 'Blurs the photos while the visitor is using another window or app, like a screenshot or screen recording tool. The photos come back when they click on the page again.', 'sunshine-photo-cart' ),
-		'options'     => array( 1 ),
-	);
-	$galleries_fields['1740'] = array(
-		'name'        => __( 'Blur part of each photo on phones and tablets', 'sunshine-photo-cart' ),
-		'id'          => 'protection_blur',
-		'type'        => 'select',
-		'options'     => array(
-			''      => __( 'Off', 'sunshine-photo-cart' ),
-			'all'   => __( 'Gallery and photo pages', 'sunshine-photo-cart' ),
-			'image' => __( 'Photo pages only', 'sunshine-photo-cart' ),
-		),
-		'description' => __( 'Phones and tablets don\'t tell a website when a screenshot is taken, so part of each photo stays blurred instead. On a photo\'s page, visitors tap the photo to move the blur and see the rest.', 'sunshine-photo-cart' ),
-	);
-	$blur_on = array(
-		array(
-			'compare' => '!=',
-			'value'   => '',
-			'field'   => 'protection_blur',
-			'action'  => 'show',
-		),
-	);
-	$galleries_fields['1750'] = array(
-		'name'       => __( 'Blur shape', 'sunshine-photo-cart' ),
-		'id'         => 'protection_blur_type',
-		'type'       => 'radio',
-		'default'    => 'radial',
-		'options'    => array(
-			'radial'   => __( 'Around a clear circle', 'sunshine-photo-cart' ),
-			'vertical' => __( 'One side', 'sunshine-photo-cart' ),
-			'diagonal' => __( 'One corner half', 'sunshine-photo-cart' ),
-		),
-		'conditions' => $blur_on,
-	);
-	$galleries_fields['1760'] = array(
-		'name'       => __( 'How much is blurred', 'sunshine-photo-cart' ),
-		'id'         => 'protection_blur_amount',
-		'type'       => 'select',
-		'default'    => '50',
-		'options'    => array(
-			'35' => __( 'About a third', 'sunshine-photo-cart' ),
-			'50' => __( 'About half', 'sunshine-photo-cart' ),
-			'65' => __( 'About two thirds', 'sunshine-photo-cart' ),
-		),
-		'conditions' => $blur_on,
-	);
-	$galleries_fields['1770'] = array(
-		'name'       => __( 'Preview', 'sunshine-photo-cart' ),
-		'id'         => 'protection_blur_preview',
-		'type'       => 'html',
-		'html'       => sunshine_protection_blur_preview_html(),
-		'conditions' => $blur_on,
-	);
-	$galleries_fields['1780'] = array(
-		'name'        => __( 'Explain the blur', 'sunshine-photo-cart' ),
-		'id'          => 'protection_blur_banner',
-		'type'        => 'checkbox',
-		'description' => __( 'Shows a note above the photos on phones and tablets that says why they\'re blurred. Visitors can close it.', 'sunshine-photo-cart' ),
-		'options'     => array( 1 ),
-		'conditions'  => $blur_on,
-	);
-	$galleries_fields['1790'] = array(
-		'name'       => __( 'Note', 'sunshine-photo-cart' ),
-		'id'         => 'protection_blur_banner_text',
-		'type'       => 'textarea',
-		'default'    => sunshine_get_protection_banner_default_text(),
-		'conditions' => array_merge(
-			$blur_on,
-			array(
-				array(
-					'compare' => '==',
-					'value'   => '1',
-					'field'   => 'protection_blur_banner',
-					'action'  => 'show',
-				),
-			)
-		),
 	);
 
 	$galleries_fields['2000'] = array(
@@ -992,6 +859,141 @@ function sunshine_get_settings_fields() {
 			),
 		),
 		'description' => __( 'Choose where the selection tray appears on the page', 'sunshine-photo-cart' ),
+	);
+
+	$galleries_fields['6000'] = array(
+		'id'          => 'image_protection_header',
+		'name'        => __( 'Image Protection', 'sunshine-photo-cart' ),
+		'type'        => 'header',
+		'description' => sprintf(
+			/* translators: %s is a link to the help doc */
+			__( 'Show a notice when someone tries to screenshot, save or print your photos. It\'s hidden while you\'re logged in as an admin. %s', 'sunshine-photo-cart' ),
+			'<a href="https://www.sunshinephotocart.com/docs/image-protection/" target="_blank">' . esc_html__( 'How it works', 'sunshine-photo-cart' ) . '</a>'
+		),
+	);
+	$galleries_fields['6010'] = array(
+		'name'          => __( 'Protect all galleries', 'sunshine-photo-cart' ),
+		'id'            => 'disable_right_click',
+		'type'          => 'checkbox',
+		'description'   => __( 'Each gallery can also turn this on or off for itself.', 'sunshine-photo-cart' ),
+		'options'       => array( 1 ),
+		'documentation' => 'https://www.sunshinephotocart.com/docs/image-protection/',
+	);
+	$galleries_fields['6012'] = array(
+		'name'        => __( 'Record attempts', 'sunshine-photo-cart' ),
+		'id'          => 'protection_log',
+		'type'        => 'checkbox',
+		'description' => sprintf(
+			/* translators: 1: link to the site's privacy policy, 2: link to the help doc */
+			__( 'Saves who tried, on which photo and when, on each gallery\'s Protection Log tab. Turn on Gallery Terms so visitors are told first, and mention it in %1$s. %2$s', 'sunshine-photo-cart' ),
+			sunshine_protection_privacy_policy_link(),
+			'<a href="https://www.sunshinephotocart.com/docs/image-protection/#recording-attempts-in-the-eu-and-uk" target="_blank">' . esc_html__( 'Privacy notes', 'sunshine-photo-cart' ) . '</a>'
+		),
+		'options'     => array( 1 ),
+	);
+	$galleries_fields['6014'] = array(
+		'name'        => __( 'Save IP addresses', 'sunshine-photo-cart' ),
+		'id'          => 'protection_log_ip',
+		'type'        => 'checkbox',
+		'description' => __( 'Only for guests who didn\'t log in or give an email.', 'sunshine-photo-cart' ),
+		'options'     => array( 1 ),
+		'conditions'  => array(
+			array(
+				'compare' => '==',
+				'value'   => '1',
+				'field'   => 'protection_log',
+				'action'  => 'show',
+			),
+		),
+	);
+	$galleries_fields['6020'] = array(
+		'name'        => __( 'Notice', 'sunshine-photo-cart' ),
+		'id'          => 'protection_notice',
+		'type'        => 'wysiwyg',
+		'default'     => sunshine_get_protection_notice_default_text(),
+		'description' => __( 'Also printed in place of the page.', 'sunshine-photo-cart' ),
+	);
+	$galleries_fields['6030'] = array(
+		'name'        => __( 'Blur photos when the page is in the background', 'sunshine-photo-cart' ),
+		'id'          => 'protection_focus_blur',
+		'type'        => 'checkbox',
+		'description' => __( 'Catches some screenshot and screen recording tools.', 'sunshine-photo-cart' ),
+		'options'     => array( 1 ),
+	);
+	$galleries_fields['6040'] = array(
+		'name'        => __( 'Blur part of each photo on phones and tablets', 'sunshine-photo-cart' ),
+		'id'          => 'protection_blur',
+		'type'        => 'select',
+		'options'     => array(
+			''      => __( 'Off', 'sunshine-photo-cart' ),
+			'all'   => __( 'Gallery and photo pages', 'sunshine-photo-cart' ),
+			'image' => __( 'Photo pages only', 'sunshine-photo-cart' ),
+		),
+		'description' => __( 'Phones can\'t report screenshots, so part of each photo stays blurred. Visitors tap a photo to move the blur.', 'sunshine-photo-cart' ),
+	);
+	$blur_on = array(
+		array(
+			'compare' => '!=',
+			'value'   => '',
+			'field'   => 'protection_blur',
+			'action'  => 'show',
+		),
+	);
+	$galleries_fields['6050'] = array(
+		'name'       => __( 'Blur shape', 'sunshine-photo-cart' ),
+		'id'         => 'protection_blur_type',
+		'type'       => 'radio',
+		'default'    => 'radial',
+		'options'    => array(
+			'radial'   => __( 'Around a clear circle', 'sunshine-photo-cart' ),
+			'vertical' => __( 'One side', 'sunshine-photo-cart' ),
+			'diagonal' => __( 'One corner half', 'sunshine-photo-cart' ),
+		),
+		'conditions' => $blur_on,
+	);
+	$galleries_fields['6060'] = array(
+		'name'       => __( 'How much is blurred', 'sunshine-photo-cart' ),
+		'id'         => 'protection_blur_amount',
+		'type'       => 'select',
+		'default'    => '50',
+		'options'    => array(
+			'35' => __( 'About a third', 'sunshine-photo-cart' ),
+			'50' => __( 'About half', 'sunshine-photo-cart' ),
+			'65' => __( 'About two thirds', 'sunshine-photo-cart' ),
+		),
+		'conditions' => $blur_on,
+	);
+	$galleries_fields['6070'] = array(
+		'name'       => __( 'Preview', 'sunshine-photo-cart' ),
+		'id'         => 'protection_blur_preview',
+		'type'       => 'html',
+		'html'       => sunshine_protection_blur_preview_html(),
+		'conditions' => $blur_on,
+	);
+	$galleries_fields['6080'] = array(
+		'name'        => __( 'Explain the blur', 'sunshine-photo-cart' ),
+		'id'          => 'protection_blur_banner',
+		'type'        => 'checkbox',
+		'description' => __( 'Shows a note above the photos saying why they\'re blurred.', 'sunshine-photo-cart' ),
+		'options'     => array( 1 ),
+		'conditions'  => $blur_on,
+	);
+	$galleries_fields['6090'] = array(
+		'name'       => __( 'Note', 'sunshine-photo-cart' ),
+		'id'         => 'protection_blur_banner_text',
+		'type'       => 'textarea',
+		'default'    => sunshine_get_protection_banner_default_text(),
+		'conditions' => array_merge(
+			$blur_on,
+			array(
+				array(
+					'compare' => '==',
+					'value'   => '1',
+					'field'   => 'protection_blur_banner',
+					'action'  => 'show',
+				),
+			)
+		),
 	);
 
 	$galleries_fields = apply_filters( 'sunshine_options_galleries', $galleries_fields );
@@ -1808,7 +1810,7 @@ function sunshine_get_settings_fields() {
 		'id'          => 'privacy_retain_protection_log',
 		'name'        => __( 'Retain records of screenshot attempts', 'sunshine-photo-cart' ),
 		'type'        => 'duration',
-		'description' => __( 'From Image Protection in the Galleries settings. Set to 12 months when recording is turned on, if blank. Leave blank to keep records until you delete them.', 'sunshine-photo-cart' ),
+		'description' => __( 'From Image Protection. Leave blank to keep them until you delete them.', 'sunshine-photo-cart' ),
 	);
 	$privacy_fields['3300'] = array(
 		'id'          => 'privacy_delete_expired_galleries',
