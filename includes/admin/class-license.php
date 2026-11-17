@@ -1267,8 +1267,9 @@ class SPC_License {
 	}
 
 	/**
-	 * Whether the store has had its say: it answered in the last two days, or it has not been
-	 * reachable for STOP_UNREACHABLE. An add-on with no key needs no answer.
+	 * Whether the store has had its say in the last two days: it answered, or that try failed
+	 * too and it has not been reachable for STOP_UNREACHABLE. An old failed try isn't enough,
+	 * since the store may be back and the license renewed. An add-on with no key needs no answer.
 	 *
 	 * @return bool
 	 */
@@ -1279,13 +1280,10 @@ class SPC_License {
 		$plan_id = $this->get_followed_plan_id();
 		$license = ( $plan_id && isset( self::$all[ $plan_id ] ) ) ? self::$all[ $plan_id ] : $this;
 		$check   = $license->get_last_check();
-		if ( ! $check ) {
+		if ( ! $check || $check['time'] < self::now() - 2 * DAY_IN_SECONDS ) {
 			return false;
 		}
-		if ( $check['ok'] ) {
-			return $check['time'] >= self::now() - 2 * DAY_IN_SECONDS;
-		}
-		return ! empty( $check['first_fail'] ) && $check['first_fail'] < self::now() - self::STOP_UNREACHABLE;
+		return $check['ok'] || ( ! empty( $check['first_fail'] ) && $check['first_fail'] < self::now() - self::STOP_UNREACHABLE );
 	}
 
 	/**
