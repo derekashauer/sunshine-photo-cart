@@ -250,8 +250,9 @@ class SPC_License {
 
 		$lines = array();
 
+		// The "activated on a different site" messages already name the address.
 		$url = SPC()->get_option( 'license_url_' . $this->id );
-		if ( $url ) {
+		if ( $url && ! in_array( $this->get_status(), array( 'site_inactive', 'no_activations_left' ), true ) ) {
 			/* translators: %s is a site address, like www.example.com */
 			$lines[] = sprintf( esc_html__( 'Activated for %s', 'sunshine-photo-cart' ), '<code>' . esc_html( untrailingslashit( preg_replace( '#^https?://#', '', $url ) ) ) . '</code>' );
 		}
@@ -260,21 +261,16 @@ class SPC_License {
 		if ( $check ) {
 			$format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 			if ( $this->is_check_stale() ) {
-				$lines[] = '<strong>' . ( $check['last_ok']
-					? sprintf(
-						/* translators: %1$s is a date, %2$s is an error message */
-						esc_html__( 'This site has not been able to reach sunshinephotocart.com to check this license since %1$s, so the status above may be out of date. The last try said: %2$s', 'sunshine-photo-cart' ),
-						esc_html( wp_date( $format, $check['last_ok'] ) ),
-						esc_html( $check['error'] )
-					)
-					: sprintf(
-						/* translators: %s is an error message */
-						esc_html__( 'This site has not been able to reach sunshinephotocart.com to check this license, so the status above may be out of date. The last try said: %s', 'sunshine-photo-cart' ),
-						esc_html( $check['error'] )
-					) ) . '</strong>';
-			} else {
+				$lines[] = '<strong>' . sprintf(
+					/* translators: %1$s is a date, %2$s is an error message */
+					esc_html__( 'This site has not been able to reach sunshinephotocart.com to check this license since %1$s, so the status above may be out of date. The last try said: %2$s', 'sunshine-photo-cart' ),
+					esc_html( wp_date( $format, $check['last_ok'] ? $check['last_ok'] : $check['first_fail'] ) ),
+					esc_html( $check['error'] )
+				) . '</strong>';
+			} elseif ( $check['last_ok'] ) {
+				// The last check that got through, not a try that didn't.
 				/* translators: %s is a date and time */
-				$lines[] = sprintf( esc_html__( 'Last checked %s', 'sunshine-photo-cart' ), esc_html( wp_date( $format, $check['time'] ) ) );
+				$lines[] = sprintf( esc_html__( 'Last checked %s', 'sunshine-photo-cart' ), esc_html( wp_date( $format, $check['last_ok'] ) ) );
 			}
 		}
 
@@ -320,13 +316,28 @@ class SPC_License {
 	 * was renewed. This reads saved options, not SPC()->plans, because the list of active
 	 * add-ons is built before the plans are.
 	 *
+	 * Its own saved status is "valid" or "expired" while the store says the plan covers it
+	 * (the plan's key just expired with the plan). Any other answer means the plan doesn't
+	 * cover it, and it keeps its own. A key from an expired plan the site has moved off of
+	 * isn't followed either: the add-on keeps its own until the next check moves it to the
+	 * plan in use.
+	 *
 	 * @return string
 	 */
 	private function get_followed_plan_id() {
-		if ( $this->requires || ! $this->license_key || 'valid' !== SPC()->get_option( 'license_status_' . $this->id ) ) {
+		if ( $this->requires || ! $this->license_key || ! in_array( SPC()->get_option( 'license_status_' . $this->id ), array( 'valid', 'expired' ), true ) ) {
 			return '';
 		}
-		return self::plan_id_for_key( $this->license_key );
+		$plan_id = self::plan_id_for_key( $this->license_key );
+		if ( ! $plan_id || 'valid' === SPC()->get_option( 'license_status_' . $plan_id ) ) {
+			return $plan_id;
+		}
+		foreach ( array_keys( self::PLAN_RANKS ) as $plan ) {
+			if ( 'valid' === SPC()->get_option( 'license_status_sunshine-photo-cart-' . $plan ) ) {
+				return '';
+			}
+		}
+		return $plan_id;
 	}
 
 	/**
@@ -582,17 +593,32 @@ class SPC_License {
 	 */
 	public static function check_all() {
 
-		self::$quiet = true;
-		do_action( 'sunshine_license_check' );
-		self::$quiet = false;
+		$started = time();
 
-		$failed = array();
-		foreach ( self::$all as $license ) {
+		// Plans first: add-ons on a plan key move to it once it is valid. When a check can't
+		// reach the store the rest would wait out the same timeout, one after another, so stop.
+		$licenses = self::$all;
+		uasort(
+			$licenses,
+			function ( $a, $b ) {
+				return (int) ! $a->requires - (int) ! $b->requires;
+			}
+		);
+
+		self::$quiet = true;
+		$failed      = array();
+		foreach ( $licenses as $license ) {
+			if ( ! $license->get_license_key() ) {
+				continue;
+			}
+			$license->check_license();
 			$check = $license->get_last_check();
-			if ( $license->get_license_key() && $check && ! $check['ok'] && $check['time'] >= time() - MINUTE_IN_SECONDS ) {
+			if ( $check && ! $check['ok'] && $check['time'] >= $started ) {
 				$failed[] = $license->get_name();
+				break;
 			}
 		}
+		self::$quiet = false;
 
 		if ( $failed ) {
 			/* translators: %s is a list of product names */
@@ -775,11 +801,15 @@ class SPC_License {
 	 */
 	public static function record_check( $id, $result ) {
 		$previous = SPC()->get_option( 'license_check_' . $id );
+		$previous = is_array( $previous ) ? $previous : array();
+		$failed   = is_wp_error( $result );
 		$check    = array(
-			'time'    => time(),
-			'ok'      => ! is_wp_error( $result ),
-			'error'   => is_wp_error( $result ) ? $result->get_error_message() : '',
-			'last_ok' => is_wp_error( $result ) ? ( is_array( $previous ) && ! empty( $previous['last_ok'] ) ? $previous['last_ok'] : 0 ) : time(),
+			'time'       => time(),
+			'ok'         => ! $failed,
+			'error'      => $failed ? $result->get_error_message() : '',
+			'last_ok'    => $failed ? ( $previous['last_ok'] ?? 0 ) : time(),
+			// When this run of failed checks started, so the first failure is never counted as weeks of them.
+			'first_fail' => $failed ? ( ! empty( $previous['first_fail'] ) && empty( $previous['ok'] ) ? $previous['first_fail'] : time() ) : 0,
 		);
 		SPC()->update_option( 'license_check_' . $id, $check );
 	}
@@ -803,7 +833,7 @@ class SPC_License {
 	 */
 	public function is_check_stale() {
 		$check = $this->get_last_check();
-		return $check && ! $check['ok'] && $check['last_ok'] < time() - self::STALE_AFTER;
+		return $check && ! $check['ok'] && ! empty( $check['first_fail'] ) && $check['first_fail'] < time() - self::STALE_AFTER;
 	}
 
 	/**
@@ -955,7 +985,11 @@ class SPC_License {
 			return $problem_addons;
 		}
 		// No status means the key was deactivated on purpose, or never checked.
-		if ( $this->is_check_stale() || ! in_array( $this->get_status(), array( '', false, 'valid', 'expired' ), true ) ) {
+		$status = $this->get_status();
+		if ( in_array( $status, array( '', false ), true ) ) {
+			return $problem_addons;
+		}
+		if ( $this->is_check_stale() || ! in_array( $status, array( 'valid', 'expired' ), true ) ) {
 			$problem_addons[ $this->id ] = $this->name;
 		}
 		return $problem_addons;

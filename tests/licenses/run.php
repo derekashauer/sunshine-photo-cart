@@ -41,7 +41,7 @@ $other_addon = next( $addons );
 
 // Save every license option, to put back at the end.
 global $wpdb;
-$saved = $wpdb->get_results( "SELECT option_name, option_value FROM {$wpdb->options} WHERE option_name LIKE 'sunshine\\_license%'" );
+$saved = $wpdb->get_results( "SELECT option_name, option_value, autoload FROM {$wpdb->options} WHERE option_name LIKE 'sunshine\\_license%'" );
 
 $GLOBALS['spc_lt'] = array(
 	'passes'   => 0,
@@ -149,6 +149,24 @@ spc_lt_check( 'the add-on is expired with it', $addon->is_expired() && 'expired'
 spc_lt_check( 'the add-on no longer counts as active', ! array_key_exists( $addon_id, apply_filters( 'sunshine_active_addons', array() ) ) );
 spc_lt_check( 'the red bar names the plan, not the add-on', array_key_exists( 'sunshine-photo-cart-pro', $expired() ) && ! array_key_exists( $addon_id, $expired() ) );
 
+WP_CLI::log( 'The plan is renewed after it expired (the add-on\'s own copy says expired)' );
+spc_lt_set( $plan, $pro_key, 'valid', $future );
+spc_lt_set( $addon, $pro_key, 'expired', $past );
+spc_lt_check( 'the add-on is active again right away', ! $addon->is_expired() && array_key_exists( $addon_id, apply_filters( 'sunshine_active_addons', array() ) ) );
+
+WP_CLI::log( 'An add-on still on an older, expired plan\'s key after the site moved up to Pro' );
+$basic = $all['sunshine-photo-cart-basic'] ?? null;
+if ( $basic ) {
+	$basic_key = 'testbasickey00000000000000000e5f6';
+	spc_lt_set( $basic, $basic_key, 'expired', $past );
+	spc_lt_set( $addon, $basic_key, 'valid', $future );
+	spc_lt_check( 'it keeps its own status until the next check moves it to Pro', 'valid' === $addon->get_status() && ! $addon->is_expired() );
+	$store = array( 'mode' => 'valid', 'expires' => $future );
+	$addon->check_license();
+	spc_lt_check( 'the next check moves it to the Pro key', $pro_key === $addon->get_license_key() && $addon->is_covered_by_plan() );
+	spc_lt_set( $basic, '', '', '' );
+}
+
 WP_CLI::log( 'An add-on bought on its own keeps its own end date' );
 spc_lt_set( $plan, $pro_key, 'valid', $future );
 spc_lt_set( $addon, $own_key, 'expired', $past );
@@ -163,11 +181,20 @@ spc_lt_check( 'the red bar names it as a problem', array_key_exists( $addon_id, 
 WP_CLI::log( 'Checks that keep failing' );
 spc_lt_set( $addon, $pro_key, 'valid', $future );
 $day = DAY_IN_SECONDS;
-spc_lt_set( $plan, $pro_key, 'expired', $past, array( 'time' => time() - $day, 'ok' => false, 'error' => 'cURL error 28', 'last_ok' => time() - 20 * $day ) );
+spc_lt_set( $plan, $pro_key, 'expired', $past, array( 'time' => time() - $day, 'ok' => false, 'error' => 'cURL error 28', 'last_ok' => time() - 20 * $day, 'first_fail' => time() - 19 * $day ) );
 spc_lt_check( 'after 20 days with no check getting through, the plan is a problem, not expired', array_key_exists( 'sunshine-photo-cart-pro', $problems() ) && ! array_key_exists( 'sunshine-photo-cart-pro', $expired() ) );
 spc_lt_check( 'the Licenses screen says the status may be out of date', false !== strpos( (string) ( apply_filters( 'sunshine_options_licenses', array() )['plansunshine-photo-cart-pro']['description'] ?? '' ), 'may be out of date' ) );
-spc_lt_set( $plan, $pro_key, 'expired', $past, array( 'time' => time() - $day, 'ok' => false, 'error' => 'cURL error 28', 'last_ok' => time() - 3 * $day ) );
+spc_lt_set( $plan, $pro_key, 'expired', $past, array( 'time' => time() - $day, 'ok' => false, 'error' => 'cURL error 28', 'last_ok' => time() - 3 * $day, 'first_fail' => time() - $day ) );
 spc_lt_check( 'one failed check 3 days after a good one still says expired', array_key_exists( 'sunshine-photo-cart-pro', $expired() ) && ! array_key_exists( 'sunshine-photo-cart-pro', $problems() ) );
+spc_lt_set( $plan, $pro_key, 'valid', $future );
+$store = array( 'mode' => 'fail' );
+$plan->check_license();
+spc_lt_check( 'the first failed check on a site with no record yet is not "weeks of failures"', ! $plan->is_check_stale() && ! array_key_exists( 'sunshine-photo-cart-pro', $problems() ) );
+$plan->check_license();
+spc_lt_check( 'a second failure keeps when the failures started', $plan->get_last_check()['first_fail'] <= time() && ! $plan->is_check_stale() );
+spc_lt_set( $addon, $own_key, '', '', array( 'time' => time(), 'ok' => false, 'error' => 'x', 'last_ok' => 0, 'first_fail' => time() - 20 * $day ) );
+spc_lt_check( 'a license deactivated on purpose is not called a problem', ! array_key_exists( $addon_id, $problems() ) );
+$store = array( 'mode' => 'valid' );
 
 WP_CLI::log( 'Refresh on the plan checks every license' );
 spc_lt_set( $plan, $pro_key, 'expired', $past );
@@ -187,6 +214,15 @@ $check = $plan->get_last_check();
 spc_lt_check( 'the failure and its error are recorded', $check && ! $check['ok'] && false !== strpos( $check['error'], 'cURL error 28' ) );
 spc_lt_check( 'the last good check is kept', $last_ok === $check['last_ok'] );
 spc_lt_check( 'the saved status is left alone', 'valid' === $plan->get_status() );
+$requests = 0;
+$count    = function ( $pre ) use ( &$requests ) {
+	++$requests;
+	return $pre;
+};
+add_filter( 'pre_http_request', $count, 0 );
+SPC_License::check_all();
+remove_filter( 'pre_http_request', $count, 0 );
+spc_lt_check( 'a refresh that cannot reach the store stops after one try', 1 === $requests );
 
 WP_CLI::log( 'System Info' );
 $info = SPC_License::system_info_fields();
@@ -201,11 +237,12 @@ foreach ( $saved as $row ) {
 		array(
 			'option_name'  => $row->option_name,
 			'option_value' => $row->option_value,
-			'autoload'     => 'no',
+			'autoload'     => $row->autoload,
 		)
 	);
 }
 wp_cache_flush();
+SPC()->notices->delete_admin( 'sunshine_license_check_all' );
 
 WP_CLI::log( "\n" . $GLOBALS['spc_lt']['passes'] . ' passed, ' . $GLOBALS['spc_lt']['failures'] . ' failed' );
 if ( $GLOBALS['spc_lt']['failures'] ) {
