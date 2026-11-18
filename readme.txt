@@ -244,6 +244,9 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.8.3 =
+* Fix: A password gallery saved anywhere other than the gallery screen (the Connect API, WP-CLI, imports) now gets a random password when it has none, and the Cover theme's cover photo size is made, the same as a save on the gallery screen
+* Fix: Deleting a price level now puts the galleries and photos that used it back on the default price level. Before, they kept charging the deleted level's prices, which no screen could show or change
+* Change: The step that puts a new product in the default category is now a public function, `sunshine_product_set_default_category()`, so add-ons that make products can use it
 * Fix: Add-ons can now finish an order that was marked paid by hand, the same way the order screen does. The step is a public function, `sunshine_order_finish_if_paid()`
 * New: Image Protection (Settings > Galleries). When someone tries to take a screenshot, save the page or print, a notice you write reminds them the photos are copyrighted, and printing shows the notice instead of the page. On phones and tablets, part of each photo can stay blurred (around a circle, one side or one corner half), and visitors tap a photo to move the blur. Photos can also blur while the page is in the background. Each gallery can turn protection on or off
 * New: Record attempts. Each try is saved with the date, gallery, photo and who it was, shown on the new Sunshine > Protection Log page, on the gallery's Protection Log tab and on the customer's page. The notice then says it was recorded, and a line about it is added to your gallery terms so visitors know before they agree. Records are deleted after 12 months unless you change it (Settings > Privacy & Data), and are included in WordPress privacy exports and erasures

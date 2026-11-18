@@ -166,8 +166,8 @@ function sunshine_price_level_deleted( $term_id ) {
 				'post_status'    => array( 'any', 'trash' ),
 				'posts_per_page' => -1,
 				'fields'         => 'ids',
-				'meta_key'       => $meta_key,
-				'meta_value'     => intval( $term_id ),
+				'meta_key'       => $meta_key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- runs once per price level delete.
+				'meta_value'     => intval( $term_id ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 			)
 		);
 		foreach ( $post_ids as $post_id ) {
