@@ -370,8 +370,9 @@ class SPC_Admin_Order {
 			$new_status = str_replace( 'sunshine_order_status_', '', $action );
 			foreach ( $ids as $order_id ) {
 				$order = new SPC_Order( $order_id );
+				$old_status = $order->get_status();
 				$order->set_status( $new_status, '', true );
-				sunshine_order_finish_if_paid( $order );
+				sunshine_order_finish_if_paid( $order, $old_status );
 				do_action( 'sunshine_admin_order_status_update', $order );
 				$changed++;
 			}
@@ -1320,7 +1321,7 @@ class SPC_Admin_Order {
 			if ( $current_order_status != $new_order_status ) {
 				$order->add_log( 'Order status changed in admin' );
 				$order->set_status( $new_order_status, '', true );
-				sunshine_order_finish_if_paid( $order );
+				sunshine_order_finish_if_paid( $order, $current_order_status );
 				if ( ! empty( $_POST['order_status_change_notify'] ) && $_POST['order_status_change_notify'] == 'yes' ) {
 					do_action( 'sunshine_admin_order_status_update', $order );
 					// $order->notify( false );
