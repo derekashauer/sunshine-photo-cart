@@ -989,3 +989,103 @@ function sunshine_oembed_response_data( $data, $post ) {
 	}
 	return $data;
 }
+
+/*
+ * Gallery save steps. They run on every save, not only on the gallery screen, so a gallery made
+ * or changed anywhere else (the Connect API, WP-CLI, AI tools, imports) gets the same password
+ * and cover photo the screen gives it. Code that saves a gallery's settings after the post itself
+ * (as the API does) calls them again once the settings are in place.
+ */
+add_action( 'save_post', 'sunshine_make_cover_size_image', 10, 2 );
+function sunshine_make_cover_size_image( $post_id, $post = '' ) {
+
+	if ( 'sunshine-gallery' != get_post_type( $post_id ) || SPC()->get_option( 'theme_gallery' ) != 'cover' ) {
+		return;
+	}
+
+	$gallery           = sunshine_get_gallery( $post_id );
+	$featured_image_id = $gallery->get_featured_image_id();
+	if ( empty( $featured_image_id ) ) {
+		return;
+	}
+
+	$full_image_path = get_attached_file( $featured_image_id );
+	$metadata        = wp_get_attachment_metadata( $featured_image_id );
+
+	// Check if image already exists, don't remake if it does.
+	if ( ! empty( $metadata['sizes']['sunshine-cover']['file'] ) ) {
+		$existing_image_path = str_replace(
+			wp_basename( $full_image_path ),
+			wp_basename( $metadata['sizes']['sunshine-cover']['file'] ),
+			$full_image_path
+		);
+		if ( file_exists( $existing_image_path ) ) {
+			return;
+		}
+	}
+
+	// Make the new cover image and save to metadata.
+	$image_data = image_make_intermediate_size( $full_image_path, 1800, 1800, false );
+	if ( $image_data ) {
+		$metadata['sizes']['sunshine-cover'] = $image_data;
+		$metadata                            = sunshine_secure_intermediate_file_names( $metadata, $full_image_path, array( 'sunshine-cover' ) );
+	} else {
+		// No cover copy made (image smaller than 1800px or resize failed); drop any false entry older versions saved.
+		unset( $metadata['sizes']['sunshine-cover'] );
+	}
+	wp_update_attachment_metadata( $featured_image_id, $metadata );
+
+}
+
+
+add_action( 'save_post', 'sunshine_gallery_save_post', 10, 2 );
+function sunshine_gallery_save_post( $post_id, $post = '' ) {
+
+	if ( 'sunshine-gallery' != get_post_type( $post_id ) ) {
+		return;
+	}
+
+	$gallery = sunshine_get_gallery( $post_id );
+
+	// Set default password if none provided and status is password.
+	if ( $gallery->get_status() == 'password' && empty( $gallery->get_password() ) ) {
+		$gallery->update_meta_value( 'password', strtoupper( sunshine_random_string( 10 ) ) );
+	}
+
+	if ( SPC()->get_option( 'theme' ) != 'cover' ) {
+		return;
+	}
+
+	// Create cover image if using Cover theme.
+	$featured_image_id = $gallery->get_featured_image_id();
+	if ( empty( $featured_image_id ) ) {
+		return;
+	}
+
+	$full_image_path = get_attached_file( $featured_image_id );
+	$metadata        = wp_get_attachment_metadata( $featured_image_id );
+
+	// Check if image already exists, don't remake if it does.
+	if ( ! empty( $metadata['sizes']['sunshine-cover']['file'] ) ) {
+		$existing_image_path = str_replace(
+			wp_basename( $full_image_path ),
+			wp_basename( $metadata['sizes']['sunshine-cover']['file'] ),
+			$full_image_path
+		);
+		if ( file_exists( $existing_image_path ) ) {
+			return;
+		}
+	}
+
+	// Make the new cover image and save to metadata.
+	$image_data = image_make_intermediate_size( $full_image_path, 1800, 1800, false );
+	if ( $image_data ) {
+		$metadata['sizes']['sunshine-cover'] = $image_data;
+		$metadata                            = sunshine_secure_intermediate_file_names( $metadata, $full_image_path, array( 'sunshine-cover' ) );
+	} else {
+		// No cover copy made (image smaller than 1800px or resize failed); drop any false entry older versions saved.
+		unset( $metadata['sizes']['sunshine-cover'] );
+	}
+	wp_update_attachment_metadata( $featured_image_id, $metadata );
+
+}

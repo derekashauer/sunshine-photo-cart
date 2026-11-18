@@ -210,16 +210,7 @@ function sunshine_product_default_category( $post_id ) {
 	if ( empty( $_POST ) ) {
 		return;
 	}
-	$categories = wp_get_object_terms( $post_id, 'sunshine-product-category' );
-	if ( empty( $categories ) ) {
-		$default_category = sunshine_get_default_product_category();
-		if ( ! empty( $default_category ) ) {
-			$default_cat = apply_filters( 'sunshine_set_default_product_category', $default_category->get_id(), $post_id );
-			if ( $default_cat ) {
-				wp_set_object_terms( $post_id, $default_cat, 'sunshine-product-category' );
-			}
-		}
-	}
+	sunshine_product_set_default_category( $post_id );
 }
 
 add_action( 'wp', 'sunshine_admin_product_check' );
