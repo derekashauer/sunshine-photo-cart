@@ -189,6 +189,27 @@ function sunshine_order_is_paid( $status ) {
 }
 
 /**
+ * An order marked paid by hand (a cheque, a charge approved after a review, a payment
+ * notice that never arrived) is finished the same way checkout finishes a paid order, so
+ * its gift card, store credit and code uses are taken and the receipt is sent. Orders
+ * finished already are left alone. Call this right after set_status().
+ *
+ * @param SPC_Order $order      The order whose status was just changed.
+ * @param string    $old_status The status it had before. An order that was already paid is
+ *                              left alone, so moving from one paid status to another (Processing
+ *                              to Shipped) never finishes an older order a second time.
+ */
+function sunshine_order_finish_if_paid( $order, $old_status = '' ) {
+	if ( $old_status && sunshine_order_is_paid( $old_status ) ) {
+		return;
+	}
+	if ( sunshine_order_is_paid( $order->get_status() ) && ! $order->get_meta_value( 'post_processed' ) ) {
+		$order->add_log( __( 'Order finished after being marked paid by hand', 'sunshine-photo-cart' ) );
+		SPC()->cart->post_process_order( $order, false );
+	}
+}
+
+/**
  * Payment methods call this when they refuse a payment, payment notice or confirmation because
  * it doesn't pay the order: wrong amount, wrong currency, made for another order, paid to another
  * account, or it couldn't be confirmed. They add their own order note first; this only tells
