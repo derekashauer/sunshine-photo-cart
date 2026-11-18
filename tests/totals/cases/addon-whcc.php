@@ -161,6 +161,53 @@ $whcc_test(
 	}
 );
 
+// The product list shows each WHCC product "From" its cheapest size, so the customer sees a price
+// before opening WHCC's editor. WHCC's catalog has no prices, so the add-on builds each size at
+// WHCC with a gallery photo and prices them all in the background, then the list reads what it
+// saved: a customer's page never waits on WHCC.
+$whcc_test(
+	'the product list shows a WHCC product from its cheapest size',
+	function () use ( $t, &$whcc_lab, $whcc_product, $whcc_gallery, $whcc_other_level, $whcc_sent ) {
+		$product = $whcc_product( array( sunshine_get_default_price_level_id() => '50' ), false );
+		$ref     = get_post_meta( $product, 'whcc_product', true );
+		// The bigger size costs less here, so "cheapest" can't pass by being the default size.
+		$whcc_lab['catalog'][ $ref ]['size_units'] = array(
+			'8x10'  => 10.00,
+			'11x14' => 6.00,
+		);
+		$whcc_gallery( sunshine_get_default_price_level_id() );
+		$item = sunshine_get_product( $product, sunshine_get_default_price_level_id() );
+
+		$t::same( 'See options', wp_strip_all_tags( $item->get_price_formatted() ), 'before WHCC has been asked, no price' );
+
+		$t::same( true, sunshine_whcc_refresh_size_prices( $ref ), 'WHCC\'s prices are saved' );
+		$built = $whcc_sent( 'POST', 'commerce/configured-products' );
+		$sizes = array();
+		foreach ( $built as $request ) {
+			$sizes[] = $request['body']['configuredProducts'][0]['selections']['size'];
+		}
+		$t::same( array( '8x10', '11x14' ), $sizes, 'each size is built once' );
+		$t::same( 1, count( $whcc_sent( 'POST', 'commerce/submissions/calculate' ) ), 'one price check covers every size' );
+		$t::same(
+			array(
+				'11x14' => 6.0,
+				'8x10'  => 10.0,
+			),
+			sunshine_whcc_get_size_prices( $ref ),
+			'WHCC\'s price for each size, cheapest first'
+		);
+
+		$asked = count( $whcc_lab['requests'] );
+		$shown = wp_strip_all_tags( $item->get_price_formatted() );
+		$t::same( 'From ' . html_entity_decode( wp_strip_all_tags( sunshine_price( 9 ) ), ENT_QUOTES, 'UTF-8' ), html_entity_decode( $shown, ENT_QUOTES, 'UTF-8' ), 'from the cheapest, 6.00 + 50%' );
+		$t::same( $asked, count( $whcc_lab['requests'] ), 'showing the price asks WHCC nothing' );
+
+		// No markup at a price level: not sold there, so no price.
+		$other = $whcc_other_level();
+		$t::same( 'See options', wp_strip_all_tags( sunshine_get_product( $product, $other )->get_price_formatted( $other ) ), 'no price where the product has no markup' );
+	}
+);
+
 // The back button or a reload opens the same "back from the editor" link again, or Add to cart
 // is pressed twice.
 $whcc_test(

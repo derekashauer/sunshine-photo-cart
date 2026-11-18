@@ -170,9 +170,9 @@ $whcc_reply = function ( $method, $path, $query, $body, $headers ) use ( &$whcc_
 		);
 	}
 
-	// 'unit' and 'group' are the lab's own notes on a catalog product, not WHCC fields.
+	// 'unit', 'size_units' and 'group' are the lab's own notes on a catalog product, not WHCC fields.
 	$catalog_entry = function ( $entry ) {
-		return array_diff_key( $entry, array_flip( array( 'unit', 'group' ) ) );
+		return array_diff_key( $entry, array_flip( array( 'unit', 'size_units', 'group' ) ) );
 	};
 
 	if ( 'GET' === $method && 'catalog/products' === $path ) {
@@ -211,7 +211,8 @@ $whcc_reply = function ( $method, $path, $query, $body, $headers ) use ( &$whcc_
 				'ref'      => $ref,
 				'name'     => $whcc_lab['catalog'][ $ref ]['name'],
 				'group'    => $whcc_lab['catalog'][ $ref ]['group'],
-				'prices'   => array( 1 => $whcc_lab['catalog'][ $ref ]['unit'] ),
+				// 'size_units' (size => price for one) is the lab's note when sizes cost different amounts.
+				'prices'   => array( 1 => isset( $request['selections']['size'], $whcc_lab['catalog'][ $ref ]['size_units'][ $request['selections']['size'] ] ) ? $whcc_lab['catalog'][ $ref ]['size_units'][ $request['selections']['size'] ] : $whcc_lab['catalog'][ $ref ]['unit'] ),
 				'qty'      => 1,
 				'valid'    => 'ready' === $whcc_lab['build'],
 				'problems' => 'ready' === $whcc_lab['build'] ? array() : array( 'The photo could not be fetched.' ),
@@ -555,14 +556,28 @@ $whcc_keep_option = function ( $value, $old_value ) {
 };
 $whcc_kept_options = array( 'sunshine_whcc_sandbox_last_event_at', 'sunshine_whcc_production_last_event_at' );
 
+// WHCC's prices per size, which the add-on saves in an option, live here while a test runs, so
+// the test site's real saved prices are left alone and each test starts with none.
+$whcc_saved_prices = array();
+$whcc_prices_read  = function () use ( &$whcc_saved_prices ) {
+	return $whcc_saved_prices;
+};
+$whcc_prices_write = function ( $value, $old_value ) use ( &$whcc_saved_prices ) {
+	$whcc_saved_prices = $value;
+	return $old_value;
+};
+
 /**
  * Start the made-up WHCC for one test: WHCC's settings at their defaults with a made-up key,
  * the lab answering every request (unless $own_http, for a test file that answers requests
  * itself and passes WHCC's on to $whcc_http), mail stopped, and anything the add-on saves
  * noted so $whcc_close() can take it away.
  */
-$whcc_open = function ( $own_http = false ) use ( $t, &$whcc_lab, $whcc_lab_reset, $whcc_http, &$whcc_transients, $whcc_note_transient, $whcc_transient_hook, &$whcc_scheduled, $whcc_schedule, $whcc_forget_page, $whcc_keep_option, $whcc_kept_options, $whcc_key, $whcc_clear_notices, &$whcc_paused ) {
+$whcc_open = function ( $own_http = false ) use ( $t, &$whcc_lab, $whcc_lab_reset, $whcc_http, &$whcc_transients, $whcc_note_transient, $whcc_transient_hook, &$whcc_scheduled, $whcc_schedule, $whcc_forget_page, $whcc_keep_option, $whcc_kept_options, $whcc_key, $whcc_clear_notices, &$whcc_paused, &$whcc_saved_prices, $whcc_prices_read, $whcc_prices_write ) {
 	$whcc_lab_reset();
+	$whcc_saved_prices = array();
+	add_filter( 'pre_option_sunshine_whcc_prices_sandbox', $whcc_prices_read );
+	add_filter( 'pre_update_option_sunshine_whcc_prices_sandbox', $whcc_prices_write, 10, 2 );
 	$whcc_transients = array();
 	$whcc_scheduled  = array();
 	$whcc_clear_notices();
@@ -606,7 +621,9 @@ $whcc_open = function ( $own_http = false ) use ( $t, &$whcc_lab, $whcc_lab_rese
 	$whcc_forget_page();
 };
 
-$whcc_close = function ( $own_http = false ) use ( &$whcc_transients, $whcc_note_transient, $whcc_transient_hook, $whcc_http, $whcc_schedule, $whcc_forget_page, $whcc_keep_option, $whcc_kept_options, &$whcc_paused ) {
+$whcc_close = function ( $own_http = false ) use ( &$whcc_transients, $whcc_note_transient, $whcc_transient_hook, $whcc_http, $whcc_schedule, $whcc_forget_page, $whcc_keep_option, $whcc_kept_options, &$whcc_paused, $whcc_prices_read, $whcc_prices_write ) {
+	remove_filter( 'pre_option_sunshine_whcc_prices_sandbox', $whcc_prices_read );
+	remove_filter( 'pre_update_option_sunshine_whcc_prices_sandbox', $whcc_prices_write, 10 );
 	foreach ( $whcc_paused['listeners'] as $listener ) {
 		add_action( $listener[0], $listener[1], $listener[2] );
 	}
