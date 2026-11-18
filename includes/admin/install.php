@@ -108,6 +108,25 @@ function maybe_sunshine_create_custom_tables() {
 		) $collate;"
 	);
 
+	// One row per attempt to screenshot, save or print protected photos.
+	$created = maybe_create_table(
+		"{$wpdb->prefix}sunshine_protection_log",
+		"CREATE TABLE `{$wpdb->prefix}sunshine_protection_log` (
+			`log_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			`gallery_id` bigint(20) unsigned NOT NULL DEFAULT 0,
+			`image_id` bigint(20) unsigned NOT NULL DEFAULT 0,
+			`user_id` bigint(20) unsigned NOT NULL DEFAULT 0,
+			`email` varchar(254) NOT NULL DEFAULT '',
+			`ip` varchar(45) NOT NULL DEFAULT '',
+			`type` varchar(20) NOT NULL,
+			`time` bigint(20) unsigned NOT NULL,
+			PRIMARY KEY (`log_id`),
+			KEY `gallery_id` (`gallery_id`),
+			KEY `user_id` (`user_id`),
+			KEY `email` (`email`(100))
+		) $collate;"
+	);
+
 }
 
 add_action( 'admin_init', 'sunshine_install_redirect' );

@@ -136,6 +136,19 @@ function sunshine_customer_tab_profile( $customer ) {
 	<?php } ?>
 
 	<?php
+	$protection_attempts = sunshine_get_protection_attempts(
+		array(
+			'user_id' => $customer->get_id(),
+			'limit'   => 500,
+		)
+	);
+	if ( $protection_attempts ) {
+		?>
+		<h3><?php esc_html_e( 'Screenshot, Save and Print Attempts', 'sunshine-photo-cart' ); ?></h3>
+		<?php echo wp_kses_post( sunshine_protection_log_table( $protection_attempts, true ) ); ?>
+	<?php } ?>
+
+	<?php
 }
 
 add_action( 'sunshine_customer_tab_orders', 'sunshine_customer_tab_orders' );

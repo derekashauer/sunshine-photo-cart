@@ -62,6 +62,7 @@ if ( $uninstall ) {
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}sunshine_order_items" );
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}sunshine_order_itemmeta" );
 	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}sunshine_terms_agreements" );
+	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}sunshine_protection_log" );
 
 	// Delete all media attachments.
 	if ( !empty( $galleries ) ) {

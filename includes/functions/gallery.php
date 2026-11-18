@@ -717,13 +717,23 @@ function sunshine_get_gallery_terms_text() {
 }
 
 /**
+ * The terms as visitors see them: the photographer's terms plus any lines Sunshine adds, like the
+ * note that attempts to screenshot photos are recorded.
+ *
+ * @return string
+ */
+function sunshine_get_gallery_terms_shown_text() {
+	return sunshine_get_gallery_terms_text() . sunshine_get_protection_terms_text();
+}
+
+/**
  * A short ID for the current wording of the terms. Changing the wording changes it, so everyone is asked again.
  *
  * @return string
  */
 function sunshine_get_gallery_terms_version() {
 	// Tags become spaces so a paragraph break and a line break read the same.
-	$words = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( preg_replace( '/<[^>]*>/', ' ', sunshine_get_gallery_terms_text() ) ) ) );
+	$words = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( preg_replace( '/<[^>]*>/', ' ', sunshine_get_gallery_terms_shown_text() ) ) ) );
 	return substr( md5( $words ), 0, 12 );
 }
 
@@ -796,17 +806,7 @@ function sunshine_get_gallery_terms_agreements( $args = array() ) {
 			'limit'      => 0,
 		)
 	);
-	$where = array();
-	if ( $args['gallery_id'] ) {
-		$where[] = $wpdb->prepare( 'gallery_id = %d', $args['gallery_id'] );
-	}
-	if ( $args['user_id'] ) {
-		$where[] = $wpdb->prepare( 'user_id = %d', $args['user_id'] );
-	}
-	if ( $args['email'] ) {
-		$user    = get_user_by( 'email', $args['email'] );
-		$where[] = $user ? $wpdb->prepare( '( email = %s OR user_id = %d )', $args['email'], $user->ID ) : $wpdb->prepare( 'email = %s', $args['email'] );
-	}
+	$where = array_filter( array( sunshine_person_records_where( $args ) ) );
 	if ( $args['version'] ) {
 		$where[] = $wpdb->prepare( 'version = %s', $args['version'] );
 	}
@@ -821,6 +821,39 @@ function sunshine_get_gallery_terms_agreements( $args = array() ) {
 	$rows = $wpdb->get_results( $sql, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- each part is prepared above.
 
 	return is_array( $rows ) ? $rows : array();
+}
+
+/**
+ * The prepared WHERE clause for records kept per person and gallery, like terms agreements and
+ * screenshot attempts. Each table has gallery_id, user_id and email columns.
+ *
+ * @param array $args gallery_id, user_id and email. An email also finds rows saved under the
+ *                    account that has that email now.
+ * @return string Empty when nothing narrows the list.
+ */
+function sunshine_person_records_where( $args ) {
+	global $wpdb;
+
+	$args  = wp_parse_args(
+		$args,
+		array(
+			'gallery_id' => 0,
+			'user_id'    => 0,
+			'email'      => '',
+		)
+	);
+	$where = array();
+	if ( $args['gallery_id'] ) {
+		$where[] = $wpdb->prepare( 'gallery_id = %d', $args['gallery_id'] );
+	}
+	if ( $args['user_id'] ) {
+		$where[] = $wpdb->prepare( 'user_id = %d', $args['user_id'] );
+	}
+	if ( $args['email'] ) {
+		$user    = get_user_by( 'email', $args['email'] );
+		$where[] = $user ? $wpdb->prepare( '( email = %s OR user_id = %d )', $args['email'], $user->ID ) : $wpdb->prepare( 'email = %s', $args['email'] );
+	}
+	return implode( ' AND ', $where );
 }
 
 /**
@@ -874,7 +907,7 @@ function sunshine_record_gallery_terms_agreement( $gallery, $email = '' ) {
 	}
 	if ( ! isset( $versions[ $version ] ) ) {
 		$versions[ $version ] = array(
-			'text' => sunshine_get_gallery_terms_text(),
+			'text' => sunshine_get_gallery_terms_shown_text(),
 			'time' => time(),
 		);
 		update_option( 'sunshine_gallery_terms_versions', $versions, false );

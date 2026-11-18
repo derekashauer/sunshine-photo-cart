@@ -146,6 +146,20 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						'bulk_edit'   => true,
 					),
 					array(
+						'id'          => 'protection',
+						'name'        => __( 'Image Protection', 'sunshine-photo-cart' ),
+						'type'        => 'radio',
+						'options'     => array(
+							/* translators: %s is the site-wide setting for image protection, "On" or "Off" */
+							''    => sprintf( __( 'Default (%s)', 'sunshine-photo-cart' ), SPC()->get_option( 'disable_right_click' ) ? __( 'On', 'sunshine-photo-cart' ) : __( 'Off', 'sunshine-photo-cart' ) ),
+							'on'  => __( 'On', 'sunshine-photo-cart' ),
+							'off' => __( 'Off', 'sunshine-photo-cart' ),
+						),
+						'description' => __( 'Show your notice when someone tries to take a screenshot, save or print, and use the other Image Protection settings.', 'sunshine-photo-cart' ),
+						'quick_edit'  => true,
+						'bulk_edit'   => true,
+					),
+					array(
 						'id'            => 'end_date',
 						'name'          => __( 'Expiration', 'sunshine-photo-cart' ),
 						'type'          => 'date_time',
@@ -266,6 +280,18 @@ class Sunshine_Admin_Meta_Boxes_Gallery extends Sunshine_Admin_Meta_Boxes {
 						'id'   => 'terms_agreements',
 						'name' => __( 'Terms Agreements', 'sunshine-photo-cart' ),
 						'type' => 'gallery_terms_agreements',
+					),
+				),
+			),
+			'9200' => array(
+				'id'     => 'protection',
+				'name'   => __( 'Protection Log', 'sunshine-photo-cart' ),
+				'icon'   => SUNSHINE_PHOTO_CART_PATH . 'assets/images/icons/settings.svg',
+				'fields' => array(
+					array(
+						'id'   => 'protection_log',
+						'name' => __( 'Protection Log', 'sunshine-photo-cart' ),
+						'type' => 'gallery_protection_log',
 					),
 				),
 			),
@@ -2061,6 +2087,149 @@ function sunshine_gallery_terms_agreements_table( $agreements, $show_gallery = f
 			$html .= esc_html( $label );
 		}
 		$html .= '</td></tr>';
+	}
+	$html .= '</tbody></table>';
+	return $html;
+}
+
+add_action( 'sunshine_meta_gallery_protection_log_display', 'sunshine_meta_gallery_protection_log_display' );
+/**
+ * Show recorded screenshot, save and print attempts on the gallery edit screen.
+ */
+function sunshine_meta_gallery_protection_log_display() {
+	global $post;
+	$attempts = sunshine_get_protection_attempts(
+		array(
+			'gallery_id' => $post->ID,
+			'limit'      => 500,
+		)
+	);
+	if ( empty( $attempts ) ) {
+		if ( SPC()->get_option( 'protection_log' ) ) {
+			esc_html_e( 'Nobody has tried to take a screenshot, save or print photos in this gallery yet', 'sunshine-photo-cart' );
+		} else {
+			esc_html_e( 'Recording attempts is off. Turn on "Record attempts" in Settings > Galleries > Image Protection.', 'sunshine-photo-cart' );
+		}
+		return;
+	}
+	$total = sunshine_count_protection_attempts( array( 'gallery_id' => $post->ID ) );
+	echo '<p>';
+	if ( $total > count( $attempts ) ) {
+		/* translators: %1$s is the total number of attempts, %2$s is how many are shown */
+		echo esc_html( sprintf( __( '%1$s attempts in all. The newest %2$s are shown.', 'sunshine-photo-cart' ), number_format_i18n( $total ), number_format_i18n( count( $attempts ) ) ) );
+	} else {
+		/* translators: %s is the number of attempts */
+		echo esc_html( sprintf( _n( '%s attempt', '%s attempts', $total, 'sunshine-photo-cart' ), number_format_i18n( $total ) ) );
+	}
+	echo ' <a href="' . esc_url( admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-protection-log' ) ) . '">' . esc_html__( 'See all galleries', 'sunshine-photo-cart' ) . '</a>';
+	echo '</p>';
+	echo wp_kses_post( sunshine_protection_log_table( $attempts ) );
+}
+
+/**
+ * The Protection Log page under the Sunshine menu: every recorded attempt, newest first.
+ */
+function sunshine_protection_log_page() {
+	$per_page = 50;
+	$paged    = isset( $_GET['paged'] ) ? max( 1, absint( $_GET['paged'] ) ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only picks the page.
+	$total    = sunshine_count_protection_attempts( array( 'all' => true ) );
+	$attempts = sunshine_get_protection_attempts(
+		array(
+			'all'    => true,
+			'limit'  => $per_page,
+			'offset' => ( $paged - 1 ) * $per_page,
+		)
+	);
+	$pages    = paginate_links(
+		array(
+			'base'    => add_query_arg( 'paged', '%#%' ),
+			'format'  => '',
+			'current' => $paged,
+			'total'   => (int) ceil( $total / $per_page ),
+		)
+	);
+	?>
+	<div class="wrap">
+		<h1><?php esc_html_e( 'Protection Log', 'sunshine-photo-cart' ); ?></h1>
+		<p>
+			<?php
+			echo esc_html__( 'Screenshot, save and print attempts in protected galleries, newest first.', 'sunshine-photo-cart' ) . ' ';
+			/* translators: %s is a link to the help doc */
+			printf( esc_html__( 'A record means a key or click was noticed, not that a screenshot was taken. %s', 'sunshine-photo-cart' ), '<a href="https://www.sunshinephotocart.com/docs/image-protection/" target="_blank">' . esc_html__( 'Learn more', 'sunshine-photo-cart' ) . '</a>' );
+			?>
+		</p>
+		<?php if ( empty( $attempts ) ) { ?>
+			<p><?php esc_html_e( 'Nobody has tried to take a screenshot, save or print photos yet', 'sunshine-photo-cart' ); ?></p>
+		<?php } else { ?>
+			<div class="tablenav top">
+				<div class="tablenav-pages">
+					<span class="displaying-num">
+						<?php
+						/* translators: %s is the number of attempts */
+						echo esc_html( sprintf( _n( '%s attempt', '%s attempts', $total, 'sunshine-photo-cart' ), number_format_i18n( $total ) ) );
+						?>
+					</span>
+					<?php echo wp_kses_post( (string) $pages ); ?>
+				</div>
+			</div>
+			<?php echo wp_kses_post( sunshine_protection_log_table( $attempts, true ) ); ?>
+			<div class="tablenav bottom">
+				<div class="tablenav-pages"><?php echo wp_kses_post( (string) $pages ); ?></div>
+			</div>
+		<?php } ?>
+	</div>
+	<?php
+}
+
+/**
+ * A table of recorded screenshot, save and print attempts, for the gallery and customer admin screens.
+ *
+ * @param array $attempts     Attempt records, newest first.
+ * @param bool  $show_gallery Add a column for the gallery (used on the customer screen).
+ * @return string HTML.
+ */
+function sunshine_protection_log_table( $attempts, $show_gallery = false ) {
+	$types = sunshine_get_protection_attempt_types();
+	$html  = '<table class="widefat striped"><thead><tr>';
+	$html .= '<th>' . esc_html__( 'Date', 'sunshine-photo-cart' ) . '</th>';
+	$html .= '<th>' . esc_html__( 'Who', 'sunshine-photo-cart' ) . '</th>';
+	if ( $show_gallery ) {
+		$html .= '<th>' . esc_html__( 'Gallery', 'sunshine-photo-cart' ) . '</th>';
+	}
+	$html .= '<th>' . esc_html__( 'Photo', 'sunshine-photo-cart' ) . '</th>';
+	$html .= '<th>' . esc_html__( 'What', 'sunshine-photo-cart' ) . '</th>';
+	$html .= '</tr></thead><tbody>';
+	foreach ( $attempts as $attempt ) {
+		$html .= '<tr><td>' . esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $attempt['time'] ) ) . '</td>';
+
+		$who = $attempt['email'] ? esc_html( $attempt['email'] ) : esc_html__( 'Guest', 'sunshine-photo-cart' );
+		if ( ! empty( $attempt['user_id'] ) ) {
+			$who = '<a href="' . esc_url( admin_url( 'edit.php?post_type=sunshine-gallery&page=sunshine-customers&customer=' . $attempt['user_id'] ) ) . '">' . $who . '</a>';
+		}
+		if ( ! empty( $attempt['ip'] ) ) {
+			$who .= '<br /><span class="description">' . esc_html( $attempt['ip'] ) . '</span>';
+		}
+		$html .= '<td>' . $who . '</td>';
+
+		if ( $show_gallery ) {
+			$html .= '<td>';
+			if ( $attempt['gallery_id'] && get_post( $attempt['gallery_id'] ) ) {
+				$html .= '<a href="' . esc_url( admin_url( 'post.php?post=' . $attempt['gallery_id'] . '&action=edit' ) ) . '">' . esc_html( get_the_title( $attempt['gallery_id'] ) ) . '</a>';
+			} else {
+				$html .= '&mdash;';
+			}
+			$html .= '</td>';
+		}
+
+		$html .= '<td>';
+		if ( $attempt['image_id'] && get_post( $attempt['image_id'] ) ) {
+			$html .= '<a href="' . esc_url( get_permalink( $attempt['image_id'] ) ) . '" target="_blank">' . esc_html( get_the_title( $attempt['image_id'] ) ) . '</a>';
+		} else {
+			$html .= '&mdash;';
+		}
+		$html .= '</td>';
+
+		$html .= '<td>' . esc_html( isset( $types[ $attempt['type'] ] ) ? $types[ $attempt['type'] ] : $attempt['type'] ) . '</td></tr>';
 	}
 	$html .= '</tbody></table>';
 	return $html;

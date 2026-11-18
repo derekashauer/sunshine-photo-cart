@@ -28,7 +28,6 @@ class SPC_Frontend {
 		add_action( 'wp_head', array( $this, 'meta' ), 1 );
 		add_action( 'wp_head', array( $this, 'head' ), 2 );
 		add_action( 'wp_head', array( $this, 'custom_css' ), 999 );
-		add_action( 'wp_footer', array( $this, 'protection' ) );
 		add_action( 'wp_footer', array( $this, 'selection_tray_widget' ), 10 );
 		add_action( 'wp_footer', array( $this, 'version_output' ), 9999 );
 		// add_action( 'template_redirect', array( $this, 'can_view_gallery' ) );
@@ -949,22 +948,6 @@ class SPC_Frontend {
 			echo esc_attr( $css );
 			echo '</style>';
 		}
-	}
-
-	function protection() {
-
-		if ( is_sunshine() && SPC()->get_option( 'disable_right_click' ) && ! current_user_can( 'manage_options' ) ) {
-			?>
-			<script type="text/javascript">
-			jQuery(document).ready(function() {
-				jQuery(document).bind("contextmenu",function(e){ return false; });
-				jQuery("img").mousedown(function(){ return false; });
-				document.body.style.webkitTouchCallout='none';
-			});
-			</script>
-			<?php
-		}
-
 	}
 
 	public function selection_tray_widget() {

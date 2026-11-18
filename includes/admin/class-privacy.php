@@ -85,6 +85,10 @@ class SPC_Privacy {
 			'eraser_friendly_name' => __( 'Sunshine Photo Cart Gallery Terms Agreements', 'sunshine-photo-cart' ),
 			'callback'             => array( $this, 'gallery_terms_eraser' ),
 		);
+		$erasers['sunshine-protection-log'] = array(
+			'eraser_friendly_name' => __( 'Sunshine Photo Cart Image Protection Records', 'sunshine-photo-cart' ),
+			'callback'             => array( $this, 'protection_log_eraser' ),
+		);
 		return $erasers;
 	}
 
@@ -103,6 +107,10 @@ class SPC_Privacy {
 		$exporters['sunshine-gallery-terms'] = array(
 			'exporter_friendly_name' => __( 'Sunshine Photo Cart Gallery Terms Agreements', 'sunshine-photo-cart' ),
 			'callback'               => array( $this, 'gallery_terms_exporter' ),
+		);
+		$exporters['sunshine-protection-log'] = array(
+			'exporter_friendly_name' => __( 'Sunshine Photo Cart Image Protection Records', 'sunshine-photo-cart' ),
+			'callback'               => array( $this, 'protection_log_exporter' ),
 		);
 		return $exporters;
 	}
@@ -439,10 +447,90 @@ class SPC_Privacy {
 		);
 	}
 
+	/**
+	 * Export recorded screenshot, save and print attempts for an email address.
+	 *
+	 * @param string $email_address The email address.
+	 * @param int    $page          Page number (everything fits on one page).
+	 * @return array
+	 */
+	public function protection_log_exporter( $email_address, $page = 1 ) {
+		$types       = sunshine_get_protection_attempt_types();
+		$export_data = array();
+		foreach ( sunshine_get_protection_attempts( array( 'email' => $email_address ) ) as $attempt ) {
+			$data = array(
+				array(
+					'name'  => __( 'Gallery', 'sunshine-photo-cart' ),
+					'value' => $attempt['gallery_id'] ? get_the_title( $attempt['gallery_id'] ) : '',
+				),
+				array(
+					'name'  => __( 'Photo', 'sunshine-photo-cart' ),
+					'value' => $attempt['image_id'] ? get_the_title( $attempt['image_id'] ) : '',
+				),
+				array(
+					'name'  => __( 'What', 'sunshine-photo-cart' ),
+					'value' => isset( $types[ $attempt['type'] ] ) ? $types[ $attempt['type'] ] : $attempt['type'],
+				),
+				array(
+					'name'  => __( 'Date', 'sunshine-photo-cart' ),
+					'value' => wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $attempt['time'] ),
+				),
+			);
+			if ( $attempt['ip'] ) {
+				$data[] = array(
+					'name'  => __( 'IP address', 'sunshine-photo-cart' ),
+					'value' => $attempt['ip'],
+				);
+			}
+			$export_data[] = array(
+				'group_id'    => 'sunshine-protection-log',
+				'group_label' => __( 'Sunshine Photo Cart Image Protection Records', 'sunshine-photo-cart' ),
+				'item_id'     => 'sunshine-protection-log-' . $attempt['log_id'],
+				'data'        => $data,
+			);
+		}
+		return array(
+			'data' => $export_data,
+			'done' => true,
+		);
+	}
+
+	/**
+	 * Erase recorded screenshot, save and print attempts for an email address.
+	 *
+	 * @param string $email_address The email address.
+	 * @param int    $page          Page number (everything fits on one page).
+	 * @return array
+	 */
+	public function protection_log_eraser( $email_address, $page = 1 ) {
+		global $wpdb;
+		$where   = sunshine_person_records_where( array( 'email' => $email_address ) );
+		$removed = $where ? $wpdb->query( "DELETE FROM {$wpdb->prefix}sunshine_protection_log WHERE {$where}" ) : 0; // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- the clause is prepared.
+		return array(
+			'items_removed'  => (bool) $removed,
+			'items_retained' => false,
+			'messages'       => array(),
+			'done'           => true,
+		);
+	}
+
 	public function retention_cleanup() {
 		$this->cleanup_inactive_accounts();
 		$this->cleanup_old_orders();
 		$this->cleanup_expired_galleries();
+		$this->cleanup_protection_log();
+	}
+
+	/**
+	 * Remove records of screenshot, save and print attempts older than the retention setting.
+	 */
+	private function cleanup_protection_log() {
+		global $wpdb;
+		$cutoff = $this->get_retention_cutoff( 'protection_log' );
+		if ( ! $cutoff ) {
+			return;
+		}
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}sunshine_protection_log WHERE time < %d", $cutoff ) );
 	}
 
 	/**

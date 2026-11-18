@@ -1,0 +1,233 @@
+/*
+ * Photo protection. Loaded on pages where protection is on, and on the settings screen for the
+ * blur preview. Colors are set everywhere so the theme's own can't leak in.
+ */
+
+/* Photos can't be dragged out or saved with press-and-hold */
+#sunshine img,
+#sunshine--modal img,
+.lg-container img {
+	-webkit-touch-callout: none;
+	-webkit-user-drag: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+/* Blurred right away when screenshot keys are held, and while the page is in the background */
+html.sunshine--protection-cover #sunshine img,
+html.sunshine--protection-cover #sunshine--modal img,
+html.sunshine--protection-cover #sunshine--selection-tray-widget img,
+html.sunshine--protection-away #sunshine img,
+html.sunshine--protection-away #sunshine--modal img,
+html.sunshine--protection-away #sunshine--selection-tray-widget img,
+html.sunshine--protection-cover .lg-container img,
+html.sunshine--protection-away .lg-container img {
+	filter: blur(40px) !important;
+	transition: none !important;
+}
+
+/* The notice */
+#sunshine--protection-notice {
+	display: none;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 2147483647;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	background: rgba(0, 0, 0, 0.92);
+	font-family: inherit;
+}
+#sunshine--protection-notice.sunshine--open {
+	display: flex;
+}
+#sunshine--protection-notice #sunshine--protection-notice--box {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 480px;
+	max-height: 100%;
+	overflow: auto;
+	margin: 0;
+	padding: 30px;
+	border: 0;
+	border-radius: 6px;
+	box-shadow: none;
+	background: #fff;
+	color: #000;
+	font-size: 1em;
+	line-height: 1.5;
+	text-align: center;
+	text-transform: none;
+}
+#sunshine--protection-notice #sunshine--protection-notice--text p,
+#sunshine--protection-notice #sunshine--protection-notice--recorded {
+	margin: 0 0 1em;
+	padding: 0;
+	color: #000;
+	font-size: 1em;
+}
+#sunshine--protection-notice #sunshine--protection-notice--recorded {
+	display: none;
+	font-weight: bold;
+}
+#sunshine--protection-notice.sunshine--recorded #sunshine--protection-notice--recorded {
+	display: block;
+}
+#sunshine--protection-notice #sunshine--protection-notice--text a {
+	color: #000;
+	text-decoration: underline;
+}
+#sunshine--protection-notice #sunshine--protection-notice--close {
+	display: inline-block;
+	margin: 0.5em 0 0;
+	padding: 0.7em 1.6em;
+	border: 0;
+	border-radius: 4px;
+	box-shadow: none;
+	background: #000;
+	color: #fff;
+	font-family: inherit;
+	font-size: 1em;
+	font-weight: normal;
+	line-height: 1.2;
+	letter-spacing: normal;
+	text-transform: none;
+	cursor: pointer;
+}
+
+/* Printing shows the notice instead of the page */
+@media print {
+	/* Leave out the rest of the page so it doesn't print blank pages after the notice */
+	body > *:not(#sunshine--protection-notice):not(:has(#sunshine--protection-notice)) {
+		display: none !important;
+	}
+	body * {
+		visibility: hidden !important;
+	}
+	#sunshine--protection-notice,
+	#sunshine--protection-notice * {
+		visibility: visible !important;
+	}
+	#sunshine--protection-notice {
+		display: block !important;
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: auto;
+		left: 0;
+		background: none;
+	}
+	#sunshine--protection-notice #sunshine--protection-notice--box {
+		margin: 0 auto;
+	}
+	#sunshine--protection-notice #sunshine--protection-notice--close {
+		display: none !important;
+	}
+}
+
+/* Part of each photo blurred on touch screens. The mask comes from protection.js. */
+html.sunshine--blur-grid #sunshine--image-items:not(.sunshine--layout--justified) figure.sunshine--image-item > a {
+	display: block;
+	position: relative;
+}
+html.sunshine--blur-single #sunshine--image--content--display {
+	position: relative;
+	width: -webkit-fit-content;
+	width: fit-content;
+	max-width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	touch-action: manipulation;
+}
+html.sunshine--blur-single #sunshine--image--content--display img {
+	display: block;
+}
+html.sunshine--blur-grid #sunshine--image-items figure.sunshine--image-item > a::after,
+html.sunshine--blur-single #sunshine--image--content--display::after,
+#sunshine-protection-preview--photo::after,
+.sunshine--protection-blur-layer {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1;
+	pointer-events: none;
+	-webkit-backdrop-filter: blur(16px);
+	backdrop-filter: blur(16px);
+	-webkit-mask-image: var(--sunshine-blur-mask);
+	mask-image: var(--sunshine-blur-mask);
+}
+
+/* The blur layer the script lays over each photo in the Lightbox add-on's popup */
+.sunshine--protection-blur-layer {
+	display: block;
+}
+
+/* The note that explains the blur. Hidden until the script places it above the photos. */
+#sunshine--protection-banner {
+	display: none;
+}
+#sunshine #sunshine--protection-banner {
+	display: none;
+	align-items: flex-start;
+	gap: 12px;
+	margin: 0 0 20px;
+	padding: 12px 16px;
+	border: 0;
+	border-radius: 6px;
+	background: #000;
+	color: #fff;
+	font-size: 0.9em;
+	line-height: 1.4;
+	text-transform: none;
+}
+#sunshine #sunshine--protection-banner.sunshine--open {
+	display: flex;
+}
+#sunshine #sunshine--protection-banner--text {
+	flex: 1;
+}
+#sunshine #sunshine--protection-banner--text p {
+	margin: 0;
+	padding: 0;
+	color: #fff;
+}
+#sunshine #sunshine--protection-banner--close {
+	margin: 0;
+	padding: 0 4px;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	background: none;
+	color: #fff;
+	font-family: inherit;
+	font-size: 1.5em;
+	font-weight: normal;
+	line-height: 1;
+	text-transform: none;
+	cursor: pointer;
+}
+
+/* Settings preview */
+#sunshine-protection-preview--photo {
+	position: relative;
+	display: inline-block;
+	max-width: 260px;
+	cursor: pointer;
+	line-height: 0;
+}
+#sunshine-protection-preview--photo img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+#sunshine-protection-preview--placeholder {
+	width: 200px;
+	height: 260px;
+	background: repeating-linear-gradient(45deg, #ccc 0 20px, #888 20px 40px);
+}

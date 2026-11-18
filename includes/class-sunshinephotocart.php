@@ -96,6 +96,7 @@ final class Sunshine_Photo_Cart {
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/share.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/gallery-app.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/watermark.php';
+		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/protection.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/seo.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/rest.php';
 		include_once SUNSHINE_PHOTO_CART_PATH . 'includes/functions/plugin-compat.php';

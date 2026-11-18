@@ -580,6 +580,24 @@ class SPC_Gallery extends Sunshine_Data {
 	}
 
 	/**
+	 * Is photo protection on for this gallery: the notice on screenshot, save and print
+	 * tries, the blur on touch screens, and the record of attempts.
+	 *
+	 * @return bool
+	 */
+	public function is_protected() {
+		// A sub-gallery on Default follows the nearest gallery above it that has its own setting.
+		$setting = $this->get_meta_value( 'protection', true );
+		if ( 'on' === $setting ) {
+			return true;
+		}
+		if ( 'off' === $setting ) {
+			return false;
+		}
+		return (bool) SPC()->get_option( 'disable_right_click' );
+	}
+
+	/**
 	 * Does the current visitor still have to agree to the gallery terms.
 	 *
 	 * @return bool
