@@ -98,25 +98,26 @@ function sunshine_get_protection_blur_type() {
 }
 
 /**
- * The gallery shown on this page: the gallery or photo being viewed, or one embedded with the
- * [sunshine_gallery] shortcode.
+ * The galleries shown on this page: the gallery or photo being viewed, or every gallery
+ * embedded with the [sunshine_gallery] shortcode.
  *
- * @return SPC_Gallery|null
+ * @return SPC_Gallery[]
  */
-function sunshine_protection_gallery() {
+function sunshine_protection_galleries() {
 	global $post;
 	if ( ! empty( SPC()->frontend->current_gallery ) ) {
-		return SPC()->frontend->current_gallery;
+		return array( SPC()->frontend->current_gallery );
 	}
+	$galleries = array();
 	if ( ! empty( $post->post_content ) && has_shortcode( $post->post_content, 'sunshine_gallery' ) && preg_match_all( '/' . get_shortcode_regex( array( 'sunshine_gallery' ) ) . '/', $post->post_content, $matches, PREG_SET_ORDER ) ) {
 		foreach ( $matches as $match ) {
 			$atts = shortcode_parse_atts( $match[3] );
 			if ( ! empty( $atts['id'] ) && 'sunshine-gallery' === get_post_type( (int) $atts['id'] ) ) {
-				return sunshine_get_gallery( (int) $atts['id'] );
+				$galleries[ (int) $atts['id'] ] = sunshine_get_gallery( (int) $atts['id'] );
 			}
 		}
 	}
-	return null;
+	return array_values( $galleries );
 }
 
 /**
@@ -131,9 +132,15 @@ function sunshine_protection_is_active() {
 	if ( ! is_sunshine() || current_user_can( 'sunshine_manage_options' ) ) {
 		return false;
 	}
-	$gallery = sunshine_protection_gallery();
-	if ( $gallery ) {
-		return $gallery->is_protected();
+	// A page showing several galleries is protected when any of them is.
+	$galleries = sunshine_protection_galleries();
+	if ( $galleries ) {
+		foreach ( $galleries as $gallery ) {
+			if ( $gallery->is_protected() ) {
+				return true;
+			}
+		}
+		return false;
 	}
 	// Pages showing photos from many galleries follow the site setting, including a gallery list
 	// or search placed on any page with a shortcode.
@@ -159,7 +166,9 @@ function sunshine_protection_enqueue_scripts() {
 	wp_enqueue_script( 'sunshine-photo-cart-protection', SUNSHINE_PHOTO_CART_URL . 'assets/js/protection.js', array(), SUNSHINE_PHOTO_CART_VERSION, true );
 
 	$frontend = SPC()->frontend;
-	$gallery  = sunshine_protection_gallery();
+	$galleries = sunshine_protection_galleries();
+	// With several galleries on the page, each record takes its gallery from the photo.
+	$gallery  = ( 1 === count( $galleries ) ) ? $galleries[0] : null;
 	$blur     = SPC()->get_option( 'protection_blur' );
 	wp_localize_script(
 		'sunshine-photo-cart-protection',
@@ -232,11 +241,7 @@ function sunshine_ajax_protection_attempt() {
 
 	// Only galleries that really have protection on get records, so the log can't be filled with made-up galleries.
 	$gallery_id = isset( $_POST['gallery_id'] ) ? absint( $_POST['gallery_id'] ) : 0;
-	if ( $gallery_id ) {
-		if ( 'sunshine-gallery' !== get_post_type( $gallery_id ) || ! sunshine_get_gallery( $gallery_id )->is_protected() ) {
-			wp_send_json_error();
-		}
-	} elseif ( ! SPC()->get_option( 'disable_right_click' ) ) {
+	if ( $gallery_id && ( 'sunshine-gallery' !== get_post_type( $gallery_id ) || ! sunshine_get_gallery( $gallery_id )->is_protected() ) ) {
 		wp_send_json_error();
 	}
 
@@ -247,9 +252,15 @@ function sunshine_ajax_protection_attempt() {
 		if ( 'attachment' !== get_post_type( $image_id ) || ( $gallery_id && $image_gallery !== $gallery_id ) ) {
 			$image_id = 0;
 		} elseif ( ! $gallery_id && 'sunshine-gallery' === get_post_type( $image_gallery ) && sunshine_get_gallery( $image_gallery )->is_protected() ) {
-			// Pages like favorites show photos from many galleries, so the photo says which one.
+			// Pages like favorites, or a page with several galleries, show photos from many
+			// galleries, so the photo says which one.
 			$gallery_id = $image_gallery;
 		}
+	}
+
+	// Without a protected gallery, only pages that follow the site setting can record.
+	if ( ! $gallery_id && ! SPC()->get_option( 'disable_right_click' ) ) {
+		wp_send_json_error();
 	}
 
 	if ( sunshine_is_rate_limited( 'protection_attempt', 60 ) ) {
