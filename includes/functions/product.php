@@ -146,6 +146,36 @@ function sunshine_get_default_price_level_id() {
 	return false;
 }
 
+add_action( 'delete_sunshine-product-price-level', 'sunshine_price_level_deleted' );
+/**
+ * When a price level is deleted, galleries and photos set to it go back to the default price level.
+ * Left alone they kept charging the deleted level's prices, which no screen can show or change.
+ * Runs for every delete: the Price Levels screen, the Connect API and anything else.
+ *
+ * @param int $term_id The deleted price level's ID.
+ */
+function sunshine_price_level_deleted( $term_id ) {
+	$keys = array(
+		'sunshine-gallery' => 'price_level',
+		'attachment'       => 'sunshine_price_level',
+	);
+	foreach ( $keys as $post_type => $meta_key ) {
+		$post_ids = get_posts(
+			array(
+				'post_type'      => $post_type,
+				'post_status'    => array( 'any', 'trash' ),
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				'meta_key'       => $meta_key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- runs once per price level delete.
+				'meta_value'     => intval( $term_id ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			)
+		);
+		foreach ( $post_ids as $post_id ) {
+			delete_post_meta( $post_id, $meta_key );
+		}
+	}
+}
+
 /**
  * Signature for a price level, printed next to it on any page that lets a visitor buy at that
  * level (store shortcodes, gift card and session fee pages). It does not expire, so cached pages
@@ -182,6 +212,31 @@ function sunshine_get_requested_price_level( $request, $level_key = 'price_level
 	return $default;
 }
 
+
+/**
+ * Put a product that has no category into the default category. Customers only see products
+ * through their categories, so a product with none never shows in a gallery or the store.
+ * The product screen and the Connect API both call this for a new product.
+ *
+ * @param int $product_id Product post ID.
+ * @return bool True when the default category was added.
+ */
+function sunshine_product_set_default_category( $product_id ) {
+	$categories = wp_get_object_terms( $product_id, 'sunshine-product-category' );
+	if ( ! empty( $categories ) ) {
+		return false;
+	}
+	$default_category = sunshine_get_default_product_category();
+	if ( empty( $default_category ) ) {
+		return false;
+	}
+	$default_cat = apply_filters( 'sunshine_set_default_product_category', $default_category->get_id(), $product_id );
+	if ( ! $default_cat ) {
+		return false;
+	}
+	wp_set_object_terms( $product_id, $default_cat, 'sunshine-product-category' );
+	return true;
+}
 
 function sunshine_get_default_product_category() {
 	$terms = get_terms(
