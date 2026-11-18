@@ -172,7 +172,7 @@ $whcc_reply = function ( $method, $path, $query, $body, $headers ) use ( &$whcc_
 
 	// 'unit', 'size_units' and 'group' are the lab's own notes on a catalog product, not WHCC fields.
 	$catalog_entry = function ( $entry ) {
-		return array_diff_key( $entry, array_flip( array( 'unit', 'size_units', 'group' ) ) );
+		return array_diff_key( $entry, array_flip( array( 'unit', 'size_units', 'size_invalid', 'group' ) ) );
 	};
 
 	if ( 'GET' === $method && 'catalog/products' === $path ) {
@@ -214,7 +214,8 @@ $whcc_reply = function ( $method, $path, $query, $body, $headers ) use ( &$whcc_
 				// 'size_units' (size => price for one) is the lab's note when sizes cost different amounts.
 				'prices'   => array( 1 => isset( $request['selections']['size'], $whcc_lab['catalog'][ $ref ]['size_units'][ $request['selections']['size'] ] ) ? $whcc_lab['catalog'][ $ref ]['size_units'][ $request['selections']['size'] ] : $whcc_lab['catalog'][ $ref ]['unit'] ),
 				'qty'      => 1,
-				'valid'    => 'ready' === $whcc_lab['build'],
+				// 'size_invalid' (sizes) is the lab's note for sizes WHCC won't make with the starting choices.
+				'valid'    => 'ready' === $whcc_lab['build'] && ! ( isset( $request['selections']['size'], $whcc_lab['catalog'][ $ref ]['size_invalid'] ) && in_array( $request['selections']['size'], $whcc_lab['catalog'][ $ref ]['size_invalid'], true ) ),
 				'problems' => 'ready' === $whcc_lab['build'] ? array() : array( 'The photo could not be fetched.' ),
 				'status'   => $whcc_lab['build'],
 			);

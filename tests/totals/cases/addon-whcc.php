@@ -202,6 +202,12 @@ $whcc_test(
 		$t::same( 'From ' . html_entity_decode( wp_strip_all_tags( sunshine_price( 9 ) ), ENT_QUOTES, 'UTF-8' ), html_entity_decode( $shown, ENT_QUOTES, 'UTF-8' ), 'from the cheapest, 6.00 + 50%' );
 		$t::same( $asked, count( $whcc_lab['requests'] ), 'showing the price asks WHCC nothing' );
 
+		// A size WHCC won't make as built isn't a price to show, even when it's the cheapest.
+		$whcc_lab['catalog'][ $ref ]['size_invalid'] = array( '11x14' );
+		sunshine_whcc_refresh_size_prices( $ref );
+		$t::same( array( '8x10' => 10.0 ), sunshine_whcc_get_size_prices( $ref ), 'a size WHCC can\'t make as built is left out' );
+		$t::same( 'From ' . html_entity_decode( wp_strip_all_tags( sunshine_price( 15 ) ), ENT_QUOTES, 'UTF-8' ), html_entity_decode( wp_strip_all_tags( $item->get_price_formatted() ), ENT_QUOTES, 'UTF-8' ), 'so the list starts from the next one, 10.00 + 50%' );
+
 		// No markup at a price level: not sold there, so no price.
 		$other = $whcc_other_level();
 		$t::same( 'See options', wp_strip_all_tags( sunshine_get_product( $product, $other )->get_price_formatted( $other ) ), 'no price where the product has no markup' );
