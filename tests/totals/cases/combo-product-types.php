@@ -149,8 +149,9 @@ $combo_variant_text = function ( $line ) {
 		case 'package':
 			return 0 === $variant % 2 ? '2 prints and a file' : '2 prints';
 		case 'session fee':
-		case 'whcc print':
 			return 0 === $variant % 2 ? 'taxed' : 'not taxed';
+		case 'whcc print':
+			return "WHCC's price + 50%, " . ( 0 === $variant % 2 ? 'taxed' : 'not taxed' );
 		case 'included print':
 			return ( 0 === $variant % 3 ? $qty + 2 : max( 1, $qty - 1 ) ) . ' included';
 		case 'quantity discount print':
@@ -180,7 +181,15 @@ $combo_describe = function ( $recipe ) use ( $combo_variant_text ) {
 	if ( $recipe['credits'] ) {
 		$parts[] = 'credits ' . $recipe['credits'];
 	}
-	if ( 'none' !== $recipe['shipping'] ) {
+	$has_whcc = false;
+	foreach ( $recipe['lines'] as $line ) {
+		$has_whcc = $has_whcc || 'whcc print' === $line[0];
+	}
+	if ( $has_whcc ) {
+		// A cart with WHCC items always ships with WHCC Economy; only whether it's taxed comes
+		// from the recipe (see $combo_build).
+		$parts[] = 'WHCC Economy shipping' . ( false !== strpos( $recipe['shipping'], 'taxed' ) ? ' taxed' : '' );
+	} elseif ( 'none' !== $recipe['shipping'] ) {
 		$parts[] = 'shipping ' . $recipe['shipping'];
 	}
 	if ( 'none' !== $recipe['fee'] ) {
@@ -199,141 +208,20 @@ $combo_describe = function ( $recipe ) use ( $combo_variant_text ) {
 };
 
 /*
- * A made-up WHCC lab. It answers the two calls adding a WHCC item to the cart makes: the
- * editor's price ("export") and what the customer built (GET editors/{id}).
+ * WHCC prints use the made-up WHCC in addon-whcc-helpers.php, the same one the WHCC tests use.
  */
-$combo_whcc = array(
-	'run'     => 'spccombo' . wp_rand( 100000, 999999 ),
-	'count'   => 0,
-	'editors' => array(),
-	'catalog' => array(),
-);
+require_once __DIR__ . '/addon-whcc-helpers.php';
 
-$combo_whcc_reply = function ( $method, $endpoint, $body ) use ( &$combo_whcc ) {
-	if ( 'PUT' === $method && 'oas/editors/export' === $endpoint ) {
-		$items  = array();
-		$orders = array();
-		foreach ( (array) ( isset( $body['editors'] ) ? $body['editors'] : array() ) as $row ) {
-			$editor_id = isset( $row['editorId'] ) ? $row['editorId'] : '';
-			if ( empty( $combo_whcc['editors'][ $editor_id ] ) ) {
-				continue;
-			}
-			$editor   = $combo_whcc['editors'][ $editor_id ];
-			$qty      = isset( $row['quantity'] ) ? intval( $row['quantity'] ) : $editor['qty'];
-			$items[]  = array(
-				'editor'  => array(
-					'id'                => $editor_id,
-					'selectionsSummary' => $editor['summary'],
-				),
-				'pricing' => array(
-					'markedUpPrice' => round( $editor['unit'] * $qty, 2 ),
-					'quantity'      => $qty,
-					'unitBasePrice' => $editor['base'],
-				),
-			);
-			$orders[] = array(
-				'EditorId'   => $editor_id,
-				'ProductUID' => 1000,
-				'Quantity'   => $qty,
-			);
-		}
-		$reply = array( 'items' => $items );
-		// Every WHCC item here is a photo print, and WHCC ships prints together in one package.
-		if ( empty( $body['priceOnly'] ) ) {
-			$reply['order'] = array(
-				'Orders' => $orders ? array(
-					array(
-						'SequenceNumber' => 1,
-						'OrderItems'     => $orders,
-					),
-				) : array(),
-			);
-		}
-		return array( 200, $reply );
-	}
-	if ( 'GET' === $method && preg_match( '#^editors/([^/?]+)$#', $endpoint, $match ) && ! empty( $combo_whcc['editors'][ $match[1] ] ) ) {
-		$editor = $combo_whcc['editors'][ $match[1] ];
-		return array(
-			200,
-			array(
-				'editorId'          => $match[1],
-				'productId'         => $editor['whcc_id'],
-				'selections'        => array(
-					'quantity' => $editor['qty'],
-					'photo'    => array( 'galleryId' => (string) $editor['photo'] ),
-				),
-				'selectionsSummary' => $editor['summary'],
-				'productPreviews'   => array(),
-			),
-		);
-	}
-	return null;
-};
-
-// Outgoing requests a test tried to make. WHCC calls go to the lab, everything else is stopped.
+// Outgoing requests a test tried to make. WHCC calls go to the made-up WHCC, everything else
+// is stopped.
 $combo_blocked = array();
-$combo_http    = function ( $preempt, $args, $url ) use ( &$combo_blocked, $combo_whcc_reply ) {
-	$method = isset( $args['method'] ) ? strtoupper( $args['method'] ) : 'GET';
-	$marker = 'dragdrop.design/api/v1/';
-	$pos    = strpos( $url, $marker );
-	if ( false !== $pos ) {
-		$body  = ( isset( $args['body'] ) && is_string( $args['body'] ) ) ? json_decode( $args['body'], true ) : array();
-		$reply = $combo_whcc_reply( $method, substr( $url, $pos + strlen( $marker ) ), is_array( $body ) ? $body : array() );
-		if ( null !== $reply ) {
-			return array(
-				'headers'  => array(),
-				'body'     => wp_json_encode( $reply[1] ),
-				'response' => array(
-					'code'    => $reply[0],
-					'message' => 'OK',
-				),
-				'cookies'  => array(),
-				'filename' => null,
-			);
-		}
+$combo_http    = function ( $preempt, $args, $url ) use ( &$combo_blocked, $whcc_http ) {
+	if ( 0 === strpos( $url, 'https://apis-stage.whcc.com/' ) ) {
+		return $whcc_http( $preempt, $args, $url );
 	}
+	$method          = isset( $args['method'] ) ? strtoupper( $args['method'] ) : 'GET';
 	$combo_blocked[] = $method . ' ' . $url;
 	return new WP_Error( 'spc_totals_offline', 'Outgoing requests are blocked in the totals tests' );
-};
-
-$combo_whcc_catalog = function () use ( &$combo_whcc ) {
-	return array_values( $combo_whcc['catalog'] );
-};
-
-// The object that adds a WHCC item when the customer comes back from WHCC's editor.
-$combo_whcc_adder = function () {
-	global $wp_filter;
-	if ( empty( $wp_filter['sunshine_add_to_cart_item'] ) || ! class_exists( 'SPC_WHCC_Add_to_Cart' ) ) {
-		return null;
-	}
-	foreach ( $wp_filter['sunshine_add_to_cart_item']->callbacks as $callbacks ) {
-		foreach ( $callbacks as $callback ) {
-			if ( is_array( $callback['function'] ) && $callback['function'][0] instanceof SPC_WHCC_Add_to_Cart ) {
-				return $callback['function'][0];
-			}
-		}
-	}
-	return null;
-};
-
-// The WHCC add-on remembers some things for the rest of a page load. Each add to cart is its
-// own page load in real life, so forget them.
-$combo_whcc_forget = function () use ( $combo_whcc_adder ) {
-	$adder = $combo_whcc_adder();
-	if ( $adder ) {
-		foreach ( array( 'line_price', 'image_url', 'qty' ) as $property ) {
-			$reflection = new ReflectionProperty( $adder, $property );
-			$reflection->setAccessible( true );
-			$reflection->setValue( $adder, null );
-		}
-	}
-	if ( class_exists( 'SPC_WHCC_Shipping' ) && property_exists( 'SPC_WHCC_Shipping', 'product_category_cache' ) ) {
-		$cache = new ReflectionProperty( 'SPC_WHCC_Shipping', 'product_category_cache' );
-		$cache->setAccessible( true );
-		$cache->setValue( null, null );
-	}
-	SPC()->session->set( 'whcc_cart_split', '' );
-	SPC()->session->set( 'whcc_editor_ids', '' );
 };
 
 /**
@@ -343,10 +231,10 @@ $combo_whcc_forget = function () use ( $combo_whcc_adder ) {
  * PHP warnings and notices raised by the code under test are collected and checked.
  */
 $combo_galleries_made = array();
-$combo_test           = function ( $name, $callback ) use ( $t, $combo_http, $combo_whcc_catalog, $combo_whcc_forget, &$combo_blocked ) {
+$combo_test           = function ( $name, $callback ) use ( $t, $combo_http, &$combo_blocked, &$whcc_lab, $whcc_open, $whcc_close ) {
 	$t::test(
 		$name,
-		function () use ( $t, $callback, $combo_http, $combo_whcc_catalog, $combo_whcc_forget, &$combo_blocked ) {
+		function () use ( $t, $callback, $combo_http, &$combo_blocked, &$whcc_lab, $whcc_open, $whcc_close ) {
 			global $wp_filter;
 			$hooks  = array( 'sunshine_shipping_methods', 'sunshine_checkout_delivery_options', 'sunshine_delivery_methods', 'sunshine_options_shipping' );
 			$before = array();
@@ -357,36 +245,11 @@ $combo_test           = function ( $name, $callback ) use ( $t, $combo_http, $co
 			add_filter( 'pre_http_request', $combo_http, PHP_INT_MAX, 3 );
 			add_filter( 'pre_wp_mail', '__return_false', PHP_INT_MAX );
 			add_filter( 'sunshine_checkout_allow_order_notify', '__return_false', PHP_INT_MAX );
-			add_filter( 'pre_transient_sunshine_whcc_products', $combo_whcc_catalog, PHP_INT_MAX );
-			$quiet     = array();
-			$listeners = array(
-				'sunshine_add_cart_item' => array( 'sunshine_adv_reports_add_to_cart', 'sunshine_email_queue_after_cart' ),
-				'sunshine_cart_update'   => array( 'sunshine_adv_reports_cart_update' ),
-			);
-			foreach ( $listeners as $hook => $callbacks ) {
-				foreach ( $callbacks as $hook_callback ) {
-					$priority = has_action( $hook, $hook_callback );
-					if ( false !== $priority ) {
-						remove_action( $hook, $hook_callback, $priority );
-						$quiet[] = array( $hook, $hook_callback, $priority );
-					}
-				}
-			}
-			// WHCC settings at their defaults, with a made-up key so the real one is never used.
-			$t::option( 'whcc_environment', 'sandbox' );
-			$t::option( 'whcc_sandbox_api_key', 'spc-totals-offline-key' );
-			$t::option( 'whcc_production_api_key', 'spc-totals-offline-key' );
-			$t::option( 'whcc_shipping_prices', array() );
-			$t::option( 'whcc_require_signature', 'no' );
-			$t::option( 'whcc_signature_threshold', '' );
-			$t::option( 'whcc_mixed_cart_surcharge', '' );
-			$t::option( 'whcc_show_shipping_packages', 'no' );
-			$t::option( 'whcc_send_customer_emails', 'no' );
+			// The made-up WHCC, with WHCC's settings at their defaults and a made-up key so the
+			// real one is never used. Requests reach it through $combo_http. It also switches off
+			// the analytics and email listeners and leaves out the IP address (see $whcc_open).
+			$whcc_open( true );
 			$t::option( 'proofing', '' );
-			// The WHCC rate limit counts visitors by IP address and saves the count.
-			$remote_addr = isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : null;
-			unset( $_SERVER['REMOTE_ADDR'] );
-			$combo_whcc_forget();
 
 			$warnings = array();
 			set_error_handler(
@@ -406,15 +269,8 @@ $combo_test           = function ( $name, $callback ) use ( $t, $combo_http, $co
 				remove_filter( 'pre_http_request', $combo_http, PHP_INT_MAX );
 				remove_filter( 'pre_wp_mail', '__return_false', PHP_INT_MAX );
 				remove_filter( 'sunshine_checkout_allow_order_notify', '__return_false', PHP_INT_MAX );
-				remove_filter( 'pre_transient_sunshine_whcc_products', $combo_whcc_catalog, PHP_INT_MAX );
-				foreach ( $quiet as $hook ) {
-					add_action( $hook[0], $hook[1], $hook[2] );
-				}
-				if ( null !== $remote_addr ) {
-					$_SERVER['REMOTE_ADDR'] = $remote_addr;
-				}
-				unset( $_GET['whcc_editor_id'] );
-				$combo_whcc_forget();
+				$whcc_close( true );
+				$combo_blocked = array_merge( $combo_blocked, $whcc_lab['blocked'] );
 				foreach ( $hooks as $hook ) {
 					if ( empty( $wp_filter[ $hook ] ) ) {
 						continue;
@@ -728,7 +584,7 @@ $combo_add_photo = function ( $product_id, $photo_id, $qty, $options = array() )
  * Make each ingredient line and say how to add it. Returns the line's spec: what the customer
  * sees on the price tag for one, how many, whether it is shipped, and its product.
  */
-$combo_make_line = function ( $index, $line, $recipe, &$context ) use ( $t, $combo_product, $combo_add_photo, $combo_ajax, &$combo_whcc, $combo_whcc_adder, $combo_whcc_forget ) {
+$combo_make_line = function ( $index, $line, $recipe, &$context ) use ( $t, $combo_product, $combo_add_photo, $combo_ajax, $whcc_product, $whcc_buy ) {
 	list( $kind, $price, $qty, $variant ) = $line;
 	$shared  = $context['shared'];
 	$default = $shared['default'];
@@ -1040,79 +896,37 @@ $combo_make_line = function ( $index, $line, $recipe, &$context ) use ( $t, $com
 
 		case 'whcc print':
 			$t::require_plugin( 'sunshine_whcc_init', 'WHCC add-on' );
-			if ( ! $combo_whcc_adder() ) {
+			if ( ! function_exists( 'sunshine_whcc_ajax_add_to_cart' ) ) {
 				$t::skip( 'WHCC add-on did not load' );
 			}
 			$context['whcc'] = true;
-			$combo_whcc['count']++;
-			$whcc_id                           = $combo_whcc['run'] . 'print' . $combo_whcc['count'];
-			$combo_whcc['catalog'][ $whcc_id ] = array(
-				'_id'      => $whcc_id,
-				'name'     => 'Photo Print',
-				'category' => array( 'name' => 'Photo Prints' ),
-			);
-			// A WHCC product: the chosen WHCC product, a markup for the default price level,
-			// and a price of 0 there because WHCC sets the real price.
-			$spec['product'] = $combo_product(
-				'whcc',
-				array( $default => 0 ),
-				array(
-					'whcc_product' => $whcc_id,
-					'whcc_markup'  => array( $default => '50' ),
-					'taxable'      => 0 === $variant % 2 ? '1' : '',
-				),
-				'Combo test WHCC print'
-			);
-			// WHCC quotes the line at the price for one times the quantity.
-			$editor_id                            = 'spccombo' . wp_rand( 1000000, 9999999 ) . $combo_whcc['count'];
-			$combo_whcc['editors'][ $editor_id ] = array(
-				'whcc_id' => $whcc_id,
-				'qty'     => $qty,
-				'unit'    => (float) $price,
-				'base'    => round( $price / 1.5, 2 ),
-				'photo'   => $photo,
-				'summary' => array(
-					array(
-						'name'        => 'size',
-						'description' => '8x10',
-					),
-				),
-			);
-			$spec['add'] = function () use ( $combo_whcc_adder, $combo_whcc_forget, $editor_id ) {
-				$adder = $combo_whcc_adder();
-				sunshine_whcc_register_session_editor( $editor_id );
-				$_GET['whcc_editor_id'] = $editor_id;
-				// It ends by redirecting back; stop there instead of exiting.
-				$redirect = function () {
-					throw new Exception( 'spc-combo-whcc-redirect' );
-				};
-				add_filter( 'wp_redirect', $redirect, -1000 );
-				// With Video Sales on, the WHCC item is matched to the wrong product (known), so
-				// that lookup filter is off while the item is added.
+			// The recipe's price is WHCC's price for one. The customer pays that plus the
+			// product's 50% markup, to the cent.
+			$spec['product'] = $whcc_product( array( $default => '50' ), 0 === $variant % 2 );
+			$spec['tag']     = round( $price * 1.5, 2 );
+			$spec['add']     = function () use ( $whcc_buy, $spec, $price, $photo, $default ) {
+				// With Video Sales on, a product lookup can match the wrong product (known), so
+				// that filter is off while the item is added.
 				$video_priority = has_filter( 'sunshine_get_product_args', 'sunshine_video_sales_filter_product_args' );
 				if ( false !== $video_priority ) {
 					remove_filter( 'sunshine_get_product_args', 'sunshine_video_sales_filter_product_args', $video_priority );
 				}
 				try {
-					$adder->add_to_cart();
-				} catch ( Exception $e ) {
-					if ( 'spc-combo-whcc-redirect' !== $e->getMessage() ) {
-						throw $e;
-					}
+					$whcc_buy(
+						$spec['product'],
+						$price,
+						$spec['qty'],
+						array(
+							'image_id'    => $photo,
+							'gallery_id'  => sunshine_get_image( $photo )->get_gallery_id(),
+							'price_level' => $default,
+						)
+					);
 				} finally {
-					remove_filter( 'wp_redirect', $redirect, -1000 );
 					if ( false !== $video_priority ) {
 						add_filter( 'sunshine_get_product_args', 'sunshine_video_sales_filter_product_args', $video_priority, 2 );
 					}
-					unset( $_GET['whcc_editor_id'] );
-					$combo_whcc_forget();
 				}
-				foreach ( (array) SPC()->cart->get_cart() as $item ) {
-					if ( ! empty( $item['meta']['whcc_editor_id'] ) && $item['meta']['whcc_editor_id'] === $editor_id ) {
-						return;
-					}
-				}
-				throw new Exception( 'The WHCC item was not added: ' . wp_json_encode( SPC()->notices->get_notices() ) );
 			};
 			break;
 
@@ -1175,7 +989,7 @@ $combo_code = function ( $meta ) use ( $t ) {
  * Build the recipe's cart: products, customer, lines, codes, gift card, credits, shipping and
  * payment fee. Returns what the test needs to check it.
  */
-$combo_build = function ( $recipe ) use ( $t, $combo_shared_setup, $combo_make_line, $combo_code ) {
+$combo_build = function ( $recipe ) use ( $t, $combo_shared_setup, $combo_make_line, $combo_code, $whcc_ship_setup ) {
 	$context = array(
 		'shared'           => $combo_shared_setup(),
 		'needs_customer'   => $recipe['credits'] > 0,
@@ -1312,9 +1126,22 @@ $combo_build = function ( $recipe ) use ( $t, $combo_shared_setup, $combo_make_l
 		SPC()->cart->set_checkout_data_item( 'use_credits', 1 );
 	}
 
-	// Shipping. A cart with WHCC items ships with WHCC's own method.
+	// Shipping. A cart with WHCC items ships with WHCC's own method, even when the recipe says
+	// no shipping: an order with WHCC items can't be placed without WHCC's shipping price.
 	$shipping_taxable = false;
-	if ( 'none' !== $recipe['shipping'] ) {
+	if ( $context['whcc'] ) {
+		$settings         = array(
+			'none'                   => '',
+			'flat 8.95'              => '',
+			'flat 6 taxed'           => '1',
+			'flat 2.50 a line taxed' => '1',
+			'flat 1.25 an item'      => '',
+		);
+		$shipping_taxable = '1' === $settings[ $recipe['shipping'] ];
+		$whcc_ship_setup( array( 'lowest_cost' ), $shipping_taxable );
+		SPC()->cart->set_checkout_data_item( 'shipping_method', 'spcwhcclowest_cost' );
+		SPC()->cart->set_checkout_data_item( 'delivery_method', 'shipping' );
+	} elseif ( 'none' !== $recipe['shipping'] ) {
 		$settings         = array(
 			'flat 8.95'              => array( '8.95', 'cart', '' ),
 			'flat 6 taxed'           => array( '6', 'cart', '1' ),
@@ -1323,33 +1150,19 @@ $combo_build = function ( $recipe ) use ( $t, $combo_shared_setup, $combo_make_l
 		);
 		$setting          = $settings[ $recipe['shipping'] ];
 		$shipping_taxable = '1' === $setting[2];
-		if ( $context['whcc'] ) {
-			$t::option(
-				'shipping_methods',
-				array(
-					'spccombowhcc' => array(
-						'id'     => 'whcc_lowest_cost',
-						'active' => 1,
-					),
-				)
-			);
-			$t::option( 'whcc_lowest_cost_taxable_spccombowhcc', $setting[2] );
-			SPC()->cart->set_checkout_data_item( 'shipping_method', 'spccombowhcc' );
-		} else {
-			$t::option(
-				'shipping_methods',
-				array(
-					'spccomboflat' => array(
-						'id'     => 'flat_rate',
-						'active' => 1,
-					),
-				)
-			);
-			$t::option( 'flat_rate_price_spccomboflat', $setting[0] );
-			$t::option( 'flat_rate_price_type_spccomboflat', $setting[1] );
-			$t::option( 'flat_rate_taxable_spccomboflat', $setting[2] );
-			SPC()->cart->set_checkout_data_item( 'shipping_method', 'spccomboflat' );
-		}
+		$t::option(
+			'shipping_methods',
+			array(
+				'spccomboflat' => array(
+					'id'     => 'flat_rate',
+					'active' => 1,
+				),
+			)
+		);
+		$t::option( 'flat_rate_price_spccomboflat', $setting[0] );
+		$t::option( 'flat_rate_price_type_spccomboflat', $setting[1] );
+		$t::option( 'flat_rate_taxable_spccomboflat', $setting[2] );
+		SPC()->cart->set_checkout_data_item( 'shipping_method', 'spccomboflat' );
 		SPC()->cart->set_checkout_data_item( 'delivery_method', 'shipping' );
 	}
 

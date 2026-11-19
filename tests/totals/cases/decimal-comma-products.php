@@ -159,8 +159,8 @@ $decimal_comma_prod_test(
 
 /*
  * WHCC markup. The Markup box on a WHCC product is a text box with one box per price level and
- * a "%" after it. The markup is sent to WHCC when its editor opens (create_editor() takes
- * get_markup()), and WHCC prices the item with it.
+ * a "%" after it. The cart charges WHCC's price for one plus that markup
+ * (sunshine_whcc_customer_unit_price()). The whole path through the cart is in addon-whcc.php.
  */
 
 $decimal_comma_prod_test(
@@ -181,12 +181,14 @@ $decimal_comma_prod_test(
 			// The box has its own field type, "whcc_markup", which the meta box saves as posted.
 			$decimal_comma_prod_save( $album, 'whcc_markup', 'whcc_markup', $decimal_comma_prod_levels( '12,5' ) );
 			$t::same( 12.5, sunshine_get_product( $album, sunshine_get_default_price_level_id() )->get_markup(), 'markup 12,5 %' );
+			$t::money( 11.25, sunshine_whcc_customer_unit_price( sunshine_get_product( $album ), 10.00, sunshine_get_default_price_level_id() ), 'WHCC\'s 10,00 plus 12,5 % is 11,25' );
 
 			$print = $t::product( 0 );
 			update_post_meta( $print, 'type', 'whcc' );
 			update_post_meta( $print, 'whcc_product', 'spcdcwhcc' . wp_rand( 100000, 999999 ) );
 			$decimal_comma_prod_save( $print, 'whcc_markup', 'whcc_markup', $decimal_comma_prod_levels( '35' ) );
 			$t::same( 35.0, sunshine_get_product( $print, sunshine_get_default_price_level_id() )->get_markup(), 'markup 35 %' );
+			$t::money( 13.50, sunshine_whcc_customer_unit_price( sunshine_get_product( $print ), 10.00, sunshine_get_default_price_level_id() ), 'WHCC\'s 10,00 plus 35 % is 13,50' );
 		} finally {
 			remove_filter( 'pre_http_request', $block, PHP_INT_MAX );
 		}
