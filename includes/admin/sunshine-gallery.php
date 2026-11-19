@@ -835,7 +835,7 @@ function sunshine_meta_gallery_images_display() {
 			activeUploads--;
 			console.log( 'SUNSHINE: FileUploaded event:', file.name, '(active:', activeUploads, ')' );
 			console.log( 'SUNSHINE: Response:', response.response );
-			var result = $.parseJSON( response.response );
+			var result = JSON.parse( response.response );
 			console.log( 'SUNSHINE: Parsed result:', result );
 			if ( result.success === true ) {
 				current_image_count++;

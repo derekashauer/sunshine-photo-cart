@@ -298,8 +298,8 @@ class Sunshine_Admin {
 		wp_register_script( 'chartjs', SUNSHINE_PHOTO_CART_URL . 'assets/js/chart.min.js', '', '3.8' );
 		wp_register_script( 'sunshine-admin-image-field', SUNSHINE_PHOTO_CART_URL . 'assets/js/admin-image-field.js', array( 'jquery' ), SUNSHINE_PHOTO_CART_VERSION, true );
 
-		wp_register_script( 'select2', SUNSHINE_PHOTO_CART_URL . 'assets/js/select2/select2.min.js', array( 'jquery' ), '4.0.13' );
-		wp_register_style( 'select2', SUNSHINE_PHOTO_CART_URL . 'assets/js/select2/select2.min.css', '4.0.13' );
+		wp_register_script( 'select2', SUNSHINE_PHOTO_CART_URL . 'assets/js/select2/select2.min.js', array( 'jquery' ), '4.1.0' );
+		wp_register_style( 'select2', SUNSHINE_PHOTO_CART_URL . 'assets/js/select2/select2.min.css', array(), '4.1.0' );
 
 		// Need this on all pages as we might need it for global actions like notices.
 		wp_enqueue_script( 'sunshine-admin', SUNSHINE_PHOTO_CART_URL . 'assets/js/admin.js', array( 'jquery' ), SUNSHINE_PHOTO_CART_VERSION, true );
