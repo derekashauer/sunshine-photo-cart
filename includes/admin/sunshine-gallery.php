@@ -723,7 +723,7 @@ function sunshine_meta_gallery_images_display() {
 				uploaddiv.addClass('drag-drop');
 					$('#drag-drop-area')
 						.on('dragover.wp-uploader', function(){ uploaddiv.addClass('drag-over'); })
-						.on('dragleave.wp-uploader, drop.wp-uploader', function(){ uploaddiv.removeClass('drag-over'); });
+						.on('dragleave.wp-uploader drop.wp-uploader', function(){ uploaddiv.removeClass('drag-over'); });
 			}
 
 		});

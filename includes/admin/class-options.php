@@ -80,8 +80,8 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 		public function settings_assets() {
 
 			// Select2.
-			wp_enqueue_style( 'select2' );
-			wp_enqueue_script( 'select2' );
+			wp_enqueue_style( 'sunshine-select2' );
+			wp_enqueue_script( 'sunshine-select2' );
 
 			// Color picker.
 			wp_enqueue_style( 'wp-color-picker' );
