@@ -285,7 +285,8 @@
 		if ( type ) {
 			event.preventDefault();
 			showNotice( type, hoveredImageId );
-		} else {
+		} else if ( ! event.ctrlKey && ! event.altKey && ! event.metaKey ) {
+			// Stays blurred while Ctrl, Alt, Windows or Cmd is still held, since a screenshot key can still follow.
 			cover( false );
 		}
 	}, true );
