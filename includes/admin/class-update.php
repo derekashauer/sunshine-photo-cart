@@ -103,6 +103,13 @@ class SPC_Update {
 			}
 		}
 
+		// The saved version is bumped below on the first visit, so the version 3 data update
+		// would never show again if it wasn't finished then. Keep showing it until it's done,
+		// using the same check as the admin notice in update_check().
+		if ( ! in_array( '3.0', $run_updates, true ) && get_option( 'sunshine_options' ) && ! SPC()->get_option( 'update_3' ) ) {
+			array_unshift( $run_updates, '3.0' );
+		}
+
 		// Set new version only when we have arrived on the update page.
 		SPC()->update_option( 'version', SUNSHINE_PHOTO_CART_VERSION );
 
