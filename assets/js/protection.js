@@ -222,6 +222,15 @@
 		return event.metaKey && event.shiftKey && [ 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'KeyS' ].indexOf( code ) > -1;
 	}
 
+	function isModifierKey( key ) {
+		return [ 'Control', 'Alt', 'Meta', 'Shift' ].indexOf( key ) > -1;
+	}
+
+	// Ctrl+A, Ctrl+V and the like in a form field shouldn't blur the photos.
+	function isTyping( target ) {
+		return target && ( target.isContentEditable || [ 'INPUT', 'TEXTAREA', 'SELECT' ].indexOf( target.tagName ) > -1 );
+	}
+
 	function blockedKeysType( event ) {
 		var code = event.code || '';
 		var key = ( event.key || '' ).toLowerCase();
@@ -259,6 +268,15 @@
 			if ( event.metaKey && event.shiftKey ) {
 				screenshotModifiers = true;
 				cover( true );
+				return;
+			}
+		}
+		if ( isModifierKey( event.key ) ) {
+			// Ctrl, Alt, Windows or Cmd on its own. Screenshot shortcuts start with one of these
+			// (Ctrl+PrtSc, Alt+PrtSc, Windows+Shift+S), and the key that follows often never
+			// reaches the page, so blur while it's held. Nothing is recorded for this.
+			if ( 'Shift' !== event.key && ! isTyping( event.target ) ) {
+				cover( true );
 			}
 			return;
 		}
@@ -288,6 +306,10 @@
 		if ( ( 'Meta' === event.key || 'Shift' === event.key ) && screenshotModifiers ) {
 			screenshotModifiers = false;
 			screenshotModifiersReleased();
+			return;
+		}
+		if ( isModifierKey( event.key ) && ! event.ctrlKey && ! event.altKey && ! event.metaKey && ( ! notice || ! notice.classList.contains( 'sunshine--open' ) ) ) {
+			cover( false );
 		}
 	}, true );
 
