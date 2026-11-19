@@ -303,7 +303,7 @@ function sunshine_admin_user_show_favorites( $user ) {
 				</div>
 				<script>
 				jQuery(document).ready(function($){
-					$('#sunshine--favorites-file-list-link').click(function(){
+					$('#sunshine--favorites-file-list-link').on( 'click', function(){
 						$('#sunshine--favorites-file-list').slideToggle();
 						return false;
 					});

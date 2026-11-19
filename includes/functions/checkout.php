@@ -84,7 +84,7 @@ function sunshine_checkout_scripts() {
 						$( '#sunshine--checkout' ).replaceWith( result.data.html );
 						$( '#sunshine--checkout input, #sunshine--checkout select' ).trigger( 'conditional' );
 						$( document ).trigger( 'sunshine_reload_checkout', [ result.data ] );
-						$( '.sunshine--checkout--section-active' ).find( 'input:visible, select:visible' ).first().focus();
+						$( '.sunshine--checkout--section-active' ).find( 'input:visible, select:visible' ).first().trigger( 'focus' );
 					} else {
 						var newURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
 						if ( section ) {
@@ -115,7 +115,7 @@ function sunshine_checkout_scripts() {
 				console.log( 'Enter key pressed in input field' );
 				e.preventDefault();
 				// Manually trigger form submission
-				$( this ).closest( 'form' ).submit();
+				$( this ).closest( 'form' ).trigger( 'submit' );
 			}
 		});
 
@@ -510,7 +510,7 @@ function sunshine_checkout_scripts() {
 							.then(() => {
 								// Promise resolved - either immediately or by payment gateway
 								// Now we can submit the form
-								jQuery( '#sunshine--checkout--form' ).submit();
+								jQuery( '#sunshine--checkout--form' ).trigger( 'submit' );
 							})
 							.catch(error => {
 								// Notify server about payment failure

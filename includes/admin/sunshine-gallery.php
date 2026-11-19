@@ -705,7 +705,7 @@ function sunshine_meta_gallery_images_display() {
 
 		// ON watermark setting change.
 		//uploader.settings.multipart_params.watermark = false;
-		$( 'input[name="watermark"]' ).change(function () {
+		$( 'input[name="watermark"]' ).on( 'change', function () {
 			if (!$(this).prop('checked')) {
 				uploader.settings.multipart_params.watermark = 0;
 			} else {
@@ -718,12 +718,12 @@ function sunshine_meta_gallery_images_display() {
 			var uploaddiv = $('#plupload-upload-ui');
 			if( $(document.body).hasClass("mobile") ){
 				uploaddiv.removeClass('drag-drop');
-				$('#drag-drop-area').unbind('.wp-uploader');
+				$('#drag-drop-area').off('.wp-uploader');
 			} else{
 				uploaddiv.addClass('drag-drop');
 					$('#drag-drop-area')
-						.bind('dragover.wp-uploader', function(){ uploaddiv.addClass('drag-over'); })
-						.bind('dragleave.wp-uploader, drop.wp-uploader', function(){ uploaddiv.removeClass('drag-over'); });
+						.on('dragover.wp-uploader', function(){ uploaddiv.addClass('drag-over'); })
+						.on('dragleave.wp-uploader, drop.wp-uploader', function(){ uploaddiv.removeClass('drag-over'); });
 			}
 
 		});

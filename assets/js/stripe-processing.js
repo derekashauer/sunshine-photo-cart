@@ -277,7 +277,7 @@ jQuery( document ).on( 'sunshine_payment_processing', function( event, data ) {
 				// Add the payment intent ID
 				$form.prepend( '<input type="hidden" name="stripe_payment_intent_id" value="' + result.paymentIntent.id + '" />' );
 				console.log( 'Added payment_intent_id to form: ' + result.paymentIntent.id );
-				$form.submit();
+				$form.trigger( 'submit' );
 			} else {
 				console.error( 'Form #sunshine--checkout--form not found!' );
 			}

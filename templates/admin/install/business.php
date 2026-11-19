@@ -55,7 +55,7 @@ if ( empty( $logo ) ) {
 		</p>
 		<script>
 		jQuery(document).ready(function($) {
-			$('#image-upload').click(function(e) {
+			$('#image-upload').on( 'click', function(e) {
 				e.preventDefault();
 				var mediaUploader;
 
@@ -83,7 +83,7 @@ if ( empty( $logo ) ) {
 				mediaUploader.open();
 			});
 
-			$('#remove-image').click(function(e) {
+			$('#remove-image').on( 'click', function(e) {
 				e.preventDefault();
 				$('#image-id').val('');
 				$('#image-preview').attr('src', '').hide();

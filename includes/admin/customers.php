@@ -223,8 +223,8 @@ function sunshine_customer_tab_favorites( $customer ) {
 		echo '<input type="text" id="filenames" style="width:70%" value="' . esc_attr( join( ',', $file_names ) ) . '" />';
 		echo ' <a id="copy-filenames" class="button">' . esc_html__( 'Copy to clipboard', 'sunshine-photo-cart' ) . '</a><br /><br />';
 		echo '<script>
-			jQuery("#copy-filenames").click(function(){
-				jQuery("#filenames").select();
+			jQuery("#copy-filenames").on( "click", function(){
+				jQuery("#filenames").trigger( "select" );
 				document.execCommand( "copy" );
 				jQuery( this ).html( "Copied!" );
 				return false;
