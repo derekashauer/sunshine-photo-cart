@@ -381,12 +381,12 @@ class Sunshine_Admin_Quick_Bulk_Edit {
 		if ( ! $screen || ! in_array( $screen->id, array( 'edit-sunshine-gallery', 'edit-sunshine-product' ), true ) ) {
 			return;
 		}
-		wp_enqueue_style( 'select2' );
-		wp_enqueue_script( 'select2' );
+		wp_enqueue_style( 'sunshine-select2' );
+		wp_enqueue_script( 'sunshine-select2' );
 		wp_enqueue_script(
 			'sunshine-qbe',
 			SUNSHINE_PHOTO_CART_URL . 'assets/js/admin-quick-bulk-edit.js',
-			array( 'jquery', 'inline-edit-post', 'select2' ),
+			array( 'jquery', 'inline-edit-post', 'sunshine-select2' ),
 			defined( 'SUNSHINE_PHOTO_CART_VERSION' ) ? SUNSHINE_PHOTO_CART_VERSION : null,
 			true
 		);

@@ -625,7 +625,7 @@ jQuery( document ).ready(function($){
 
 	// PACKAGE/MULTIPLE PRODUCTS: When clicking thumbnail or placeholder, trigger the related button near it
 	$( 'body' ).on( 'click', '.sunshine--multi-image-select--selected-images--item', function() {
-		$( this ).closest( '.sunshine--product-options--item' ).find( '.sunshine--multi-image-select--open' ).click();
+		$( this ).closest( '.sunshine--product-options--item' ).find( '.sunshine--multi-image-select--open' ).trigger( 'click' );
 	});
 
     // Choose source

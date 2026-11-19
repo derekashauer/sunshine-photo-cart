@@ -75,7 +75,7 @@ function sunshine_shipping_methods_display() {
 						security: "<?php echo esc_js( wp_create_nonce( 'sunshine-add-shipping-method' ) ); ?>"
 					},
 					success: function( data, textStatus, XMLHttpRequest ) {
-						var result = $.parseJSON( data );
+						var result = JSON.parse( data );
 						if ( result ) {
 							$( '#sunshine-shipping-methods' ).append( '<tr id="sunshine-shipping-method-' + result.instance_id + '" data-instance="' + result.instance_id + '"><td><span class="dashicons dashicons-sort"></span></td><td><label class="sunshine-switch"><input type="checkbox" name="sunshine_shipping_method_enabled[' + result.key + ']" checked="checked" /><span class="sunshine-switch-slider"></span></label></td><td><strong>' + result.name + '</strong></td><td><a href="admin.php?page=sunshine&section=shipping_methods&shipping_method=' + result.id + '&instance_id=' + result.instance_id + '" class="button"><?php echo esc_js( __( 'Configure', 'sunshine-photo-cart' ) ); ?></a> <a href="#" class="button delete"><?php echo esc_js( __( 'Delete', 'sunshine-photo-cart' ) ); ?></a></td></tr>' );
 							$( '#sunshine-shipping-methods tbody' ).sortable( 'refresh' );

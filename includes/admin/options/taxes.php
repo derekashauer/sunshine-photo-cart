@@ -167,7 +167,7 @@ function sunshine_taxes_display() {
 			// Suggest a name for the country (GST, VAT) only when the field is still empty,
 			// so a name the store owner typed is never replaced.
 			var name_field = $( this ).closest( 'tr' ).find( 'td.tax-name input' );
-			if ( name_field.length && '' === $.trim( name_field.val() ) && sunshine_tax_name_suggestions[ selected_country ] ) {
+			if ( name_field.length && '' === name_field.val().trim() && sunshine_tax_name_suggestions[ selected_country ] ) {
 				name_field.val( sunshine_tax_name_suggestions[ selected_country ] );
 			}
 			$.ajax({

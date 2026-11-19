@@ -86,7 +86,7 @@
 		function( i, method ) {
 			$[ method ] = function( qname, url, data, callback, type ) {
 
-				if ( $.isFunction( data ) ) {
+				if ( typeof data === "function" ) {
 					type     = type || callback;
 					callback = data;
 					data     = undefined;

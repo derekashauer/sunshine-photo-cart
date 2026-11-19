@@ -80,8 +80,8 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 		public function settings_assets() {
 
 			// Select2.
-			wp_enqueue_style( 'select2' );
-			wp_enqueue_script( 'select2' );
+			wp_enqueue_style( 'sunshine-select2' );
+			wp_enqueue_script( 'sunshine-select2' );
 
 			// Color picker.
 			wp_enqueue_style( 'wp-color-picker' );
@@ -853,11 +853,11 @@ if ( ! class_exists( 'SPC_Settings_API' ) ) {
 				$(this).farbtastic( $(this).closest('.color-picker').find('.color') );
 			});
 
-			$('.color').click(function() {
+			$('.color').on( 'click', function() {
 				$(this).closest('.color-picker').find('.colorpicker').fadeIn();
 			});
 
-			$(document).mousedown(function() {
+			$(document).on( 'mousedown', function() {
 				$('.colorpicker').each(function() {
 					var display = $(this).css('display');
 					if ( display == 'block' )

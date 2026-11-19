@@ -44,11 +44,11 @@ function sunshine_product_category_add_form_fields( $taxonomy ) {
 				file_frame.open();
 			}
 
-			$( '#image-upload' ).click(function() {
+			$( '#image-upload' ).on( 'click', function() {
 				$.fn.uploadMediaFile( jQuery(this), true );
 			});
 
-			$( '#image-delete' ).click(function() {
+			$( '#image-delete' ).on( 'click', function() {
 				$( 'input[type="image"]' ).val( '' );
 				$( '#image img' ).remove();
 				$( '#image-delete' ).hide();
@@ -133,7 +133,7 @@ function sunshine_product_category_edit_form_fields( $term, $taxonomy ) {
 				file_frame.open();
 			});
 
-			$( '#image-delete' ).click(function() {
+			$( '#image-delete' ).on( 'click', function() {
 				$( 'input[name="image"]' ).val( '' );
 				$( '#image img' ).remove();
 				$( '#image-delete' ).hide();

@@ -820,7 +820,7 @@ class SPC_Admin_Order {
 				</p>
 				<p id="order-status-change-notify" style="display: none;"><label><input type="checkbox" name="order_status_change_notify" value="yes" /> <?php esc_html_e( 'Notify customer of status change', 'sunshine-photo-cart' ); ?></label></p>
 				<script>
-					jQuery( 'select[name="order_status"]' ).change(function() {
+					jQuery( 'select[name="order_status"]' ).on( 'change', function() {
 						if ( jQuery('select[name="order_status"]').val() != '<?php echo esc_js( $current_order_status ); ?>' ) {
 							jQuery( '#order-status-change-notify' ).show();
 						} else {
@@ -1100,7 +1100,7 @@ class SPC_Admin_Order {
 			echo ' <a id="copy-filenames" class="button">' . esc_html__( 'Copy to clipboard', 'sunshine-photo-cart' ) . '</a><br /><br />';
 			esc_html_e( 'Copy and paste the file names above into Lightroom search feature (Library filter) to quickly find and create a new collection to make processing this order easier. Make sure you are using the "Contains" (and not "Contains All") search parameter.', 'sunshine-photo-cart' );
 			echo '<script>
-				jQuery("#copy-filenames").click(function(){
+				jQuery("#copy-filenames").on( "click", function(){
 	var text = jQuery("#filenames").val();
 	navigator.clipboard.writeText(text).then(function() {
 		jQuery("#copy-filenames").html("Copied!");
