@@ -90,7 +90,6 @@ function sunshine_get_template_html( $template, $args = array(), $base = '' ) {
 	return ob_get_clean();
 }
 
-// TODO: Finish
 function sunshine_page_title( $echo = true ) {
 
 	$page_title = apply_filters( 'sunshine_page_title', SPC()->frontend->get_page_title() );
@@ -829,11 +828,10 @@ function sunshine_gallery_password_form( $echo = true ) {
 
 }
 
-/* TODO: Redo: make into template, use gallery class functions */
 function sunshine_gallery_expiration_notice() {
 	if ( SPC()->frontend->is_gallery() ) {
-		$end_date = get_post_meta( SPC()->frontend->current_gallery->get_id(), 'sunshine_gallery_end_date', true );
-		if ( $end_date != '' && $end_date > current_time( 'timestamp' ) ) {
+		$end_date = SPC()->frontend->current_gallery->get_expiration_date();
+		if ( $end_date && $end_date > current_time( 'timestamp' ) ) {
 			echo '<div id="sunshine--gallery--expiration-notice">';
 			/* translators: %s is the gallery expiration date and time */
 			echo wp_kses_post( apply_filters( 'sunshine_gallery_expiration_notice', sprintf( __( 'This gallery is set to expire on <strong>%s</strong>', 'sunshine-photo-cart' ), date_i18n( get_option( 'date_format' ) . ' @ ' . get_option( 'time_format' ), $end_date ) ) ) );

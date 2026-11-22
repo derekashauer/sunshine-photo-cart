@@ -1527,7 +1527,7 @@ function sunshine_gallery_image_featured() {
 		sunshine_admin_gallery_ajax_check( $gallery_id );
 		$current_post_thumbnail_id = get_post_thumbnail_id( $gallery_id );
 		if ( $image_id == $current_post_thumbnail_id ) {
-			set_post_thumbnail( $gallery_id, 1 );
+			delete_post_thumbnail( $gallery_id );
 			wp_send_json_success(
 				array(
 					'image_id'  => $image_id,

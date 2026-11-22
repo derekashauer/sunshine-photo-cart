@@ -80,7 +80,6 @@ jQuery( document ).on( 'sunshine_checkout_payment_change', async function ( even
 			sunshine_stripe_payment_element.on('ready', function() {
 				// Remove loading message only when Stripe form is actually ready
 				jQuery('#sunshine-stripe-payment-loading').remove();
-				console.log('Stripe payment element is ready');
 			});
 			
 			// Fallback: Remove loading message after 10 seconds if ready event never fires
@@ -156,7 +155,6 @@ jQuery( document ).on( 'sunshine_payment_processing', function( event, data ) {
 		// Prevent double submission - check if already processing
 		var $submitBtn = jQuery('#sunshine--checkout--submit');
 		if ($submitBtn.data('stripe-processing')) {
-			console.log('Stripe payment already in progress, ignoring duplicate submission');
 			reject(new Error('Payment already in progress'));
 			return;
 		}
@@ -276,7 +274,6 @@ jQuery( document ).on( 'sunshine_payment_processing', function( event, data ) {
 				$form.find( 'input[name="stripe_payment_intent_id"]' ).remove();
 				// Add the payment intent ID
 				$form.prepend( '<input type="hidden" name="stripe_payment_intent_id" value="' + result.paymentIntent.id + '" />' );
-				console.log( 'Added payment_intent_id to form: ' + result.paymentIntent.id );
 				$form.trigger( 'submit' );
 			} else {
 				console.error( 'Form #sunshine--checkout--form not found!' );

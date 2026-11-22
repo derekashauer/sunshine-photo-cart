@@ -287,9 +287,9 @@ function sunshine_get_settings_fields() {
 		'id'          => 'endpoint_order_received',
 		'type'        => 'text',
 		'callback'    => 'sanitize_title_with_dashes',
-		'description' => 'Current order URL example: <pre style="display: inline;">' . trailingslashit( sunshine_get_page_permalink( 'checkout' ) ) . '<strong>' . SPC()->get_option( 'endpoint_order_received', 'receipt' ) . '</strong>/42</pre>',
+		'description' => 'Current order URL example: <pre style="display: inline;">' . trailingslashit( sunshine_get_page_permalink( 'checkout' ) ) . '<strong>' . sunshine_get_order_received_endpoint() . '</strong>/42</pre>',
 		'required'    => true,
-		'default'     => 'order-received',
+		'default'     => SUNSHINE_PHOTO_CART_ORDER_RECEIVED_ENDPOINT,
 	);
 	$pages_fields['2300'] = array(
 		'name'        => __( 'Store', 'sunshine-photo-cart' ),

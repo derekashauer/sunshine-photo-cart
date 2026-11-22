@@ -86,7 +86,6 @@ function sunshine_get_shipping_method_by_id( $id, $instance_id = 0 ) {
 		$shipping_method = $shipping_methods[ $id ];
 		$class           = $shipping_method['class'];
 		if ( class_exists( $class ) ) {
-			// TODO: Are shipping classes getting called repeatedly because of this here? Make like payment methods
 			return new $class( $instance_id );
 		}
 	}

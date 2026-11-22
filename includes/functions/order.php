@@ -1,4 +1,14 @@
 <?php
+/**
+ * The address part for the order received page, like "receipt" in /checkout/receipt/42.
+ *
+ * Every place that builds, registers or reads that address uses this, so they can't disagree
+ * when the setting is empty.
+ */
+function sunshine_get_order_received_endpoint() {
+	return SPC()->get_option( 'endpoint_order_received', SUNSHINE_PHOTO_CART_ORDER_RECEIVED_ENDPOINT );
+}
+
 function sunshine_get_orders( $args = array(), $mode = 'live' ) {
 
 	$orders = get_posts( sunshine_get_order_query_args( $args, $mode ) );

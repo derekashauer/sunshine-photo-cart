@@ -461,32 +461,6 @@ class SPC_Product extends Sunshine_Data {
 
 	}
 
-	/*
-	public function get_option_prices( $price_level_id ) {
-
-		if ( !empty( $this->options ) ) { // If we have got this already, don't redo it all again
-			return $this->options;
-		}
-
-		if ( empty( $price_level_id ) ) {
-			$price_level_id = $this->price_level;
-		}
-
-		$options = $this->get_meta_value( 'options' );
-		if ( empty( $options ) ) {
-			return false;
-		}
-
-		sunshine_log( $options );
-
-		$option_prices = array();
-		foreach ( $options as $option ) {
-
-		}
-
-	}
-	*/
-
 	public function get_option_item_price( $this_option_id, $this_option_item_id, $this_price_level_id = '' ) {
 
 		if ( empty( $this_price_level_id ) ) {

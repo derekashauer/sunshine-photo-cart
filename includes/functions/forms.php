@@ -243,10 +243,6 @@ function sunshine_form_field( $id, $field, $value = '', $echo = true ) {
 		case 'checkbox':
 			break; // Special cases do not need an added label here.
 
-		case 'checkboxXXXX':
-			$html_safe = '<span class="sunshine--form--field--name">' . esc_html( $field['name'] ) . '</span><label for="' . esc_attr( $field['id'] ) . '"><span class="sunshine--form--field--name">' . $html_safe . wp_kses_post( $field['description'] ) . $required . '</span></label>';
-			break;
-
 		default:
 			$html_safe = '<label for="' . esc_attr( $field['id'] ) . '"><span class="sunshine--form--field--name">' . esc_html( $field['name'] ) . $required . '</span></label>' . $html_safe;
 			break;

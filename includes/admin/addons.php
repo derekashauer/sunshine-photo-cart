@@ -126,7 +126,7 @@ function sunshine_addon_get_license_key( $name ) {
 
 function sunshine_addons_page() {
 
-	$addons = sunshine_get_addon_data( true ); // TODO: Do not force this.
+	$addons = sunshine_get_addon_data();
 	add_thickbox();
 	$current_plan = ( ! empty( SPC()->plan ) && SPC()->plan->is_valid() ) ? SPC()->plan->get_id() : 'free';
 	?>

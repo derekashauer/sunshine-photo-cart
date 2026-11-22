@@ -128,29 +128,13 @@ class SPC_Update {
 	// Things to check every time there is an update.
 	function common_updates() {
 
-		if ( ! wp_next_scheduled( 'sunshine_addon_check' ) ) {
-			wp_schedule_event( time(), 'weekly', 'sunshine_addon_check' );
-		}
-		if ( ! wp_next_scheduled( 'sunshine_session_garbage_collection' ) ) {
-			wp_schedule_event( time(), 'twicedaily', 'sunshine_session_garbage_collection' );
-		}
-		if ( ! wp_next_scheduled( 'sunshine_send_summary' ) ) {
-			$week_start = (int) get_option( 'start_of_week' );
-			$start      = strtotime( "Sunday + $week_start days 8am" );
-			wp_schedule_event( $start, 'weekly', 'sunshine_send_summary' );
-		}
-		if ( ! wp_next_scheduled( 'sunshine_license_check' ) ) {
-			wp_schedule_event( time(), 'weekly', 'sunshine_license_check' );
-		} else {
+		if ( wp_next_scheduled( 'sunshine_license_check' ) ) {
 			// Check right away so add-ons still on their own older keys switch to the plan key.
 			wp_schedule_single_event( time(), 'sunshine_license_check' );
 		}
-		if ( ! wp_next_scheduled( 'sunshine_tracking_send' ) ) {
-			wp_schedule_event( time() + DAY_IN_SECONDS, 'weekly', 'sunshine_tracking_send' );
-		}
-		if ( ! wp_next_scheduled( 'sunshine_daily' ) ) {
-			wp_schedule_event( time(), 'daily', 'sunshine_daily' );
-		}
+		sunshine_schedule_events();
+
+		$this->repair_term_order_meta();
 
 		$allowed_tracking = get_option( 'sunshine_allow_tracking' );
 		if ( $allowed_tracking ) {
@@ -185,6 +169,34 @@ class SPC_Update {
 
 		sunshine_tracking_send();
 
+	}
+
+	// One-time fix: product categories and options made before new terms got an order saved.
+	public function repair_term_order_meta() {
+		if ( get_option( 'sunshine_repaired_term_order_meta' ) ) {
+			return;
+		}
+		$taxonomies = array( 'sunshine-product-category', 'sunshine-product-option' );
+		foreach ( $taxonomies as $taxonomy ) {
+			$terms = get_terms(
+				array(
+					'taxonomy'   => $taxonomy,
+					'hide_empty' => false,
+					'meta_query' => array(
+						array(
+							'key'     => 'order',
+							'compare' => 'NOT EXISTS',
+						),
+					),
+				)
+			);
+			if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+					add_term_meta( $term->term_id, 'order', 1 );
+				}
+			}
+		}
+		update_option( 'sunshine_repaired_term_order_meta', true, false );
 	}
 
 	function update_3() {
@@ -1976,23 +1988,10 @@ class SPC_Update {
 	}
 
 	function check_plugin_activation( $plugin, $network_wide ) {
-		// Get the plugin folder name
-		$plugin_folder_name = explode( '/', $plugin )[0];
-
-		// Check if plugin folder name starts with "sunshine-"
-		if ( strpos( $plugin_folder_name, 'sunshine-' ) === 0 ) {
-			// Get plugin data to check version
-			$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin );
-
-			// Check if plugin version is less than 3
-			if ( version_compare( $plugin_data['Version'], '3', '<' ) ) {
-				// Deactivate the plugin
-				deactivate_plugins( $plugin );
-
-				$plugin_name = $plugin_data['Name'];
-				set_transient( 'sunshine_addon_deactivation_notice', $plugin_name, 500 );
-
-			}
+		$plugin_data = sunshine_get_sunshine_2_addon_data( $plugin );
+		if ( $plugin_data ) {
+			deactivate_plugins( $plugin );
+			set_transient( 'sunshine_addon_deactivation_notice', $plugin_data['Name'], 500 );
 		}
 	}
 

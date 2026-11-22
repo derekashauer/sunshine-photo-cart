@@ -209,8 +209,8 @@ class SPC_Frontend {
 				exit;
 				// $this->die();
 			}
-		} elseif ( get_query_var( SPC()->get_option( 'endpoint_order_received', 'receipt' ) ) ) {
-			$order_id = get_query_var( SPC()->get_option( 'endpoint_order_received', 'receipt' ) );
+		} elseif ( get_query_var( sunshine_get_order_received_endpoint() ) ) {
+			$order_id = get_query_var( sunshine_get_order_received_endpoint() );
 			$order    = new SPC_Order( $order_id );
 			if ( $order->can_access() ) { // Permission check to make sure access to this sensitive data is allowed
 				$this->current_order = $order;

@@ -313,7 +313,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		$this->get_locations( $mode );
 
 		if ( ! wp_next_scheduled( 'sunshine_square_access_token_refresh' ) ) {
-			$result = wp_schedule_event( current_time( 'timestamp' ), 'weekly', 'sunshine_square_access_token_refresh' );
+			$result = wp_schedule_event( time(), 'weekly', 'sunshine_square_access_token_refresh' );
 			if ( is_wp_error( $result ) ) {
 				SPC()->log( 'Square access token refresh not scheduled' );
 			} else {
@@ -322,7 +322,7 @@ class SPC_Payment_Method_Square extends SPC_Payment_Method {
 		}
 
 		if ( ! wp_next_scheduled( 'sunshine_square_refresh_fees' ) ) {
-			$result = wp_schedule_event( current_time( 'timestamp' ), 'daily', 'sunshine_square_refresh_fees' );
+			$result = wp_schedule_event( time(), 'daily', 'sunshine_square_refresh_fees' );
 			if ( is_wp_error( $result ) ) {
 				SPC()->log( 'Square processing fee refresh not scheduled' );
 			} else {

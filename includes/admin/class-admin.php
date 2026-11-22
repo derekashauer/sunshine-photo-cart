@@ -19,8 +19,6 @@ class Sunshine_Admin {
 		add_filter( 'display_post_states', array( $this, 'post_states' ), 10, 2 );
 
 		add_action( 'admin_init', array( $this, 'update_check' ) );
-		add_action( 'admin_init', array( $this, 'warnings' ) );
-		add_action( 'admin_init', array( $this, 'repair_term_order_meta' ) );
 
 		add_filter( 'jpeg_quality', array( $this, 'image_quality' ) );
 		// add_filter( 'wp_image_editors', array( $this, 'force_imagick' ) );
@@ -125,32 +123,11 @@ class Sunshine_Admin {
 
 		$addons = array();
 
-		// Loop through each active plugin
 		foreach ( $active_plugins as $plugin_path ) {
-			// Get plugin data using WordPress function
-			$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin_path );
-
-			// Check if the plugin folder name starts with 'sunshine-'
-			if ( strpos( $plugin_path, 'sunshine-' ) === 0 && $plugin_path != 'sunshine-photo-cart' ) {
-				// Get the version of the plugin
-				$version = $plugin_data['Version'];
-
-				// The original intent of this check was to catch Sunshine 2
-				// add-ons (which were versioned 2.x.x) running alongside
-				// Sunshine 3 core. A bare `< 2.99` would also flag any *new*
-				// add-on starting fresh at 1.x.x as if it were Sunshine 2 era.
-				// Narrow to 2.x.x explicitly so new add-ons can pick their
-				// own version line without being mistaken for legacy.
-				if (
-					! empty( $version )
-					&& version_compare( $version, '2.0', '>=' )
-					&& version_compare( $version, '2.99', '<' )
-				) {
-					// Add plugin name to error list
-					$addons[] = $plugin_data['Name'];
-					// Deactivate the plugin
-					deactivate_plugins( $plugin_path );
-				}
+			$plugin_data = sunshine_get_sunshine_2_addon_data( $plugin_path );
+			if ( $plugin_data ) {
+				$addons[] = $plugin_data['Name'];
+				deactivate_plugins( $plugin_path );
 			}
 		}
 
@@ -375,14 +352,6 @@ class Sunshine_Admin {
 			// sunshine_update();
 		}
 
-	}
-
-	/* TODO: Check for various setting warnings and what not to notify the user of */
-	public function warnings() {
-
-		// When checking, might need to do transients so it is not getting checked on every admin page load
-
-		// If shortcode option enabled but any of the existing pages do not have the shortcode
 	}
 
 	public function image_quality( $quality ) {
@@ -931,33 +900,6 @@ class Sunshine_Admin {
 			$pieces['orderby'] = ' ORDER BY COALESCE(tm.meta_value + 0, 999) ';
 		}
 		return $pieces;
-	}
-
-	public function repair_term_order_meta() {
-		if ( get_option( 'sunshine_repaired_term_order_meta' ) ) {
-			return;
-		}
-		$taxonomies = array( 'sunshine-product-category', 'sunshine-product-option' );
-		foreach ( $taxonomies as $taxonomy ) {
-			$terms = get_terms(
-				array(
-					'taxonomy'   => $taxonomy,
-					'hide_empty' => false,
-					'meta_query' => array(
-						array(
-							'key'     => 'order',
-							'compare' => 'NOT EXISTS',
-						),
-					),
-				)
-			);
-			if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
-				foreach ( $terms as $term ) {
-					add_term_meta( $term->term_id, 'order', 1 );
-				}
-			}
-		}
-		update_option( 'sunshine_repaired_term_order_meta', true, false );
 	}
 
 	public function delete_post( $post_id, $post ) {
