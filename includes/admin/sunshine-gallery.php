@@ -1528,6 +1528,8 @@ function sunshine_gallery_image_featured() {
 		$current_post_thumbnail_id = get_post_thumbnail_id( $gallery_id );
 		if ( $image_id == $current_post_thumbnail_id ) {
 			delete_post_thumbnail( $gallery_id );
+			// The gallery now uses its first image as the cover, which may not have the cover size yet.
+			sunshine_make_cover_size_image( $gallery_id );
 			wp_send_json_success(
 				array(
 					'image_id'  => $image_id,

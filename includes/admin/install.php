@@ -181,7 +181,6 @@ function sunshine_deactivation() {
 	wp_clear_scheduled_hook( 'sunshine_source_watch' );
 	wp_clear_scheduled_hook( 'sunshine_source_watch_continue' );
 	wp_clear_scheduled_hook( 'sunshine_daily' );
-	wp_clear_scheduled_hook( 'sunshine_license_enforce' );
 	// Square adds this one back on its own. Its token and fee jobs, and the gallery ready check, are
 	// left alone: they are only made when Square connects or an image is added, so clearing them
 	// would stop token renewals or a waiting gallery's ready check after turning back on.
@@ -193,8 +192,9 @@ function sunshine_deactivation() {
  * Plugin data for a Sunshine 2 add-on, which breaks Sunshine 3, or false for any other plugin.
  *
  * Sunshine 2 add-ons were all versioned 2.x. Newer add-ons and the other WP Sunshine plugins also
- * live in "sunshine-" folders and can start at 1.x, so only 2.x counts. The folder is checked
- * before the plugin file is read, so other plugins cost nothing.
+ * live in "sunshine-" folders and can start at 1.x, so only 2.x counts, and the other WP Sunshine
+ * plugins are never counted, so they can reach 2.x. The folder is checked before the plugin file
+ * is read, so other plugins cost nothing.
  *
  * @param string $plugin Plugin file, relative to the plugins folder.
  * @return array|false
@@ -203,6 +203,11 @@ function sunshine_get_sunshine_2_addon_data( $plugin ) {
 	$folder = explode( '/', $plugin )[0];
 	if ( strpos( $folder, 'sunshine-' ) !== 0 || 'sunshine-photo-cart' === $folder ) {
 		return false;
+	}
+	foreach ( array( 'sunshine-analytics', 'sunshine-consent', 'sunshine-seo', 'sunshine-utm-builder' ) as $other_plugin ) {
+		if ( $folder === $other_plugin || strpos( $folder, $other_plugin . '-' ) === 0 ) {
+			return false;
+		}
 	}
 	if ( ! function_exists( 'get_plugin_data' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';

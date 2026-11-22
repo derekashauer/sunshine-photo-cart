@@ -118,6 +118,11 @@ class Sunshine_Admin {
 	}
 
 	public function deactivate_old_addons() {
+		// Background admin requests (like the heartbeat) don't need to check this too.
+		if ( wp_doing_ajax() ) {
+			return;
+		}
+
 		// Get the list of all active plugins
 		$active_plugins = get_option( 'active_plugins' );
 
