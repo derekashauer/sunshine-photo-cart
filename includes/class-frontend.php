@@ -135,9 +135,39 @@ class SPC_Frontend {
 			$content = sunshine_get_template_html( 'gallery/single' );
 		} elseif ( $this->is_order() ) {
 			$content = sunshine_get_template_html( 'order/single' );
+		} else {
+			return $content;
 		}
 
-		return $content;
+		return $this->hide_brackets_from_shortcodes( $content );
+	}
+
+	/**
+	 * A swapped-in Sunshine page prints text visitors typed (search words, order notes,
+	 * addresses), and the_content runs shortcodes after this filter. So every [ and ] is turned
+	 * into &#91; and &#93;, which browsers show as the same brackets but shortcodes can't see.
+	 * The gallery description's own shortcodes have already run by now. Script and style
+	 * blocks are left as they are, since the codes would break them, so visitor text must never
+	 * be printed inside an inline script on these pages.
+	 *
+	 * @param string $html The rendered Sunshine page.
+	 * @return string
+	 */
+	private function hide_brackets_from_shortcodes( $html ) {
+		$brackets = array( '[', ']' );
+		$codes    = array( '&#91;', '&#93;' );
+		$parts    = preg_split( '#(<script\b.*?</script>|<style\b.*?</style>)#is', $html, -1, PREG_SPLIT_DELIM_CAPTURE );
+		if ( false === $parts ) {
+			// Too big to split: hiding every bracket may break a script, but never runs one.
+			return str_replace( $brackets, $codes, $html );
+		}
+		// The split puts the script and style blocks at the odd positions.
+		foreach ( $parts as $i => $part ) {
+			if ( 0 === $i % 2 ) {
+				$parts[ $i ] = str_replace( $brackets, $codes, $part );
+			}
+		}
+		return implode( '', $parts );
 	}
 
 	function get_page_title() {
