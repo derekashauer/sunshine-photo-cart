@@ -209,15 +209,12 @@ function sunshine_single_gallery_display( $gallery = '' ) {
 	}
 
 	$content = $gallery->get_content();
-	// Classic themes never add the swap filter, so only put it back if it was there to remove.
-	$swap_removed = remove_filter( 'the_content', array( SPC()->frontend, 'the_content' ), SPC_Frontend::CONTENT_FILTER_PRIORITY );
-	$content      = apply_filters( 'the_content', $content );
+	remove_filter( 'the_content', array( SPC()->frontend, 'the_content' ) );
+	$content = apply_filters( 'the_content', $content );
 	if ( ! empty( $content ) ) {
 		echo '<div id="sunshine--content">' . $content . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped - already filtered by "the_content" which is exactly how the_content() works in core.
 	}
-	if ( $swap_removed ) {
-		add_filter( 'the_content', array( SPC()->frontend, 'the_content' ), SPC_Frontend::CONTENT_FILTER_PRIORITY );
-	}
+	add_filter( 'the_content', array( SPC()->frontend, 'the_content' ) );
 
 	$child_galleries = $gallery->get_child_galleries();
 	$images          = $gallery->get_images();

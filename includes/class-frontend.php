@@ -1,13 +1,6 @@
 <?php
 class SPC_Frontend {
 
-	/**
-	 * When the_content() swaps in Sunshine's own page. It must run after core's do_shortcode
-	 * (priority 11): the swapped-in page prints text visitors typed (search words, order notes,
-	 * addresses), and anything in square brackets there would otherwise run as a shortcode.
-	 */
-	const CONTENT_FILTER_PRIORITY = 12;
-
 	public $current_gallery;
 	public $current_image;
 	public $current_order;
@@ -55,7 +48,7 @@ class SPC_Frontend {
 		// Filter the_content for FSE themes since full template_include fails with get_header()
 		// TODO: Somehow create a single-gallery.html FSE template like WooCommerce does
 		if ( ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() && 'theme' == SPC()->get_option( 'theme' ) ) || SPC()->get_option( 'page_builder' ) ) {
-			add_filter( 'the_content', array( $this, 'the_content' ), self::CONTENT_FILTER_PRIORITY );
+			add_filter( 'the_content', array( $this, 'the_content' ) );
 			add_filter( 'attachment_template_hierarchy', array( $this, 'skip_theme_photo_templates' ) );
 		} else {
 			add_filter( 'template_include', array( $this, 'template_include' ), 999 );
@@ -142,9 +135,38 @@ class SPC_Frontend {
 			$content = sunshine_get_template_html( 'gallery/single' );
 		} elseif ( $this->is_order() ) {
 			$content = sunshine_get_template_html( 'order/single' );
+		} else {
+			return $content;
 		}
 
-		return $content;
+		return $this->hide_brackets_from_shortcodes( $content );
+	}
+
+	/**
+	 * A swapped-in Sunshine page prints text visitors typed (search words, order notes,
+	 * addresses), and the_content runs shortcodes after this filter. So every [ and ] is turned
+	 * into &#91; and &#93;, which browsers show as the same brackets but shortcodes can't see.
+	 * The gallery description's own shortcodes have already run by now. Script and style
+	 * blocks are left as they are, since the codes would break them.
+	 *
+	 * @param string $html The rendered Sunshine page.
+	 * @return string
+	 */
+	private function hide_brackets_from_shortcodes( $html ) {
+		$brackets = array( '[', ']' );
+		$codes    = array( '&#91;', '&#93;' );
+		$parts    = preg_split( '#(<script\b.*?</script>|<style\b.*?</style>)#is', $html, -1, PREG_SPLIT_DELIM_CAPTURE );
+		if ( false === $parts ) {
+			// Too big to split: hiding every bracket may break a script, but never runs one.
+			return str_replace( $brackets, $codes, $html );
+		}
+		// The split puts the script and style blocks at the odd positions.
+		foreach ( $parts as $i => $part ) {
+			if ( 0 === $i % 2 ) {
+				$parts[ $i ] = str_replace( $brackets, $codes, $part );
+			}
+		}
+		return implode( '', $parts );
 	}
 
 	function get_page_title() {

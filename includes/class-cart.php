@@ -2738,14 +2738,18 @@ class SPC_Cart {
 			$order->update_meta_value( 'customer_id', get_current_user_id() );
 		}
 
-		// Only take a note when the store shows the Notes field; otherwise it's not a real answer.
-		$notes_field = $this->get_checkout_field( 'customer_notes' );
-		if ( ! empty( $_POST['customer_notes'] ) && $notes_field && ! empty( $notes_field['visible'] ) ) {
-			$order->update_meta_value( 'customer_notes', sanitize_textarea_field( $_POST['customer_notes'] ) );
-		}
-
 		// Setting all various meta data including delivery method, shipping method, payment method.
 		$data = $this->get_checkout_data();
+
+		// A note only counts when the store shows the Notes field. The checkout steps keep every
+		// field's value in the session, shown or not, so a hidden note is blanked here too. That
+		// also clears a note left from an earlier try at this same order.
+		$notes_field = $this->get_checkout_field( 'customer_notes' );
+		if ( ! $notes_field || ! $this->is_checkout_field_visible( $notes_field, $data ) ) {
+			$data['customer_notes'] = '';
+		} elseif ( ! empty( $_POST['customer_notes'] ) ) {
+			$order->update_meta_value( 'customer_notes', sanitize_textarea_field( $_POST['customer_notes'] ) );
+		}
 
 		// The customer said their billing address is the same as where the order is going, so
 		// copy it across. Only the address fields are copied -- matching on the shipping_
