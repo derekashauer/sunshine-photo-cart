@@ -285,11 +285,14 @@ class SPC_Addon_Update_Verify {
 
 			foreach ( $iterator as $file ) {
 				$full_path = $file->getPathname();
-				$path      = str_replace( '\\', '/', substr( $full_path, strlen( $source ) ) );
+				$path      = substr( $full_path, strlen( $source ) );
 
-				// Outside Windows a backslash is part of a file name, so "a\b.php" and "a/b.php"
-				// would share one key and only one of them would be checked. Refuse instead.
-				if ( isset( $files[ $path ] ) ) {
+				// Only Windows puts a backslash between folders. Anywhere else it's part of a file
+				// name, and swapping it would let "includes\a.php" stand in for the signed
+				// "includes/a.php", so a name with one is refused.
+				if ( '\\' === DIRECTORY_SEPARATOR ) {
+					$path = str_replace( '\\', '/', $path );
+				} elseif ( false !== strpos( $path, '\\' ) ) {
 					return false;
 				}
 
