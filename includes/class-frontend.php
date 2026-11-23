@@ -147,7 +147,8 @@ class SPC_Frontend {
 	 * addresses), and the_content runs shortcodes after this filter. So every [ and ] is turned
 	 * into &#91; and &#93;, which browsers show as the same brackets but shortcodes can't see.
 	 * The gallery description's own shortcodes have already run by now. Script and style
-	 * blocks are left as they are, since the codes would break them.
+	 * blocks are left as they are, since the codes would break them, so visitor text must never
+	 * be printed inside an inline script on these pages.
 	 *
 	 * @param string $html The rendered Sunshine page.
 	 * @return string

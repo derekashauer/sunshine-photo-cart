@@ -2743,12 +2743,14 @@ class SPC_Cart {
 
 		// A note only counts when the store shows the Notes field. The checkout steps keep every
 		// field's value in the session, shown or not, so a hidden note is blanked here too. That
-		// also clears a note left from an earlier try at this same order.
+		// also clears a note left from an earlier try at this same order. When it is shown, the
+		// note sent with the order is the newest, and keeps its line breaks, so it wins over the
+		// session's copy. The loop below saves whichever is in $data.
 		$notes_field = $this->get_checkout_field( 'customer_notes' );
 		if ( ! $notes_field || ! $this->is_checkout_field_visible( $notes_field, $data ) ) {
 			$data['customer_notes'] = '';
-		} elseif ( ! empty( $_POST['customer_notes'] ) ) {
-			$order->update_meta_value( 'customer_notes', sanitize_textarea_field( $_POST['customer_notes'] ) );
+		} elseif ( isset( $_POST['customer_notes'] ) ) {
+			$data['customer_notes'] = sanitize_textarea_field( $_POST['customer_notes'] );
 		}
 
 		// The customer said their billing address is the same as where the order is going, so

@@ -70,6 +70,16 @@ $t::test(
 );
 
 $t::test(
+	'The note sent with the order wins over the payment step copy and keeps its line breaks',
+	function () use ( $t, $notes_order ) {
+		$t::option( 'general_fields', array( 'notes' ) );
+		$t::option( 'required_general_fields', array() );
+		$order = $notes_order( "Crop tight\nNo filters", 'First draft' );
+		$t::same( "Crop tight\nNo filters", $order->get_customer_notes(), 'customer notes' );
+	}
+);
+
+$t::test(
 	'Brackets in a note never run as a shortcode on the swapped-in order page',
 	function () use ( $t, $notes_order, $notes_audio ) {
 		$t::option( 'general_fields', array( 'notes' ) );
@@ -87,6 +97,7 @@ $t::test(
 			SPC()->frontend->current_order = $before;
 		}
 		$t::same( false, strpos( $html, 'wp-audio-shortcode' ) !== false, 'audio player made from the note' );
-		$t::same( true, strpos( $html, 'Hello &#91;audio src="https://example.com/a.mp3"&#93; end' ) !== false, 'note shown as plain text' );
+		$t::same( false, strpos( $html, '[audio' ) !== false, 'raw shortcode left in the page' );
+		$t::same( true, strpos( $html, 'audio src="https://example.com/a.mp3"' ) !== false, 'note text still shown' );
 	}
 );
