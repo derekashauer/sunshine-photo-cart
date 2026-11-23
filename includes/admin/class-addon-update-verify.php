@@ -287,6 +287,12 @@ class SPC_Addon_Update_Verify {
 				$full_path = $file->getPathname();
 				$path      = str_replace( '\\', '/', substr( $full_path, strlen( $source ) ) );
 
+				// Outside Windows a backslash is part of a file name, so "a\b.php" and "a/b.php"
+				// would share one key and only one of them would be checked. Refuse instead.
+				if ( isset( $files[ $path ] ) ) {
+					return false;
+				}
+
 				$files[ $path ] = $full_path;
 			}
 		} catch ( UnexpectedValueException $e ) {
