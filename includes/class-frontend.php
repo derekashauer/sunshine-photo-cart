@@ -1,6 +1,13 @@
 <?php
 class SPC_Frontend {
 
+	/**
+	 * When the_content() swaps in Sunshine's own page. It must run after core's do_shortcode
+	 * (priority 11): the swapped-in page prints text visitors typed (search words, order notes,
+	 * addresses), and anything in square brackets there would otherwise run as a shortcode.
+	 */
+	const CONTENT_FILTER_PRIORITY = 12;
+
 	public $current_gallery;
 	public $current_image;
 	public $current_order;
@@ -48,7 +55,7 @@ class SPC_Frontend {
 		// Filter the_content for FSE themes since full template_include fails with get_header()
 		// TODO: Somehow create a single-gallery.html FSE template like WooCommerce does
 		if ( ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() && 'theme' == SPC()->get_option( 'theme' ) ) || SPC()->get_option( 'page_builder' ) ) {
-			add_filter( 'the_content', array( $this, 'the_content' ) );
+			add_filter( 'the_content', array( $this, 'the_content' ), self::CONTENT_FILTER_PRIORITY );
 			add_filter( 'attachment_template_hierarchy', array( $this, 'skip_theme_photo_templates' ) );
 		} else {
 			add_filter( 'template_include', array( $this, 'template_include' ), 999 );

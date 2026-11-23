@@ -2738,7 +2738,9 @@ class SPC_Cart {
 			$order->update_meta_value( 'customer_id', get_current_user_id() );
 		}
 
-		if ( ! empty( $_POST['customer_notes'] ) ) {
+		// Only take a note when the store shows the Notes field; otherwise it's not a real answer.
+		$notes_field = $this->get_checkout_field( 'customer_notes' );
+		if ( ! empty( $_POST['customer_notes'] ) && $notes_field && ! empty( $notes_field['visible'] ) ) {
 			$order->update_meta_value( 'customer_notes', sanitize_textarea_field( $_POST['customer_notes'] ) );
 		}
 
