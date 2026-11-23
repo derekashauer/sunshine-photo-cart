@@ -148,22 +148,18 @@ class SPC_Addon_Update_Verify {
 	 * @return string Empty when the package is fine, otherwise what is wrong.
 	 */
 	public static function find_problem( $source, $folder, $version ) {
-		global $wp_filesystem;
 
-		// WordPress unzips updates through $wp_filesystem. On a host that updates over FTP or
-		// SSH, $source is a path on that connection, which PHP can't open itself, so every
-		// read here goes through $wp_filesystem too. Without it nothing can be checked.
-		if ( ! $wp_filesystem instanceof WP_Filesystem_Base ) {
+		$source = self::local_folder( $source );
+		if ( false === $source ) {
 			return __( 'the update files could not be read.', 'sunshine-photo-cart' );
 		}
 
-		$source = trailingslashit( $source );
-
-		if ( ! $wp_filesystem->is_file( $source . self::SIGNATURE_FILE ) ) {
+		$signature_file = $source . self::SIGNATURE_FILE;
+		if ( ! is_readable( $signature_file ) ) {
 			return __( 'the update has no signature.', 'sunshine-photo-cart' );
 		}
 
-		$signed = json_decode( (string) $wp_filesystem->get_contents( $source . self::SIGNATURE_FILE ), true );
+		$signed = json_decode( (string) file_get_contents( $signature_file ), true );
 		if ( ! is_array( $signed ) || empty( $signed['manifest'] ) || empty( $signed['signature'] ) || ! is_string( $signed['manifest'] ) || ! is_string( $signed['signature'] ) ) {
 			return __( 'the signature file is damaged.', 'sunshine-photo-cart' );
 		}
@@ -190,23 +186,18 @@ class SPC_Addon_Update_Verify {
 			);
 		}
 
-		$found = self::list_files( $wp_filesystem, $source );
+		$found = self::list_files( $source );
 		if ( false === $found ) {
 			return __( 'the update files could not be read.', 'sunshine-photo-cart' );
 		}
 		unset( $found[ self::SIGNATURE_FILE ] );
 
-		foreach ( array_keys( $found ) as $path ) {
+		foreach ( $found as $path => $full_path ) {
 			if ( ! isset( $manifest['files'][ $path ] ) ) {
 				/* translators: %s: file path */
 				return sprintf( __( 'the update has a file that was not signed (%s).', 'sunshine-photo-cart' ), $path );
 			}
-			$contents = $wp_filesystem->get_contents( $source . $path );
-			if ( false === $contents ) {
-				/* translators: %s: file path */
-				return sprintf( __( 'a file could not be read (%s).', 'sunshine-photo-cart' ), $path );
-			}
-			if ( ! hash_equals( (string) $manifest['files'][ $path ], hash( 'sha256', $contents ) ) ) {
+			if ( ! hash_equals( (string) $manifest['files'][ $path ], (string) hash_file( 'sha256', $full_path ) ) ) {
 				/* translators: %s: file path */
 				return sprintf( __( 'a file was changed after it was signed (%s).', 'sunshine-photo-cart' ), $path );
 			}
@@ -248,34 +239,58 @@ class SPC_Addon_Update_Verify {
 	}
 
 	/**
-	 * Every file under $dir, hidden ones too, keyed by its path inside the package with
-	 * forward slashes. Anything that isn't a folder counts as a file, so it gets checked.
+	 * The folder on this server that holds $source, for PHP to read directly.
 	 *
-	 * @param WP_Filesystem_Base $filesystem The filesystem WordPress unzipped the update with.
-	 * @param string             $dir        Folder with a trailing slash.
-	 * @param string             $prefix     Path of $dir inside the package.
-	 * @return array|false False when any folder can't be listed, so no file goes unchecked.
+	 * WordPress unzips updates through $wp_filesystem. On a host that updates over FTP or SSH,
+	 * $source is a path on that connection, starting at the connection's wp-content folder.
+	 * The files are still on this server, and PHP can read them under WP_CONTENT_DIR. Reading
+	 * them over FTP would mean trusting the FTP server's folder listings, which WordPress
+	 * misreads on some servers (a file named "x a.php" can be listed as "a.php"), and some
+	 * servers leave hidden files out of.
+	 *
+	 * @param string $source Folder the package was unzipped to.
+	 * @return string|false Folder with a trailing slash, or false when it can't be found.
 	 */
-	private static function list_files( $filesystem, $dir, $prefix = '' ) {
+	private static function local_folder( $source ) {
+		global $wp_filesystem;
 
-		$entries = $filesystem->dirlist( $dir, true, false );
-		if ( ! is_array( $entries ) ) {
-			return false;
+		$source = trailingslashit( $source );
+
+		if ( $wp_filesystem instanceof WP_Filesystem_Base && 'direct' !== $wp_filesystem->method ) {
+			$remote = $wp_filesystem->wp_content_dir();
+			if ( ! $remote || 0 !== strpos( $source, trailingslashit( $remote ) ) ) {
+				return false;
+			}
+			$source = trailingslashit( WP_CONTENT_DIR ) . substr( $source, strlen( trailingslashit( $remote ) ) );
 		}
 
-		$files = array();
-		foreach ( $entries as $entry ) {
-			$name = (string) $entry['name'];
+		return is_dir( $source ) ? $source : false;
+	}
 
-			if ( 'd' === $entry['type'] ) {
-				$inside = self::list_files( $filesystem, $dir . $name . '/', $prefix . $name . '/' );
-				if ( false === $inside ) {
-					return false;
-				}
-				$files += $inside;
-			} else {
-				$files[ $prefix . $name ] = true;
+	/**
+	 * Every file under $source, hidden ones too, keyed by its path relative to $source with
+	 * forward slashes. Symlinks count as files, so a link added to the package is caught as
+	 * unsigned.
+	 *
+	 * @param string $source Folder with a trailing slash.
+	 * @return array|false False when a folder can't be opened, so no file goes unchecked.
+	 */
+	private static function list_files( $source ) {
+
+		$files = array();
+		try {
+			$iterator = new RecursiveIteratorIterator(
+				new RecursiveDirectoryIterator( $source, FilesystemIterator::SKIP_DOTS )
+			);
+
+			foreach ( $iterator as $file ) {
+				$full_path = $file->getPathname();
+				$path      = str_replace( '\\', '/', substr( $full_path, strlen( $source ) ) );
+
+				$files[ $path ] = $full_path;
 			}
+		} catch ( UnexpectedValueException $e ) {
+			return false;
 		}
 
 		return $files;
