@@ -99,7 +99,8 @@ class SPC_Addon_Update_Verify {
 				/* translators: 1: add-on name, 2: why the update was refused */
 				__( '%1$s refused this update because it could not confirm it came from Sunshine Photo Cart: %2$s Your current version was left in place.', 'sunshine-photo-cart' ),
 				$addon['name'],
-				$problem
+				// WordPress prints this message as HTML, and $problem can hold a file name from the zip.
+				esc_html( $problem )
 			)
 		);
 	}
@@ -147,15 +148,22 @@ class SPC_Addon_Update_Verify {
 	 * @return string Empty when the package is fine, otherwise what is wrong.
 	 */
 	public static function find_problem( $source, $folder, $version ) {
+		global $wp_filesystem;
+
+		// WordPress unzips updates through $wp_filesystem. On a host that updates over FTP or
+		// SSH, $source is a path on that connection, which PHP can't open itself, so every
+		// read here goes through $wp_filesystem too. Without it nothing can be checked.
+		if ( ! $wp_filesystem instanceof WP_Filesystem_Base ) {
+			return __( 'the update files could not be read.', 'sunshine-photo-cart' );
+		}
 
 		$source = trailingslashit( $source );
 
-		$signature_file = $source . self::SIGNATURE_FILE;
-		if ( ! is_readable( $signature_file ) ) {
+		if ( ! $wp_filesystem->is_file( $source . self::SIGNATURE_FILE ) ) {
 			return __( 'the update has no signature.', 'sunshine-photo-cart' );
 		}
 
-		$signed = json_decode( (string) file_get_contents( $signature_file ), true );
+		$signed = json_decode( (string) $wp_filesystem->get_contents( $source . self::SIGNATURE_FILE ), true );
 		if ( ! is_array( $signed ) || empty( $signed['manifest'] ) || empty( $signed['signature'] ) || ! is_string( $signed['manifest'] ) || ! is_string( $signed['signature'] ) ) {
 			return __( 'the signature file is damaged.', 'sunshine-photo-cart' );
 		}
@@ -182,15 +190,23 @@ class SPC_Addon_Update_Verify {
 			);
 		}
 
-		$found = self::list_files( $source );
+		$found = self::list_files( $wp_filesystem, $source );
+		if ( false === $found ) {
+			return __( 'the update files could not be read.', 'sunshine-photo-cart' );
+		}
 		unset( $found[ self::SIGNATURE_FILE ] );
 
-		foreach ( $found as $path => $full_path ) {
+		foreach ( array_keys( $found ) as $path ) {
 			if ( ! isset( $manifest['files'][ $path ] ) ) {
 				/* translators: %s: file path */
 				return sprintf( __( 'the update has a file that was not signed (%s).', 'sunshine-photo-cart' ), $path );
 			}
-			if ( ! hash_equals( (string) $manifest['files'][ $path ], (string) hash_file( 'sha256', $full_path ) ) ) {
+			$contents = $wp_filesystem->get_contents( $source . $path );
+			if ( false === $contents ) {
+				/* translators: %s: file path */
+				return sprintf( __( 'a file could not be read (%s).', 'sunshine-photo-cart' ), $path );
+			}
+			if ( ! hash_equals( (string) $manifest['files'][ $path ], hash( 'sha256', $contents ) ) ) {
 				/* translators: %s: file path */
 				return sprintf( __( 'a file was changed after it was signed (%s).', 'sunshine-photo-cart' ), $path );
 			}
@@ -232,24 +248,34 @@ class SPC_Addon_Update_Verify {
 	}
 
 	/**
-	 * Every file under $source, keyed by its path relative to $source with forward slashes.
-	 * Symlinks count as files, so a link added to the package is caught as unsigned.
+	 * Every file under $dir, hidden ones too, keyed by its path inside the package with
+	 * forward slashes. Anything that isn't a folder counts as a file, so it gets checked.
 	 *
-	 * @param string $source Folder with a trailing slash.
-	 * @return array
+	 * @param WP_Filesystem_Base $filesystem The filesystem WordPress unzipped the update with.
+	 * @param string             $dir        Folder with a trailing slash.
+	 * @param string             $prefix     Path of $dir inside the package.
+	 * @return array|false False when any folder can't be listed, so no file goes unchecked.
 	 */
-	private static function list_files( $source ) {
+	private static function list_files( $filesystem, $dir, $prefix = '' ) {
 
-		$files    = array();
-		$iterator = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator( $source, FilesystemIterator::SKIP_DOTS )
-		);
+		$entries = $filesystem->dirlist( $dir, true, false );
+		if ( ! is_array( $entries ) ) {
+			return false;
+		}
 
-		foreach ( $iterator as $file ) {
-			$full_path = $file->getPathname();
-			$path      = str_replace( '\\', '/', substr( $full_path, strlen( $source ) ) );
+		$files = array();
+		foreach ( $entries as $entry ) {
+			$name = (string) $entry['name'];
 
-			$files[ $path ] = $full_path;
+			if ( 'd' === $entry['type'] ) {
+				$inside = self::list_files( $filesystem, $dir . $name . '/', $prefix . $name . '/' );
+				if ( false === $inside ) {
+					return false;
+				}
+				$files += $inside;
+			} else {
+				$files[ $prefix . $name ] = true;
+			}
 		}
 
 		return $files;
