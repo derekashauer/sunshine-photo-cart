@@ -193,8 +193,9 @@ function sunshine_deactivation() {
  *
  * Sunshine 2 add-ons were all versioned 2.x. Newer add-ons and the other WP Sunshine plugins also
  * live in "sunshine-" folders and can start at 1.x, so only 2.x counts, and the other WP Sunshine
- * plugins are never counted, so they can reach 2.x. The folder is checked before the plugin file
- * is read, so other plugins cost nothing.
+ * plugins (main file sunshine-analytics.php, sunshine-consent-premium.php and so on) are never
+ * counted, so they can reach 2.x. The names are checked before the plugin file is read, so other
+ * plugins cost nothing.
  *
  * @param string $plugin Plugin file, relative to the plugins folder.
  * @return array|false
@@ -204,8 +205,11 @@ function sunshine_get_sunshine_2_addon_data( $plugin ) {
 	if ( strpos( $folder, 'sunshine-' ) !== 0 || 'sunshine-photo-cart' === $folder ) {
 		return false;
 	}
+	// Matched by main file name, not folder: Photo Cart's own Advanced Sales Reports add-on also
+	// uses the sunshine-analytics folder (as analytics.php), and its old copies must still be caught.
+	$file = basename( $plugin );
 	foreach ( array( 'sunshine-analytics', 'sunshine-consent', 'sunshine-seo', 'sunshine-utm-builder' ) as $other_plugin ) {
-		if ( $folder === $other_plugin || strpos( $folder, $other_plugin . '-' ) === 0 ) {
+		if ( strpos( $file, $other_plugin ) === 0 ) {
 			return false;
 		}
 	}

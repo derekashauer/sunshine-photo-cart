@@ -33,7 +33,7 @@ function sunshine_log( $message = '', $pre = '' ) {
  * @return void
  */
 function sunshine_dump_var( $var, $echo = true ) {
-	// Saved data can hold text customers typed, so it is escaped before it is shown.
+	// Escape the dump before it is shown.
 	$content = '<pre>' . esc_html( print_r( $var, true ) ) . '</pre>';
 	if ( $echo ) {
 		echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
