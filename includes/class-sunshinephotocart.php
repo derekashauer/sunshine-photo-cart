@@ -282,8 +282,6 @@ final class Sunshine_Photo_Cart {
 		$this->emails          = new SPC_Emails();
 		$this->payment_methods = new SPC_Payment_Methods();
 
-		load_plugin_textdomain( 'sunshine-photo-cart', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
-
 		$this->set_pages();
 		$this->post_types();
 		$this->image_sizes();
@@ -315,7 +313,7 @@ final class Sunshine_Photo_Cart {
 		add_rewrite_endpoint( $this->get_option( 'account_login_endpoint', 'login' ), EP_PERMALINK | EP_PAGES );
 		add_rewrite_endpoint( $this->get_option( 'account_logout_endpoint', 'logout' ), EP_PERMALINK | EP_PAGES );
 		add_rewrite_endpoint( $this->get_option( 'endpoint_store', 'store' ), EP_PERMALINK | EP_PAGES );
-		add_rewrite_endpoint( $this->get_option( 'endpoint_order_received', 'order-received' ), EP_PERMALINK | EP_PAGES );
+		add_rewrite_endpoint( sunshine_get_order_received_endpoint(), EP_PERMALINK | EP_PAGES );
 
 		/*
 		add_rewrite_endpoint( $this->get_option( 'endpoint_gallery' ), EP_PERMALINK | EP_PAGES );

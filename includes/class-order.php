@@ -157,7 +157,6 @@ class SPC_Order extends Sunshine_Data {
 	}
 
 	public function get_order_key() {
-		// TODO: Do we use this? I think original idea was for guest orders to view receipt page
 		return $this->get_meta_value( 'order_key' );
 	}
 
@@ -314,7 +313,7 @@ class SPC_Order extends Sunshine_Data {
 
 	public function get_received_permalink() {
 		$url  = trailingslashit( sunshine_get_page_permalink( 'checkout' ) );
-		$url .= trailingslashit( SPC()->get_option( 'endpoint_order_received', 'order-received' ) );
+		$url .= trailingslashit( sunshine_get_order_received_endpoint() );
 		$url .= $this->get_id();
 		$url  = add_query_arg( 'order_key', $this->get_meta_value( 'order_key' ), $url );
 		return $url;

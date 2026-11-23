@@ -27,10 +27,6 @@ class SPC_Payment_Method_PayPal extends SPC_Payment_Method {
 		add_action( 'wp_ajax_sunshine_checkout_paypal_create_order', array( $this, 'create_order' ) );
 		add_action( 'wp_ajax_nopriv_sunshine_checkout_paypal_create_order', array( $this, 'create_order' ) );
 
-		/*
-		add_action( 'wp_ajax_sunshine_checkout_paypal_approve', array( $this, 'approve' ) );
-		add_action( 'wp_ajax_nopriv_sunshine_checkout_paypal_approve', array( $this, 'approve' ) );
-		*/
 		add_action( 'sunshine_checkout_process_payment_paypal', array( $this, 'process_payment' ) );
 
 		add_filter( 'sunshine_order_transaction_url', array( $this, 'transaction_url' ) );

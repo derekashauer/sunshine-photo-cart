@@ -11,17 +11,6 @@ COMMON FUNCTIONS
  */
 function sunshine_log( $message = '', $pre = '' ) {
 	if ( WP_DEBUG === true ) {
-		/*
-		$backtrace = debug_backtrace();
-		error_log( print_r( $backtrace, 1 ) );
-		return;
-		//error_log( '*** ' . basename( $backtrace[0]['file'] ) . ', Line ' . $backtrace[0]['line'] );
-		$i = '';
-		foreach ( $backtrace as $b ) {
-			$i .= '*';
-			error_log( $i . ': ' . basename( $b['file'] ) . ', Line ' . $b['line'] );
-		}
-		*/
 		if ( $pre ) {
 			error_log( $pre );
 		}
@@ -44,14 +33,11 @@ function sunshine_log( $message = '', $pre = '' ) {
  * @return void
  */
 function sunshine_dump_var( $var, $echo = true ) {
+	// Escape the dump before it is shown.
+	$content = '<pre>' . esc_html( print_r( $var, true ) ) . '</pre>';
 	if ( $echo ) {
-		echo '<pre>';
-		print_r( $var );
-		echo '</pre>';
+		echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
 	} else {
-		$content  = '<pre>';
-		$content .= print_r( $var, true );
-		$content .= '</pre>';
 		return $content;
 	}
 }

@@ -41,20 +41,30 @@ if ( $uninstall ) {
 	// Get all galleries for use in deleting attachments.
 	$galleries = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'sunshine-gallery';" );
 
+	// Remove comments (and their meta) on orders, galleries and gallery images.
+	$wpdb->query( "DELETE c, cm FROM {$wpdb->comments} c LEFT JOIN {$wpdb->commentmeta} cm ON cm.comment_id = c.comment_ID INNER JOIN {$wpdb->posts} p ON p.ID = c.comment_post_ID WHERE p.post_type IN ( 'sunshine-product', 'sunshine-gallery', 'sunshine-order', 'sunshine-product-opt' ) OR ( p.post_type = 'attachment' AND p.post_parent IN ( SELECT ID FROM ( SELECT ID FROM {$wpdb->posts} WHERE post_type = 'sunshine-gallery' ) AS galleries ) );" );
+
 	// Remove post type data.
-	$wpdb->query( "DELETE FROM {$wpdb->posts} WHERE post_type IN ( 'sunshine-product', 'sunshine-gallery', 'sunshine-order', 'sunshine-prodcut-opt' );" );
+	$wpdb->query( "DELETE FROM {$wpdb->posts} WHERE post_type IN ( 'sunshine-product', 'sunshine-gallery', 'sunshine-order', 'sunshine-product-opt' );" );
 	// Delete all meta data that is not assigned anymore.
 	$wpdb->query( "DELETE meta FROM {$wpdb->postmeta} meta LEFT JOIN {$wpdb->posts} posts ON posts.ID = meta.post_id WHERE posts.ID IS NULL;" );
 
-	// Remove taxonomy data
-	foreach ( array( 'sunshine-product-category', 'sunshine-product-price-level', 'sunshine-order-status' ) as $taxonomy ) {
-		delete_option( $taxonomy . '_children' );
+	// Remove taxonomy data: the term links, the taxonomy rows, then the terms and their meta.
+	foreach ( array( 'sunshine-product-category', 'sunshine-product-option', 'sunshine-product-price-level', 'sunshine-order-status' ) as $sunshine_taxonomy ) {
+		delete_option( $sunshine_taxonomy . '_children' );
+		$term_ids = array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT term_id FROM {$wpdb->term_taxonomy} WHERE taxonomy = %s", $sunshine_taxonomy ) ) );
+		$wpdb->query( $wpdb->prepare( "DELETE tr FROM {$wpdb->term_relationships} tr INNER JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id WHERE tt.taxonomy = %s", $sunshine_taxonomy ) );
 		$wpdb->delete(
 			$wpdb->term_taxonomy,
 			array(
-				'taxonomy' => $taxonomy,
+				'taxonomy' => $sunshine_taxonomy,
 			)
 		);
+		if ( ! empty( $term_ids ) ) {
+			$term_ids = join( ',', $term_ids );
+			$wpdb->query( "DELETE FROM {$wpdb->terms} WHERE term_id IN ( $term_ids );" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- IDs made whole numbers above.
+			$wpdb->query( "DELETE FROM {$wpdb->termmeta} WHERE term_id IN ( $term_ids );" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- IDs made whole numbers above.
+		}
 	}
 
 	// Remove session table.
@@ -78,13 +88,13 @@ if ( $uninstall ) {
 		// Clear all unattached meta data query
 		$wpdb->query( "DELETE meta FROM {$wpdb->postmeta} meta LEFT JOIN {$wpdb->posts} posts ON posts.ID = meta.post_id WHERE posts.ID IS NULL;" );
 
-		// Delete files from server
-		$upload_dir = wp_upload_dir();
-		$folder = $upload_dir['basedir'] . '/sunshine';
-
-		sunshine_uninstall_folder( $folder );
-
 	}
+
+	// Delete files from server. Logs and imports live here too, so this runs even with no galleries.
+	$upload_dir = wp_upload_dir();
+	$folder     = $upload_dir['basedir'] . '/sunshine';
+
+	sunshine_uninstall_folder( $folder );
 
 	do_action( 'sunshine_uninstall' );
 

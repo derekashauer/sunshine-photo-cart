@@ -39,13 +39,11 @@ async function sunshine_square_create_payment(token) {
 			url: spc_square_vars.ajax_url,
 			data: data,
 			success: function(result, textStatus, XMLHttpRequest) {
-				console.log( 'square create payment result', result );
 				if (result.success) {
 					jQuery('#sunshine--checkout form').append('<input type="hidden" name="square_payment_id" value="' + result.data.payment_id + '" />');
 					resolve(result);
 				} else {
 					jQuery('#sunshine-square-payment-errors').html('');
-					console.log( 'square create payment error shown', result.data.reasons );
 					jQuery( '<div>' )
 						.css( { background: 'red', color: '#FFF', padding: '7px 12px' } )
 						.text( result.data.reasons )

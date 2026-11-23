@@ -1155,7 +1155,6 @@ class SPC_Admin_Order {
 						success: function( result, textStatus, XMLHttpRequest) {
 							if ( result.success ) {
 								$( 'textarea[name="comment"]' ).val( '' );
-								console.log( result.data );
 								$( '#sunshine--order--comments' ).append( result.data.comment );
 							}
 						},

@@ -1,5 +1,4 @@
 <?php
-// TODO: Admin notices: Ability to close out a notice and not show any more
 class SPC_Notices {
 
 	private $notices       = array();

@@ -326,14 +326,11 @@ class SPC_Order_Item extends SPC_Cart_Item {
 
 	public function set_options_total() {
 		if ( ! empty( $this->meta['options'] ) ) {
-			sunshine_log( $this->meta['options'], 'options' );
 			foreach ( $this->meta['options'] as $option_item ) {
 				if ( ! empty( $option_item['price'] ) ) {
-					sunshine_log( '$ option_item[price]: ' . $option_item['price'] );
 					$this->options_total += $option_item['price'];
 				}
 			}
-			sunshine_log( '$$$ Options total: ' . $this->options_total );
 		}
 	}
 

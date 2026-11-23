@@ -8,6 +8,9 @@ function sunshine_activation() {
 		maybe_sunshine_create_custom_tables();
 	}
 
+	// Turning the plugin off clears its scheduled jobs, so turning it back on puts them back.
+	sunshine_schedule_events();
+
 }
 
 function maybe_sunshine_create_custom_tables() {
@@ -177,7 +180,74 @@ function sunshine_deactivation() {
 	wp_clear_scheduled_hook( 'sunshine_tracking_send' );
 	wp_clear_scheduled_hook( 'sunshine_source_watch' );
 	wp_clear_scheduled_hook( 'sunshine_source_watch_continue' );
+	wp_clear_scheduled_hook( 'sunshine_daily' );
+	// Square adds this one back on its own. Its token and fee jobs, and the gallery ready check, are
+	// left alone: they are only made when Square connects or an image is added, so clearing them
+	// would stop token renewals or a waiting gallery's ready check after turning back on.
+	wp_clear_scheduled_hook( 'sunshine_square_reconcile_pending' );
 	sunshine_fast_imports_uninstall();
+}
+
+/**
+ * Plugin data for a Sunshine 2 add-on, which breaks Sunshine 3, or false for any other plugin.
+ *
+ * Sunshine 2 add-ons were versioned 0.x to 2.x, and every Sunshine 3 add-on starts at 3.0-beta1 or
+ * higher, so any "sunshine-" add-on below 3 counts. The other WP Sunshine plugins also live in
+ * "sunshine-" folders with their own version numbers, so they (main file sunshine-analytics.php,
+ * sunshine-consent-premium.php and so on) are never counted. The names are checked before the
+ * plugin file is read, so other plugins cost nothing.
+ *
+ * @param string $plugin Plugin file, relative to the plugins folder.
+ * @return array|false
+ */
+function sunshine_get_sunshine_2_addon_data( $plugin ) {
+	$folder = explode( '/', $plugin )[0];
+	if ( strpos( $folder, 'sunshine-' ) !== 0 || 'sunshine-photo-cart' === $folder ) {
+		return false;
+	}
+	// Matched by main file name, not folder: Photo Cart's own Advanced Sales Reports add-on also
+	// uses the sunshine-analytics folder (as analytics.php), and its old copies must still be caught.
+	$file = basename( $plugin );
+	foreach ( array( 'sunshine-analytics', 'sunshine-consent', 'sunshine-seo', 'sunshine-utm-builder' ) as $other_plugin ) {
+		if ( strpos( $file, $other_plugin ) === 0 ) {
+			return false;
+		}
+	}
+	if ( ! function_exists( 'get_plugin_data' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+	$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin, false, false );
+	$version     = $plugin_data['Version'];
+	if ( ! empty( $version ) && version_compare( $version, '3', '<' ) ) {
+		return $plugin_data;
+	}
+	return false;
+}
+
+/**
+ * Schedule the repeating jobs. Fresh installs and updates both run this.
+ */
+function sunshine_schedule_events() {
+	if ( ! wp_next_scheduled( 'sunshine_addon_check' ) ) {
+		wp_schedule_event( time(), 'weekly', 'sunshine_addon_check' );
+	}
+	if ( ! wp_next_scheduled( 'sunshine_session_garbage_collection' ) ) {
+		wp_schedule_event( time(), 'twicedaily', 'sunshine_session_garbage_collection' );
+	}
+	if ( ! wp_next_scheduled( 'sunshine_send_summary' ) ) {
+		$week_start = (int) get_option( 'start_of_week' );
+		$start      = strtotime( "Sunday + $week_start days 8am" );
+		wp_schedule_event( $start, 'weekly', 'sunshine_send_summary' );
+	}
+	if ( ! wp_next_scheduled( 'sunshine_license_check' ) ) {
+		wp_schedule_event( time(), 'weekly', 'sunshine_license_check' );
+	}
+	if ( ! wp_next_scheduled( 'sunshine_tracking_send' ) ) {
+		wp_schedule_event( time() + DAY_IN_SECONDS, 'weekly', 'sunshine_tracking_send' );
+	}
+	if ( ! wp_next_scheduled( 'sunshine_daily' ) ) {
+		wp_schedule_event( time(), 'daily', 'sunshine_daily' );
+	}
 }
 
 function sunshine_base_install() {
@@ -206,7 +276,7 @@ function sunshine_base_install() {
 		'currency_show_code'              => false,
 
 		'endpoint_gallery'                => 'gallery',
-		'endpoint_order_received'         => 'receipt',
+		'endpoint_order_received'         => SUNSHINE_PHOTO_CART_ORDER_RECEIVED_ENDPOINT,
 		'endpoint_store'                  => 'store',
 		'account_orders_endpoint'         => 'my-orders',
 		'account_view_order_endpoint'     => '',
@@ -214,7 +284,6 @@ function sunshine_base_install() {
 		'account_edit_endpoint'           => '',
 		'account_login_endpoint'          => '',
 		'account_reset_password_endpoint' => '',
-		'account_logout_endpoint'         => '',
 		'account_logout_endpoint'         => '',
 
 		'delete_images'                   => true,
@@ -376,26 +445,7 @@ function sunshine_base_install() {
 
 	SPC()->log( 'Setting up scheduled events' );
 
-	if ( ! wp_next_scheduled( 'sunshine_addon_check' ) ) {
-		wp_schedule_event( time(), 'weekly', 'sunshine_addon_check' );
-	}
-	if ( ! wp_next_scheduled( 'sunshine_session_garbage_collection' ) ) {
-		wp_schedule_event( time(), 'twicedaily', 'sunshine_session_garbage_collection' );
-	}
-	if ( ! wp_next_scheduled( 'sunshine_send_summary' ) ) {
-		$week_start = (int) get_option( 'start_of_week' );
-		$start      = strtotime( "Sunday + $week_start days 8am" );
-		wp_schedule_event( $start, 'weekly', 'sunshine_send_summary' );
-	}
-	if ( ! wp_next_scheduled( 'sunshine_license_check' ) ) {
-		wp_schedule_event( time(), 'weekly', 'sunshine_license_check' );
-	}
-	if ( ! wp_next_scheduled( 'sunshine_tracking_send' ) ) {
-		wp_schedule_event( time() + DAY_IN_SECONDS, 'weekly', 'sunshine_tracking_send' );
-	}
-	if ( ! wp_next_scheduled( 'sunshine_daily' ) ) {
-		wp_schedule_event( time(), 'daily', 'sunshine_daily' );
-	}
+	sunshine_schedule_events();
 
 	// Make default directory for uploads.
 	$upload_dir = wp_upload_dir();

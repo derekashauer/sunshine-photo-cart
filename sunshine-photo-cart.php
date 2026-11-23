@@ -23,6 +23,8 @@ define( 'SUNSHINE_PHOTO_CART_URL', plugin_dir_url( __FILE__ ) );
 define( 'SUNSHINE_PHOTO_CART_FILE', __FILE__ );
 define( 'SUNSHINE_PHOTO_CART_VERSION', '3.8.2' );
 define( 'SUNSHINE_PHOTO_CART_STORE_URL', 'https://license.sunshinephotocart.com' );
+// Default address part for the order received page, like /checkout/receipt/42. Installs have always saved this one.
+define( 'SUNSHINE_PHOTO_CART_ORDER_RECEIVED_ENDPOINT', 'receipt' );
 
 if ( ! class_exists( 'Sunshine_Photo_Cart', false ) ) {
 	include_once SUNSHINE_PHOTO_CART_PATH . '/includes/class-sunshinephotocart.php';

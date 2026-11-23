@@ -700,7 +700,6 @@ jQuery( document ).ready(function($){
 			});
 			var maxImages = main_el.data( 'image-count' );
 			if ( maxImages && currentTotal >= maxImages  ) {
-				console.log( 'Too many images selected' );
 				$( this ).prop( 'checked', false );
 				alert( sunshine_photo_cart.lang.max_images );
 				return;
@@ -716,7 +715,6 @@ jQuery( document ).ready(function($){
 		var currentValue = $(this).val();
 		$( 'select[name*=qty]' ).each(function() {
 			if ($(this).attr('name') === currentName) {
-				console.log( 'Found another qty select with the same name 2', $( this ).attr( 'name' ) );
 				$(this).val(currentValue);
 			}
 		});
@@ -767,7 +765,6 @@ jQuery( document ).ready(function($){
 		var currentValue = $(this).val();
 		$( 'select[name*=qty]' ).each(function() {
 			if ($(this).attr('name') === currentName) {
-				console.log( 'Found another qty select with the same name and updating to ' + currentValue, $( this ).attr( 'name' ) );
 				$(this).val(currentValue);
 				// Also set the checkbox near it to checked if the value is greater than 0 or unchecked if the value is 0
 				if ( currentValue > 0 ) {
@@ -824,7 +821,6 @@ jQuery( document ).ready(function($){
 				ref: ref,
 			},
 			success: function( result, textStatus, XMLHttpRequest) {
-				console.log( 'sunshine_multi_image_select_images_item', result );
 				if ( result.success ) {
 					let $selected_target = $( '#sunshine--multi-image-select--selected-images--' + main_el.data( 'key' ) );
 					$selected_target.html( '' ); // Reset the thumbnail display.
