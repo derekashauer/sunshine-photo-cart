@@ -191,11 +191,11 @@ function sunshine_deactivation() {
 /**
  * Plugin data for a Sunshine 2 add-on, which breaks Sunshine 3, or false for any other plugin.
  *
- * Sunshine 2 add-ons were all versioned 2.x. Newer add-ons and the other WP Sunshine plugins also
- * live in "sunshine-" folders and can start at 1.x, so only 2.x counts, and the other WP Sunshine
- * plugins (main file sunshine-analytics.php, sunshine-consent-premium.php and so on) are never
- * counted, so they can reach 2.x. The names are checked before the plugin file is read, so other
- * plugins cost nothing.
+ * Sunshine 2 add-ons were versioned 0.x to 2.x, and every Sunshine 3 add-on starts at 3.0-beta1 or
+ * higher, so any "sunshine-" add-on below 3 counts. The other WP Sunshine plugins also live in
+ * "sunshine-" folders with their own version numbers, so they (main file sunshine-analytics.php,
+ * sunshine-consent-premium.php and so on) are never counted. The names are checked before the
+ * plugin file is read, so other plugins cost nothing.
  *
  * @param string $plugin Plugin file, relative to the plugins folder.
  * @return array|false
@@ -218,7 +218,7 @@ function sunshine_get_sunshine_2_addon_data( $plugin ) {
 	}
 	$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin, false, false );
 	$version     = $plugin_data['Version'];
-	if ( ! empty( $version ) && version_compare( $version, '2.0', '>=' ) && version_compare( $version, '2.99', '<' ) ) {
+	if ( ! empty( $version ) && version_compare( $version, '3', '<' ) ) {
 		return $plugin_data;
 	}
 	return false;
