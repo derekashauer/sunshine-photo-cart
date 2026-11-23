@@ -99,7 +99,8 @@ class SPC_Addon_Update_Verify {
 				/* translators: 1: add-on name, 2: why the update was refused */
 				__( '%1$s refused this update because it could not confirm it came from Sunshine Photo Cart: %2$s Your current version was left in place.', 'sunshine-photo-cart' ),
 				$addon['name'],
-				$problem
+				// WordPress prints this message as HTML, and $problem can hold a file name from the zip.
+				esc_html( $problem )
 			)
 		);
 	}
@@ -148,7 +149,10 @@ class SPC_Addon_Update_Verify {
 	 */
 	public static function find_problem( $source, $folder, $version ) {
 
-		$source = trailingslashit( $source );
+		$source = self::local_folder( $source );
+		if ( false === $source ) {
+			return __( 'the update files could not be read.', 'sunshine-photo-cart' );
+		}
 
 		$signature_file = $source . self::SIGNATURE_FILE;
 		if ( ! is_readable( $signature_file ) ) {
@@ -183,6 +187,9 @@ class SPC_Addon_Update_Verify {
 		}
 
 		$found = self::list_files( $source );
+		if ( false === $found ) {
+			return __( 'the update files could not be read.', 'sunshine-photo-cart' );
+		}
 		unset( $found[ self::SIGNATURE_FILE ] );
 
 		foreach ( $found as $path => $full_path ) {
@@ -232,24 +239,64 @@ class SPC_Addon_Update_Verify {
 	}
 
 	/**
-	 * Every file under $source, keyed by its path relative to $source with forward slashes.
-	 * Symlinks count as files, so a link added to the package is caught as unsigned.
+	 * The folder on this server that holds $source, for PHP to read directly.
+	 *
+	 * WordPress unzips updates through $wp_filesystem. On a host that updates over FTP or SSH,
+	 * $source is a path on that connection, starting at the connection's wp-content folder.
+	 * The files are still on this server, and PHP can read them under WP_CONTENT_DIR. Reading
+	 * them over FTP would mean trusting the FTP server's folder listings, which WordPress
+	 * misreads on some servers (a file named "x a.php" can be listed as "a.php"), and some
+	 * servers leave hidden files out of.
+	 *
+	 * @param string $source Folder the package was unzipped to.
+	 * @return string|false Folder with a trailing slash, or false when it can't be found.
+	 */
+	private static function local_folder( $source ) {
+		global $wp_filesystem;
+
+		$source = trailingslashit( $source );
+
+		if ( $wp_filesystem instanceof WP_Filesystem_Base && 'direct' !== $wp_filesystem->method ) {
+			$remote = $wp_filesystem->wp_content_dir();
+			if ( ! $remote || 0 !== strpos( $source, trailingslashit( $remote ) ) ) {
+				return false;
+			}
+			$source = trailingslashit( WP_CONTENT_DIR ) . substr( $source, strlen( trailingslashit( $remote ) ) );
+		}
+
+		return is_dir( $source ) ? $source : false;
+	}
+
+	/**
+	 * Every file under $source, hidden ones too, keyed by its path relative to $source with
+	 * forward slashes. Symlinks count as files, so a link added to the package is caught as
+	 * unsigned.
 	 *
 	 * @param string $source Folder with a trailing slash.
-	 * @return array
+	 * @return array|false False when a folder can't be opened, so no file goes unchecked.
 	 */
 	private static function list_files( $source ) {
 
-		$files    = array();
-		$iterator = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator( $source, FilesystemIterator::SKIP_DOTS )
-		);
+		$files = array();
+		try {
+			$iterator = new RecursiveIteratorIterator(
+				new RecursiveDirectoryIterator( $source, FilesystemIterator::SKIP_DOTS )
+			);
 
-		foreach ( $iterator as $file ) {
-			$full_path = $file->getPathname();
-			$path      = str_replace( '\\', '/', substr( $full_path, strlen( $source ) ) );
+			foreach ( $iterator as $file ) {
+				$full_path = $file->getPathname();
+				$path      = str_replace( '\\', '/', substr( $full_path, strlen( $source ) ) );
 
-			$files[ $path ] = $full_path;
+				// Outside Windows a backslash is part of a file name, so "a\b.php" and "a/b.php"
+				// would share one key and only one of them would be checked. Refuse instead.
+				if ( isset( $files[ $path ] ) ) {
+					return false;
+				}
+
+				$files[ $path ] = $full_path;
+			}
+		} catch ( UnexpectedValueException $e ) {
+			return false;
 		}
 
 		return $files;
