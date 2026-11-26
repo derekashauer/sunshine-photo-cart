@@ -12,17 +12,76 @@ COMMON FUNCTIONS
 function sunshine_log( $message = '', $pre = '' ) {
 	if ( WP_DEBUG === true ) {
 		if ( $pre ) {
-			error_log( $pre );
+			error_log( sunshine_mask_emails( $pre ) );
 		}
 		if ( empty( $message ) ) {
 			$message = 'EMPTY';
 		}
 		if ( is_array( $message ) || is_object( $message ) ) {
-			error_log( print_r( $message, true ) );
+			error_log( sunshine_mask_emails( print_r( $message, true ) ) );
 		} else {
-			error_log( $message );
+			error_log( sunshine_mask_emails( $message ) );
 		}
 	}
+}
+
+/**
+ * Hide most of an email address, keeping a few letters as a hint of whose it is.
+ *
+ * Keeps the first letter before the @ (and the last one when there are 5 or more), the
+ * first letter of the domain and the ending: derek@wpsunshine.com becomes
+ * d***k@w***.com and bob@x.io becomes b***@x***.io. Always three stars, so the length is
+ * hidden too. A web-encoded address (derek%40wpsunshine.com) is handled the same way.
+ *
+ * @param string $email Email address.
+ * @return string
+ */
+function sunshine_mask_email( $email ) {
+	$parts = preg_split( '/@|%40/i', $email );
+	if ( count( $parts ) < 2 ) {
+		return $email;
+	}
+	$domain = array_pop( $parts );
+	$local  = implode( '@', $parts );
+
+	$masked_local = mb_substr( $local, 0, 1 ) . '***' . ( mb_strlen( $local ) >= 5 ? mb_substr( $local, -1 ) : '' );
+
+	$labels        = explode( '.', $domain );
+	$ending        = count( $labels ) > 1 ? '.' . end( $labels ) : '';
+	$masked_domain = mb_substr( $domain, 0, 1 ) . '***' . $ending;
+
+	return $masked_local . '@' . $masked_domain;
+}
+
+/**
+ * Hide every email address in a piece of text with sunshine_mask_email().
+ *
+ * Used on every log entry right before it is written, so customer emails never sit in a
+ * log file in full. Retina file names like photo@2x.jpg are left alone.
+ *
+ * @param string $text Text that may hold email addresses.
+ * @return string
+ */
+function sunshine_mask_emails( $text ) {
+	if ( ! is_string( $text ) || ( false === strpos( $text, '@' ) && false === stripos( $text, '%40' ) ) ) {
+		return $text;
+	}
+	$mask = function ( $found ) {
+		return sunshine_mask_email( $found[0] );
+	};
+
+	// Before an @, the name allows every character WordPress's is_email() does. Before a
+	// web-encoded %40, those characters would be encoded too, so a smaller set keeps the
+	// rest of the link (like ?email=) readable.
+	$pattern = '/(?:[{L}{N}!#$%&\'*+\/=?^_`{|}~.\-]+@|[{L}{N}._%+\-]+%40)(?!\d+x\.)[{L}{N}\-]+(?:\.[{L}{N}\-]+)*\.[{L}]{2,}/i';
+
+	// Letters in any language first. That fails on text that isn't valid UTF-8, such as a
+	// dump of binary data, so it falls back to plain English letters.
+	$masked = preg_replace_callback( str_replace( array( '{L}', '{N}' ), array( '\p{L}', '\p{N}' ), $pattern ) . 'u', $mask, $text );
+	if ( null === $masked ) {
+		$masked = preg_replace_callback( str_replace( array( '{L}', '{N}' ), array( 'A-Za-z', '0-9' ), $pattern ), $mask, $text );
+	}
+	return $masked;
 }
 
 /**
