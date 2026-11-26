@@ -47,9 +47,9 @@ final class Sunshine_Photo_Cart {
 		if ( is_array( $message ) || is_object( $message ) ) {
 			$message = print_r( $message, true );
 		}
-		$message = sunshine_mask_emails( $message );
 
-		$log_message = current_time( 'y-m-d H:i:s' ) . ': ' . $message;
+		// Only the log file saved to the server hides email addresses.
+		$log_message = current_time( 'y-m-d H:i:s' ) . ': ' . sunshine_mask_emails( $message );
 		if ( is_user_logged_in() ) {
 			$log_message .= ' (User ID: ' . get_current_user_id() . ')';
 		}
@@ -747,7 +747,7 @@ final class Sunshine_Photo_Cart {
 
 		$type = isset( $error_types[ $errno ] ) ? $error_types[ $errno ] : 'PHP Error ' . $errno;
 
-		$message = sunshine_mask_emails( sprintf( '[%s] %s in %s on line %d', $type, $errstr, $errfile, $errline ) );
+		$message = sprintf( '[%s] %s in %s on line %d', $type, $errstr, $errfile, $errline );
 
 		$log_message = current_time( 'y-m-d H:i:s' ) . ': ' . $message . "\n";
 		$fp          = fopen( $this->error_log_file, 'a' );
@@ -775,10 +775,6 @@ final class Sunshine_Photo_Cart {
 		}
 
 		$message = sprintf( '[PHP Fatal Error] %s in %s on line %d', $error['message'], $error['file'], $error['line'] );
-		// A parse error can stop misc.php from loading, so check the helper is there.
-		if ( function_exists( 'sunshine_mask_emails' ) ) {
-			$message = sunshine_mask_emails( $message );
-		}
 
 		$log_message = current_time( 'y-m-d H:i:s' ) . ': ' . $message . "\n";
 		$fp          = @fopen( $this->error_log_file, 'a' );

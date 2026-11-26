@@ -1,10 +1,12 @@
 <?php
 /**
- * Log tests: email addresses are masked right before any log entry is written.
+ * Log tests: email addresses are masked right before an entry is written to the Sunshine log
+ * file saved to the server (SPC()->log()), and only there.
  *
- * Photographers send their log files to support, and those files hold customer emails. Each
+ * Photographers send that log file to support, and it holds customer emails. Each
  * address must be mostly hidden, keeping only a few letters as a hint of whose it is. Text
- * that only looks like an email, such as a retina file name, must stay readable.
+ * that only looks like an email, such as a retina file name, must stay readable. The error
+ * log and the WordPress debug log are left as they are.
  *
  * Run on a test site, never a live store:
  *   wp eval-file wp-content/plugins/sunshine-photo-cart/tests/logs/run.php
@@ -73,6 +75,8 @@ $real_log             = SPC()->log_file;
 $real_error_log       = SPC()->error_log_file;
 $tmp_log              = wp_tempnam( 'spc-log-test' );
 $tmp_error_log        = wp_tempnam( 'spc-error-log-test' );
+$tmp_debug_log        = wp_tempnam( 'spc-debug-log-test' );
+$real_debug_log       = ini_set( 'error_log', $tmp_debug_log );
 SPC()->log_file       = $tmp_log;
 SPC()->error_log_file = $tmp_error_log;
 $enable_log           = function () {
@@ -80,7 +84,7 @@ $enable_log           = function () {
 };
 add_filter( 'pre_option_' . SPC()->prefix . 'enable_log', $enable_log );
 
-WP_CLI::log( 'Writing to the debug log' );
+WP_CLI::log( 'Writing to the Sunshine log file' );
 SPC()->log( 'Email sent to customer@photostudio.com: Your order' );
 SPC()->log(
 	array(
@@ -93,17 +97,25 @@ spc_log_check( 'a text entry is written masked', false !== strpos( $written, 'Em
 spc_log_check( 'an array entry is written masked', false !== strpos( $written, 'n***d@p***.com' ) );
 spc_log_check( 'no full address reaches the file', false === strpos( $written, 'customer@photostudio.com' ) && false === strpos( $written, 'nested@photostudio.com' ) );
 
-WP_CLI::log( 'Writing to the error log' );
+WP_CLI::log( 'Other logs are left alone' );
+if ( WP_DEBUG ) {
+	$debug_text = file_get_contents( $tmp_debug_log );
+	spc_log_check( 'the copy sent to the WordPress debug log keeps the full address', false !== strpos( $debug_text, 'Email sent to customer@photostudio.com: Your order' ), trim( $debug_text ) );
+} else {
+	WP_CLI::warning( 'WP_DEBUG is off, so the WordPress debug log check was skipped.' );
+}
 SPC()->php_error_handler( E_USER_WARNING, 'Could not send to errors@photostudio.com', __FILE__, __LINE__ );
 $error_text = file_get_contents( $tmp_error_log );
-spc_log_check( 'a PHP warning is written masked', false !== strpos( $error_text, 'Could not send to e***s@p***.com' ) && false === strpos( $error_text, 'errors@photostudio.com' ), trim( $error_text ) );
+spc_log_check( 'the error log keeps the full address', false !== strpos( $error_text, 'Could not send to errors@photostudio.com' ), trim( $error_text ) );
 
 // Put everything back.
 remove_filter( 'pre_option_' . SPC()->prefix . 'enable_log', $enable_log );
 SPC()->log_file       = $real_log;
 SPC()->error_log_file = $real_error_log;
+ini_set( 'error_log', $real_debug_log );
 wp_delete_file( $tmp_log );
 wp_delete_file( $tmp_error_log );
+wp_delete_file( $tmp_debug_log );
 
 $t = $GLOBALS['spc_log_t'];
 WP_CLI::log( '' );

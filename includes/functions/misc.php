@@ -12,15 +12,15 @@ COMMON FUNCTIONS
 function sunshine_log( $message = '', $pre = '' ) {
 	if ( WP_DEBUG === true ) {
 		if ( $pre ) {
-			error_log( sunshine_mask_emails( $pre ) );
+			error_log( $pre );
 		}
 		if ( empty( $message ) ) {
 			$message = 'EMPTY';
 		}
 		if ( is_array( $message ) || is_object( $message ) ) {
-			error_log( sunshine_mask_emails( print_r( $message, true ) ) );
+			error_log( print_r( $message, true ) );
 		} else {
-			error_log( sunshine_mask_emails( $message ) );
+			error_log( $message );
 		}
 	}
 }
@@ -56,8 +56,8 @@ function sunshine_mask_email( $email ) {
 /**
  * Hide every email address in a piece of text with sunshine_mask_email().
  *
- * Used on every log entry right before it is written, so customer emails never sit in a
- * log file in full. Retina file names like photo@2x.jpg are left alone.
+ * Used on each entry of the Sunshine log file right before it is written, so customer
+ * emails never sit in that file in full. Retina file names like photo@2x.jpg are left alone.
  *
  * @param string $text Text that may hold email addresses.
  * @return string
