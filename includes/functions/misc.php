@@ -26,28 +26,29 @@ function sunshine_log( $message = '', $pre = '' ) {
 }
 
 /**
- * Hide most of an email address, keeping just enough to tell addresses apart.
+ * Hide most of an email address, keeping a few letters as a hint of whose it is.
  *
- * Keeps the first and last letter before the @, the first letter of the domain and the
- * ending: derek@wpsunshine.com becomes d***k@w***.com. Always three stars, so the
- * length is hidden too.
+ * Keeps the first letter before the @ (and the last one when there are 5 or more), the
+ * first letter of the domain and the ending: derek@wpsunshine.com becomes
+ * d***k@w***.com and bob@x.io becomes b***@x***.io. Always three stars, so the length is
+ * hidden too. A web-encoded address (derek%40wpsunshine.com) is handled the same way.
  *
  * @param string $email Email address.
  * @return string
  */
 function sunshine_mask_email( $email ) {
-	$at = strrpos( $email, '@' );
-	if ( false === $at ) {
+	$parts = preg_split( '/@|%40/i', $email );
+	if ( count( $parts ) < 2 ) {
 		return $email;
 	}
-	$local  = substr( $email, 0, $at );
-	$domain = substr( $email, $at + 1 );
+	$domain = array_pop( $parts );
+	$local  = implode( '@', $parts );
 
-	$masked_local = substr( $local, 0, 1 ) . '***' . ( strlen( $local ) > 2 ? substr( $local, -1 ) : '' );
+	$masked_local = mb_substr( $local, 0, 1 ) . '***' . ( mb_strlen( $local ) >= 5 ? mb_substr( $local, -1 ) : '' );
 
-	$parts         = explode( '.', $domain );
-	$ending        = count( $parts ) > 1 ? '.' . end( $parts ) : '';
-	$masked_domain = substr( $domain, 0, 1 ) . '***' . $ending;
+	$labels        = explode( '.', $domain );
+	$ending        = count( $labels ) > 1 ? '.' . end( $labels ) : '';
+	$masked_domain = mb_substr( $domain, 0, 1 ) . '***' . $ending;
 
 	return $masked_local . '@' . $masked_domain;
 }
@@ -56,22 +57,26 @@ function sunshine_mask_email( $email ) {
  * Hide every email address in a piece of text with sunshine_mask_email().
  *
  * Used on every log entry right before it is written, so customer emails never sit in a
- * log file in full.
+ * log file in full. Retina file names like photo@2x.jpg are left alone.
  *
  * @param string $text Text that may hold email addresses.
  * @return string
  */
 function sunshine_mask_emails( $text ) {
-	if ( ! is_string( $text ) || false === strpos( $text, '@' ) ) {
+	if ( ! is_string( $text ) || ( false === strpos( $text, '@' ) && false === stripos( $text, '%40' ) ) ) {
 		return $text;
 	}
-	return preg_replace_callback(
-		'/[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(?:\.[A-Za-z0-9\-]+)*\.[A-Za-z]{2,}/',
-		function ( $found ) {
-			return sunshine_mask_email( $found[0] );
-		},
-		$text
-	);
+	$mask = function ( $found ) {
+		return sunshine_mask_email( $found[0] );
+	};
+
+	// Letters in any language. This fails on text that isn't valid UTF-8, such as a dump of
+	// binary data, so that falls back to plain English letters.
+	$masked = preg_replace_callback( '/[\p{L}\p{N}._%+\'\-]+(?:@|%40)(?!\d+x\.)[\p{L}\p{N}\-]+(?:\.[\p{L}\p{N}\-]+)*\.\p{L}{2,}/iu', $mask, $text );
+	if ( null === $masked ) {
+		$masked = preg_replace_callback( '/[A-Za-z0-9._%+\'\-]+(?:@|%40)(?!\d+x\.)[A-Za-z0-9\-]+(?:\.[A-Za-z0-9\-]+)*\.[A-Za-z]{2,}/i', $mask, $text );
+	}
+	return $masked;
 }
 
 /**

@@ -244,7 +244,7 @@ Security is important to us. Please report security bugs through the [Patchstack
 == Changelog ==
 
 = 3.8.3 =
-* Security: Email addresses are now partly hidden in Sunshine's log files (the debug log and the error log) and in the WordPress debug log, so a log sent to support doesn't show customers' emails. Each address keeps a few letters so you can still tell them apart: derek@example.com shows as d***k@e***.com
+* Security: New entries in Sunshine's log files (the debug log and the error log), and the lines Sunshine adds to the WordPress debug log, now hide most of each email address, so a log sent to support doesn't show customers' emails. A few letters are kept as a hint of whose it is: derek@example.com shows as d***k@e***.com
 * Security: On block themes (or with the Alternate integration setting on), text a customer types (order notes, addresses, gallery search words) always shows as plain text on order and search pages and is never run as a shortcode. Checkout also ignores a note when the Notes field is turned off
 * Fix: Sites updating from Sunshine 2 could get stuck with the "needs the database to be updated" notice. If the update steps weren't finished on the first visit to the update page, later visits showed only the changelog. The steps now show until the update is done
 * Fix: A password gallery saved anywhere other than the gallery screen (the Connect API, WP-CLI, imports) now gets a random password when it has none, and the Cover theme's cover photo size is made, the same as a save on the gallery screen
