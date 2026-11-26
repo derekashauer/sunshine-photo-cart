@@ -55,7 +55,10 @@ spc_log_check( 'both addresses in one line are hidden', 'WARNING: Stripe custome
 spc_log_check( 'accented letters are hidden too', 'Sent to a***é@e***.de' === sunshine_mask_emails( 'Sent to andré@exämple.de' ), sunshine_mask_emails( 'Sent to andré@exämple.de' ) );
 spc_log_check( 'an apostrophe does not leave the start of the name showing', 'Sent to o***n@e***.com' === sunshine_mask_emails( "Sent to o'brien@example.com" ), sunshine_mask_emails( "Sent to o'brien@example.com" ) );
 spc_log_check( 'a web-encoded address in a link is hidden', 'redirect=/?email=d***k@e***.com&step=2' === sunshine_mask_emails( 'redirect=/?email=derek%40example.com&step=2' ), sunshine_mask_emails( 'redirect=/?email=derek%40example.com&step=2' ) );
-$retina = 'Imported IMG_1234@2x.jpg and logo@3x.png';
+spc_log_check( 'punctuation right before the @ is hidden', 'Email sent to j***!@e***.com: Your order' === sunshine_mask_emails( 'Email sent to john.smith!@example.com: Your order' ), sunshine_mask_emails( 'Email sent to john.smith!@example.com: Your order' ) );
+spc_log_check( 'punctuation inside the name does not leave part of it showing', 'Sent to j***g@e***.com' === sunshine_mask_emails( 'Sent to john.smith=tag@example.com' ), sunshine_mask_emails( 'Sent to john.smith=tag@example.com' ) );
+spc_log_check( 'every character WordPress allows is covered', 'Sent to a***~@e***.com' === sunshine_mask_emails( 'Sent to a#b$c&d*e/f?g^h`i{j|k}~@example.com' ), sunshine_mask_emails( 'Sent to a#b$c&d*e/f?g^h`i{j|k}~@example.com' ) );
+$retina ='Imported IMG_1234@2x.jpg and logo@3x.png';
 spc_log_check( 'retina file names stay readable', sunshine_mask_emails( $retina ) === $retina, sunshine_mask_emails( $retina ) );
 $broken = "Payload \xff\xfe sent to derek@example.com";
 spc_log_check( 'text that is not valid UTF-8 is still masked, not lost', "Payload \xff\xfe sent to d***k@e***.com" === sunshine_mask_emails( $broken ), (string) sunshine_mask_emails( $broken ) );

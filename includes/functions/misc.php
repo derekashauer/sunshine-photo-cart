@@ -70,11 +70,16 @@ function sunshine_mask_emails( $text ) {
 		return sunshine_mask_email( $found[0] );
 	};
 
-	// Letters in any language. This fails on text that isn't valid UTF-8, such as a dump of
-	// binary data, so that falls back to plain English letters.
-	$masked = preg_replace_callback( '/[\p{L}\p{N}._%+\'\-]+(?:@|%40)(?!\d+x\.)[\p{L}\p{N}\-]+(?:\.[\p{L}\p{N}\-]+)*\.\p{L}{2,}/iu', $mask, $text );
+	// Before an @, the name allows every character WordPress's is_email() does. Before a
+	// web-encoded %40, those characters would be encoded too, so a smaller set keeps the
+	// rest of the link (like ?email=) readable.
+	$pattern = '/(?:[{L}{N}!#$%&\'*+\/=?^_`{|}~.\-]+@|[{L}{N}._%+\-]+%40)(?!\d+x\.)[{L}{N}\-]+(?:\.[{L}{N}\-]+)*\.[{L}]{2,}/i';
+
+	// Letters in any language first. That fails on text that isn't valid UTF-8, such as a
+	// dump of binary data, so it falls back to plain English letters.
+	$masked = preg_replace_callback( str_replace( array( '{L}', '{N}' ), array( '\p{L}', '\p{N}' ), $pattern ) . 'u', $mask, $text );
 	if ( null === $masked ) {
-		$masked = preg_replace_callback( '/[A-Za-z0-9._%+\'\-]+(?:@|%40)(?!\d+x\.)[A-Za-z0-9\-]+(?:\.[A-Za-z0-9\-]+)*\.[A-Za-z]{2,}/i', $mask, $text );
+		$masked = preg_replace_callback( str_replace( array( '{L}', '{N}' ), array( 'A-Za-z', '0-9' ), $pattern ), $mask, $text );
 	}
 	return $masked;
 }
