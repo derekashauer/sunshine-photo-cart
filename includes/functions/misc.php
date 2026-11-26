@@ -12,17 +12,66 @@ COMMON FUNCTIONS
 function sunshine_log( $message = '', $pre = '' ) {
 	if ( WP_DEBUG === true ) {
 		if ( $pre ) {
-			error_log( $pre );
+			error_log( sunshine_mask_emails( $pre ) );
 		}
 		if ( empty( $message ) ) {
 			$message = 'EMPTY';
 		}
 		if ( is_array( $message ) || is_object( $message ) ) {
-			error_log( print_r( $message, true ) );
+			error_log( sunshine_mask_emails( print_r( $message, true ) ) );
 		} else {
-			error_log( $message );
+			error_log( sunshine_mask_emails( $message ) );
 		}
 	}
+}
+
+/**
+ * Hide most of an email address, keeping just enough to tell addresses apart.
+ *
+ * Keeps the first and last letter before the @, the first letter of the domain and the
+ * ending: derek@wpsunshine.com becomes d***k@w***.com. Always three stars, so the
+ * length is hidden too.
+ *
+ * @param string $email Email address.
+ * @return string
+ */
+function sunshine_mask_email( $email ) {
+	$at = strrpos( $email, '@' );
+	if ( false === $at ) {
+		return $email;
+	}
+	$local  = substr( $email, 0, $at );
+	$domain = substr( $email, $at + 1 );
+
+	$masked_local = substr( $local, 0, 1 ) . '***' . ( strlen( $local ) > 2 ? substr( $local, -1 ) : '' );
+
+	$parts         = explode( '.', $domain );
+	$ending        = count( $parts ) > 1 ? '.' . end( $parts ) : '';
+	$masked_domain = substr( $domain, 0, 1 ) . '***' . $ending;
+
+	return $masked_local . '@' . $masked_domain;
+}
+
+/**
+ * Hide every email address in a piece of text with sunshine_mask_email().
+ *
+ * Used on every log entry right before it is written, so customer emails never sit in a
+ * log file in full.
+ *
+ * @param string $text Text that may hold email addresses.
+ * @return string
+ */
+function sunshine_mask_emails( $text ) {
+	if ( ! is_string( $text ) || false === strpos( $text, '@' ) ) {
+		return $text;
+	}
+	return preg_replace_callback(
+		'/[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(?:\.[A-Za-z0-9\-]+)*\.[A-Za-z]{2,}/',
+		function ( $found ) {
+			return sunshine_mask_email( $found[0] );
+		},
+		$text
+	);
 }
 
 /**
