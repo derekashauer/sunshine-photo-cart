@@ -753,6 +753,16 @@ function sunshine_meta_gallery_images_display() {
 		var upload_video_exts = ['mp4', 'mov', 'avi', 'wmv', 'flv', 'webm', 'mkv'];
 		var upload_busy_statuses = [429, 502, 503, 504];
 		var upload_max_retries = 3;
+		var upload_max_waits = 70; // checks 10 seconds apart, a little longer than a request may run
+
+		var upload_still_working = function( body ) {
+			try {
+				var result = JSON.parse( body );
+				return !! ( result && false === result.success && result.data && result.data.still_working );
+			} catch ( e ) {
+				return false;
+			}
+		};
 
 		var upload_pending = 0;   // files added but not yet in upload_waiting (see FilesAdded)
 		var upload_retrying = 0;  // files waiting out a pause before they are sent again
@@ -874,6 +884,7 @@ function sunshine_meta_gallery_images_display() {
 
 		var upload_send = function( file ) {
 			var tries = file._sunshine_tries || 0;
+			var waits = file._sunshine_waits || 0;
 			upload_active++;
 			upload_sending[ file.id ] = file.name;
 			upload_status_line();
@@ -885,6 +896,19 @@ function sunshine_meta_gallery_images_display() {
 				upload_active--;
 				upload_status_line();
 				upload_next();
+			};
+
+			// Give up the spot while waiting, then go back to the front of the line,
+			// so a file sent again also waits its turn.
+			var upload_again_later = function( delay ) {
+				upload_retrying++;
+				finish( plupload.QUEUED );
+				$( '#sunshine-gallery-images-processing div.status span.current-file' ).text( ' Retrying ' + file.name + '...' );
+				setTimeout( function() {
+					upload_retrying--;
+					upload_waiting.unshift( file );
+					upload_next();
+				}, delay );
 			};
 
 			var attempt = function() {
@@ -906,6 +930,8 @@ function sunshine_meta_gallery_images_display() {
 				if ( upload_video_exts.indexOf( file.name.split( '.' ).pop().toLowerCase() ) !== -1 ) {
 					data.append( 'sunshine_is_video', true );
 				}
+				// Same on every try of this file, so the server can tell a try apart from a new photo.
+				data.append( 'sunshine_upload_id', file.id );
 				data.append( 'name', file.name );
 				data.append( uploader.settings.file_data_name, native_file, file.name );
 
@@ -917,6 +943,15 @@ function sunshine_meta_gallery_images_display() {
 					contentType: false,
 					dataType: 'text'
 				}).done( function( body ) {
+					// An earlier try of this file is still being added on the server.
+					// Check back instead of adding it again.
+					if ( upload_still_working( body ) && waits < upload_max_waits ) {
+						waits++;
+						file._sunshine_waits = waits;
+						console.log( 'SUNSHINE: ' + file.name + ' is still being added from an earlier try, checking again soon' );
+						upload_again_later( 10000 );
+						return;
+					}
 					upload_reply( file, body );
 					finish( plupload.DONE );
 				}).fail( function( xhr ) {
@@ -932,17 +967,8 @@ function sunshine_meta_gallery_images_display() {
 						if ( tries <= upload_max_retries ) {
 							var delay = 1000 * Math.pow( 2, tries - 1 ); // 1s, 2s, 4s
 							console.log( 'SUNSHINE: Retrying ' + file.name + ' (attempt ' + tries + '/' + upload_max_retries + ') in ' + delay + 'ms' );
-							// Give up the spot while waiting, then go back to the front of
-							// the line, so retries also go one at a time.
 							file._sunshine_tries = tries;
-							upload_retrying++;
-							finish( plupload.QUEUED );
-							$( '#sunshine-gallery-images-processing div.status span.current-file' ).text( ' Retrying ' + file.name + '...' );
-							setTimeout( function() {
-								upload_retrying--;
-								upload_waiting.unshift( file );
-								upload_next();
-							}, delay );
+							upload_again_later( delay );
 							return;
 						}
 						upload_error( file.name + ': HTTP Error. (Your server could not process the image, contact your web host)' );
@@ -1305,6 +1331,42 @@ function sunshine_gallery_admin_ajax_upload() {
 		wp_send_json_error( array( 'error' => __( 'You do not have permission to upload files', 'sunshine-photo-cart' ) ) );
 	}
 
+	// The uploader sends a photo again when the server took too long to answer.
+	// The web server stops waiting, but PHP usually keeps going and adds the photo,
+	// so sending it again would add it twice. Every try of a file carries the same
+	// upload ID: a try that finds the photo already added answers with it, and a
+	// try that comes while the first is still working is told to check back.
+	$upload_id = isset( $_POST['sunshine_upload_id'] ) ? sanitize_key( wp_unslash( $_POST['sunshine_upload_id'] ) ) : '';
+	if ( $upload_id ) {
+		$existing = sunshine_gallery_find_uploaded_image( $gallery_id, $upload_id );
+		if ( $existing ) {
+			wp_send_json_success(
+				array(
+					'image_id'      => $existing,
+					'file_name'     => basename( get_attached_file( $existing ) ),
+					'image_html'    => sunshine_admin_gallery_image_thumbnail( $existing, false ),
+					'already_added' => true,
+				)
+			);
+		}
+		// Held until this request ends. As long as an upload request may run.
+		if ( ! sunshine_import_lock( 'upload_' . $gallery_id . '_' . $upload_id, 11 * MINUTE_IN_SECONDS ) ) {
+			wp_send_json_error(
+				array(
+					'still_working' => true,
+					'error'         => __( 'The server is still adding this photo from an earlier try. Check the gallery before sending it again.', 'sunshine-photo-cart' ),
+				)
+			);
+		}
+		$tag_upload = function ( $attachment_id ) use ( &$tag_upload, $upload_id, $gallery_id ) {
+			if ( (int) wp_get_post_parent_id( $attachment_id ) === $gallery_id ) {
+				add_post_meta( $attachment_id, '_sunshine_upload_id', $upload_id, true );
+				remove_action( 'add_attachment', $tag_upload );
+			}
+		};
+		add_action( 'add_attachment', $tag_upload );
+	}
+
 	sunshine_doing_upload( $gallery_id );
 
 	// Several photos can arrive for the same gallery at once. Picking a file name
@@ -1374,6 +1436,29 @@ function sunshine_gallery_admin_ajax_upload() {
 		wp_send_json_error( array( 'error' => $e->getMessage() ) );
 		return;
 	}
+}
+
+/**
+ * Find the photo a gallery upload already added, by the upload ID its file was sent with.
+ *
+ * @param int    $gallery_id Gallery the photo was sent to.
+ * @param string $upload_id  The uploader's ID for that file, the same on every try.
+ * @return int Attachment ID, or 0 when that file hasn't been added.
+ */
+function sunshine_gallery_find_uploaded_image( $gallery_id, $upload_id ) {
+	$found = get_posts(
+		array(
+			'post_type'        => 'attachment',
+			'post_status'      => 'any',
+			'post_parent'      => $gallery_id,
+			'meta_key'         => '_sunshine_upload_id',
+			'meta_value'       => $upload_id,
+			'fields'           => 'ids',
+			'posts_per_page'   => 1,
+			'suppress_filters' => true,
+		)
+	);
+	return $found ? (int) $found[0] : 0;
 }
 
 add_action( 'wp_ajax_sunshine_gallery_upload_order', 'sunshine_gallery_admin_ajax_upload_order' );
