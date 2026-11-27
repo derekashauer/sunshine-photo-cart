@@ -109,11 +109,22 @@ function sunshine_import_lock( $key, $expires = 600 ) {
 	}
 
 	$GLOBALS['sunshine_import_locks'][ $option ] = $value;
-	register_shutdown_function(
-		function () use ( $wpdb, $option, $value ) {
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $option, $value ) );
-		}
-	);
+
+	// One cleanup for the whole request lets go of every claim still held. A
+	// request that claims and lets go once per photo then leaves nothing to do
+	// at the end for the claims it already let go.
+	static $cleanup_added = false;
+	if ( ! $cleanup_added ) {
+		$cleanup_added = true;
+		register_shutdown_function(
+			function () use ( $wpdb ) {
+				$held_locks = isset( $GLOBALS['sunshine_import_locks'] ) ? (array) $GLOBALS['sunshine_import_locks'] : array();
+				foreach ( $held_locks as $held_option => $held_value ) {
+					$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $held_option, $held_value ) );
+				}
+			}
+		);
+	}
 
 	return true;
 }

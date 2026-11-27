@@ -755,8 +755,20 @@ function sunshine_meta_gallery_images_display() {
 		var upload_busy_statuses = [429, 502, 503, 504];
 		var upload_max_retries = 3;
 
+		var upload_pending = 0;   // files added but not yet in upload_waiting (see FilesAdded)
 		var upload_running = function() {
-			return upload_active > 0 || upload_waiting.length > 0;
+			return upload_active > 0 || upload_waiting.length > 0 || upload_pending > 0;
+		};
+
+		// Roughly the name the server will save a file under. WordPress takes out
+		// characters like # and %, and turns spaces into dashes, so "Photo 1.jpg"
+		// and "Photo-1.jpg" end up as the same file. Close enough errs on the safe
+		// side: two names that match here are only sent one after the other.
+		var upload_name_key = function( name ) {
+			return String( name ).toLowerCase()
+				.replace( /[?\[\]\/\\=<>:;,'"&$#*()|~`!{}%+\u2019\u00ab\u00bb\u201d\u201c]/g, '' )
+				.replace( /[\s\-_]+/g, '-' )
+				.replace( /^[\-_.]+|[\-_.]+$/g, '' );
 		};
 
 		var upload_status_line = function() {
@@ -781,6 +793,11 @@ function sunshine_meta_gallery_images_display() {
 			upload_limit = upload_limit_default;
 
 			var complete = function() {
+				// More files were added while the order was saving: that upload
+				// owns the status box now.
+				if ( upload_running() ) {
+					return;
+				}
 				$( '#sunshine-gallery-images-processing div.status' ).html( 'Upload complete!' );
 				$( '#sunshine-gallery-images-processing' ).addClass( 'success' ).delay( 1000 ).fadeOut( 400 );
 				var elem = document.getElementById( 'sunshine-gallery-images' );
@@ -830,10 +847,10 @@ function sunshine_meta_gallery_images_display() {
 			while ( upload_active < limit && upload_waiting.length ) {
 				// Two photos with the same name sent at once could both be given the
 				// same file name on the server, and one would replace the other.
-				var sending = $.map( upload_sending, function( name ) { return name.toLowerCase(); } );
+				var sending = $.map( upload_sending, upload_name_key );
 				var index = -1;
 				$.each( upload_waiting, function( i, file ) {
-					if ( sending.indexOf( file.name.toLowerCase() ) === -1 ) {
+					if ( sending.indexOf( upload_name_key( file.name ) ) === -1 ) {
 						index = i;
 						return false;
 					}
@@ -891,7 +908,9 @@ function sunshine_meta_gallery_images_display() {
 
 			var finish = function( status ) {
 				file.status = status;
-				upload_first_done = true;
+				if ( plupload.DONE === status ) {
+					upload_first_done = true;
+				}
 				delete upload_sending[ file.id ];
 				upload_active--;
 				upload_status_line();
@@ -981,7 +1000,9 @@ function sunshine_meta_gallery_images_display() {
 			up.refresh();
 			// Wait a moment so the Video Sales FilesAdded handler can take videos out
 			// first. Files still in Plupload's list after that are sent here.
+			upload_pending += files.length;
 			setTimeout( function() {
+				upload_pending -= files.length;
 				plupload.each( files, function( file ) {
 					if ( ! up.getFile( file.id ) || file.status !== plupload.QUEUED ) {
 						return;
@@ -1580,7 +1601,11 @@ function sunshine_gallery_image_sort() {
 	// The image ids passed are only what is currently visible. There could be more in the gallery because of pagination.
 	// So we are only going to rebuild the same amount of gallery image ids that are passsed.
 
+	// Take a turn with uploads that may be adding to the list right now.
+	$locked = $gallery->lock_image_ids();
+
 	// Get image ids first.
+	wp_cache_delete( $gallery->get_id(), 'post_meta' );
 	$existing_image_ids = $gallery->get_image_ids();
 
 	// Sorting can only reorder images already in this gallery, never add others to it.
@@ -1596,6 +1621,10 @@ function sunshine_gallery_image_sort() {
 	$final_image_ids = array_merge( $sorted_image_ids, $existing_image_ids );
 
 	$gallery->set_image_ids( $final_image_ids );
+
+	if ( $locked ) {
+		sunshine_import_unlock( 'gallery_images_' . $gallery->get_id() );
+	}
 
 	wp_send_json_success();
 }

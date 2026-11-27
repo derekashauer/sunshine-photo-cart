@@ -339,12 +339,16 @@ class SPC_Gallery extends Sunshine_Data {
 	 *
 	 * Photos sent to the server at the same time finish out of order. This puts
 	 * them in the given order in the spots they already hold in the gallery's photo
-	 * list. The custom order follows that list, and so do photos that tie in the
-	 * other orders, like several uploaded in the same second (see get_images()).
+	 * list, which the custom order follows. Their upload dates are handed out again
+	 * in that order too, earliest first, so both upload date orders match. The dates
+	 * themselves stay the ones the photos got. Photos that end up with the same
+	 * second follow the list (see get_images()).
 	 *
 	 * @param int[] $image_ids Photos in this gallery, in the order they were added.
 	 */
 	public function order_added_images( $image_ids ) {
+		global $wpdb;
+
 		$locked = $this->lock_image_ids();
 
 		wp_cache_delete( $this->get_id(), 'post_meta' );
@@ -361,6 +365,40 @@ class SPC_Gallery extends Sunshine_Data {
 
 		if ( $locked ) {
 			sunshine_import_unlock( 'gallery_images_' . $this->get_id() );
+		}
+
+		if ( count( $image_ids ) < 2 ) {
+			return;
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $image_ids ), '%d' ) );
+		// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $placeholders is a list of %d.
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_date, post_date_gmt FROM {$wpdb->posts} WHERE ID IN ( $placeholders )", $image_ids ), OBJECT_K );
+		if ( count( $rows ) !== count( $image_ids ) ) {
+			return;
+		}
+
+		$dates = array_values( $rows );
+		usort(
+			$dates,
+			function ( $a, $b ) {
+				return strcmp( $a->post_date_gmt, $b->post_date_gmt );
+			}
+		);
+
+		foreach ( $image_ids as $i => $image_id ) {
+			if ( $rows[ $image_id ]->post_date_gmt === $dates[ $i ]->post_date_gmt ) {
+				continue;
+			}
+			$wpdb->update(
+				$wpdb->posts,
+				array(
+					'post_date'     => $dates[ $i ]->post_date,
+					'post_date_gmt' => $dates[ $i ]->post_date_gmt,
+				),
+				array( 'ID' => $image_id )
+			);
+			clean_post_cache( $image_id );
 		}
 	}
 
@@ -459,6 +497,10 @@ class SPC_Gallery extends Sunshine_Data {
 			return false;
 		}
 		if ( wp_delete_attachment( $image_id, true ) ) {
+			// Take a turn with uploads that may be adding to the list right now.
+			$locked = $this->lock_image_ids();
+			wp_cache_delete( $this->get_id(), 'post_meta' );
+			$image_ids = $this->get_image_ids();
 			// TODO: What is the function for this to get the array key from value?!
 			foreach ( $image_ids as $key => $item_image_id ) {
 				if ( $image_id == $item_image_id ) {
@@ -467,6 +509,9 @@ class SPC_Gallery extends Sunshine_Data {
 				}
 			}
 			$this->set_image_ids( $image_ids );
+			if ( $locked ) {
+				sunshine_import_unlock( 'gallery_images_' . $this->get_id() );
+			}
 			return true;
 		}
 		return false;
