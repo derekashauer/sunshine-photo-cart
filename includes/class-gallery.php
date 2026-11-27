@@ -372,7 +372,7 @@ class SPC_Gallery extends Sunshine_Data {
 		}
 
 		$placeholders = implode( ',', array_fill( 0, count( $image_ids ), '%d' ) );
-		// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $placeholders is a list of %d.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery -- $placeholders is a list of %d; the dates must be read fresh.
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_date, post_date_gmt FROM {$wpdb->posts} WHERE ID IN ( $placeholders )", $image_ids ), OBJECT_K );
 		if ( count( $rows ) !== count( $image_ids ) ) {
 			return;
