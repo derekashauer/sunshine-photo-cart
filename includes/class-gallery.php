@@ -295,10 +295,119 @@ class SPC_Gallery extends Sunshine_Data {
 	}
 
 	public function add_image_id( $image_id ) {
+		// Uploads can finish at the same moment. Each one reads the list, adds its
+		// photo and saves the list, so two at once would both read the old list and
+		// one photo would drop off. They take turns here instead.
+		$locked = $this->lock_image_ids();
+
+		// Read the list as saved now, not a copy loaded earlier in this request.
+		wp_cache_delete( $this->get_id(), 'post_meta' );
 		$image_ids   = $this->get_image_ids();
 		$image_ids[] = $image_id;
 		$this->set_image_ids( $image_ids );
+
+		if ( $locked ) {
+			sunshine_import_unlock( 'gallery_images_' . $this->get_id() );
+		}
 		return $image_ids;
+	}
+
+	/**
+	 * Wait for a turn to change this gallery's photo list.
+	 *
+	 * Each turn takes a moment, so the wait is short. A turn left behind by a
+	 * request that died counts as over after 15 seconds, and the wait is long
+	 * enough to outlast it.
+	 *
+	 * @return bool Whether this request has the turn. False only if it never came,
+	 *              and then the change goes ahead without it, as it always did.
+	 */
+	public function lock_image_ids() {
+		$key = 'gallery_images_' . $this->get_id();
+		for ( $try = 0; $try < 200; $try++ ) {
+			if ( sunshine_import_lock( $key, 15 ) ) {
+				return true;
+			}
+			usleep( 100000 );
+		}
+		SPC()->log( 'Gallery ' . $this->get_id() . ': gave up waiting to change the photo list' );
+		return false;
+	}
+
+	/**
+	 * Put photos that were just added back in the order they were added.
+	 *
+	 * Photos sent to the server at the same time finish out of order. This puts
+	 * them in the given order in the spots they already hold in the gallery's photo
+	 * list, and gives them upload dates that go up in the same order. The custom
+	 * order and both upload date orders then match the order they were added in.
+	 *
+	 * Dates stay the ones the photos got, handed out again in the right order. Two
+	 * photos that finished in the same second would sort either way, so a later one
+	 * moves forward a second when needed.
+	 *
+	 * @param int[] $image_ids Photos in this gallery, in the order they were added.
+	 */
+	public function order_added_images( $image_ids ) {
+		global $wpdb;
+
+		$locked = $this->lock_image_ids();
+		wp_cache_delete( $this->get_id(), 'post_meta' );
+		$list      = array_map( 'intval', $this->get_image_ids() );
+		$image_ids = array_values( array_intersect( array_unique( array_map( 'intval', (array) $image_ids ) ), $list ) );
+
+		if ( count( $image_ids ) > 1 ) {
+			$slots = array_keys( array_intersect( $list, $image_ids ) );
+			foreach ( $slots as $i => $slot ) {
+				$list[ $slot ] = $image_ids[ $i ];
+			}
+			$this->set_image_ids( $list );
+		}
+
+		if ( $locked ) {
+			sunshine_import_unlock( 'gallery_images_' . $this->get_id() );
+		}
+
+		if ( count( $image_ids ) < 2 ) {
+			return;
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $image_ids ), '%d' ) );
+		// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- $placeholders is a list of %d.
+		$dates = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_date_gmt FROM {$wpdb->posts} WHERE ID IN ( $placeholders )", $image_ids ), OBJECT_K );
+		if ( count( $dates ) !== count( $image_ids ) ) {
+			return;
+		}
+
+		$times = array();
+		foreach ( $dates as $row ) {
+			$time = strtotime( $row->post_date_gmt . ' UTC' );
+			if ( ! $time || '0000-00-00 00:00:00' === $row->post_date_gmt ) {
+				return;
+			}
+			$times[ (int) $row->ID ] = $time;
+		}
+		$sorted = array_values( $times );
+		sort( $sorted );
+
+		$previous = 0;
+		foreach ( $image_ids as $i => $image_id ) {
+			$time     = max( $sorted[ $i ], $previous + 1 );
+			$previous = $time;
+			if ( $time === $times[ $image_id ] ) {
+				continue;
+			}
+			$date_gmt = gmdate( 'Y-m-d H:i:s', $time );
+			$wpdb->update(
+				$wpdb->posts,
+				array(
+					'post_date'     => get_date_from_gmt( $date_gmt ),
+					'post_date_gmt' => $date_gmt,
+				),
+				array( 'ID' => $image_id )
+			);
+			clean_post_cache( $image_id );
+		}
 	}
 
 	public function set_image_ids( $image_ids ) {

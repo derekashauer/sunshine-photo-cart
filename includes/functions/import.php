@@ -75,10 +75,12 @@ function sunshine_import_batch_has_time( &$batch ) {
  * Released at the end of the request, even when it stops with an error. A claim
  * older than the longest a request may run counts as left over and is taken.
  *
- * @param string $key Which import, for example the gallery or import run.
+ * @param string $key     Which import, for example the gallery or import run.
+ * @param int    $expires Seconds after which a claim counts as left over. Work
+ *                        that holds it for a moment can pass a much shorter time.
  * @return bool Whether this request has it.
  */
-function sunshine_import_lock( $key ) {
+function sunshine_import_lock( $key, $expires = 600 ) {
 	global $wpdb;
 
 	$option = 'sunshine_import_lock_' . md5( $key );
@@ -97,7 +99,7 @@ function sunshine_import_lock( $key ) {
 	if ( ! $claim() ) {
 		$held  = (string) $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $option ) );
 		$since = (int) strtok( $held, '|' );
-		if ( $since > time() - 10 * MINUTE_IN_SECONDS ) {
+		if ( $since > time() - $expires ) {
 			return false;
 		}
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $option, $held ) );

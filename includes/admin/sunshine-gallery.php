@@ -691,6 +691,17 @@ function sunshine_meta_gallery_images_display() {
 				'watermark'  => ( SPC()->get_option( 'watermark_image' ) ) ? 1 : 0,
 			),
 		);
+
+		/**
+		 * How many photos the gallery uploader sends to the server at once.
+		 *
+		 * If the server answers that it is busy, the uploader drops to one at a
+		 * time for the rest of that upload.
+		 *
+		 * @param int $concurrency Photos sent at once. Default 3.
+		 * @param int $gallery_id  Gallery being uploaded to.
+		 */
+		$upload_concurrency = max( 1, (int) apply_filters( 'sunshine_upload_concurrency', 3, $post->ID ) );
 		?>
 
 		// create the uploader and pass the config from above
@@ -699,9 +710,6 @@ function sunshine_meta_gallery_images_display() {
 
 		// Make uploader globally accessible for addon plugins
 		window.sunshineGalleryUploader = uploader;
-
-		// Track active uploads for debug logging
-		var activeUploads = 0;
 
 		// ON watermark setting change.
 		//uploader.settings.multipart_params.watermark = false;
@@ -728,173 +736,270 @@ function sunshine_meta_gallery_images_display() {
 
 		});
 
-		uploader.bind( 'UploadComplete', function(){
-			$( '#sunshine-gallery-images-processing div.status' ).html( 'Upload complete!' );
-			$( '#sunshine-gallery-images-processing' ).addClass( 'success' ).delay( 1000 ).fadeOut( 400 );
-			var elem = document.getElementById( 'sunshine-gallery-images' );
-			elem.scrollTop = elem.scrollHeight;
-		});
-
-		// a file was added in the queue
+		/*
+		 * Plupload still picks the files: the browse button, drag and drop, the file
+		 * type filter, and the FilesAdded event Video Sales uses to take videos out.
+		 * Sending happens here instead, because Plupload only ever sends one file at
+		 * a time and the server sits mostly idle while it waits.
+		 */
+		var upload_limit_default = <?php echo (int) $upload_concurrency; ?>;
+		var upload_limit = upload_limit_default; // how many files are sent at once
+		var upload_waiting = [];  // files not sent yet, in the order they were added
+		var upload_sending = {};  // file id => file name, for the status line
+		var upload_active = 0;    // files sent and not finished, retries included
+		var upload_position = 0;  // each file's place in this upload, across every batch added while it runs
+		var upload_done = [];     // { position, image_id } for each photo that made it in
+		var upload_first_done = false;
 		var current_image_count = 0;
-		uploader.bind( 'FilesAdded', function(up, files){
-			$( '#sunshine-gallery-image-errors' ).html( '' );
-			var hundredmb = 100 * 1024 * 1024, max = parseInt(up.settings.max_file_size, 10);
-			var images_to_upload = files.length;
-			var has_video = false;
-			plupload.each(files, function(file){
-				console.log( 'SUNSHINE: Processing file:', file.name, 'Type:', file.type );
-				var ext = file.name.split('.').pop().toLowerCase();
-				var videoExts = ['mp4', 'mov', 'avi', 'wmv', 'flv', 'webm', 'mkv'];
-				if ( videoExts.indexOf( ext ) !== -1 ) {
-					console.log( 'SUNSHINE: Video file detected:', file.name );
-					has_video = true;
-				}
-				if ( max > hundredmb && file.size > hundredmb && up.runtime != 'html5' ){
-					alert( 'Your file was too large' );
-				} else {
-					current_image_count = 0;
-					$( '#sunshine-gallery-images-processing').removeClass( 'success' );
-					$( '#sunshine-gallery-images-processing div.status' ).html( 'Uploading <span class="processed">0</span> of <span class="total-files">' + images_to_upload + '</span> files...<span class="current-file"></span>' );
-					$( '#sunshine-gallery-images-processing' ).show();
-				}
-			});
+		var upload_video_exts = ['mp4', 'mov', 'avi', 'wmv', 'flv', 'webm', 'mkv'];
+		var upload_busy_statuses = [429, 502, 503, 504];
+		var upload_max_retries = 3;
 
-			// Set video flag if any video files are in the queue
-			if ( has_video ) {
-				up.settings.multipart_params.sunshine_is_video = true;
-				console.log( 'SUNSHINE: Video files detected, set sunshine_is_video flag' );
-			} else {
-				if ( up.settings.multipart_params.sunshine_is_video ) {
-					delete up.settings.multipart_params.sunshine_is_video;
-				}
+		var upload_running = function() {
+			return upload_active > 0 || upload_waiting.length > 0;
+		};
+
+		var upload_status_line = function() {
+			var names = $.map( upload_sending, function( name ) { return name; } );
+			<?php /* translators: %s: names of the files being sent right now */ ?>
+			var line = names.length ? ' ' + '<?php echo esc_js( __( 'Sending %s', 'sunshine-photo-cart' ) ); ?>'.replace( '%s', names.join( ', ' ) ) : '';
+			$( '#sunshine-gallery-images-processing div.status span.current-file' ).text( line );
+		};
+
+		var upload_error = function( text ) {
+			$( '#sunshine-gallery-image-errors' ).append( $( '<li/>' ).text( text ) );
+		};
+
+		// Photos finish out of order when several are sent at once. Put them back in
+		// the order they were added: in the list on this screen, and on the server,
+		// which keeps both the custom order and the upload dates in line with it.
+		var upload_finish = function() {
+			var finished = upload_done;
+			upload_done = [];
+			upload_position = 0;
+			upload_first_done = false;
+			upload_limit = upload_limit_default;
+
+			var complete = function() {
+				$( '#sunshine-gallery-images-processing div.status' ).html( 'Upload complete!' );
+				$( '#sunshine-gallery-images-processing' ).addClass( 'success' ).delay( 1000 ).fadeOut( 400 );
+				var elem = document.getElementById( 'sunshine-gallery-images' );
+				elem.scrollTop = elem.scrollHeight;
+			};
+
+			if ( finished.length < 2 ) {
+				complete();
+				return;
 			}
-			console.log( 'SUNSHINE: Upload params before start:', up.settings.multipart_params );
 
-			up.refresh();
-			// Delay start() to allow video handler to process videos first
-			// Video handler will remove videos from queue, then we can start uploading remaining files
-			setTimeout(function() {
-				up.start();
-			}, 50);
-		});
+			finished.sort( function( a, b ) { return a.position - b.position; } );
+			var image_ids = $.map( finished, function( item ) { return item.image_id; } );
 
-		// a file was uploaded
-		uploader.bind( 'FilesAdded', function(up, files) {
-			console.log( 'SUNSHINE: Files added to queue:', files.length );
-			files.forEach( function( file ) {
-				console.log( 'SUNSHINE: File added:', file.name, 'Type:', file.type );
-				var ext = file.name.split('.').pop().toLowerCase();
-				var videoExts = ['mp4', 'mov', 'avi', 'wmv', 'flv', 'webm', 'mkv'];
-				if ( videoExts.indexOf( ext ) !== -1 ) {
-					console.log( 'SUNSHINE: Video file detected:', file.name );
-					// Add video flag to multipart params for this file
-					uploader.settings.multipart_params.sunshine_is_video = true;
-					console.log( 'SUNSHINE: Set sunshine_is_video flag in upload params' );
-				} else {
-					// Make sure flag is not set for non-videos
-					if ( uploader.settings.multipart_params.sunshine_is_video ) {
-						delete uploader.settings.multipart_params.sunshine_is_video;
+			// Each new photo takes the spot of the one that finished in that place.
+			var $slots = $( '#sunshine-gallery-image-list li' ).filter( function() {
+				return image_ids.indexOf( parseInt( $( this ).data( 'image-id' ), 10 ) ) !== -1;
+			});
+			if ( $slots.length === image_ids.length ) {
+				var markers = $slots.map( function() {
+					return $( '<li style="display:none"></li>' ).insertBefore( this ).get( 0 );
+				});
+				$.each( image_ids, function( i, image_id ) {
+					$( markers[ i ] ).replaceWith( $( '#image-' + image_id ) );
+				});
+			}
+
+			$( '#sunshine-gallery-images-processing div.status' ).html( '<?php echo esc_js( __( 'Saving image order...', 'sunshine-photo-cart' ) ); ?>' );
+			$.post( ajaxurl, {
+				action: 'sunshine_gallery_upload_order',
+				security: uploader.settings.multipart_params.security,
+				gallery_id: uploader.settings.multipart_params.gallery_id,
+				image_ids: image_ids.join( ',' )
+			}).done( function( response ) {
+				if ( ! response || response.success !== true ) {
+					upload_error( '<?php echo esc_js( __( 'The new images were added, but their order could not be saved.', 'sunshine-photo-cart' ) ); ?>' );
+				}
+			}).fail( function() {
+				upload_error( '<?php echo esc_js( __( 'The new images were added, but their order could not be saved.', 'sunshine-photo-cart' ) ); ?>' );
+			}).always( complete );
+		};
+
+		var upload_next = function() {
+			// The first photo goes alone. It may have to make the gallery's folder,
+			// and two requests making the same folder at once fail one photo.
+			var limit = upload_first_done ? upload_limit : 1;
+			while ( upload_active < limit && upload_waiting.length ) {
+				// Two photos with the same name sent at once could both be given the
+				// same file name on the server, and one would replace the other.
+				var sending = $.map( upload_sending, function( name ) { return name.toLowerCase(); } );
+				var index = -1;
+				$.each( upload_waiting, function( i, file ) {
+					if ( sending.indexOf( file.name.toLowerCase() ) === -1 ) {
+						index = i;
+						return false;
 					}
+				});
+				if ( index === -1 ) {
+					break;
 				}
-			});
-		});
-
-		uploader.bind( 'BeforeUpload', function(up, file) {
-			activeUploads++;
-			console.log( 'SUNSHINE: Before upload:', file.name, '(active:', activeUploads, ')' );
-			console.log( 'SUNSHINE: Upload params:', up.settings.multipart_params );
-			var ext = file.name.split('.').pop().toLowerCase();
-			var videoExts = ['mp4', 'mov', 'avi', 'wmv', 'flv', 'webm', 'mkv'];
-			if ( videoExts.indexOf( ext ) !== -1 ) {
-				up.settings.multipart_params.sunshine_is_video = true;
-				console.log( 'SUNSHINE: Video file, setting sunshine_is_video flag' );
-			} else {
-				if ( up.settings.multipart_params.sunshine_is_video ) {
-					delete up.settings.multipart_params.sunshine_is_video;
-				}
+				upload_send( upload_waiting.splice( index, 1 )[0] );
 			}
-		});
-
-		uploader.bind( 'BeforeUpload', function(up, file) {
-			console.log( 'SUNSHINE: BeforeUpload event:', file.name );
-			var ext = file.name.split('.').pop().toLowerCase();
-			var videoExts = ['mp4', 'mov', 'avi', 'wmv', 'flv', 'webm', 'mkv'];
-			if ( videoExts.indexOf( ext ) !== -1 ) {
-				up.settings.multipart_params.sunshine_is_video = true;
-				console.log( 'SUNSHINE: Video file, setting sunshine_is_video flag before upload' );
-			} else {
-				if ( up.settings.multipart_params.sunshine_is_video ) {
-					delete up.settings.multipart_params.sunshine_is_video;
-				}
+			if ( ! upload_running() ) {
+				upload_finish();
 			}
-			console.log( 'SUNSHINE: Upload params:', up.settings.multipart_params );
-		});
+		};
 
-		uploader.bind( 'FileUploaded', function(up, file, response) {
-			activeUploads--;
-			console.log( 'SUNSHINE: FileUploaded event:', file.name, '(active:', activeUploads, ')' );
-			console.log( 'SUNSHINE: Response:', response.response );
-			var result = JSON.parse( response.response );
-			console.log( 'SUNSHINE: Parsed result:', result );
-			if ( result.success === true ) {
+		var upload_reply = function( file, body ) {
+			var result = null;
+			try {
+				result = JSON.parse( body );
+			} catch ( e ) {
+				result = null;
+			}
+			console.log( 'SUNSHINE: Upload reply:', file.name, result );
+			if ( result && result.success === true ) {
 				current_image_count++;
 				$( '#sunshine-gallery-images-processing span.processed' ).html( current_image_count );
-				$( '#sunshine-gallery-images-processing div.status span.current-file' ).html( file.name + ' uploaded' );
+				upload_done.push( { position: file._sunshine_position, image_id: parseInt( result.data.image_id, 10 ) } );
 				if ( result.data.image_html ) {
 					var image_ids = $( 'input[name="selected_images"]' ).val();
 					$( 'input[name="selected_images"]' ).val( image_ids + ',' + result.data.image_id );
 					$( '#sunshine-gallery-image-list' ).append( result.data.image_html );
 					total_images++;
-					console.log( 'SUNSHINE: Image added to gallery, ID:', result.data.image_id );
 					jQuery( document ).trigger( 'refresh_images' );
 				} else {
-					console.log( 'SUNSHINE: No image_html in response, adding to files list' );
 					$( '#sunshine-gallery-images ul#files' ).append(
 						$('<li/>', {
 							'id': 'image-' + result.data.image_id,
-							html: result.file.name
+							text: file.name
 						})
 					);
 				}
+			} else if ( result && result.data && result.data.error ) {
+				upload_error( file.name + ' could not be uploaded: ' + result.data.error );
 			} else {
-				console.error( 'SUNSHINE: Upload failed:', result.data.error );
-				$( '#sunshine-gallery-image-errors' ).append( '<li>' + result.data.file + ' could not be uploaded: ' + result.data.error + '</li>' );
+				<?php /* translators: %s: file name */ ?>
+				upload_error( '<?php echo esc_js( __( '%s could not be uploaded: the server sent back an answer that was not understood.', 'sunshine-photo-cart' ) ); ?>'.replace( '%s', file.name ) );
 			}
-		});
+		};
 
-		uploader.bind( 'ChunkUploaded', function(up, file, info) {
-			var percent = Math.round( 100 - ( ( (info.total - info.offset) / info.total ) * 100 ) );
-			$( '#sunshine-gallery-images-processing div.status span.current-file').html( 'Uploading file "'+file.name+'" ('+percent+'%)' );
-		});
+		var upload_send = function( file ) {
+			var tries = 0;
+			upload_active++;
+			upload_sending[ file.id ] = file.name;
+			upload_status_line();
+			file.status = plupload.UPLOADING;
 
-		uploader.bind('Error', function(up, err) {
-			activeUploads--;
-			console.error( 'SUNSHINE: Upload error:', err, '(active:', activeUploads, ')' );
+			var finish = function( status ) {
+				file.status = status;
+				upload_first_done = true;
+				delete upload_sending[ file.id ];
+				upload_active--;
+				upload_status_line();
+				upload_next();
+			};
 
-			var transientStatuses = [502, 503, 504];
-			var maxRetries = 3;
-
-			// Retry transient HTTP errors with exponential backoff
-			if ( err.file && err.code === plupload.HTTP_ERROR && transientStatuses.indexOf( err.status ) !== -1 ) {
-				err.file._retries = ( err.file._retries || 0 ) + 1;
-				if ( err.file._retries <= maxRetries ) {
-					var delay = 1000 * Math.pow( 2, err.file._retries - 1 ); // 1s, 2s, 4s
-					console.log( 'SUNSHINE: Retrying ' + err.file.name + ' (attempt ' + err.file._retries + '/' + maxRetries + ') in ' + delay + 'ms' );
-					$( '#sunshine-gallery-images-processing div.status span.current-file' ).html( 'Retrying ' + err.file.name + '...' );
-					setTimeout( function() {
-						err.file.status = plupload.QUEUED;
-						up.start();
-					}, delay );
+			var attempt = function() {
+				var native_file = file.getNative();
+				if ( ! native_file ) {
+					upload_error( file.name + ' could not be uploaded: ' + '<?php echo esc_js( __( 'This browser cannot send the file.', 'sunshine-photo-cart' ) ); ?>' );
+					finish( plupload.FAILED );
 					return;
 				}
+
+				// Same fields Plupload sent, so the upload handler and any add-on
+				// watching it see the same request as before.
+				var data = new FormData();
+				$.each( uploader.settings.multipart_params, function( key, value ) {
+					if ( 'sunshine_is_video' !== key ) {
+						data.append( key, value );
+					}
+				});
+				if ( upload_video_exts.indexOf( file.name.split( '.' ).pop().toLowerCase() ) !== -1 ) {
+					data.append( 'sunshine_is_video', true );
+				}
+				data.append( 'name', file.name );
+				data.append( uploader.settings.file_data_name, native_file, file.name );
+
+				$.ajax({
+					url: uploader.settings.url,
+					type: 'POST',
+					data: data,
+					processData: false,
+					contentType: false,
+					dataType: 'text'
+				}).done( function( body ) {
+					upload_reply( file, body );
+					finish( plupload.DONE );
+				}).fail( function( xhr ) {
+					console.error( 'SUNSHINE: Upload error:', file.name, xhr.status );
+					if ( upload_busy_statuses.indexOf( xhr.status ) !== -1 ) {
+						// The server is too busy for several at once. Send the rest of
+						// this upload one at a time, the way it always worked.
+						if ( upload_limit > 1 ) {
+							console.log( 'SUNSHINE: Server busy, sending one file at a time' );
+							upload_limit = 1;
+						}
+						tries++;
+						if ( tries <= upload_max_retries ) {
+							var delay = 1000 * Math.pow( 2, tries - 1 ); // 1s, 2s, 4s
+							console.log( 'SUNSHINE: Retrying ' + file.name + ' (attempt ' + tries + '/' + upload_max_retries + ') in ' + delay + 'ms' );
+							$( '#sunshine-gallery-images-processing div.status span.current-file' ).text( ' Retrying ' + file.name + '...' );
+							setTimeout( attempt, delay );
+							return;
+						}
+						upload_error( file.name + ': HTTP Error. (Your server could not process the image, contact your web host)' );
+					} else {
+						upload_error( file.name + ': HTTP Error. (' + xhr.status + ')' );
+					}
+					finish( plupload.FAILED );
+				});
+			};
+
+			attempt();
+		};
+
+		uploader.bind( 'FilesAdded', function(up, files){
+			var hundredmb = 100 * 1024 * 1024, max = parseInt(up.settings.max_file_size, 10);
+			plupload.each(files, function(file){
+				if ( max > hundredmb && file.size > hundredmb && up.runtime != 'html5' ){
+					alert( 'Your file was too large' );
+				}
+			});
+
+			if ( upload_running() ) {
+				// Added while an upload is running: these join the end of it.
+				var $total = $( '#sunshine-gallery-images-processing span.total-files' );
+				$total.html( ( parseInt( $total.html(), 10 ) || 0 ) + files.length );
+			} else {
+				current_image_count = 0;
+				$( '#sunshine-gallery-image-errors' ).html( '' );
+				$( '#sunshine-gallery-images-processing').removeClass( 'success' );
+				$( '#sunshine-gallery-images-processing div.status' ).html( 'Uploading <span class="processed">0</span> of <span class="total-files">' + files.length + '</span> files...<span class="current-file"></span>' );
+				$( '#sunshine-gallery-images-processing' ).show();
 			}
 
-			// Non-retryable or retries exhausted
-			if ( err.status == 504 || err.status == 503 || err.status == 502 ) {
-				$( '#sunshine-gallery-image-errors' ).append( '<li>' + err.file.name + ': ' + err.message + ' (Your server could not process the image, contact your web host)</li>' );
-			} else {
-				$( '#sunshine-gallery-image-errors' ).append( '<li>' + err.file.name + ': ' + err.message + ' (' + err.code + ', ' + err.status + ')</li>' );
+			up.refresh();
+			// Wait a moment so the Video Sales FilesAdded handler can take videos out
+			// first. Files still in Plupload's list after that are sent here.
+			setTimeout( function() {
+				plupload.each( files, function( file ) {
+					if ( ! up.getFile( file.id ) || file.status !== plupload.QUEUED ) {
+						return;
+					}
+					upload_position++;
+					file._sunshine_position = upload_position;
+					upload_waiting.push( file );
+				});
+				upload_next();
+			}, 50 );
+		});
+
+		// Plupload's own errors, like a file type the filter turned away. Upload
+		// errors are handled where the file is sent.
+		uploader.bind('Error', function(up, err) {
+			console.error( 'SUNSHINE: Upload error:', err );
+			if ( err.file ) {
+				upload_error( err.file.name + ': ' + err.message + ' (' + err.code + ')' );
 			}
 		});
 
@@ -1253,6 +1358,29 @@ function sunshine_gallery_admin_ajax_upload() {
 		wp_send_json_error( array( 'error' => $e->getMessage() ) );
 		return;
 	}
+}
+
+add_action( 'wp_ajax_sunshine_gallery_upload_order', 'sunshine_gallery_admin_ajax_upload_order' );
+/**
+ * Put the photos of one upload back in the order they were added.
+ *
+ * The gallery uploader sends several photos at once, so they finish out of
+ * order. When the upload is done it sends the new photos here in the order they
+ * were added.
+ */
+function sunshine_gallery_admin_ajax_upload_order() {
+
+	check_ajax_referer( 'sunshine_gallery_upload', 'security' );
+
+	$gallery = sunshine_admin_gallery_ajax_check( isset( $_POST['gallery_id'] ) ? $_POST['gallery_id'] : 0 );
+	if ( ! current_user_can( 'upload_files' ) ) {
+		wp_send_json_error( array( 'error' => __( 'You do not have permission to upload files', 'sunshine-photo-cart' ) ) );
+	}
+
+	$image_ids = isset( $_POST['image_ids'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_POST['image_ids'] ) ) ) : array();
+	$gallery->order_added_images( $image_ids );
+
+	wp_send_json_success();
 }
 
 function sunshine_insert_gallery_image( $file_path, $gallery_id, $result = 'json', $watermark = true ) {
