@@ -767,8 +767,9 @@ function sunshine_meta_gallery_images_display() {
 			$( '#sunshine-gallery-images-processing div.status span.current-file' ).text( line );
 		};
 
+		var upload_refused = [];  // messages for files Plupload turned away in this pick
 		var upload_error = function( text ) {
-			$( '#sunshine-gallery-image-errors' ).append( $( '<li/>' ).text( text ) );
+			return $( '<li/>' ).text( text ).appendTo( '#sunshine-gallery-image-errors' );
 		};
 
 		// Photos finish out of order when several are sent at once. Put them back in
@@ -969,11 +970,13 @@ function sunshine_meta_gallery_images_display() {
 				$total.html( ( parseInt( $total.html(), 10 ) || 0 ) + files.length );
 			} else {
 				current_image_count = 0;
-				$( '#sunshine-gallery-image-errors' ).html( '' );
+				$( '#sunshine-gallery-image-errors li' ).not( upload_refused ).remove();
 				$( '#sunshine-gallery-images-processing').removeClass( 'success' );
 				$( '#sunshine-gallery-images-processing div.status' ).html( 'Uploading <span class="processed">0</span> of <span class="total-files">' + files.length + '</span> files...<span class="current-file"></span>' );
 				$( '#sunshine-gallery-images-processing' ).show();
 			}
+
+			upload_refused = [];
 
 			up.refresh();
 			// Wait a moment so the Video Sales FilesAdded handler can take videos out
@@ -998,7 +1001,9 @@ function sunshine_meta_gallery_images_display() {
 		uploader.bind('Error', function(up, err) {
 			console.error( 'SUNSHINE: Upload error:', err );
 			if ( err.file ) {
-				upload_error( err.file.name + ': ' + err.message + ' (' + err.code + ')' );
+				// Plupload turns a file away before FilesAdded, which clears the
+				// error list when a new upload starts. Kept apart so it survives that.
+				upload_refused.push( upload_error( err.file.name + ': ' + err.message + ' (' + err.code + ')' ).get( 0 ) );
 			}
 		});
 
