@@ -295,10 +295,99 @@ class SPC_Gallery extends Sunshine_Data {
 	}
 
 	public function add_image_id( $image_id ) {
+		// Uploads can finish at the same moment. Each one reads the list, adds its
+		// photo and saves the list, so two at once would both read the old list and
+		// one photo would drop off. They take turns here instead.
+		$locked = $this->lock_image_ids();
+
+		// Read the list as saved now, not a copy loaded earlier in this request.
+		wp_cache_delete( $this->get_id(), 'post_meta' );
 		$image_ids   = $this->get_image_ids();
 		$image_ids[] = $image_id;
 		$this->set_image_ids( $image_ids );
+
+		if ( $locked ) {
+			sunshine_import_unlock( 'gallery_images_' . $this->get_id() );
+		}
 		return $image_ids;
+	}
+
+	/**
+	 * Wait for a turn to change this gallery's photo list.
+	 *
+	 * @return bool Whether this request has the turn. False only if it never came,
+	 *              and then the change goes ahead without it, as it always did.
+	 */
+	public function lock_image_ids() {
+		return sunshine_import_lock_wait( 'gallery_images_' . $this->get_id() );
+	}
+
+	/**
+	 * Put photos that were just added back in the order they were added.
+	 *
+	 * Photos sent to the server at the same time finish out of order. This puts
+	 * them in the given order in the spots they already hold in the gallery's photo
+	 * list, which the custom order follows. Their upload dates are handed out again
+	 * in that order too, earliest first, so both upload date orders match. The dates
+	 * themselves stay the ones the photos got. Photos that end up with the same
+	 * second follow the list (see get_images()).
+	 *
+	 * @param int[] $image_ids Photos in this gallery, in the order they were added.
+	 */
+	public function order_added_images( $image_ids ) {
+		global $wpdb;
+
+		$locked = $this->lock_image_ids();
+
+		wp_cache_delete( $this->get_id(), 'post_meta' );
+		$list      = array_map( 'intval', $this->get_image_ids() );
+		$image_ids = array_values( array_intersect( array_unique( array_map( 'intval', (array) $image_ids ) ), $list ) );
+
+		if ( count( $image_ids ) > 1 ) {
+			$slots = array_keys( array_intersect( $list, $image_ids ) );
+			foreach ( $slots as $i => $slot ) {
+				$list[ $slot ] = $image_ids[ $i ];
+			}
+			$this->set_image_ids( $list );
+		}
+
+		if ( $locked ) {
+			sunshine_import_unlock( 'gallery_images_' . $this->get_id() );
+		}
+
+		if ( count( $image_ids ) < 2 ) {
+			return;
+		}
+
+		$placeholders = implode( ',', array_fill( 0, count( $image_ids ), '%d' ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery -- $placeholders is a list of %d; the dates must be read fresh.
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_date, post_date_gmt FROM {$wpdb->posts} WHERE ID IN ( $placeholders )", $image_ids ), OBJECT_K );
+		if ( count( $rows ) !== count( $image_ids ) ) {
+			return;
+		}
+
+		$dates = array_values( $rows );
+		usort(
+			$dates,
+			function ( $a, $b ) {
+				return strcmp( $a->post_date_gmt, $b->post_date_gmt );
+			}
+		);
+
+		foreach ( $image_ids as $i => $image_id ) {
+			if ( $rows[ $image_id ]->post_date_gmt === $dates[ $i ]->post_date_gmt ) {
+				continue;
+			}
+			$wpdb->update(
+				$wpdb->posts,
+				array(
+					'post_date'     => $dates[ $i ]->post_date,
+					'post_date_gmt' => $dates[ $i ]->post_date_gmt,
+				),
+				array( 'ID' => $image_id )
+			);
+			clean_post_cache( $image_id );
+		}
 	}
 
 	public function set_image_ids( $image_ids ) {
@@ -342,22 +431,25 @@ class SPC_Gallery extends Sunshine_Data {
 
 		$order = SPC()->get_option( 'image_order' );
 
+		// Photos that tie, like several uploaded in the same second or shot in the
+		// same second, follow the gallery's own list, which keeps the order they
+		// were added in. Without it the database may return ties in any order.
 		if ( $order == 'shoot_order' ) {
 			$args['meta_key'] = 'created_timestamp';
-			$args['orderby']  = 'meta_value_num menu_order';
+			$args['orderby']  = 'meta_value_num menu_order post__in';
 			$args['order']    = 'ASC';
 		} elseif ( $order == 'shoot_order_reverse' ) {
 			$args['meta_key'] = 'created_timestamp';
-			$args['orderby']  = 'meta_value_num menu_order';
+			$args['orderby']  = 'meta_value_num menu_order post__in';
 			$args['order']    = 'DESC';
 		} elseif ( $order == 'date_new_old' ) {
-			$args['orderby'] = 'date';
+			$args['orderby'] = 'date post__in';
 			$args['order']   = 'DESC';
 		} elseif ( $order == 'date_old_new' ) {
-			$args['orderby'] = 'date';
+			$args['orderby'] = 'date post__in';
 			$args['order']   = 'ASC';
 		} elseif ( $order == 'title' ) {
-			$args['orderby'] = 'title menu_order';
+			$args['orderby'] = 'title menu_order post__in';
 			$args['order']   = 'ASC';
 		} else {
 			$args['orderby'] = 'post__in';
@@ -393,6 +485,10 @@ class SPC_Gallery extends Sunshine_Data {
 			return false;
 		}
 		if ( wp_delete_attachment( $image_id, true ) ) {
+			// Take a turn with uploads that may be adding to the list right now.
+			$locked = $this->lock_image_ids();
+			wp_cache_delete( $this->get_id(), 'post_meta' );
+			$image_ids = $this->get_image_ids();
 			// TODO: What is the function for this to get the array key from value?!
 			foreach ( $image_ids as $key => $item_image_id ) {
 				if ( $image_id == $item_image_id ) {
@@ -401,6 +497,9 @@ class SPC_Gallery extends Sunshine_Data {
 				}
 			}
 			$this->set_image_ids( $image_ids );
+			if ( $locked ) {
+				sunshine_import_unlock( 'gallery_images_' . $this->get_id() );
+			}
 			return true;
 		}
 		return false;

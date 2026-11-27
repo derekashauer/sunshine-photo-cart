@@ -75,10 +75,12 @@ function sunshine_import_batch_has_time( &$batch ) {
  * Released at the end of the request, even when it stops with an error. A claim
  * older than the longest a request may run counts as left over and is taken.
  *
- * @param string $key Which import, for example the gallery or import run.
+ * @param string $key     Which import, for example the gallery or import run.
+ * @param int    $expires Seconds after which a claim counts as left over. Work
+ *                        that holds it for a moment can pass a much shorter time.
  * @return bool Whether this request has it.
  */
-function sunshine_import_lock( $key ) {
+function sunshine_import_lock( $key, $expires = 600 ) {
 	global $wpdb;
 
 	$option = 'sunshine_import_lock_' . md5( $key );
@@ -97,7 +99,7 @@ function sunshine_import_lock( $key ) {
 	if ( ! $claim() ) {
 		$held  = (string) $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $option ) );
 		$since = (int) strtok( $held, '|' );
-		if ( $since > time() - 10 * MINUTE_IN_SECONDS ) {
+		if ( $since > time() - $expires ) {
 			return false;
 		}
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $option, $held ) );
@@ -107,13 +109,47 @@ function sunshine_import_lock( $key ) {
 	}
 
 	$GLOBALS['sunshine_import_locks'][ $option ] = $value;
-	register_shutdown_function(
-		function () use ( $wpdb, $option, $value ) {
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $option, $value ) );
-		}
-	);
+
+	// One cleanup for the whole request lets go of every claim still held. A
+	// request that claims and lets go once per photo then leaves nothing to do
+	// at the end for the claims it already let go.
+	static $cleanup_added = false;
+	if ( ! $cleanup_added ) {
+		$cleanup_added = true;
+		register_shutdown_function(
+			function () use ( $wpdb ) {
+				$held_locks = isset( $GLOBALS['sunshine_import_locks'] ) ? (array) $GLOBALS['sunshine_import_locks'] : array();
+				foreach ( $held_locks as $held_option => $held_value ) {
+					$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name = %s AND option_value = %s", $held_option, $held_value ) );
+				}
+			}
+		);
+	}
 
 	return true;
+}
+
+/**
+ * Wait for a short claim with sunshine_import_lock().
+ *
+ * For work that holds the claim only a moment, like changing a gallery's photo
+ * list. A claim left behind by a request that died counts as over after
+ * $expires seconds, and the wait is long enough to outlast it.
+ *
+ * @param string $key     Same kind of key as sunshine_import_lock().
+ * @param int    $expires Seconds after which a claim counts as left over.
+ * @return bool Whether this request has it. False only if it never came.
+ */
+function sunshine_import_lock_wait( $key, $expires = 15 ) {
+	$tries = ( $expires + 5 ) * 10;
+	for ( $try = 0; $try < $tries; $try++ ) {
+		if ( sunshine_import_lock( $key, $expires ) ) {
+			return true;
+		}
+		usleep( 100000 );
+	}
+	SPC()->log( 'Gave up waiting for ' . $key );
+	return false;
 }
 
 /**
