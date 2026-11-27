@@ -1372,7 +1372,7 @@ function sunshine_gallery_admin_ajax_upload_order() {
 
 	check_ajax_referer( 'sunshine_gallery_upload', 'security' );
 
-	$gallery = sunshine_admin_gallery_ajax_check( isset( $_POST['gallery_id'] ) ? $_POST['gallery_id'] : 0 );
+	$gallery = sunshine_admin_gallery_ajax_check( isset( $_POST['gallery_id'] ) ? absint( $_POST['gallery_id'] ) : 0 );
 	if ( ! current_user_can( 'upload_files' ) ) {
 		wp_send_json_error( array( 'error' => __( 'You do not have permission to upload files', 'sunshine-photo-cart' ) ) );
 	}
