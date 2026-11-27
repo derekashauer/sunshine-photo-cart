@@ -130,6 +130,29 @@ function sunshine_import_lock( $key, $expires = 600 ) {
 }
 
 /**
+ * Wait for a short claim with sunshine_import_lock().
+ *
+ * For work that holds the claim only a moment, like changing a gallery's photo
+ * list. A claim left behind by a request that died counts as over after
+ * $expires seconds, and the wait is long enough to outlast it.
+ *
+ * @param string $key     Same kind of key as sunshine_import_lock().
+ * @param int    $expires Seconds after which a claim counts as left over.
+ * @return bool Whether this request has it. False only if it never came.
+ */
+function sunshine_import_lock_wait( $key, $expires = 15 ) {
+	$tries = ( $expires + 5 ) * 10;
+	for ( $try = 0; $try < $tries; $try++ ) {
+		if ( sunshine_import_lock( $key, $expires ) ) {
+			return true;
+		}
+		usleep( 100000 );
+	}
+	SPC()->log( 'Gave up waiting for ' . $key );
+	return false;
+}
+
+/**
  * Let go of a claim this request made with sunshine_import_lock().
  *
  * The claim also ends with the request, but not when another plugin stops the

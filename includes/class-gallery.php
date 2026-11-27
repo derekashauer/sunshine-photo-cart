@@ -315,23 +315,11 @@ class SPC_Gallery extends Sunshine_Data {
 	/**
 	 * Wait for a turn to change this gallery's photo list.
 	 *
-	 * Each turn takes a moment, so the wait is short. A turn left behind by a
-	 * request that died counts as over after 15 seconds, and the wait is long
-	 * enough to outlast it.
-	 *
 	 * @return bool Whether this request has the turn. False only if it never came,
 	 *              and then the change goes ahead without it, as it always did.
 	 */
 	public function lock_image_ids() {
-		$key = 'gallery_images_' . $this->get_id();
-		for ( $try = 0; $try < 200; $try++ ) {
-			if ( sunshine_import_lock( $key, 15 ) ) {
-				return true;
-			}
-			usleep( 100000 );
-		}
-		SPC()->log( 'Gallery ' . $this->get_id() . ': gave up waiting to change the photo list' );
-		return false;
+		return sunshine_import_lock_wait( 'gallery_images_' . $this->get_id() );
 	}
 
 	/**

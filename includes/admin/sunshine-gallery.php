@@ -749,26 +749,15 @@ function sunshine_meta_gallery_images_display() {
 		var upload_active = 0;    // files sent and not finished, retries included
 		var upload_position = 0;  // each file's place in this upload, across every batch added while it runs
 		var upload_done = [];     // { position, image_id } for each photo that made it in
-		var upload_first_done = false;
 		var current_image_count = 0;
 		var upload_video_exts = ['mp4', 'mov', 'avi', 'wmv', 'flv', 'webm', 'mkv'];
 		var upload_busy_statuses = [429, 502, 503, 504];
 		var upload_max_retries = 3;
 
 		var upload_pending = 0;   // files added but not yet in upload_waiting (see FilesAdded)
+		var upload_retrying = 0;  // files waiting out a pause before they are sent again
 		var upload_running = function() {
-			return upload_active > 0 || upload_waiting.length > 0 || upload_pending > 0;
-		};
-
-		// Roughly the name the server will save a file under. WordPress takes out
-		// characters like # and %, and turns spaces into dashes, so "Photo 1.jpg"
-		// and "Photo-1.jpg" end up as the same file. Close enough errs on the safe
-		// side: two names that match here are only sent one after the other.
-		var upload_name_key = function( name ) {
-			return String( name ).toLowerCase()
-				.replace( /[?\[\]\/\\=<>:;,'"&$#*()|~`!{}%+\u2019\u00ab\u00bb\u201d\u201c]/g, '' )
-				.replace( /[\s\-_]+/g, '-' )
-				.replace( /^[\-_.]+|[\-_.]+$/g, '' );
+			return upload_active > 0 || upload_waiting.length > 0 || upload_pending > 0 || upload_retrying > 0;
 		};
 
 		var upload_status_line = function() {
@@ -789,7 +778,6 @@ function sunshine_meta_gallery_images_display() {
 			var finished = upload_done;
 			upload_done = [];
 			upload_position = 0;
-			upload_first_done = false;
 			upload_limit = upload_limit_default;
 
 			var complete = function() {
@@ -841,24 +829,8 @@ function sunshine_meta_gallery_images_display() {
 		};
 
 		var upload_next = function() {
-			// The first photo goes alone. It may have to make the gallery's folder,
-			// and two requests making the same folder at once fail one photo.
-			var limit = upload_first_done ? upload_limit : 1;
-			while ( upload_active < limit && upload_waiting.length ) {
-				// Two photos with the same name sent at once could both be given the
-				// same file name on the server, and one would replace the other.
-				var sending = $.map( upload_sending, upload_name_key );
-				var index = -1;
-				$.each( upload_waiting, function( i, file ) {
-					if ( sending.indexOf( upload_name_key( file.name ) ) === -1 ) {
-						index = i;
-						return false;
-					}
-				});
-				if ( index === -1 ) {
-					break;
-				}
-				upload_send( upload_waiting.splice( index, 1 )[0] );
+			while ( upload_active < upload_limit && upload_waiting.length ) {
+				upload_send( upload_waiting.shift() );
 			}
 			if ( ! upload_running() ) {
 				upload_finish();
@@ -900,7 +872,7 @@ function sunshine_meta_gallery_images_display() {
 		};
 
 		var upload_send = function( file ) {
-			var tries = 0;
+			var tries = file._sunshine_tries || 0;
 			upload_active++;
 			upload_sending[ file.id ] = file.name;
 			upload_status_line();
@@ -908,9 +880,6 @@ function sunshine_meta_gallery_images_display() {
 
 			var finish = function( status ) {
 				file.status = status;
-				if ( plupload.DONE === status ) {
-					upload_first_done = true;
-				}
 				delete upload_sending[ file.id ];
 				upload_active--;
 				upload_status_line();
@@ -962,8 +931,17 @@ function sunshine_meta_gallery_images_display() {
 						if ( tries <= upload_max_retries ) {
 							var delay = 1000 * Math.pow( 2, tries - 1 ); // 1s, 2s, 4s
 							console.log( 'SUNSHINE: Retrying ' + file.name + ' (attempt ' + tries + '/' + upload_max_retries + ') in ' + delay + 'ms' );
+							// Give up the spot while waiting, then go back to the front of
+							// the line, so retries also go one at a time.
+							file._sunshine_tries = tries;
+							upload_retrying++;
+							finish( plupload.QUEUED );
 							$( '#sunshine-gallery-images-processing div.status span.current-file' ).text( ' Retrying ' + file.name + '...' );
-							setTimeout( attempt, delay );
+							setTimeout( function() {
+								upload_retrying--;
+								upload_waiting.unshift( file );
+								upload_next();
+							}, delay );
 							return;
 						}
 						upload_error( file.name + ': HTTP Error. (Your server could not process the image, contact your web host)' );
@@ -1324,6 +1302,14 @@ function sunshine_gallery_admin_ajax_upload() {
 
 	sunshine_doing_upload( $gallery_id );
 
+	// Several photos can arrive for the same gallery at once. Picking a file name
+	// that isn't taken and moving the file in is one step per photo, or two photos
+	// could pick the same name and one would replace the other. Two requests also
+	// can't both make the gallery's folder. It only takes a moment; making the
+	// image sizes after it still runs side by side.
+	$file_lock = 'gallery_files_' . $gallery_id;
+	$file_locked = sunshine_import_lock_wait( $file_lock );
+
 	// Check upload directory permissions
 	$upload_dir = wp_upload_dir();
 	if ( ! wp_is_writable( $upload_dir['path'] ) ) {
@@ -1348,6 +1334,10 @@ function sunshine_gallery_admin_ajax_upload() {
 				'action'    => 'sunshine_gallery_upload',
 			)
 		);
+
+		if ( $file_locked ) {
+			sunshine_import_unlock( $file_lock );
+		}
 
 		if ( isset( $file_upload['error'] ) ) {
 			SPC()->log( sprintf( 'Upload error: %s', $file_upload['error'] ) );
