@@ -1334,12 +1334,24 @@ function sunshine_gallery_admin_ajax_upload() {
 	// The uploader sends a photo again when the server took too long to answer.
 	// The web server stops waiting, but PHP usually keeps going and adds the photo,
 	// so sending it again would add it twice. Every try of a file carries the same
-	// upload ID: a try that finds the photo already added answers with it, and a
-	// try that comes while the first is still working is told to check back.
+	// upload ID: a try that comes while the first is still working is told to check
+	// back, and a try that finds the photo already in the gallery answers with it.
 	$upload_id = isset( $_POST['sunshine_upload_id'] ) ? sanitize_key( wp_unslash( $_POST['sunshine_upload_id'] ) ) : '';
 	if ( $upload_id ) {
+		// Held until this request ends. As long as an upload request may run.
+		if ( ! sunshine_import_lock( 'upload_' . $gallery_id . '_' . $upload_id, 11 * MINUTE_IN_SECONDS ) ) {
+			wp_send_json_error(
+				array(
+					'still_working' => true,
+					'error'         => __( 'The server is still adding this photo from an earlier try. Check the gallery before sending it again.', 'sunshine-photo-cart' ),
+				)
+			);
+		}
+		// The photo is saved before its sizes are made and it joins the gallery, so
+		// only a photo in the gallery is done. One that isn't is left from a try that
+		// stopped partway: remove it and add the photo again.
 		$existing = sunshine_gallery_find_uploaded_image( $gallery_id, $upload_id );
-		if ( $existing ) {
+		if ( $existing && in_array( $existing, array_map( 'intval', sunshine_get_gallery( $gallery_id )->get_image_ids() ), true ) ) {
 			wp_send_json_success(
 				array(
 					'image_id'      => $existing,
@@ -1349,14 +1361,9 @@ function sunshine_gallery_admin_ajax_upload() {
 				)
 			);
 		}
-		// Held until this request ends. As long as an upload request may run.
-		if ( ! sunshine_import_lock( 'upload_' . $gallery_id . '_' . $upload_id, 11 * MINUTE_IN_SECONDS ) ) {
-			wp_send_json_error(
-				array(
-					'still_working' => true,
-					'error'         => __( 'The server is still adding this photo from an earlier try. Check the gallery before sending it again.', 'sunshine-photo-cart' ),
-				)
-			);
+		if ( $existing ) {
+			SPC()->log( sprintf( 'CORE: Removing photo %d left from an earlier try that stopped partway', $existing ) );
+			wp_delete_attachment( $existing, true );
 		}
 		$tag_upload = function ( $attachment_id ) use ( &$tag_upload, $upload_id, $gallery_id ) {
 			if ( (int) wp_get_post_parent_id( $attachment_id ) === $gallery_id ) {
