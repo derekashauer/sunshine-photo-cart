@@ -272,6 +272,9 @@ Security is important to us. Please report security bugs through the [Patchstack
 * New: Refresh license on your plan checks every license on the site at once, including the add-ons that use the plan's key
 * New: The Licenses screen shows which site each key is activated for and when it was last checked. When your site hasn't been able to reach sunshinephotocart.com to check a license for two weeks, it says so with the reason, and the license bar links there
 * New: The Sunshine Photo Cart part of Tools > Site Health > Info now shows each license's status, end date, last check and the site it's activated for, instead of only saying a key is there, so they're included when you copy your system info for a support ticket. Only the last 4 characters of a key are shown
+* Enhancement: Photos added to a gallery now upload 3 at a time instead of one by one, about 2.5 to 3 times faster on real hosts. The number can be changed with the `sunshine_upload_concurrency` filter
+* Fix: Photos uploaded together no longer go missing from the gallery or replace each other when their file names match, and they keep the order you picked them in when sorted by upload date
+* Fix: When the server is slow to answer and a photo is sent again, it is no longer added to the gallery twice
 
 = 3.8.2 - November 11, 2026 =
 * New: Gallery terms. Visitors can be asked to agree to your terms before they see a gallery's photos, such as not saving them or removing watermarks (Settings > Galleries > Gallery Terms, and a Terms option on each gallery). Sunshine keeps a record of who agreed, when, and to which wording, on the gallery and the customer's screen. Guests also give their email when they agree, unless you turn that off. This discourages copying, but it can't stop a screenshot
